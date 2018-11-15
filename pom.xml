@@ -14,7 +14,7 @@
     <properties>
         <!-- Dependencies -->
         <version.kubernetes-client>4.1.0</version.kubernetes-client>
-        <version.servicecatalog-client>1.0.3</version.servicecatalog-client>
+        <version.servicecatalog-client>1.0.4-SNAPSHOT</version.servicecatalog-client>
         <version.sundrio>0.14.2</version.sundrio>
         <!-- Testing Dependencies -->
         <version.junit-jupiter>5.1.0</version.junit-jupiter>
@@ -34,7 +34,7 @@
         <dependencies>
             <dependency>
                 <groupId>io.fabric8</groupId>
-                <artifactId>kubernetes-client-bom</artifactId>
+                <artifactId>kubernetes-client-bom-with-deps</artifactId>
                 <version>${version.kubernetes-client}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -44,6 +44,12 @@
                 <groupId>me.snowdrop</groupId>
                 <artifactId>servicecatalog-model</artifactId>
                 <version>${version.servicecatalog-client}</version>
+                <exclusions>
+                  <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                  </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

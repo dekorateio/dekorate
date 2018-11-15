@@ -23,6 +23,7 @@ import io.ap4k.config.KubernetesConfig;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -42,7 +43,7 @@ public class Session {
   private static Session INASTANCE;
 
   private final AtomicBoolean closed = new AtomicBoolean();
-  private final Set<Generator> generators = new HashSet<>();
+  private final Set<Generator> generators = new LinkedHashSet<>();
   private final Configurations configurations = new Configurations();
   private final Resources resources = new Resources();
 
