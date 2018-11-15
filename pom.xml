@@ -15,7 +15,7 @@
         <!-- Dependencies -->
         <version.kubernetes-client>4.1.0</version.kubernetes-client>
         <version.servicecatalog-client>1.0.3</version.servicecatalog-client>
-        <version.sundrio>0.14-SNAPSHOT</version.sundrio>
+        <version.sundrio>0.14.2</version.sundrio>
         <!-- Testing Dependencies -->
         <version.junit-jupiter>5.1.0</version.junit-jupiter>
         <version.junit-platform>1.1.0</version.junit-platform>
