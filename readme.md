@@ -250,16 +250,16 @@ This module can be added to the project using:
 The [istio](https://istio.io)  annotation processor can be used to automatically inject the istio sidecar to the generated resources. 
 For example:
 
-   import io.ap4k.annotation.KubernetesApplication;
-   import io.ap4k.istio.annotation.Istio;
+    import io.ap4k.annotation.KubernetesApplication;
+    import io.ap4k.istio.annotation.Istio;
    
-   @Istio
-   @KubernetesApplication
-   public class Main {
-        public static void main(String[] args) {
-          //Your code goes here
-        }
-   }
+    @Istio
+    @KubernetesApplication
+    public class Main {
+         public static void main(String[] args) {
+           //Your code goes here
+         }
+    }
 
 #### Adding the istio annotation processor to the classpath
 
