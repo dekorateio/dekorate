@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ap4k-project</artifactId>
+        <groupId>io.ap4k</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.ap4k</groupId>
+    <artifactId>examples</artifactId>
+    <packaging>pom</packaging>
+    <name>AP4K :: Examples</name>
+
+    <modules>
+        <module>service-catalog-example</module>
+        <module>kubernetes-example</module>
+        <module>openshift-example</module>
+        <module>istio-example</module>
+      <module>spring-boot-on-kubernetes-example</module>
+    </modules>
+
+
+</project>
