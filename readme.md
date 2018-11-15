@@ -18,6 +18,7 @@ Annotation processor for Kubernetes is a collection of Java annotation processor
   - inject bindings into pods
 - Istio annotations
   - proxy injection
+- Component operator annotations 
 - No build tool coupling
 - Rich framework integration
   - Spring Boot
@@ -271,6 +272,25 @@ This module can be added to the project using:
       <version>${project.version}</version>
     </dependency>
     
+### Component Operator annotations
+The component operator is an operator that aims on abstracting kubernetes resources and simplify configuration. (See https://github.com/snowdrop/component-operator)an operator that aims on abstracting kubernetes resources and simplify configuration. (See https://github.com/snowdrop/component-operator).
+This module proivides limited/early support of the component operator.
+
+By adding the `@CompositeApplication` annotation to the application, the generation of `target/classes/META-INF/apk/component.yml' is triggered.
+
+The content of the component descriptor will be dermined by the existing configuration provided by annotations like:
+
+- @KubernetesApplication
+- @ServiceCatalog
+- and more...
+
+This module can be added to the project using:
+
+    <dependency>
+     <groupId>io.ap4k</groupId>
+     <artifactId>component-operator-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     
 ###  Framework integration
 
