@@ -1,13 +1,13 @@
 # Annotation processors for Kubernetes
 
-Annotation processor for Kubernetes is a collection of Java annotation processor and tools for generating Kubernetes/Openshift resources on compile time.
+Annotation processor for Kubernetes is a collection of Java annotation processors and tools for generating Kubernetes/Openshift resources at compile time.
 
 ## Features
 
 - Kubernetes annotations
   - annotations
   - labels
-  - environmnet variables
+  - environment variables
   - mounts
   - ports and services
 - Openshift annotations 
@@ -39,7 +39,7 @@ Annotation processing has quite a few advantages over external tools or build to
 - Annotation processing is performed in rounds which makes it technically easier to write extensions and customizations.
 
 #### What this project will not do
-This project will not trigger container builds of any kind (e.g. docker, openshift builds), nor will communicate with any daemon or api server.
+This project will not trigger container builds of any kind (e.g. docker, openshift builds), nor will it communicate with any daemon or api server.
 Integration with external tools that perform such task might be added in the future.
 
 
@@ -112,7 +112,7 @@ To add extra environment variables to the container, you can add one or more `@E
       }
     }
     
-Additional options are provided for adding environmnet variables from fields, config maps and secrets.    
+Additional options are provided for adding environment variables from fields, config maps and secrets.    
 
 #### Working with volumes and mounts
 To define volumes and mounts for your application, you can use something like:
