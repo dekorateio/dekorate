@@ -223,7 +223,7 @@ Here's an example:
     import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 
     @KubernetesApplication
-    @ServiceCatalogInstances(
+    @ServiceCatalog(instances =
         @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default")
     )
     public class Main {
