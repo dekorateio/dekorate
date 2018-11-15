@@ -10,9 +10,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.ap4k</groupId>
-  <artifactId>service-catalog-example</artifactId>
-  <packaging>jar</packaging>
-  <name>AP4K :: Examples :: Service Catalog</name>
+  <artifactId>component-operator-example</artifactId>
+  <name>AP4K :: Examples :: Component Operator</name>
+
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,22 +25,14 @@
   <dependencies>
     <dependency>
       <groupId>io.ap4k</groupId>
-      <artifactId>kubernetes-annotations</artifactId>
+      <artifactId>component-operator-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>servicecatalog-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>ap4k-spring-boot</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -70,5 +62,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
