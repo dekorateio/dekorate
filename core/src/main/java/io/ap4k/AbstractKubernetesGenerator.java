@@ -52,54 +52,55 @@ public abstract class AbstractKubernetesGenerator<C extends KubernetesConfig> im
      * Add all visitor to the resources.
      * This method will read the configuration and then add all the required visitor to the resources.
      * The method is intended to be called from the generate method and thus marked as protected.
+     * @param group     The group..
      * @param config    The config.
      */
-    protected void addVisitors(C config) {
+    protected void addVisitors(String group, C config) {
         for (Label label : config.getLabels()) {
-            resources.accept(new AddLabel(label));
+            resources.accept(group, new AddLabel(label));
         }
         for (Annotation annotation : config.getAnnotations()) {
-            resources.accept(new AddAnnotation(annotation));
+            resources.accept(group, new AddAnnotation(annotation));
         }
         for (Env env : config.getEnvVars()) {
-            resources.accept(new AddEnvVar(env));
+            resources.accept(group, new AddEnvVar(env));
         }
         for (Port port : config.getPorts()) {
-            resources.accept(new AddPort(port));
+            resources.accept(group, new AddPort(port));
         }
         for (Mount mount: config.getMounts()) {
-            resources.accept(new AddMount(mount));
+            resources.accept(group, new AddMount(mount));
         }
 
         for (SecretVolume volume : config.getSecretVolumes()) {
-            resources.accept(new AddSecretVolume(volume));
+            resources.accept(group, new AddSecretVolume(volume));
         }
 
         for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
-            resources.accept(new AddConfigMapVolume(volume));
+            resources.accept(group, new AddConfigMapVolume(volume));
         }
 
         for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
-            resources.accept(new AddPvcVolume(volume));
+            resources.accept(group, new AddPvcVolume(volume));
         }
 
         for (AzureFileVolume volume : config.getAzureFileVolumes()) {
-            resources.accept(new AddAzureFileVolume(volume));
+            resources.accept(group, new AddAzureFileVolume(volume));
         }
 
         for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
-            resources.accept(new AddAzureDiskVolume(volume));
+            resources.accept(group, new AddAzureDiskVolume(volume));
         }
 
         for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
-            resources.accept(new AddAwsElasticBlockStoreVolume(volume));
+            resources.accept(group, new AddAwsElasticBlockStoreVolume(volume));
         }
 
         if (config.getPorts().length > 0) {
-          resources.accept(new AddService(config));
+          resources.accept(group, new AddService(config));
         }
         
-        resources.accept(new AddLivenessProbe(config.getLivenessProbe()));
-        resources.accept(new AddReadinessProbe(config.getReadinessProbe()));
+        resources.accept(group, new AddLivenessProbe(config.getLivenessProbe()));
+        resources.accept(group, new AddReadinessProbe(config.getReadinessProbe()));
     }
 }

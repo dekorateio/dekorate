@@ -14,7 +14,7 @@ public class KubernetesGenerator extends AbstractKubernetesGenerator<KubernetesC
 
     public void generate(KubernetesConfig config) {
         resources.add(KUBERNETES, KubernetesResources.createDeployment(config));
-        addVisitors(config);
+        addVisitors(KUBERNETES, config);
     }
 
   @Override
