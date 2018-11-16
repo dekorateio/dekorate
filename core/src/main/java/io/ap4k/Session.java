@@ -17,9 +17,6 @@
  **/
 package io.ap4k;
 
-import io.ap4k.config.Configuration;
-import io.ap4k.config.ConfigurationSupplier;
-import io.ap4k.config.KubernetesConfig;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 
 import java.util.HashSet;
@@ -86,8 +83,31 @@ public class Session {
    */
   public Map<String, KubernetesList> close() {
     this.closed.set(true);
-    configurations.stream().forEach(c -> generators
-        .stream().filter(g -> g.getType().isAssignableFrom(c.getClass())).forEach(g->g.generate(c)));
+    configurations.stream().forEach(c ->
+      generators.forEach(g ->  {
+        if (matches(g.getType(), c.getClass())) {
+          g.generate(c);
+        }
+      }));
     return resources.generate();
+  }
+
+  /**
+   * Check if generator type matches configuration.
+   *
+   * The obivous solution would be to use is assignable. But we don't want generators to react to downstream configurations.
+   * So we compare by name. We also cover the Editable case.
+   * @param generatorType
+   * @param configurationType
+   * @return
+   */
+  private static boolean matches(Class generatorType, Class configurationType) {
+    if (generatorType.getCanonicalName().equals(configurationType.getCanonicalName())) {
+      return true;
+    }
+    if (configurationType.getCanonicalName().equals(generatorType.getPackage().getName() + ".Editable" + generatorType.getSimpleName())) {
+      return true;
+    }
+    return false;
   }
 }
