@@ -19,7 +19,7 @@ package io.ap4k.annotation;
 
 public enum ServiceType {
 
-    ClusterIp,
+    ClusterIP,
     NodePort,
     LoadBalancer,
     ExternalName;
