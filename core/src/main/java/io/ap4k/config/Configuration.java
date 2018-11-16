@@ -21,6 +21,7 @@ import io.ap4k.project.Project;
 import io.sundr.builder.annotations.Buildable;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class Configuration {
 
     public Configuration(Project project, Map<ConfigKey, Object> attributes) {
         this.project = project;
-        this.attributes = attributes;
+        this.attributes = attributes != null ? attributes : new HashMap<>();
     }
 
     public Project getProject() {
@@ -40,9 +41,7 @@ public class Configuration {
     }
 
     public Map<ConfigKey, Object> getAttributes() {
-        return attributes != null
-                ? Collections.unmodifiableMap(attributes)
-                : Collections.emptyMap();
+        return  Collections.unmodifiableMap(attributes);
     }
 
     public <T> T getAttribute(ConfigKey<T> key) {
