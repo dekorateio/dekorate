@@ -40,6 +40,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.util.HashSet;
 import java.util.Set;
 
 @SupportedAnnotationTypes({"io.ap4k.annotation.KubernetesApplication", "io.ap4k.openshift.annotation.OpenshiftApplication"})
@@ -51,13 +52,16 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
             session.onClose(r -> write(r));
             return true;
         }
-
+        Set<Element> mainClasses = new HashSet<>();
         for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-                session.configurations().add(configuration(mainClass));
-                session.generators().add(new OpenshiftGenerator(session.resources()));
-
+                mainClasses.add(mainClass);
             }
+        }
+
+        for (Element mainClass : mainClasses) {
+          session.configurations().add(configuration(mainClass));
+          session.generators().add(new OpenshiftGenerator(session.resources()));
         }
         return false;
     }

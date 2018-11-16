@@ -21,7 +21,7 @@ public class OpenshiftGenerator  extends AbstractKubernetesGenerator<OpenshiftCo
                     resources.add(OPENSHIFT, OpenshiftResources.createProjectImageStream(config));
                     resources.add(OPENSHIFT, OpenshiftResources.createBuildConfig(config));
                 }
-                addVisitors(config);
+                addVisitors(OPENSHIFT, config);
         }
 
   @Override

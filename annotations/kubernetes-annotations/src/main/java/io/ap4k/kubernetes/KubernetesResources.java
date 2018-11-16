@@ -46,6 +46,9 @@ public class KubernetesResources {
      */
     public static Deployment createDeployment(KubernetesConfig config)  {
         return new DeploymentBuilder()
+                .withNewMetadata()
+                .withName(config.getName())
+                .endMetadata()
                 .withNewSpec()
                 .withNewReplicas(1)
                 .withTemplate(createPodTemplateSpec(config))
