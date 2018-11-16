@@ -95,7 +95,9 @@ public abstract class AbstractKubernetesGenerator<C extends KubernetesConfig> im
             resources.accept(new AddAwsElasticBlockStoreVolume(volume));
         }
 
-        resources.accept(new AddService(config));
+        if (config.getPorts().length > 0) {
+          resources.accept(new AddService(config));
+        }
         
         resources.accept(new AddLivenessProbe(config.getLivenessProbe()));
         resources.accept(new AddReadinessProbe(config.getReadinessProbe()));
