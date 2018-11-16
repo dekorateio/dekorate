@@ -109,7 +109,7 @@ public @interface OpenshiftApplication {
     /**
      * The type of service that will be generated for the application.
      */
-    ServiceType serviceType() default ServiceType.ClusterIp;
+    ServiceType serviceType() default ServiceType.ClusterIP;
 
     PersistentVolumeClaimVolume[] pvcVolumes() default {};
 
