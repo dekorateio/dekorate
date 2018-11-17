@@ -6,6 +6,8 @@ import io.ap4k.Resources;
 import io.ap4k.component.visitor.AddServiceInstanceToComponent;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
+import io.ap4k.config.Configuration;
+import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 
 public class ComponentServiceCatalogGenerator implements Generator<ServiceCatalogConfig> {
 
@@ -13,6 +15,9 @@ public class ComponentServiceCatalogGenerator implements Generator<ServiceCatalo
   
   private final Resources resources;
 
+  public ComponentServiceCatalogGenerator () {
+    this(new Resources());
+  }
   public ComponentServiceCatalogGenerator (Resources resources) {
     this.resources = resources;
   }
@@ -23,8 +28,8 @@ public class ComponentServiceCatalogGenerator implements Generator<ServiceCatalo
     }
   }
 
-  public Class<? extends ServiceCatalogConfig> getType() {
-    return ServiceCatalogConfig.class;
+  public boolean accepts(Class<? extends Configuration> type) {
+    return type.equals(ServiceCatalogConfig.class) ||
+      type.equals(EditableServiceCatalogConfig.class);
   }
-
 }
