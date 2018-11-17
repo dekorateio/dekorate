@@ -38,7 +38,7 @@ public class AddPort extends TypedVisitor<ContainerBuilder> {
     public void visit(ContainerBuilder container) {
       container.addNewPort()
         .withName(port.getName())
-        .withHostPort(port.getHostPort())
+        .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
         .withContainerPort(port.getContainerPort())
         .withProtocol(port.getProtocol())
         .endPort();
