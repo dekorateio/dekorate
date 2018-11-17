@@ -15,33 +15,30 @@
  * 
 **/
 
-package io.ap4k.openshift;
+package io.ap4k.servicecatalog;
 
-import io.ap4k.openshift.config.OpenshiftConfig;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
-import io.ap4k.openshift.config.EditableOpenshiftConfig;
 import io.ap4k.config.KubernetesConfig;
-import org.junit.jupiter.api.Test;
+import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
+import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 
-class OpenshiftGeneratorTest {
+
+public class ServiceCatalogGeneratorTest {
 
   @Test
-  public void shouldAccpetOpenshiftConfig() {
-    OpenshiftGenerator generator = new OpenshiftGenerator();
-    assertTrue(generator.accepts(OpenshiftConfig.class));
+  public void shouldAccpetServiceCatalogConfig() {
+    ServiceCatalogGenerator generator = new ServiceCatalogGenerator();
+    assertTrue(generator.accepts(ServiceCatalogConfig.class));
   }
 
   @Test
-  public void shouldAccpetEditableOpenshiftConfig() {
-    OpenshiftGenerator generator = new OpenshiftGenerator();
-    assertTrue(generator.accepts(EditableOpenshiftConfig.class));
+  public void shouldAccpetEditableServiceCatalogConfig() {
+    ServiceCatalogGenerator generator = new ServiceCatalogGenerator();
+    assertTrue(generator.accepts(EditableServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfig() {
-    OpenshiftGenerator generator = new OpenshiftGenerator();
+    ServiceCatalogGenerator generator = new ServiceCatalogGenerator();
     assertFalse(generator.accepts(KubernetesConfig.class));
   }
 }

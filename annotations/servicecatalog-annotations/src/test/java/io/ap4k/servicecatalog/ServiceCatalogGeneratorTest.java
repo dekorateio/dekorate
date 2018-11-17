@@ -1,30 +1,30 @@
-package io.ap4k.component;
+package io.ap4k.servicecatalog;
 
 import io.ap4k.config.KubernetesConfig;
-import io.ap4k.servicecatalog.ServiceCatalogGenerator;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ComponentServiceCatalogGeneratorTest {
+class ServiceCatalogGeneratorTest {
 
   @Test
   public void shouldAccpetServiceCatalogConfig() {
-    ComponentServiceCatalogGenerator generator = new ComponentServiceCatalogGenerator();
+    ServiceCatalogGenerator generator = new ServiceCatalogGenerator();
     assertTrue(generator.accepts(ServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldAccpetEditableServiceCatalogConfig() {
-    ComponentServiceCatalogGenerator generator = new ComponentServiceCatalogGenerator();
+    ServiceCatalogGenerator generator = new ServiceCatalogGenerator();
     assertTrue(generator.accepts(EditableServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfig() {
-    ComponentServiceCatalogGenerator generator = new ComponentServiceCatalogGenerator();
+    ServiceCatalogGenerator generator = new ServiceCatalogGenerator();
     assertFalse(generator.accepts(KubernetesConfig.class));
   }
 }
