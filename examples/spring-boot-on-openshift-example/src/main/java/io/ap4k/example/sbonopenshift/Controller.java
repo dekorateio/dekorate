@@ -1,4 +1,4 @@
-package io.ap4k.example.sbonkubernetes;
+package io.ap4k.example.sbonopenshift;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

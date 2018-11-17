@@ -15,16 +15,13 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.example.sbonkubernetes;
+package io.ap4k.example.sbonopenshift;
 
-import io.ap4k.annotation.KubernetesApplication;
-import io.ap4k.annotation.Mount;
-import io.ap4k.annotation.PersistentVolumeClaimVolume;
-import io.ap4k.annotation.Port;
+import io.ap4k.openshift.annotation.OpenshiftApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KubernetesApplication
+@OpenshiftApplication
 @SpringBootApplication
 public class Main {
 
