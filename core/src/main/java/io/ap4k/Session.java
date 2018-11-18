@@ -86,29 +86,10 @@ public class Session {
     this.closed.set(true);
     configurations.stream().forEach(c ->
       generators.forEach(g ->  {
-        if (matches(g.getType(), c.getClass())) {
+          if (g.accepts(c.getClass())) {
           g.generate(c);
         }
       }));
     return resources.generate();
-  }
-
-  /**
-   * Check if generator type matches configuration.
-   *
-   * The obivous solution would be to use is assignable. But we don't want generators to react to downstream configurations.
-   * So we compare by name. We also cover the Editable case.
-   * @param generatorType
-   * @param configurationType
-   * @return
-   */
-  private static boolean matches(Class generatorType, Class configurationType) {
-    if (generatorType.getCanonicalName().equals(configurationType.getCanonicalName())) {
-      return true;
-    }
-    if (configurationType.getCanonicalName().equals(generatorType.getPackage().getName() + ".Editable" + generatorType.getSimpleName())) {
-      return true;
-    }
-    return false;
   }
 }

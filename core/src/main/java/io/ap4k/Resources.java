@@ -43,7 +43,7 @@ public class Resources {
     } else if (groups.containsKey(group)) {
       groups.get(group).accept(visitor);
     } else {
-      throw new IllegalArgumentException("Cannot add visitor for non existent resource group:" + group);
+      groups.put(group, new KubernetesListBuilder().accept(visitor));
     }
   }
 

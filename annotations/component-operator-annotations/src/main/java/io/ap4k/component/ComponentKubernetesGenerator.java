@@ -2,13 +2,14 @@ package io.ap4k.component;
 
 import io.ap4k.Generator;
 import io.ap4k.Resources;
-import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
 import io.ap4k.component.model.DeploymentType;
 import io.ap4k.component.visitor.AddEnvToComponent;
+import io.ap4k.config.Configuration;
 import io.ap4k.config.Env;
 import io.ap4k.config.KubernetesConfig;
+import io.ap4k.config.EditableKubernetesConfig;
 
 public class ComponentKubernetesGenerator implements Generator<KubernetesConfig> {
 
@@ -16,6 +17,9 @@ public class ComponentKubernetesGenerator implements Generator<KubernetesConfig>
 
   private final Resources resources;
 
+  public ComponentKubernetesGenerator () {
+    this(new Resources());
+  }
   public ComponentKubernetesGenerator(Resources resources) {
     this.resources = resources;
   }
@@ -27,11 +31,10 @@ public class ComponentKubernetesGenerator implements Generator<KubernetesConfig>
     addVisitors(config);
   }
 
-  @Override
-  public Class<? extends KubernetesConfig> getType() {
-    return KubernetesConfig.class;
+  public boolean accepts(Class<? extends Configuration> type) {
+    return type.equals(KubernetesConfig.class) ||
+      type.equals(EditableKubernetesConfig.class);
   }
-
 
   /**
    * Create a {@link Component} from a {@link KubernetesConfig}.

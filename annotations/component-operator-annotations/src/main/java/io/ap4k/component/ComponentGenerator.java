@@ -3,6 +3,9 @@ package io.ap4k.component;
 import io.ap4k.Generator;
 import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
+import io.ap4k.component.config.EditableCompositeConfig;
+import io.ap4k.config.Configuration;
+import io.ap4k.config.EditableKubernetesConfig;
 
 public class ComponentGenerator implements Generator<CompositeConfig> {
 
@@ -10,6 +13,9 @@ public class ComponentGenerator implements Generator<CompositeConfig> {
 
   private final Resources resources;
 
+  public ComponentGenerator () {
+    this(new Resources());
+  }
   public ComponentGenerator(Resources resources) {
     this.resources = resources;
   }
@@ -21,7 +27,8 @@ public class ComponentGenerator implements Generator<CompositeConfig> {
   }
 
   @Override
-  public Class<? extends CompositeConfig> getType() {
-    return CompositeConfig.class;
+  public boolean accepts(Class<? extends Configuration> type) {
+   return type.equals(CompositeConfig.class) ||
+   type.equals(EditableCompositeConfig.class);
   }
 }

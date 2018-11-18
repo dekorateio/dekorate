@@ -44,6 +44,6 @@ public class MicronautProcessor extends AbstractAnnotationProcessor {
     }
 
   private Port detectMicornautPort()  {
-      return new PortBuilder().withContainerPort(8080).withHostPort(8080).withName("http").build();
+      return new PortBuilder().withContainerPort(8080).withName("http").build();
   }
 }

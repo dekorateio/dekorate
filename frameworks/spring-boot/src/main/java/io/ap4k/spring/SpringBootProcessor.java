@@ -44,6 +44,6 @@ public class SpringBootProcessor extends AbstractAnnotationProcessor {
     }
 
   private Port detectSpringBootPort()  {
-      return new PortBuilder().withContainerPort(8080).withHostPort(8080).withName("http").build();
+      return new PortBuilder().withContainerPort(8080).withName("http").build();
   }
 }

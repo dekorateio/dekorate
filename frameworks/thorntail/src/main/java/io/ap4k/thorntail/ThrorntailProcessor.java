@@ -44,6 +44,6 @@ public class ThrorntailProcessor extends AbstractAnnotationProcessor {
     }
 
   private Port detectThorntailHttpPort()  {
-      return new PortBuilder().withContainerPort(8080).withHostPort(8080).withName("http").build();
+      return new PortBuilder().withContainerPort(8080).withName("http").build();
   }
 }

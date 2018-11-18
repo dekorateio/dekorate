@@ -2,6 +2,7 @@ package io.ap4k.istio;
 
 import io.ap4k.Generator;
 import io.ap4k.Resources;
+import io.ap4k.config.Configuration;
 import io.ap4k.annotation.ImagePullPolicy;
 import io.ap4k.istio.config.IstioConfig;
 import io.ap4k.visitor.ContainerVisitor;
@@ -9,6 +10,7 @@ import io.ap4k.visitor.VolumeMountVisitor;
 import io.ap4k.visitor.VolumeVisitor;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.istio.config.EditableIstioConfig;
 
 public class IstioGenerator implements Generator<IstioConfig> {
 
@@ -37,6 +39,9 @@ public class IstioGenerator implements Generator<IstioConfig> {
 
     private final Resources resources;
 
+  public IstioGenerator () {
+    this(new Resources());
+  }
   public IstioGenerator(Resources resources) {
     this.resources = resources;
   }
@@ -67,11 +72,10 @@ public class IstioGenerator implements Generator<IstioConfig> {
                             .withMountPath("/etc/certs"));
   }
 
-  @Override
-  public Class<? extends IstioConfig> getType() {
-    return IstioConfig.class;
+  public boolean accepts(Class<? extends Configuration> type) {
+    return type.equals(IstioConfig.class) ||
+      type.equals(EditableIstioConfig.class);
   }
-
 
     /**
      * Create a visitor that adds an istio proxy container to all pods.
