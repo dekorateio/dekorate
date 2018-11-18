@@ -10,8 +10,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.ap4k</groupId>
-  <artifactId>openshift-example</artifactId>
-  <name>AP4K :: Examples :: Openshift</name>
+  <artifactId>source-to-image-example</artifactId>
+  <name>AP4K :: Examples :: Source to Image Example</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -83,5 +83,6 @@
       </plugin>
     </plugins>
   </build>
+
 
 </project>
