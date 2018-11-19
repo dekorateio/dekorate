@@ -21,23 +21,27 @@ import io.ap4k.Session;
 import io.ap4k.annotation.KubernetesApplication;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.openshift.OpenshiftGenerator;
+import io.ap4k.openshift.SourceToImageGenerator;
+import io.ap4k.openshift.adapt.SourceToImageConfigAdapter;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
+import io.ap4k.openshift.annotation.SourceToImage;
 import io.ap4k.openshift.confg.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.OpenshiftConfig;
-import io.ap4k.openshift.config.OpenshiftConfigBuilder;
+import io.ap4k.openshift.config.SourceToImageConfig;
+import io.ap4k.openshift.config.SourceToImageConfigBuilder;
+import io.ap4k.openshift.visitor.ApplyOpenshiftConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.project.Project;
-import io.ap4k.project.ProjectFactory;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.HashSet;
 import java.util.Set;
 
-@SupportedAnnotationTypes({"io.ap4k.annotation.KubernetesApplication", "io.ap4k.openshift.annotation.OpenshiftApplication"})
-public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<OpenshiftConfig> {
+import static io.ap4k.openshift.adapt.SourceToImageConfigAdapter.newBuilder;
+
+@SupportedAnnotationTypes("io.ap4k.openshift.annotation.SourceToImage")
+public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor<SourceToImageConfig> {
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Session session = Session.getSession();
@@ -45,23 +49,18 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
             session.onClose(r -> write(r));
             return true;
         }
-        Set<Element> mainClasses = new HashSet<>();
         for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-                mainClasses.add(mainClass);
+              session.configurations().add(configuration(mainClass));
+              session.generators().add(new SourceToImageGenerator(session.resources()));
             }
-        }
-
-        for (Element mainClass : mainClasses) {
-          session.configurations().add(configuration(mainClass));
-          session.generators().add(new OpenshiftGenerator(session.resources()));
         }
         return false;
     }
 
   @Override
-  public ConfigurationSupplier<OpenshiftConfig> configuration(Element mainClass) {
-    return new ConfigurationSupplier<OpenshiftConfig>(configurationBuilder(mainClass));
+  public ConfigurationSupplier<SourceToImageConfig> configuration(Element mainClass) {
+    return new ConfigurationSupplier<SourceToImageConfig>(configurationBuilder(mainClass));
   }
 
   /**
@@ -69,10 +68,11 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
      * @param mainClass     The type element of the annotated class (Main).
      * @return              A new config.
      */
-    public OpenshiftConfigBuilder configurationBuilder(Element mainClass) {
-        Project project = ProjectFactory.create(processingEnv);
-        OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
-        KubernetesApplication kubernetesApplication = mainClass.getAnnotation(KubernetesApplication.class);
-        return OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication, kubernetesApplication);
+    public SourceToImageConfigBuilder configurationBuilder(Element mainClass) {
+        SourceToImage sourceToImage = mainClass.getAnnotation(SourceToImage.class);
+      OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
+      KubernetesApplication kubernetesApplication = mainClass.getAnnotation(KubernetesApplication.class);
+      OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication, kubernetesApplication).build();
+        return SourceToImageConfigAdapter.newBuilder(sourceToImage).accept(new ApplyOpenshiftConfig(openshiftConfig));
     }
 }

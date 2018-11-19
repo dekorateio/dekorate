@@ -57,10 +57,6 @@ public class OpenshiftResources {
      * @return          The deployment config.
      */
     public static DeploymentConfig createDeploymentConfig(OpenshiftConfig config)  {
-        SourceToImageConfig sourceToImageConfig = config.getAttributeOrDefault(SOURCE_TO_IMAGE_CONFIG);
-        String repository = Images.getRepository(sourceToImageConfig.getBuilderImage());
-        String tag = Images.getTag(sourceToImageConfig.getBuilderImage());
-
         return new DeploymentConfigBuilder()
             .withNewMetadata()
             .withName(config.getName())
@@ -136,83 +132,4 @@ public class OpenshiftResources {
             .build();
     }
 
-
-    /**
-     * Create an {@link ImageStream} for the {@link OpenshiftConfig}.
-     * @param config   The config.
-     * @return         The build config.
-     */
-    public static ImageStream createBuilderImageStream(OpenshiftConfig config) {
-        SourceToImageConfig sourceToImageConfig = config.getAttributeOrDefault(SOURCE_TO_IMAGE_CONFIG);
-        String repository = Images.getRepository(sourceToImageConfig.getBuilderImage());
-
-        String name = !repository.contains("/")
-            ? repository
-            : repository.substring(repository.lastIndexOf("/") + 1);
-
-        return new ImageStreamBuilder()
-            .withNewMetadata()
-            .withName(name)
-            .endMetadata()
-            .withNewSpec()
-            .withDockerImageRepository(repository)
-            .endSpec()
-            .build();
-    }
-
-    
-    /**
-     * Create an {@link ImageStream} for the {@link OpenshiftConfig}.
-     * @param config   The config.
-     * @return         The build config.
-     */
-    public static ImageStream createProjectImageStream(OpenshiftConfig config) {
-        return new ImageStreamBuilder()
-            .withNewMetadata()
-            .withName(config.getName())
-            .endMetadata()
-            .build();
-    }
-    
-    /**
-     * Create a {@link BuildConfig} for the {@link OpenshiftConfig}.
-     * @param config   The config.
-     * @return          The build config.
-     */
-    public static BuildConfig createBuildConfig(OpenshiftConfig config) {
-        SourceToImageConfig sourceToImageConfig = config.getAttributeOrDefault(SOURCE_TO_IMAGE_CONFIG);
-        String builderRepository = Images.getRepository(sourceToImageConfig.getBuilderImage());
-        String builderTag = Images.getTag(sourceToImageConfig.getBuilderImage());
-
-        String builderName = !builderRepository.contains("/")
-            ? builderRepository
-            : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
-
-
-        return new BuildConfigBuilder()
-            .withNewMetadata()
-            .withName(config.getName())
-            .endMetadata()
-            .withNewSpec()
-            .withNewOutput()
-            .withNewTo()
-            .withKind(IMAGESTREAMTAG)
-            .withName(config.getName() + ":" + config.getVersion())
-            .endTo()
-            .endOutput()
-            .withNewSource()
-            .withNewBinary()
-            .endBinary()
-            .endSource()
-            .withNewStrategy()
-            .withNewSourceStrategy()
-            .withNewFrom()
-            .withKind(IMAGESTREAMTAG)
-            .withName(builderName + ":" + builderTag)
-            .endFrom()
-            .endSourceStrategy()
-            .endStrategy()
-            .endSpec()
-            .build();
-    }
 }

@@ -31,6 +31,7 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.client.utils.Serialization;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
@@ -45,15 +46,21 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     protected static final String JSON = "json";
     protected static final String YML = "yml";
 
-    /**
+    protected Project project;
+
+  @Override
+  public synchronized void init(ProcessingEnvironment processingEnv) {
+    super.init(processingEnv);
+    this.project = ProjectFactory.create(processingEnv);
+  }
+
+  /**
      * Get or create a new config for the specified {@link Element}.
      * @param mainClass     The type element of the annotated class (Main).
      * @return              A new config.
      */
     public ConfigurationSupplier<C> configuration(Element mainClass) {
         KubernetesApplication application = mainClass.getAnnotation(KubernetesApplication.class);
-        Project project = ProjectFactory.create(processingEnv);
-
         return new ConfigurationSupplier<C>((VisitableBuilder<C, ?>) KubernetesConfigAdapter
                 .newBuilder(application)
                 .accept(new ApplyProjectInfo(project)));
