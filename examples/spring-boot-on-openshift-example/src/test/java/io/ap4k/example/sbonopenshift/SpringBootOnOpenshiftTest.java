@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SpringBootOnOpenshiftTest {
   @Test
   public void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshal(SpringBootOnOpenshiftTest.class.getClassLoader().getResourceAsStream("/META-INF/apk4/openshift.yml"));
+    KubernetesList list = Serialization.unmarshal(SpringBootOnOpenshiftTest.class.getClassLoader().getResourceAsStream("META-INF/ap4k/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig dc = findFirst(list, DeploymentConfig.class).orElseThrow(()-> new IllegalStateException());
     assertNotNull(dc);
@@ -22,7 +22,7 @@ class SpringBootOnOpenshiftTest {
 
   @Test
   public void shouldContainService() {
-    KubernetesList list = Serialization.unmarshal(SpringBootOnOpenshiftTest.class.getClassLoader().getResourceAsStream("/META-INF/apk4/openshift.yml"));
+    KubernetesList list = Serialization.unmarshal(SpringBootOnOpenshiftTest.class.getClassLoader().getResourceAsStream("META-INF/ap4k/openshift.yml"));
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(()-> new IllegalStateException());
     assertNotNull(s);

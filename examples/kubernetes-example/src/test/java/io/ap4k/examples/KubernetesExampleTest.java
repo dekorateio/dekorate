@@ -15,22 +15,24 @@
  * 
 **/
 
-package io.ap4k.examples.openshift;
+package io.ap4k.examples;
 
 import org.junit.jupiter.api.Test;
 import io.fabric8.kubernetes.client.utils.Serialization;
 import io.fabric8.kubernetes.api.model.KubernetesList;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class OpenshiftExampleTest {
+class KubernetesExampleTest {
 
   @Test
-  public void shouldContainDeploymentConfig() {
-    KubernetesList list = Serialization.unmarshal(OpenshiftExampleTest.class.getClassLoader().getResourceAsStream("META-INF/ap4k/openshift.yml"));
+  public void shouldContainDeployment() {
+    KubernetesList list = Serialization.unmarshal(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/ap4k/kubernetes.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
-    assertEquals("DeploymentConfig", list.getItems().get(0).getKind());
+    assertEquals("Deployment", list.getItems().get(0).getKind());
   }
 }
