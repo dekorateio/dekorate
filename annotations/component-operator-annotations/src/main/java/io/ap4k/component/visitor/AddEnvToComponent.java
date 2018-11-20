@@ -1,7 +1,7 @@
 package io.ap4k.component.visitor;
 
 import io.ap4k.component.model.ComponentSpecBuilder;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
 import io.ap4k.config.Env;
 
 public class AddEnvToComponent extends TypedVisitor<ComponentSpecBuilder> {

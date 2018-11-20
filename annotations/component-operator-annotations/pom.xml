@@ -28,11 +28,6 @@
     </dependency>
 
     <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>kubernetes-model</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
     </dependency>

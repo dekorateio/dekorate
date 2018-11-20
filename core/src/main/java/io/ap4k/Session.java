@@ -17,9 +17,8 @@
  **/
 package io.ap4k;
 
-import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;

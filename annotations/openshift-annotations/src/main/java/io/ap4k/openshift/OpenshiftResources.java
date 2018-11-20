@@ -17,25 +17,17 @@
  **/
 package io.ap4k.openshift;
 
+import io.ap4k.deps.openshift.api.model.DeploymentConfig;
+import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
 import io.ap4k.openshift.config.OpenshiftConfig;
-import io.ap4k.openshift.config.SourceToImageConfig;
-import io.fabric8.kubernetes.api.model.PodSpec;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.fabric8.kubernetes.api.model.PodTemplateSpec;
-import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
-import io.fabric8.openshift.api.model.BuildConfig;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
-import io.fabric8.openshift.api.model.BuildConfigBuilder;
-import io.fabric8.openshift.api.model.ImageStreamBuilder;
-import io.fabric8.openshift.api.model.ImageStream;
-import io.ap4k.utils.Images;
+import io.ap4k.deps.kubernetes.api.model.PodSpec;
+import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.deps.kubernetes.api.model.PodTemplateSpec;
+import io.ap4k.deps.kubernetes.api.model.PodTemplateSpecBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.ap4k.openshift.Constants.DEFAULT_SOURCE_TO_IMAGE_CONFIG;
-import static io.ap4k.openshift.Constants.SOURCE_TO_IMAGE_CONFIG;
 
 public class OpenshiftResources {
 

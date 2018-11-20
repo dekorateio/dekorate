@@ -5,7 +5,6 @@ import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
 import io.ap4k.config.Configuration;
-import io.ap4k.config.EditableKubernetesConfig;
 
 public class ComponentGenerator implements Generator<CompositeConfig> {
 

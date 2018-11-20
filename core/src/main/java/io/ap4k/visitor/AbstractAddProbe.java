@@ -2,13 +2,13 @@ package io.ap4k.visitor;
 
 import io.ap4k.config.Probe;
 import io.ap4k.utils.Strings;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.ContainerBuilder;
-import io.fabric8.kubernetes.api.model.ExecAction;
-import io.fabric8.kubernetes.api.model.HTTPGetAction;
-import io.fabric8.kubernetes.api.model.IntOrString;
-import io.fabric8.kubernetes.api.model.ProbeBuilder;
-import io.fabric8.kubernetes.api.model.TCPSocketAction;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.deps.kubernetes.api.model.ExecAction;
+import io.ap4k.deps.kubernetes.api.model.HTTPGetAction;
+import io.ap4k.deps.kubernetes.api.model.IntOrString;
+import io.ap4k.deps.kubernetes.api.model.ProbeBuilder;
+import io.ap4k.deps.kubernetes.api.model.TCPSocketAction;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,11 +27,11 @@ public abstract class AbstractAddProbe extends TypedVisitor<ContainerBuilder> {
 
 
     /**
-     * Convert the internal {@link Probe} to the kubernetes-model {@link io.fabric8.kubernetes.api.model.Probe}.
+     * Convert the internal {@link Probe} to the kubernetes-model {@link io.ap4k.deps.kubernetes.api.model.Probe}.
      * @param probe The inrenal probe.
      * @return      The fabirc8 probe.
      */
-    protected io.fabric8.kubernetes.api.model.Probe convert(Probe probe) {
+    protected io.ap4k.deps.kubernetes.api.model.Probe convert(Probe probe) {
        return new ProbeBuilder()
                .withExec(execAction(probe))
                 .withHttpGet(httpGetAction(probe))

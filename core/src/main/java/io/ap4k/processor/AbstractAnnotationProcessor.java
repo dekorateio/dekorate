@@ -26,9 +26,9 @@ import io.ap4k.config.KubernetesConfig;
 import io.ap4k.project.ApplyProjectInfo;
 import io.ap4k.project.Project;
 import io.ap4k.project.ProjectFactory;
-import io.fabric8.kubernetes.api.builder.VisitableBuilder;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.client.utils.Serialization;
+import io.ap4k.utils.Serialization;
+import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
+import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;

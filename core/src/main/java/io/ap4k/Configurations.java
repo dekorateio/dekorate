@@ -2,10 +2,11 @@ package io.ap4k;
 
 import io.ap4k.config.Configuration;
 import io.ap4k.config.ConfigurationSupplier;
-import io.fabric8.kubernetes.api.builder.Visitor;
+import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,5 +37,7 @@ public class Configurations {
       return stream().collect(Collectors.toSet());
   }
 
-
+  public <C extends Configuration> Optional<C> get(Class<C> type) {
+    return stream().filter(i -> type.isAssignableFrom(i.getClass())).map(i -> (C)i).findFirst();
+  }
 }

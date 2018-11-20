@@ -18,8 +18,8 @@
 package io.ap4k.visitor;
 
 import io.ap4k.config.Port;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 
 import java.util.Objects;
 

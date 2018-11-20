@@ -1,20 +1,20 @@
 package io.ap4k.component.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.fabric8.kubernetes.api.model.Doneable;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
-import io.fabric8.kubernetes.api.model.ListMeta;
+import io.ap4k.deps.jackson.annotation.JsonIgnore;
+import io.ap4k.deps.jackson.annotation.JsonInclude;
+import io.ap4k.deps.jackson.annotation.JsonProperty;
+import io.ap4k.deps.jackson.annotation.JsonPropertyOrder;
+import io.ap4k.deps.jackson.databind.annotation.JsonDeserialize;
+import io.ap4k.deps.javax.validation.Valid;
+import io.ap4k.deps.javax.validation.constraints.NotNull;
+import io.ap4k.deps.kubernetes.api.model.Doneable;
+import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
+import io.ap4k.deps.kubernetes.api.model.KubernetesResourceList;
+import io.ap4k.deps.kubernetes.api.model.ListMeta;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Inline;
 
 import javax.annotation.Generated;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +32,8 @@ import java.util.Map;
     "metadata",
     "items"
 })
-@JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+@JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
+@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 public class ComponentList implements KubernetesResource, KubernetesResourceList
 {
 

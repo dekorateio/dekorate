@@ -1,10 +1,10 @@
 package io.ap4k;
 
-import io.fabric8.kubernetes.api.builder.Visitor;
-import io.fabric8.kubernetes.api.model.Doneable;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.ap4k.deps.kubernetes.api.builder.Visitor;
+import io.ap4k.deps.kubernetes.api.model.Doneable;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
+import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 
 import java.util.HashMap;
 import java.util.HashSet;

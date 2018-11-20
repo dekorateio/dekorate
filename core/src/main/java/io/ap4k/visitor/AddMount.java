@@ -1,8 +1,8 @@
 package io.ap4k.visitor;
 
 import io.ap4k.config.Mount;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 
 public class AddMount extends TypedVisitor<ContainerBuilder> {
 

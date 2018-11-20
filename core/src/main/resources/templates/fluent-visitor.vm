@@ -11,24 +11,24 @@ package io.ap4k.visitor;
 // ${model.implementsList[0].arguments[1].fullyQualifiedName}
 // ${model.getImplementsList}
 // $model.getImplementsList.get(0)
-import io.fabric8.kubernetes.api.builder.Function;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.Doneable;
+import io.ap4k.deps.kubernetes.api.builder.Function;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.Doneable;
 
 import $parent;
-import io.fabric8.kubernetes.api.model.$target;
-import io.fabric8.kubernetes.api.model.${target}Builder;
-import io.fabric8.kubernetes.api.model.${target}FluentImpl;
+import io.ap4k.deps.kubernetes.api.model.$target;
+import io.ap4k.deps.kubernetes.api.model.${target}Builder;
+import io.ap4k.deps.kubernetes.api.model.${target}FluentImpl;
 
 public class ${target}FluentVisitor extends ${target}FluentImpl<${target}FluentVisitor> implements Doneable<TypedVisitor<$parent>> {
 
     private final ${target}Builder builder;
-    private final io.fabric8.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function;
+    private final io.ap4k.deps.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function;
 
-    public ${target}FluentVisitor(io.fabric8.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function){
+    public ${target}FluentVisitor(io.ap4k.deps.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function){
     super();this.builder=new ${target}Builder(this);this.function=function;
     }
-    public ${target}FluentVisitor($target item,io.fabric8.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function){
+    public ${target}FluentVisitor($target item,io.ap4k.deps.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function){
     super(item);this.builder=new ${target}Builder(this, item);this.function=function;
     }
 

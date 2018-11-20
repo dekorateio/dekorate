@@ -2,7 +2,7 @@ package io.ap4k.visitor;
 
 import io.ap4k.config.Probe;
 import io.ap4k.utils.Strings;
-import io.fabric8.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 
 public class AddReadinessProbe extends AbstractAddProbe {
 

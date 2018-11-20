@@ -2,7 +2,7 @@ package io.ap4k.openshift.visitor;
 
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.SourceToImageConfigFluent;
-import io.fabric8.kubernetes.api.builder.Visitor;
+import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
 public class ApplyOpenshiftConfig implements Visitor<SourceToImageConfigFluent> {
 

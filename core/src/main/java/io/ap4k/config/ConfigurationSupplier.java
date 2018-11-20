@@ -17,9 +17,9 @@
 
 package io.ap4k.config;
 
-import io.fabric8.kubernetes.api.builder.Visitable;
-import io.fabric8.kubernetes.api.builder.VisitableBuilder;
-import io.fabric8.kubernetes.api.builder.Visitor;
+import io.ap4k.deps.kubernetes.api.builder.Visitable;
+import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
+import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
 import java.util.function.Supplier;
 

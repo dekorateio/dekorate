@@ -15,19 +15,19 @@
     <name>AP4K :: Core</name>
 
     <dependencies>
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-client</artifactId>
-        </dependency>
+
+      <dependency>
+        <groupId>io.ap4k</groupId>
+        <artifactId>ap4k-dependencies</artifactId>
+        <version>${version.ap4k-deps}</version>
+      </dependency>
+
         <dependency>
             <groupId>io.sundr</groupId>
             <artifactId>transform-annotations</artifactId>
         </dependency>
-          <dependency>
+
+        <dependency>
             <groupId>io.sundr</groupId>
             <artifactId>builder-annotations</artifactId>
         </dependency>
@@ -59,16 +59,16 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.maven-compiler-plugin}</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

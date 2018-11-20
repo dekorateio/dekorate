@@ -18,17 +18,15 @@
 package io.ap4k.kubernetes;
 
 import io.ap4k.config.KubernetesConfig;
-import io.fabric8.kubernetes.api.model.LabelSelector;
-import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
-import io.fabric8.kubernetes.api.model.PodSpec;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.fabric8.kubernetes.api.model.PodTemplateSpec;
-import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
+import io.ap4k.deps.kubernetes.api.model.LabelSelector;
+import io.ap4k.deps.kubernetes.api.model.LabelSelectorBuilder;
+import io.ap4k.deps.kubernetes.api.model.PodSpec;
+import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.deps.kubernetes.api.model.PodTemplateSpec;
+import io.ap4k.deps.kubernetes.api.model.PodTemplateSpecBuilder;
+import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
+import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import static io.ap4k.utils.Labels.createLabels;
 

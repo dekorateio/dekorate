@@ -1,8 +1,8 @@
 package io.ap4k.visitor;
 
 import io.ap4k.config.PersistentVolumeClaimVolume;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 
 public class AddPvcVolume extends TypedVisitor<PodSpecBuilder> {
 

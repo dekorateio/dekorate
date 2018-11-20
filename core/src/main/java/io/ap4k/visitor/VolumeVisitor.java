@@ -17,9 +17,9 @@
 **/
 package io.ap4k.visitor;
 
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.fabric8.kubernetes.api.model.Volume;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.deps.kubernetes.api.model.Volume;
 import io.sundr.transform.annotations.VelocityTransformation;
 
 @VelocityTransformation("/templates/fluent-visitor.vm")

@@ -19,7 +19,7 @@ package io.ap4k.config.visitors;
 
 import io.ap4k.config.KubernetesConfigFluent;
 import io.ap4k.config.Port;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
 
 import java.util.Objects;
 

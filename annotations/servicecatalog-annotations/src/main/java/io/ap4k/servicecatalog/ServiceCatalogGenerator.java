@@ -3,12 +3,12 @@ package io.ap4k.servicecatalog;
 import io.ap4k.Generator;
 import io.ap4k.Resources;
 import io.ap4k.config.Configuration;
+import io.ap4k.deps.servicecatalog.api.model.ServiceBindingBuilder;
+import io.ap4k.deps.servicecatalog.api.model.ServiceInstanceBuilder;
 import io.ap4k.servicecatalog.config.Parameter;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
 import io.ap4k.utils.Strings;
-import me.snowdrop.servicecatalog.api.model.ServiceBindingBuilder;
-import me.snowdrop.servicecatalog.api.model.ServiceInstanceBuilder;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 
 import java.util.Arrays;

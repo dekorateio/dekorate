@@ -2,7 +2,7 @@ package io.ap4k.component.visitor;
 
 import io.ap4k.component.model.ComponentSpecBuilder;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
 
 public class AddServiceInstanceToComponent extends TypedVisitor<ComponentSpecBuilder> {
 

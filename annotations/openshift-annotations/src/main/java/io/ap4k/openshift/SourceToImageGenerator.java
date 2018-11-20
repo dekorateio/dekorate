@@ -3,13 +3,13 @@ package io.ap4k.openshift;
 import io.ap4k.Generator;
 import io.ap4k.Resources;
 import io.ap4k.config.Configuration;
+import io.ap4k.deps.openshift.api.model.BuildConfig;
+import io.ap4k.deps.openshift.api.model.BuildConfigBuilder;
+import io.ap4k.deps.openshift.api.model.ImageStream;
+import io.ap4k.deps.openshift.api.model.ImageStreamBuilder;
 import io.ap4k.openshift.config.EditableSourceToImageConfig;
 import io.ap4k.openshift.config.SourceToImageConfig;
 import io.ap4k.utils.Images;
-import io.fabric8.openshift.api.model.BuildConfig;
-import io.fabric8.openshift.api.model.BuildConfigBuilder;
-import io.fabric8.openshift.api.model.ImageStream;
-import io.fabric8.openshift.api.model.ImageStreamBuilder;
 
 public class SourceToImageGenerator implements Generator<SourceToImageConfig> {
 

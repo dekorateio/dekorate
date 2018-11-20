@@ -17,9 +17,9 @@
 
 package io.ap4k.examples.openshift;
 
+import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.Test;
-import io.fabric8.kubernetes.client.utils.Serialization;
-import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import static org.junit.Assert.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

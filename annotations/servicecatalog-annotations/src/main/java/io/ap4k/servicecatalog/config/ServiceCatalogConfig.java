@@ -9,7 +9,7 @@ import io.sundr.builder.annotations.BuildableReference;
 import java.util.List;
 import java.util.Map;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = @BuildableReference(Configuration.class))
+@Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder", refs = @BuildableReference(Configuration.class))
 public class ServiceCatalogConfig extends Configuration {
 
   private final List<ServiceCatalogInstance> instances;

@@ -17,13 +17,13 @@
 
 package io.ap4k.visitor;
 
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.config.KubernetesConfig;
-import io.fabric8.kubernetes.api.model.ServicePort;
+import io.ap4k.deps.kubernetes.api.model.ServicePort;
 import io.ap4k.config.Port;
-import io.fabric8.kubernetes.api.model.ServicePortBuilder;
-import io.fabric8.kubernetes.api.model.IntOrString;
+import io.ap4k.deps.kubernetes.api.model.ServicePortBuilder;
+import io.ap4k.deps.kubernetes.api.model.IntOrString;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import io.ap4k.utils.Labels;

@@ -20,11 +20,6 @@
             <version>${project.version}</version>
         </dependency>
 
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>openshift-client</artifactId>
-      </dependency>
-
         <dependency>
             <groupId>io.sundr</groupId>
             <artifactId>builder-annotations</artifactId>

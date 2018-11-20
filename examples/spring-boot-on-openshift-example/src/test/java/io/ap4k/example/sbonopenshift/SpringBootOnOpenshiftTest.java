@@ -1,10 +1,10 @@
 package io.ap4k.example.sbonopenshift;
 
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.Service;
-import io.fabric8.kubernetes.client.utils.Serialization;
-import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
+import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.Service;
+import io.ap4k.deps.openshift.api.model.DeploymentConfig;
+import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;

@@ -2,7 +2,7 @@ package io.ap4k.project;
 
 import io.ap4k.config.KubernetesConfigFluent;
 import io.ap4k.utils.Strings;
-import io.fabric8.kubernetes.api.builder.Visitor;
+import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
 public class ApplyProjectInfo implements Visitor<KubernetesConfigFluent> {
 

@@ -20,7 +20,6 @@ package io.ap4k.openshift.processor;
 import io.ap4k.Session;
 import io.ap4k.annotation.KubernetesApplication;
 import io.ap4k.config.ConfigurationSupplier;
-import io.ap4k.openshift.OpenshiftGenerator;
 import io.ap4k.openshift.SourceToImageGenerator;
 import io.ap4k.openshift.adapt.SourceToImageConfigAdapter;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
@@ -29,6 +28,7 @@ import io.ap4k.openshift.confg.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.SourceToImageConfig;
 import io.ap4k.openshift.config.SourceToImageConfigBuilder;
+import io.ap4k.openshift.hook.SourceToImageHook;
 import io.ap4k.openshift.visitor.ApplyOpenshiftConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 
@@ -36,9 +36,8 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.util.Optional;
 import java.util.Set;
-
-import static io.ap4k.openshift.adapt.SourceToImageConfigAdapter.newBuilder;
 
 @SupportedAnnotationTypes("io.ap4k.openshift.annotation.SourceToImage")
 public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor<SourceToImageConfig> {

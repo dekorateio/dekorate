@@ -21,7 +21,6 @@ import io.ap4k.visitor.AddEnvVar;
 import io.ap4k.visitor.AddLabel;
 import io.ap4k.visitor.AddLivenessProbe;
 import io.ap4k.visitor.AddMount;
-import io.ap4k.config.visitors.AddPortToConfig;
 import io.ap4k.visitor.AddPort;
 import io.ap4k.visitor.AddPvcVolume;
 import io.ap4k.visitor.AddReadinessProbe;

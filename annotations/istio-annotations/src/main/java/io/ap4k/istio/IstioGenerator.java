@@ -8,8 +8,8 @@ import io.ap4k.istio.config.IstioConfig;
 import io.ap4k.visitor.ContainerVisitor;
 import io.ap4k.visitor.VolumeMountVisitor;
 import io.ap4k.visitor.VolumeVisitor;
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
+import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.istio.config.EditableIstioConfig;
 
 public class IstioGenerator implements Generator<IstioConfig> {
