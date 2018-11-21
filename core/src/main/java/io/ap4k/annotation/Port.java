@@ -17,6 +17,8 @@
 **/
 package io.ap4k.annotation;
 
+import io.ap4k.config.Protocol;
+
 public @interface Port {
 
     /**
@@ -39,5 +41,5 @@ public @interface Port {
     int hostPort() default 0;
 
 
-    String protocol() default "tcp";
+    Protocol protocol() default Protocol.TCP;
 }

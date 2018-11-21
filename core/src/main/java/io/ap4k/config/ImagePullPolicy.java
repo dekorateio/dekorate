@@ -15,7 +15,7 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.annotation;
+package io.ap4k.config;
 
 public enum  ImagePullPolicy {
     Always,

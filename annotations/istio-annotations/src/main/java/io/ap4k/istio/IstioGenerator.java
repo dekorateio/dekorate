@@ -3,7 +3,7 @@ package io.ap4k.istio;
 import io.ap4k.Generator;
 import io.ap4k.Resources;
 import io.ap4k.config.Configuration;
-import io.ap4k.annotation.ImagePullPolicy;
+import io.ap4k.config.ImagePullPolicy;
 import io.ap4k.istio.config.IstioConfig;
 import io.ap4k.visitor.ContainerVisitor;
 import io.ap4k.visitor.VolumeMountVisitor;

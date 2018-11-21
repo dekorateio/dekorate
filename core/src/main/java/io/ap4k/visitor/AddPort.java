@@ -18,6 +18,7 @@
 package io.ap4k.visitor;
 
 import io.ap4k.config.Port;
+import io.ap4k.config.Protocol;
 import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 
@@ -40,7 +41,7 @@ public class AddPort extends TypedVisitor<ContainerBuilder> {
         .withName(port.getName())
         .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
         .withContainerPort(port.getContainerPort())
-        .withProtocol(port.getProtocol())
+        .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
         .endPort();
     }
 

@@ -23,7 +23,7 @@ import io.ap4k.annotation.AwsElasticBlockStoreVolume;
 import io.ap4k.annotation.AzureDiskVolume;
 import io.ap4k.annotation.AzureFileVolume;
 import io.ap4k.annotation.GitRepoVolume;
-import io.ap4k.annotation.ImagePullPolicy;
+import io.ap4k.config.ImagePullPolicy;
 import io.ap4k.annotation.Label;
 import io.ap4k.annotation.Mount;
 import io.ap4k.annotation.PersistentVolumeClaimVolume;

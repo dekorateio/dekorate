@@ -17,7 +17,7 @@
 
 package io.apk4k.kubernetes;
 
-import io.ap4k.annotation.ImagePullPolicy;
+import io.ap4k.config.ImagePullPolicy;
 import io.ap4k.annotation.ServiceType;
 import io.ap4k.config.Annotation;
 import io.ap4k.config.AwsElasticBlockStoreVolume;

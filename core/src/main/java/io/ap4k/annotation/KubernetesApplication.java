@@ -19,6 +19,7 @@ package io.ap4k.annotation;
 
 
 import io.ap4k.config.Configuration;
+import io.ap4k.config.ImagePullPolicy;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
