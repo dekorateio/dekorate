@@ -60,6 +60,9 @@ public @interface SourceToImage {
      */
     String version() default "";
 
+
+    boolean autoDeployEnabled() default false;
+
     String builderImage() default "fabric8/s2i-java:2.3";
 
 }
