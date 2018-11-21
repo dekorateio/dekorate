@@ -28,6 +28,7 @@
         <module>annotations</module>
         <module>examples</module>
         <module>frameworks</module>
+      <module>testing</module>
     </modules>
 
     <dependencyManagement>
