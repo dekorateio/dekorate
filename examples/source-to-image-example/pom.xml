@@ -37,6 +37,12 @@
 
     <!-- Testing -->
     <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>openshift-junit</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${version.junit-jupiter}</version>
@@ -73,6 +79,24 @@
             <goals>
               <goal>repackage</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.0.0-M1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+            <phase>integration-test</phase>
+            <configuration>
+              <includes>
+                <include>**/*IT.class</include>
+              </includes>
+            </configuration>
           </execution>
         </executions>
       </plugin>
