@@ -22,15 +22,19 @@
         <version>${version.ap4k-deps}</version>
       </dependency>
 
-        <dependency>
-            <groupId>io.sundr</groupId>
-            <artifactId>transform-annotations</artifactId>
-        </dependency>
+      <dependency>
+        <groupId>io.sundr</groupId>
+        <artifactId>transform-annotations</artifactId>
+        <scope>compile</scope>
+        <optional>true</optional>
+      </dependency>
 
-        <dependency>
-            <groupId>io.sundr</groupId>
-            <artifactId>builder-annotations</artifactId>
-        </dependency>
+      <dependency>
+        <groupId>io.sundr</groupId>
+        <artifactId>builder-annotations</artifactId>
+        <scope>compile</scope>
+        <optional>true</optional>
+      </dependency>
 
         <!-- Testing -->
         <dependency>
