@@ -27,7 +27,7 @@ import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.OpenshiftConfigBuilder;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.project.Project;
-import io.ap4k.project.ProjectFactory;
+import io.ap4k.project.AptProjectFactory;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -70,7 +70,7 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
      * @return              A new config.
      */
     public OpenshiftConfigBuilder configurationBuilder(Element mainClass) {
-        Project project = ProjectFactory.create(processingEnv);
+        Project project = AptProjectFactory.create(processingEnv);
         OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
         KubernetesApplication kubernetesApplication = mainClass.getAnnotation(KubernetesApplication.class);
         return OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication, kubernetesApplication);

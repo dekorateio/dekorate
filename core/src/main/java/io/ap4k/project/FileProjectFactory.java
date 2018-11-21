@@ -20,6 +20,7 @@ package io.ap4k.project;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,45 +30,35 @@ import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
-public class ProjectFactory {
+public class FileProjectFactory {
 
     private static Project PROJECT = null;
 
     /**
      * Creates a {@link Project} form the specified {@link ProcessingEnvironment}.
-     * @param environment   The environment.
+     * @param file          A file within the project.
      * @return              The project.
      */
-    public static Project create(ProcessingEnvironment environment) {
+    public static Project create(File file) {
         if (PROJECT != null) {
           return PROJECT;
         }
-        synchronized (ProjectFactory.class) {
+        synchronized (FileProjectFactory.class) {
            if (PROJECT == null) {
-              PROJECT = createInternal(environment);
+              PROJECT = createInternal(file);
            }
         }
         return PROJECT;
     }
 
-    private static Project createInternal(ProcessingEnvironment environment) {
-       FileObject f = null;
-        try {
-            f = environment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", ".marker-" + UUID.randomUUID().toString());
-            Path path = Paths.get(f.toUri());
+    private static Project createInternal(File f) {
+            Path path = f.toPath();
             Optional<BuildInfo> info = getProjectInfo(path);
             while (path != null && !info.isPresent()) {
                 path = path.getParent();
                 info = getProjectInfo(path);
             }
             return new Project(path, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info reader")));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to determine the project root!");
-        } finally {
-            if (f != null) {
-                f.delete();
-            }
-        }
     }
 
     /**
@@ -80,7 +71,7 @@ public class ProjectFactory {
             return Optional.empty();
         }
 
-        return StreamSupport.stream(ServiceLoader.load(BuildInfoReader.class, ProjectFactory.class.getClassLoader()).spliterator(), false)
+        return StreamSupport.stream(ServiceLoader.load(BuildInfoReader.class, FileProjectFactory.class.getClassLoader()).spliterator(), false)
                 .filter(r -> r.isApplicable(path))
                 .sorted(Comparator.comparingInt(BuildInfoReader::order))
                 .findFirst()

@@ -25,7 +25,7 @@ import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.config.KubernetesConfig;
 import io.ap4k.project.ApplyProjectInfo;
 import io.ap4k.project.Project;
-import io.ap4k.project.ProjectFactory;
+import io.ap4k.project.AptProjectFactory;
 import io.ap4k.utils.Serialization;
 import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
@@ -51,7 +51,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
-    this.project = ProjectFactory.create(processingEnv);
+    this.project = AptProjectFactory.create(processingEnv);
   }
 
   /**
