@@ -319,7 +319,7 @@ This module can be added to the project using:
 
     <dependency>
      <groupId>io.ap4k</groupId>
-     <artifactId>component-operator-annotations</artifactId>
+     <artifactId>component-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
     

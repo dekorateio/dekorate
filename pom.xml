@@ -13,7 +13,7 @@
 
     <properties>
         <!-- Dependencies -->
-        <version.ap4k-deps>1.0.2</version.ap4k-deps>
+        <version.ap4k-deps>1.0-SNAPSHOT</version.ap4k-deps>
         <version.servicecatalog-client>1.0.3</version.servicecatalog-client>
         <version.sundrio>0.14.2</version.sundrio>
         <!-- Testing Dependencies -->

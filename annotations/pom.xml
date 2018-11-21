@@ -19,7 +19,7 @@
         <module>openshift-annotations</module>
         <module>istio-annotations</module>
         <module>servicecatalog-annotations</module>
-      <module>component-operator-annotations</module>
+        <module>component-annotations</module>
     </modules>
 
 </project>
