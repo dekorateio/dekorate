@@ -23,7 +23,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenshiftApplication
-@SourceToImage
+@SourceToImage(autoDeployEnabled = true)
 @SpringBootApplication
 public class Main {
 
