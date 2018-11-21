@@ -13,6 +13,7 @@ import io.ap4k.deps.openshift.api.model.ImageStreamTag;
 import io.ap4k.deps.openshift.api.model.SourceBuildStrategyFluent;
 import io.ap4k.deps.openshift.client.DefaultOpenShiftClient;
 import io.ap4k.deps.openshift.client.OpenShiftClient;
+import io.ap4k.deps.openshift.client.dsl.internal.BuildOperationsImpl;
 import io.ap4k.hook.ProjectHook;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Packaging;
@@ -38,7 +39,10 @@ public class JavaBuildHook extends ProjectHook {
   private final OpenShiftClient client = new DefaultOpenShiftClient();
   private final List<HasMetadata> items = new ArrayList<>();
 
-  private Class[] requirements = new Class[] {ResourceCompare.class};
+  private Class[] requirements = new Class[] {
+    BuildOperationsImpl.class,
+    ResourceCompare.class
+  };
 
   public JavaBuildHook(Project project) {
     super(project);
