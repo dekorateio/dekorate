@@ -272,13 +272,15 @@ This module can be added to the project using:
       <version>${project.version}</version>
     </dependency>
     
-### Component Operator annotations
-The component operator is an operator that aims on abstracting kubernetes resources and simplify configuration. (See https://github.com/snowdrop/component-operator)an operator that aims on abstracting kubernetes resources and simplify configuration. (See https://github.com/snowdrop/component-operator).
-This module proivides limited/early support of the component operator.
+### Component annotations
+The component [CRD](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims on abstracting kubernetes/OpenShift resources and simplify the configuration, design of an application.
+See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more info about how the structure, syntax of a Component (runtime, service, link) is defined.
+To play with a Components CRD and its [operator](https://coreos.com/operators/) running on the cloud platform and able to generate the kubernetes resources or manage them, then look to this [project](https://github.com/snowdrop/component-operator-demo).
+This module provides limited/early support of the component operator.
 
 By adding the `@CompositeApplication` annotation to the application, the generation of `target/classes/META-INF/apk/component.yml' is triggered.
 
-The content of the component descriptor will be dermined by the existing configuration provided by annotations like:
+The content of the component descriptor will be determined by the existing configuration provided by annotations like:
 
 - @KubernetesApplication
 - @ServiceCatalog
