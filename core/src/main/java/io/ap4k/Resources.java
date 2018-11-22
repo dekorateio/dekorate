@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Resources {
 
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
-  private final Set<KubernetesListBuilder> global = new LinkedHashSet<>();
+  private final KubernetesListBuilder global = new KubernetesListBuilder();
   private final Set<Visitor> visitors = new HashSet<>();
 
   private final Map<String, KubernetesListBuilder> explicitGroups = new HashMap<>();
@@ -60,7 +60,7 @@ public class Resources {
    * @param metadata
    */
   public void add(HasMetadata metadata) {
-    groups.forEach((g, b)-> b.addToItems(metadata));
+    global.addToItems(metadata);
   }
 
   /**
@@ -112,7 +112,7 @@ public class Resources {
    * @return A map of {@link KubernetesList} by group name.
    */
   public Map<String, KubernetesList> generate() {
-    List<HasMetadata> allGlobals = global.stream().flatMap(g -> g.buildItems().stream()).collect(Collectors.toList());
+    List<HasMetadata> allGlobals = global.buildItems();
 
     Map<String, KubernetesList> resources = new HashMap<>();
     for (Map.Entry<String, KubernetesListBuilder> entry : groups.entrySet())  {
