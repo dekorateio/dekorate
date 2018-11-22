@@ -15,12 +15,18 @@
   <name>AP4K :: Testing :: Openshift</name>
 
   <dependencies>
+
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>ap4k-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>openshift-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>

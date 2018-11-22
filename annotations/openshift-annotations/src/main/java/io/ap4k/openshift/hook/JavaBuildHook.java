@@ -7,6 +7,7 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.ObjectReference;
 import io.ap4k.deps.kubernetes.client.utils.ResourceCompare;
+import io.ap4k.deps.okhttp3.Callback;
 import io.ap4k.deps.openshift.api.model.Build;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
 import io.ap4k.deps.openshift.api.model.ImageStreamTag;
@@ -15,6 +16,7 @@ import io.ap4k.deps.openshift.client.DefaultOpenShiftClient;
 import io.ap4k.deps.openshift.client.OpenShiftClient;
 import io.ap4k.deps.openshift.client.dsl.internal.BuildOperationsImpl;
 import io.ap4k.hook.ProjectHook;
+import io.ap4k.openshift.utils.OpenshiftUtils;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Packaging;
 import io.ap4k.utils.Serialization;
@@ -26,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class JavaBuildHook extends ProjectHook {
 
@@ -41,7 +44,8 @@ public class JavaBuildHook extends ProjectHook {
 
   private Class[] requirements = new Class[] {
     BuildOperationsImpl.class,
-    ResourceCompare.class
+    ResourceCompare.class,
+    Callback.class
   };
 
   public JavaBuildHook(Project project) {
@@ -82,53 +86,19 @@ public class JavaBuildHook extends ProjectHook {
   }
 
 
-  private void waitForImageStreamTags() {
-    final List<String> tags = new ArrayList<>();
-    new KubernetesListBuilder()
-      .withItems(items)
-      .accept(new Visitor<SourceBuildStrategyFluent>() {
-        @Override
-        public void visit(SourceBuildStrategyFluent strategy) {
-          ObjectReference from = strategy.buildFrom();
-          if (from.getKind().equals("ImageStreamTag")) {
-            tags.add(from.getName());
-          }
-        }
-      }).build();
-
-      boolean tagsMissing = true;
-      while (tagsMissing && !Thread.interrupted()) {
-        tagsMissing = false;
-        for (String tag : tags) {
-          ImageStreamTag t = client.imageStreamTags().withName(tag).get();
-          if (t == null) {
-            tagsMissing = true;
-          }
-        }
-
-        if (tagsMissing) {
-          try {
-             Thread.sleep(1000);
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-          }
-        }
-      }
-  }
-
   /**
    * Deploy the generated resources.
    */
   private void deploy() {
     try (FileInputStream fis = new FileInputStream(manifest)) {
         List<HasMetadata> items = client.resourceList(Serialization.unmarshal(fis, KubernetesList.class)).createOrReplace();
-        items.stream().forEach(i -> System.out.println("Applied: "+ i.getMetadata().getName()));
+        items.stream().forEach(i -> System.out.println("Applied: "+ i.getKind()+ " "+ i.getMetadata().getName()+"."));
       } catch (FileNotFoundException e) {
         throw Ap4kException.launderThrowable(e);
       } catch (IOException e) {
         throw Ap4kException.launderThrowable(e);
       }
 
-      waitForImageStreamTags();
+     OpenshiftUtils.waitForImageStreamTags(items, 2, TimeUnit.MINUTES);
   }
 }

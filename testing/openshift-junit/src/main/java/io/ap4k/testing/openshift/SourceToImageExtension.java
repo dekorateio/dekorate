@@ -8,6 +8,7 @@ import io.ap4k.deps.openshift.api.model.Build;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
 import io.ap4k.deps.openshift.client.DefaultOpenShiftClient;
 import io.ap4k.deps.openshift.client.OpenShiftClient;
+import io.ap4k.openshift.utils.OpenshiftUtils;
 import io.ap4k.project.FileProjectFactory;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Packaging;
@@ -67,7 +68,7 @@ public class SourceToImageExtension implements BeforeAllCallback, AfterAllCallba
   public void build() {
     Path path = project.getRoot().resolve(TARGET).resolve(project.getBuildInfo().getOutputFileName());
     File tar = Packaging.packageFile(path.toAbsolutePath().toString());
-
+    OpenshiftUtils.waitForImageStreamTags(created, 2, TimeUnit.MINUTES);
     created.stream()
       .filter(i -> i instanceof BuildConfig)
       .map(i -> (BuildConfig)i)
@@ -80,6 +81,7 @@ public class SourceToImageExtension implements BeforeAllCallback, AfterAllCallba
    * @param binaryFile  The binary file.
    */
   private void binaryBuild(BuildConfig buildConfig, File binaryFile) {
+    System.out.println("Running binary build:"+buildConfig.getMetadata().getName()+ " for:" +binaryFile.getAbsolutePath());
     Build build = client.buildConfigs().withName(buildConfig.getMetadata().getName()).instantiateBinary().fromFile(binaryFile);
     try  (BufferedReader reader = new BufferedReader(client.builds().withName(build.getMetadata().getName()).getLogReader())) {
       for (String line = reader.readLine(); line != null; line = reader.readLine()) {
