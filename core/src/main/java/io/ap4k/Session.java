@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  */
 public class Session {
 
-  private static Session INASTANCE;
+  private static Session INSTANCE;
 
   private final AtomicBoolean closed = new AtomicBoolean();
   private final Set<Generator> generators = new LinkedHashSet<>();
@@ -48,15 +48,15 @@ public class Session {
    * @return  The Session.
    */
   public static Session getSession() {
-    if (INASTANCE != null) {
-      return INASTANCE;
+    if (INSTANCE != null) {
+      return INSTANCE;
     }
     synchronized (Session.class) {
-      if (INASTANCE == null) {
-        INASTANCE = new Session();
+      if (INSTANCE == null) {
+        INSTANCE = new Session();
       }
     }
-    return INASTANCE;
+    return INSTANCE;
   }
 
   public Configurations configurations() {
