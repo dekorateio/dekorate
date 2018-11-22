@@ -37,12 +37,16 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractAnnotationProcessor<C extends Configuration> extends AbstractProcessor {
 
     protected static final String PACKAGE = "";
     protected static final String FILENAME = "META-INF/ap4k/%s.%s";
+    protected static final String CONFIG = "META-INF/ap4k/.config/%s.%s";
+    protected static final String[] STRIP = {"^Editable", "Config$"};
     protected static final String JSON = "json";
     protected static final String YML = "yml";
 
@@ -71,8 +75,10 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
      * @param session The target session.
      */
     protected void write(Session session) {
-        Map<String, KubernetesList> resources = session.close();
+        Map<String, KubernetesList> resources = session.resources().generate();
+        Set<? extends Configuration> configurations = session.configurations().toSet();
         resources.forEach((g, l) -> write(g, l));
+        configurations.forEach(c -> write(c));
     }
 
 
@@ -83,6 +89,26 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     protected void write(Map<String, KubernetesList> resources) {
         resources.forEach((g, l) -> write(g, l));
     }
+
+  /**
+   * Writes a {@link Configuration}.
+   * @param configuration  The target session configurations.
+   */
+  protected void write(Configuration configuration) {
+    try {
+        String name = configuration.getClass().getSimpleName();
+        for (String s : STRIP) {
+          name = name.replaceAll(s, "");
+        }
+        name = name.toLowerCase();
+        FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(CONFIG, name, YML));
+        try (Writer writer = yml.openWriter()) {
+          writer.write(Serialization.asYaml(configuration));
+        }
+    } catch (IOException e) {
+      throw new RuntimeException("Error writing resources");
+    }
+  }
 
     /**
      * Write the resources contained in the {@link KubernetesList} in a directory named after the specififed group.

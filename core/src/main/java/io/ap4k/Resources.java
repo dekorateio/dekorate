@@ -113,6 +113,7 @@ public class Resources {
    */
   public Map<String, KubernetesList> generate() {
     List<HasMetadata> allGlobals = global.buildItems();
+    Map<String, KubernetesListBuilder> groups = new HashMap<>(this.groups);
 
     Map<String, KubernetesList> resources = new HashMap<>();
     for (Map.Entry<String, KubernetesListBuilder> entry : groups.entrySet())  {
