@@ -17,6 +17,7 @@
  **/
 package io.ap4k.project;
 
+import io.ap4k.utils.Strings;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -80,18 +81,17 @@ public class MavenInfo implements BuildInfo {
 
     /**
      * Read the version form the document.
-     * @pairam document     The document.
+     * @param document     The document.
      * @return              The version, if exists, the parent version otherwise.
      */
     public static String getVersion(Document document) {
-        return getElement(document.getDocumentElement(), VERSION)
-            .map(e -> e.getTextContent())
-            .orElse(getParentVersion(document));
+        String version = getElement(document.getDocumentElement(), VERSION).map(e -> e.getTextContent()).orElse(null);
+        return Strings.isNotNullOrEmpty(version) ? version : getParentVersion(document);
     }
 
     /**
      * Read the packaging form the document.
-     * @pairam document     The document.
+     * @param document     The document.
      * @return              The version, if exists, the parent version otherwise.
      */
     public static String getPackaging(Document document) {
