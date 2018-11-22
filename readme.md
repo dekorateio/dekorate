@@ -1,5 +1,7 @@
 # Annotation processors for Kubernetes
 
+[![CircleCI](https://circleci.com/gh/ap4k/ap4k.svg?style=svg)](https://circleci.com/gh/ap4k/ap4k)
+
 Annotation processor for Kubernetes is a collection of Java annotation processors and tools for generating Kubernetes/Openshift resources at compile time.
 
 ## Features
