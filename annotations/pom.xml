@@ -20,6 +20,7 @@
         <module>istio-annotations</module>
         <module>servicecatalog-annotations</module>
         <module>component-annotations</module>
+      <module>docker-annotations</module>
     </modules>
 
 </project>
