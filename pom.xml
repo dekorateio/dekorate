@@ -29,6 +29,7 @@
         <module>examples</module>
         <module>frameworks</module>
       <module>testing</module>
+      <module>starters</module>
     </modules>
 
     <dependencyManagement>
