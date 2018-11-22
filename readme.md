@@ -27,6 +27,11 @@ Annotation processor for Kubernetes is a collection of Java annotation processor
   - Thorntail
   - Micronaut
 
+### Experimental features
+
+- Build hooks
+  - Docker build hook
+  - Source to image build hook
 
 
 ## Rationale
@@ -336,3 +341,9 @@ The frameworks supported so far:
 - Spring Boot
 - Thorntail (or any framework using jaxrs, jaxws annotations)
 - Micronaut
+
+## Experimental features
+
+### Docker build hook
+
+A shutddown hook that triggers a docker build, given that the docker binary is present and is configured to point to a working docker daemon.
