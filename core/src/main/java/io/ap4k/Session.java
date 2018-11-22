@@ -71,9 +71,10 @@ public class Session {
     return generators;
   }
 
-  public void onClose(Consumer<Map<String, KubernetesList>> consumer) {
+  public void onClose(Consumer<Session> consumer) {
     if (closed.compareAndSet(false, true)) {
-      consumer.accept(close());
+      close();
+      consumer.accept(this);
     }
   }
 

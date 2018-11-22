@@ -24,7 +24,7 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
       Session session = Session.getSession();
-      session.onClose(r -> write(r));
+      session.onClose(s -> write(s));
       return true;
     }
     for (TypeElement typeElement : annotations) {
