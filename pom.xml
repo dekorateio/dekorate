@@ -21,6 +21,7 @@
         <version.junit-platform>1.1.0</version.junit-platform>
         <!-- Plugins -->
         <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
+        <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
     </properties>
 
     <modules>

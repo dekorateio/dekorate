@@ -281,7 +281,7 @@ This module can be added to the project using:
     
 ### Component annotations
 The component [CRD](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims on abstracting kubernetes/OpenShift resources and simplify the configuration, design of an application.
-See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more info about how the structure, syntax of a Component (runtime, service, link) is defined.
+See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more buildInfo about how the structure, syntax of a Component (runtime, service, link) is defined.
 To play with a Components CRD and its [operator](https://coreos.com/operators/) running on the cloud platform and able to generate the kubernetes resources or manage them, then look to this [project](https://github.com/snowdrop/component-operator-demo).
 This module provides limited/early support of the component operator.
 
