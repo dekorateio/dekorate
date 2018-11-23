@@ -76,6 +76,9 @@ public class KubernetesResources {
     public static PodTemplateSpec createPodTemplateSpec(KubernetesConfig config) {
         return new PodTemplateSpecBuilder()
                 .withSpec(createPodSpec(config))
+                .withNewMetadata()
+                .withLabels(createLabels(config))
+                .endMetadata()
                 .build();
     }
 
