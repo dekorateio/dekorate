@@ -22,6 +22,9 @@ public class ComponentStatus {
 
   String phase;
 
+  public ComponentStatus() {
+  }
+
   public ComponentStatus(String phase) {
     this.phase = phase;
   }

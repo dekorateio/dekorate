@@ -26,6 +26,9 @@ public class Feature {
 
   private String description;
 
+  public Feature() {
+  }
+
   public Feature(String id, String name, String description) {
     this.id = id;
     this.name = name;

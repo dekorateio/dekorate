@@ -35,6 +35,9 @@ public class Link {
   private String ref;
   private Env[] envs;
 
+  public Link() {
+  }
+
   public Link(Kind kind, String name, String targetComponentName, String ref, Env[] envs) {
     this.kind = kind;
     this.name = name;

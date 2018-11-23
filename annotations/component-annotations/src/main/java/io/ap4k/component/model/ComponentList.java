@@ -70,6 +70,8 @@ public class ComponentList implements KubernetesResource, KubernetesResourceList
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+  public ComponentList() {
+  }
 
   public ComponentList(String apiVersion, List<Component> items, String kind, ListMeta metadata, Map<String, Object> additionalProperties) {
     this.apiVersion = apiVersion;
