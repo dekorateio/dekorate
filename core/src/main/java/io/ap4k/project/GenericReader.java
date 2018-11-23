@@ -19,7 +19,7 @@ package io.ap4k.project;
 
 import java.nio.file.Path;
 
-public class GenericReader implements BuildInfoReader<GenericInfo> {
+public class GenericReader implements BuildInfoReader {
 
     private static final String GIT = ".git";
 
@@ -34,7 +34,7 @@ public class GenericReader implements BuildInfoReader<GenericInfo> {
     }
 
     @Override
-    public GenericInfo getInfo(Path root) {
+    public BuildInfo getInfo(Path root) {
         throw new UnsupportedOperationException();
     }
 }

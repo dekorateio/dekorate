@@ -19,7 +19,7 @@ package io.ap4k.project;
 
 import java.nio.file.Path;
 
-public class BazelInfoReader implements BuildInfoReader<BazelInfo> {
+public class BazelInfoReader implements BuildInfoReader {
 
     private static final String BUILD = "BUILD";
 
@@ -34,7 +34,7 @@ public class BazelInfoReader implements BuildInfoReader<BazelInfo> {
     }
 
     @Override
-    public BazelInfo getInfo(Path root) {
+    public BuildInfo getInfo(Path root) {
         throw new UnsupportedOperationException();
     }
 }

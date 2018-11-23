@@ -17,36 +17,80 @@
 **/
 package io.ap4k.project;
 
-public interface BuildInfo {
+public class BuildInfo {
 
-    String DEFAULT_PACKAGING = "jar";
-    String OUTPUTFILE_FORMAT = "%s-%s.%s";
+    public static String DEFAULT_PACKAGING = "jar";
+    public static String OUTPUTFILE_FORMAT = "%s-%s.%s";
 
-    /**
+    private String name;
+    private String version;
+    private String packaging;
+    private String outputFileName;
+
+  public BuildInfo() {
+    this(null, null);
+  }
+
+  public BuildInfo(String name, String version) {
+    this(name, version, DEFAULT_PACKAGING);
+  }
+
+  public BuildInfo(String name, String version, String packaging) {
+    this(name, version, packaging, String.format(OUTPUTFILE_FORMAT, name, version, packaging));
+  }
+
+  public BuildInfo(String name, String version, String packaging, String outputFileName) {
+    this.name = name;
+    this.version = version;
+    this.packaging = packaging;
+    this.outputFileName = outputFileName;
+  }
+
+  /**
      * Get the project name.
      * @return The project name.
      */
-    String getName();
+    public String getName() {
+      return name;
+    }
 
     /**
      * Get the project version.
      * @return The project version.
      */
-    String getVersion();
+    public String getVersion() {
+      return version;
+    }
 
 
     /**
      * Get the project packaging.
      * @return The project packaging.
      */
-    default String getPackaging() {
-        return DEFAULT_PACKAGING;
+    public String getPackaging() {
+        return packaging;
     }
     /**
      * Get the output file name.
      * @return  The output file name.
      */
-    default String getOutputFileName() {
-        return String.format(OUTPUTFILE_FORMAT, getName(), getVersion(), getPackaging());
+    public String getOutputFileName() {
+        return outputFileName;
     }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public void setPackaging(String packaging) {
+    this.packaging = packaging;
+  }
+
+  public void setOutputFileName(String outputFileName) {
+    this.outputFileName = outputFileName;
+  }
 }

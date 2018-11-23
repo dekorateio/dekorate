@@ -19,7 +19,7 @@ package io.ap4k.project;
 
 import java.nio.file.Path;
 
-public class SbtInfoReader implements BuildInfoReader<SbtBuildInfo> {
+public class SbtInfoReader implements BuildInfoReader {
 
     private static final String BUILD_SBT = "build.sbt";
 
@@ -34,7 +34,7 @@ public class SbtInfoReader implements BuildInfoReader<SbtBuildInfo> {
     }
 
     @Override
-    public SbtBuildInfo getInfo(Path root) {
+    public BuildInfo getInfo(Path root) {
         throw new UnsupportedOperationException();
     }
 }

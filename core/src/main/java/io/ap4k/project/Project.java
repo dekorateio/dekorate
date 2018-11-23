@@ -21,12 +21,15 @@ import java.nio.file.Path;
 
 public class Project {
 
-    private final Path root;
-    private final BuildInfo info;
+    private Path root;
+    private BuildInfo buildInfo;
 
-    public Project(Path root, BuildInfo info) {
+    public Project() {
+    }
+
+    public Project(Path root, BuildInfo buildInfo) {
         this.root = root;
-        this.info = info;
+        this.buildInfo = buildInfo;
     }
 
     public Path getRoot() {
@@ -34,6 +37,6 @@ public class Project {
     }
 
     public BuildInfo getBuildInfo() {
-        return info;
+        return buildInfo;
     }
 }
