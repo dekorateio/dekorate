@@ -24,6 +24,11 @@
   <dependencies>
     <dependency>
       <groupId>io.ap4k</groupId>
+      <artifactId>kubernetes-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.ap4k</groupId>
       <artifactId>component-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
