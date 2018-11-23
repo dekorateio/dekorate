@@ -22,6 +22,9 @@ public class Storage {
   private String capacity;
   private String mode;
 
+  public Storage() {
+  }
+
   public Storage(String name, String capacity, String mode) {
     this.name = name;
     this.capacity = capacity;

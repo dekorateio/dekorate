@@ -20,6 +20,9 @@ public class Env {
   private String name;
   private String value;
 
+  public Env() {
+  }
+
   public Env(String name, String value) {
     this.name = name;
     this.value = value;

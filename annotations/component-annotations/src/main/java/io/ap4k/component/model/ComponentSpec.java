@@ -47,6 +47,9 @@ public class ComponentSpec {
   private Feature[] feature;
   private Link[] link;
 
+  public ComponentSpec() {
+  }
+
   public ComponentSpec(String name, String packagingMode, String type, DeploymentType deploymentMode, String runtime, String version, boolean exposeService, String cpu, Storage storage, Image[] image, Env[] env, Service[] service, Feature[] feature, Link[] link) {
     this.name = name;
     this.packagingMode = packagingMode;

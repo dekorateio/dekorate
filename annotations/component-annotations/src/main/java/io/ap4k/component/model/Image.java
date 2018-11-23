@@ -27,6 +27,9 @@ public class Image {
   private String tag;
   private String dockerImage;
 
+  public Image() {
+  }
+
   public Image(String name, boolean annotationCmds, String repo, String tag, String dockerImage) {
     this.name = name;
     this.annotationCmds = annotationCmds;

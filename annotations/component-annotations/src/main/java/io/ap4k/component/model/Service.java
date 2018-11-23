@@ -35,6 +35,9 @@ public class Service {
   private Parameter[] parameters;
   private String parametersJson;
 
+  public Service() {
+  }
+
   public Service(String name, String serviceClass, String servicePlan, String externalId, String secretName, Parameter[] parameters, String parametersJson) {
     this.name = name;
     this.serviceClass = serviceClass;
