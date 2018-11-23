@@ -18,12 +18,11 @@
 package io.ap4k.example.sbonkubernetes;
 
 import io.ap4k.annotation.KubernetesApplication;
-import io.ap4k.annotation.Mount;
-import io.ap4k.annotation.PersistentVolumeClaimVolume;
-import io.ap4k.annotation.Port;
+import io.ap4k.docker.annotation.DockerBuild;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@DockerBuild
 @KubernetesApplication
 @SpringBootApplication
 public class Main {
