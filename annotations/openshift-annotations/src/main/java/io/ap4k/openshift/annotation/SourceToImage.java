@@ -24,7 +24,7 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
-@Pojo(suffix = "Config", superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapt"))
+@Pojo(suffix = "Config", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapt"))
 public @interface SourceToImage {
 
     /**

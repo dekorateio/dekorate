@@ -32,6 +32,7 @@ import java.lang.annotation.Target;
 
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
 @Pojo(name = "KubernetesConfig", relativePath = "../config",
+        mutable = true,
         superClass = Configuration.class,
         withStaticBuilderMethod = false,
         withStaticAdapterMethod = false,
