@@ -17,6 +17,7 @@
  **/
 package io.ap4k.config;
 
+import io.ap4k.deps.jackson.annotation.JsonIgnore;
 import io.ap4k.project.Project;
 import io.sundr.builder.annotations.Buildable;
 
@@ -28,23 +29,35 @@ import java.util.Set;
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
 public class Configuration {
 
-    private final Project project;
-    private final Map<ConfigKey, Object> attributes;
+    private Project project;
+    private Map<ConfigKey, Object> attributes;
 
-    public Configuration(Project project, Map<ConfigKey, Object> attributes) {
+  public Configuration() {
+    this(null, null);
+  }
+
+  public Configuration(Project project, Map<ConfigKey, Object> attributes) {
         this.project = project;
         this.attributes = attributes != null ? attributes : new HashMap<>();
     }
-
     public Project getProject() {
         return project;
     }
 
+    public void setProject(Project project) {
+     this.project = project;
+   }
+
+    @JsonIgnore
     public Map<ConfigKey, Object> getAttributes() {
         return  Collections.unmodifiableMap(attributes);
     }
 
-    public <T> T getAttribute(ConfigKey<T> key) {
+  public void setAttributes(Map<ConfigKey, Object> attributes) {
+    this.attributes = attributes;
+  }
+
+  public <T> T getAttribute(ConfigKey<T> key) {
         return (T) attributes.get(key);
     }
 
