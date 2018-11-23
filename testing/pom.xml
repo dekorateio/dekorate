@@ -16,6 +16,7 @@
 
   <modules>
     <module>openshift-junit</module>
+    <module>kubernetes-junit</module>
   </modules>
 
 </project>
