@@ -45,7 +45,7 @@ import java.lang.annotation.Target;
 
 
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
-@Pojo(name = "OpenshiftConfig", superClass = KubernetesConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapt"))
+@Pojo(name = "OpenshiftConfig", mutable = true, superClass = KubernetesConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapt"))
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface OpenshiftApplication {
