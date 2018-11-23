@@ -20,7 +20,7 @@ package io.ap4k.project;
 
 import java.nio.file.Path;
 
-public interface BuildInfoReader<I extends BuildInfo> {
+public interface BuildInfoReader {
 
     /**
      * The order the reader will be applied.
@@ -41,6 +41,6 @@ public interface BuildInfoReader<I extends BuildInfo> {
      * @param root  The project root.
      * @return      The {@link BuildInfo} instance.
      */
-    I getInfo(Path root);
+    BuildInfo getInfo(Path root);
 
 }

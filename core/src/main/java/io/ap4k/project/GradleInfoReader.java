@@ -19,7 +19,7 @@ package io.ap4k.project;
 
 import java.nio.file.Path;
 
-public class GradleInfoReader implements BuildInfoReader<GradleBuildInfo> {
+public class GradleInfoReader implements BuildInfoReader {
 
     private static final String BUILD_GRADLE = "build.gradle";
 
@@ -34,7 +34,7 @@ public class GradleInfoReader implements BuildInfoReader<GradleBuildInfo> {
     }
 
     @Override
-    public GradleBuildInfo getInfo(Path root) {
+    public BuildInfo getInfo(Path root) {
         throw new UnsupportedOperationException();
     }
 }

@@ -19,7 +19,7 @@ package io.ap4k.project;
 
 import java.nio.file.Path;
 
-public class LeiningenInfoReader implements BuildInfoReader<LeiningenBuildInfo> {
+public class LeiningenInfoReader implements BuildInfoReader {
 
     private static final String PROJECT_CLJ = "project.clj";
 
@@ -34,7 +34,7 @@ public class LeiningenInfoReader implements BuildInfoReader<LeiningenBuildInfo> 
     }
 
     @Override
-    public LeiningenBuildInfo getInfo(Path root) {
+    public BuildInfo getInfo(Path root) {
         throw new UnsupportedOperationException();
     }
 }
