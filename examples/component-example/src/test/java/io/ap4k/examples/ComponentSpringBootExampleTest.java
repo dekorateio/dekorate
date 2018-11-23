@@ -1,4 +1,4 @@
-package io.ap4k.examples.component;
+package io.ap4k.examples;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.utils.Serialization;
