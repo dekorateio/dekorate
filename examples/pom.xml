@@ -22,6 +22,7 @@
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-openshift-example</module>
     <module>component-example</module>
+    <module>component-service-example</module>
     <module>source-to-image-example</module>
   </modules>
 
