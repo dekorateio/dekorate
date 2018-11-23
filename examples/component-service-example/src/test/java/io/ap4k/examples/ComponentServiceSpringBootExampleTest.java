@@ -17,9 +17,9 @@
 
 package io.ap4k.examples;
 
+import io.ap4k.component.model.Component;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
-import io.ap4k.deps.servicecatalog.api.model.ServiceInstance;
 import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
@@ -36,8 +36,8 @@ public class ComponentServiceSpringBootExampleTest {
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
     assertEquals(1, items.size());
-    ServiceInstance svc = (ServiceInstance)items.get(0);
-    assertNotNull(svc);
-    assertEquals("mysql-instance",svc.getMetadata().getName());
+    Component component = (Component) items.get(0);
+    assertNotNull(component.getSpec().getService());
+    assertEquals("mysql-instance",component.getSpec().getService()[0].getName());
   }
 }
