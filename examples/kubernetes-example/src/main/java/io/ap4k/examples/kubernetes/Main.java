@@ -18,9 +18,6 @@
 package io.ap4k.examples.kubernetes;
 
 import io.ap4k.annotation.KubernetesApplication;
-import io.ap4k.annotation.Mount;
-import io.ap4k.annotation.PersistentVolumeClaimVolume;
-import io.ap4k.annotation.Port;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
