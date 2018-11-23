@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class ComponentSpringBootExampleTest {
 
   @Test
-  public void shouldContainDeploymentConfig() {
+  public void shouldContainComponent() {
     KubernetesList list = Serialization.unmarshal(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/ap4k/component.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
