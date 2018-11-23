@@ -15,7 +15,7 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.spring;
+package io.ap4k.spring.processor;
 
 import io.ap4k.config.Port;
 import io.ap4k.config.PortBuilder;
@@ -29,7 +29,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 @SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping"})
-public class SpringBootProcessor extends AbstractAnnotationProcessor {
+public class SpringBootMappingProcessor extends AbstractAnnotationProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
