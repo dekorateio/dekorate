@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 @Internal
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
 @Pojo(suffix = "Config", relativePath = "../config",
+  mutable = true,
   superClass = Configuration.class,
   withStaticBuilderMethod = false,
   withStaticAdapterMethod = false,
@@ -66,5 +67,5 @@ public @interface DockerBuild {
    * Flag to automatically register a build hook after compilation.
    * @return  True if hook is to be registered, false otherwise.
    */
-  boolean isAutoBuildEnabled() default false;
+  boolean autoBuildEnabled() default false;
 }
