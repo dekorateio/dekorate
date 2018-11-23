@@ -2,7 +2,7 @@ package io.ap4k.examples;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.utils.Serialization;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;

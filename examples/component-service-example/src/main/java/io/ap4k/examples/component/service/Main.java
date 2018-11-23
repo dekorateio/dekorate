@@ -15,7 +15,8 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.examples.component;
+
+package io.ap4k.examples.component.service;
 
 import io.ap4k.annotation.KubernetesApplication;
 import io.ap4k.component.annotation.CompositeApplication;
