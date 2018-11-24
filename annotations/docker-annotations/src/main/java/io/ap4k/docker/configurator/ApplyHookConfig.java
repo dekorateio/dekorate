@@ -1,9 +1,9 @@
-package io.ap4k.docker.visitor;
+package io.ap4k.docker.configurator;
 
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
+import io.ap4k.config.Configurator;
 import io.ap4k.docker.config.DockerBuildConfigFluent;
 
-public class ApplyHookConfig implements Visitor<DockerBuildConfigFluent> {
+public class ApplyHookConfig extends Configurator<DockerBuildConfigFluent> {
 
   private static final String AP4K_BUILD = "ap4k.build";
 

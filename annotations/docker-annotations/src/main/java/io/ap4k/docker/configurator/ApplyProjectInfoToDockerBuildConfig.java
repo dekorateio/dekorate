@@ -1,11 +1,11 @@
-package io.ap4k.docker.visitor;
+package io.ap4k.docker.configurator;
 
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
+import io.ap4k.decorator.Decorator;
 import io.ap4k.docker.config.DockerBuildConfigFluent;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Strings;
 
-public class ApplyProjectInfoToDockerBuildConfig implements Visitor<DockerBuildConfigFluent> {
+public class ApplyProjectInfoToDockerBuildConfig extends Decorator<DockerBuildConfigFluent> {
 
     private static final String APP_GROUP = "app.group";
     private static final String APP_NAME = "app.name";

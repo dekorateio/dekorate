@@ -5,7 +5,7 @@ import io.ap4k.Resources;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
 import io.ap4k.component.model.DeploymentType;
-import io.ap4k.component.visitor.AddEnvToComponent;
+import io.ap4k.component.decorator.AddEnvToComponent;
 import io.ap4k.config.Configuration;
 import io.ap4k.config.Env;
 import io.ap4k.config.KubernetesConfig;
