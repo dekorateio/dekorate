@@ -24,7 +24,7 @@ import io.ap4k.config.Port;
 import java.util.Objects;
 
 /**
- * A visitor that adds a port to all containers.
+ * A decorator that adds a port to all containers.
  */
 public class AddPort extends Configurator<KubernetesConfigFluent> {
 

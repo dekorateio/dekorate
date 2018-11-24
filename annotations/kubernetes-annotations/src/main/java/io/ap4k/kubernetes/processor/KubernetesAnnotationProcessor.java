@@ -19,7 +19,7 @@ package io.ap4k.kubernetes.processor;
 
 import io.ap4k.Session;
 import io.ap4k.config.KubernetesConfig;
-import io.ap4k.kubernetes.KubernetesGenerator;
+import io.ap4k.kubernetes.KubernetesProcessor;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -40,7 +40,7 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<K
         for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
               session.configurators().add(configuration(mainClass));
-              session.generators().add(new KubernetesGenerator(session.resources()));
+              session.generators().add(new KubernetesProcessor(session.resources()));
             }
         }
         return false;
