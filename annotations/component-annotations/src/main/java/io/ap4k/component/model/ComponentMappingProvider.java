@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 The original authors.
+ * Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  * 
 **/
 
+
 package io.ap4k.component.model;
 
 import io.ap4k.deps.kubernetes.api.KubernetesResourceMappingProvider;
@@ -26,7 +27,7 @@ import java.util.HashMap;
 public class ComponentMappingProvider implements KubernetesResourceMappingProvider {
 
   private Map<String, Class<? extends KubernetesResource>> mappings = new HashMap<String, Class<? extends KubernetesResource>>() {{
-        put("v1beta1#Component", Component.class);
+      put("v1beta1#Component", Component.class);
     }};
 
   public Map<String, Class<? extends KubernetesResource>> getMappings() {

@@ -1,3 +1,19 @@
+/**
+ * Copyright 2018 The original authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+**/
 package io.ap4k.utils;
 
 import io.ap4k.deps.jackson.core.JsonProcessingException;
@@ -69,7 +85,7 @@ public class Serialization {
    * @return
    */
   public static <T> T unmarshal(InputStream is, ObjectMapper mapper) {
-    return unmarshal(is, mapper, Collections.<String, String>emptyMap());
+    return unmarshal(is, mapper, Collections.emptyMap());
   }
 
   /**
@@ -106,13 +122,13 @@ public class Serialization {
    * @return
    */
   public static <T> T unmarshal(String str, final Class<T> type)  {
-    try (InputStream is = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));) {
+    try (InputStream is = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8))) {
       return unmarshal(is, new TypeReference<T>() {
-        @Override
-        public Type getType() {
-          return type;
-        }
-      });
+          @Override
+          public Type getType() {
+            return type;
+          }
+        });
     } catch (IOException e) {
       throw Ap4kException.launderThrowable(e);
     }
@@ -127,11 +143,11 @@ public class Serialization {
    */
   public static <T> T unmarshal(InputStream is, final Class<T> type)  {
     return unmarshal(is, new TypeReference<T>() {
-      @Override
-      public Type getType() {
-        return type;
-      }
-    } );
+        @Override
+        public Type getType() {
+          return type;
+        }
+      } );
   }
 
 
@@ -196,7 +212,7 @@ public class Serialization {
 
     while(nLine < lines.length) {
       if((lines[nLine].length() >= DOCUMENT_DELIMITER.length()
-        && !lines[nLine].substring(0, DOCUMENT_DELIMITER.length()).equals(DOCUMENT_DELIMITER)) || (lines[nLine].length() < DOCUMENT_DELIMITER.length())) {
+          && !lines[nLine].substring(0, DOCUMENT_DELIMITER.length()).equals(DOCUMENT_DELIMITER)) || (lines[nLine].length() < DOCUMENT_DELIMITER.length())) {
         builder.append(lines[nLine] + System.lineSeparator());
       } else {
         documents.add(builder.toString());

@@ -2,118 +2,118 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.ap4k</groupId>
-    <artifactId>ap4k-project</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>io.ap4k</groupId>
+  <artifactId>ap4k-project</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
 
-    <name>AP4K</name>
+  <name>AP4K</name>
 
-    <properties>
-        <!-- Dependencies -->
-        <version.ap4k-deps>0.1.1</version.ap4k-deps>
-        <version.servicecatalog-client>1.0.3</version.servicecatalog-client>
-        <version.sundrio>0.14.3</version.sundrio>
-        <!-- Testing Dependencies -->
-        <version.junit-jupiter>5.1.0</version.junit-jupiter>
-        <version.junit-platform>1.1.0</version.junit-platform>
-        <!-- Plugins -->
-        <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
-        <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
-    </properties>
+  <properties>
+    <!-- Dependencies -->
+    <version.ap4k-deps>0.1.1</version.ap4k-deps>
+    <version.servicecatalog-client>1.0.3</version.servicecatalog-client>
+    <version.sundrio>0.14.3</version.sundrio>
+    <!-- Testing Dependencies -->
+    <version.junit-jupiter>5.1.0</version.junit-jupiter>
+    <version.junit-platform>1.1.0</version.junit-platform>
+    <!-- Plugins -->
+    <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
+    <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
+  </properties>
 
-    <modules>
-        <module>core</module>
-        <module>annotations</module>
-        <module>examples</module>
-        <module>frameworks</module>
-      <module>testing</module>
-      <module>starters</module>
-    </modules>
+  <modules>
+    <module>core</module>
+    <module>annotations</module>
+    <module>examples</module>
+    <module>frameworks</module>
+    <module>testing</module>
+    <module>starters</module>
+  </modules>
 
-    <dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.sundr</groupId>
+        <artifactId>builder-annotations</artifactId>
+        <version>${version.sundrio}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sundr</groupId>
+        <artifactId>transform-annotations</artifactId>
+        <version>${version.sundrio}</version>
+      </dependency>
+
+      <!-- Testing -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-launcher</artifactId>
+        <version>${version.junit-platform}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-runner</artifactId>
+        <version>${version.junit-platform}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <useSystemClassLoader>false</useSystemClassLoader>
+        </configuration>
         <dependencies>
-            <dependency>
-                <groupId>io.sundr</groupId>
-                <artifactId>builder-annotations</artifactId>
-                <version>${version.sundrio}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.sundr</groupId>
-                <artifactId>transform-annotations</artifactId>
-                <version>${version.sundrio}</version>
-            </dependency>
-
-            <!-- Testing -->
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${version.junit-jupiter}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${version.junit-jupiter}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-                <version>${version.junit-jupiter}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-launcher</artifactId>
-                <version>${version.junit-platform}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-runner</artifactId>
-                <version>${version.junit-platform}</version>
-                <scope>test</scope>
-            </dependency>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>${version.junit-platform}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${version.junit-jupiter}</version>
+          </dependency>
         </dependencies>
-    </dependencyManagement>
-
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.maven-compiler-plugin}</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.19.1</version>
-            <configuration>
-                <useSystemClassLoader>false</useSystemClassLoader>
-            </configuration>
-            <dependencies>
-              <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-surefire-provider</artifactId>
-                <version>${version.junit-platform}</version>
-              </dependency>
-              <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${version.junit-jupiter}</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-    </build>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

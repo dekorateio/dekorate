@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 The original authors.
+ * Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  * 
 **/
 
+
 package io.ap4k.decorator;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
@@ -29,30 +30,30 @@ import io.ap4k.utils.Labels;
 
 public class AddService extends Decorator<KubernetesListBuilder> {
 
-    private final KubernetesConfig config;
+  private final KubernetesConfig config;
 
-    public AddService (KubernetesConfig config) {
-        this.config = config;
-    }
-        
-    public void visit(KubernetesListBuilder list) {
-        list.addNewServiceItem()
-            .withNewMetadata()
-            .withName(config.getName())
-            .endMetadata()
-            .withNewSpec()
-            .withType(config.getServiceType().name())
-            .withSelector(Labels.createLabels(config))
-            .withPorts(Arrays.asList(config.getPorts()).stream().map(this::toServicePort).collect(Collectors.toList()))
-            .endSpec()
-            .endServiceItem();
-    }
+  public AddService (KubernetesConfig config) {
+    this.config = config;
+  }
 
-    private ServicePort toServicePort(Port port) {
-        return new ServicePortBuilder()
-            .withName(port.getName())
-            .withPort(port.getContainerPort())
-            .withTargetPort(new IntOrString(port.getHostPort() > 0 ? port.getHostPort() : port.getContainerPort()))
-            .build();
-    }
+  public void visit(KubernetesListBuilder list) {
+    list.addNewServiceItem()
+      .withNewMetadata()
+      .withName(config.getName())
+      .endMetadata()
+      .withNewSpec()
+      .withType(config.getServiceType().name())
+      .withSelector(Labels.createLabels(config))
+      .withPorts(Arrays.asList(config.getPorts()).stream().map(this::toServicePort).collect(Collectors.toList()))
+      .endSpec()
+      .endServiceItem();
+  }
+
+  private ServicePort toServicePort(Port port) {
+    return new ServicePortBuilder()
+      .withName(port.getName())
+      .withPort(port.getContainerPort())
+      .withTargetPort(new IntOrString(port.getHostPort() > 0 ? port.getHostPort() : port.getContainerPort()))
+      .build();
+  }
 }

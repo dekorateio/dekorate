@@ -1,3 +1,19 @@
+/**
+ * Copyright 2018 The original authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+**/
 package io.ap4k.component.model;
 
 import io.ap4k.deps.jackson.annotation.JsonIgnore;
@@ -28,98 +44,98 @@ import java.util.Map;
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
     "apiVersion",
-    "kind",
-    "metadata",
-    "items"
-})
-@JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
-public class ComponentList implements KubernetesResource, KubernetesResourceList
-{
+      "kind",
+      "metadata",
+      "items"
+      })
+      @JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
+      @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+      public class ComponentList implements KubernetesResource, KubernetesResourceList
+      {
 
-    /**
-     *
-     * (Required)
-     *
-     */
-    @NotNull
-    @JsonProperty("apiVersion")
-    private String apiVersion = "v1";
-    /**
-     *
-     *
-     */
-    @JsonProperty("items")
-    @Valid
-    private List<Component> items = new ArrayList<Component>();
-    /**
-     *
-     * (Required)
-     *
-     */
-    @NotNull
-    @JsonProperty("kind")
-    private String kind = "ComponentList";
-    /**
-     *
-     *
-     */
-    @JsonProperty("metadata")
-    @Valid
-    private ListMeta metadata;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+        /**
+         *
+         * (Required)
+         *
+         */
+        @NotNull
+        @JsonProperty("apiVersion")
+        private String apiVersion = "v1";
+        /**
+         *
+         *
+         */
+        @JsonProperty("items")
+        @Valid
+        private List<Component> items = new ArrayList<Component>();
+        /**
+         *
+         * (Required)
+         *
+         */
+        @NotNull
+        @JsonProperty("kind")
+        private String kind = "ComponentList";
+        /**
+         *
+         *
+         */
+        @JsonProperty("metadata")
+        @Valid
+        private ListMeta metadata;
+        @JsonIgnore
+        private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-  public ComponentList() {
-  }
+        public ComponentList() {
+        }
 
-  public ComponentList(String apiVersion, List<Component> items, String kind, ListMeta metadata, Map<String, Object> additionalProperties) {
-    this.apiVersion = apiVersion;
-    this.items = items;
-    this.kind = kind;
-    this.metadata = metadata;
-    this.additionalProperties = additionalProperties;
-  }
+        public ComponentList(String apiVersion, List<Component> items, String kind, ListMeta metadata, Map<String, Object> additionalProperties) {
+          this.apiVersion = apiVersion;
+          this.items = items;
+          this.kind = kind;
+          this.metadata = metadata;
+          this.additionalProperties = additionalProperties;
+        }
 
-  public String getApiVersion() {
-    return apiVersion;
-  }
+        public String getApiVersion() {
+          return apiVersion;
+        }
 
-  public void setApiVersion(String apiVersion) {
-    this.apiVersion = apiVersion;
-  }
+        public void setApiVersion(String apiVersion) {
+          this.apiVersion = apiVersion;
+        }
 
-  @Override
-  public List<Component> getItems() {
-    return items;
-  }
+        @Override
+        public List<Component> getItems() {
+          return items;
+        }
 
-  public void setItems(List<Component> items) {
-    this.items = items;
-  }
+        public void setItems(List<Component> items) {
+          this.items = items;
+        }
 
-  public String getKind() {
-    return kind;
-  }
+        public String getKind() {
+          return kind;
+        }
 
-  public void setKind(String kind) {
-    this.kind = kind;
-  }
+        public void setKind(String kind) {
+          this.kind = kind;
+        }
 
-  @Override
-  public ListMeta getMetadata() {
-    return metadata;
-  }
+        @Override
+        public ListMeta getMetadata() {
+          return metadata;
+        }
 
-  public void setMetadata(ListMeta metadata) {
-    this.metadata = metadata;
-  }
+        public void setMetadata(ListMeta metadata) {
+          this.metadata = metadata;
+        }
 
-  public Map<String, Object> getAdditionalProperties() {
-    return additionalProperties;
-  }
+        public Map<String, Object> getAdditionalProperties() {
+          return additionalProperties;
+        }
 
-  public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-    this.additionalProperties = additionalProperties;
-  }
-}
+        public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+          this.additionalProperties = additionalProperties;
+        }
+      }
