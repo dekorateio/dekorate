@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  **/
-package io.ap4k.config.visitors;
+package io.ap4k.configurator;
 
+import io.ap4k.config.Configurator;
 import io.ap4k.config.KubernetesConfigFluent;
 import io.ap4k.config.Port;
-import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
 
 import java.util.Objects;
 
 /**
  * A visitor that adds a port to all containers.
  */
-public class AddPortToConfig extends TypedVisitor<KubernetesConfigFluent> {
+public class AddPort extends Configurator<KubernetesConfigFluent> {
 
   private final Port port;
 
-  public AddPortToConfig(Port port) {
+  public AddPort(Port port) {
     this.port = port;
   }
 
@@ -59,8 +59,8 @@ public class AddPortToConfig extends TypedVisitor<KubernetesConfigFluent> {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    AddPortToConfig addPortToConfig = (AddPortToConfig) o;
-    return Objects.equals(port, addPortToConfig.port);
+    AddPort addPort = (AddPort) o;
+    return Objects.equals(port, addPort.port);
   }
 
   @Override

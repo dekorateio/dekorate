@@ -40,7 +40,7 @@ public class Session {
 
   private final AtomicBoolean closed = new AtomicBoolean();
   private final Set<Generator> generators = new LinkedHashSet<>();
-  private final Configurations configurations = new Configurations();
+  private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
 
   /**
@@ -59,8 +59,8 @@ public class Session {
     return INSTANCE;
   }
 
-  public Configurations configurations() {
-    return configurations;
+  public Configurators configurators() {
+    return configurators;
   }
 
   public Resources resources() {
@@ -84,7 +84,7 @@ public class Session {
    */
   public Map<String, KubernetesList> close() {
     this.closed.set(true);
-    configurations.stream().forEach(c ->
+    configurators.stream().forEach(c ->
       generators.forEach(g ->  {
           if (g.accepts(c.getClass())) {
           g.generate(c);

@@ -1,9 +1,9 @@
-package io.ap4k.openshift.visitor;
+package io.ap4k.openshift.configurator;
 
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
+import io.ap4k.config.Configurator;
 import io.ap4k.openshift.config.SourceToImageConfigFluent;
 
-public class ApplyHookConfig  implements Visitor<SourceToImageConfigFluent> {
+public class ApplyHook extends Configurator<SourceToImageConfigFluent> {
 
   private static final String AP4K_DEPLOY = "ap4k.deploy";
 
