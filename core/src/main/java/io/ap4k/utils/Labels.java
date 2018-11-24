@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 The original authors.
+ * Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- **/
+**/
+
 
 package io.ap4k.utils;
 
@@ -25,27 +26,27 @@ import io.ap4k.config.Label;
 
 
 public class Labels {
-  
-    private static final String APP = "app";
-    private static final String PROVIDER = "provider";
-    private static final String VERSION = "version";
-    private static final String GROUP = "group";
 
-    /**
-     * Creates a {@link Map} with the labels for the {@link KubernetesConfig}.
-     * @param config   The config.
-     * @return          A map containing the lables.
-     */
-    public static Map<String, String> createLabels(KubernetesConfig config) {
-        Map<String,String> result =  new HashMap<String, String >() {{
-                put(GROUP, config.getGroup());
-                put(APP, config.getName());
-                put(VERSION, config.getVersion());
-            }};
+  private static final String APP = "app";
+  private static final String PROVIDER = "provider";
+  private static final String VERSION = "version";
+  private static final String GROUP = "group";
 
-        for (Label label : config.getLabels()) {
-            result.put(label.getKey(), label.getValue());
-        }
-        return result; 
+  /**
+   * Creates a {@link Map} with the labels for the {@link KubernetesConfig}.
+   * @param config   The config.
+   * @return          A map containing the lables.
+   */
+  public static Map<String, String> createLabels(KubernetesConfig config) {
+    Map<String,String> result =  new HashMap<String, String >() {{
+        put(GROUP, config.getGroup());
+        put(APP, config.getName());
+        put(VERSION, config.getVersion());
+      }};
+
+    for (Label label : config.getLabels()) {
+      result.put(label.getKey(), label.getValue());
     }
+    return result; 
+  }
 }

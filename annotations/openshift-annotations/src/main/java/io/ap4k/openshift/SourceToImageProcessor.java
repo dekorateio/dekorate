@@ -1,3 +1,19 @@
+/**
+ * Copyright 2018 The original authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+**/
 package io.ap4k.openshift;
 
 import io.ap4k.Processor;
@@ -24,90 +40,90 @@ public class SourceToImageProcessor implements Processor<SourceToImageConfig> {
 
   @Override
   public void process(SourceToImageConfig config) {
-                    resources.add(OPENSHIFT, createBuilderImageStream(config));
-                    resources.add(OPENSHIFT, createProjectImageStream(config));
-                    resources.add(OPENSHIFT, createBuildConfig(config));
+    resources.add(OPENSHIFT, createBuilderImageStream(config));
+    resources.add(OPENSHIFT, createProjectImageStream(config));
+    resources.add(OPENSHIFT, createBuildConfig(config));
   }
 
   @Override
   public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(SourceToImageConfig.class) || type.equals(EditableSourceToImageConfig.class);
   }
-    /**
-     * Create an {@link ImageStream} for the {@link SourceToImageConfig}.
-     * @param config   The config.
-     * @return         The build config.
-     */
-    public static ImageStream createBuilderImageStream(SourceToImageConfig config) {
-        String repository = Images.getRepository(config.getBuilderImage());
+  /**
+   * Create an {@link ImageStream} for the {@link SourceToImageConfig}.
+   * @param config   The config.
+   * @return         The build config.
+   */
+  public static ImageStream createBuilderImageStream(SourceToImageConfig config) {
+    String repository = Images.getRepository(config.getBuilderImage());
 
-        String name = !repository.contains("/")
-            ? repository
-            : repository.substring(repository.lastIndexOf("/") + 1);
+    String name = !repository.contains("/")
+      ? repository
+      : repository.substring(repository.lastIndexOf("/") + 1);
 
-        return new ImageStreamBuilder()
-            .withNewMetadata()
-            .withName(name)
-            .endMetadata()
-            .withNewSpec()
-            .withDockerImageRepository(repository)
-            .endSpec()
-            .build();
-    }
-
-
-    /**
-     * Create an {@link ImageStream} for the {@link SourceToImageConfig}.
-     * @param config   The config.
-     * @return         The build config.
-     */
-    public static ImageStream createProjectImageStream(SourceToImageConfig config) {
-        return new ImageStreamBuilder()
-            .withNewMetadata()
-            .withName(config.getName())
-            .endMetadata()
-            .build();
-    }
-
-    /**
-     * Create a {@link BuildConfig} for the {@link SourceToImageConfig}.
-     * @param config   The config.
-     * @return          The build config.
-     */
-    public static BuildConfig createBuildConfig(SourceToImageConfig config) {
-        String builderRepository = Images.getRepository(config.getBuilderImage());
-        String builderTag = Images.getTag(config.getBuilderImage());
-
-        String builderName = !builderRepository.contains("/")
-            ? builderRepository
-            : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
+    return new ImageStreamBuilder()
+      .withNewMetadata()
+      .withName(name)
+      .endMetadata()
+      .withNewSpec()
+      .withDockerImageRepository(repository)
+      .endSpec()
+      .build();
+  }
 
 
-        return new BuildConfigBuilder()
-            .withNewMetadata()
-            .withName(config.getName())
-            .endMetadata()
-            .withNewSpec()
-            .withNewOutput()
-            .withNewTo()
-            .withKind(IMAGESTREAMTAG)
-            .withName(config.getName() + ":" + config.getVersion())
-            .endTo()
-            .endOutput()
-            .withNewSource()
-            .withNewBinary()
-            .endBinary()
-            .endSource()
-            .withNewStrategy()
-            .withNewSourceStrategy()
-            .withNewFrom()
-            .withKind(IMAGESTREAMTAG)
-            .withName(builderName + ":" + builderTag)
-            .endFrom()
-            .endSourceStrategy()
-            .endStrategy()
-            .endSpec()
-            .build();
-    }
+  /**
+   * Create an {@link ImageStream} for the {@link SourceToImageConfig}.
+   * @param config   The config.
+   * @return         The build config.
+   */
+  public static ImageStream createProjectImageStream(SourceToImageConfig config) {
+    return new ImageStreamBuilder()
+      .withNewMetadata()
+      .withName(config.getName())
+      .endMetadata()
+      .build();
+  }
+
+  /**
+   * Create a {@link BuildConfig} for the {@link SourceToImageConfig}.
+   * @param config   The config.
+   * @return          The build config.
+   */
+  public static BuildConfig createBuildConfig(SourceToImageConfig config) {
+    String builderRepository = Images.getRepository(config.getBuilderImage());
+    String builderTag = Images.getTag(config.getBuilderImage());
+
+    String builderName = !builderRepository.contains("/")
+      ? builderRepository
+      : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
+
+
+    return new BuildConfigBuilder()
+      .withNewMetadata()
+      .withName(config.getName())
+      .endMetadata()
+      .withNewSpec()
+      .withNewOutput()
+      .withNewTo()
+      .withKind(IMAGESTREAMTAG)
+      .withName(config.getName() + ":" + config.getVersion())
+      .endTo()
+      .endOutput()
+      .withNewSource()
+      .withNewBinary()
+      .endBinary()
+      .endSource()
+      .withNewStrategy()
+      .withNewSourceStrategy()
+      .withNewFrom()
+      .withKind(IMAGESTREAMTAG)
+      .withName(builderName + ":" + builderTag)
+      .endFrom()
+      .endSourceStrategy()
+      .endStrategy()
+      .endSpec()
+      .build();
+  }
 
 }

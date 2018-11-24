@@ -1,12 +1,11 @@
 /**
- * Copyright (C) 2018 Ioannis Canellos 
- *     
+ * Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,28 +14,29 @@
  * limitations under the License.
  * 
 **/
+
 package io.ap4k.project;
 
 import java.nio.file.Path;
 
 public class Project {
 
-    private Path root;
-    private BuildInfo buildInfo;
+  private Path root;
+  private BuildInfo buildInfo;
 
-    public Project() {
-    }
+  public Project() {
+  }
 
-    public Project(Path root, BuildInfo buildInfo) {
-        this.root = root;
-        this.buildInfo = buildInfo;
-    }
+  public Project(Path root, BuildInfo buildInfo) {
+    this.root = root;
+    this.buildInfo = buildInfo;
+  }
 
-    public Path getRoot() {
-        return root;
-    }
+  public Path getRoot() {
+    return root;
+  }
 
-    public BuildInfo getBuildInfo() {
-        return buildInfo;
-    }
+  public BuildInfo getBuildInfo() {
+    return buildInfo;
+  }
 }

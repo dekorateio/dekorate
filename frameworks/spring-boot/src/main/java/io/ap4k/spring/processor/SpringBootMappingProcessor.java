@@ -1,12 +1,11 @@
 /**
- * Copyright (C) 2018 Ioannis Canellos 
- *     
+ * Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +14,7 @@
  * limitations under the License.
  * 
 **/
+
 package io.ap4k.spring.processor;
 
 import io.ap4k.config.Port;
@@ -31,19 +31,19 @@ import java.util.Set;
 @SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping"})
 public class SpringBootMappingProcessor extends AbstractAnnotationProcessor {
 
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        Session session = Session.getSession();
-        if  (roundEnv.processingOver()) {
-            session.onClose(r -> write(r));
-            return true;
-        }
-        Port port = detectSpringBootPort();
-        session.configurators().add(new AddPort(port));
-        return false;
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Session session = Session.getSession();
+    if  (roundEnv.processingOver()) {
+      session.onClose(r -> write(r));
+      return true;
     }
+    Port port = detectSpringBootPort();
+    session.configurators().add(new AddPort(port));
+    return false;
+  }
 
   private Port detectSpringBootPort()  {
-      return new PortBuilder().withContainerPort(8080).withName("http").build();
+    return new PortBuilder().withContainerPort(8080).withName("http").build();
   }
 }

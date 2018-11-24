@@ -1,12 +1,11 @@
 /**
- * Copyright (C) 2018 Ioannis Canellos 
- *     
+ * Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +14,7 @@
  * limitations under the License.
  * 
 **/
+
 package io.ap4k.project;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -26,36 +26,36 @@ import java.util.UUID;
 
 public class AptProjectFactory {
 
-    private static Project PROJECT = null;
+  private static Project PROJECT = null;
 
-    /**
-     * Creates a {@link Project} form the specified {@link ProcessingEnvironment}.
-     * @param environment   The environment.
-     * @return              The project.
-     */
-    public static Project create(ProcessingEnvironment environment) {
-        if (PROJECT != null) {
-          return PROJECT;
-        }
-        synchronized (AptProjectFactory.class) {
-           if (PROJECT == null) {
-              PROJECT = createInternal(environment);
-           }
-        }
-        return PROJECT;
+  /**
+   * Creates a {@link Project} form the specified {@link ProcessingEnvironment}.
+   * @param environment   The environment.
+   * @return              The project.
+   */
+  public static Project create(ProcessingEnvironment environment) {
+    if (PROJECT != null) {
+      return PROJECT;
     }
+    synchronized (AptProjectFactory.class) {
+      if (PROJECT == null) {
+        PROJECT = createInternal(environment);
+      }
+    }
+    return PROJECT;
+  }
 
-    private static Project createInternal(ProcessingEnvironment environment) {
-       FileObject f = null;
-        try {
-            f = environment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", ".marker-" + UUID.randomUUID().toString());
-            return FileProjectFactory.create(Paths.get(f.toUri()).toFile());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to determine the project root!");
-        } finally {
-            if (f != null) {
-                f.delete();
-            }
-        }
+  private static Project createInternal(ProcessingEnvironment environment) {
+    FileObject f = null;
+    try {
+      f = environment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", ".marker-" + UUID.randomUUID().toString());
+      return FileProjectFactory.create(Paths.get(f.toUri()).toFile());
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to determine the project root!");
+    } finally {
+      if (f != null) {
+        f.delete();
+      }
     }
+  }
 }

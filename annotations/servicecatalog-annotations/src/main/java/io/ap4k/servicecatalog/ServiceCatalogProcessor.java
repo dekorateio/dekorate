@@ -1,3 +1,19 @@
+/**
+ * Copyright 2018 The original authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+**/
 package io.ap4k.servicecatalog;
 
 import io.ap4k.Processor;
@@ -28,28 +44,28 @@ public class ServiceCatalogProcessor implements Processor<ServiceCatalogConfig> 
 
   @Override
   public void process(ServiceCatalogConfig config) {
-     for (ServiceCatalogInstance instance : config.getInstances()) {
+    for (ServiceCatalogInstance instance : config.getInstances()) {
       resources.add(new ServiceInstanceBuilder()
-        .withNewMetadata()
-        .withName(instance.getName())
-        .endMetadata()
-        .withNewSpec()
-        .withClusterServiceClassExternalName(instance.getServiceClass())
-        .withClusterServicePlanExternalName(instance.getServicePlan())
-        .withParameters(toMap(instance.getParameters()))
-        .endSpec()
-        .build());
+                    .withNewMetadata()
+                    .withName(instance.getName())
+                    .endMetadata()
+                    .withNewSpec()
+                    .withClusterServiceClassExternalName(instance.getServiceClass())
+                    .withClusterServicePlanExternalName(instance.getServicePlan())
+                    .withParameters(toMap(instance.getParameters()))
+                    .endSpec()
+                    .build());
 
       if (!Strings.isNullOrEmpty(instance.getBindingSecret())) {
         resources.add(new ServiceBindingBuilder()
-          .withNewMetadata()
-          .withName(instance.getName())
-          .endMetadata()
-          .withNewSpec()
-          .withNewInstanceRef(instance.getName())
-          .withSecretName(instance.getBindingSecret())
-          .endSpec()
-          .build());
+                      .withNewMetadata()
+                      .withName(instance.getName())
+                      .endMetadata()
+                      .withNewSpec()
+                      .withNewInstanceRef(instance.getName())
+                      .withSecretName(instance.getBindingSecret())
+                      .endSpec()
+                      .build());
       }
     }
   }

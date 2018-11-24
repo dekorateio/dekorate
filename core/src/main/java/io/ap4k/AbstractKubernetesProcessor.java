@@ -1,3 +1,19 @@
+/**
+ * Copyright 2018 The original authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+**/
 package io.ap4k;
 
 import io.ap4k.config.Annotation;
@@ -34,72 +50,72 @@ import io.ap4k.decorator.AddService;
  */
 public abstract class AbstractKubernetesProcessor<C extends KubernetesConfig> implements Processor<C> {
 
-    protected final Resources resources;
+  protected final Resources resources;
 
-    public AbstractKubernetesProcessor(Resources resources) {
-        this.resources = resources;
+  public AbstractKubernetesProcessor(Resources resources) {
+    this.resources = resources;
+  }
+
+  /**
+   * Generate / populate the resources.
+   * @param config
+   */
+  public abstract void process(C config);
+
+
+  /**
+   * Add all decorator to the resources.
+   * This method will read the configuration and then add all the required decorator to the resources.
+   * The method is intended to be called from the generate method and thus marked as protected.
+   * @param group     The group..
+   * @param config    The config.
+   */
+  protected void addVisitors(String group, C config) {
+    for (Label label : config.getLabels()) {
+      resources.accept(group, new AddLabel(label));
+    }
+    for (Annotation annotation : config.getAnnotations()) {
+      resources.accept(group, new AddAnnotation(annotation));
+    }
+    for (Env env : config.getEnvVars()) {
+      resources.accept(group, new AddEnvVar(env));
+    }
+    for (Port port : config.getPorts()) {
+      resources.accept(group, new AddPort(port));
+    }
+    for (Mount mount: config.getMounts()) {
+      resources.accept(group, new AddMount(mount));
     }
 
-    /**
-     * Generate / populate the resources.
-     * @param config
-     */
-    public abstract void process(C config);
-
-
-    /**
-     * Add all decorator to the resources.
-     * This method will read the configuration and then add all the required decorator to the resources.
-     * The method is intended to be called from the generate method and thus marked as protected.
-     * @param group     The group..
-     * @param config    The config.
-     */
-    protected void addVisitors(String group, C config) {
-        for (Label label : config.getLabels()) {
-            resources.accept(group, new AddLabel(label));
-        }
-        for (Annotation annotation : config.getAnnotations()) {
-            resources.accept(group, new AddAnnotation(annotation));
-        }
-        for (Env env : config.getEnvVars()) {
-            resources.accept(group, new AddEnvVar(env));
-        }
-        for (Port port : config.getPorts()) {
-            resources.accept(group, new AddPort(port));
-        }
-        for (Mount mount: config.getMounts()) {
-            resources.accept(group, new AddMount(mount));
-        }
-
-        for (SecretVolume volume : config.getSecretVolumes()) {
-            resources.accept(group, new AddSecretVolume(volume));
-        }
-
-        for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
-            resources.accept(group, new AddConfigMapVolume(volume));
-        }
-
-        for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
-            resources.accept(group, new AddPvcVolume(volume));
-        }
-
-        for (AzureFileVolume volume : config.getAzureFileVolumes()) {
-            resources.accept(group, new AddAzureFileVolume(volume));
-        }
-
-        for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
-            resources.accept(group, new AddAzureDiskVolume(volume));
-        }
-
-        for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
-            resources.accept(group, new AddAwsElasticBlockStoreVolume(volume));
-        }
-
-        if (config.getPorts().length > 0) {
-          resources.accept(group, new AddService(config));
-        }
-        
-        resources.accept(group, new AddLivenessProbe(config.getLivenessProbe()));
-        resources.accept(group, new AddReadinessProbe(config.getReadinessProbe()));
+    for (SecretVolume volume : config.getSecretVolumes()) {
+      resources.accept(group, new AddSecretVolume(volume));
     }
+
+    for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
+      resources.accept(group, new AddConfigMapVolume(volume));
+    }
+
+    for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
+      resources.accept(group, new AddPvcVolume(volume));
+    }
+
+    for (AzureFileVolume volume : config.getAzureFileVolumes()) {
+      resources.accept(group, new AddAzureFileVolume(volume));
+    }
+
+    for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
+      resources.accept(group, new AddAzureDiskVolume(volume));
+    }
+
+    for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
+      resources.accept(group, new AddAwsElasticBlockStoreVolume(volume));
+    }
+
+    if (config.getPorts().length > 0) {
+      resources.accept(group, new AddService(config));
+    }
+
+    resources.accept(group, new AddLivenessProbe(config.getLivenessProbe()));
+    resources.accept(group, new AddReadinessProbe(config.getReadinessProbe()));
+  }
 }
