@@ -1,4 +1,4 @@
-package io.ap4k.component.visitor;
+package io.ap4k.component.decorator;
 
 import io.ap4k.component.model.ComponentSpecBuilder;
 import io.ap4k.decorator.Decorator;

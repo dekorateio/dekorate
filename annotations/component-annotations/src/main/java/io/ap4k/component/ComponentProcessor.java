@@ -4,7 +4,7 @@ import io.ap4k.Processor;
 import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
-import io.ap4k.component.visitor.AddRuntimeToComponent;
+import io.ap4k.component.decorator.AddRuntimeToComponent;
 import io.ap4k.config.ConfigKey;
 import io.ap4k.config.Configuration;
 import io.ap4k.config.KubernetesConfig;

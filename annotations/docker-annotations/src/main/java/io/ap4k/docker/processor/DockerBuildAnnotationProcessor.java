@@ -6,8 +6,8 @@ import io.ap4k.docker.adapter.DockerBuildConfigAdapter;
 import io.ap4k.docker.annotation.DockerBuild;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
-import io.ap4k.docker.visitor.ApplyHookConfig;
-import io.ap4k.docker.visitor.ApplyProjectInfoToDockerBuildConfig;
+import io.ap4k.docker.configurator.ApplyHookConfig;
+import io.ap4k.docker.configurator.ApplyProjectInfoToDockerBuildConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 
 import javax.annotation.processing.RoundEnvironment;

@@ -3,7 +3,7 @@ package io.ap4k.component;
 
 import io.ap4k.Processor;
 import io.ap4k.Resources;
-import io.ap4k.component.visitor.AddServiceInstanceToComponent;
+import io.ap4k.component.decorator.AddServiceInstanceToComponent;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
 import io.ap4k.config.Configuration;

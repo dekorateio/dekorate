@@ -1,10 +1,10 @@
 package io.ap4k.project;
 
+import io.ap4k.config.Configurator;
 import io.ap4k.config.KubernetesConfigFluent;
 import io.ap4k.utils.Strings;
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
-public class ApplyProjectInfo implements Visitor<KubernetesConfigFluent> {
+public class ApplyProjectInfo extends Configurator<KubernetesConfigFluent> {
 
     private static final String APP_GROUP = "app.group";
     private static final String APP_NAME = "app.name";
