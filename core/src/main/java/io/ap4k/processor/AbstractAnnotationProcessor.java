@@ -22,7 +22,6 @@ import io.ap4k.adapter.KubernetesConfigAdapter;
 import io.ap4k.annotation.KubernetesApplication;
 import io.ap4k.config.Configuration;
 import io.ap4k.config.ConfigurationSupplier;
-import io.ap4k.config.KubernetesConfig;
 import io.ap4k.project.ApplyProjectInfo;
 import io.ap4k.project.Project;
 import io.ap4k.project.AptProjectFactory;
@@ -37,7 +36,6 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,7 +74,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
      */
     protected void write(Session session) {
         Map<String, KubernetesList> resources = session.resources().generate();
-        Set<? extends Configuration> configurations = session.configurations().toSet();
+        Set<? extends Configuration> configurations = session.configurators().toSet();
         resources.forEach((g, l) -> write(g, l));
         configurations.forEach(c -> write(c));
     }

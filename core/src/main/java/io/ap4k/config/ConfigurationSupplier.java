@@ -23,7 +23,7 @@ import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
 import java.util.function.Supplier;
 
-public class ConfigurationSupplier<C extends Configuration> implements Supplier<C>, Visitable<ConfigurationSupplier<C>> {
+public class ConfigurationSupplier<C extends Configuration> implements Supplier<C> {
 
   private final VisitableBuilder<C, ?> builder;
 
@@ -35,14 +35,13 @@ public class ConfigurationSupplier<C extends Configuration> implements Supplier<
     return builder.build();
   }
 
-  public ConfigurationSupplier<C> acceptAll(Iterable<Visitor> visitor) {
-    visitor.forEach(v -> builder.accept(v));
+  public ConfigurationSupplier<C> acceptAll(Iterable<Configurator> configurators) {
+    configurators.forEach(v -> builder.accept(v));
     return this;
   }
 
-  @Override
-  public ConfigurationSupplier<C> accept(Visitor visitor) {
-    builder.accept(visitor);
+  public ConfigurationSupplier<C> accept(Configurator configurator) {
+    builder.accept(configurator);
     return this;
   }
 }

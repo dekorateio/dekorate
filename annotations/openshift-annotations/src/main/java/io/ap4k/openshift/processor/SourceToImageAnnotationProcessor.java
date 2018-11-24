@@ -30,8 +30,8 @@ import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.SourceToImageConfig;
 import io.ap4k.openshift.config.SourceToImageConfigBuilder;
 import io.ap4k.openshift.hook.JavaBuildHook;
-import io.ap4k.openshift.visitor.ApplyHookConfig;
-import io.ap4k.openshift.visitor.ApplyOpenshiftConfig;
+import io.ap4k.openshift.configurator.ApplyHook;
+import io.ap4k.openshift.configurator.ApplyOpenshiftConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -48,7 +48,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
         Session session = Session.getSession();
         if  (roundEnv.processingOver()) {
             session.onClose(r -> write(r));
-            Optional<SourceToImageConfig> config = session.configurations().get(SourceToImageConfig.class);
+            Optional<SourceToImageConfig> config = session.configurators().get(SourceToImageConfig.class);
             if (config.orElse(Constants.DEFAULT_SOURCE_TO_IMAGE_CONFIG).isAutoDeployEnabled()) {
                JavaBuildHook hook = new JavaBuildHook(project);
                hook.register();
@@ -57,7 +57,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
         }
         for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-              session.configurations().add(configuration(mainClass));
+              session.configurators().add(configuration(mainClass));
               session.generators().add(new SourceToImageGenerator(session.resources()));
             }
         }
@@ -80,7 +80,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
       KubernetesApplication kubernetesApplication = mainClass.getAnnotation(KubernetesApplication.class);
       OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication, kubernetesApplication).build();
         return SourceToImageConfigAdapter.newBuilder(sourceToImage)
-          .accept(new ApplyHookConfig())
+          .accept(new ApplyHook())
           .accept(new ApplyOpenshiftConfig(openshiftConfig));
     }
 }

@@ -39,7 +39,7 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<K
         }
         for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-              session.configurations().add(configuration(mainClass));
+              session.configurators().add(configuration(mainClass));
               session.generators().add(new KubernetesGenerator(session.resources()));
             }
         }

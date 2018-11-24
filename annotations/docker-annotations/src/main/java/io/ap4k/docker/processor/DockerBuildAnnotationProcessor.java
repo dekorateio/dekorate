@@ -26,7 +26,7 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor 
         Session session = Session.getSession();
         if  (roundEnv.processingOver()) {
             session.onClose(r -> write(r));
-            Optional<DockerBuildConfig> config = session.configurations().get(DockerBuildConfig.class);
+            Optional<DockerBuildConfig> config = session.configurators().get(DockerBuildConfig.class);
             if (config.isPresent() && config.get().isAutoBuildEnabled()) {
                DockerBuildHook hook = new DockerBuildHook(project, config.get());
                hook.register();
@@ -35,7 +35,7 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor 
         }
         for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-              session.configurations().add(configuration(mainClass));
+              session.configurators().add(configuration(mainClass));
             }
         }
         return false;

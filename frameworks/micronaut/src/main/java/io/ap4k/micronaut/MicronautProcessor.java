@@ -20,7 +20,7 @@ package io.ap4k.micronaut;
 import io.ap4k.Session;
 import io.ap4k.config.Port;
 import io.ap4k.config.PortBuilder;
-import io.ap4k.config.visitors.AddPortToConfig;
+import io.ap4k.configurator.AddPort;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -39,7 +39,7 @@ public class MicronautProcessor extends AbstractAnnotationProcessor {
             return true;
         }
         Port port = detectMicornautPort();
-        session.configurations().accept(new AddPortToConfig(port));
+        session.configurators().add(new AddPort(port));
         return false;
     }
 
