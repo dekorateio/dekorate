@@ -1,5 +1,6 @@
 package io.ap4k;
 
+import io.ap4k.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.builder.Visitor;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
@@ -9,50 +10,48 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Resources {
 
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
   private final KubernetesListBuilder global = new KubernetesListBuilder();
-  private final Set<Visitor> visitors = new HashSet<>();
+  private final Set<Decorator> decorators = new HashSet<>();
 
   private final Map<String, KubernetesListBuilder> explicitGroups = new HashMap<>();
 
   /**
    * Add a {@link Visitor}.
-   * @param visitor   The visitor.
+   * @param decorator   The decorator.
    */
-  public void accept(Visitor visitor) {
-    visitors.add(visitor);
+  public void accept(Decorator decorator) {
+    decorators.add(decorator);
   }
 
   /**
    * Add a {@link Visitor} to the specified resource group.
    * @param group     The group.
-   * @param visitor   The visitor.
+   * @param decorator   The decorator.
    */
-  public void accept(String group, Visitor visitor) {
+  public void accept(String group, Decorator decorator) {
     if (explicitGroups.containsKey(group)) {
-      explicitGroups.get(group).accept(visitor);
+      explicitGroups.get(group).accept(decorator);
 
     } else if (groups.containsKey(group)) {
-      groups.get(group).accept(visitor);
+      groups.get(group).accept(decorator);
     } else {
-      groups.put(group, new KubernetesListBuilder().accept(visitor));
+      groups.put(group, new KubernetesListBuilder().accept(decorator));
     }
   }
 
   /**
    * Add a {@link Visitor}.
-   * @param visitor   The visitor.
+   * @param decorator   The decorator.
    */
-  public void accept(Doneable<? extends Visitor> visitor) {
-    visitors.add(visitor.done());
+  public void accept(Doneable<? extends Decorator> decorator) {
+    decorators.add(decorator.done());
   }
 
   /**
@@ -77,7 +76,7 @@ public class Resources {
 
   /**
    * Add a resource to the specified explicit group.
-   * Explicit groups only accept visitors explicitly assigned to them.
+   * Explicit groups only accept decorators explicitly assigned to them.
    * @param group     The group.
    * @param metadata  The resource.
    */
@@ -120,7 +119,7 @@ public class Resources {
       entry.getValue().addAllToItems(allGlobals);
     }
 
-    visitors.forEach(v -> groups.forEach((g, b) -> b.accept(v)));
+    decorators.forEach(v -> groups.forEach((g, b) -> b.accept(v)));
     groups.forEach((g, b) -> resources.put(g, b.build()));
     explicitGroups.forEach((g, b) -> resources.put(g, b.build()));
     return resources;

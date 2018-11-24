@@ -1,4 +1,4 @@
-package io.ap4k.visitor;
+package io.ap4k.decorator;
 
 
 #set ($targetfn = ${model.implementsList[0].arguments[0].fullyQualifiedName})
@@ -12,27 +12,27 @@ package io.ap4k.visitor;
 // ${model.getImplementsList}
 // $model.getImplementsList.get(0)
 import io.ap4k.deps.kubernetes.api.builder.Function;
-import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 
 import $parent;
+import io.ap4k.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.model.$target;
 import io.ap4k.deps.kubernetes.api.model.${target}Builder;
 import io.ap4k.deps.kubernetes.api.model.${target}FluentImpl;
 
-public class ${target}FluentVisitor extends ${target}FluentImpl<${target}FluentVisitor> implements Doneable<TypedVisitor<$parent>> {
+public class ${target}FluentVisitor extends ${target}FluentImpl<${target}FluentVisitor> implements Doneable<Decorator<$parent>> {
 
     private final ${target}Builder builder;
-    private final io.ap4k.deps.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function;
+    private final io.ap4k.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function;
 
-    public ${target}FluentVisitor(io.ap4k.deps.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function){
+    public ${target}FluentVisitor(io.ap4k.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function){
     super();this.builder=new ${target}Builder(this);this.function=function;
     }
-    public ${target}FluentVisitor($target item,io.ap4k.deps.kubernetes.api.builder.Function<$target,TypedVisitor<$parent>> function){
+    public ${target}FluentVisitor($target item,io.ap4k.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function){
     super(item);this.builder=new ${target}Builder(this, item);this.function=function;
     }
 
-    public TypedVisitor<$parent> done(){
+    public Decorator<$parent> done(){
     return function.apply(builder.build());
     }
  }

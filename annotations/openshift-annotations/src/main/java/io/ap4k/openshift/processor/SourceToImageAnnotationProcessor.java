@@ -21,7 +21,7 @@ import io.ap4k.Session;
 import io.ap4k.annotation.KubernetesApplication;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.openshift.Constants;
-import io.ap4k.openshift.SourceToImageGenerator;
+import io.ap4k.openshift.SourceToImageProcessor;
 import io.ap4k.openshift.adapt.SourceToImageConfigAdapter;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 import io.ap4k.openshift.annotation.SourceToImage;
@@ -58,7 +58,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
         for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
               session.configurators().add(configuration(mainClass));
-              session.generators().add(new SourceToImageGenerator(session.resources()));
+              session.generators().add(new SourceToImageProcessor(session.resources()));
             }
         }
         return false;

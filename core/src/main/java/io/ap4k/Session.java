@@ -39,7 +39,7 @@ public class Session {
   private static Session INSTANCE;
 
   private final AtomicBoolean closed = new AtomicBoolean();
-  private final Set<Generator> generators = new LinkedHashSet<>();
+  private final Set<Processor> processors = new LinkedHashSet<>();
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
 
@@ -67,8 +67,8 @@ public class Session {
     return resources;
   }
 
-  public Set<Generator> generators() {
-    return generators;
+  public Set<Processor> generators() {
+    return processors;
   }
 
   public void onClose(Consumer<Session> consumer) {
@@ -85,9 +85,9 @@ public class Session {
   public Map<String, KubernetesList> close() {
     this.closed.set(true);
     configurators.stream().forEach(c ->
-      generators.forEach(g ->  {
+      processors.forEach(g ->  {
           if (g.accepts(c.getClass())) {
-          g.generate(c);
+          g.process(c);
         }
       }));
     return resources.generate();

@@ -4,7 +4,7 @@ package io.ap4k.servicecatalog.processor;
 import io.ap4k.Session;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.servicecatalog.ServiceCatalogGenerator;
+import io.ap4k.servicecatalog.ServiceCatalogProcessor;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfigAdapter;
@@ -30,7 +30,7 @@ public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcess
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         session.configurators().add(configuration(mainClass));
-        session.generators().add(new ServiceCatalogGenerator(session.resources()));
+        session.generators().add(new ServiceCatalogProcessor(session.resources()));
       }
     }
     return false;

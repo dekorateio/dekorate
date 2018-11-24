@@ -1,12 +1,12 @@
 package io.ap4k.component.visitor;
 
 import io.ap4k.component.model.ComponentSpecBuilder;
+import io.ap4k.decorator.Decorator;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
-import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
 
 import java.util.Arrays;
 
-public class AddServiceInstanceToComponent extends TypedVisitor<ComponentSpecBuilder> {
+public class AddServiceInstanceToComponent extends Decorator<ComponentSpecBuilder> {
 
   private final ServiceCatalogInstance instance;
 
