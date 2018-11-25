@@ -46,10 +46,16 @@ Annotation processing has quite a few advantages over external tools or build to
 - Can "react" to annotations provided by the framework.
 - Annotation processing is performed in rounds which makes it technically easier to write extensions and customizations.
 
-#### What this project will not do
-This project will not trigger container builds of any kind (e.g. docker, openshift builds), nor will it communicate with any daemon or api server.
-Integration with external tools that perform such task might be added in the future.
+#### What about building and deploying?
+Performing container builds like docker, or openshift source to image builds, is outside of the scope of this project.
+It is however desirable, to provide integration with tools that are right for this job. 
 
+So, at the moment as an experimental support the following hooks are provided:
+
+- docker build hook (requires docker binary, triggered with `-Dap4k.build=true`)
+- openshift s2i build hook (requires oc binary, triggered with `-Dap4k.deploy=true`)
+
+In the future its plan to include integration with the fabric8 maven plugin.
 
 ## Usage
 
