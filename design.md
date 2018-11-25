@@ -12,12 +12,14 @@ An object / pojo that encapsulates the information provided by an annotation and
 
 A `configurator` is a visitor that visits parts of the `configuration` with the purpose of performing minor changes / updates.
 
+
 | Configurator           | Target              | Description                                                                   |
-|------------------------+---------------------+-------------------------------------------------------------------------------|
+|------------------------|---------------------|-------------------------------------------------------------------------------|
 | ApplyOpenshiftConfig   | SourceToImageConfig | Applies group, name and version from OpenshiftConfig to SourceToImage config. |
 | AddPort                | KubernetesConfig    | adds a port to all containers.                                                |
 | ApplyDockerBuildHook   | DockerBuildConfig   | Apply the docker build hook configuration.                                    |
 | ApplySourceToImageHook | SourceToImageConfig | Apply source to image build hook.                                             |
+
 
 ### Handler 
 
@@ -28,8 +30,8 @@ An object that can handle certain types of `config`. A `processor` may create re
 A `decorator` is a visitor that visits parts of the kubernetes/openshift manifest in order to pefrorm minor changes / updates.
 It's different than a `configurator` in the sense that it operator on the actual model instead of the `config`.
 
-| Decorator                     | Target         | Descriptron                                            |
-|-------------------------------+----------------+--------------------------------------------------------|
+| Decorator                     | Target         | Description                                            |
+|-------------------------------|----------------|--------------------------------------------------------|
 | AddSecretVolume               | PodSpec        | Add a secret volume to all pod specs.                  |
 | AddService                    | KubernetesList | Add a service to the list.                             |
 | AddLivenessProbe              | Container      | Add a liveness probe to all containers.                |
@@ -52,7 +54,7 @@ It's different than a `configurator` in the sense that it operator on the actual
 Refers to Java annotation processors. Each processor is responsible for creating a `config` object and also for registering one or more `processors` that handle the `config`.
 An processor may register more than one `config` processors with no restriction on the kind of `config` they handle. 
 
-| Processor                         | Config               | Supported Annotations                                                                                        | Descriptron                                                       |
+| Processor                         | Config               | Supported Annotations                                                                                        | Description                                                       |
 |-----------------------------------|----------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
 | SourceToImageAnnotationProcessor  | SourceToImageConfig  | [io.ap4k.openshift.annotation.SourceToImage]                                                                 | Adds source to image configuration in the openshift manifests.    |
 | CompositeAnnotationProcessor      | CompositeConfig      | [io.ap4k.component.annotation.CompositeApplication]                                                          | Generate component custom resources.                              |
