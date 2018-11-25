@@ -16,30 +16,30 @@
 **/
 package io.ap4k.kubernetes;
 
-import io.ap4k.AbstractKubernetesProcessor;
+import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;
 import io.ap4k.config.KubernetesConfig;
 import io.ap4k.config.EditableKubernetesConfig;
 import io.ap4k.config.Configuration;
 
-public class KubernetesProcessor extends AbstractKubernetesProcessor<KubernetesConfig> {
+public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> {
 
   private static final String KUBERNETES = "kubernetes";
 
-  public KubernetesProcessor() {
+  public KubernetesHandler() {
     this(new Resources());
   }
 
-  public KubernetesProcessor(Resources resources) {
+  public KubernetesHandler(Resources resources) {
     super(resources);
   }
 
-  public void process(KubernetesConfig config) {
+  public void handle(KubernetesConfig config) {
     resources.add(KUBERNETES, KubernetesResources.createDeployment(config));
     addVisitors(KUBERNETES, config);
   }
 
-  public boolean accepts(Class<? extends Configuration> type) {
+  public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(KubernetesConfig.class) ||
       type.equals(EditableKubernetesConfig.class);
   }

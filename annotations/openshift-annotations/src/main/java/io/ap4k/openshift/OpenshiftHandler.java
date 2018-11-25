@@ -17,29 +17,29 @@
 
 package io.ap4k.openshift;
 
-import io.ap4k.AbstractKubernetesProcessor;
+import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;
 import io.ap4k.config.Configuration;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
 
-public class OpenshiftProcessor extends AbstractKubernetesProcessor<OpenshiftConfig> {
+public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> {
 
   private static final String OPENSHIFT = "openshift";
 
-  public OpenshiftProcessor() {
+  public OpenshiftHandler() {
     super(new Resources());
   }
-  public OpenshiftProcessor(Resources resources) {
+  public OpenshiftHandler(Resources resources) {
     super(resources);
   }
 
-  public void process(OpenshiftConfig config) {
+  public void handle(OpenshiftConfig config) {
     resources.add(OPENSHIFT, OpenshiftResources.createDeploymentConfig(config));
     addVisitors(OPENSHIFT, config);
   }
 
-  public boolean accepts(Class<? extends Configuration> type) {
+  public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(OpenshiftConfig.class) ||
       type.equals(EditableOpenshiftConfig.class);
   }

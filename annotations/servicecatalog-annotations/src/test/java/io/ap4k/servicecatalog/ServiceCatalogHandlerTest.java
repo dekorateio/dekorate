@@ -24,23 +24,23 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ServiceCatalogProcessorTest {
+class ServiceCatalogHandlerTest {
 
   @Test
   public void shouldAccpetServiceCatalogConfig() {
-    ServiceCatalogProcessor generator = new ServiceCatalogProcessor();
-    assertTrue(generator.accepts(ServiceCatalogConfig.class));
+    ServiceCatalogHandler generator = new ServiceCatalogHandler();
+    assertTrue(generator.canHandle(ServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldAccpetEditableServiceCatalogConfig() {
-    ServiceCatalogProcessor generator = new ServiceCatalogProcessor();
-    assertTrue(generator.accepts(EditableServiceCatalogConfig.class));
+    ServiceCatalogHandler generator = new ServiceCatalogHandler();
+    assertTrue(generator.canHandle(EditableServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfig() {
-    ServiceCatalogProcessor generator = new ServiceCatalogProcessor();
-    assertFalse(generator.accepts(KubernetesConfig.class));
+    ServiceCatalogHandler generator = new ServiceCatalogHandler();
+    assertFalse(generator.canHandle(KubernetesConfig.class));
   }
 }

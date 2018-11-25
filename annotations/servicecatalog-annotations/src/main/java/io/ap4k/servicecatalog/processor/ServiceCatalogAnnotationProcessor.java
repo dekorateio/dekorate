@@ -20,7 +20,7 @@ package io.ap4k.servicecatalog.processor;
 import io.ap4k.Session;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.servicecatalog.ServiceCatalogProcessor;
+import io.ap4k.servicecatalog.ServiceCatalogHandler;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfigAdapter;
@@ -46,7 +46,7 @@ import java.util.Set;
           for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
               session.configurators().add(configuration(mainClass));
-              session.generators().add(new ServiceCatalogProcessor(session.resources()));
+              session.generators().add(new ServiceCatalogHandler(session.resources()));
             }
           }
           return false;

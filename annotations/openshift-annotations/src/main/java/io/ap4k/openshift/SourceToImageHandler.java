@@ -16,7 +16,7 @@
 **/
 package io.ap4k.openshift;
 
-import io.ap4k.Processor;
+import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.config.Configuration;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
@@ -27,26 +27,26 @@ import io.ap4k.openshift.config.EditableSourceToImageConfig;
 import io.ap4k.openshift.config.SourceToImageConfig;
 import io.ap4k.utils.Images;
 
-public class SourceToImageProcessor implements Processor<SourceToImageConfig> {
+public class SourceToImageHandler implements Handler<SourceToImageConfig> {
 
   private static final String OPENSHIFT = "openshift";
   private static final String IMAGESTREAMTAG = "ImageStreamTag";
 
   private final Resources resources;
 
-  public SourceToImageProcessor(Resources resources) {
+  public SourceToImageHandler(Resources resources) {
     this.resources = resources;
   }
 
   @Override
-  public void process(SourceToImageConfig config) {
+  public void handle(SourceToImageConfig config) {
     resources.add(OPENSHIFT, createBuilderImageStream(config));
     resources.add(OPENSHIFT, createProjectImageStream(config));
     resources.add(OPENSHIFT, createBuildConfig(config));
   }
 
   @Override
-  public boolean accepts(Class<? extends Configuration> type) {
+  public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(SourceToImageConfig.class) || type.equals(EditableSourceToImageConfig.class);
   }
   /**

@@ -22,17 +22,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ComponentKubernetesProcessorTest {
+class ComponentKubernetesHandlerTest {
 
   @Test
   public void shouldAccpetKubernetesConfig()  {
-    ComponentKubernetesProcessor generator = new ComponentKubernetesProcessor();
-    assertTrue(generator.accepts(KubernetesConfig.class));
+    ComponentKubernetesHandler generator = new ComponentKubernetesHandler();
+    assertTrue(generator.canHandle(KubernetesConfig.class));
   }
 
   @Test
   public void shouldAccpetEditableKubernetesConfig()  {
-    ComponentKubernetesProcessor generator = new ComponentKubernetesProcessor();
-    assertTrue(generator.accepts(EditableKubernetesConfig.class));
+    ComponentKubernetesHandler generator = new ComponentKubernetesHandler();
+    assertTrue(generator.canHandle(EditableKubernetesConfig.class));
   }
 }

@@ -16,33 +16,33 @@
 **/
 
 
-package io.ap4k.istio;
+package io.ap4k.openshift;
 
+import io.ap4k.openshift.config.OpenshiftConfig;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import io.ap4k.openshift.config.EditableOpenshiftConfig;
 import io.ap4k.config.KubernetesConfig;
-import io.ap4k.istio.config.EditableIstioConfig;
-import io.ap4k.istio.config.IstioConfig;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class IstioProcessorTest {
+class OpenshiftHandlerTest {
 
   @Test
-  public void shouldAccpetIstioConfig() {
-    IstioProcessor generator = new IstioProcessor();
-    assertTrue(generator.accepts(IstioConfig.class));
+  public void shouldAccpetOpenshiftConfig() {
+    OpenshiftHandler generator = new OpenshiftHandler();
+    assertTrue(generator.canHandle(OpenshiftConfig.class));
   }
 
   @Test
-  public void shouldAccpetEditableIstioConfig() {
-    IstioProcessor generator = new IstioProcessor();
-    assertTrue(generator.accepts(EditableIstioConfig.class));
+  public void shouldAccpetEditableOpenshiftConfig() {
+    OpenshiftHandler generator = new OpenshiftHandler();
+    assertTrue(generator.canHandle(EditableOpenshiftConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfig() {
-    IstioProcessor generator = new IstioProcessor();
-    assertFalse(generator.accepts(KubernetesConfig.class));
+    OpenshiftHandler generator = new OpenshiftHandler();
+    assertFalse(generator.canHandle(KubernetesConfig.class));
   }
 }

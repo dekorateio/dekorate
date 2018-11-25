@@ -18,9 +18,9 @@
 package io.ap4k.component.processor;
 
 import io.ap4k.Session;
-import io.ap4k.component.ComponentServiceCatalogProcessor;
-import io.ap4k.component.ComponentProcessor;
-import io.ap4k.component.ComponentKubernetesProcessor;
+import io.ap4k.component.ComponentHandler;
+import io.ap4k.component.ComponentServiceCatalogHandler;
+import io.ap4k.component.ComponentKubernetesHandler;
 import io.ap4k.component.adapt.CompositeConfigAdapter;
 import io.ap4k.component.annotation.CompositeApplication;
 import io.ap4k.component.config.CompositeConfig;
@@ -48,9 +48,9 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         session.configurators().add(configuration(mainClass));
-        session.generators().add(new ComponentKubernetesProcessor(session.resources()));
-        session.generators().add(new ComponentProcessor(session.resources()));
-        session.generators().add(new ComponentServiceCatalogProcessor(session.resources()));
+        session.generators().add(new ComponentKubernetesHandler(session.resources()));
+        session.generators().add(new ComponentHandler(session.resources()));
+        session.generators().add(new ComponentServiceCatalogHandler(session.resources()));
       }
     }
     return false;
