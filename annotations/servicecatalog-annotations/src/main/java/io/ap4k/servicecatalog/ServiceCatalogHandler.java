@@ -16,7 +16,7 @@
 **/
 package io.ap4k.servicecatalog;
 
-import io.ap4k.Processor;
+import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.config.Configuration;
 import io.ap4k.deps.servicecatalog.api.model.ServiceBindingBuilder;
@@ -33,19 +33,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Description("Adds service instance and binding and inject binding info to container environment.")
-public class ServiceCatalogProcessor implements Processor<ServiceCatalogConfig> {
+public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
 
   private final Resources resources;
 
-  public ServiceCatalogProcessor() {
+  public ServiceCatalogHandler() {
     this(new Resources());
   }
-  public ServiceCatalogProcessor(Resources resources) {
+  public ServiceCatalogHandler(Resources resources) {
     this.resources = resources;
   }
 
   @Override
-  public void process(ServiceCatalogConfig config) {
+  public void handle(ServiceCatalogConfig config) {
     for (ServiceCatalogInstance instance : config.getInstances()) {
       resources.add(new ServiceInstanceBuilder()
                     .withNewMetadata()
@@ -72,7 +72,7 @@ public class ServiceCatalogProcessor implements Processor<ServiceCatalogConfig> 
     }
   }
 
-  public boolean accepts(Class<? extends Configuration> type) {
+  public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(ServiceCatalogConfig.class) ||
       type.equals(EditableServiceCatalogConfig.class);
   }

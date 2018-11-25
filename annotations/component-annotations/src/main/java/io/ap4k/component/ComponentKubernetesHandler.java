@@ -16,7 +16,7 @@
 **/
 package io.ap4k.component;
 
-import io.ap4k.Processor;
+import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
@@ -27,27 +27,27 @@ import io.ap4k.config.Env;
 import io.ap4k.config.KubernetesConfig;
 import io.ap4k.config.EditableKubernetesConfig;
 
-public class ComponentKubernetesProcessor implements Processor<KubernetesConfig> {
+public class ComponentKubernetesHandler implements Handler<KubernetesConfig> {
 
   private static final String COMPONENT = "component";
 
   private final Resources resources;
 
-  public ComponentKubernetesProcessor() {
+  public ComponentKubernetesHandler() {
     this(new Resources());
   }
-  public ComponentKubernetesProcessor(Resources resources) {
+  public ComponentKubernetesHandler(Resources resources) {
     this.resources = resources;
   }
 
 
   @Override
-  public void process(KubernetesConfig config) {
+  public void handle(KubernetesConfig config) {
     resources.addExplicit(COMPONENT, createComponent(config));
     addVisitors(config);
   }
 
-  public boolean accepts(Class<? extends Configuration> type) {
+  public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(KubernetesConfig.class) ||
       type.equals(EditableKubernetesConfig.class);
   }

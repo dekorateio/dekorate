@@ -34,8 +34,8 @@ import io.ap4k.config.PersistentVolumeClaimVolume;
 import io.ap4k.config.Port;
 import io.ap4k.config.Probe;
 import io.ap4k.config.SecretVolume;
+import io.ap4k.kubernetes.KubernetesHandler;
 import io.ap4k.project.Project;
-import io.ap4k.kubernetes.KubernetesProcessor;
 
 import io.ap4k.config.KubernetesConfig;
 import io.ap4k.config.EditableKubernetesConfig;
@@ -47,24 +47,24 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-class KubernetesProcessorTest {
+class KubernetesHandlerTest {
 
   @Test
   public void shouldAccpetKubernetesConfig()  {
-    KubernetesProcessor generator = new KubernetesProcessor();
-    assertTrue(generator.accepts(KubernetesConfig.class));
+    KubernetesHandler generator = new KubernetesHandler();
+    assertTrue(generator.canHandle(KubernetesConfig.class));
   }
 
   @Test
   public void shouldAccpetEditableKubernetesConfig()  {
-    KubernetesProcessor generator = new KubernetesProcessor();
-    assertTrue(generator.accepts(EditableKubernetesConfig.class));
+    KubernetesHandler generator = new KubernetesHandler();
+    assertTrue(generator.canHandle(EditableKubernetesConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfigSubclasses()  {
-    KubernetesProcessor generator = new KubernetesProcessor();
-    assertFalse(generator.accepts(KubernetesConfigSubclass.class));
+    KubernetesHandler generator = new KubernetesHandler();
+    assertFalse(generator.canHandle(KubernetesConfigSubclass.class));
   }
 
   private class KubernetesConfigSubclass extends KubernetesConfig {

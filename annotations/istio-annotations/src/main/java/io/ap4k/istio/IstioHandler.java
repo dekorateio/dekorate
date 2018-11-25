@@ -16,7 +16,7 @@
 **/
 package io.ap4k.istio;
 
-import io.ap4k.Processor;
+import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.config.Configuration;
 import io.ap4k.config.ImagePullPolicy;
@@ -28,7 +28,7 @@ import io.ap4k.istio.config.IstioConfig;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.istio.config.EditableIstioConfig;
 
-public class IstioProcessor implements Processor<IstioConfig> {
+public class IstioHandler implements Handler<IstioConfig> {
 
   private static final String DEV_TERMINATION_LOG = "/dev/termination-log";
   private static final String FILE = "File";
@@ -55,15 +55,15 @@ public class IstioProcessor implements Processor<IstioConfig> {
 
   private final Resources resources;
 
-  public IstioProcessor() {
+  public IstioHandler() {
     this(new Resources());
   }
-  public IstioProcessor(Resources resources) {
+  public IstioHandler(Resources resources) {
     this.resources = resources;
   }
 
   @Override
-  public void process(IstioConfig config) {
+  public void handle(IstioConfig config) {
     //Containers
     resources.accept(createIstioInit(config));
     resources.accept(createIstioProxy(config));
@@ -88,7 +88,7 @@ public class IstioProcessor implements Processor<IstioConfig> {
                      .withMountPath("/etc/certs"));
   }
 
-  public boolean accepts(Class<? extends Configuration> type) {
+  public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(IstioConfig.class) ||
       type.equals(EditableIstioConfig.class);
   }

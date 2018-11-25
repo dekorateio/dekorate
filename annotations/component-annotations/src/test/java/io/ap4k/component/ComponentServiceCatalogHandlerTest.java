@@ -23,23 +23,23 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ComponentServiceCatalogProcessorTest {
+class ComponentServiceCatalogHandlerTest {
 
   @Test
   public void shouldAccpetServiceCatalogConfig() {
-    ComponentServiceCatalogProcessor generator = new ComponentServiceCatalogProcessor();
-    assertTrue(generator.accepts(ServiceCatalogConfig.class));
+    ComponentServiceCatalogHandler generator = new ComponentServiceCatalogHandler();
+    assertTrue(generator.canHandle(ServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldAccpetEditableServiceCatalogConfig() {
-    ComponentServiceCatalogProcessor generator = new ComponentServiceCatalogProcessor();
-    assertTrue(generator.accepts(EditableServiceCatalogConfig.class));
+    ComponentServiceCatalogHandler generator = new ComponentServiceCatalogHandler();
+    assertTrue(generator.canHandle(EditableServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfig() {
-    ComponentServiceCatalogProcessor generator = new ComponentServiceCatalogProcessor();
-    assertFalse(generator.accepts(KubernetesConfig.class));
+    ComponentServiceCatalogHandler generator = new ComponentServiceCatalogHandler();
+    assertFalse(generator.canHandle(KubernetesConfig.class));
   }
 }

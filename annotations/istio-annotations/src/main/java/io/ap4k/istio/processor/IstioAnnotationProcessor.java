@@ -18,7 +18,7 @@
 package io.ap4k.istio.processor;
 
 import io.ap4k.config.ConfigurationSupplier;
-import io.ap4k.istio.IstioProcessor;
+import io.ap4k.istio.IstioHandler;
 import io.ap4k.istio.adapt.IstioConfigAdapter;
 import io.ap4k.istio.annotation.Istio;
 import io.ap4k.istio.config.IstioConfig;
@@ -49,7 +49,7 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         Session session = Session.getSession();
         session.configurators().add(configuration(mainClass));
-        session.generators().add(new IstioProcessor(session.resources()));
+        session.generators().add(new IstioHandler(session.resources()));
       }
     }
     return false;

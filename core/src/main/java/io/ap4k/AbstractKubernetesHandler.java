@@ -48,11 +48,11 @@ import io.ap4k.decorator.AddService;
  * A generator is meant to popullate the initial resources to the {@link Session} as well as adding decorator etc.
  * @param <C>   The configuration type (its expected to vary between processors).
  */
-public abstract class AbstractKubernetesProcessor<C extends KubernetesConfig> implements Processor<C> {
+public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> implements Handler<C> {
 
   protected final Resources resources;
 
-  public AbstractKubernetesProcessor(Resources resources) {
+  public AbstractKubernetesHandler(Resources resources) {
     this.resources = resources;
   }
 
@@ -60,7 +60,7 @@ public abstract class AbstractKubernetesProcessor<C extends KubernetesConfig> im
    * Generate / populate the resources.
    * @param config
    */
-  public abstract void process(C config);
+  public abstract void handle(C config);
 
 
   /**

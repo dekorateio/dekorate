@@ -19,9 +19,9 @@ A `configurator` is a visitor that visits parts of the `configuration` with the 
 | ApplyDockerBuildHook   | DockerBuildConfig   | Apply the docker build hook configuration.                                    |
 | ApplySourceToImageHook | SourceToImageConfig | Apply source to image build hook.                                             |
 
-### Processor 
+### Handler 
 
-An object that can process certain types of `config`. A `processor` may create resources and register `decorators`.
+An object that can handle certain types of `config`. A `processor` may create resources and register `decorators`.
 
 ### Decorator
 

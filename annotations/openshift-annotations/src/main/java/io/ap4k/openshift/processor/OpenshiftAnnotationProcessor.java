@@ -20,7 +20,7 @@ package io.ap4k.openshift.processor;
 import io.ap4k.Session;
 import io.ap4k.annotation.KubernetesApplication;
 import io.ap4k.config.ConfigurationSupplier;
-import io.ap4k.openshift.OpenshiftProcessor;
+import io.ap4k.openshift.OpenshiftHandler;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 import io.ap4k.openshift.confg.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.OpenshiftConfig;
@@ -56,7 +56,7 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
 
     for (Element mainClass : mainClasses) {
       session.configurators().add(configuration(mainClass));
-      session.generators().add(new OpenshiftProcessor(session.resources()));
+      session.generators().add(new OpenshiftHandler(session.resources()));
     }
     return false;
   }

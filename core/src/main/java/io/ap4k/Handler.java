@@ -18,13 +18,13 @@ package io.ap4k;
 
 import io.ap4k.config.Configuration;
 
-public interface Processor<C extends Configuration> {
+public interface Handler<C extends Configuration> {
 
   /**
    * Generate / populate the resources.
    * @param config
    */
-  void process(C config);
+  void handle(C config);
 
 
   /**
@@ -33,5 +33,5 @@ public interface Processor<C extends Configuration> {
    * @param config The specified config class;
    * @returns True if config type is accepted, false otherwise.
    */
-  boolean accepts(Class<? extends Configuration> config);
+  boolean canHandle(Class<? extends Configuration> config);
 }
