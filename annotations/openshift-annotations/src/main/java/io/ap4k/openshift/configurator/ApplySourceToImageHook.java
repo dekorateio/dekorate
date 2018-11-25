@@ -18,8 +18,10 @@ package io.ap4k.openshift.configurator;
 
 import io.ap4k.config.Configurator;
 import io.ap4k.openshift.config.SourceToImageConfigFluent;
+import io.ap4k.doc.Description;
 
-public class ApplyHook extends Configurator<SourceToImageConfigFluent> {
+@Description("Apply source to image build hook.")
+public class ApplySourceToImageHook extends Configurator<SourceToImageConfigFluent> {
 
   private static final String AP4K_DEPLOY = "ap4k.deploy";
 

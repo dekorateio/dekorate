@@ -19,13 +19,12 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.Annotation;
 import io.ap4k.deps.kubernetes.api.model.ObjectMetaBuilder;
+import io.ap4k.doc.Description;
 
 import java.util.Objects;
 
-/**
- * A decorator that adds an annotation to all resources.
- */
-public class AddAnnotation extends Decorator<ObjectMetaBuilder> {
+ @Description("A decorator that adds an annotation to all resources.")
+ public class AddAnnotation extends Decorator<ObjectMetaBuilder> {
 
   private final Annotation annotation;
 

@@ -18,7 +18,9 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.SecretVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.doc.Description;
 
+@Description("Add a secret volume to all pod specs.")
 public class AddSecretVolume extends Decorator<PodSpecBuilder> {
 
   private final SecretVolume volume;

@@ -19,7 +19,9 @@ package io.ap4k.decorator;
 import io.ap4k.config.Probe;
 import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.doc.Description;
 
+@Description("Add a readiness probe to all containers.")
 public class AddReadinessProbe extends AbstractAddProbe {
 
   public AddReadinessProbe(Probe probe) {

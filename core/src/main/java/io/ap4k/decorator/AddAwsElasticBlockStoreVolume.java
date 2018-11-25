@@ -18,7 +18,9 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.AwsElasticBlockStoreVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.doc.Description;
 
+@Description("Add an elastic block store volume to the pod spec.")
 public class AddAwsElasticBlockStoreVolume extends Decorator<PodSpecBuilder> {
 
   private final AwsElasticBlockStoreVolume volume;

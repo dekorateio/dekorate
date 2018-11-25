@@ -22,12 +22,14 @@ import io.ap4k.config.Port;
 import io.ap4k.config.PortBuilder;
 import io.ap4k.configurator.AddPort;
 import io.ap4k.processor.AbstractAnnotationProcessor;
+import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
+@Description("Detects jaxrs and jaxws annotations and registers the http port.")
 @SupportedAnnotationTypes({"javax.ws.rs.ApplicationPath","javax.jws.WebService"})
 public class ThrorntailProcessor extends AbstractAnnotationProcessor {
 

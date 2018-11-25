@@ -20,12 +20,11 @@ package io.ap4k.configurator;
 import io.ap4k.config.Configurator;
 import io.ap4k.config.KubernetesConfigFluent;
 import io.ap4k.config.Port;
+import io.ap4k.doc.Description;
 
 import java.util.Objects;
 
-/**
- * A decorator that adds a port to all containers.
- */
+@Description("adds a port to all containers.")
 public class AddPort extends Configurator<KubernetesConfigFluent> {
 
   private final Port port;

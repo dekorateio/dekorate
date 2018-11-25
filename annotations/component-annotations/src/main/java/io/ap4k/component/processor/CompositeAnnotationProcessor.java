@@ -27,6 +27,7 @@ import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.CompositeConfigBuilder;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.processor.AbstractAnnotationProcessor;
+import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -34,6 +35,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
+@Description("Generate component custom resources.")
 @SupportedAnnotationTypes("io.ap4k.component.annotation.CompositeApplication")
 public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<CompositeConfig> {
 

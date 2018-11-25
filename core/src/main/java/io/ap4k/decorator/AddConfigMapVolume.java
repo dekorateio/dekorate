@@ -18,7 +18,9 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.ConfigMapVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.doc.Description;
 
+@Description("Add a configmap volume to the pod spec.")
 public class AddConfigMapVolume extends Decorator<PodSpecBuilder> {
 
   private final ConfigMapVolume volume;

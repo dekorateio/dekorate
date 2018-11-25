@@ -20,12 +20,14 @@ package io.ap4k.decorator;
 import io.ap4k.config.Port;
 import io.ap4k.config.Protocol;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.doc.Description;
 
 import java.util.Objects;
 
 /**
  * A decorator that adds a port to all containers.
  */
+@Description("Add port to all containers.")
 public class AddPort extends Decorator<ContainerBuilder> {
 
   private final Port port;

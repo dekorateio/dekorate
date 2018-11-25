@@ -19,7 +19,9 @@ package io.ap4k.component.decorator;
 import io.ap4k.component.model.ComponentSpecBuilder;
 import io.ap4k.decorator.Decorator;
 import io.ap4k.config.Env;
+import io.ap4k.doc.Description;
 
+@Description("Add environment variable to component.")
 public class AddEnvToComponent extends Decorator<ComponentSpecBuilder> {
 
   private final Env env;

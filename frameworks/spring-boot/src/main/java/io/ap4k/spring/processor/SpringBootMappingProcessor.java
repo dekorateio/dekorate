@@ -22,12 +22,14 @@ import io.ap4k.config.PortBuilder;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.configurator.AddPort;
 import io.ap4k.Session;
+import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
+@Description("Detects Spring Boot web endpoints and registers the http port.")
 @SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping"})
 public class SpringBootMappingProcessor extends AbstractAnnotationProcessor {
 

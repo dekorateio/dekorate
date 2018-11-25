@@ -28,6 +28,7 @@ import io.ap4k.openshift.config.OpenshiftConfigBuilder;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.project.Project;
 import io.ap4k.project.AptProjectFactory;
+import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -36,6 +37,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.HashSet;
 import java.util.Set;
 
+@Description("Generates openshift manifests.")
 @SupportedAnnotationTypes({"io.ap4k.annotation.KubernetesApplication", "io.ap4k.openshift.annotation.OpenshiftApplication"})
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<OpenshiftConfig> {
 
