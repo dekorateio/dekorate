@@ -18,8 +18,10 @@ package io.ap4k.docker.configurator;
 
 import io.ap4k.config.Configurator;
 import io.ap4k.docker.config.DockerBuildConfigFluent;
+import io.ap4k.doc.Description;
 
-public class ApplyHookConfig extends Configurator<DockerBuildConfigFluent> {
+@Description("Apply the docker build hook configuration.")
+public class ApplyDockerBuildHook extends Configurator<DockerBuildConfigFluent> {
 
   private static final String AP4K_BUILD = "ap4k.build";
 

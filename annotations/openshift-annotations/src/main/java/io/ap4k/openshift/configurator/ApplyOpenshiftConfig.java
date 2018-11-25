@@ -19,7 +19,9 @@ package io.ap4k.openshift.configurator;
 import io.ap4k.config.Configurator;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.SourceToImageConfigFluent;
+import io.ap4k.doc.Description;
 
+@Description("Applies group, name and version from OpenshiftConfig to SourceToImage config.")
 public class ApplyOpenshiftConfig extends Configurator<SourceToImageConfigFluent> {
 
   private final OpenshiftConfig openshiftConfig;

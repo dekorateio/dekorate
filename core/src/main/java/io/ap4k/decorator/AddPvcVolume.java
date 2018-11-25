@@ -18,7 +18,9 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.PersistentVolumeClaimVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.doc.Description;
 
+@Description("Add a persistent volume claim volume to all pod specs.")
 public class AddPvcVolume extends Decorator<PodSpecBuilder> {
 
   private final PersistentVolumeClaimVolume volume;

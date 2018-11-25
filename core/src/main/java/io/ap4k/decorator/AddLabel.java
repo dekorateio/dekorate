@@ -19,12 +19,14 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.Label;
 import io.ap4k.deps.kubernetes.api.model.ObjectMetaBuilder;
+import io.ap4k.doc.Description;
 
 import java.util.Objects;
 
 /**
  * A decorator that adds a label to resources.
  */
+@Description("Add a label to the all metadata.")
 public class AddLabel extends Decorator<ObjectMetaBuilder> {
 
   private final Label label;

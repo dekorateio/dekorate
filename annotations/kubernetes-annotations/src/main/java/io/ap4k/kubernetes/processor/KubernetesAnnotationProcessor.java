@@ -21,6 +21,7 @@ import io.ap4k.Session;
 import io.ap4k.config.KubernetesConfig;
 import io.ap4k.kubernetes.KubernetesProcessor;
 import io.ap4k.processor.AbstractAnnotationProcessor;
+import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -28,6 +29,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
+@Description("Generates kubernetes manifests.")
 @SupportedAnnotationTypes("io.ap4k.annotation.KubernetesApplication")
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<KubernetesConfig> {
 

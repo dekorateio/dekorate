@@ -22,9 +22,10 @@ import io.ap4k.docker.adapter.DockerBuildConfigAdapter;
 import io.ap4k.docker.annotation.DockerBuild;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
-import io.ap4k.docker.configurator.ApplyHookConfig;
+import io.ap4k.docker.configurator.ApplyDockerBuildHook;
 import io.ap4k.docker.configurator.ApplyProjectInfoToDockerBuildConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
+import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -33,8 +34,9 @@ import javax.lang.model.element.TypeElement;
 import java.util.Optional;
 import java.util.Set;
 
+@Description("Register a docker build hook.")
 @SupportedAnnotationTypes("io.ap4k.docker.annotation.DockerBuild")
-public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor {
+public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<DockerBuildConfig> {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -63,7 +65,7 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor 
     return new ConfigurationSupplier<DockerBuildConfig>(DockerBuildConfigAdapter
                                                         .newBuilder(dockerBuild)
                                                         .accept(new ApplyProjectInfoToDockerBuildConfig(project))
-                                                        .accept(new ApplyHookConfig()));
+                                                        .accept(new ApplyDockerBuildHook()));
   }
 
 }

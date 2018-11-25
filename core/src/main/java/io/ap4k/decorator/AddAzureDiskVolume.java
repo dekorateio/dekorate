@@ -18,7 +18,9 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.AzureDiskVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.doc.Description;
 
+@Description("Add an Azure disk volume to the pod spec.")
 public class AddAzureDiskVolume extends Decorator<PodSpecBuilder> {
 
   private final AzureDiskVolume volume;

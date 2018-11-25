@@ -19,9 +19,11 @@ package io.ap4k.component.decorator;
 import io.ap4k.component.model.ComponentSpecBuilder;
 import io.ap4k.decorator.Decorator;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
+import io.ap4k.doc.Description;
 
 import java.util.Arrays;
 
+@Description("Add the service instance information to the component.")
 public class AddServiceInstanceToComponent extends Decorator<ComponentSpecBuilder> {
 
   private final ServiceCatalogInstance instance;

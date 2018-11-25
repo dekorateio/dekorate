@@ -18,7 +18,9 @@ package io.ap4k.component.decorator;
 
 import io.ap4k.component.model.ComponentSpecBuilder;
 import io.ap4k.decorator.Decorator;
+import io.ap4k.doc.Description;
 
+@Description("Add the runtime information to the component.")
 public class AddRuntimeToComponent extends Decorator<ComponentSpecBuilder> {
 
   private final String runtime;

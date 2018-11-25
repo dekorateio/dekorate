@@ -20,12 +20,14 @@ package io.ap4k.decorator;
 import io.ap4k.config.Env;
 import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.doc.Description;
 
 import java.util.Objects;
 
 /**
  * A decorator that adds an environment variable to all containers.
  */
+@Description("Add a environment variable to the container.")
 public class AddEnvVar extends Decorator<ContainerBuilder> {
 
   private final Env env;

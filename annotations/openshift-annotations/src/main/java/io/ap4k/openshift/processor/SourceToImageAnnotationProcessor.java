@@ -30,9 +30,10 @@ import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.SourceToImageConfig;
 import io.ap4k.openshift.config.SourceToImageConfigBuilder;
 import io.ap4k.openshift.hook.JavaBuildHook;
-import io.ap4k.openshift.configurator.ApplyHook;
+import io.ap4k.openshift.configurator.ApplySourceToImageHook;
 import io.ap4k.openshift.configurator.ApplyOpenshiftConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
+import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -41,6 +42,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Optional;
 import java.util.Set;
 
+@Description("Adds source to image configuration in the openshift manifests.")
 @SupportedAnnotationTypes("io.ap4k.openshift.annotation.SourceToImage")
 public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor<SourceToImageConfig> {
 
@@ -80,7 +82,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     KubernetesApplication kubernetesApplication = mainClass.getAnnotation(KubernetesApplication.class);
     OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication, kubernetesApplication).build();
     return SourceToImageConfigAdapter.newBuilder(sourceToImage)
-      .accept(new ApplyHook())
+      .accept(new ApplySourceToImageHook())
       .accept(new ApplyOpenshiftConfig(openshiftConfig));
   }
 }

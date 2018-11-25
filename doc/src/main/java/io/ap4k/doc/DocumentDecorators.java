@@ -14,30 +14,19 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.decorator;
 
-import io.ap4k.config.Mount;
-import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
-import io.ap4k.doc.Description;
+package io.ap4k.doc;
 
-@Description("Add mount to all containers.")
-public class AddMount extends Decorator<ContainerBuilder> {
-
-  private final Mount mount;
-
-  public AddMount(Mount mount) {
-    this.mount = mount;
-  }
-
-  @Override
-  public void visit(ContainerBuilder container) {
-    container.addNewVolumeMount()
-      .withName(mount.getName())
-      .withMountPath(mount.getPath())
-      .withSubPath(mount.getSubPath())
-      .withReadOnly(mount.isReadOnly())
-      .endVolumeMount();
+import io.sundr.transform.annotations.VelocityTransformation;
+import io.sundr.transform.annotations.VelocityTransformations;
+import io.sundr.codegen.annotations.PackageSelector;
 
 
-  }
+@VelocityTransformations(value = @VelocityTransformation(value="/decorator-doc.vm", outputPath="decorators-table.org", gather=true),
+                         packages = {
+                           @PackageSelector(value="io.ap4k.decorator"),
+                           @PackageSelector(value="io.ap4k.component.decorator")
+                         })
+public class DocumentDecorators {
+
 }

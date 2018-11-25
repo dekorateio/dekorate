@@ -18,7 +18,9 @@ package io.ap4k.decorator;
 
 import io.ap4k.config.AzureFileVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
+import io.ap4k.doc.Description;
 
+@Description("Add an Azure File volume to the Pod spec.")
 public class AddAzureFileVolume extends Decorator<PodSpecBuilder> {
 
   private final AzureFileVolume volume;

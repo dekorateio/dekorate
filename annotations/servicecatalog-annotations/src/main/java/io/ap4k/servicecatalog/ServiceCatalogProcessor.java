@@ -26,11 +26,13 @@ import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
 import io.ap4k.utils.Strings;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
+import io.ap4k.doc.Description;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Description("Adds service instance and binding and inject binding info to container environment.")
 public class ServiceCatalogProcessor implements Processor<ServiceCatalogConfig> {
 
   private final Resources resources;
