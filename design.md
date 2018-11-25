@@ -23,7 +23,7 @@ A `configurator` is a visitor that visits parts of the `configuration` with the 
 
 ### Handler 
 
-An object that can handle certain types of `config`. A `processor` may create resources and register `decorators`.
+An object that can handle certain types of `config`. A `handler` may create resources and register `decorators`.
 
 ### Decorator
 
@@ -51,8 +51,8 @@ It's different than a `configurator` in the sense that it operator on the actual
 | AddAzureFileVolume            | PodSpec        | Add an Azure File volume to the Pod spec.              |
 
 ### Annotation Processor
-Refers to Java annotation processors. Each processor is responsible for creating a `config` object and also for registering one or more `processors` that handle the `config`.
-An processor may register more than one `config` processors with no restriction on the kind of `config` they handle. 
+Refers to Java annotation processors. Each processor is responsible for creating a `config` object and also for registering one or more `handler` that handle the `config`.
+A processor may register more than one `config` `handlers` with no restriction on the kind of `config` they handle. 
 
 | Processor                         | Config               | Supported Annotations                                                                                        | Description                                                       |
 |-----------------------------------|----------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
