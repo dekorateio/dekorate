@@ -47,7 +47,7 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        session.configurators().add(configuration(mainClass));
+        session.configurators().add(config(mainClass));
         session.generators().add(new ComponentKubernetesHandler(session.resources()));
         session.generators().add(new ComponentHandler(session.resources()));
         session.generators().add(new ComponentServiceCatalogHandler(session.resources()));
@@ -57,7 +57,7 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
   }
 
   @Override
-  public ConfigurationSupplier<CompositeConfig> configuration(Element mainClass) {
+  public ConfigurationSupplier<CompositeConfig> config(Element mainClass) {
     CompositeApplication compositeApplication = mainClass.getAnnotation(CompositeApplication.class);
     return compositeApplication != null
       ?  new ConfigurationSupplier<CompositeConfig>(CompositeConfigAdapter.newBuilder(compositeApplication))

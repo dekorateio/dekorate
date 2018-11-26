@@ -25,7 +25,7 @@ import java.util.List;
 public class IstioProxy {
 
   /**
-   * Get the istio proxy arguments for the specified configuration.
+   * Get the istio proxy arguments for the specified config.
    * @param config    The istio config.
    * @return          An array containing all arguments.
    */

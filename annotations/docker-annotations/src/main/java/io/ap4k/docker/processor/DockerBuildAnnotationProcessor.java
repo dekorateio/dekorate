@@ -53,14 +53,14 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        session.configurators().add(configuration(mainClass));
+        session.configurators().add(config(mainClass));
       }
     }
     return false;
   }
 
   @Override
-  public ConfigurationSupplier<DockerBuildConfig> configuration(Element mainClass) {
+  public ConfigurationSupplier<DockerBuildConfig> config(Element mainClass) {
     DockerBuild dockerBuild = mainClass.getAnnotation(DockerBuild.class);
     return new ConfigurationSupplier<DockerBuildConfig>(DockerBuildConfigAdapter
                                                         .newBuilder(dockerBuild)

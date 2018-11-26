@@ -16,7 +16,7 @@
 **/
 package io.ap4k.openshift.utils;
 
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
+import io.ap4k.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.ObjectReference;
@@ -44,7 +44,7 @@ public class OpenshiftUtils {
     final List<String> tags = new ArrayList<>();
     new KubernetesListBuilder()
       .withItems(items)
-      .accept(new Visitor<SourceBuildStrategyFluent>() {
+      .accept(new Decorator<SourceBuildStrategyFluent>() {
           @Override
           public void visit(SourceBuildStrategyFluent strategy) {
             ObjectReference from = strategy.buildFrom();

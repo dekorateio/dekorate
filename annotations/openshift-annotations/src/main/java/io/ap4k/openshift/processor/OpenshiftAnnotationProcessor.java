@@ -55,14 +55,14 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
     }
 
     for (Element mainClass : mainClasses) {
-      session.configurators().add(configuration(mainClass));
+      session.configurators().add(config(mainClass));
       session.generators().add(new OpenshiftHandler(session.resources()));
     }
     return false;
   }
 
   @Override
-  public ConfigurationSupplier<OpenshiftConfig> configuration(Element mainClass) {
+  public ConfigurationSupplier<OpenshiftConfig> config(Element mainClass) {
     return new ConfigurationSupplier<OpenshiftConfig>(configurationBuilder(mainClass));
   }
 

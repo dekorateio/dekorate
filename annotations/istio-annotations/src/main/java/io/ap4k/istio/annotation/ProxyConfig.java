@@ -28,7 +28,7 @@ public @interface ProxyConfig {
 
   String proxyImage() default "istio.io/proxy:1.0.3";
   /**
-   * Where should envoy's configuration be stored in the istio-proxy container.
+   * Where should envoy's config be stored in the istio-proxy container.
    * @return The config path.
    */
   String configPath() default "/etc/istio/proxy";

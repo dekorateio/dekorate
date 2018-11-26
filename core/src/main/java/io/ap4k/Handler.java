@@ -29,7 +29,7 @@ public interface Handler<C extends Configuration> {
 
   /**
    * Check if config is accepted.
-   * A generator can choose to which configuration it should react.
+   * A generator can choose to which config it should react.
    * @param config The specified config class;
    * @returns True if config type is accepted, false otherwise.
    */

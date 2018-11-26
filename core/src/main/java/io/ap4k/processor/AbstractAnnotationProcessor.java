@@ -61,7 +61,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
    * @param mainClass     The type element of the annotated class (Main).
    * @return              A new config.
    */
-  public ConfigurationSupplier<C> configuration(Element mainClass) {
+  public ConfigurationSupplier<C> config(Element mainClass) {
     KubernetesApplication application = mainClass.getAnnotation(KubernetesApplication.class);
     return new ConfigurationSupplier<C>((VisitableBuilder<C, ?>) KubernetesConfigAdapter
                                         .newBuilder(application)
@@ -90,18 +90,18 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
 
   /**
    * Writes a {@link Configuration}.
-   * @param configuration  The target session configurations.
+   * @param config  The target session configurations.
    */
-  protected void write(Configuration configuration) {
+  protected void write(Configuration config) {
     try {
-      String name = configuration.getClass().getSimpleName();
+      String name = config.getClass().getSimpleName();
       for (String s : STRIP) {
         name = name.replaceAll(s, "");
       }
       name = name.toLowerCase();
       FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(CONFIG, name, YML));
       try (Writer writer = yml.openWriter()) {
-        writer.write(Serialization.asYaml(configuration));
+        writer.write(Serialization.asYaml(config));
       }
     } catch (IOException e) {
       throw new RuntimeException("Error writing resources");

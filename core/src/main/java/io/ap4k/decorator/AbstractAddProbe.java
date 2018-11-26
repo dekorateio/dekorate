@@ -60,7 +60,7 @@ public abstract class AbstractAddProbe extends Decorator<ContainerBuilder> {
   /**
    * Convert {@link Probe} to an {@link ExecAction}.
    * @param probe The probe.
-   * @return      The exec action, or null if no exec configuration is present.
+   * @return      The exec action, or null if no exec config is present.
    */
   protected ExecAction execAction(Probe probe) {
     if (Strings.isNullOrEmpty(probe.getExecAction())) {
@@ -72,7 +72,7 @@ public abstract class AbstractAddProbe extends Decorator<ContainerBuilder> {
   /**
    * Convert the {@link Probe} to an {@link HTTPGetAction}.
    * @param probe     The probe.
-   * @return          The http get action, or null if not http configuration is present.
+   * @return          The http get action, or null if not http config is present.
    */
   protected HTTPGetAction httpGetAction(Probe probe) {
     if (Strings.isNullOrEmpty(probe.getHttpAction())) {

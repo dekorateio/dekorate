@@ -17,7 +17,6 @@
 package io.ap4k;
 
 import io.ap4k.decorator.Decorator;
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
@@ -36,11 +35,11 @@ public class Resources {
   private final KubernetesListBuilder global = new KubernetesListBuilder();
   private final Set<Decorator> decorators = new HashSet<>();
 
-  private final Map<String, Decorator> explicitDecorators = new HashMap<>();
-  private final Map<String, KubernetesListBuilder> explicitGroups = new HashMap<>();
+  private final Map<String, Decorator> customDecorators = new HashMap<>();
+  private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
 
   /**
-   * Add a {@link Visitor}.
+   * Add a {@link Decorator}.
    * @param decorator   The decorator.
    */
   public void accept(Decorator decorator) {
@@ -48,7 +47,7 @@ public class Resources {
   }
 
   /**
-   * Add a {@link Visitor} to the specified resource group.
+   * Add a {@link Decorator} to the specified resource group.
    * @param group     The group.
    * @param decorator   The decorator.
    */
@@ -61,7 +60,7 @@ public class Resources {
   }
 
   /**
-   * Add a {@link Visitor}.
+   * Add a {@link Decorator}.
    * @param decorator   The decorator.
    */
   public void accept(Doneable<? extends Decorator> decorator) {
@@ -89,25 +88,28 @@ public class Resources {
   }
 
   /**
-   * Add a {@link Visitor} to the specified resource explicit group.
-   * Explicit groups are groups that only get resources and decorators that have been explicitly specified.
-   * @param group     The group.
+   * Add a {@link Decorator} to the specified custom group.
+   * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
+   * To add a custom decorator, you need to explicitly specify it using this method.
+   * @param group       The group.
    * @param decorator   The decorator.
    */
-  public void acceptExplicit(String group, Decorator decorator) {
-    explicitDecorators.put(group, decorator);
+  public void decorateCustom(String group, Decorator decorator) {
+    customDecorators.put(group, decorator);
   }
+
   /**
-   * Add a resource to the specified explicit group.
-   * Explicit groups only accept decorators explicitly assigned to them.
+   * Add a resource to the specified custom group.
+   * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
+   * To add a custom resource, you need to explicitly specify it using this method.
    * @param group     The group.
    * @param metadata  The resource.
    */
-  public void addExplicit(String group, HasMetadata metadata) {
-    if (!explicitGroups.containsKey(group)) {
-      explicitGroups.put(group, new KubernetesListBuilder());
+  public void addCustom(String group, HasMetadata metadata) {
+    if (!customGroups.containsKey(group)) {
+      customGroups.put(group, new KubernetesListBuilder());
     }
-    explicitGroups.get(group).addToItems(metadata);
+    customGroups.get(group).addToItems(metadata);
   }
 
   /**
@@ -126,8 +128,8 @@ public class Resources {
     decorators.forEach(v -> groups.forEach((g, b) -> b.accept(v)));
     groups.forEach((g, b) -> resources.put(g, b.build()));
 
-    explicitDecorators.forEach((g, d) -> explicitGroups.get(g).accept(d));
-    explicitGroups.forEach((g, b) -> resources.put(g, b.build()));
+    customDecorators.forEach((g, d) -> customGroups.get(g).accept(d));
+    customGroups.forEach((g, b) -> resources.put(g, b.build()));
     return resources;
   }
 }

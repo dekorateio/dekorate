@@ -43,7 +43,7 @@ public class ComponentKubernetesHandler implements Handler<KubernetesConfig> {
 
   @Override
   public void handle(KubernetesConfig config) {
-    resources.addExplicit(COMPONENT, createComponent(config));
+    resources.addCustom(COMPONENT, createComponent(config));
     addVisitors(config);
   }
 
@@ -71,7 +71,7 @@ public class ComponentKubernetesHandler implements Handler<KubernetesConfig> {
 
   private void addVisitors(KubernetesConfig config) {
     for (Env env : config.getEnvVars()) {
-      resources.acceptExplicit(COMPONENT, new AddEnvToComponent(env));
+      resources.decorateCustom(COMPONENT, new AddEnvToComponent(env));
     }
   }
 }

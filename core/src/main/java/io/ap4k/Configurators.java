@@ -37,7 +37,7 @@ public class Configurators {
     this.suppliers.add(supplier);
   }
   /**
-   * Add a {@link Visitor}.
+   * Add a {@link Configurator}.
    * @param configurator   The configurator.
    */
   public void add(Configurator configurator) {
