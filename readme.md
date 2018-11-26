@@ -41,21 +41,26 @@ The are tons of tools out there for scaffolding / generating kubernetes resource
 Annotation processing has quite a few advantages over external tools or build tool extensions:
 
 - Configuration is validated by the compiler.
-- Leverages tools like the IDE for writing type safe configuration (checking, completion etc).
+- Leverages tools like the IDE for writing type safe config (checking, completion etc).
 - Works with all build tools.
 - Can "react" to annotations provided by the framework.
 - Annotation processing is performed in rounds which makes it technically easier to write extensions and customizations.
 
 #### What about building and deploying?
-Performing container builds like docker, or openshift source to image builds, is outside of the scope of this project.
-It is however desirable, to provide integration with tools that are right for this job. 
+Triggering the build of a docker image using a Dockerfile or a S2i image is outside of the scope of this project but nevertheless,
+it is proposed as an experimental option(using the hooks below) till we have figured out how such deployment/integration
+will take place with different tools such as: 
+
+- fabric8 maven plugin,
+- odo,
+- launcher
+
+... or an operator able to process the resources generated.
 
 So, at the moment as an experimental support the following hooks are provided:
 
 - docker build hook (requires docker binary, triggered with `-Dap4k.build=true`)
 - openshift s2i build hook (requires oc binary, triggered with `-Dap4k.deploy=true`)
-
-In the future its plan to include integration with the fabric8 maven plugin.
 
 ## Usage
 
@@ -90,7 +95,7 @@ On top of that `lightweight` integration with build tools is provided in order t
 
 ##### Lightweight build tool integration
 
-Lightweight integration with build tools, refers to reading information from the build tool configuration without bringing in the build tool itself into the classpath.
+Lightweight integration with build tools, refers to reading information from the build tool config without bringing in the build tool itself into the classpath.
 For example in the case of maven it refers to parsing the pom.xml with DOM in order to fetch the artifactId and version.
 
 #### Adding extra ports and exposing them as services
@@ -286,14 +291,14 @@ This module can be added to the project using:
     </dependency>
     
 ### Component annotations
-The component [CRD](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims on abstracting kubernetes/OpenShift resources and simplify the configuration, design of an application.
+The component [CRD](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims on abstracting kubernetes/OpenShift resources and simplify the config, design of an application.
 See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more buildInfo about how the structure, syntax of a Component (runtime, service, link) is defined.
 To play with a Components CRD and its [operator](https://coreos.com/operators/) running on the cloud platform and able to generate the kubernetes resources or manage them, then look to this [project](https://github.com/snowdrop/component-operator-demo).
 This module provides limited/early support of the component operator.
 
 By adding the `@CompositeApplication` annotation to the application, the generation of `target/classes/META-INF/apk/component.yml' is triggered.
 
-The content of the component descriptor will be determined by the existing configuration provided by annotations like:
+The content of the component descriptor will be determined by the existing config provided by annotations like:
 
 - @KubernetesApplication
 - @ServiceCatalog
