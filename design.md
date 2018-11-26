@@ -1,8 +1,36 @@
 # AP4K Design
 
-## Terminology
+## Overview
+This section provides a high level overview on the design of AP4K. The core building blocks are back-quoted and a definition
+for them is provided in the next section (vocabulary).
 
-The section below descibes the core parts of AP4K and tries to describe how they work together.
+AP4K provides multiple annotation processors all targeting at the generation of Kubernetes resources.
+Each annotation processor is "supporting" one or more annotations and will be called by the compiler at least twice when
+the annotations are spotted. 
+
+On each annotation processor invocation, information about the annotated classes are passed.
+The last invocation signals the end of the processing.
+
+When the processing is over, each processor will assemble a `config` object and pass it to the responsible `handler`.
+The handlers role is to create or modify the `model` based on the `config`. 
+
+Finally, the `model` is serialized to disk as json/yml.
+
+[sequence diagram][https://raw.githubusercontent.com/ap4k/ap4k/master/doc/src/main/resources/sequence.png]
+
+## Vocabulary
+
+The section below describes the core parts of AP4K and tries to describe how they work together.
+
+### Visitor
+Refers to the the `Gang of Four` visitor pattern. As Kubernetes resources are deeply nested we are extensively using the 
+`visitor` pattern  to perform modifications to those resources without having to programmatically traverse this complex
+structure.
+
+### Model
+With kubernetes/openshift `model` or just `model` we refer to the java object representation of the Kubernetes/Openshift
+resource domain. The `model` has the same strcuture are the actual kubernetes resources and can be easily serialized into 
+json or yml and form the actual resources.
 
 ### Config
 
@@ -10,7 +38,7 @@ An object / pojo that encapsulates the information provided by an annotation and
 
 ### Configurator
 
-A `configurator` is a visitor that visits parts of the `configuration` with the purpose of performing minor changes / updates.
+A `configurator` is a visitor that visits parts of the `config` with the purpose of performing minor changes / updates.
 
 
 | Configurator           | Target              | Description                                                                   |
@@ -66,3 +94,7 @@ A processor may register more than one `config` `handlers` with no restriction o
 | OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.ap4k.annotation.KubernetesApplication, io.ap4k.openshift.annotation.OpenshiftApplication]                | Generates openshift manifests.                                    |
 | MicronautProcessor                | none                 | [io.micronaut.http.annotation.Controller]                                                                    | Detects the micronaut controller and registers the http port.     |
 | DockerBuildAnnotationProcessor    | DockerBuildConfig    | [io.ap4k.docker.annotation.DockerBuild]                                                                      | Register a docker build hook.                                     |
+
+### Session
+A shared repository between `annotation processors`. This repository holds `config`, `configurators`, `handlers`, `model` and `decorators`. When the session is closed, All `configurator` are applied, the final `config` is passed to the `handlers`.
+The `handlers` generate and decorate the `model`. The resulting model is passed back to the `processor`.
