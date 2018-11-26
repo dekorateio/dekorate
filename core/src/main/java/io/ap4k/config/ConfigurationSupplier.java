@@ -35,7 +35,7 @@ public class ConfigurationSupplier<C extends Configuration> implements Supplier<
     return builder.build();
   }
 
-  public ConfigurationSupplier<C> configurel(Iterable<Configurator> configurators) {
+  public ConfigurationSupplier<C> configure(Iterable<Configurator> configurators) {
     configurators.forEach(v -> builder.accept(v));
     return this;
   }
