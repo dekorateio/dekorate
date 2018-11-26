@@ -46,7 +46,7 @@ import io.ap4k.decorator.AddService;
 /**
  * An abstract generator.
  * A generator is meant to popullate the initial resources to the {@link Session} as well as adding decorator etc.
- * @param <C>   The configuration type (its expected to vary between processors).
+ * @param <C>   The config type (its expected to vary between processors).
  */
 public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> implements Handler<C> {
 
@@ -65,7 +65,7 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
 
   /**
    * Add all decorator to the resources.
-   * This method will read the configuration and then add all the required decorator to the resources.
+   * This method will read the config and then add all the required decorator to the resources.
    * The method is intended to be called from the generate method and thus marked as protected.
    * @param group     The group..
    * @param config    The config.

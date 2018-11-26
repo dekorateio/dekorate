@@ -45,7 +45,7 @@ import java.util.Set;
           }
           for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-              session.configurators().add(configuration(mainClass));
+              session.configurators().add(config(mainClass));
               session.generators().add(new ServiceCatalogHandler(session.resources()));
             }
           }
@@ -53,7 +53,7 @@ import java.util.Set;
         }
 
         @Override
-        public ConfigurationSupplier<ServiceCatalogConfig> configuration(Element mainClass) {
+        public ConfigurationSupplier<ServiceCatalogConfig> config(Element mainClass) {
           ServiceCatalog serviceCatalog = mainClass.getAnnotation(ServiceCatalog.class);
           return serviceCatalog != null
             ? new ConfigurationSupplier<ServiceCatalogConfig>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))

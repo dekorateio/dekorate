@@ -42,7 +42,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Optional;
 import java.util.Set;
 
-@Description("Adds source to image configuration in the openshift manifests.")
+@Description("Adds source to image config in the openshift manifests.")
 @SupportedAnnotationTypes("io.ap4k.openshift.annotation.SourceToImage")
 public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor<SourceToImageConfig> {
 
@@ -59,7 +59,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        session.configurators().add(configuration(mainClass));
+        session.configurators().add(config(mainClass));
         session.generators().add(new SourceToImageHandler(session.resources()));
       }
     }
@@ -67,7 +67,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
   }
 
   @Override
-  public ConfigurationSupplier<SourceToImageConfig> configuration(Element mainClass) {
+  public ConfigurationSupplier<SourceToImageConfig> config(Element mainClass) {
     return new ConfigurationSupplier<SourceToImageConfig>(configurationBuilder(mainClass));
   }
 

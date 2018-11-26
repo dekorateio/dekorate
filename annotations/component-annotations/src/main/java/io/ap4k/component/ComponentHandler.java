@@ -54,7 +54,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   private void addVisitors(KubernetesConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     if (type != null) {
-      resources.acceptExplicit(COMPONENT,new AddRuntimeToComponent(type));
+      resources.decorateCustom(COMPONENT,new AddRuntimeToComponent(type));
     }
   }
 

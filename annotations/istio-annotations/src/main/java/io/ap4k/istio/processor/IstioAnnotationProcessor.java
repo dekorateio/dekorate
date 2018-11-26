@@ -48,7 +48,7 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         Session session = Session.getSession();
-        session.configurators().add(configuration(mainClass));
+        session.configurators().add(config(mainClass));
         session.generators().add(new IstioHandler(session.resources()));
       }
     }
@@ -56,7 +56,7 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
   }
 
   @Override
-  public ConfigurationSupplier<IstioConfig> configuration(Element mainClass) {
+  public ConfigurationSupplier<IstioConfig> config(Element mainClass) {
     Istio istio = mainClass.getAnnotation(Istio.class);
     return istio != null
       ? new ConfigurationSupplier<IstioConfig>(IstioConfigAdapter.newBuilder(istio))
