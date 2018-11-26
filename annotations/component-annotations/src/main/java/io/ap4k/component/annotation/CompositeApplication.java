@@ -18,6 +18,7 @@ package io.ap4k.component.annotation;
 
 
 import io.ap4k.component.model.DeploymentType;
+import io.ap4k.annotation.Env;
 import io.ap4k.config.KubernetesConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
@@ -40,11 +41,9 @@ public @interface CompositeApplication {
 
   boolean exposeService() default false;
 
+  Env[] envVars() default {};
+
   /*
-
-    Env[] envVars() default {};
-
-    ServiceCatalogInstance[] instances();
-
+  ServiceCatalogInstance[] instances();
   */
 }
