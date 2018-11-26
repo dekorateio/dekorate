@@ -18,9 +18,8 @@
 
 package io.ap4k.config;
 
-import io.ap4k.deps.kubernetes.api.builder.Visitable;
+
 import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
 import java.util.function.Supplier;
 
