@@ -29,16 +29,51 @@ structure.
 
 ### Model
 With kubernetes/openshift `model` or just `model` we refer to the java object representation of the Kubernetes/Openshift
-resource domain. The `model` has the same strcuture are the actual kubernetes resources and can be easily serialized into 
+resource domain. The `model` has the same structure are the actual kubernetes resources and can be easily serialized into 
 json or yml and form the actual resources.
+
+The base interface that all `model` objects implement is the HasMetadata. For example:
+
+     public class Pod implemnets HasMetadata {
+     
+       private String kind;
+       private ObjectMeta metadata;
+       
+       public String getKind() {
+         return this.kind;
+       }
+        
+       public ObjectMeta getMetadata() {
+          return this.metadata;
+       }
+     }
 
 ### Config
 
 An object / pojo that encapsulates the information provided by an annotation and the project (e.g. name, version etc).
+An example configuration is the `KuberenetesConfig` class:
+
+    public class KubernetecConfig  {
+        private String group;
+        private String name;
+        private String version;
+        private io.ap4k.config.Label[] labels;
+        private io.ap4k.config.Annotation[] annotations;
+        ...
+    }
 
 ### Configurator
 
 A `configurator` is a visitor that visits parts of the `config` with the purpose of performing minor changes / updates.
+
+For example a configurator that can be used to add a label to `KubernetesConfig`:
+
+    public class AddLabel extends Configurator<KubernetesConfigFluent> {
+    
+         public void vist(KubernetesConfigFluent config) {
+             config.addToLabels(new Label("createdBy", "ap4k");
+         }
+    }
 
 
 | Configurator           | Target              | Description                                                                   |
@@ -51,12 +86,37 @@ A `configurator` is a visitor that visits parts of the `config` with the purpose
 
 ### Handler 
 
-An object that can handle certain types of `config`. A `handler` may create resources and register `decorators`.
+An object that can handle certain types of `config`. A `handler` may create `model` resources and register `decorators`.
+The handler is the object that does most of the creation of the `model` resources.
+
+     public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> {
+
+        public void handle(KubernetesConfig config) {
+            resources.add("kubernetes", createDeployment(config));
+        }
+
+        public boolean canHandle(Class<? extends Configuration> type) {
+          return type.equals(KubernetesConfig.class);
+        }
+    }
 
 ### Decorator
 
-A `decorator` is a visitor that visits parts of the kubernetes/openshift manifest in order to pefrorm minor changes / updates.
+A `decorator` is a visitor that visits parts of the kubernetes/openshift `model` in order to perform minor changes / updates.
 It's different than a `configurator` in the sense that it operator on the actual model instead of the `config`.
+
+    public class AddLabel extends Decorator<PodFluent> {
+    
+         public void vist(PodFluent podFluent) {
+             podFluent.addToLabels(new Label("createdBy", "ap4k");
+         }
+    }
+    
+    
+The `decorator` looks pretty similar to the `configurator` the only difference between the two is the kind of objects they visit.
+
+`Configurators` visit `config` objects.
+`Decorators` visit `model` objects.
 
 | Decorator                     | Target         | Description                                            |
 |-------------------------------|----------------|--------------------------------------------------------|
@@ -77,6 +137,20 @@ It's different than a `configurator` in the sense that it operator on the actual
 | AddRuntimeToComponent         | ComponentSpec  | Add the runtime information to the component.          |
 | AddLabel                      | ObjectMeta     | Add a label to the all metadata.                       |
 | AddAzureFileVolume            | PodSpec        | Add an Azure File volume to the Pod spec.              |
+
+#### Why do we need both Configurators and Decorators?
+
+The kubernetes `model` is very complex and deeply nested object structure and for a good reason: `It needs to fit to every signle deployment use case out there.`
+The deployment of a java application though is something more concrete and can be described by something simpler than the actual model.
+
+While gathering and combining information from multiple annotation processors its more practical and less error prone to apply them to the a more simplified representation of the `model`.
+This is the `config`. So, during the processing phase we use `configurators` to apply the information gathered in each step to the `config`.
+
+Once the `configuration` is finalized, the actual `model` is being populated. Since different `processors` are creating different kind of `config` we need to combine them all in order to build the `model`.
+This is where `decorators` come in place. Each `config` is translated to different `decorators` that contribute to different parts of the `model`.
+
+##### Why not directly creating the model?
+We have a variable number of `config` instances all contributing to the `model`. Combining them all in one go without the use of `decorators` would result in a conditional hell.
 
 ### Annotation Processor
 Refers to Java annotation processors. Each processor is responsible for creating a `config` object and also for registering one or more `handler` that handle the `config`.
