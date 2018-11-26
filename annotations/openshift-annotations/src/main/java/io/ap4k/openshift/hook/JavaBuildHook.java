@@ -17,17 +17,11 @@
 package io.ap4k.openshift.hook;
 
 import io.ap4k.Ap4kException;
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
-import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.ap4k.deps.kubernetes.api.model.ObjectReference;
 import io.ap4k.deps.kubernetes.client.utils.ResourceCompare;
 import io.ap4k.deps.okhttp3.Callback;
 import io.ap4k.deps.openshift.api.model.Build;
-import io.ap4k.deps.openshift.api.model.BuildConfig;
-import io.ap4k.deps.openshift.api.model.ImageStreamTag;
-import io.ap4k.deps.openshift.api.model.SourceBuildStrategyFluent;
 import io.ap4k.deps.openshift.client.DefaultOpenShiftClient;
 import io.ap4k.deps.openshift.client.OpenShiftClient;
 import io.ap4k.deps.openshift.client.dsl.internal.BuildOperationsImpl;
