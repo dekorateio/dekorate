@@ -71,7 +71,7 @@ public class ComponentKubernetesHandler implements Handler<KubernetesConfig> {
 
   private void addVisitors(KubernetesConfig config) {
     for (Env env : config.getEnvVars()) {
-      resources.accept(COMPONENT, new AddEnvToComponent(env));
+      resources.acceptExplicit(COMPONENT, new AddEnvToComponent(env));
     }
   }
 }
