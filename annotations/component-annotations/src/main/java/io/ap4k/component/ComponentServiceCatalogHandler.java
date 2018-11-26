@@ -40,7 +40,7 @@ public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogCon
 
   public void handle(ServiceCatalogConfig config) {
     for (ServiceCatalogInstance instance : config.getInstances()) {
-      resources.accept(COMPONENT, new AddServiceInstanceToComponent(instance));
+      resources.acceptExplicit(COMPONENT, new AddServiceInstanceToComponent(instance));
     }
   }
 
