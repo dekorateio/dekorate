@@ -72,50 +72,50 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
    */
   protected void addVisitors(String group, C config) {
     for (Label label : config.getLabels()) {
-      resources.accept(group, new AddLabel(label));
+      resources.decorate(group, new AddLabel(label));
     }
     for (Annotation annotation : config.getAnnotations()) {
-      resources.accept(group, new AddAnnotation(annotation));
+      resources.decorate(group, new AddAnnotation(annotation));
     }
     for (Env env : config.getEnvVars()) {
-      resources.accept(group, new AddEnvVar(env));
+      resources.decorate(group, new AddEnvVar(env));
     }
     for (Port port : config.getPorts()) {
-      resources.accept(group, new AddPort(port));
+      resources.decorate(group, new AddPort(port));
     }
     for (Mount mount: config.getMounts()) {
-      resources.accept(group, new AddMount(mount));
+      resources.decorate(group, new AddMount(mount));
     }
 
     for (SecretVolume volume : config.getSecretVolumes()) {
-      resources.accept(group, new AddSecretVolume(volume));
+      resources.decorate(group, new AddSecretVolume(volume));
     }
 
     for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
-      resources.accept(group, new AddConfigMapVolume(volume));
+      resources.decorate(group, new AddConfigMapVolume(volume));
     }
 
     for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
-      resources.accept(group, new AddPvcVolume(volume));
+      resources.decorate(group, new AddPvcVolume(volume));
     }
 
     for (AzureFileVolume volume : config.getAzureFileVolumes()) {
-      resources.accept(group, new AddAzureFileVolume(volume));
+      resources.decorate(group, new AddAzureFileVolume(volume));
     }
 
     for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
-      resources.accept(group, new AddAzureDiskVolume(volume));
+      resources.decorate(group, new AddAzureDiskVolume(volume));
     }
 
     for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
-      resources.accept(group, new AddAwsElasticBlockStoreVolume(volume));
+      resources.decorate(group, new AddAwsElasticBlockStoreVolume(volume));
     }
 
     if (config.getPorts().length > 0) {
-      resources.accept(group, new AddService(config));
+      resources.decorate(group, new AddService(config));
     }
 
-    resources.accept(group, new AddLivenessProbe(config.getLivenessProbe()));
-    resources.accept(group, new AddReadinessProbe(config.getReadinessProbe()));
+    resources.decorate(group, new AddLivenessProbe(config.getLivenessProbe()));
+    resources.decorate(group, new AddReadinessProbe(config.getReadinessProbe()));
   }
 }

@@ -65,25 +65,25 @@ public class IstioHandler implements Handler<IstioConfig> {
   @Override
   public void handle(IstioConfig config) {
     //Containers
-    resources.accept(createIstioInit(config));
-    resources.accept(createIstioProxy(config));
+    resources.decorate(createIstioInit(config));
+    resources.decorate(createIstioProxy(config));
     //Volumes
-    resources.accept(VolumeDecorator.createNew()
+    resources.decorate(VolumeDecorator.createNew()
                      .withName("istio-envoy")
                      .withNewEmptyDir()
                      .withMedium("Memory")
                      .endEmptyDir());
-    resources.accept(VolumeDecorator.createNew()
+    resources.decorate(VolumeDecorator.createNew()
                      .withName("istio-certs")
                      .withNewSecret()
                      .withSecretName("istio.default")
                      .withDefaultMode(420)
                      .endSecret());
     //Mounts
-    resources.accept(VolumeMountDecorator.createNew()
+    resources.decorate(VolumeMountDecorator.createNew()
                      .withName("istio-envoy")
                      .withMountPath("/etc/istio/proxy"));
-    resources.accept(VolumeMountDecorator.createNew()
+    resources.decorate(VolumeMountDecorator.createNew()
                      .withName("istio-certs")
                      .withMountPath("/etc/certs"));
   }
