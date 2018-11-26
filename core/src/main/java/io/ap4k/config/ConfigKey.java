@@ -17,6 +17,8 @@
 
 package io.ap4k.config;
 
+import java.util.Objects;
+
 public class ConfigKey<T> {
 
   private final String name;
@@ -43,5 +45,20 @@ public class ConfigKey<T> {
 
   public T getDefaultValue() {
     return defaultValue;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ConfigKey<?> configKey = (ConfigKey<?>) o;
+    return Objects.equals(name, configKey.name) &&
+      Objects.equals(type, configKey.type);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(name, type);
   }
 }
