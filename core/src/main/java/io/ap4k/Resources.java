@@ -42,7 +42,7 @@ public class Resources {
    * Add a {@link Decorator}.
    * @param decorator   The decorator.
    */
-  public void accept(Decorator decorator) {
+  public void decorate(Decorator decorator) {
     decorators.add(decorator);
   }
 
@@ -51,7 +51,7 @@ public class Resources {
    * @param group     The group.
    * @param decorator   The decorator.
    */
-  public void accept(String group, Decorator decorator) {
+  public void decorate(String group, Decorator decorator) {
     if (groups.containsKey(group)) {
       groups.get(group).accept(decorator);
     } else {
@@ -63,7 +63,7 @@ public class Resources {
    * Add a {@link Decorator}.
    * @param decorator   The decorator.
    */
-  public void accept(Doneable<? extends Decorator> decorator) {
+  public void decorate(Doneable<? extends Decorator> decorator) {
     decorators.add(decorator.done());
   }
 

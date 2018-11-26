@@ -19,7 +19,6 @@ package io.ap4k;
 import io.ap4k.config.Configuration;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.config.Configurator;
-import io.ap4k.deps.kubernetes.api.builder.Visitor;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -47,7 +46,7 @@ public class Configurators {
   public Stream<? extends Configuration> stream() {
     return suppliers
       .stream()
-      .map(s -> s.acceptAll(configurators).get());
+      .map(s -> s.configure(configurators).get());
   }
 
   public Set<? extends Configuration> toSet()  {

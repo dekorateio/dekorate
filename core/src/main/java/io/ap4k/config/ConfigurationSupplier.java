@@ -36,12 +36,12 @@ public class ConfigurationSupplier<C extends Configuration> implements Supplier<
     return builder.build();
   }
 
-  public ConfigurationSupplier<C> acceptAll(Iterable<Configurator> configurators) {
+  public ConfigurationSupplier<C> configurel(Iterable<Configurator> configurators) {
     configurators.forEach(v -> builder.accept(v));
     return this;
   }
 
-  public ConfigurationSupplier<C> accept(Configurator configurator) {
+  public ConfigurationSupplier<C> configure(Configurator configurator) {
     builder.accept(configurator);
     return this;
   }
