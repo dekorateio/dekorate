@@ -35,10 +35,9 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
       session.onClose(r -> write(r));
-
-      session.configurators().add(new SetSpringBootRuntime());
-      return true;
+    return true;
     }
+    session.configurators().add(new SetSpringBootRuntime());
     return false;
   }
 }
