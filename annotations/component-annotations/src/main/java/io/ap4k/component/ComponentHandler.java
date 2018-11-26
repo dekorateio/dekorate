@@ -20,9 +20,11 @@ import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
+import io.ap4k.component.decorator.AddEnvToComponent;
 import io.ap4k.component.decorator.AddRuntimeToComponent;
 import io.ap4k.config.ConfigKey;
 import io.ap4k.config.Configuration;
+import io.ap4k.config.Env;
 import io.ap4k.config.KubernetesConfig;
 
 public class ComponentHandler implements Handler<CompositeConfig> {
@@ -55,6 +57,9 @@ public class ComponentHandler implements Handler<CompositeConfig> {
     String type = config.getAttribute(RUNTIME_TYPE);
     if (type != null) {
       resources.decorateCustom(COMPONENT,new AddRuntimeToComponent(type));
+    }
+    for (Env env : config.getEnvVars()) {
+      resources.decorateCustom(COMPONENT, new AddEnvToComponent(env));
     }
   }
 
