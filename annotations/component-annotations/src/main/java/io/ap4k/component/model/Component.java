@@ -59,7 +59,7 @@ import java.util.Map;
          */
         @NotNull
         @JsonProperty("apiVersion")
-        private String apiVersion = "v1beta1";
+        private String apiVersion = "component.k8s.io/v1alpha1";
         /**
          *
          * (Required)
