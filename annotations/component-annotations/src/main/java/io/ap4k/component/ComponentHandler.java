@@ -79,6 +79,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
       .endMetadata()
       .withNewSpec()
       .withDeploymentMode(DeploymentType.innerloop)
+      .withExposeService(config.isExposeService())
       .endSpec()
       .build();
   }
