@@ -167,7 +167,7 @@ A processor may register more than one `config` `handlers` with no restriction o
 | ServiceCatalogAnnotationProcessor | ServiceCatalogConfig | [io.ap4k.servicecatalog.annotation.ServiceCatalog, io.ap4k.servicecatalog.annotation.ServiceCatalogInstance] |                                                                   |
 | OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.ap4k.kubernetes.annotation.KubernetesApplication, io.ap4k.openshift.annotation.OpenshiftApplication]                | Generates openshift manifests.                                    |
 | MicronautProcessor                | none                 | [io.micronaut.http.annotation.Controller]                                                                    | Detects the micronaut controller and registers the http port.     |
-| DockerBuildAnnotationProcessor    | DockerBuildConfig    | [io.ap4k.docker.annotation.DockerBuild]                                                                      | Register a docker build hook.                                     |
+| DockerBuildAnnotationProcessor    | DockerBuildConfig    | [io.ap4k.docker.annotation.EnableDockerBuild]                                                                      | Register a docker build hook.                                     |
 
 ### Session
 A shared repository between `annotation processors`. This repository holds `config`, `configurators`, `handlers`, `model` and `decorators`. When the session is closed, All `configurator` are applied, the final `config` is passed to the `handlers`.

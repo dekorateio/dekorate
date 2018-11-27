@@ -29,15 +29,15 @@ import java.lang.annotation.Target;
 
 @Internal
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
-@Pojo(suffix = "Config", relativePath = "../config",
+@Pojo(name = "DockerBuildConfig", relativePath = "../config",
       mutable = true,
       superClass = Configuration.class,
       withStaticBuilderMethod = false,
       withStaticAdapterMethod = false,
-      adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter"))
+      adapter = @Adapter(name = "DockerBuildConfigAdapter", relativePath = "../adapter"))
       @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
       @Retention(RetentionPolicy.SOURCE)
-      public @interface DockerBuild {
+      public @interface EnableDockerBuild {
 
         /**
          * The group of the application.
