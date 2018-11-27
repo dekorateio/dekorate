@@ -17,17 +17,17 @@
 package io.ap4k.openshift;
 
 import io.ap4k.kubernetes.config.ConfigKey;
-import io.ap4k.openshift.config.SourceToImageConfig;
-import io.ap4k.openshift.config.SourceToImageConfigBuilder;
+import io.ap4k.openshift.config.S2iConfig;
+import io.ap4k.openshift.config.S2iConfigBuilder;
 
 public class Constants {
 
   public static String DEFAULT_S2I_BUILDER_IMAGE = "fabric8/s2i-java:2.3";
 
 
-  public static SourceToImageConfig DEFAULT_SOURCE_TO_IMAGE_CONFIG = new SourceToImageConfigBuilder()
+  public static S2iConfig DEFAULT_SOURCE_TO_IMAGE_CONFIG = new S2iConfigBuilder()
     .withBuilderImage(DEFAULT_S2I_BUILDER_IMAGE)
     .build();
 
-  public static ConfigKey<SourceToImageConfig> SOURCE_TO_IMAGE_CONFIG = new ConfigKey<SourceToImageConfig>("SOURCE_TO_IMAGE_CONFIG", SourceToImageConfig.class, DEFAULT_SOURCE_TO_IMAGE_CONFIG);
+  public static ConfigKey<S2iConfig> SOURCE_TO_IMAGE_CONFIG = new ConfigKey<S2iConfig>("SOURCE_TO_IMAGE_CONFIG", S2iConfig.class, DEFAULT_SOURCE_TO_IMAGE_CONFIG);
 }

@@ -23,11 +23,11 @@ import io.ap4k.deps.openshift.api.model.BuildConfig;
 import io.ap4k.deps.openshift.api.model.BuildConfigBuilder;
 import io.ap4k.deps.openshift.api.model.ImageStream;
 import io.ap4k.deps.openshift.api.model.ImageStreamBuilder;
-import io.ap4k.openshift.config.EditableSourceToImageConfig;
-import io.ap4k.openshift.config.SourceToImageConfig;
+import io.ap4k.openshift.config.EditableS2iConfig;
+import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.utils.Images;
 
-public class SourceToImageHandler implements Handler<SourceToImageConfig> {
+public class SourceToImageHandler implements Handler<S2iConfig> {
 
   private static final String OPENSHIFT = "openshift";
   private static final String IMAGESTREAMTAG = "ImageStreamTag";
@@ -39,7 +39,7 @@ public class SourceToImageHandler implements Handler<SourceToImageConfig> {
   }
 
   @Override
-  public void handle(SourceToImageConfig config) {
+  public void handle(S2iConfig config) {
     resources.add(OPENSHIFT, createBuilderImageStream(config));
     resources.add(OPENSHIFT, createProjectImageStream(config));
     resources.add(OPENSHIFT, createBuildConfig(config));
@@ -47,14 +47,14 @@ public class SourceToImageHandler implements Handler<SourceToImageConfig> {
 
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {
-    return type.equals(SourceToImageConfig.class) || type.equals(EditableSourceToImageConfig.class);
+    return type.equals(S2iConfig.class) || type.equals(EditableS2iConfig.class);
   }
   /**
-   * Create an {@link ImageStream} for the {@link SourceToImageConfig}.
+   * Create an {@link ImageStream} for the {@link S2iConfig}.
    * @param config   The config.
    * @return         The build config.
    */
-  public static ImageStream createBuilderImageStream(SourceToImageConfig config) {
+  public static ImageStream createBuilderImageStream(S2iConfig config) {
     String repository = Images.getRepository(config.getBuilderImage());
 
     String name = !repository.contains("/")
@@ -73,11 +73,11 @@ public class SourceToImageHandler implements Handler<SourceToImageConfig> {
 
 
   /**
-   * Create an {@link ImageStream} for the {@link SourceToImageConfig}.
+   * Create an {@link ImageStream} for the {@link S2iConfig}.
    * @param config   The config.
    * @return         The build config.
    */
-  public static ImageStream createProjectImageStream(SourceToImageConfig config) {
+  public static ImageStream createProjectImageStream(S2iConfig config) {
     return new ImageStreamBuilder()
       .withNewMetadata()
       .withName(config.getName())
@@ -86,11 +86,11 @@ public class SourceToImageHandler implements Handler<SourceToImageConfig> {
   }
 
   /**
-   * Create a {@link BuildConfig} for the {@link SourceToImageConfig}.
+   * Create a {@link BuildConfig} for the {@link S2iConfig}.
    * @param config   The config.
    * @return          The build config.
    */
-  public static BuildConfig createBuildConfig(SourceToImageConfig config) {
+  public static BuildConfig createBuildConfig(S2iConfig config) {
     String builderRepository = Images.getRepository(config.getBuilderImage());
     String builderTag = Images.getTag(config.getBuilderImage());
 

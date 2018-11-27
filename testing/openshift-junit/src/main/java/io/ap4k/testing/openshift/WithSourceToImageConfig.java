@@ -16,15 +16,15 @@
  **/
 package io.ap4k.testing.openshift;
 
-import io.ap4k.openshift.config.SourceToImageConfig;
+import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.utils.Serialization;
 
 public interface WithSourceToImageConfig {
 
-  String SOURCE_TO_IMAGE_CONFIG_PATH = "META-INF/ap4k/.config/sourcetoimage.yml";
+  String SOURCE_TO_IMAGE_CONFIG_PATH = "META-INF/ap4k/.config/s2iconfig.yml";
 
-  default SourceToImageConfig getSourceToImageConfig() {
-    return  Serialization.unmarshal(WithSourceToImageConfig.class.getClassLoader().getResourceAsStream(SOURCE_TO_IMAGE_CONFIG_PATH), SourceToImageConfig.class);
+  default S2iConfig getSourceToImageConfig() {
+    return  Serialization.unmarshal(WithSourceToImageConfig.class.getClassLoader().getResourceAsStream(SOURCE_TO_IMAGE_CONFIG_PATH), S2iConfig.class);
   }
 
 }

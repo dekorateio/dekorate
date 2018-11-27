@@ -25,7 +25,7 @@ import io.ap4k.kubernetes.annotation.Internal;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.openshift.api.model.Build;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
-import io.ap4k.openshift.config.SourceToImageConfig;
+import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.openshift.utils.OpenshiftUtils;
 import io.ap4k.project.Project;
 import io.ap4k.testing.WithKubernetesClient;
@@ -96,7 +96,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       });
 
     Project project = getProject(MANIFEST_PATH);
-    SourceToImageConfig s2iConfig = getSourceToImageConfig();
+    S2iConfig s2iConfig = getSourceToImageConfig();
 
     build(context, project);
     client.adapt(OpenShiftClient.class).deploymentConfigs().withName(s2iConfig.getName()).waitUntilReady(5, TimeUnit.MINUTES);
@@ -123,7 +123,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       } catch (Exception e) {}
     });
 
-    SourceToImageConfig s2iConfig = getSourceToImageConfig();
+    S2iConfig s2iConfig = getSourceToImageConfig();
     List<HasMetadata> buildPods = client.pods().list()
       .getItems()
       .stream()
