@@ -24,7 +24,7 @@ import io.sundr.codegen.annotations.PackageSelector;
 
 @VelocityTransformations(value = @VelocityTransformation(value="/decorator-doc.vm", outputPath="decorators-table.org", gather=true),
                          packages = {
-                           @PackageSelector(value="io.ap4k.decorator"),
+                           @PackageSelector(value="io.ap4k.kubernetes.decorator"),
                            @PackageSelector(value="io.ap4k.component.decorator")
                          })
 public class DocumentDecorators {

@@ -16,8 +16,8 @@
 **/
 package io.ap4k.docker.annotation;
 
-import io.ap4k.annotation.Internal;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.annotation.Internal;
+import io.ap4k.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;

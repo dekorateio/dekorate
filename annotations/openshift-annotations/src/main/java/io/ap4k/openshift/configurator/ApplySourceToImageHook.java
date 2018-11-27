@@ -16,7 +16,7 @@
 **/
 package io.ap4k.openshift.configurator;
 
-import io.ap4k.config.Configurator;
+import io.ap4k.kubernetes.config.Configurator;
 import io.ap4k.openshift.config.SourceToImageConfigFluent;
 import io.ap4k.doc.Description;
 

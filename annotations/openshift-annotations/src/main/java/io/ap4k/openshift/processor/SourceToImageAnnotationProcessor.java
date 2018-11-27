@@ -18,8 +18,7 @@
 package io.ap4k.openshift.processor;
 
 import io.ap4k.Session;
-import io.ap4k.annotation.KubernetesApplication;
-import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.openshift.Constants;
 import io.ap4k.openshift.SourceToImageHandler;
 import io.ap4k.openshift.adapt.SourceToImageConfigAdapter;
@@ -66,7 +65,6 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     return false;
   }
 
-  @Override
   public ConfigurationSupplier<SourceToImageConfig> config(Element mainClass) {
     return new ConfigurationSupplier<SourceToImageConfig>(configurationBuilder(mainClass));
   }
@@ -79,8 +77,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
   public SourceToImageConfigBuilder configurationBuilder(Element mainClass) {
     SourceToImage sourceToImage = mainClass.getAnnotation(SourceToImage.class);
     OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
-    KubernetesApplication kubernetesApplication = mainClass.getAnnotation(KubernetesApplication.class);
-    OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication, kubernetesApplication).build();
+    OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication).build();
     return SourceToImageConfigAdapter.newBuilder(sourceToImage)
       .accept(new ApplySourceToImageHook())
       .accept(new ApplyOpenshiftConfig(openshiftConfig));

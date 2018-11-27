@@ -16,9 +16,9 @@
 **/
 package io.ap4k.spring.configurator;
 
-import io.ap4k.config.ConfigKey;
-import io.ap4k.config.Configurator;
-import io.ap4k.config.KubernetesConfigFluent;
+import io.ap4k.kubernetes.config.ConfigKey;
+import io.ap4k.kubernetes.config.Configurator;
+import io.ap4k.kubernetes.config.KubernetesConfigFluent;
 
 public class SetSpringBootRuntime extends Configurator<KubernetesConfigFluent> {
 

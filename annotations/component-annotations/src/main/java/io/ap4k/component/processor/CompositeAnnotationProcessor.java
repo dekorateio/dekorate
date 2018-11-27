@@ -20,12 +20,11 @@ package io.ap4k.component.processor;
 import io.ap4k.Session;
 import io.ap4k.component.ComponentHandler;
 import io.ap4k.component.ComponentServiceCatalogHandler;
-import io.ap4k.component.ComponentKubernetesHandler;
 import io.ap4k.component.adapt.CompositeConfigAdapter;
 import io.ap4k.component.annotation.CompositeApplication;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.CompositeConfigBuilder;
-import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 
@@ -48,7 +47,6 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         session.configurators().add(config(mainClass));
-        session.generators().add(new ComponentKubernetesHandler(session.resources()));
         session.generators().add(new ComponentHandler(session.resources()));
         session.generators().add(new ComponentServiceCatalogHandler(session.resources()));
       }
@@ -56,7 +54,6 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
     return false;
   }
 
-  @Override
   public ConfigurationSupplier<CompositeConfig> config(Element mainClass) {
     CompositeApplication compositeApplication = mainClass.getAnnotation(CompositeApplication.class);
     return compositeApplication != null

@@ -16,7 +16,7 @@
 **/
 package io.ap4k.testing.kubernetes;
 
-import io.ap4k.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.client.DefaultKubernetesClient;

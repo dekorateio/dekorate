@@ -18,27 +18,27 @@
 
 package io.apk4k.kubernetes;
 
-import io.ap4k.config.ImagePullPolicy;
-import io.ap4k.annotation.ServiceType;
-import io.ap4k.config.Annotation;
-import io.ap4k.config.AwsElasticBlockStoreVolume;
-import io.ap4k.config.AzureDiskVolume;
-import io.ap4k.config.AzureFileVolume;
-import io.ap4k.config.ConfigKey;
-import io.ap4k.config.ConfigMapVolume;
-import io.ap4k.config.Env;
-import io.ap4k.config.GitRepoVolume;
-import io.ap4k.config.Label;
-import io.ap4k.config.Mount;
-import io.ap4k.config.PersistentVolumeClaimVolume;
-import io.ap4k.config.Port;
-import io.ap4k.config.Probe;
-import io.ap4k.config.SecretVolume;
+import io.ap4k.kubernetes.config.ImagePullPolicy;
+import io.ap4k.kubernetes.annotation.ServiceType;
+import io.ap4k.kubernetes.config.Annotation;
+import io.ap4k.kubernetes.config.AwsElasticBlockStoreVolume;
+import io.ap4k.kubernetes.config.AzureDiskVolume;
+import io.ap4k.kubernetes.config.AzureFileVolume;
+import io.ap4k.kubernetes.config.ConfigKey;
+import io.ap4k.kubernetes.config.ConfigMapVolume;
+import io.ap4k.kubernetes.config.Env;
+import io.ap4k.kubernetes.config.GitRepoVolume;
+import io.ap4k.kubernetes.config.Label;
+import io.ap4k.kubernetes.config.Mount;
+import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
+import io.ap4k.kubernetes.config.Port;
+import io.ap4k.kubernetes.config.Probe;
+import io.ap4k.kubernetes.config.SecretVolume;
 import io.ap4k.kubernetes.KubernetesHandler;
 import io.ap4k.project.Project;
 
-import io.ap4k.config.KubernetesConfig;
-import io.ap4k.config.EditableKubernetesConfig;
+import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.EditableKubernetesConfig;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

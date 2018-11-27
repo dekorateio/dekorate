@@ -17,7 +17,7 @@
 package io.ap4k.testing.openshift;
 
 import io.ap4k.Ap4kException;
-import io.ap4k.annotation.Internal;
+import io.ap4k.kubernetes.annotation.Internal;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.openshift.api.model.Build;

@@ -16,7 +16,7 @@
 **/
 package io.ap4k.docker.configurator;
 
-import io.ap4k.config.Configurator;
+import io.ap4k.kubernetes.config.Configurator;
 import io.ap4k.docker.config.DockerBuildConfigFluent;
 import io.ap4k.doc.Description;
 

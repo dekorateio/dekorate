@@ -16,8 +16,8 @@
 **/
 package io.ap4k.project;
 
-import io.ap4k.config.Configurator;
-import io.ap4k.config.KubernetesConfigFluent;
+import io.ap4k.kubernetes.config.Configurator;
+import io.ap4k.kubernetes.config.KubernetesConfigFluent;
 import io.ap4k.utils.Strings;
 
 public class ApplyProjectInfo extends Configurator<KubernetesConfigFluent> {

@@ -16,32 +16,32 @@
 **/
 package io.ap4k;
 
-import io.ap4k.config.Annotation;
-import io.ap4k.config.AwsElasticBlockStoreVolume;
-import io.ap4k.config.AzureDiskVolume;
-import io.ap4k.config.AzureFileVolume;
-import io.ap4k.config.ConfigMapVolume;
-import io.ap4k.config.Env;
-import io.ap4k.config.KubernetesConfig;
-import io.ap4k.config.Label;
-import io.ap4k.config.Mount;
-import io.ap4k.config.PersistentVolumeClaimVolume;
-import io.ap4k.config.Port;
-import io.ap4k.config.SecretVolume;
-import io.ap4k.decorator.AddAnnotation;
-import io.ap4k.decorator.AddAwsElasticBlockStoreVolume;
-import io.ap4k.decorator.AddAzureDiskVolume;
-import io.ap4k.decorator.AddAzureFileVolume;
-import io.ap4k.decorator.AddConfigMapVolume;
-import io.ap4k.decorator.AddEnvVar;
-import io.ap4k.decorator.AddLabel;
-import io.ap4k.decorator.AddLivenessProbe;
-import io.ap4k.decorator.AddMount;
-import io.ap4k.decorator.AddPort;
-import io.ap4k.decorator.AddPvcVolume;
-import io.ap4k.decorator.AddReadinessProbe;
-import io.ap4k.decorator.AddSecretVolume;
-import io.ap4k.decorator.AddService;
+import io.ap4k.kubernetes.config.Annotation;
+import io.ap4k.kubernetes.config.AwsElasticBlockStoreVolume;
+import io.ap4k.kubernetes.config.AzureDiskVolume;
+import io.ap4k.kubernetes.config.AzureFileVolume;
+import io.ap4k.kubernetes.config.ConfigMapVolume;
+import io.ap4k.kubernetes.config.Env;
+import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.Label;
+import io.ap4k.kubernetes.config.Mount;
+import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
+import io.ap4k.kubernetes.config.Port;
+import io.ap4k.kubernetes.config.SecretVolume;
+import io.ap4k.kubernetes.decorator.AddAnnotation;
+import io.ap4k.kubernetes.decorator.AddAwsElasticBlockStoreVolume;
+import io.ap4k.kubernetes.decorator.AddAzureDiskVolume;
+import io.ap4k.kubernetes.decorator.AddAzureFileVolume;
+import io.ap4k.kubernetes.decorator.AddConfigMapVolume;
+import io.ap4k.kubernetes.decorator.AddEnvVar;
+import io.ap4k.kubernetes.decorator.AddLabel;
+import io.ap4k.kubernetes.decorator.AddLivenessProbe;
+import io.ap4k.kubernetes.decorator.AddMount;
+import io.ap4k.kubernetes.decorator.AddPort;
+import io.ap4k.kubernetes.decorator.AddPvcVolume;
+import io.ap4k.kubernetes.decorator.AddReadinessProbe;
+import io.ap4k.kubernetes.decorator.AddSecretVolume;
+import io.ap4k.kubernetes.decorator.AddService;
 
 /**
  * An abstract generator.

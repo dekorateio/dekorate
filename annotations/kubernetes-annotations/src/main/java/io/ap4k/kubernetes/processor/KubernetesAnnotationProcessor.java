@@ -18,10 +18,15 @@
 package io.ap4k.kubernetes.processor;
 
 import io.ap4k.Session;
-import io.ap4k.config.KubernetesConfig;
+import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
+import io.ap4k.kubernetes.adapter.KubernetesConfigAdapter;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.KubernetesHandler;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
+import io.ap4k.project.ApplyProjectInfo;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -30,7 +35,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 @Description("Generates kubernetes manifests.")
-@SupportedAnnotationTypes("io.ap4k.annotation.KubernetesApplication")
+@SupportedAnnotationTypes("io.ap4k.kubernetes.annotation.KubernetesApplication")
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<KubernetesConfig> {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -46,5 +51,17 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<K
       }
     }
     return false;
+  }
+
+  /**
+   * Get or create a new config for the specified {@link Element}.
+   * @param mainClass     The type element of the annotated class (Main).
+   * @return              A new config.
+   */
+  public ConfigurationSupplier<KubernetesConfig> config(Element mainClass) {
+    KubernetesApplication application = mainClass.getAnnotation(KubernetesApplication.class);
+    return new ConfigurationSupplier<KubernetesConfig>((VisitableBuilder<KubernetesConfig, ?>) KubernetesConfigAdapter
+      .newBuilder(application)
+      .accept(new ApplyProjectInfo(project)));
   }
 }

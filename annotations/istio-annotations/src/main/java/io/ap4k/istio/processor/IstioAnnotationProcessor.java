@@ -17,7 +17,7 @@
 
 package io.ap4k.istio.processor;
 
-import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.istio.IstioHandler;
 import io.ap4k.istio.adapt.IstioConfigAdapter;
 import io.ap4k.istio.annotation.Istio;
@@ -55,7 +55,6 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
     return false;
   }
 
-  @Override
   public ConfigurationSupplier<IstioConfig> config(Element mainClass) {
     Istio istio = mainClass.getAnnotation(Istio.class);
     return istio != null

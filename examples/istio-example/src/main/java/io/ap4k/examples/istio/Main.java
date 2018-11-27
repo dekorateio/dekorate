@@ -17,7 +17,7 @@
 
 package io.ap4k.examples.istio;
 
-import io.ap4k.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.istio.annotation.Istio;
 
 @Istio

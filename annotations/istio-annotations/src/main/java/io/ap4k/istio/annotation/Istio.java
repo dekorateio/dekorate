@@ -16,7 +16,7 @@
 **/
 package io.ap4k.istio.annotation;
 
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;

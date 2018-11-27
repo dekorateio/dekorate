@@ -16,7 +16,7 @@
 **/
 package io.ap4k;
 
-import io.ap4k.decorator.Decorator;
+import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;

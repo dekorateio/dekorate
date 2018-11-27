@@ -18,11 +18,11 @@
 
 package io.ap4k.utils;
 
-import io.ap4k.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Arrays;
-import io.ap4k.config.Label;
+import io.ap4k.kubernetes.config.Label;
 
 
 public class Labels {

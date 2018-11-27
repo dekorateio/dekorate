@@ -18,8 +18,7 @@
 package io.ap4k.openshift.processor;
 
 import io.ap4k.Session;
-import io.ap4k.annotation.KubernetesApplication;
-import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.openshift.OpenshiftHandler;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 import io.ap4k.openshift.confg.OpenshiftConfigCustomAdapter;
@@ -38,7 +37,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Description("Generates openshift manifests.")
-@SupportedAnnotationTypes({"io.ap4k.annotation.KubernetesApplication", "io.ap4k.openshift.annotation.OpenshiftApplication"})
+@SupportedAnnotationTypes({"io.ap4k.kubernetes.annotation.KubernetesApplication", "io.ap4k.openshift.annotation.OpenshiftApplication"})
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<OpenshiftConfig> {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -61,7 +60,6 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
     return false;
   }
 
-  @Override
   public ConfigurationSupplier<OpenshiftConfig> config(Element mainClass) {
     return new ConfigurationSupplier<OpenshiftConfig>(configurationBuilder(mainClass));
   }
@@ -74,7 +72,6 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
   public OpenshiftConfigBuilder configurationBuilder(Element mainClass) {
     Project project = AptProjectFactory.create(processingEnv);
     OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
-    KubernetesApplication kubernetesApplication = mainClass.getAnnotation(KubernetesApplication.class);
-    return OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication, kubernetesApplication);
+    return OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication);
   }
 }

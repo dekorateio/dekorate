@@ -22,7 +22,7 @@ import io.ap4k.Resources;
 import io.ap4k.component.decorator.AddServiceInstanceToComponent;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 
 public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogConfig> {

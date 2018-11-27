@@ -17,8 +17,8 @@
 
 package io.ap4k.istio;
 
-import io.ap4k.config.ConfigKey;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.ConfigKey;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.istio.annotation.ProxyConfig;
 
 import java.util.HashMap;

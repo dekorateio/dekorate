@@ -18,12 +18,12 @@ package io.ap4k.istio;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
-import io.ap4k.config.Configuration;
-import io.ap4k.config.ImagePullPolicy;
-import io.ap4k.decorator.ContainerDecorator;
-import io.ap4k.decorator.Decorator;
-import io.ap4k.decorator.VolumeDecorator;
-import io.ap4k.decorator.VolumeMountDecorator;
+import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.config.ImagePullPolicy;
+import io.ap4k.kubernetes.decorator.ContainerDecorator;
+import io.ap4k.kubernetes.decorator.Decorator;
+import io.ap4k.kubernetes.decorator.VolumeDecorator;
+import io.ap4k.kubernetes.decorator.VolumeMountDecorator;
 import io.ap4k.istio.config.IstioConfig;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.istio.config.EditableIstioConfig;

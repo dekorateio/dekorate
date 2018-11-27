@@ -18,9 +18,9 @@ package io.ap4k.kubernetes;
 
 import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;
-import io.ap4k.config.KubernetesConfig;
-import io.ap4k.config.EditableKubernetesConfig;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.EditableKubernetesConfig;
+import io.ap4k.kubernetes.config.Configuration;
 
 public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> {
 

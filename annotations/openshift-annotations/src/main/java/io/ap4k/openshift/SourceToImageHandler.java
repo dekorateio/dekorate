@@ -18,7 +18,7 @@ package io.ap4k.openshift;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
 import io.ap4k.deps.openshift.api.model.BuildConfigBuilder;
 import io.ap4k.deps.openshift.api.model.ImageStream;
