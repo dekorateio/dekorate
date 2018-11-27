@@ -17,9 +17,9 @@
 package io.ap4k.docker.processor;
 
 import io.ap4k.Session;
+import io.ap4k.docker.annotation.EnableDockerBuild;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.docker.adapter.DockerBuildConfigAdapter;
-import io.ap4k.docker.annotation.DockerBuild;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
 import io.ap4k.docker.configurator.ApplyDockerBuildHook;
@@ -35,7 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Description("Register a docker build hook.")
-@SupportedAnnotationTypes("io.ap4k.docker.annotation.DockerBuild")
+@SupportedAnnotationTypes("io.ap4k.docker.annotation.EnableDockerBuild")
 public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<DockerBuildConfig> {
 
   @Override
@@ -60,12 +60,11 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<
   }
 
   public ConfigurationSupplier<DockerBuildConfig> config(Element mainClass) {
-    DockerBuild dockerBuild = mainClass.getAnnotation(DockerBuild.class);
-    return new ConfigurationSupplier<>(
-            DockerBuildConfigAdapter
-            .newBuilder(dockerBuild)
-            .accept(new ApplyProjectInfoToDockerBuildConfig(project))
-            .accept(new ApplyDockerBuildHook()));
+    EnableDockerBuild enableDockerBuild = mainClass.getAnnotation(EnableDockerBuild.class);
+    return new ConfigurationSupplier<DockerBuildConfig>(DockerBuildConfigAdapter
+                                                        .newBuilder(enableDockerBuild)
+                                                        .accept(new ApplyProjectInfoToDockerBuildConfig(project))
+                                                        .accept(new ApplyDockerBuildHook()));
   }
 
 }
