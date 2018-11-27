@@ -16,7 +16,7 @@
 **/
 package io.ap4k.openshift.utils;
 
-import io.ap4k.decorator.Decorator;
+import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.ObjectReference;

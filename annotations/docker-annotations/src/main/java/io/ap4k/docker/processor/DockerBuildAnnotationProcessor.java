@@ -17,7 +17,7 @@
 package io.ap4k.docker.processor;
 
 import io.ap4k.Session;
-import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.docker.adapter.DockerBuildConfigAdapter;
 import io.ap4k.docker.annotation.DockerBuild;
 import io.ap4k.docker.config.DockerBuildConfig;
@@ -59,7 +59,6 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<
     return false;
   }
 
-  @Override
   public ConfigurationSupplier<DockerBuildConfig> config(Element mainClass) {
     DockerBuild dockerBuild = mainClass.getAnnotation(DockerBuild.class);
     return new ConfigurationSupplier<DockerBuildConfig>(DockerBuildConfigAdapter

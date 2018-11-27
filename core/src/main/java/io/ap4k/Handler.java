@@ -16,7 +16,7 @@
 **/
 package io.ap4k;
 
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.Configuration;
 
 public interface Handler<C extends Configuration> {
 

@@ -78,11 +78,11 @@ limitations under the License.
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
-          <!-- Disable annotation processing for ourselves. -->
-          <compilerArgument>-proc:none</compilerArgument>
+          <annotationProcessors>
+            <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
+          </annotationProcessors>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
 </project>

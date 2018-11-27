@@ -18,20 +18,14 @@
 package io.ap4k.processor;
 
 import io.ap4k.Session;
-import io.ap4k.adapter.KubernetesConfigAdapter;
-import io.ap4k.annotation.KubernetesApplication;
-import io.ap4k.config.Configuration;
-import io.ap4k.config.ConfigurationSupplier;
-import io.ap4k.project.ApplyProjectInfo;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.project.Project;
 import io.ap4k.project.AptProjectFactory;
 import io.ap4k.utils.Serialization;
-import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -56,17 +50,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     this.project = AptProjectFactory.create(processingEnv);
   }
 
-  /**
-   * Get or create a new config for the specified {@link Element}.
-   * @param mainClass     The type element of the annotated class (Main).
-   * @return              A new config.
-   */
-  public ConfigurationSupplier<C> config(Element mainClass) {
-    KubernetesApplication application = mainClass.getAnnotation(KubernetesApplication.class);
-    return new ConfigurationSupplier<C>((VisitableBuilder<C, ?>) KubernetesConfigAdapter
-                                        .newBuilder(application)
-                                        .accept(new ApplyProjectInfo(project)));
-  }
+
 
   /**
    * Writes all {@link Session} resources.

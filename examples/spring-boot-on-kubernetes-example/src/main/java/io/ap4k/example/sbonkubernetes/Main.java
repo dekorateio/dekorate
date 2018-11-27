@@ -17,7 +17,7 @@
 
 package io.ap4k.example.sbonkubernetes;
 
-import io.ap4k.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.docker.annotation.DockerBuild;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

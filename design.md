@@ -57,8 +57,8 @@ An example configuration is the `KuberenetesConfig` class:
         private String group;
         private String name;
         private String version;
-        private io.ap4k.config.Label[] labels;
-        private io.ap4k.config.Annotation[] annotations;
+        private io.ap4k.kubernetes.config.Label[] labels;
+        private io.ap4k.kubernetes.config.Annotation[] annotations;
         ...
     }
 
@@ -161,11 +161,11 @@ A processor may register more than one `config` `handlers` with no restriction o
 | SourceToImageAnnotationProcessor  | SourceToImageConfig  | [io.ap4k.openshift.annotation.SourceToImage]                                                                 | Adds source to image configuration in the openshift manifests.    |
 | CompositeAnnotationProcessor      | CompositeConfig      | [io.ap4k.component.annotation.CompositeApplication]                                                          | Generate component custom resources.                              |
 | SpringBootApplicationProcessor    | none                 | [org.springframework.boot.autoconfigure.SpringBootApplication]                                               | Detects Spring Boot and set the runtime attribute to Spring Boot. |
-| KubernetesAnnotationProcessor     | KubernetesConfig     | [io.ap4k.annotation.KubernetesApplication]                                                                   | Generates kubernetes manifests.                                   |
+| KubernetesAnnotationProcessor     | KubernetesConfig     | [io.ap4k.kubernetes.annotation.KubernetesApplication]                                                                   | Generates kubernetes manifests.                                   |
 | ThrorntailProcessor               | none                 | [javax.ws.rs.ApplicationPath, javax.jws.WebService]                                                          | Detects jaxrs and jaxws annotations and registers the http port.  |
 | SpringBootMappingProcessor        | none                 | [org.springframework.web.bind.annotation.RequestMapping, org.springframework.web.bind.annotation.GetMapping] | Detects Spring Boot web endpoints and registers the http port.    |
 | ServiceCatalogAnnotationProcessor | ServiceCatalogConfig | [io.ap4k.servicecatalog.annotation.ServiceCatalog, io.ap4k.servicecatalog.annotation.ServiceCatalogInstance] |                                                                   |
-| OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.ap4k.annotation.KubernetesApplication, io.ap4k.openshift.annotation.OpenshiftApplication]                | Generates openshift manifests.                                    |
+| OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.ap4k.kubernetes.annotation.KubernetesApplication, io.ap4k.openshift.annotation.OpenshiftApplication]                | Generates openshift manifests.                                    |
 | MicronautProcessor                | none                 | [io.micronaut.http.annotation.Controller]                                                                    | Detects the micronaut controller and registers the http port.     |
 | DockerBuildAnnotationProcessor    | DockerBuildConfig    | [io.ap4k.docker.annotation.DockerBuild]                                                                      | Register a docker build hook.                                     |
 

@@ -18,7 +18,7 @@
 
 package io.ap4k.examples.component.service;
 
-import io.ap4k.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.component.annotation.CompositeApplication;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;

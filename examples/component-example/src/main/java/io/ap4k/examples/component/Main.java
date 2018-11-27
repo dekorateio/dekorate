@@ -18,13 +18,11 @@
 
 package io.ap4k.examples.component;
 
-import io.ap4k.annotation.Env;
-import io.ap4k.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.annotation.Env;
 import io.ap4k.component.annotation.CompositeApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KubernetesApplication
 @CompositeApplication(envVars = @Env(name = "key1", value = "val1"))
 @SpringBootApplication
 public class Main {

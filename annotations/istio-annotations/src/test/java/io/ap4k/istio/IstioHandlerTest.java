@@ -18,7 +18,7 @@
 
 package io.ap4k.istio;
 
-import io.ap4k.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.istio.config.EditableIstioConfig;
 import io.ap4k.istio.config.IstioConfig;
 import org.junit.jupiter.api.Test;

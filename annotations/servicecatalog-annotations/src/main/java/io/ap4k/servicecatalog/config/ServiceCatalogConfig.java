@@ -16,8 +16,8 @@
 **/
 package io.ap4k.servicecatalog.config;
 
-import io.ap4k.config.ConfigKey;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.ConfigKey;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.project.Project;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;

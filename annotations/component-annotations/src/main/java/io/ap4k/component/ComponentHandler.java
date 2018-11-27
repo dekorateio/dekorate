@@ -22,10 +22,13 @@ import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
 import io.ap4k.component.decorator.AddEnvToComponent;
 import io.ap4k.component.decorator.AddRuntimeToComponent;
-import io.ap4k.config.ConfigKey;
-import io.ap4k.config.Configuration;
-import io.ap4k.config.Env;
-import io.ap4k.config.KubernetesConfig;
+import io.ap4k.component.model.Component;
+import io.ap4k.component.model.ComponentBuilder;
+import io.ap4k.component.model.DeploymentType;
+import io.ap4k.kubernetes.config.ConfigKey;
+import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.config.Env;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 
 public class ComponentHandler implements Handler<CompositeConfig> {
 
@@ -44,6 +47,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
 
   @Override
   public void handle(CompositeConfig config) {
+    resources.addCustom(COMPONENT, createComponent(config));
     addVisitors(config);
   }
 
@@ -63,4 +67,19 @@ public class ComponentHandler implements Handler<CompositeConfig> {
     }
   }
 
+  /**
+   * Create a {@link Component} from a {@link KubernetesConfig}.
+   * @param config  The config.
+   * @return        The component.
+   */
+  private Component createComponent(CompositeConfig config) {
+    return new ComponentBuilder()
+      .withNewMetadata()
+      .withName(config.getName())
+      .endMetadata()
+      .withNewSpec()
+      .withDeploymentMode(DeploymentType.innerloop)
+      .endSpec()
+      .build();
+  }
 }

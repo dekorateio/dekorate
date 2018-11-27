@@ -18,7 +18,7 @@ package io.ap4k.servicecatalog;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.deps.servicecatalog.api.model.ServiceBindingBuilder;
 import io.ap4k.deps.servicecatalog.api.model.ServiceInstanceBuilder;
 import io.ap4k.servicecatalog.config.Parameter;

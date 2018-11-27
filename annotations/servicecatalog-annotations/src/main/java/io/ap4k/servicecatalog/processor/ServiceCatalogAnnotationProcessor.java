@@ -18,7 +18,7 @@ package io.ap4k.servicecatalog.processor;
 
 
 import io.ap4k.Session;
-import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.servicecatalog.ServiceCatalogHandler;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
@@ -52,7 +52,6 @@ import java.util.Set;
           return false;
         }
 
-        @Override
         public ConfigurationSupplier<ServiceCatalogConfig> config(Element mainClass) {
           ServiceCatalog serviceCatalog = mainClass.getAnnotation(ServiceCatalog.class);
           return serviceCatalog != null

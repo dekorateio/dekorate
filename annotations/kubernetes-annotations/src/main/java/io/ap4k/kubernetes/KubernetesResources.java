@@ -17,7 +17,7 @@
 
 package io.ap4k.kubernetes;
 
-import io.ap4k.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.deps.kubernetes.api.model.LabelSelector;
 import io.ap4k.deps.kubernetes.api.model.LabelSelectorBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodSpec;

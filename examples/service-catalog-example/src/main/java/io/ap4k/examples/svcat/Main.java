@@ -18,7 +18,7 @@
 package io.ap4k.examples.svcat;
 
 
-import io.ap4k.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 

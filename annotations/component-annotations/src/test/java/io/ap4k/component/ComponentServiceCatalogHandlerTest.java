@@ -16,7 +16,7 @@
 **/
 package io.ap4k.component;
 
-import io.ap4k.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import org.junit.jupiter.api.Test;

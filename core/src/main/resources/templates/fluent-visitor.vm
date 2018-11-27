@@ -1,4 +1,4 @@
-package io.ap4k.decorator;
+package io.ap4k.kubernetes.decorator;
 
 
 #set ($targetfn = ${model.implementsList[0].arguments[0].fullyQualifiedName})
@@ -15,7 +15,7 @@ import io.ap4k.deps.kubernetes.api.builder.Function;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 
 import $parent;
-import io.ap4k.decorator.Decorator;
+import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.model.$target;
 import io.ap4k.deps.kubernetes.api.model.${target}Builder;
 import io.ap4k.deps.kubernetes.api.model.${target}FluentImpl;

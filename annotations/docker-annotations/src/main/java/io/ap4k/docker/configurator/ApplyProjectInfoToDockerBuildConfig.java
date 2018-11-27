@@ -16,7 +16,7 @@
 **/
 package io.ap4k.docker.configurator;
 
-import io.ap4k.decorator.Decorator;
+import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.docker.config.DockerBuildConfigFluent;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Strings;

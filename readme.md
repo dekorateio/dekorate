@@ -102,8 +102,8 @@ For example in the case of maven it refers to parsing the pom.xml with DOM in or
 
 To add extra ports to the container, you can add one or more `@Port` into your `@KubernetesApplication`:
 
-    import io.ap4k.annotation.Env;
-    import io.ap4k.annotation.KubernetesApplication;
+    import io.ap4k.kubernetes.annotation.Env;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
     @KubernetesApplication(ports = @Port(name = "web", containerPort = 8080))
     public class Main {
@@ -120,8 +120,8 @@ This will trigger the addition of a container port to the `Deployment` but also 
 #### Adding container environment variables
 To add extra environment variables to the container, you can add one or more `@EnvVar` into your `@KubernetesApplication`:
 
-    import io.ap4k.annotation.Env;
-    import io.ap4k.annotation.KubernetesApplication;
+    import io.ap4k.kubernetes.annotation.Env;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
     @KubernetesApplication(envVars = @Env(name = "key1", value = "var1"))
     public class Main {
@@ -136,10 +136,10 @@ Additional options are provided for adding environment variables from fields, co
 #### Working with volumes and mounts
 To define volumes and mounts for your application, you can use something like:
 
-    import io.ap4k.annotation.Port;
-    import io.ap4k.annotation.Mount;
-    import io.ap4k.annotation.PersistentVolumeClaimVolume;
-    import io.ap4k.annotation.KubernetesApplication;
+    import io.ap4k.kubernetes.annotation.Port;
+    import io.ap4k.kubernetes.annotation.Mount;
+    import io.ap4k.kubernetes.annotation.PersistentVolumeClaimVolume;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
     
     @KubernetesApplication(ports = @Port(name = "http", containerPort = 8080), 
       pvcVolumes = @PersistentVolumeClaimVolume(volumeName = "mysql-volume", claimName = "mysql-pvc"),
@@ -237,7 +237,7 @@ The [service catalog](https://svc-cat.io) annotation processor is can be used in
 
 Here's an example:
 
-    import io.ap4k.annotation.KubernetesApplication;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
     import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
     import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 
@@ -269,7 +269,7 @@ This module can be added to the project using:
 The [istio](https://istio.io)  annotation processor can be used to automatically inject the istio sidecar to the generated resources. 
 For example:
 
-    import io.ap4k.annotation.KubernetesApplication;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
     import io.ap4k.istio.annotation.Istio;
    
     @Istio
@@ -306,7 +306,7 @@ The content of the component descriptor will be determined by the existing confi
 
 For example, the following code:
 
-    import io.ap4k.annotation.KubernetesApplication;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
     import io.ap4k.component.annotation.CompositeApplication;
     import io.ap4k.servicecatalog.annotation.ServiceCatalog;
     import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;

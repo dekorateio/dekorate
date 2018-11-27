@@ -19,7 +19,7 @@ package io.ap4k.openshift;
 
 import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;
-import io.ap4k.config.Configuration;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
 
