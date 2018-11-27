@@ -25,6 +25,7 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class Resources {
   private final KubernetesListBuilder global = new KubernetesListBuilder();
   private final Set<Decorator> decorators = new HashSet<>();
 
-  private final Map<String, Decorator> customDecorators = new HashMap<>();
+  private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
 
   /**
@@ -95,7 +96,10 @@ public class Resources {
    * @param decorator   The decorator.
    */
   public void decorateCustom(String group, Decorator decorator) {
-    customDecorators.put(group, decorator);
+    if (!customDecorators.containsKey(group)) {
+      customDecorators.put(group, new LinkedHashSet<>());
+    }
+    customDecorators.get(group).add(decorator);
   }
 
   /**
@@ -128,8 +132,14 @@ public class Resources {
     decorators.forEach(v -> groups.forEach((g, b) -> b.accept(v)));
     groups.forEach((g, b) -> resources.put(g, b.build()));
 
-    customDecorators.forEach((g, d) -> customGroups.get(g).accept(d));
-    customGroups.forEach((g, b) -> resources.put(g, b.build()));
+    for (Map.Entry<String, Set<Decorator>> entry : customDecorators.entrySet()) {
+      String group = entry.getKey();
+      Set<Decorator> groupDecorators = entry.getValue();
+      for (Decorator decorator : groupDecorators)  {
+       customGroups.get(group).accept(decorator);
+      }
+      resources.put(group, customGroups.get(group).build());
+    }
     return resources;
   }
 }
