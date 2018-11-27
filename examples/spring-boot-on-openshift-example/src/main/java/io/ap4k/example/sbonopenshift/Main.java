@@ -18,12 +18,12 @@
 package io.ap4k.example.sbonopenshift;
 
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.annotation.SourceToImage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.ap4k.openshift.annotation.EnableS2iBuild;
 
 @OpenshiftApplication
-@SourceToImage
+@EnableS2iBuild
 @SpringBootApplication
 public class Main {
 

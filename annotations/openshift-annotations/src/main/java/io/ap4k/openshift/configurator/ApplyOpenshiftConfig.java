@@ -18,11 +18,12 @@ package io.ap4k.openshift.configurator;
 
 import io.ap4k.kubernetes.config.Configurator;
 import io.ap4k.openshift.config.OpenshiftConfig;
-import io.ap4k.openshift.config.SourceToImageConfigFluent;
+import io.ap4k.openshift.config.S2iConfigFluent;
 import io.ap4k.doc.Description;
 
-@Description("Applies group, name and version from OpenshiftConfig to SourceToImage config.")
-public class ApplyOpenshiftConfig extends Configurator<SourceToImageConfigFluent> {
+@Description("Applies group, name and version from OpenshiftConfig to EnableS2iBuild config.")
+public class ApplyOpenshiftConfig extends Configurator<S2iConfigFluent> {
+
 
   private final OpenshiftConfig openshiftConfig;
 
@@ -31,7 +32,7 @@ public class ApplyOpenshiftConfig extends Configurator<SourceToImageConfigFluent
   }
 
   @Override
-  public void visit(SourceToImageConfigFluent fluent) {
+  public void visit(S2iConfigFluent fluent) {
     fluent.withGroup(openshiftConfig.getGroup())
       .withName(openshiftConfig.getName())
       .withVersion(openshiftConfig.getVersion());

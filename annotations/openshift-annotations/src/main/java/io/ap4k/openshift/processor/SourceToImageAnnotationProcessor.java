@@ -21,13 +21,13 @@ import io.ap4k.Session;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.openshift.Constants;
 import io.ap4k.openshift.SourceToImageHandler;
-import io.ap4k.openshift.adapt.SourceToImageConfigAdapter;
+import io.ap4k.openshift.adapt.S2iConfigAdapter;
+import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.annotation.SourceToImage;
 import io.ap4k.openshift.confg.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.OpenshiftConfig;
-import io.ap4k.openshift.config.SourceToImageConfig;
-import io.ap4k.openshift.config.SourceToImageConfigBuilder;
+import io.ap4k.openshift.config.S2iConfig;
+import io.ap4k.openshift.config.S2iConfigBuilder;
 import io.ap4k.openshift.hook.JavaBuildHook;
 import io.ap4k.openshift.configurator.ApplySourceToImageHook;
 import io.ap4k.openshift.configurator.ApplyOpenshiftConfig;
@@ -42,14 +42,14 @@ import java.util.Optional;
 import java.util.Set;
 
 @Description("Adds source to image config in the openshift manifests.")
-@SupportedAnnotationTypes("io.ap4k.openshift.annotation.SourceToImage")
-public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor<SourceToImageConfig> {
+@SupportedAnnotationTypes("io.ap4k.openshift.annotation.EnableS2iBuild")
+public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor<S2iConfig> {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
       session.onClose(this::write);
-      Optional<SourceToImageConfig> config = session.configurators().get(SourceToImageConfig.class);
+      Optional<S2iConfig> config = session.configurators().get(S2iConfig.class);
       if (config.orElse(Constants.DEFAULT_SOURCE_TO_IMAGE_CONFIG).isAutoDeployEnabled()) {
         JavaBuildHook hook = new JavaBuildHook(project);
         hook.register();
@@ -65,7 +65,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     return false;
   }
 
-  public ConfigurationSupplier<SourceToImageConfig> config(Element mainClass) {
+  public ConfigurationSupplier<S2iConfig> config(Element mainClass) {
     return new ConfigurationSupplier<>(configurationBuilder(mainClass));
   }
 
@@ -74,11 +74,11 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
    * @param mainClass     The type element of the annotated class (Main).
    * @return              A new config.
    */
-  public SourceToImageConfigBuilder configurationBuilder(Element mainClass) {
-    SourceToImage sourceToImage = mainClass.getAnnotation(SourceToImage.class);
+  public S2iConfigBuilder configurationBuilder(Element mainClass) {
+    EnableS2iBuild enableS2iBuild = mainClass.getAnnotation(EnableS2iBuild.class);
     OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
     OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication).build();
-    return SourceToImageConfigAdapter.newBuilder(sourceToImage)
+    return S2iConfigAdapter.newBuilder(enableS2iBuild)
       .accept(new ApplySourceToImageHook())
       .accept(new ApplyOpenshiftConfig(openshiftConfig));
   }

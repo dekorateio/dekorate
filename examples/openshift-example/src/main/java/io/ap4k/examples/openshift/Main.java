@@ -18,7 +18,6 @@
 package io.ap4k.examples.openshift;
 
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.annotation.SourceToImage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

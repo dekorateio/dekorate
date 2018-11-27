@@ -209,7 +209,7 @@ This annotation will configure:
 Here's an example:
 
     import io.ap4k.openshift.annotation.OpenshiftApplication;
-    import io.ap4k.openshift.annotation.SourceToImage;
+    import io.ap4k.openshift.annotation.EnableS2iBuild;
 
     @OpenshiftApplication(name = "doc-example")
     @SourceToImage
