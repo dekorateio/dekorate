@@ -20,7 +20,9 @@ import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
+import io.ap4k.component.config.Link;
 import io.ap4k.component.decorator.AddEnvToComponent;
+import io.ap4k.component.decorator.AddLinkToComponent;
 import io.ap4k.component.decorator.AddRuntimeToComponent;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
@@ -57,7 +59,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
       type.equals(EditableCompositeConfig.class);
   }
 
-  private void addVisitors(KubernetesConfig config) {
+  private void addVisitors(CompositeConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     if (type != null) {
       resources.decorateCustom(COMPONENT,new AddRuntimeToComponent(type));
@@ -65,6 +67,10 @@ public class ComponentHandler implements Handler<CompositeConfig> {
     for (Env env : config.getEnvVars()) {
       resources.decorateCustom(COMPONENT, new AddEnvToComponent(env));
     }
+    for (Link link : config.getLinks()) {
+      resources.decorateCustom(COMPONENT, new AddLinkToComponent(link));
+    }
+
   }
 
   /**
