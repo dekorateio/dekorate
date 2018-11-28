@@ -39,7 +39,7 @@ import io.sundr.builder.annotations.Inline;
       @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
       public class Link {
 
-        enum Kind {
+        public enum Kind {
           Secret,
           ConfigMap,
           Env
