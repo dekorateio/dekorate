@@ -16,7 +16,7 @@ The handlers role is to create or modify the `model` based on the `config`.
 
 Finally, the `model` is serialized to disk as json/yml.
 
-[sequence diagram][https://raw.githubusercontent.com/ap4k/ap4k/master/doc/src/main/resources/sequence.png]
+[sequence diagram](https://raw.githubusercontent.com/ap4k/ap4k/master/doc/src/main/resources/sequence.png)
 
 ## Vocabulary
 
@@ -51,7 +51,7 @@ The base interface that all `model` objects implement is the HasMetadata. For ex
 ### Config
 
 An object / pojo that encapsulates the information provided by an annotation and the project (e.g. name, version etc).
-An example configuration is the `KuberenetesConfig` class:
+An example configuration is the `KubernetesConfig` class:
 
     public class KubernetecConfig  {
         private String group;
@@ -70,7 +70,7 @@ For example a configurator that can be used to add a label to `KubernetesConfig`
 
     public class AddLabel extends Configurator<KubernetesConfigFluent> {
     
-         public void vist(KubernetesConfigFluent config) {
+         public void visit(KubernetesConfigFluent config) {
              config.addToLabels(new Label("createdBy", "ap4k");
          }
     }
@@ -103,7 +103,7 @@ The handler is the object that does most of the creation of the `model` resource
 ### Decorator
 
 A `decorator` is a visitor that visits parts of the kubernetes/openshift `model` in order to perform minor changes / updates.
-It's different than a `configurator` in the sense that it operator on the actual model instead of the `config`.
+It's different than a `configurator` in the sense that it operates on the actual model instead of the `config`.
 
     public class AddLabel extends Decorator<PodFluent> {
     
@@ -113,7 +113,7 @@ It's different than a `configurator` in the sense that it operator on the actual
     }
     
     
-The `decorator` looks pretty similar to the `configurator` the only difference between the two is the kind of objects they visit.
+The `decorator` looks pretty similar to the `configurator` the only difference between the two being the kind of objects they visit.
 
 `Configurators` visit `config` objects.
 `Decorators` visit `model` objects.
@@ -143,10 +143,10 @@ The `decorator` looks pretty similar to the `configurator` the only difference b
 The kubernetes `model` is very complex and deeply nested object structure and for a good reason: `It needs to fit to every signle deployment use case out there.`
 The deployment of a java application though is something more concrete and can be described by something simpler than the actual model.
 
-While gathering and combining information from multiple annotation processors its more practical and less error prone to apply them to the a more simplified representation of the `model`.
-This is the `config`. So, during the processing phase we use `configurators` to apply the information gathered in each step to the `config`.
+During the process of gathering and combining information from multiple annotation processors its more practical and less error prone to apply them to a more simplified representation of the `model`.
+which is what the `config` essentially is. So, during the processing phase we use `configurators` to apply the information gathered in each step to the `config`.
 
-Once the `configuration` is finalized, the actual `model` is being populated. Since different `processors` are creating different kind of `config` we need to combine them all in order to build the `model`.
+Once the `configuration` is finalized, the actual `model` is populated. Since different `processors` are creating different kinds of `config` we need to combine them all in order to build the `model`.
 This is where `decorators` come in place. Each `config` is translated to different `decorators` that contribute to different parts of the `model`.
 
 ##### Why not directly creating the model?
