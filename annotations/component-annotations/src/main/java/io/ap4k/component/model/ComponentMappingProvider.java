@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class ComponentMappingProvider implements KubernetesResourceMappingProvider {
 
   private Map<String, Class<? extends KubernetesResource>> mappings = new HashMap<String, Class<? extends KubernetesResource>>() {{
-      put("v1beta1#Component", Component.class);
+      put("component.k8s.io/v1alpha1#Component", Component.class);
     }};
 
   public Map<String, Class<? extends KubernetesResource>> getMappings() {
