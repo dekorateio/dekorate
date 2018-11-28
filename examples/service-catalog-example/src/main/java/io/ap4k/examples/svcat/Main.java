@@ -21,8 +21,16 @@ package io.ap4k.examples.svcat;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringApplication;
 
 @KubernetesApplication
 @ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default"))
+@SpringBootApplication
 public class Main {
+
+  public static void main(String[] args) {
+    SpringApplication.run(Main.class, args);
+  }
+
 }
