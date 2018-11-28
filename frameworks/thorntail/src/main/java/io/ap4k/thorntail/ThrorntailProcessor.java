@@ -37,7 +37,7 @@ public class ThrorntailProcessor extends AbstractAnnotationProcessor {
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(r -> write(r));
+      session.onClose(this::write);
       return true;
     }
     Port port = detectThorntailHttpPort();

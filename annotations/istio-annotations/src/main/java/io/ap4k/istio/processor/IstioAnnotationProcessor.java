@@ -42,7 +42,7 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
       Session session = Session.getSession();
-      session.onClose(s -> write(s));
+      session.onClose(this::write);
       return true;
     }
     for (TypeElement typeElement : annotations) {
@@ -58,7 +58,7 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
   public ConfigurationSupplier<IstioConfig> config(Element mainClass) {
     Istio istio = mainClass.getAnnotation(Istio.class);
     return istio != null
-      ? new ConfigurationSupplier<IstioConfig>(IstioConfigAdapter.newBuilder(istio))
-      : new ConfigurationSupplier<IstioConfig>(IstioConfig.newIstioConfigBuilder());
+      ? new ConfigurationSupplier<>(IstioConfigAdapter.newBuilder(istio))
+      : new ConfigurationSupplier<>(IstioConfig.newIstioConfigBuilder());
   }
 }

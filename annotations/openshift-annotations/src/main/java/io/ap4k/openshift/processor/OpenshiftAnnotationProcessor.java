@@ -43,7 +43,7 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(s -> write(s));
+      session.onClose(this::write);
       return true;
     }
     Set<Element> mainClasses = new HashSet<>();
@@ -61,7 +61,7 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
   }
 
   public ConfigurationSupplier<OpenshiftConfig> config(Element mainClass) {
-    return new ConfigurationSupplier<OpenshiftConfig>(configurationBuilder(mainClass));
+    return new ConfigurationSupplier<>(configurationBuilder(mainClass));
   }
 
   /**
