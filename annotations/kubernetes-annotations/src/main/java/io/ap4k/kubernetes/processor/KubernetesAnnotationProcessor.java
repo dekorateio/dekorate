@@ -41,7 +41,7 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<K
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if (roundEnv.processingOver()) {
-      session.onClose(s -> write(s));
+      session.onClose(this::write);
       return true;
     }
     for (TypeElement typeElement : annotations) {
@@ -60,8 +60,9 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<K
    */
   public ConfigurationSupplier<KubernetesConfig> config(Element mainClass) {
     KubernetesApplication application = mainClass.getAnnotation(KubernetesApplication.class);
-    return new ConfigurationSupplier<KubernetesConfig>((VisitableBuilder<KubernetesConfig, ?>) KubernetesConfigAdapter
-      .newBuilder(application)
-      .accept(new ApplyProjectInfo(project)));
+    return new ConfigurationSupplier<>(
+            KubernetesConfigAdapter
+            .newBuilder(application)
+            .accept(new ApplyProjectInfo(project)));
   }
 }

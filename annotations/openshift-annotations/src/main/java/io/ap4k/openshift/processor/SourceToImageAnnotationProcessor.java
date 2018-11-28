@@ -48,7 +48,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(r -> write(r));
+      session.onClose(this::write);
       Optional<SourceToImageConfig> config = session.configurators().get(SourceToImageConfig.class);
       if (config.orElse(Constants.DEFAULT_SOURCE_TO_IMAGE_CONFIG).isAutoDeployEnabled()) {
         JavaBuildHook hook = new JavaBuildHook(project);
@@ -66,7 +66,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
   }
 
   public ConfigurationSupplier<SourceToImageConfig> config(Element mainClass) {
-    return new ConfigurationSupplier<SourceToImageConfig>(configurationBuilder(mainClass));
+    return new ConfigurationSupplier<>(configurationBuilder(mainClass));
   }
 
   /**

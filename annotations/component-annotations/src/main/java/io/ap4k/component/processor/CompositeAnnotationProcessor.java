@@ -41,7 +41,7 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if (roundEnv.processingOver()) {
-      session.onClose(s -> write(s));
+      session.onClose(this::write);
       return true;
     }
     for (TypeElement typeElement : annotations) {
@@ -57,7 +57,7 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
   public ConfigurationSupplier<CompositeConfig> config(Element mainClass) {
     CompositeApplication compositeApplication = mainClass.getAnnotation(CompositeApplication.class);
     return compositeApplication != null
-      ?  new ConfigurationSupplier<CompositeConfig>(CompositeConfigAdapter.newBuilder(compositeApplication))
+      ? new ConfigurationSupplier<>(CompositeConfigAdapter.newBuilder(compositeApplication))
       : new ConfigurationSupplier<>(new CompositeConfigBuilder());
   }
 }

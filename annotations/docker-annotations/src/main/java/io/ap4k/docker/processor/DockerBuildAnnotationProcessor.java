@@ -43,7 +43,7 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<
 
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(r -> write(r));
+      session.onClose(this::write);
       Optional<DockerBuildConfig> config = session.configurators().get(DockerBuildConfig.class);
       if (config.isPresent() && config.get().isAutoBuildEnabled()) {
         DockerBuildHook hook = new DockerBuildHook(project, config.get());
@@ -61,10 +61,11 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<
 
   public ConfigurationSupplier<DockerBuildConfig> config(Element mainClass) {
     DockerBuild dockerBuild = mainClass.getAnnotation(DockerBuild.class);
-    return new ConfigurationSupplier<DockerBuildConfig>(DockerBuildConfigAdapter
-                                                        .newBuilder(dockerBuild)
-                                                        .accept(new ApplyProjectInfoToDockerBuildConfig(project))
-                                                        .accept(new ApplyDockerBuildHook()));
+    return new ConfigurationSupplier<>(
+            DockerBuildConfigAdapter
+            .newBuilder(dockerBuild)
+            .accept(new ApplyProjectInfoToDockerBuildConfig(project))
+            .accept(new ApplyDockerBuildHook()));
   }
 
 }

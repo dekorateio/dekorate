@@ -40,7 +40,7 @@ import java.util.Set;
         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
           Session session = Session.getSession();
           if  (roundEnv.processingOver()) {
-            session.onClose(s -> write(s));
+            session.onClose(this::write);
             return true;
           }
           for (TypeElement typeElement : annotations) {
@@ -55,7 +55,7 @@ import java.util.Set;
         public ConfigurationSupplier<ServiceCatalogConfig> config(Element mainClass) {
           ServiceCatalog serviceCatalog = mainClass.getAnnotation(ServiceCatalog.class);
           return serviceCatalog != null
-            ? new ConfigurationSupplier<ServiceCatalogConfig>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
-            : new ConfigurationSupplier<ServiceCatalogConfig>(ServiceCatalogConfigAdapter.newServiceCatalogBuilder());
+            ? new ConfigurationSupplier<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
+            : new ConfigurationSupplier<>(ServiceCatalogConfigAdapter.newServiceCatalogBuilder());
         }
       }
