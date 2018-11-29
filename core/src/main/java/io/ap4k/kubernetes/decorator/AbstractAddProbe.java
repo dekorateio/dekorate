@@ -81,7 +81,7 @@ public abstract class AbstractAddProbe extends Decorator<ContainerBuilder> {
 
     try {
       URI uri = new URI(probe.getHttpAction());
-      return new HTTPGetAction(uri.getHost(), Collections.emptyList(), uri.getPath(), new IntOrString(uri.getPort()), uri.getScheme());
+      return new HTTPGetAction(null, Collections.emptyList(), uri.getPath(), new IntOrString(uri.getPort()), uri.getScheme().toUpperCase());
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
