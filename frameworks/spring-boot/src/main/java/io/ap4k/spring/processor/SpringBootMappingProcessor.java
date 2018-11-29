@@ -19,6 +19,8 @@ package io.ap4k.spring.processor;
 
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.kubernetes.config.PortBuilder;
+import io.ap4k.kubernetes.configurator.AddLivenessProbe;
+import io.ap4k.kubernetes.configurator.AddReadinessProbe;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.kubernetes.configurator.AddPort;
 import io.ap4k.Session;
@@ -42,6 +44,8 @@ public class SpringBootMappingProcessor extends AbstractAnnotationProcessor {
     }
     Port port = detectSpringBootPort();
     session.configurators().add(new AddPort(port));
+    session.configurators().add(new AddReadinessProbe(port.getContainerPort()));
+    session.configurators().add(new AddLivenessProbe(port.getContainerPort()));
     return false;
   }
 

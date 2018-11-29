@@ -20,7 +20,9 @@ package io.ap4k.micronaut;
 import io.ap4k.Session;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.kubernetes.config.PortBuilder;
+import io.ap4k.kubernetes.configurator.AddLivenessProbe;
 import io.ap4k.kubernetes.configurator.AddPort;
+import io.ap4k.kubernetes.configurator.AddReadinessProbe;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 
@@ -42,6 +44,8 @@ public class MicronautProcessor extends AbstractAnnotationProcessor {
     }
     Port port = detectMicornautPort();
     session.configurators().add(new AddPort(port));
+    session.configurators().add(new AddReadinessProbe(port.getContainerPort()));
+    session.configurators().add(new AddLivenessProbe(port.getContainerPort()));
     return false;
   }
 
