@@ -19,6 +19,8 @@ package io.ap4k;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -39,10 +41,13 @@ public class Session {
   private static Session INSTANCE;
 
   private final AtomicBoolean closed = new AtomicBoolean();
+  private final AtomicBoolean generated = new AtomicBoolean();
+
   private final Set<Handler> handlers = new LinkedHashSet<>();
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
 
+  private final Map<String, KubernetesList> result = new HashMap<>();
   /**
    * Creates or resues a single instance of Session.
    * @return  The Session.
@@ -73,7 +78,6 @@ public class Session {
 
   public void onClose(Consumer<Session> consumer) {
     if (closed.compareAndSet(false, true)) {
-      close();
       consumer.accept(this);
     }
   }
@@ -82,14 +86,17 @@ public class Session {
    * Close the session an get all resource groups.
    * @return A map of {@link KubernetesList} by group name.
    */
-  public Map<String, KubernetesList> close() {
-    this.closed.set(true);
-    configurators.stream().forEach(c ->
-                                   handlers.forEach(g ->  {
-                                       if (g.canHandle(c.getClass())) {
-                                         g.handle(c);
-                                       }
-                                     }));
-    return resources.generate();
+  public Map<String, KubernetesList> generate() {
+    if (generated.compareAndSet(false, true)) {
+      closed.set(true);
+      configurators.stream().forEach(c ->
+        handlers.forEach(g ->  {
+          if (g.canHandle(c.getClass())) {
+            g.handle(c);
+          }
+        }));
+      this.result.putAll(resources.generate());
+    }
+    return Collections.unmodifiableMap(result);
   }
 }
