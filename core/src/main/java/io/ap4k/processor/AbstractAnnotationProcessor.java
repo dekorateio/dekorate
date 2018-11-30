@@ -50,20 +50,6 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     this.project = AptProjectFactory.create(processingEnv);
   }
 
-
-
-  /**
-   * Writes all {@link Session} resources.
-   * @param session The target session.
-   */
-  protected void write(Session session) {
-    Map<String, KubernetesList> resources = session.resources().generate();
-    Set<? extends Configuration> configurations = session.configurators().toSet();
-    resources.forEach((g, l) -> write(g, l));
-    configurations.forEach(c -> write(c));
-  }
-
-
   /**
    * Writes all {@link Session} resources.
    * @param resources The target session resources.
