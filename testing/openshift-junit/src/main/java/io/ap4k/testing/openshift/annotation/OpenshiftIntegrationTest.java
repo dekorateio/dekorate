@@ -16,7 +16,7 @@
 **/
 package io.ap4k.testing.openshift.annotation;
 
-import io.ap4k.testing.openshift.OpenshiftExtesnsion;
+import io.ap4k.testing.openshift.OpenshiftExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.Retention;
@@ -29,6 +29,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({ TYPE, METHOD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@ExtendWith(OpenshiftExtesnsion.class)
+@ExtendWith(OpenshiftExtension.class)
 public @interface OpenshiftIntegrationTest {
 }

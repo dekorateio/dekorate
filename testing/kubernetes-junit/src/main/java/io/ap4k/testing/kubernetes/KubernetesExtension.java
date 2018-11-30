@@ -37,10 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
   WithPod, WithKubernetesClient, WithKubernetesResources, WithProject, WithDockerBuildConifg {
 
-
   private static final String MANIFEST_PATH = "META-INF/ap4k/kubernetes.yml";
-  private static final String KUBERNETES_CONFIG_PATH = "META-INF/ap4k/.config/kubernetes.yml";
-
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -69,7 +66,6 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
 
     client.resourceList(list).waitUntilReady(5, TimeUnit.MINUTES);
   }
-
 
   @Override
   public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {

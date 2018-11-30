@@ -7,7 +7,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * A name qualidier annotation.
+ * A name qualifier annotation.
  */
 
 @Target({ FIELD })
@@ -15,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Named {
 
   /**
-   * The name of the annoated resouece.
+   * The name of the annotated resource.
    * This annotation is used as a qualifier for injection.
    * @return
    */
