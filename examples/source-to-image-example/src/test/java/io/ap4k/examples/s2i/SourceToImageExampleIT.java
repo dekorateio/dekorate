@@ -18,11 +18,11 @@ package io.ap4k.examples.s2i;
 
 import io.ap4k.deps.kubernetes.client.DefaultKubernetesClient;
 import io.ap4k.deps.kubernetes.client.KubernetesClient;
-import io.ap4k.testing.openshift.OpenshiftExtesnsion;
+import io.ap4k.testing.openshift.OpenshiftExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(OpenshiftExtesnsion.class)
+@ExtendWith(OpenshiftExtension.class)
 public class SourceToImageExampleIT {
 
   @Test
