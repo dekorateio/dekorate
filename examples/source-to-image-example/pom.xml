@@ -98,24 +98,6 @@ limitations under the License.
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.0.0-M1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-            </goals>
-            <phase>integration-test</phase>
-            <configuration>
-              <includes>
-                <include>**/*IT.class</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
