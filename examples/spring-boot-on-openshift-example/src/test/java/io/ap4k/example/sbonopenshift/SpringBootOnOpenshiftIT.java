@@ -14,9 +14,8 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.example.sbonkubernetes;
+package io.ap4k.example.sbonopenshift;
 
-import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.Pod;
 import io.ap4k.deps.kubernetes.client.KubernetesClient;
 import io.ap4k.deps.kubernetes.client.LocalPortForward;
@@ -24,8 +23,8 @@ import io.ap4k.deps.okhttp3.OkHttpClient;
 import io.ap4k.deps.okhttp3.Request;
 import io.ap4k.deps.okhttp3.Response;
 import io.ap4k.testing.annotation.Inject;
-import io.ap4k.testing.annotation.KubernetesIntegrationTest;
 import io.ap4k.testing.annotation.Named;
+import io.ap4k.testing.openshift.annotation.OpenshiftIntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,23 +33,19 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@KubernetesIntegrationTest
-public class SpringBootOnKubernetesIT {
+@OpenshiftIntegrationTest
+public class SpringBootOnOpenshiftIT {
 
   @Inject
   private KubernetesClient client;
 
   @Inject
-  private KubernetesList list;
-
-  @Inject
-  @Named("spring-boot-on-kubernetes-example")
+  @Named("spring-boot-on-openshift-example")
   Pod pod;
 
   @Test
   public void shouldRespondWithHelloWorld() throws Exception {
     Assertions.assertNotNull(client);
-    Assertions.assertNotNull(list);
     System.out.println("Forwarding port");
     try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
       assertTrue(p.isAlive());

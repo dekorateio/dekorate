@@ -23,9 +23,14 @@
 
     <dependency>
       <groupId>io.ap4k</groupId>
-      <artifactId>docker-annotations</artifactId>
+      <artifactId>core-junit</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>docker-annotations</artifactId>
+      <version>${project.version}</version></dependency>
 
     <dependency>
       <groupId>io.ap4k</groupId>

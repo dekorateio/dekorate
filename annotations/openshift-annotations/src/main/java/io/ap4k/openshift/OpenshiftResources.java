@@ -28,6 +28,8 @@ import io.ap4k.deps.kubernetes.api.model.PodTemplateSpecBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.ap4k.utils.Labels.createLabels;
+
 
 public class OpenshiftResources {
 
@@ -71,19 +73,6 @@ public class OpenshiftResources {
       .endSpec()
       .build();
   }
-
-  /**
-   * Creates a {@link Map} with the labels for the {@link OpenshiftConfig}.
-   * @param config   The config.
-   * @return          A map containing the labels.
-   */
-  public static Map<String, String> createLabels(OpenshiftConfig config) {
-    return new HashMap<String, String >() {{
-      put(APP, config.getName());
-      put(VERSION, config.getVersion());
-    }};
-  }
-
 
   /**
    * Creates a {@link PodTemplateSpec} for the {@link OpenshiftConfig}.
