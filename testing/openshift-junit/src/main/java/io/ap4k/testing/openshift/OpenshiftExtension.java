@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Internal
-public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithSourceToImageConfig {
+public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithS2iBuildConfig {
 
   private static final String MANIFEST_PATH = "META-INF/ap4k/openshift.yml";
   private static final String S2I_CONFIG_PATH = "META-INF/ap4k/.config/sourcetoimage.yml";
