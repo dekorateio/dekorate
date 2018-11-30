@@ -1,34 +1,30 @@
 /**
  * Copyright 2018 The original authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
-**/
+ *
+ **/
+package io.ap4k.testing.openshift;
 
-package io.ap4k.example.sbonopenshift;
+import io.ap4k.openshift.config.SourceToImageConfig;
+import io.ap4k.utils.Serialization;
 
-import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.annotation.SourceToImage;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+public interface WithSourceToImageConfig {
 
-@OpenshiftApplication
-@SourceToImage
-@SpringBootApplication
-public class Main {
+  String SOURCE_TO_IMAGE_CONFIG_PATH = "META-INF/ap4k/.config/sourcetoimage.yml";
 
-  public static void main(String[] args) {
-    SpringApplication.run(Main.class, args);
+  default SourceToImageConfig getSourceToImageConfig() {
+    return  Serialization.unmarshal(WithSourceToImageConfig.class.getClassLoader().getResourceAsStream(SOURCE_TO_IMAGE_CONFIG_PATH), SourceToImageConfig.class);
   }
 
 }
