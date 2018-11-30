@@ -18,6 +18,7 @@ package io.ap4k.component.decorator;
 
 import io.ap4k.component.model.ComponentSpecBuilder;
 import io.ap4k.kubernetes.decorator.Decorator;
+import io.ap4k.servicecatalog.config.Parameter;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
 import io.ap4k.doc.Description;
 
@@ -43,10 +44,26 @@ public class AddServiceInstanceToComponent extends Decorator<ComponentSpecBuilde
       .withServiceClass(instance.getServiceClass())
       .withServicePlan(instance.getServicePlan())
       .withSecretName(instance.getBindingSecret())
+      .withParameters(convertToModelParameter(instance.getParameters()))
       .endService();
   }
 
   private boolean hasService(ComponentSpecBuilder componentSpec) {
     return Arrays.asList(componentSpec.getService()).stream().filter(s -> s.getName().equals(instance.getName())).count() > 0;
+  }
+
+  private io.ap4k.component.model.Parameter[] convertToModelParameter(Parameter[] parametersConfig) {
+    io.ap4k.component.model.Parameter[] parameters = new io.ap4k.component.model.Parameter[parametersConfig.length];
+    io.ap4k.component.model.Parameter parameter;
+
+    for( int i = 0; i < parametersConfig.length; i++) {
+      Parameter paramConfig = parametersConfig[i];
+
+      parameter = new io.ap4k.component.model.Parameter();
+      parameter.setName(paramConfig.getKey());
+      parameter.setValue(paramConfig.getValue());
+      parameters[i] = parameter;
+    }
+    return parameters;
   }
 }
