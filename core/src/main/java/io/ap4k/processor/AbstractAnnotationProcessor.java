@@ -50,14 +50,12 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     this.project = AptProjectFactory.create(processingEnv);
   }
 
-
-
   /**
    * Writes all {@link Session} resources.
    * @param session The target session.
    */
   protected void write(Session session) {
-    Map<String, KubernetesList> resources = session.resources().generate();
+    Map<String, KubernetesList> resources = session.generate();
     Set<? extends Configuration> configurations = session.configurators().toSet();
     resources.forEach((g, l) -> write(g, l));
     configurations.forEach(c -> write(c));
@@ -68,7 +66,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
    * Writes all {@link Session} resources.
    * @param resources The target session resources.
    */
-  protected void write(Map<String, KubernetesList> resources) {
+  private void write(Map<String, KubernetesList> resources) {
     resources.forEach((g, l) -> write(g, l));
   }
 
@@ -76,7 +74,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
    * Writes a {@link Configuration}.
    * @param config  The target session configurations.
    */
-  protected void write(Configuration config) {
+  private void write(Configuration config) {
     try {
       String name = config.getClass().getSimpleName();
       for (String s : STRIP) {

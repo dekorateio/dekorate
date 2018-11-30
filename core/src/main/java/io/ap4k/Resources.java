@@ -117,10 +117,10 @@ public class Resources {
   }
 
   /**
-   * Close the session an get all resource groups.
+   * Generate all resources.
    * @return A map of {@link KubernetesList} by group name.
    */
-  public Map<String, KubernetesList> generate() {
+  protected Map<String, KubernetesList> generate() {
     List<HasMetadata> allGlobals = global.buildItems();
     Map<String, KubernetesListBuilder> groups = new HashMap<>(this.groups);
 
