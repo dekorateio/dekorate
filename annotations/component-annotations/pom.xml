@@ -70,6 +70,17 @@ limitations under the License.
       <version>${version.junit-platform}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Integration Testing -->
+    <!-- These are internal dependencies used in integration tests via invoker plugin.
+         We need to somehow let the reactor know that the integration tests depend on them. -->
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>ap4k-spring-boot</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
