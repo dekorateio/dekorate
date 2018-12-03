@@ -88,7 +88,7 @@ the generations of addition resources, like `Service` and `Ingress`.
 
 #### Name and Version
 
-So where did the generated `Deployment` gets its name, docker image etc from?
+So where did the generated `Deployment` gets its name, docker images etc from?
 
 Everything can be customized via annotation parameters and system properties.
 On top of that `lightweight` integration with build tools is provided in order to reduce duplication.
@@ -229,9 +229,9 @@ If the name was implicitly created the user would have to figure the name out be
 done either by `oc get bc` or by knowing the conventions used to read names from build tool config (e.g. if maven then name the artifactId).
 
 ### Service Catalog annotations
-The [service catalog](https://svc-cat.io) annotation processor is can be used in order to create [service catalog](https://svc-cat.io) resources for:
+The [services catalog](https://svc-cat.io) annotation processor is can be used in order to create [services catalog](https://svc-cat.io) resources for:
 
-- creating service instances
+- creating services instances
 - binding to services
 - injecting binding info into the container 
 
@@ -254,7 +254,7 @@ Here's an example:
 The `@ServiceCatalogInstance` annotation will trigger the generation of a `ServiceInstance` and a `ServiceBinding`resource.
 It will also decorate any `Pod`, `Deployment`, `DeploymentConfig` and so on with additional environment variables containing the binding information.
 
-#### Adding the service catalog annotation processor to the classpath
+#### Adding the services catalog annotation processor to the classpath
 
 This module can be added to the project using:
 
@@ -292,7 +292,7 @@ This module can be added to the project using:
     
 ### Component annotations
 The component [CRD](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims on abstracting kubernetes/OpenShift resources and simplify the config, design of an application.
-See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more buildInfo about how the structure, syntax of a Component (runtime, service, link) is defined.
+See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more buildInfo about how the structure, syntax of a Component (runtime, services, links) is defined.
 To play with a Components CRD and its [operator](https://coreos.com/operators/) running on the cloud platform and able to generate the kubernetes resources or manage them, then look to this [project](https://github.com/snowdrop/component-operator-demo).
 This module provides limited/early support of the component operator.
 
@@ -329,7 +329,7 @@ Will trigger the creation of the following component:
        name: ""
      spec:
        deploymentMode: "innerloop"
-    service:
+    services:
     - name: "mysql-instance"
       class: "apb-mysql"
       plan: "default"

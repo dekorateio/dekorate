@@ -49,7 +49,7 @@ public class AddServiceInstanceToComponent extends Decorator<ComponentSpecBuilde
   }
 
   private boolean hasService(ComponentSpecBuilder componentSpec) {
-    return Arrays.asList(componentSpec.getService()).stream().filter(s -> s.getName().equals(instance.getName())).count() > 0;
+    return Arrays.asList(componentSpec.getServices()).stream().filter(s -> s.getName().equals(instance.getName())).count() > 0;
   }
 
   private io.ap4k.component.model.Parameter[] convertToModelParameter(Parameter[] parametersConfig) {
