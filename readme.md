@@ -96,6 +96,12 @@ On top of that `lightweight` integration with build tools is provided in order t
 ##### Lightweight build tool integration
 
 Lightweight integration with build tools, refers to reading information from the build tool config without bringing in the build tool itself into the classpath.
+The information read from the build tool is limited to:
+
+- name / artifactId
+- version
+- output file
+
 For example in the case of maven it refers to parsing the pom.xml with DOM in order to fetch the artifactId and version.
 
 Supported build tools:
@@ -104,7 +110,60 @@ Supported build tools:
 - gradle
 - sbt
 
-For all other build tools, the name and version need to be provided via annotation.
+For all other build tools, the name and version need to be provided via the core annotations:
+
+      @KubernetesApplication(name = "my-app", version="1.1.0.Final")
+      public class Main {
+      }
+      
+      
+or
+
+      @OpenshiftApplication(name = "my-app", version="1.1.0.Final")
+      public class Main {
+      }
+
+and so on...
+
+The information read from the build tool, is added to all resources as labels (name, version).
+They are also used to name images, containers, deployments, services etc.
+
+For example for a gradle app, with the following `gradle.properties`:
+
+    name = my-gradle-app
+    version = 1.0.0
+    
+The following deployment will be generated:
+    
+    apiVersion: "apps/v1"
+    kind: "Deployment"
+    metadata:
+      name: "kubernetes-example"
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: "my-gradle-app"
+          version: "1.0-SNAPSHOT"
+          group: "default"
+      template:
+        metadata:
+          labels:
+            app: "my-gralde-app"
+            version: "1.0-SNAPSHOT"
+            group: "default"
+        spec:
+          containers:
+          - env:
+            - name: "KUBERNETES_NAMESPACE"
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.namespace"
+            image: "default/my-gradle-app:1.0-SNAPSHOT"
+            imagePullPolicy: "IfNotPresent"
+            name: "my-gradle-app"
+            
+The output file name may be used in certain cases, to set the value of `JAVA_APP_JAR` an environment variable that points to the build jar.
 
 #### Adding extra ports and exposing them as services
 
