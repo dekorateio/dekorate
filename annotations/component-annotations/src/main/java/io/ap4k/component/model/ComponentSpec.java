@@ -40,10 +40,10 @@ import javax.annotation.Generated;
       "exposeService",
       "cpu",
       "strorage",
-      "image",
-      "env",
-      "feature",
-      "link"
+      "images",
+      "envs",
+      "features",
+      "links"
       })
       @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
       public class ComponentSpec {
@@ -57,16 +57,16 @@ import javax.annotation.Generated;
         private boolean exposeService;
         private String cpu;
         private Storage storage;
-        private Image[] image;
-        private Env[] env;
-        private Service[] service;
-        private Feature[] feature;
-        private Link[] link;
+        private Image[] images;
+        private Env[] envs;
+        private Service[] services;
+        private Feature[] features;
+        private Link[] links;
 
         public ComponentSpec() {
         }
 
-        public ComponentSpec(String name, String packagingMode, String type, DeploymentType deploymentMode, String runtime, String version, boolean exposeService, String cpu, Storage storage, Image[] image, Env[] env, Service[] service, Feature[] feature, Link[] link) {
+        public ComponentSpec(String name, String packagingMode, String type, DeploymentType deploymentMode, String runtime, String version, boolean exposeService, String cpu, Storage storage, Image[] images, Env[] envs, Service[] services, Feature[] features, Link[] links) {
           this.name = name;
           this.packagingMode = packagingMode;
           this.type = type;
@@ -76,11 +76,11 @@ import javax.annotation.Generated;
           this.exposeService = exposeService;
           this.cpu = cpu;
           this.storage = storage;
-          this.image = image;
-          this.env = env;
-          this.service = service;
-          this.feature = feature;
-          this.link = link;
+          this.images = images;
+          this.envs = envs;
+          this.services = services;
+          this.features = features;
+          this.links = links;
         }
 
         public String getName() {
@@ -155,43 +155,43 @@ import javax.annotation.Generated;
           this.storage = storage;
         }
 
-        public Image[] getImage() {
-          return image;
+        public Image[] getImages() {
+          return images;
         }
 
-        public void setImage(Image[] image) {
-          this.image = image;
+        public void setImages(Image[] images) {
+          this.images = images;
         }
 
-        public Env[] getEnv() {
-          return env;
+        public Env[] getEnvs() {
+          return envs;
         }
 
-        public void setEnv(Env[] env) {
-          this.env = env;
+        public void setEnvs(Env[] envs) {
+          this.envs = envs;
         }
 
-        public Service[] getService() {
-          return service;
+        public Service[] getServices() {
+          return services;
         }
 
-        public void setService(Service[] service) {
-          this.service = service;
+        public void setServices(Service[] services) {
+          this.services = services;
         }
 
-        public Feature[] getFeature() {
-          return feature;
+        public Feature[] getFeatures() {
+          return features;
         }
 
-        public void setFeature(Feature[] feature) {
-          this.feature = feature;
+        public void setFeatures(Feature[] features) {
+          this.features = features;
         }
 
-        public Link[] getLink() {
-          return link;
+        public Link[] getLinks() {
+          return links;
         }
 
-        public void setLink(Link[] link) {
-          this.link = link;
+        public void setLinks(Link[] links) {
+          this.links = links;
         }
       }

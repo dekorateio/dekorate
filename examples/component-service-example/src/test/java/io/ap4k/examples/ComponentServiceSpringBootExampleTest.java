@@ -38,7 +38,7 @@ public class ComponentServiceSpringBootExampleTest {
     List<HasMetadata> items = list.getItems();
     assertEquals(1, items.size());
     Component component = (Component) items.get(0);
-    assertNotNull(component.getSpec().getService());
-    assertEquals("mysql-instance",component.getSpec().getService()[0].getName());
+    assertNotNull(component.getSpec().getServices());
+    assertEquals("mysql-instance",component.getSpec().getServices()[0].getName());
   }
 }
