@@ -98,6 +98,14 @@ On top of that `lightweight` integration with build tools is provided in order t
 Lightweight integration with build tools, refers to reading information from the build tool config without bringing in the build tool itself into the classpath.
 For example in the case of maven it refers to parsing the pom.xml with DOM in order to fetch the artifactId and version.
 
+Supported build tools:
+
+- maven
+- gradle
+- sbt
+
+For all other build tools, the name and version need to be provided via annotation.
+
 #### Adding extra ports and exposing them as services
 
 To add extra ports to the container, you can add one or more `@Port` into your `@KubernetesApplication`:
