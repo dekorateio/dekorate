@@ -55,9 +55,11 @@ public class IstioHandler implements Handler<IstioConfig> {
 
   private final Resources resources;
 
-  public IstioHandler() {
+  // only used for testing
+  IstioHandler() {
     this(new Resources());
   }
+
   public IstioHandler(Resources resources) {
     this.resources = resources;
   }

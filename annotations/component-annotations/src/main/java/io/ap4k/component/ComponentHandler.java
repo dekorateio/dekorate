@@ -39,13 +39,9 @@ public class ComponentHandler implements Handler<CompositeConfig> {
 
   private final Resources resources;
 
-  public ComponentHandler() {
-    this(new Resources());
-  }
   public ComponentHandler(Resources resources) {
     this.resources = resources;
   }
-
 
   @Override
   public void handle(CompositeConfig config) {

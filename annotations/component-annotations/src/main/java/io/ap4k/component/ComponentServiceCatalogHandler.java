@@ -31,9 +31,11 @@ public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogCon
 
   private final Resources resources;
 
-  public ComponentServiceCatalogHandler() {
+  // only used for testing
+  ComponentServiceCatalogHandler() {
     this(new Resources());
   }
+
   public ComponentServiceCatalogHandler(Resources resources) {
     this.resources = resources;
   }
