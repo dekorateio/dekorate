@@ -59,7 +59,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         session.configurators().add(config(mainClass));
-        session.generators().add(new SourceToImageHandler(session.resources()));
+        session.handlers().add(new SourceToImageHandler(session.resources()));
       }
     }
     return false;

@@ -55,7 +55,7 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
 
     for (Element mainClass : mainClasses) {
       session.configurators().add(config(mainClass));
-      session.generators().add(new OpenshiftHandler(session.resources()));
+      session.handlers().add(new OpenshiftHandler(session.resources()));
     }
     return false;
   }

@@ -18,7 +18,6 @@
 package io.ap4k.kubernetes.processor;
 
 import io.ap4k.Session;
-import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
 import io.ap4k.kubernetes.adapter.KubernetesConfigAdapter;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
@@ -47,7 +46,7 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<K
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         session.configurators().add(config(mainClass));
-        session.generators().add(new KubernetesHandler(session.resources()));
+        session.handlers().add(new KubernetesHandler(session.resources()));
       }
     }
     return false;

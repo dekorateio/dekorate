@@ -46,7 +46,7 @@ import java.util.Set;
           for (TypeElement typeElement : annotations) {
             for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
               session.configurators().add(config(mainClass));
-              session.generators().add(new ServiceCatalogHandler(session.resources()));
+              session.handlers().add(new ServiceCatalogHandler(session.resources()));
             }
           }
           return false;

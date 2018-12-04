@@ -49,7 +49,7 @@ public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<Istio
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         Session session = Session.getSession();
         session.configurators().add(config(mainClass));
-        session.generators().add(new IstioHandler(session.resources()));
+        session.handlers().add(new IstioHandler(session.resources()));
       }
     }
     return false;
