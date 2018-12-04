@@ -16,16 +16,16 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.AwsElasticBlockStoreVolume;
+import io.ap4k.kubernetes.config.ConfigMapVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add an elastic block store volume to the pod spec.")
-public class AddAwsElasticBlockStoreVolume extends Decorator<PodSpecBuilder> {
+@Description("Add a configmap volume to the pod spec.")
+public class AddConfigMapVolumeDecorator extends Decorator<PodSpecBuilder> {
 
-  private final AwsElasticBlockStoreVolume volume;
+  private final ConfigMapVolume volume;
 
-  public AddAwsElasticBlockStoreVolume(AwsElasticBlockStoreVolume volume) {
+  public AddConfigMapVolumeDecorator(ConfigMapVolume volume) {
     this.volume = volume;
   }
 
@@ -33,11 +33,11 @@ public class AddAwsElasticBlockStoreVolume extends Decorator<PodSpecBuilder> {
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
       .withName(volume.getVolumeName())
-      .withNewAwsElasticBlockStore()
-      .withVolumeID(volume.getVolumeId())
-      .withFsType(volume.getFsType())
-      .withNewPartition(volume.getPartition())
-      .withReadOnly(volume.isReadOnly())
-      .endAwsElasticBlockStore();
+      .withNewConfigMap()
+      .withName(volume.getConfigMapName())
+      .withDefaultMode(volume.getDefaultMode())
+      .withOptional(volume.isOptional())
+      .endConfigMap();
+
   }
 }

@@ -25,11 +25,11 @@ import io.ap4k.doc.Description;
 import java.util.Arrays;
 
 @Description("Add the service instance information to the component.")
-public class AddServiceInstanceToComponent extends Decorator<ComponentSpecBuilder> {
+public class AddServiceInstanceToComponentDecorator extends Decorator<ComponentSpecBuilder> {
 
   private final ServiceCatalogInstance instance;
 
-  public AddServiceInstanceToComponent(ServiceCatalogInstance instance) {
+  public AddServiceInstanceToComponentDecorator(ServiceCatalogInstance instance) {
     this.instance = instance;
   }
 

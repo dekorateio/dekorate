@@ -30,11 +30,11 @@ import io.ap4k.utils.Labels;
 import io.ap4k.doc.Description;
 
 @Description("Add a service to the list.")
-public class AddService extends Decorator<KubernetesListBuilder> {
+public class AddServiceDecorator extends Decorator<KubernetesListBuilder> {
 
   private final KubernetesConfig config;
 
-  public AddService (KubernetesConfig config) {
+  public AddServiceDecorator(KubernetesConfig config) {
     this.config = config;
   }
 

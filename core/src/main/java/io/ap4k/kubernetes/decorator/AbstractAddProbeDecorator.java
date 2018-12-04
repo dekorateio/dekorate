@@ -30,11 +30,11 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 
-public abstract class AbstractAddProbe extends Decorator<ContainerBuilder> {
+public abstract class AbstractAddProbeDecorator extends Decorator<ContainerBuilder> {
 
   protected final Probe probe;
 
-  public AbstractAddProbe(Probe probe) {
+  public AbstractAddProbeDecorator(Probe probe) {
     this.probe = probe;
   }
 

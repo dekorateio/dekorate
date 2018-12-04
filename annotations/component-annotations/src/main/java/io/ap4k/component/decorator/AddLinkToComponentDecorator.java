@@ -10,11 +10,11 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Description("Add link variable to component.")
-public class AddLinkToComponent extends Decorator<ComponentSpecBuilder> {
+public class AddLinkToComponentDecorator extends Decorator<ComponentSpecBuilder> {
 
   private final Link link;
 
-  public AddLinkToComponent (Link link) {
+  public AddLinkToComponentDecorator(Link link) {
     this.link = link;
   }
 

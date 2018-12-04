@@ -21,10 +21,10 @@ import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add a liveness probe to all containers.")
-public class AddLivenessProbe extends AbstractAddProbe {
+@Description("Add a readiness probe to all containers.")
+public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
 
-  public AddLivenessProbe(Probe probe) {
+  public AddReadinessProbeDecorator(Probe probe) {
     super(probe);
   }
 
@@ -38,14 +38,14 @@ public class AddLivenessProbe extends AbstractAddProbe {
         Strings.isNullOrEmpty(probe.getTcpSocketAction())) {
       return;
     }
-    container.withNewLivenessProbe()
+    container.withNewReadinessProbe()
       .withExec(execAction(probe))
       .withHttpGet(httpGetAction(probe))
       .withTcpSocket(tcpSocketAction(probe))
       .withInitialDelaySeconds(probe.getInitialDelaySeconds())
       .withPeriodSeconds(probe.getPeriodSeconds())
       .withTimeoutSeconds(probe.getTimeoutSeconds())
-      .endLivenessProbe();
+      .endReadinessProbe();
   }
 
 }

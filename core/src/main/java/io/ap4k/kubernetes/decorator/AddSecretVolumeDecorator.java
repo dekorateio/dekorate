@@ -16,28 +16,28 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.Mount;
-import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.kubernetes.config.SecretVolume;
+import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add mount to all containers.")
-public class AddMount extends Decorator<ContainerBuilder> {
+@Description("Add a secret volume to all pod specs.")
+public class AddSecretVolumeDecorator extends Decorator<PodSpecBuilder> {
 
-  private final Mount mount;
+  private final SecretVolume volume;
 
-  public AddMount(Mount mount) {
-    this.mount = mount;
+  public AddSecretVolumeDecorator(SecretVolume volume) {
+    this.volume = volume;
   }
 
   @Override
-  public void visit(ContainerBuilder container) {
-    container.addNewVolumeMount()
-      .withName(mount.getName())
-      .withMountPath(mount.getPath())
-      .withSubPath(mount.getSubPath())
-      .withReadOnly(mount.isReadOnly())
-      .endVolumeMount();
-
+  public void visit(PodSpecBuilder podSpec) {
+    podSpec.addNewVolume()
+      .withName(volume.getVolumeName())
+      .withNewSecret()
+      .withSecretName(volume.getSecretName())
+      .withDefaultMode(volume.getDefaultMode())
+      .withOptional(volume.isOptional())
+      .endSecret();
 
   }
 }

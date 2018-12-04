@@ -21,9 +21,9 @@ import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
 import io.ap4k.component.config.Link;
-import io.ap4k.component.decorator.AddEnvToComponent;
-import io.ap4k.component.decorator.AddLinkToComponent;
-import io.ap4k.component.decorator.AddRuntimeToComponent;
+import io.ap4k.component.decorator.AddEnvToComponentDecorator;
+import io.ap4k.component.decorator.AddLinkToComponentDecorator;
+import io.ap4k.component.decorator.AddRuntimeToComponentDecorator;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
 import io.ap4k.component.model.DeploymentType;
@@ -58,13 +58,13 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   private void addVisitors(CompositeConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     if (type != null) {
-      resources.decorateCustom(COMPONENT,new AddRuntimeToComponent(type));
+      resources.decorateCustom(COMPONENT,new AddRuntimeToComponentDecorator(type));
     }
     for (Env env : config.getEnvVars()) {
-      resources.decorateCustom(COMPONENT, new AddEnvToComponent(env));
+      resources.decorateCustom(COMPONENT, new AddEnvToComponentDecorator(env));
     }
     for (Link link : config.getLinks()) {
-      resources.decorateCustom(COMPONENT, new AddLinkToComponent(link));
+      resources.decorateCustom(COMPONENT, new AddLinkToComponentDecorator(link));
     }
 
   }

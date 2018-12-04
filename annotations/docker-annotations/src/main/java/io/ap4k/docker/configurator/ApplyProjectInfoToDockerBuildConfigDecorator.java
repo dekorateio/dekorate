@@ -21,7 +21,7 @@ import io.ap4k.docker.config.DockerBuildConfigFluent;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Strings;
 
-public class ApplyProjectInfoToDockerBuildConfig extends Decorator<DockerBuildConfigFluent> {
+public class ApplyProjectInfoToDockerBuildConfigDecorator extends Decorator<DockerBuildConfigFluent> {
 
   private static final String APP_GROUP = "app.group";
   private static final String APP_NAME = "app.name";
@@ -31,7 +31,7 @@ public class ApplyProjectInfoToDockerBuildConfig extends Decorator<DockerBuildCo
 
   private final Project project;
 
-  public ApplyProjectInfoToDockerBuildConfig(Project project) {
+  public ApplyProjectInfoToDockerBuildConfigDecorator(Project project) {
     this.project = project;
   }
 

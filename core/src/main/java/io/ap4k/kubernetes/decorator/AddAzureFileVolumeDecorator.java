@@ -16,16 +16,16 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.ConfigMapVolume;
+import io.ap4k.kubernetes.config.AzureFileVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add a configmap volume to the pod spec.")
-public class AddConfigMapVolume extends Decorator<PodSpecBuilder> {
+@Description("Add an Azure File volume to the Pod spec.")
+public class AddAzureFileVolumeDecorator extends Decorator<PodSpecBuilder> {
 
-  private final ConfigMapVolume volume;
+  private final AzureFileVolume volume;
 
-  public AddConfigMapVolume(ConfigMapVolume volume) {
+  public AddAzureFileVolumeDecorator(AzureFileVolume volume) {
     this.volume = volume;
   }
 
@@ -33,11 +33,11 @@ public class AddConfigMapVolume extends Decorator<PodSpecBuilder> {
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
       .withName(volume.getVolumeName())
-      .withNewConfigMap()
-      .withName(volume.getConfigMapName())
-      .withDefaultMode(volume.getDefaultMode())
-      .withOptional(volume.isOptional())
-      .endConfigMap();
+      .withNewAzureFile()
+      .withSecretName(volume.getSecretName())
+      .withShareName(volume.getShareName())
+      .withReadOnly(volume.isReadOnly())
+      .endAzureFile();
 
   }
 }

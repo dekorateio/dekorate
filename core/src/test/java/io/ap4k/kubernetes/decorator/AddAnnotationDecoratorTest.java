@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AddAnnotationTest {
+class AddAnnotationDecoratorTest {
 
   @Test
   public void shouldAddAnnotationToResources() {
@@ -38,7 +38,7 @@ class AddAnnotationTest {
       .withNewMetadata()
       .withName("pod")
       .endMetadata()
-      .accept(new AddAnnotation(new Annotation("key1", "value1")))
+      .accept(new AddAnnotationDecorator(new Annotation("key1", "value1")))
       .build();
 
     assertEquals(expectecd, actual);

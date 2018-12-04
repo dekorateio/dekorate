@@ -28,11 +28,11 @@ import java.util.Objects;
  * A decorator that adds an environment variable to all containers.
  */
 @Description("Add a environment variable to the container.")
-public class AddEnvVar extends Decorator<ContainerBuilder> {
+public class AddEnvVarDecorator extends Decorator<ContainerBuilder> {
 
   private final Env env;
 
-  public AddEnvVar(Env env) {
+  public AddEnvVarDecorator(Env env) {
     this.env = env;
   }
 
@@ -99,8 +99,8 @@ public class AddEnvVar extends Decorator<ContainerBuilder> {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    AddEnvVar addEnvVar = (AddEnvVar) o;
-    return Objects.equals(env, addEnvVar.env);
+    AddEnvVarDecorator addEnvVarDecorator = (AddEnvVarDecorator) o;
+    return Objects.equals(env, addEnvVarDecorator.env);
   }
 
   @Override

@@ -16,16 +16,16 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.AzureDiskVolume;
+import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add an Azure disk volume to the pod spec.")
-public class AddAzureDiskVolume extends Decorator<PodSpecBuilder> {
+@Description("Add a persistent volume claim volume to all pod specs.")
+public class AddPvcVolumeDecorator extends Decorator<PodSpecBuilder> {
 
-  private final AzureDiskVolume volume;
+  private final PersistentVolumeClaimVolume volume;
 
-  public AddAzureDiskVolume(AzureDiskVolume volume) {
+  public AddPvcVolumeDecorator(PersistentVolumeClaimVolume volume) {
     this.volume = volume;
   }
 
@@ -33,14 +33,10 @@ public class AddAzureDiskVolume extends Decorator<PodSpecBuilder> {
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
       .withName(volume.getVolumeName())
-      .withNewAzureDisk()
-      .withKind(volume.getKind())
-      .withDiskName(volume.getDiskName())
-      .withDiskURI(volume.getDiskURI())
-      .withFsType(volume.getFsType())
-      .withCachingMode(volume.getCachingMode())
-      .withReadOnly(volume.isReadOnly())
-      .endAzureDisk();
+      .withNewPersistentVolumeClaim()
+      .withClaimName(volume.getClaimName())
+      .withNewReadOnly(volume.isReadOnly())
+      .endPersistentVolumeClaim();
 
   }
 }

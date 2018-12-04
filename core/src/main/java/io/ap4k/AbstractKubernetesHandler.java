@@ -28,20 +28,20 @@ import io.ap4k.kubernetes.config.Mount;
 import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.kubernetes.config.SecretVolume;
-import io.ap4k.kubernetes.decorator.AddAnnotation;
-import io.ap4k.kubernetes.decorator.AddAwsElasticBlockStoreVolume;
-import io.ap4k.kubernetes.decorator.AddAzureDiskVolume;
-import io.ap4k.kubernetes.decorator.AddAzureFileVolume;
-import io.ap4k.kubernetes.decorator.AddConfigMapVolume;
-import io.ap4k.kubernetes.decorator.AddEnvVar;
-import io.ap4k.kubernetes.decorator.AddLabel;
-import io.ap4k.kubernetes.decorator.AddLivenessProbe;
-import io.ap4k.kubernetes.decorator.AddMount;
-import io.ap4k.kubernetes.decorator.AddPort;
-import io.ap4k.kubernetes.decorator.AddPvcVolume;
-import io.ap4k.kubernetes.decorator.AddReadinessProbe;
-import io.ap4k.kubernetes.decorator.AddSecretVolume;
-import io.ap4k.kubernetes.decorator.AddService;
+import io.ap4k.kubernetes.decorator.AddAnnotationDecorator;
+import io.ap4k.kubernetes.decorator.AddAwsElasticBlockStoreVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddAzureDiskVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddAzureFileVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddConfigMapVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddEnvVarDecorator;
+import io.ap4k.kubernetes.decorator.AddLabelDecorator;
+import io.ap4k.kubernetes.decorator.AddLivenessProbeDecorator;
+import io.ap4k.kubernetes.decorator.AddMountDecorator;
+import io.ap4k.kubernetes.decorator.AddPortDecorator;
+import io.ap4k.kubernetes.decorator.AddPvcVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddReadinessProbeDecorator;
+import io.ap4k.kubernetes.decorator.AddSecretVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddServiceDecorator;
 
 /**
  * An abstract generator.
@@ -72,50 +72,50 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
    */
   protected void addVisitors(String group, C config) {
     for (Label label : config.getLabels()) {
-      resources.decorate(group, new AddLabel(label));
+      resources.decorate(group, new AddLabelDecorator(label));
     }
     for (Annotation annotation : config.getAnnotations()) {
-      resources.decorate(group, new AddAnnotation(annotation));
+      resources.decorate(group, new AddAnnotationDecorator(annotation));
     }
     for (Env env : config.getEnvVars()) {
-      resources.decorate(group, new AddEnvVar(env));
+      resources.decorate(group, new AddEnvVarDecorator(env));
     }
     for (Port port : config.getPorts()) {
-      resources.decorate(group, new AddPort(port));
+      resources.decorate(group, new AddPortDecorator(port));
     }
     for (Mount mount: config.getMounts()) {
-      resources.decorate(group, new AddMount(mount));
+      resources.decorate(group, new AddMountDecorator(mount));
     }
 
     for (SecretVolume volume : config.getSecretVolumes()) {
-      resources.decorate(group, new AddSecretVolume(volume));
+      resources.decorate(group, new AddSecretVolumeDecorator(volume));
     }
 
     for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
-      resources.decorate(group, new AddConfigMapVolume(volume));
+      resources.decorate(group, new AddConfigMapVolumeDecorator(volume));
     }
 
     for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
-      resources.decorate(group, new AddPvcVolume(volume));
+      resources.decorate(group, new AddPvcVolumeDecorator(volume));
     }
 
     for (AzureFileVolume volume : config.getAzureFileVolumes()) {
-      resources.decorate(group, new AddAzureFileVolume(volume));
+      resources.decorate(group, new AddAzureFileVolumeDecorator(volume));
     }
 
     for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
-      resources.decorate(group, new AddAzureDiskVolume(volume));
+      resources.decorate(group, new AddAzureDiskVolumeDecorator(volume));
     }
 
     for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
-      resources.decorate(group, new AddAwsElasticBlockStoreVolume(volume));
+      resources.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(volume));
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(group, new AddService(config));
+      resources.decorate(group, new AddServiceDecorator(config));
     }
 
-    resources.decorate(group, new AddLivenessProbe(config.getLivenessProbe()));
-    resources.decorate(group, new AddReadinessProbe(config.getReadinessProbe()));
+    resources.decorate(group, new AddLivenessProbeDecorator(config.getLivenessProbe()));
+    resources.decorate(group, new AddReadinessProbeDecorator(config.getReadinessProbe()));
   }
 }
