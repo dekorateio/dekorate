@@ -17,46 +17,40 @@
 
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.Port;
-import io.ap4k.kubernetes.config.Protocol;
-import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
+import io.ap4k.kubernetes.config.Label;
+import io.ap4k.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.ap4k.doc.Description;
 
 import java.util.Objects;
 
 /**
- * A decorator that adds a port to all containers.
+ * A decorator that adds a label to resources.
  */
-@Description("Add port to all containers.")
-public class AddPort extends Decorator<ContainerBuilder> {
+@Description("Add a label to the all metadata.")
+public class AddLabelDecorator extends Decorator<ObjectMetaBuilder> {
 
-  private final Port port;
+  private final Label label;
 
-  public AddPort(Port port) {
-    this.port = port;
+  public AddLabelDecorator(Label label) {
+    this.label = label;
   }
 
   @Override
-  public void visit(ContainerBuilder container) {
-    container.addNewPort()
-      .withName(port.getName())
-      .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
-      .withContainerPort(port.getContainerPort())
-      .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
-      .endPort();
+  public void visit(ObjectMetaBuilder builder) {
+    builder.addToLabels(label.getKey(), label.getValue());
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    AddPort addPortToConfig = (AddPort) o;
-    return Objects.equals(port, addPortToConfig.port);
+    AddLabelDecorator addLabelDecorator = (AddLabelDecorator) o;
+    return Objects.equals(label, addLabelDecorator.label);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(port);
+    return Objects.hash(label);
   }
 }

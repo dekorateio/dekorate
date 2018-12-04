@@ -23,7 +23,7 @@ import io.ap4k.docker.adapter.DockerBuildConfigAdapter;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
 import io.ap4k.docker.configurator.ApplyDockerBuildHook;
-import io.ap4k.docker.configurator.ApplyProjectInfoToDockerBuildConfig;
+import io.ap4k.docker.configurator.ApplyProjectInfoToDockerBuildConfigDecorator;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 
@@ -63,7 +63,7 @@ public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<
     EnableDockerBuild enableDockerBuild = mainClass.getAnnotation(EnableDockerBuild.class);
     return new ConfigurationSupplier<DockerBuildConfig>(DockerBuildConfigAdapter
                                                         .newBuilder(enableDockerBuild)
-                                                        .accept(new ApplyProjectInfoToDockerBuildConfig(project))
+                                                        .accept(new ApplyProjectInfoToDockerBuildConfigDecorator(project))
                                                         .accept(new ApplyDockerBuildHook()));
   }
 

@@ -21,11 +21,11 @@ import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.doc.Description;
 
 @Description("Add the runtime information to the component.")
-public class AddRuntimeToComponent extends Decorator<ComponentSpecBuilder> {
+public class AddRuntimeToComponentDecorator extends Decorator<ComponentSpecBuilder> {
 
   private final String runtime;
 
-  public AddRuntimeToComponent(String runtime) {
+  public AddRuntimeToComponentDecorator(String runtime) {
     this.runtime = runtime;
   }
 

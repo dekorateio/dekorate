@@ -24,11 +24,11 @@ import io.ap4k.doc.Description;
 import java.util.Objects;
 
  @Description("A decorator that adds an annotation to all resources.")
- public class AddAnnotation extends Decorator<ObjectMetaBuilder> {
+ public class AddAnnotationDecorator extends Decorator<ObjectMetaBuilder> {
 
   private final Annotation annotation;
 
-  public AddAnnotation(Annotation annotation) {
+  public AddAnnotationDecorator(Annotation annotation) {
     this.annotation = annotation;
   }
 
@@ -41,7 +41,7 @@ import java.util.Objects;
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    AddAnnotation that = (AddAnnotation) o;
+    AddAnnotationDecorator that = (AddAnnotationDecorator) o;
     return Objects.equals(annotation, that.annotation);
   }
 

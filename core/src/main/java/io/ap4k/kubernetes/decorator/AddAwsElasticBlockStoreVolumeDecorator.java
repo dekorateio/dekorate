@@ -16,16 +16,16 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.AzureFileVolume;
+import io.ap4k.kubernetes.config.AwsElasticBlockStoreVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add an Azure File volume to the Pod spec.")
-public class AddAzureFileVolume extends Decorator<PodSpecBuilder> {
+@Description("Add an elastic block store volume to the pod spec.")
+public class AddAwsElasticBlockStoreVolumeDecorator extends Decorator<PodSpecBuilder> {
 
-  private final AzureFileVolume volume;
+  private final AwsElasticBlockStoreVolume volume;
 
-  public AddAzureFileVolume(AzureFileVolume volume) {
+  public AddAwsElasticBlockStoreVolumeDecorator(AwsElasticBlockStoreVolume volume) {
     this.volume = volume;
   }
 
@@ -33,11 +33,11 @@ public class AddAzureFileVolume extends Decorator<PodSpecBuilder> {
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
       .withName(volume.getVolumeName())
-      .withNewAzureFile()
-      .withSecretName(volume.getSecretName())
-      .withShareName(volume.getShareName())
+      .withNewAwsElasticBlockStore()
+      .withVolumeID(volume.getVolumeId())
+      .withFsType(volume.getFsType())
+      .withNewPartition(volume.getPartition())
       .withReadOnly(volume.isReadOnly())
-      .endAzureFile();
-
+      .endAwsElasticBlockStore();
   }
 }

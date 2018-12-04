@@ -16,16 +16,16 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.SecretVolume;
+import io.ap4k.kubernetes.config.AzureDiskVolume;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add a secret volume to all pod specs.")
-public class AddSecretVolume extends Decorator<PodSpecBuilder> {
+@Description("Add an Azure disk volume to the pod spec.")
+public class AddAzureDiskVolumeDecorator extends Decorator<PodSpecBuilder> {
 
-  private final SecretVolume volume;
+  private final AzureDiskVolume volume;
 
-  public AddSecretVolume(SecretVolume volume) {
+  public AddAzureDiskVolumeDecorator(AzureDiskVolume volume) {
     this.volume = volume;
   }
 
@@ -33,11 +33,14 @@ public class AddSecretVolume extends Decorator<PodSpecBuilder> {
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
       .withName(volume.getVolumeName())
-      .withNewSecret()
-      .withSecretName(volume.getSecretName())
-      .withDefaultMode(volume.getDefaultMode())
-      .withOptional(volume.isOptional())
-      .endSecret();
+      .withNewAzureDisk()
+      .withKind(volume.getKind())
+      .withDiskName(volume.getDiskName())
+      .withDiskURI(volume.getDiskURI())
+      .withFsType(volume.getFsType())
+      .withCachingMode(volume.getCachingMode())
+      .withReadOnly(volume.isReadOnly())
+      .endAzureDisk();
 
   }
 }

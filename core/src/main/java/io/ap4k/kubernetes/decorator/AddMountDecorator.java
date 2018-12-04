@@ -14,27 +14,30 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.component.decorator;
+package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.component.model.ComponentSpecBuilder;
-import io.ap4k.kubernetes.decorator.Decorator;
-import io.ap4k.kubernetes.config.Env;
+import io.ap4k.kubernetes.config.Mount;
+import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 import io.ap4k.doc.Description;
 
-@Description("Add environment variable to component.")
-public class AddEnvToComponent extends Decorator<ComponentSpecBuilder> {
+@Description("Add mount to all containers.")
+public class AddMountDecorator extends Decorator<ContainerBuilder> {
 
-  private final Env env;
+  private final Mount mount;
 
-  public AddEnvToComponent (Env env) {
-    this.env = env;
+  public AddMountDecorator(Mount mount) {
+    this.mount = mount;
   }
 
   @Override
-  public void visit(ComponentSpecBuilder component) {
-    component.addNewEnv()
-      .withName(env.getName())
-      .withValue(env.getValue())
-      .endEnv();
+  public void visit(ContainerBuilder container) {
+    container.addNewVolumeMount()
+      .withName(mount.getName())
+      .withMountPath(mount.getPath())
+      .withSubPath(mount.getSubPath())
+      .withReadOnly(mount.isReadOnly())
+      .endVolumeMount();
+
+
   }
 }
