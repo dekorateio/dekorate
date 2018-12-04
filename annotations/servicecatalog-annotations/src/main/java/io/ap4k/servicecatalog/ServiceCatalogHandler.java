@@ -37,9 +37,11 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
 
   private final Resources resources;
 
-  public ServiceCatalogHandler() {
+  // only used for testing
+  ServiceCatalogHandler() {
     this(new Resources());
   }
+
   public ServiceCatalogHandler(Resources resources) {
     this.resources = resources;
   }
