@@ -72,7 +72,7 @@ public class Session {
     return resources;
   }
 
-  public Set<Handler> generators() {
+  public Set<Handler> handlers() {
     return handlers;
   }
 

@@ -47,8 +47,8 @@ public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<Co
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         session.configurators().add(config(mainClass));
-        session.generators().add(new ComponentHandler(session.resources()));
-        session.generators().add(new ComponentServiceCatalogHandler(session.resources()));
+        session.handlers().add(new ComponentHandler(session.resources()));
+        session.handlers().add(new ComponentServiceCatalogHandler(session.resources()));
       }
     }
     return false;
