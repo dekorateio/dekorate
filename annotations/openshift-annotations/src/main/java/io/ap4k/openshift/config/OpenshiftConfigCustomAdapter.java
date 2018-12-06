@@ -14,11 +14,10 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.openshift.confg;
+package io.ap4k.openshift.config;
 
 import io.ap4k.openshift.adapt.OpenshiftConfigAdapter;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.config.OpenshiftConfigBuilder;
 import io.ap4k.project.ApplyProjectInfo;
 import io.ap4k.project.Project;
 

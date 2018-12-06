@@ -22,7 +22,6 @@ import io.ap4k.kubernetes.adapter.KubernetesConfigAdapter;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.KubernetesConfig;
-import io.ap4k.kubernetes.KubernetesHandler;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 import io.ap4k.project.ApplyProjectInfo;

@@ -19,7 +19,6 @@ package io.ap4k.kubernetes.annotation;
 
 
 import io.ap4k.kubernetes.config.Configuration;
-import io.ap4k.kubernetes.config.ImagePullPolicy;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 

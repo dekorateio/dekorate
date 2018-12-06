@@ -18,12 +18,12 @@
 package io.ap4k.component.processor;
 
 import io.ap4k.Session;
-import io.ap4k.component.ComponentHandler;
-import io.ap4k.component.ComponentServiceCatalogHandler;
 import io.ap4k.component.adapt.CompositeConfigAdapter;
 import io.ap4k.component.annotation.CompositeApplication;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.CompositeConfigBuilder;
+import io.ap4k.component.handler.ComponentHandler;
+import io.ap4k.component.handler.ComponentServiceCatalogHandler;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;

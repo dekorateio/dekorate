@@ -18,7 +18,7 @@
 package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.kubernetes.config.Port;
-import io.ap4k.kubernetes.config.Protocol;
+import io.ap4k.kubernetes.annotation.Protocol;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 import io.ap4k.doc.Description;
 

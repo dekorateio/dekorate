@@ -14,33 +14,35 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.servicecatalog;
+
+
+package io.ap4k.istio.handler;
 
 import io.ap4k.kubernetes.config.KubernetesConfig;
-import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
-import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
+import io.ap4k.istio.config.EditableIstioConfig;
+import io.ap4k.istio.config.IstioConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ServiceCatalogHandlerTest {
+public class IstioHandlerTest {
 
   @Test
-  public void shouldAccpetServiceCatalogConfig() {
-    ServiceCatalogHandler generator = new ServiceCatalogHandler();
-    assertTrue(generator.canHandle(ServiceCatalogConfig.class));
+  public void shouldAccpetIstioConfig() {
+    IstioHandler generator = new IstioHandler();
+    assertTrue(generator.canHandle(IstioConfig.class));
   }
 
   @Test
-  public void shouldAccpetEditableServiceCatalogConfig() {
-    ServiceCatalogHandler generator = new ServiceCatalogHandler();
-    assertTrue(generator.canHandle(EditableServiceCatalogConfig.class));
+  public void shouldAccpetEditableIstioConfig() {
+    IstioHandler generator = new IstioHandler();
+    assertTrue(generator.canHandle(EditableIstioConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfig() {
-    ServiceCatalogHandler generator = new ServiceCatalogHandler();
+    IstioHandler generator = new IstioHandler();
     assertFalse(generator.canHandle(KubernetesConfig.class));
   }
 }

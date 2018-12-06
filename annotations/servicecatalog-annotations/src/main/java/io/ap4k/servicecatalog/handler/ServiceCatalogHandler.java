@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.servicecatalog;
+package io.ap4k.servicecatalog.handler;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;

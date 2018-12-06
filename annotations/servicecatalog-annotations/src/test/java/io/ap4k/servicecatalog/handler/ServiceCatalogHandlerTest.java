@@ -14,32 +14,33 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.component;
+package io.ap4k.servicecatalog.handler;
 
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ComponentServiceCatalogHandlerTest {
+class ServiceCatalogHandlerTest {
 
   @Test
   public void shouldAccpetServiceCatalogConfig() {
-    ComponentServiceCatalogHandler generator = new ComponentServiceCatalogHandler();
+    ServiceCatalogHandler generator = new ServiceCatalogHandler();
     assertTrue(generator.canHandle(ServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldAccpetEditableServiceCatalogConfig() {
-    ComponentServiceCatalogHandler generator = new ComponentServiceCatalogHandler();
+    ServiceCatalogHandler generator = new ServiceCatalogHandler();
     assertTrue(generator.canHandle(EditableServiceCatalogConfig.class));
   }
 
   @Test
   public void shouldNotAccpetKubernetesConfig() {
-    ComponentServiceCatalogHandler generator = new ComponentServiceCatalogHandler();
+    ServiceCatalogHandler generator = new ServiceCatalogHandler();
     assertFalse(generator.canHandle(KubernetesConfig.class));
   }
 }

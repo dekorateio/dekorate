@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.istio;
+package io.ap4k.istio.util;
 
 import io.ap4k.istio.config.IstioConfig;
 import io.ap4k.utils.Strings;

@@ -14,10 +14,10 @@
  * limitations under the License.
  * 
 **/
+package io.ap4k.kubernetes.processor;
 
-package io.ap4k.kubernetes;
-
-import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.AbstractKubernetesHandler;
+import io.ap4k.Resources;
 import io.ap4k.deps.kubernetes.api.model.LabelSelector;
 import io.ap4k.deps.kubernetes.api.model.LabelSelectorBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodSpec;
@@ -26,16 +26,39 @@ import io.ap4k.deps.kubernetes.api.model.PodTemplateSpec;
 import io.ap4k.deps.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
 import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;
-
+import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.EditableKubernetesConfig;
+import io.ap4k.kubernetes.config.Configuration;
 
 import static io.ap4k.utils.Labels.createLabels;
 
-public class KubernetesResources {
+public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> {
+
+  private static final String KUBERNETES = "kubernetes";
 
 
   private static final String IF_NOT_PRESENT = "IfNotPresent";
   private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";
   private static final String METADATA_NAMESPACE = "metadata.namespace";
+
+  public KubernetesHandler() {
+    this(new Resources());
+  }
+
+  public KubernetesHandler(Resources resources) {
+    super(resources);
+  }
+
+  public void handle(KubernetesConfig config) {
+    resources.add(KUBERNETES, createDeployment(config));
+    addVisitors(KUBERNETES, config);
+  }
+
+  public boolean canHandle(Class<? extends Configuration> type) {
+    return type.equals(KubernetesConfig.class) ||
+      type.equals(EditableKubernetesConfig.class);
+  }
+
 
   /**
    * Creates a {@link Deployment} for the {@link KubernetesConfig}.

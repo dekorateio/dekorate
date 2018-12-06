@@ -19,11 +19,11 @@ package io.ap4k.openshift.processor;
 
 import io.ap4k.Session;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
-import io.ap4k.openshift.OpenshiftHandler;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.confg.OpenshiftConfigCustomAdapter;
+import io.ap4k.openshift.config.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.OpenshiftConfigBuilder;
+import io.ap4k.openshift.handler.OpenshiftHandler;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.project.Project;
 import io.ap4k.project.AptProjectFactory;

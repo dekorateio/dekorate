@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.openshift;
+package io.ap4k.openshift.handler;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;

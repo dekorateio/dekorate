@@ -26,7 +26,7 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.openshift.api.model.Build;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
 import io.ap4k.openshift.config.S2iConfig;
-import io.ap4k.openshift.utils.OpenshiftUtils;
+import io.ap4k.openshift.util.OpenshiftUtils;
 import io.ap4k.project.Project;
 import io.ap4k.testing.WithKubernetesClient;
 import io.ap4k.testing.WithPod;

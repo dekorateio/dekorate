@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
 import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.openshift.handler.OpenshiftHandler;
 import org.junit.jupiter.api.Test;
 
 class OpenshiftHandlerTest {

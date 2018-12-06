@@ -14,12 +14,13 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.istio;
+package io.ap4k.istio.handler;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
+import io.ap4k.istio.util.IstioProxy;
 import io.ap4k.kubernetes.config.Configuration;
-import io.ap4k.kubernetes.config.ImagePullPolicy;
+import io.ap4k.kubernetes.annotation.ImagePullPolicy;
 import io.ap4k.kubernetes.decorator.ContainerDecorator;
 import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.kubernetes.decorator.VolumeDecorator;

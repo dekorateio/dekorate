@@ -15,7 +15,7 @@
  * 
 **/
 
-package io.ap4k.istio;
+package io.ap4k.istio.util;
 
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;

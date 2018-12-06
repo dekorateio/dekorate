@@ -17,8 +17,8 @@
 
 package io.ap4k.istio.processor;
 
+import io.ap4k.istio.handler.IstioHandler;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
-import io.ap4k.istio.IstioHandler;
 import io.ap4k.istio.adapt.IstioConfigAdapter;
 import io.ap4k.istio.annotation.Istio;
 import io.ap4k.istio.config.IstioConfig;

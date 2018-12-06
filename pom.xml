@@ -22,6 +22,7 @@
     <!-- Plugins -->
     <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
     <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
+    <version.maven-shade-plugin>3.0.0</version.maven-shade-plugin>
   </properties>
 
   <modules>

@@ -15,24 +15,25 @@
  * 
 **/
 
-package io.ap4k.openshift;
+package io.ap4k.openshift.handler;
 
-import io.ap4k.deps.openshift.api.model.DeploymentConfig;
-import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
-import io.ap4k.openshift.config.OpenshiftConfig;
+import io.ap4k.AbstractKubernetesHandler;
+import io.ap4k.Resources;
 import io.ap4k.deps.kubernetes.api.model.PodSpec;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodTemplateSpec;
 import io.ap4k.deps.kubernetes.api.model.PodTemplateSpecBuilder;
-
-import java.util.HashMap;
-import java.util.Map;
+import io.ap4k.deps.openshift.api.model.DeploymentConfig;
+import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
+import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.openshift.config.OpenshiftConfig;
+import io.ap4k.openshift.config.EditableOpenshiftConfig;
 
 import static io.ap4k.utils.Labels.createLabels;
 
+public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> {
 
-public class OpenshiftResources {
-
+  private static final String OPENSHIFT = "openshift";
   private static final String APP = "app";
   private static final String VERSION = "version";
 
@@ -44,6 +45,25 @@ public class OpenshiftResources {
   private static final String IMAGECHANGE = "ImageChange";
 
   private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
+
+  public OpenshiftHandler() {
+    super(new Resources());
+  }
+  public OpenshiftHandler(Resources resources) {
+    super(resources);
+  }
+
+  public void handle(OpenshiftConfig config) {
+    resources.add(OPENSHIFT, createDeploymentConfig(config));
+    addVisitors(OPENSHIFT, config);
+  }
+
+  public boolean canHandle(Class<? extends Configuration> type) {
+    return type.equals(OpenshiftConfig.class) ||
+      type.equals(EditableOpenshiftConfig.class);
+  }
+
+
 
   /**
    * Creates a {@link DeploymentConfig} for the {@link OpenshiftConfig}.
@@ -112,5 +132,4 @@ public class OpenshiftResources {
       .endContainer()
       .build();
   }
-
 }

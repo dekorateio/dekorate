@@ -18,7 +18,7 @@
 
 package io.apk4k.kubernetes;
 
-import io.ap4k.kubernetes.config.ImagePullPolicy;
+import io.ap4k.kubernetes.annotation.ImagePullPolicy;
 import io.ap4k.kubernetes.annotation.ServiceType;
 import io.ap4k.kubernetes.config.Annotation;
 import io.ap4k.kubernetes.config.AwsElasticBlockStoreVolume;
@@ -34,7 +34,7 @@ import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.kubernetes.config.Probe;
 import io.ap4k.kubernetes.config.SecretVolume;
-import io.ap4k.kubernetes.KubernetesHandler;
+import io.ap4k.kubernetes.processor.KubernetesHandler;
 import io.ap4k.project.Project;
 
 import io.ap4k.kubernetes.config.KubernetesConfig;
