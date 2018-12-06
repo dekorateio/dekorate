@@ -28,6 +28,8 @@ import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.project.Project;
 import io.ap4k.project.AptProjectFactory;
 import io.ap4k.doc.Description;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -38,6 +40,7 @@ import java.util.Set;
 
 @Description("Generates openshift manifests.")
 @SupportedAnnotationTypes({"io.ap4k.kubernetes.annotation.KubernetesApplication", "io.ap4k.openshift.annotation.OpenshiftApplication"})
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<OpenshiftConfig> {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

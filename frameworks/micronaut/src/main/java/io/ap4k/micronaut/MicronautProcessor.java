@@ -25,6 +25,8 @@ import io.ap4k.kubernetes.configurator.AddPort;
 import io.ap4k.kubernetes.configurator.AddReadinessProbe;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -33,6 +35,7 @@ import java.util.Set;
 
 @Description("Detects the micronaut controller and registers the http port.")
 @SupportedAnnotationTypes("io.micronaut.http.annotation.Controller")
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class MicronautProcessor extends AbstractAnnotationProcessor {
 
   @Override
