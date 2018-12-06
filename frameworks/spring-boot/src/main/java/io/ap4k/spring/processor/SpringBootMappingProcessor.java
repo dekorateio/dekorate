@@ -28,11 +28,14 @@ import io.ap4k.doc.Description;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 @Description("Detects Spring Boot web endpoints and registers the http port.")
 @SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping"})
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SpringBootMappingProcessor extends AbstractAnnotationProcessor {
 
   @Override

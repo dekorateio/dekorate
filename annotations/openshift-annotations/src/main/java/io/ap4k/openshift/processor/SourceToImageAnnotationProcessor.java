@@ -32,6 +32,8 @@ import io.ap4k.openshift.configurator.ApplySourceToImageHook;
 import io.ap4k.openshift.configurator.ApplyOpenshiftConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -42,6 +44,7 @@ import java.util.Set;
 
 @Description("Adds source to image config in the openshift manifests.")
 @SupportedAnnotationTypes("io.ap4k.openshift.annotation.EnableS2iBuild")
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor<S2iConfig> {
   public static String DEFAULT_S2I_BUILDER_IMAGE = "fabric8/s2i-java:2.3";
 
