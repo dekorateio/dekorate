@@ -14,7 +14,11 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.docker;
 
-public class Constants {
+package io.ap4k.kubernetes.annotation;
+
+public enum  ImagePullPolicy {
+  Always,
+  IfNotPresent,
+  Never
 }

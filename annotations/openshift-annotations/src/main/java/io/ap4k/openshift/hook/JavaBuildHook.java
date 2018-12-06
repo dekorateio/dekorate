@@ -26,7 +26,7 @@ import io.ap4k.deps.openshift.client.DefaultOpenShiftClient;
 import io.ap4k.deps.openshift.client.OpenShiftClient;
 import io.ap4k.deps.openshift.client.dsl.internal.BuildOperationsImpl;
 import io.ap4k.hook.ProjectHook;
-import io.ap4k.openshift.utils.OpenshiftUtils;
+import io.ap4k.openshift.util.OpenshiftUtils;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Packaging;
 import io.ap4k.utils.Serialization;

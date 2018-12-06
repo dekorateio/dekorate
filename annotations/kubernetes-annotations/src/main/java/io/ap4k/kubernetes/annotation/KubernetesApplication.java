@@ -18,22 +18,7 @@
 package io.ap4k.kubernetes.annotation;
 
 
-import io.ap4k.kubernetes.annotation.Annotation;
-import io.ap4k.kubernetes.annotation.AwsElasticBlockStoreVolume;
-import io.ap4k.kubernetes.annotation.AzureDiskVolume;
-import io.ap4k.kubernetes.annotation.AzureFileVolume;
-import io.ap4k.kubernetes.annotation.ConfigMapVolume;
-import io.ap4k.kubernetes.annotation.Env;
-import io.ap4k.kubernetes.annotation.GitRepoVolume;
-import io.ap4k.kubernetes.annotation.Label;
-import io.ap4k.kubernetes.annotation.Mount;
-import io.ap4k.kubernetes.annotation.PersistentVolumeClaimVolume;
-import io.ap4k.kubernetes.annotation.Port;
-import io.ap4k.kubernetes.annotation.Probe;
-import io.ap4k.kubernetes.annotation.SecretVolume;
-import io.ap4k.kubernetes.annotation.ServiceType;
 import io.ap4k.kubernetes.config.Configuration;
-import io.ap4k.kubernetes.config.ImagePullPolicy;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;

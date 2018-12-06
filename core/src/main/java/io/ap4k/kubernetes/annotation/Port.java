@@ -17,8 +17,6 @@
 
 package io.ap4k.kubernetes.annotation;
 
-import io.ap4k.kubernetes.config.Protocol;
-
 public @interface Port {
 
   /**

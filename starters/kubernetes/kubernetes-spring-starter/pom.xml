@@ -14,31 +14,51 @@
   <name>AP4K :: Starters :: Kubernetes :: Spring</name>
 
   <dependencies>
+    <!-- Annotations -->
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>docker-annotations</artifactId>
       <version>${project.version}</version>
+      <classifier>annotations</classifier>
     </dependency>
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>kubernetes-annotations</artifactId>
       <version>${project.version}</version>
+      <classifier>annotations</classifier>
     </dependency>
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>servicecatalog-annotations</artifactId>
       <version>${project.version}</version>
+      <classifier>annotations</classifier>
+    </dependency>
+
+    <!-- Processors -->
+    <!-- Are handled separately from annotations, because there are build tools that exclude artifacts containing
+         processors from compile path. -->
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>docker-annotations</artifactId>
+      <version>${project.version}</version>
+      <classifier>processors</classifier>
+    </dependency>
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>kubernetes-annotations</artifactId>
+      <version>${project.version}</version>
+      <classifier>processors</classifier>
+    </dependency>
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>servicecatalog-annotations</artifactId>
+      <version>${project.version}</version>
+      <classifier>processors</classifier>
     </dependency>
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>ap4k-spring-boot</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>kubernetes-junit</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

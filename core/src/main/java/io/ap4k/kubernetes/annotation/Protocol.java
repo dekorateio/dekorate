@@ -14,10 +14,8 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.component;
+package io.ap4k.kubernetes.annotation;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ComponentGeneratorTest {
-
+public enum  Protocol {
+  TCP, UDP
 }

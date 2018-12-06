@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.openshift.utils;
+package io.ap4k.openshift.util;
 
 import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;

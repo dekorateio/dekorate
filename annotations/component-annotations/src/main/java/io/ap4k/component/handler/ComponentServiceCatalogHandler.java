@@ -15,7 +15,7 @@
  * 
 **/
 
-package io.ap4k.component;
+package io.ap4k.component.handler;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
