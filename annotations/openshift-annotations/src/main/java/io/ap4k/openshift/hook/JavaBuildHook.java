@@ -84,7 +84,7 @@ public class JavaBuildHook extends ProjectHook {
   @Override
   public void run() {
     deploy();
-    File tar = Packaging.packageFile(project.getRoot().resolve(TARGET).resolve(project.getBuildInfo().getOutputFileName()).toAbsolutePath().toString());
+    File tar = Packaging.packageFile(project.getBuildInfo().getOutputFile().toAbsolutePath().toString());
     Build build = client.buildConfigs().withName(project.getBuildInfo().getName()).instantiateBinary().fromFile(tar);
     try  (BufferedReader reader = new BufferedReader(client.builds().withName(build.getMetadata().getName()).getLogReader())) {
       for (String line = reader.readLine(); line != null; line = reader.readLine()) {
