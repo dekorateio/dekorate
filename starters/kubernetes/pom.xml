@@ -16,6 +16,7 @@
   <modules>
     <module>kubernetes-spring-starter</module>
     <module>kubernetes-thorntail-starter</module>
+    <module>kubernetes-junit-starter</module>
   </modules>
 
 
