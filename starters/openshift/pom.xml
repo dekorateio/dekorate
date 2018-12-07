@@ -17,6 +17,7 @@
   <modules>
     <module>openshift-spring-starter</module>
     <module>openshift-thorntail-starter</module>
+    <module>openshift-junit-starter</module>
   </modules>
 
 
