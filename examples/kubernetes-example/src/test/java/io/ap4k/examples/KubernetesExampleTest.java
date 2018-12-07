@@ -21,11 +21,9 @@ package io.ap4k.examples;
 import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.Test;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class KubernetesExampleTest {
 

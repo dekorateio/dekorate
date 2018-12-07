@@ -8,8 +8,8 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SbtInfoReaderTest {
 
