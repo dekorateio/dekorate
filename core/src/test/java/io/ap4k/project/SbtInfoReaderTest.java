@@ -34,7 +34,7 @@ class SbtInfoReaderTest {
     assertEquals(SbtInfoReader.DEFAULT_VERSION, info.getVersion());
 
     String expectedOutputFile = root.resolve("target/").resolve(info.getName() + "_" + systemScalaVersion + "-" + info.getVersion() + ".jar").toAbsolutePath().toString();
-    assertEquals(expectedOutputFile, info.getOutputFileName());
+    assertEquals(expectedOutputFile, info.getOutputFile().toAbsolutePath().toString());
   }
 
   @Test
@@ -49,6 +49,6 @@ class SbtInfoReaderTest {
     assertEquals("1.0.0", info.getVersion());
 
     String expectedOutputFile = root.resolve("target/").resolve(info.getName() + "_" + systemScalaVersion + "-" + info.getVersion() + ".jar").toAbsolutePath().toString();
-    assertEquals(expectedOutputFile, info.getOutputFileName());
+    assertEquals(expectedOutputFile, info.getOutputFile().toAbsolutePath().toString());
   }
 }

@@ -51,7 +51,7 @@ public class SbtInfoReader implements BuildInfoReader {
   protected static final String DEFAULT_SCALA_VERSION = "2.12";
 
   private static final String[] SCALA_VERSION_CMD = new String[]{"scala", "-version"};
-  private static final String VERSOIN_PATTERN = "^(\\d+\\.\\d+\\.\\d+).*";
+  private static final String VERSION_PATTERN = "^(\\d+\\.\\d+\\.\\d+).*";
 
   private static final int MAJOR = 0;
   private static final int MINOR = 1;
@@ -105,7 +105,7 @@ public class SbtInfoReader implements BuildInfoReader {
 
       BufferedReader buffer = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String output = buffer.lines().collect(Collectors.joining(NEWLINE));
-      String fullVersion = Arrays.stream(output.split(" ")).filter(w -> w.matches(VERSOIN_PATTERN)).findFirst().orElse(DEFAULT_VERSION);
+      String fullVersion = Arrays.stream(output.split(" ")).filter(w -> w.matches(VERSION_PATTERN)).findFirst().orElse(DEFAULT_VERSION);
       String[] version = fullVersion.split("\\.");
       if  (version.length >= 2) {
         return version[MAJOR] + DOT + version[MINOR];
