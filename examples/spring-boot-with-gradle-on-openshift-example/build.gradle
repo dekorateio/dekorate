@@ -1,0 +1,54 @@
+buildscript {
+  ext {
+    springBootVersion = '2.1.1.RELEASE'
+    aptPluginVersion = '0.19'
+    ap4kVersion = System.getProperty("ap4kVersion")
+  }
+  repositories {
+    mavenCentral()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    classpath("net.ltgt.gradle:gradle-apt-plugin:${aptPluginVersion}")
+    classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0'
+
+  }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: "net.ltgt.apt"
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+compileGroovy {
+  groovyOptions.javaAnnotationProcessing = true
+}
+
+junitPlatform {
+    enableStandardTestTask = true
+}
+dependencies {
+  implementation('org.springframework.boot:spring-boot-starter-web')
+  implementation('org.codehaus.groovy:groovy')
+
+  compile("io.ap4k:openshift-spring-starter:${ap4kVersion}")
+  annotationProcessor("io.ap4k:openshift-annotations:${ap4kVersion}")
+  annotationProcessor("io.ap4k:ap4k-spring-boot:${ap4kVersion}")
+
+  testRuntime("org.junit.jupiter:junit-jupiter-engine:5.1.0")
+  testImplementation("io.ap4k:openshift-junit:${ap4kVersion}")
+}
