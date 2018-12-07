@@ -40,7 +40,7 @@ public class SpringBootOnOpenshiftIT {
   private KubernetesClient client;
 
   @Inject
-  @Named("spring-boot-on-openshift-example")
+  @Named("spring-boot-with-groovy-on-openshift-example")
   Pod pod;
 
   @Test
