@@ -41,9 +41,13 @@ public class MavenInfoReader implements BuildInfoReader {
   private static final String PARENT = "parent";
   private static final String POM_XML = "pom.xml";
 
+  private static final String TARGET = "target";
+  private static final String CLASSES = "classes";
+  public static String OUTPUTFILE_FORMAT = "%s-%s.%s";
+
   @Override
   public int order() {
-    return 100;
+    return 200;
   }
 
   @Override
