@@ -17,33 +17,26 @@
 
 package io.ap4k.project;
 
+import java.nio.file.Path;
+
 public class BuildInfo {
 
   public static String DEFAULT_PACKAGING = "jar";
-  public static String OUTPUTFILE_FORMAT = "%s-%s.%s";
+
 
   private String name;
   private String version;
   private String packaging;
-  private String outputFileName;
+  private Path outputFile;
 
   public BuildInfo() {
-    this(null, null);
   }
 
-  public BuildInfo(String name, String version) {
-    this(name, version, DEFAULT_PACKAGING);
-  }
-
-  public BuildInfo(String name, String version, String packaging) {
-    this(name, version, packaging, String.format(OUTPUTFILE_FORMAT, name, version, packaging));
-  }
-
-  public BuildInfo(String name, String version, String packaging, String outputFileName) {
+  public BuildInfo(String name, String version, String packaging, Path outputFile) {
     this.name = name;
     this.version = version;
     this.packaging = packaging;
-    this.outputFileName = outputFileName;
+    this.outputFile = outputFile;
   }
 
   /**
@@ -74,8 +67,8 @@ public class BuildInfo {
    * Get the output file name.
    * @return  The output file name.
    */
-  public String getOutputFileName() {
-    return outputFileName;
+  public Path getOutputFile() {
+    return outputFile;
   }
 
   public void setName(String name) {
@@ -90,7 +83,7 @@ public class BuildInfo {
     this.packaging = packaging;
   }
 
-  public void setOutputFileName(String outputFileName) {
-    this.outputFileName = outputFileName;
+  public void setOutputFile(Path outputFile) {
+    this.outputFile = outputFile;
   }
 }

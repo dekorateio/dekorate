@@ -36,9 +36,15 @@ import io.ap4k.Ap4kException;
 public class GradleInfoReader implements BuildInfoReader {
 
   private static final String BUILD_GRADLE = "build.gradle";
+  private static final String SETTINGS_GRADLE = "settings.gradle";
   private static final String GRADLE_PROPERTIES = "gradle.properties";
   private static final String BUILD = "build";
   private static final String LIBS = "libs";
+
+  private static final String CLASSES = "classes";
+  private static final String GROOVY = "groovy";
+  private static final String JAVA = "groovy";
+  private static final String MAIN = "main";
 
   private static final String OPEN_BRACKET = "{";
   private static final String CLOSE_BRACKET = "}";
@@ -56,10 +62,13 @@ public class GradleInfoReader implements BuildInfoReader {
   private static final String DESTINATION_DIR = "DESTINATION_DIR";
 
   private static final String JAR = "jar";
+  private static final String SHADOW_JAR = "shadowJar";
+
+  private static final String ROOT_PROJECT_PREFIX = "rootProject.";
 
   @Override
   public int order() {
-    return 200;
+    return 100;
   }
 
   @Override
@@ -85,7 +94,6 @@ public class GradleInfoReader implements BuildInfoReader {
     Path outputDir = root.resolve(destinationDir);
 
     StringBuilder sb = new StringBuilder();
-    sb.append(outputDir.toAbsolutePath().toString());
     sb.append(name);
     if (Strings.isNotNullOrEmpty(version)) {
       sb.append(DASH).append(version);
@@ -96,36 +104,71 @@ public class GradleInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    String outputFileName = sb.toString();
+    return new BuildInfo(name, version, extension, outputDir.resolve(sb.toString()));
+  }
 
-    return new BuildInfo(name, version, extension, outputFileName);
+  /**
+   * Read settings.gradle and get root project properties.
+   * @param path  The path to settings.gralde.
+   * @return
+   */
+  protected static Map<String, String> readSettingsdGradle(Path path) {
+    Map<String, String> properties = new HashMap<>();
+    if (path.toFile().exists()) {
+      try {
+        Files.lines(path)
+          .map(l -> l.replaceAll("[ ]*", ""))
+          .forEach(l -> {
+            String key = l.substring(0, l.lastIndexOf(EQUALS));
+            if (key.startsWith(ROOT_PROJECT_PREFIX)) {
+              key = key.substring(ROOT_PROJECT_PREFIX.length());
+              String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "");
+              properties.put(key, value);
+            }
+          });
+      } catch (IOException e) {
+        throw Ap4kException.launderThrowable(e);
+      }
+    }
+    return properties;
   }
 
   /**
    * Parse build.gradle and read the jar configuration as a {@link Map}.
+   * @param path  The path to build.gralde.
    * @return A map containing all configuration found under jar.
    */
-  protected static Map<String, String> readBuildGradle(Path gradlePath) {
+  protected static Map<String, String> readBuildGradle(Path path) {
     AtomicBoolean inJar = new AtomicBoolean();
+    AtomicBoolean inShadowJar = new AtomicBoolean();
     AtomicInteger quotes = new AtomicInteger(0);
     Map<String, String> properties = new HashMap<>();
     try {
-      Files.lines(gradlePath).map(l -> l.replaceAll("[ ]*","")).forEach(l ->  {
-          if (l.startsWith(JAR)) {
-            inJar.set(true);
-          }
-          if (inJar.get() && l.contains(OPEN_BRACKET)) {
-            quotes.incrementAndGet();
-          }
-          if (inJar.get() && l.contains(CLOSE_BRACKET)) {
-            quotes.decrementAndGet();
-          }
-          if (inJar.get() && quotes.get() == 1 && l.contains(EQUALS)) {
-            String key = l.substring(0 ,l.lastIndexOf(EQUALS));
-            String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "");
-            properties.put(key, value);
-          }
-        });
+      Files.lines(path).map(l -> l.replaceAll("[ ]*","")).forEach(l ->  {
+        if (l.startsWith(JAR)) {
+          inJar.set(true);
+        }
+        if (l.startsWith(SHADOW_JAR)) {
+          inShadowJar.set(true);
+          properties.put(CLASSIFIER, "all");
+        }
+        if (l.contains(OPEN_BRACKET)) {
+          quotes.incrementAndGet();
+        }
+        if (l.contains(CLOSE_BRACKET)) {
+          quotes.decrementAndGet();
+        }
+        if (quotes.get() == 0) {
+          inJar.set(false);
+          inShadowJar.set(false);
+        }
+
+        if ((inShadowJar.get() || inJar.get() || quotes.get() == 0) && l.contains(EQUALS)) {
+          String key = l.substring(0 ,l.lastIndexOf(EQUALS));
+          String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "");
+          properties.put(key, value);
+        }
+      });
     } catch (IOException e) {
       throw Ap4kException.launderThrowable(e);
     }

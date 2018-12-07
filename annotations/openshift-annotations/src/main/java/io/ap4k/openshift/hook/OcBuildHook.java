@@ -16,10 +16,12 @@
 **/
 package io.ap4k.openshift.hook;
 
+import io.ap4k.Ap4kException;
 import io.ap4k.hook.ProjectHook;
 import io.ap4k.project.Project;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class OcBuildHook extends ProjectHook {
 
@@ -48,6 +50,10 @@ public class OcBuildHook extends ProjectHook {
 
   @Override
   public void run() {
-    exec("oc", "start-build", name, "--from-dir=./target", "--follow");
+    if (project.getBuildInfo().getOutputFile().getParent().toFile().exists()) {
+      exec("oc", "start-build", name, "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");
+    } else {
+     throw new IllegalStateException("Can't trigger binary build. " + project.getBuildInfo().getOutputFile().toAbsolutePath().toString() + " does not exist!");
+    }
   }
 }

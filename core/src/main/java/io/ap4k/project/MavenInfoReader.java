@@ -54,7 +54,10 @@ public class MavenInfoReader implements BuildInfoReader {
   @Override
   public BuildInfo getInfo(Path root) {
     Document document = parse(root.resolve(POM_XML));
-    return new BuildInfo(getArtifactId(document), getVersion(document), getPackaging(document));
+    String name = getArtifactId(document);
+    String version = getVersion(document);
+    String packaging = getPackaging(document);
+    return new BuildInfo(name, version, packaging, root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)));
   }
 
 

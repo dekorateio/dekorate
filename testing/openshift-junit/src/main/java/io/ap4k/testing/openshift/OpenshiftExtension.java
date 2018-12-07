@@ -138,7 +138,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
   public void build(ExtensionContext context, Project project) {
     KubernetesList kubernetesList = getOpenshiftResources(context);
     KubernetesClient client = getKubernetesClient(context);
-    Path path = project.getRoot().resolve(TARGET).resolve(project.getBuildInfo().getOutputFileName());
+    Path path = project.getBuildInfo().getOutputFile();
     File tar = Packaging.packageFile(path.toAbsolutePath().toString());
 
     kubernetesList.getItems().stream()

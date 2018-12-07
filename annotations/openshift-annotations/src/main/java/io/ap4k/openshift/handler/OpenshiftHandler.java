@@ -127,7 +127,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .endEnv()
       .addNewEnv()
       .withName(JAVA_APP_JAR)
-      .withValue(config.getProject().getBuildInfo().getOutputFileName())
+      .withValue("/deployments/" + config.getProject().getBuildInfo().getOutputFile().getFileName().toString())
       .endEnv()
       .endContainer()
       .build();

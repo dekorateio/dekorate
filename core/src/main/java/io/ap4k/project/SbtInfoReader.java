@@ -87,8 +87,8 @@ public class SbtInfoReader implements BuildInfoReader {
     String version = properties.getOrDefault(VERSION, DEFAULT_VERSION);
     String scalaVersion = properties.getOrDefault(SCALA_VERSION, getSystemScalaVersion());
     String extension = JAR;
-    String outputFileName = root.resolve(TARGET).resolve(name + UNDERSCORE + scalaVersion + DASH + version + DOT + extension).toAbsolutePath().toString();
-    return new BuildInfo(name, version, JAR, outputFileName);
+    Path outputFile = root.resolve(TARGET).resolve(name + UNDERSCORE + scalaVersion + DASH + version + DOT + extension);
+    return new BuildInfo(name, version, JAR, outputFile);
   }
 
   /**
