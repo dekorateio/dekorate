@@ -78,12 +78,14 @@ public class GradleInfoReader implements BuildInfoReader {
 
   @Override
   public BuildInfo getInfo(Path root) {
-    Path gradlePath = root.resolve(BUILD_GRADLE);
-    Path gradlePropertiesPath = root.resolve(GRADLE_PROPERTIES);
+    Path buildGradle = root.resolve(BUILD_GRADLE);
+    Path settingsGradle = root.resolve(SETTINGS_GRADLE);
+    Path gradleProperties = root.resolve(GRADLE_PROPERTIES);
 
     Map<String, String> properties = new HashMap<>();
-    properties.putAll(readGradleProperties(gradlePropertiesPath));
-    properties.putAll(readBuildGradle(gradlePath));
+    properties.putAll(readSettingsdGradle(settingsGradle));
+    properties.putAll(readGradleProperties(gradleProperties));
+    properties.putAll(readBuildGradle(buildGradle));
 
     String name = properties.getOrDefault(NAME, properties.getOrDefault(BASENAME, root.getFileName().toString()));
     String version = properties.get(VERSION);
