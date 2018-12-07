@@ -123,7 +123,7 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/istio/adapt/**</include>
+                    <include>io/ap4k/istio/adapter/**</include>
                     <include>io/ap4k/istio/config/**</include>
                     <include>io/ap4k/istio/handler/**</include>
                     <include>io/ap4k/istio/processor/**</include>
