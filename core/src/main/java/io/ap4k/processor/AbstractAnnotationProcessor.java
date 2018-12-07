@@ -38,6 +38,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
   protected static final String PACKAGE = "";
   protected static final String FILENAME = "META-INF/ap4k/%s.%s";
   protected static final String CONFIG = "META-INF/ap4k/.config/%s.%s";
+  protected static final String PROJECT = "META-INF/ap4k/.project.%s";
   protected static final String[] STRIP = {"^Editable", "Config$"};
   protected static final String JSON = "json";
   protected static final String YML = "yml";
@@ -59,6 +60,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     Set<? extends Configuration> configurations = session.configurators().toSet();
     resources.forEach((g, l) -> write(g, l));
     configurations.forEach(c -> write(c));
+    write(project);
   }
 
 
@@ -84,6 +86,21 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
       FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(CONFIG, name, YML));
       try (Writer writer = yml.openWriter()) {
         writer.write(Serialization.asYaml(config));
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("Error writing resources");
+    }
+  }
+
+  /**
+   * Writes a {@link Project}.
+   * @param project  The project.
+   */
+  private void write(Project project) {
+    try {
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(PROJECT, YML));
+      try (Writer writer = yml.openWriter()) {
+        writer.write(Serialization.asYaml(project));
       }
     } catch (IOException e) {
       throw new RuntimeException("Error writing resources");

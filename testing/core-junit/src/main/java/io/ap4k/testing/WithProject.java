@@ -16,22 +16,31 @@
 **/
 package io.ap4k.testing;
 
-import io.ap4k.project.FileProjectFactory;
+import io.ap4k.Ap4kException;
 import io.ap4k.project.Project;
+import io.ap4k.utils.Serialization;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-
-import static io.ap4k.utils.Urls.toFile;
 
 public interface WithProject {
 
-  default Project getProject(String manifestPath) {
-    URL manifestUrl = WithProject.class.getClassLoader().getResource(manifestPath);
-    if (manifestUrl != null) {
-      File manifestFile = toFile(manifestUrl);
-      return FileProjectFactory.create(manifestFile);
+  String PROJECT_DESCRIPTOR_PATH = "META-INF/ap4k/.project.yml";
+
+  default Project getProject() {
+    return getProject(PROJECT_DESCRIPTOR_PATH);
+  }
+
+  default Project getProject(String projectDescriptorPath) {
+    URL url = WithProject.class.getClassLoader().getResource(projectDescriptorPath);
+    if (url != null) {
+      try (InputStream is = url.openStream())  {
+        return Serialization.unmarshal(is, Project.class);
+      } catch (IOException e) {
+        throw Ap4kException.launderThrowable(e);
+      }
     }
-    throw new IllegalStateException("Expected to find manifest at: "+manifestPath+"!");
+    throw new IllegalStateException("Expected to find manifest at: "+projectDescriptorPath+"!");
   }
 }
