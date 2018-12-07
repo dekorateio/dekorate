@@ -19,7 +19,7 @@ package io.ap4k.openshift.processor;
 
 import io.ap4k.Session;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
-import io.ap4k.openshift.adapt.S2iConfigAdapter;
+import io.ap4k.openshift.adapter.S2iConfigAdapter;
 import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 import io.ap4k.openshift.config.OpenshiftConfigCustomAdapter;

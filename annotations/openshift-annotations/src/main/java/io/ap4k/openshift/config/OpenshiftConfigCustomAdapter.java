@@ -16,7 +16,7 @@
 **/
 package io.ap4k.openshift.config;
 
-import io.ap4k.openshift.adapt.OpenshiftConfigAdapter;
+import io.ap4k.openshift.adapter.OpenshiftConfigAdapter;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 import io.ap4k.project.ApplyProjectInfo;
 import io.ap4k.project.Project;
