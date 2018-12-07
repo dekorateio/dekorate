@@ -1,6 +1,15 @@
 # Kubernetes Example 
 
 A very simple example that demonstrates the use of `@KubernetesApplication` in its simplest form.
+Check the [Main.java](src/main/java/io/ap4k/examples/kubernetes/Main.java) which bears the annotation.
+To access the `@KubernetesApplication` annotation you just need to have the following dependency in your
+class path:
+
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>kubernetes-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
 Compile the project using:
 

@@ -11,7 +11,7 @@
 
   <groupId>io.ap4k</groupId>
   <artifactId>ap4k-doc</artifactId>
-  <name>AP4K :: Documentation Helpders</name>
+  <name>AP4K :: Documentation Helpers</name>
   <packaging>jar</packaging>
 
   <dependencies>

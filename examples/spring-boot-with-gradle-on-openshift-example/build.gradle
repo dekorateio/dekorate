@@ -41,6 +41,7 @@ compileGroovy {
 junitPlatform {
     enableStandardTestTask = true
 }
+
 dependencies {
   implementation('org.springframework.boot:spring-boot-starter-web')
   implementation('org.codehaus.groovy:groovy')

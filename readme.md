@@ -2,41 +2,61 @@
 
 [![CircleCI](https://circleci.com/gh/ap4k/ap4k.svg?style=svg)](https://circleci.com/gh/ap4k/ap4k)
 
-Annotation processor for Kubernetes is a collection of Java annotation processors and tools for generating Kubernetes/Openshift resources at compile time.
+Ap4k is a collection of Java annotations and processors for generating Kubernetes/Openshift manifests at compile time.
+
+It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) on your main class.
+
+Stop wasting time editing xml, json and yml and customize the kubernetes manifests using annotations.
 
 ## Features
 
-- Kubernetes annotations
-  - annotations
-  - labels
-  - environment variables
-  - mounts
-  - ports and services
-- Openshift annotations 
-  - image streams
-  - build configurations
-- Service Catalog annotations
-  - service instances
-  - inject bindings into pods
-- Istio annotations
-  - proxy injection
-- Component operator annotations 
-- No build tool coupling
-- Rich framework integration
-  - Spring Boot
-  - Thorntail
-  - Micronaut
+- Generates manifest via annotation processing
+  - [Kubernetes](#kubernetes-annotations)
+  - [Openshift](#openshift-annotations)
+  - [Service Catalog](#service-catalog-annotations)
+  - [Component CRD](#component-annotations)
+  - Istio
+- Customize manifests using annotations
+  - Kubernetes
+    - labels
+    - annotations
+    - [environment variables](#adding-container-environment-variables)
+    - [mounts](#working-with-volumes-and-mounts)
+    - [ports and services](#adding-extra-ports-and-exposing-them-as-services)
+  - Openshift 
+    - [image streams](#integrating-with-s2i)
+    - build configurations
+  - Service Catalog
+    - service instances
+    - inject bindings into pods
+  - Istio 
+    - proxy injection
+  - Component CRD
+- Build tool independent (works with maven, gradle, bazel and so on)
+- [Rich framework integration](#framework-integration)
+  - Port, Service and Probe auto configuration
+    - Spring Boot
+    - Thorntail
+    - Micronaut
+- Integration with external generators
+- [Rich set of examples](examples)
 
 ### Experimental features
 
-- Build hooks
-  - Docker build hook
-  - Source to image build hook
-
+- Register hooks for triggering builds and deployment
+  - Build hooks
+    - [Docker build hook](#docker-build-hook)
+    - Source to image build hook
+- junit5 integration testing extension
+  - [Kubernetes](#kubernetes-extension-for-junit5)
+  - [Openshift](#openshift-extension-for-juni5)
 
 ## Rationale
 
-The are tons of tools out there for scaffolding / generating kubernetes resources. Sooner or later these resources will require customization and what better way to that than using java annotations?
+The are tons of tools out there for scaffolding / generating kubernetes manifests. Sooner or later these manifests will require customization.
+Handcrafting is not an appealing option.
+Using external tools, is often too generic.
+Using build tool extensions and adding configuration via xml, groovy etc is a step forward, but still not optimal.
 
 Annotation processing has quite a few advantages over external tools or build tool extensions:
 
@@ -44,23 +64,6 @@ Annotation processing has quite a few advantages over external tools or build to
 - Leverages tools like the IDE for writing type safe config (checking, completion etc).
 - Works with all build tools.
 - Can "react" to annotations provided by the framework.
-- Annotation processing is performed in rounds which makes it technically easier to write extensions and customizations.
-
-#### What about building and deploying?
-Triggering the build of a docker image using a Dockerfile or a S2i image is outside of the scope of this project but nevertheless,
-it is proposed as an experimental option(using the hooks below) till we have figured out how such deployment/integration
-will take place with different tools such as: 
-
-- fabric8 maven plugin,
-- odo,
-- launcher
-
-... or an operator able to process the resources generated.
-
-So, at the moment as an experimental support the following hooks are provided:
-
-- docker build hook (requires docker binary, triggered with `-Dap4k.build=true`)
-- openshift s2i build hook (requires oc binary, triggered with `-Dap4k.deploy=true`)
 
 ## Usage
 
@@ -68,7 +71,7 @@ To start using this project you just need to add one of the provided annotations
 
 ### Kubernetes annotations
 
-This module provides `@KubernetesApplication` which can be added to your project like:
+[@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) can be added to your project like:
 
     import io.ap4k.annotaion.KubernetesApplication;
     
@@ -85,6 +88,20 @@ will end up under 'target/classes/META-INF/apk'.
 
 The annotation comes with a lot of parameters, which can be used in order to customize the `Deployment` and/or trigger
 the generations of addition resources, like `Service` and `Ingress`.
+
+#### Adding the kubernetes annotation processor to the classpath
+
+This module can be added to the project using:
+
+    <dependency>
+     <groupId>io.ap4k</groupId>
+     <artifactId>kubernetes-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+#### related examples
+ - [kubernetes example](examples/kubernetes-example)
+
 
 #### Name and Version
 
@@ -109,6 +126,7 @@ Supported build tools:
 - maven
 - gradle
 - sbt
+- bazel
 
 For all other build tools, the name and version need to be provided via the core annotations:
 
@@ -165,9 +183,11 @@ The following deployment will be generated:
             
 The output file name may be used in certain cases, to set the value of `JAVA_APP_JAR` an environment variable that points to the build jar.
 
+
+
 #### Adding extra ports and exposing them as services
 
-To add extra ports to the container, you can add one or more `@Port` into your `@KubernetesApplication`:
+To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) :
 
     import io.ap4k.kubernetes.annotation.Env;
     import io.ap4k.kubernetes.annotation.KubernetesApplication;
@@ -185,7 +205,7 @@ This will trigger the addition of a container port to the `Deployment` but also 
 **Note:**  This doesn't need to be done explicitly, if the application framework is detected and support, ports can be extracted from there *(see below)*.
 
 #### Adding container environment variables
-To add extra environment variables to the container, you can add one or more `@EnvVar` into your `@KubernetesApplication`:
+To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) :
 
     import io.ap4k.kubernetes.annotation.Env;
     import io.ap4k.kubernetes.annotation.KubernetesApplication;
@@ -244,17 +264,15 @@ This module can be added to the project using:
 This module provides two new annotations: 
 
 - @OpenshiftApplication
-- @SourceToImage
+- @EnableS2iBuild
 
-`@OpenshiftApplication` works exactly like `@KubernetesApplication`, but will generate resources in a file name `openshift.yml` / `openshift.json` instead.
+[@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/ap4k/openshift/annotation/OpenshiftApplication.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `openshift.yml` / `openshift.json` instead.
 Also instead of creating a `Deployment` it will create a `DeploymentConfig`.
 
-**NOTE:** A project can use both `@KubernetesApplication` and `@OpenshiftApplication`. If both the kubernetes and
-openshift annotation processors are present both kubernetes and openshift resources will be generated. If only the openshift 
-annotation processor is available (and @KubernetesApplication is transitively added) then just the opneshift resources will be 
-generated.
+**NOTE:** A project can use both [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) and [@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/ap4k/openshift/annotation/OpenshiftApplication.java). If both the kubernetes and
+openshift annotation processors are present both kubernetes and openshift resources will be generated. 
 
-#### Adding the kubernetes annotation processor to the classpath
+#### Adding the openshift annotation processor to the classpath
 
 This module can be added to the project using:
 
@@ -265,7 +283,7 @@ This module can be added to the project using:
     </dependency>
     
 #### Integrating with S2i
-To configure s2i for this project one can add the `@SourceToImage` annotation to the project.
+To configure s2i for this project one can add the `@EnableS2iBuild` annotation to the project.
 This annotation will configure:
 
 - ImageStream
@@ -279,7 +297,7 @@ Here's an example:
     import io.ap4k.openshift.annotation.EnableS2iBuild;
 
     @OpenshiftApplication(name = "doc-example")
-    @SourceToImage
+    @EnableS2iBuild
     public class Main {
 
         public static void main(String[] args) {
@@ -295,6 +313,13 @@ The generated `BuildConfig` will be a binary config. The actual build can be tri
 If the name was implicitly created the user would have to figure the name out before triggering the build. This could be
 done either by `oc get bc` or by knowing the conventions used to read names from build tool config (e.g. if maven then name the artifactId).
 
+#### related examples
+
+- [openshift example](examples/openshift-example)
+- [source to image example](examples/source-to-image-example)
+- [spring boot on openshift example](examples/spring-boot-on-openshift-example)
+- [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-on-openshift-example)
+- [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-on-openshift-example)
 ### Service Catalog annotations
 The [services catalog](https://svc-cat.io) annotation processor is can be used in order to create [services catalog](https://svc-cat.io) resources for:
 
@@ -331,6 +356,9 @@ This module can be added to the project using:
       <version>${project.version}</version>
     </dependency>
     
+#### related examples
+ - [service catalog example](examples/service-catalog-example)  
+ 
 ### Istio annotations
 
 The [istio](https://istio.io)  annotation processor can be used to automatically inject the istio sidecar to the generated resources. 
@@ -422,6 +450,212 @@ The frameworks supported so far:
 
 ## Experimental features
 
-### Docker build hook
+Apart from the core feature, which is resource generation, there are a couple of experimental features that do add to the developer experience.
 
-A shutddown hook that triggers a docker build, given that the docker binary is present and is configured to point to a working docker daemon.
+These features have to do with things like building, deploying and testing.
+
+### Building and Deploying?
+Ap4k does not generate Dockerfiles, neither it provides internal support for performing docker or s2i builds.
+It does however allow the user to hook external tools (e.g. the `docker` or `oc`) to tigger container image builds after the end of compilation.
+
+So, at the moment as an experimental feature the following hooks are provided:
+
+- docker build hook (requires docker binary, triggered with `-Dap4k.build=true`)
+- openshift s2i build hook (requires oc binary, triggered with `-Dap4k.deploy=true`)
+
+#### Docker build hook
+This hook will just trigger a docker build, using an existing Dockerfile at the root of the project.
+It will not generate or customize the docker build in anyway.
+
+To enable the docker build hook you need:
+
+- the `docker-annotations` module (already included in all kuberentes starter modules)
+- a `Dockerfile` in the project/module root
+- the `docker` binary configured to point the docker daemon of your kubernetes environment.
+
+To add the following dependency into the project:
+
+    <dependency>
+     <groupId>io.ap4k</groupId>
+     <artifactId>docker-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+To enable the hook you need to add the `@EnableDockerBuild` annotation to your main class.    
+Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
+
+    mvn clean install -Dap4k.build=true
+   
+or if you are using gradle:
+
+    gradle build -Dap4k.build=true   
+    
+#### S2i build hook
+This hook will just trigger an s2i binary build, that will pass the output folder as an input to the build
+
+To enable the docker build hook you need:
+
+- the `openshift-annotations` module (already included in all openshift starter modules)
+- the `oc` binary configured to point the docker daemon of your kubernetes environment.
+
+To enable the hook you need to add the `@EnableS2iBuild` annotation to your main class.    
+Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
+
+    mvn clean install -Dap4k.build=true
+   
+or if you are using gradle:
+
+    gradle build -Dap4k.build=true  
+    
+### Junit5 extensions 
+
+Ap4k provides two junit5 extensions for:
+
+- Kubernetes
+- Openshift
+
+These extensions are `ap4k` aware and can read generated resources and configuration, in order to manage `end to end` tests
+for the annotated applications.
+
+#### Features
+
+- Environment conditions
+- Container builds
+- Apply generated manifests to test environment
+- Inject test with:
+   - client
+   - application pod
+
+#### Kubernetes extension for Junit5
+
+The kubernetes extension can be used by adding the following dependency:
+
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>kubernetes-junit</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/ap4k/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
+
+By adding the annotation to your test class the following things will happen:
+
+1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
+2. If `@EnableDockerBuild` is present in the project, a docker build will be triggered.
+3. All generated manifests will be applied.
+4. Will wait until applied resources are ready.
+5. Dependencies will be injected (e.g. KubernetesClient, Pod etc)
+6. Test will run
+7. Applied resources will be removed.
+
+##### Dependency injection
+
+Supported items for injection:
+
+- KubernetesClient
+- Pod (the application pod)
+- KubernetesList (the list with all generated resources)
+
+To inject one of this you need a field in the code annotated with [@Inject](testing/core-junit/src/main/java/io/ap4k/testing/annotation/Inject.java).
+
+For example:
+
+    @Inject
+    KubernetesClient client;
+    
+When injecting a Pod, its likely that we need to specify the pod name. Since the pod name is not known in advance, we can use the deployment name instead.
+If the deployment is named `hello-world` then you can do something like:
+
+    @Inject
+    @Named("hello-world")
+    Pod pod;
+
+Note: It is highly recommended to also add `maven-failsafe-plugin` configuration so that integration tests only run in the `integration-test` phase.
+This is important since in the `test` phase the application is not packaged. Here's an example of how it you can configure the project:
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${version.maven-failsafe-plugin}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <phase>integration-test</phase>
+            <configuration>
+              <includes>
+                <include>**/*IT.class</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>   
+      
+#### related examples
+ - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
+ 
+#### Openshift extension for Juni5 
+
+Similarly to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for Openshift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/ap4k/testing/annotation/OpenshiftIntegrationTest.java).
+To use that you need to add:
+
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>openshift-junit</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+By adding the annotation to your test class the following things will happen:
+
+1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
+2. If `@EnableS2iBuild` is present in the project, a docker build will be triggered.
+3. All generated manifests will be applied.
+4. Will wait until applied resources are ready.
+5. Dependencies will be injected (e.g. KubernetesClient, Pod etc)
+6. Test will run
+7. Applied resources will be removed.
+
+#### related examples
+ - [spring boot on openshift example](examples/spring-boot-on-openshift-example)
+ - [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-openshift-example)
+ - [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-openshift-example)
+ 
+ 
+ 
+#### External generator integration
+
+No matter how good a generator/scaffolding tool is, its often desirable to handcraft part of it.
+Other times it might be desirable to combine different tools together (e.g. to generate the manifests using fmp but customize them via ap4k annotations)
+
+No matter what the reason is, ap4k supports working on existing resources and decorating them based on the provided annotation configuration.
+This is as simple as letting ap4k know where to read the existing manifests and where to store the generated ones. By adding the [@GeneratorOptions](core/src/main/java/io/ap4k/annotation/GeneratorOptions.java).
+
+##### Integration with Fabric8 Maven Plugin.
+
+The fabric8-maven-plugin can be used to package applications for kubernetes and openshift. It also supports generating manifests.
+A user might choose to build images using fmp, but customize them using `ap4k` annotations instead of xml.
+
+An example could be to expose an additional port:
+
+This can by done by configuring ap4k to read the fmp generated manifests from `META-INF/fabric8` which is where fmp stores them and save them back there once decoration is done.
+
+    @GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
+    @KubernetesApplication(port = @Port(name="srv", containerPort=8181)
+    public class Main {
+       ... 
+    }
+
+#### related examples
+ - [spring boot with fmp on openshift example](examples/spring-boot-with-fmp-on-kubernetes-example)
+
+
+## Want to get involved?
+
+By all means please do! We love contributions! 
+Docs, Bug fixes, New features ... everything is important!
+
+Make sure you take a look at contributor [guidelines](contributor-guideliness.md).
+Also, it can be useful to have a look at the ap4k [design](design.md).
+
