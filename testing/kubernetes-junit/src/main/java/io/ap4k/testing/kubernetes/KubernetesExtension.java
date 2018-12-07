@@ -23,7 +23,6 @@ import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
 import io.ap4k.testing.WithKubernetesClient;
 import io.ap4k.testing.WithProject;
-import io.ap4k.utils.Serialization;
 import io.ap4k.testing.WithPod;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -36,8 +35,6 @@ import java.util.concurrent.TimeUnit;
 
 public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
   WithPod, WithKubernetesClient, WithKubernetesResources, WithProject, WithDockerBuildConifg {
-
-  private static final String MANIFEST_PATH = "META-INF/ap4k/kubernetes.yml";
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -55,7 +52,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
     KubernetesList list = getKubernetesResources(context);
 
     DockerBuildConfig dockerBuildConfig = getDockerBuildConfig();
-    DockerBuildHook build = new DockerBuildHook(getProject(MANIFEST_PATH), dockerBuildConfig);
+    DockerBuildHook build = new DockerBuildHook(getProject(), dockerBuildConfig);
     build.run();
 
     list.getItems().stream()
