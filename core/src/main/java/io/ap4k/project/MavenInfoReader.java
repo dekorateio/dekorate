@@ -36,7 +36,6 @@ import static io.ap4k.project.BuildInfo.DEFAULT_PACKAGING;
 public class MavenInfoReader implements BuildInfoReader {
 
   private static final String ARTIFACT_ID = "artifactId";
-  private static final String VERSION = "version";
   private static final String PACKAGING = "packaging";
   private static final String PARENT = "parent";
   private static final String POM_XML = "pom.xml";

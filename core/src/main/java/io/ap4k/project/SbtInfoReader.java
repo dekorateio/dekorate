@@ -56,8 +56,6 @@ public class SbtInfoReader implements BuildInfoReader {
   private static final int MAJOR = 0;
   private static final int MINOR = 1;
 
-
-
   @Override
   public int order() {
     return 400;

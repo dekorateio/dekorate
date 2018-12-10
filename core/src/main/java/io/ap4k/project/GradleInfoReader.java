@@ -55,13 +55,7 @@ public class GradleInfoReader implements BuildInfoReader {
   private static final String DOT = ".";
 
   private static final String BASENAME = "baseName";
-  private static final String NAME = "name";
-  private static final String VERSION = "version";
-  private static final String CLASSIFIER = "classifier";
-  private static final String EXTENSION = "extension";
-  private static final String DESTINATION_DIR = "DESTINATION_DIR";
 
-  private static final String JAR = "jar";
   private static final String SHADOW_JAR = "shadowJar";
 
   private static final String ROOT_PROJECT_PREFIX = "rootProject.";
@@ -83,7 +77,7 @@ public class GradleInfoReader implements BuildInfoReader {
     Path gradleProperties = root.resolve(GRADLE_PROPERTIES);
 
     Map<String, String> properties = new HashMap<>();
-    properties.putAll(readSettingsdGradle(settingsGradle));
+    properties.putAll(readSettingsGradle(settingsGradle));
     properties.putAll(readGradleProperties(gradleProperties));
     properties.putAll(readBuildGradle(buildGradle));
 
@@ -114,7 +108,7 @@ public class GradleInfoReader implements BuildInfoReader {
    * @param path  The path to settings.gralde.
    * @return
    */
-  protected static Map<String, String> readSettingsdGradle(Path path) {
+  protected static Map<String, String> readSettingsGradle(Path path) {
     Map<String, String> properties = new HashMap<>();
     if (path.toFile().exists()) {
       try {
