@@ -22,6 +22,14 @@ import java.nio.file.Path;
 
 public interface BuildInfoReader {
 
+  String NAME = "name";
+  String VERSION = "version";
+  String CLASSIFIER = "classifier";
+  String EXTENSION = "extension";
+  String DESTINATION_DIR = "DESTINATION_DIR";
+
+  String JAR = "jar";
+
   /**
    * The order the reader will be applied.
    * Info readers will be sorted in ascending order.
