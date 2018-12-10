@@ -23,8 +23,8 @@ import io.ap4k.component.model.Component;
 import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.Assert.assertEquals;
 
 public class Issue65Test {
 
@@ -34,6 +34,6 @@ public class Issue65Test {
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     assertEquals("Component", list.getItems().get(0));
-    assertEquals(1, ((Component)list.getItems().get(0)).getSpec().getLink().length);
+    assertEquals(1, ((Component)list.getItems().get(0)).getSpec().getLinks().length);
   }
 }

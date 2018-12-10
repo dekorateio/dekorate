@@ -157,6 +157,8 @@ limitations under the License.
             <pomInclude>*/pom.xml</pomInclude>
           </pomIncludes>
           <postBuildHookScript>verify</postBuildHookScript>
+          <showErrors>true</showErrors>
+          <streamLogs>true</streamLogs>
           <goals>
             <goal>clean</goal>
             <goal>install</goal>
