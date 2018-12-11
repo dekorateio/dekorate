@@ -159,6 +159,7 @@ limitations under the License.
           <postBuildHookScript>verify</postBuildHookScript>
           <showErrors>true</showErrors>
           <streamLogs>true</streamLogs>
+          <mavenOpts>-Xmx1024m</mavenOpts>
           <goals>
             <goal>clean</goal>
             <goal>install</goal>
