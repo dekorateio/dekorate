@@ -68,7 +68,7 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project itests
-            mvn -B install
+            mvn -B install -Pbuild
 
 workflows:
   version: 2
