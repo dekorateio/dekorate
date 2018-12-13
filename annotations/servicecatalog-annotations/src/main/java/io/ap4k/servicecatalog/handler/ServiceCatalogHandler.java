@@ -47,6 +47,11 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
   }
 
   @Override
+  public int order() {
+    return 400;
+  }
+
+  @Override
   public void handle(ServiceCatalogConfig config) {
     for (ServiceCatalogInstance instance : config.getInstances()) {
       resources.add(new ServiceInstanceBuilder()

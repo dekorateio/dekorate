@@ -21,8 +21,15 @@ import io.ap4k.kubernetes.config.Configuration;
 public interface Handler<C extends Configuration> {
 
   /**
+   * A number indicating the order each handler will be invoked.
+   * Lower number will be invoked first.
+   * @return  The number used for ordering.
+   */
+  int order();
+
+  /**
    * Generate / populate the resources.
-   * @param config
+   * @param config The config to handle.
    */
   void handle(C config);
 

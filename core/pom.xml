@@ -70,12 +70,16 @@ limitations under the License.
 
   <build>
     <plugins>
-      <plugin>
+       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <annotationProcessors>
+            <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
+            <processor>io.sundr.transform.internal.VelocityTransformationProcessor</processor>
+          </annotationProcessors>
         </configuration>
       </plugin>
     </plugins>

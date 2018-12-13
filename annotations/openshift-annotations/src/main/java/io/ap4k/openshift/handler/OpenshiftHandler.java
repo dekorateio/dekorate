@@ -19,6 +19,7 @@ package io.ap4k.openshift.handler;
 
 import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;
+import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodSpec;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodTemplateSpec;
@@ -28,6 +29,9 @@ import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
+import io.ap4k.openshift.decorator.ApplyDeploymentTriggerDecorator;
+
+import java.util.Optional;
 
 import static io.ap4k.utils.Labels.createLabels;
 
@@ -53,17 +57,34 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     super(resources);
   }
 
+  @Override
+  public int order() {
+    return 300;
+  }
+
   public void handle(OpenshiftConfig config) {
-    resources.add(OPENSHIFT, createDeploymentConfig(config));
-    addVisitors(OPENSHIFT, config);
+    Optional<DeploymentConfig> existingDeploymentConfig = resources.groups().getOrDefault(OPENSHIFT, new KubernetesListBuilder()).buildItems().stream()
+      .filter(i -> i instanceof DeploymentConfig)
+      .map(i -> (DeploymentConfig)i)
+      .filter(i -> i.getMetadata().getName().equals(config.getName()))
+      .findAny();
+
+    if (!existingDeploymentConfig.isPresent()) {
+      resources.add(OPENSHIFT, createDeploymentConfig(config));
+    }
+    addDecorators(OPENSHIFT, config);
+  }
+
+  @Override
+  protected void addDecorators(String group, OpenshiftConfig config) {
+    super.addDecorators(group, config);
+    resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), config.getName() + ":" + config.getVersion()));
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(OpenshiftConfig.class) ||
       type.equals(EditableOpenshiftConfig.class);
   }
-
-
 
   /**
    * Creates a {@link DeploymentConfig} for the {@link OpenshiftConfig}.

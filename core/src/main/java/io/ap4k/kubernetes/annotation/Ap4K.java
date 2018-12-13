@@ -28,13 +28,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 
+/**
+ * This annotation is not meant to be used and thus not public.
+ * The purpose of this class is to generate the {@link io.ap4k.kubernetes.config.KubernetesConfig} class that is used
+ * as a base for the rest of the config classes.
+ */
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
 @Pojo(name = "KubernetesConfig", relativePath = "../config",
       mutable = true,
-      superClass = Configuration.class)
+      superClass = Configuration.class,
+      withStaticBuilderMethod = false,
+      withStaticAdapterMethod = false)
       @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
       @Retention(RetentionPolicy.SOURCE)
-public @interface Ap4K {
+@interface Ap4K {
 
         /**
          * The group of the application.

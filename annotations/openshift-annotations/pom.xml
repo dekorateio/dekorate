@@ -126,6 +126,7 @@ limitations under the License.
                     <include>io/ap4k/openshift/configurator/**</include>
                     <include>io/ap4k/openshift/processor/**</include>
                     <include>io/ap4k/openshift/handler/**</include>
+                    <include>io/ap4k/openshift/decorator/**</include>
                     <include>io/ap4k/openshift/hook/**</include>
                     <include>io/ap4k/openshift/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>

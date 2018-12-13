@@ -17,18 +17,28 @@
 
 package io.ap4k.project;
 
+import java.io.File;
 import java.nio.file.Path;
 
 public class Project {
 
+  private static String DEFAULT_GENERATOR_OUTPUT_PATH = "META-INF" + File.separatorChar + "ap4k";
   private Path root;
+  private String resourceInputPath;
+  private String resourceOutputPath;
   private BuildInfo buildInfo;
 
   public Project() {
   }
 
   public Project(Path root, BuildInfo buildInfo) {
+    this(root, null, DEFAULT_GENERATOR_OUTPUT_PATH, buildInfo);
+  }
+
+  public Project(Path root, String resourceInputPath, String resourceOutputPath, BuildInfo buildInfo) {
     this.root = root;
+    this.resourceInputPath = resourceInputPath;
+    this.resourceOutputPath = resourceOutputPath;
     this.buildInfo = buildInfo;
   }
 
@@ -38,5 +48,22 @@ public class Project {
 
   public BuildInfo getBuildInfo() {
     return buildInfo;
+  }
+
+  public String getResourceInputPath() {
+    return resourceInputPath;
+  }
+
+  public String getResourceOutputPath() {
+    return resourceOutputPath;
+  }
+
+
+  public Project withResourceInputPath(String resourceInputPath) {
+   return new Project(root, resourceInputPath, resourceOutputPath, buildInfo);
+  }
+
+  public Project withResourceOutputPath(String resourceOutputPath) {
+    return new Project(root, resourceInputPath, resourceOutputPath, buildInfo);
   }
 }

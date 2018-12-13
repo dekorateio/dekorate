@@ -58,7 +58,7 @@ public class FileProjectFactory {
       path = path.getParent();
       info = getProjectInfo(path);
     }
-    return new Project(path, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info reader")));
+    return new Project(path, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")));
   }
 
   /**

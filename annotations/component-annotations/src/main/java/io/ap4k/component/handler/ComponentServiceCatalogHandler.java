@@ -40,6 +40,11 @@ public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogCon
     this.resources = resources;
   }
 
+  @Override
+  public int order() {
+    return 650;
+  }
+
   public void handle(ServiceCatalogConfig config) {
     for (ServiceCatalogInstance instance : config.getInstances()) {
       resources.decorateCustom(COMPONENT, new AddServiceInstanceToComponentDecorator(instance));

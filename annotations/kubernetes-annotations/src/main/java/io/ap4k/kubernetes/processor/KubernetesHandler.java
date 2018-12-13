@@ -18,6 +18,8 @@ package io.ap4k.kubernetes.processor;
 
 import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
+import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.LabelSelector;
 import io.ap4k.deps.kubernetes.api.model.LabelSelectorBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodSpec;
@@ -29,6 +31,10 @@ import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.config.EditableKubernetesConfig;
 import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.decorator.ApplyImageDecorator;
+import io.ap4k.kubernetes.decorator.ApplyLabelSelectorDecorator;
+
+import java.util.Optional;
 
 import static io.ap4k.utils.Labels.createLabels;
 
@@ -49,9 +55,22 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     super(resources);
   }
 
+  @Override
+  public int order() {
+    return 200;
+  }
+
   public void handle(KubernetesConfig config) {
-    resources.add(KUBERNETES, createDeployment(config));
-    addVisitors(KUBERNETES, config);
+    Optional<Deployment> existingDeployment = resources.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder()).buildItems().stream()
+      .filter(i -> i instanceof Deployment)
+      .map(i -> (Deployment)i)
+      .filter(i -> i.getMetadata().getName().equals(config.getName()))
+      .findAny();
+
+    if (!existingDeployment.isPresent()) {
+      resources.add(KUBERNETES, createDeployment(config));
+    }
+    addDecorators(KUBERNETES, config);
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
@@ -59,6 +78,12 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       type.equals(EditableKubernetesConfig.class);
   }
 
+  @Override
+  protected void addDecorators(String group, KubernetesConfig config) {
+    super.addDecorators(group, config);
+    resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector(config)));
+    resources.decorate(group, new ApplyImageDecorator(config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
+  }
 
   /**
    * Creates a {@link Deployment} for the {@link KubernetesConfig}.

@@ -20,6 +20,7 @@ package io.ap4k;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class Session {
     if (generated.compareAndSet(false, true)) {
       closed.set(true);
       configurators.stream().forEach(c ->
-        handlers.forEach(g ->  {
+        handlers.stream().sorted(Comparator.comparing(Handler::order)).forEach(g ->  {
           if (g.canHandle(c.getClass())) {
             g.handle(c);
           }
