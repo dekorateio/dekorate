@@ -51,7 +51,7 @@ public class ApplyDeploymentTriggerDecorator extends Decorator<DeploymentConfigS
       .withContainerNames(containerName)
       .withNewFrom()
       .withKind(IMAGESTREAMTAG)
-      .withKind(imageStreamTag)
+      .withName(imageStreamTag)
       .endFrom()
       .endImageChangeParams()
       .endTrigger();
