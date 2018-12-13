@@ -44,6 +44,11 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   }
 
   @Override
+  public int order() {
+    return 600;
+  }
+
+  @Override
   public void handle(CompositeConfig config) {
     resources.addCustom(COMPONENT, createComponent(config));
     addVisitors(config);

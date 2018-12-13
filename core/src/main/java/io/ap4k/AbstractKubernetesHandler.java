@@ -42,6 +42,9 @@ import io.ap4k.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.ap4k.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.ap4k.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.ap4k.kubernetes.decorator.AddServiceDecorator;
+import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
+import io.ap4k.kubernetes.decorator.ApplyLabelSelectorDecorator;
+import io.ap4k.utils.Strings;
 
 /**
  * An abstract generator.
@@ -70,7 +73,9 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
    * @param group     The group..
    * @param config    The config.
    */
-  protected void addVisitors(String group, C config) {
+  protected void addDecorators(String group, C config) {
+    resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
+
     for (Label label : config.getLabels()) {
       resources.decorate(group, new AddLabelDecorator(label));
     }

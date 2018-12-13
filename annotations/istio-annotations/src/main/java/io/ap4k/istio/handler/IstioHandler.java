@@ -66,6 +66,11 @@ public class IstioHandler implements Handler<IstioConfig> {
   }
 
   @Override
+  public int order() {
+    return 500;
+  }
+
+  @Override
   public void handle(IstioConfig config) {
     //Containers
     resources.decorate(createIstioInit(config));

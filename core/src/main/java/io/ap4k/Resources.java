@@ -40,6 +40,14 @@ public class Resources {
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
 
   /**
+   * Get all registered groups.
+   * @return  The groups map.
+   */
+  public Map<String, KubernetesListBuilder> groups()  {
+    return this.groups;
+  }
+
+  /**
    * Add a {@link Decorator}.
    * @param decorator   The decorator.
    */

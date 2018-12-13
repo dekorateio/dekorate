@@ -18,10 +18,12 @@ package io.ap4k.testing.openshift;
 
 import io.ap4k.Ap4kException;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.testing.WithProject;
 import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -34,9 +36,9 @@ import static java.util.Arrays.stream;
  * Mixin for storing / loading the KubernetesList to context.
  * It also provides methods for injecting the list.
  */
-public interface WithOpenshiftResources extends TestInstancePostProcessor {
+public interface WithOpenshiftResources extends TestInstancePostProcessor, WithProject {
 
-  String MANIFEST_PATH = "META-INF/ap4k/openshift.yml";
+  String MANIFEST_PATH = "openshift.yml";
   String KUBERNETES_LIST = "KUBERNETES_LIST";
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
@@ -93,7 +95,7 @@ public interface WithOpenshiftResources extends TestInstancePostProcessor {
    */
   default KubernetesList fromManifest() {
     KubernetesList result = new KubernetesList();
-    URL manifestUrl = WithOpenshiftResources.class.getClassLoader().getResource(MANIFEST_PATH);
+    URL manifestUrl = WithOpenshiftResources.class.getClassLoader().getResource(getProject().getResourceOutputPath() + File.separatorChar + MANIFEST_PATH);
     if (manifestUrl == null)  {
       return result;
     }

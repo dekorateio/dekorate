@@ -39,6 +39,11 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
   }
 
   @Override
+  public int order() {
+    return 350;
+  }
+
+  @Override
   public void handle(S2iConfig config) {
     resources.add(OPENSHIFT, createBuilderImageStream(config));
     resources.add(OPENSHIFT, createProjectImageStream(config));
