@@ -37,15 +37,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue
 class SpringBootOnKubernetesTests {
 
   @Inject
-  private KubernetesClient client;
+  private KubernetesClient client
 
   @Inject
   @Named("spring-boot-with-gradle-on-openshift-example")
-  Pod pod;
+  Pod pod
 
   @Test
   void shouldRespondWithHelloWorld() throws Exception {
-    Assertions.assertNotNull(client);
+    Assertions.assertNotNull(client)
     System.out.println("Forwarding port")
     client.pods().withName(pod.getMetadata().getName()).portForward(8080).withClosable { p ->
       assertTrue(p.isAlive());
