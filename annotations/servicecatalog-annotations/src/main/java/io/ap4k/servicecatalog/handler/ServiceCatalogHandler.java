@@ -21,6 +21,8 @@ import io.ap4k.Resources;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.deps.servicecatalog.api.model.ServiceBindingBuilder;
 import io.ap4k.deps.servicecatalog.api.model.ServiceInstanceBuilder;
+import io.ap4k.kubernetes.config.EnvBuilder;
+import io.ap4k.kubernetes.decorator.AddEnvVarDecorator;
 import io.ap4k.servicecatalog.config.Parameter;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
@@ -65,7 +67,7 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
                     .endSpec()
                     .build());
 
-      if (!Strings.isNullOrEmpty(instance.getBindingSecret())) {
+      if (Strings.isNotNullOrEmpty(instance.getBindingSecret())) {
         resources.add(new ServiceBindingBuilder()
                       .withNewMetadata()
                       .withName(instance.getName())
@@ -75,6 +77,8 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
                       .withSecretName(instance.getBindingSecret())
                       .endSpec()
                       .build());
+
+        resources.decorate(new AddEnvVarDecorator(new EnvBuilder().withSecret(instance.getBindingSecret()).build()));
       }
     }
   }
