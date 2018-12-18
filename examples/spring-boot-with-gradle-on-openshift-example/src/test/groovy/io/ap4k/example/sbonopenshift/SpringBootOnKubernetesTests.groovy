@@ -47,13 +47,16 @@ class SpringBootOnKubernetesTests {
   void shouldRespondWithHelloWorld() throws Exception {
     Assertions.assertNotNull(client)
     System.out.println("Forwarding port")
-    client.pods().withName(pod.getMetadata().getName()).portForward(8080).withClosable { p ->
+    LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)
+    try {
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:"+p.getLocalPort()+"/")
       OkHttpClient client = new OkHttpClient()
       Request request = new Request.Builder().get().url(url).build()
       Response response = client.newCall(request).execute()
       assertEquals(response.body().string(), "Hello world")
+    } finally {
+      p.close();
     }
   }
 }
