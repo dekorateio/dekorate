@@ -39,7 +39,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Description("Generates openshift manifests.")
-@SupportedAnnotationTypes({"io.ap4k.kubernetes.annotation.KubernetesApplication", "io.ap4k.openshift.annotation.OpenshiftApplication"})
+@SupportedAnnotationTypes("io.ap4k.openshift.annotation.OpenshiftApplication")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<OpenshiftConfig> {
 
