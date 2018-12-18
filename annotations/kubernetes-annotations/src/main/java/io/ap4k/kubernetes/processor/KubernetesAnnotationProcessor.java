@@ -18,10 +18,14 @@
 package io.ap4k.kubernetes.processor;
 
 import io.ap4k.Session;
+import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.client.DefaultKubernetesClient;
+import io.ap4k.deps.kubernetes.client.KubernetesClient;
 import io.ap4k.kubernetes.adapter.KubernetesConfigAdapter;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.configurator.ApplyAutoBuild;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 import io.ap4k.project.ApplyProjectInfo;
@@ -39,11 +43,17 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<KubernetesConfig> {
 
+  private final String KUBERNETES = "kubernetes";
+
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if (roundEnv.processingOver()) {
       session.onClose(this::write);
       return true;
+    }
+    Boolean autoDeployEnabled = session.configurators().get(KubernetesConfig.class).map(c->c.isAutoDeployEnabled()).orElse(false);
+    if (autoDeployEnabled) {
+      deploy(session);
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
@@ -64,6 +74,13 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor<K
     return new ConfigurationSupplier<>(
             KubernetesConfigAdapter
             .newBuilder(application)
+            .accept(new ApplyAutoBuild())
             .accept(new ApplyProjectInfo(project)));
+  }
+
+  public void deploy(Session session) {
+    KubernetesList generated = session.generate().getOrDefault(KUBERNETES, new KubernetesList());
+    KubernetesClient client = new DefaultKubernetesClient();
+    client.resourceList(generated).createOrReplace();
   }
 }
