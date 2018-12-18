@@ -20,6 +20,21 @@
     <java.version>1.8</java.version>
   </properties>
 
+  <!-- we need to express the dependencies here as they affect build order -->
+  <dependencies>
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>openshift-spring-starter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>openshift-junit-starter</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
