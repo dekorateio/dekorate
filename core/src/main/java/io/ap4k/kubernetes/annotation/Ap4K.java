@@ -144,4 +144,10 @@ import java.lang.annotation.Target;
          */
         Probe readinessProbe() default @Probe();
 
+      /**
+       * Flag to trigger the registration of the deploy hook.
+       * It's generally preferable to use `-Dap4k.deploy=true` instead of hardcoding this here.
+       * @return  True for automatic registration of the build hook.
+       */
+       boolean autoDeployEnabled() default false;
       }

@@ -22,14 +22,15 @@ import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.openshift.adapter.S2iConfigAdapter;
 import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
+import io.ap4k.openshift.config.OpenshiftConfigBuilder;
 import io.ap4k.openshift.config.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.openshift.config.S2iConfigBuilder;
 import io.ap4k.openshift.handler.SourceToImageHandler;
-import io.ap4k.openshift.hook.JavaBuildHook;
 import io.ap4k.openshift.configurator.ApplySourceToImageHook;
 import io.ap4k.openshift.configurator.ApplyOpenshiftConfig;
+import io.ap4k.openshift.hook.OcBuildHook;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -39,7 +40,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.Optional;
 import java.util.Set;
 
 @Description("Adds source to image config in the openshift manifests.")
@@ -52,13 +52,18 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     .withBuilderImage(DEFAULT_S2I_BUILDER_IMAGE)
     .build();
 
+  public static OpenshiftConfig DEFAULT_OPENSHIFT_CONFIG = new OpenshiftConfigBuilder()
+    .build();
+
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
       session.onClose(this::write);
-      Optional<S2iConfig> config = session.configurators().get(S2iConfig.class);
-      if (config.orElse(DEFAULT_SOURCE_TO_IMAGE_CONFIG).isAutoDeployEnabled()) {
-        JavaBuildHook hook = new JavaBuildHook(project);
+
+      OpenshiftConfig openshiftConfig = session.configurators().get(OpenshiftConfig.class).orElse(DEFAULT_OPENSHIFT_CONFIG);
+      S2iConfig s2iConfig = session.configurators().get(S2iConfig.class).orElse(DEFAULT_SOURCE_TO_IMAGE_CONFIG);
+      if (s2iConfig.isAutoBuildEnabled() || openshiftConfig.isAutoDeployEnabled()) {
+        OcBuildHook hook = new OcBuildHook(s2iConfig, project);
         hook.register();
       }
       return true;

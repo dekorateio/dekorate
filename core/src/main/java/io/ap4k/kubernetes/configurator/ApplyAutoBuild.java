@@ -14,22 +14,17 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.openshift.configurator;
+package io.ap4k.kubernetes.configurator;
 
 import io.ap4k.kubernetes.config.Configurator;
-import io.ap4k.openshift.config.S2iConfigFluent;
-import io.ap4k.doc.Description;
+import io.ap4k.kubernetes.config.KubernetesConfigFluent;
 
-@Description("Apply source to image build hook.")
-public class ApplySourceToImageHook extends Configurator<S2iConfigFluent> {
+public class ApplyAutoBuild extends Configurator<KubernetesConfigFluent> {
 
-  private static final String AP4K_BUILD = "ap4k.build";
-  private static final String AP4K_DEPLOY = "ap4k.deploy";
+  public static final String AP4K_DEPLOY = "ap4k.deploy";
 
   @Override
-  public void visit(S2iConfigFluent config) {
-    config
-      .withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(AP4K_BUILD, String.valueOf(config.isAutoBuildEnabled()))))
-      .withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(AP4K_DEPLOY, String.valueOf(config.isAutoBuildEnabled()))));
+  public void visit(KubernetesConfigFluent config) {
+    config.withAutoDeployEnabled(Boolean.parseBoolean(System.getProperty(AP4K_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
   }
 }

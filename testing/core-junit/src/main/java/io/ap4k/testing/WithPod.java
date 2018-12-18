@@ -82,7 +82,7 @@ public interface WithPod extends TestInstancePostProcessor, WithKubernetesClient
 
         return client.pods().withName(pod).get();
     }
-    throw new IllegalStateException("Failed to detect pod for service:" + service);
+    throw new IllegalStateException("Failed to detect endpoints for service:" + service);
   }
 
 

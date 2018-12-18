@@ -151,4 +151,11 @@ public @interface OpenshiftApplication {
   Probe readinessProbe() default @Probe();
 
   boolean exposeRoute() default false;
+
+  /**
+   * Flag to trigger the registration of the deploy hook.
+   * It's generally preferable to use `-Dap4k.deploy=true` instead of hardcoding this here.
+   * @return  True for automatic registration of the build hook.
+   */
+  boolean autoDeployEnabled() default false;
 }
