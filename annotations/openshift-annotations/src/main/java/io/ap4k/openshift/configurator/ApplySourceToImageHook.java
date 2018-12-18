@@ -30,6 +30,6 @@ public class ApplySourceToImageHook extends Configurator<S2iConfigFluent> {
   public void visit(S2iConfigFluent config) {
     config
       .withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(AP4K_BUILD, String.valueOf(config.isAutoBuildEnabled()))))
-      .withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(AP4K_DEPLOY, String.valueOf(config.isAutoBuildEnabled()))));
+      .withAutoDeployEnabled(Boolean.parseBoolean(System.getProperty(AP4K_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
   }
 }
