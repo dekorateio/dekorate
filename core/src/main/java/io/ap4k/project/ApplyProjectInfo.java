@@ -26,7 +26,10 @@ public class ApplyProjectInfo extends Configurator<KubernetesConfigFluent> {
   private static final String APP_NAME = "app.name";
   private static final String APP_VERSION = "app.version";
 
-  private static final String DEFAULT_GROUP = "default";
+  private static final String USER_NAME_KEY = "user.name";
+  private static final String FALLBACK_USER_NAME = "default";
+
+  private static final String DEFAULT_GROUP = System.getProperty(USER_NAME_KEY, FALLBACK_USER_NAME).replaceAll(" *", "");
 
   private final Project project;
 
