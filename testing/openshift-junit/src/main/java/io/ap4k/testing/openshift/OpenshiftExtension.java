@@ -55,6 +55,9 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+    if (!hasSourceToImageConfig()) {
+      return ConditionEvaluationResult.disabled("Can't run integration tests, due to build not being enabled. Please use @EnableS2iBuild, to enable builds.");
+    }
     try {
       KubernetesClient client = getKubernetesClient(context);
       if (!client.isAdaptable(OpenShiftClient.class)) {

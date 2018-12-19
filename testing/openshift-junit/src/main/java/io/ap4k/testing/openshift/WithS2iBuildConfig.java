@@ -23,6 +23,9 @@ public interface WithS2iBuildConfig {
 
   String S2Ι_CONFIG_PATH = "META-INF/ap4k/.config/s2i.yml";
 
+  default boolean hasSourceToImageConfig()  {
+    return WithS2iBuildConfig.class.getClassLoader().getResource(S2Ι_CONFIG_PATH) != null;
+  }
 
   default S2iConfig getSourceToImageConfig() {
     return  Serialization.unmarshal(WithS2iBuildConfig.class.getClassLoader().getResourceAsStream(S2Ι_CONFIG_PATH), S2iConfig.class);
