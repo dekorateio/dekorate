@@ -1,22 +1,23 @@
 /**
  * Copyright 2018 The original authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
-**/
+ *
+ **/
 
 package io.ap4k.processor;
 
+import io.ap4k.Ap4kException;
 import io.ap4k.Session;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
@@ -25,6 +26,7 @@ import io.ap4k.project.Project;
 import io.ap4k.project.AptProjectFactory;
 import io.ap4k.utils.Serialization;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.utils.Urls;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -35,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +54,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
   protected static final String[] STRIP = {"^Editable", "Config$"};
   protected static final String JSON = "json";
   protected static final String YML = "yml";
+  protected static final String TMP = "tmp";
   protected static final String DOT = ".";
 
   protected static Project project;
@@ -62,7 +67,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     }
   }
 
- protected List<HasMetadata> read(String path) {
+  protected List<HasMetadata> read(String path) {
     try {
       FileObject fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path);
       try (InputStream is = fileObject.openInputStream()) {
@@ -154,6 +159,19 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
       }
     } catch (IOException e) {
       throw new RuntimeException("Error writing resources");
+    }
+  }
+
+  /**
+   * Get the output directory of the processor.
+   * @return  The directroy.
+   */
+  protected Path getOutputDirectory() {
+    try {
+      FileObject project = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(PROJECT, TMP));
+      return Paths.get(Urls.toFile(project.toUri().toURL()).getParentFile().getAbsolutePath());
+    } catch (IOException e) {
+      throw Ap4kException.launderThrowable(e);
     }
   }
 }

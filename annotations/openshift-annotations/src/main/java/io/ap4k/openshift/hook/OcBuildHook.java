@@ -33,7 +33,7 @@ import io.ap4k.utils.Serialization;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -43,15 +43,17 @@ public class OcBuildHook extends ProjectHook {
   private static final String OPENSHIFT_YML = "openshift.yml";
 
   private final S2iConfig config;
+  private final Path resourceDir;
   private final OpenShiftClient client = new DefaultOpenShiftClient();
 
-  public OcBuildHook(S2iConfig config, Project project) {
+  public OcBuildHook(S2iConfig config, Project project, Path resourceDir) {
     super(project);
     this.config = config;
+    this.resourceDir = resourceDir;
   }
 
   public void init () {
-    File yml = Paths.get(project.getResourceOutputPath()).resolve(OPENSHIFT_YML).toFile();
+    File yml = resourceDir.resolve(OPENSHIFT_YML).toFile();
     List<HasMetadata> items = new ArrayList<>();
     if (yml.exists()) try (FileInputStream fis = new FileInputStream(yml)) {
       items.addAll(Serialization.unmarshal(fis, KubernetesList.class).getItems());
