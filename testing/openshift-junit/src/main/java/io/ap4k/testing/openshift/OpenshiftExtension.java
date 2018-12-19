@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Internal
-public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithS2iBuildConfig {
+public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithS2iBuildConfig, WithOpenshiftConfig {
 
   private static final String TARGET = "target";
 
@@ -165,5 +165,10 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     } catch (IOException e) {
       throw Ap4kException.launderThrowable(e);
     }
+  }
+
+  @Override
+  public String getName() {
+    return getOpenshiftConfig().getName();
   }
 }

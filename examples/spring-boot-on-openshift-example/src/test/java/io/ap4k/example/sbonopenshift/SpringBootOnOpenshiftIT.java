@@ -8,7 +8,6 @@ import io.ap4k.deps.okhttp3.OkHttpClient;
 import io.ap4k.deps.okhttp3.Request;
 import io.ap4k.deps.okhttp3.Response;
 import io.ap4k.testing.annotation.Inject;
-import io.ap4k.testing.annotation.Named;
 import io.ap4k.testing.openshift.annotation.OpenshiftIntegrationTest;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,6 @@ class SpringBootOnOpenshiftIT {
   private KubernetesList list;
 
   @Inject
-  @Named("spring-boot-on-openshift-example")
   Pod pod;
 
   @Test
