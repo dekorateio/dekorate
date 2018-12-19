@@ -24,6 +24,8 @@ import io.ap4k.docker.hook.DockerBuildHook;
 import io.ap4k.testing.WithKubernetesClient;
 import io.ap4k.testing.WithProject;
 import io.ap4k.testing.WithPod;
+import io.ap4k.testing.annotation.KubernetesIntegrationTest;
+import io.ap4k.testing.config.KubernetesIntegrationTestConfig;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
@@ -34,7 +36,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
-  WithPod, WithKubernetesClient, WithKubernetesResources, WithProject, WithDockerBuildConifg {
+  WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithProject, WithDockerBuildConifg {
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -51,6 +53,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
+    KubernetesIntegrationTestConfig config = getKubernetesIntegrationTestConfig(context);
     KubernetesClient client = getKubernetesClient(context);
     KubernetesList list = getKubernetesResources(context);
 
@@ -64,7 +67,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
         System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
       });
 
-    client.resourceList(list).waitUntilReady(5, TimeUnit.MINUTES);
+    client.resourceList(list).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
   }
 
   @Override

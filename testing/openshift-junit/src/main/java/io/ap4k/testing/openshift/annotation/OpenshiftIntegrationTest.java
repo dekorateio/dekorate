@@ -17,6 +17,9 @@
 package io.ap4k.testing.openshift.annotation;
 
 import io.ap4k.testing.openshift.OpenshiftExtension;
+import io.sundr.builder.annotations.Adapter;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.Retention;
@@ -27,8 +30,27 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+@Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
+@Pojo(name = "OpenshiftIntegrationTestConfig", relativePath = "../config",
+      mutable = true,
+      withStaticBuilderMethod = false,
+
+      withStaticAdapterMethod = false,
+      adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter"))
 @Target({ TYPE, METHOD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @ExtendWith(OpenshiftExtension.class)
 public @interface OpenshiftIntegrationTest {
+
+  /**
+   * The amount of time in seconds to wait for the image stream tags to be available.
+   * @return The max amount in milliseconds.
+   */
+  long imageStreamTagTimeout() default 120000;
+
+  /**
+   * The amount of time in milliseconds to wait for application to become ready.
+   * @return  The max amount in milliseconds.
+   */
+  long readinessTimeout() default 300000;
 }

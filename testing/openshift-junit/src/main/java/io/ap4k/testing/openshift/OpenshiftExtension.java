@@ -31,6 +31,7 @@ import io.ap4k.project.Project;
 import io.ap4k.testing.WithKubernetesClient;
 import io.ap4k.testing.WithPod;
 import io.ap4k.testing.WithProject;
+import io.ap4k.testing.openshift.config.OpenshiftIntegrationTestConfig;
 import io.ap4k.utils.Packaging;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -49,9 +50,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Internal
-public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithS2iBuildConfig, WithOpenshiftConfig {
-
-  private static final String TARGET = "target";
+public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
+  WithOpenshiftIntegrationTest, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithS2iBuildConfig, WithOpenshiftConfig {
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -72,6 +72,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
+    OpenshiftIntegrationTestConfig config = getOpenshiftIntegrationTestConfig(context);
     KubernetesClient client = getKubernetesClient(context);
     KubernetesList list = getOpenshiftResources(context);
 
@@ -85,7 +86,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
         client.resourceList(i).deletingExisting().createOrReplace();
         System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
       });
-    OpenshiftUtils.waitForImageStreamTags(buildResources, 2, TimeUnit.MINUTES);
+    OpenshiftUtils.waitForImageStreamTags(buildResources, config.getImageStreamTagTimeout(), TimeUnit.MILLISECONDS);
 
     //Create the remaining resources.
     List<HasMetadata> remainingResources = new ArrayList<>(list.getItems());
@@ -100,7 +101,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     S2iConfig s2iConfig = getSourceToImageConfig();
 
     build(context, project);
-    client.adapt(OpenShiftClient.class).deploymentConfigs().withName(s2iConfig.getName()).waitUntilReady(5, TimeUnit.MINUTES);
+    client.adapt(OpenShiftClient.class).deploymentConfigs().withName(s2iConfig.getName()).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
   }
 
 

@@ -18,6 +18,9 @@ package io.ap4k.testing.annotation;
 
 
 import io.ap4k.testing.kubernetes.KubernetesExtension;
+import io.sundr.builder.annotations.Adapter;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.Retention;
@@ -28,8 +31,21 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+@Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
+@Pojo(name = "KubernetesIntegrationTestConfig", relativePath = "../config",
+      mutable = true,
+      withStaticBuilderMethod = false,
+
+      withStaticAdapterMethod = false,
+      adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter"))
 @Target({ TYPE, METHOD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @ExtendWith(KubernetesExtension.class)
 public @interface KubernetesIntegrationTest {
+
+  /**
+   * The amount of time in milliseconds to wait for application to become ready.
+   * @return  The max amount in milliseconds.
+   */
+  long readinessTimeout() default 300000;
 }
