@@ -33,7 +33,7 @@ import static java.util.Arrays.stream;
  * Mixin for storing / loading the KubernetesList to context.
  * It also provides methods for injecting the list.
  */
-public interface WithPod extends TestInstancePostProcessor, WithKubernetesClient, WithClosables {
+public interface WithPod extends TestInstancePostProcessor, WithKubernetesConfig, WithKubernetesClient, WithClosables {
 
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
@@ -60,27 +60,26 @@ public interface WithPod extends TestInstancePostProcessor, WithKubernetesClient
       return;
     }
 
-    namedAnnotation(field).ifPresent(name -> {
-      field.setAccessible(true);
-      try {
-        field.set(testInstance, podForName(context, name));
-      } catch (IllegalAccessException e) {
-        throw Ap4kException.launderThrowable(e);
-      }
-    });
+    String name = namedAnnotation(field).orElseGet(() -> getName());
+    field.setAccessible(true);
+    try {
+      field.set(testInstance, podForName(context, name));
+    } catch (IllegalAccessException e) {
+      throw Ap4kException.launderThrowable(e);
+    }
   }
 
   default Pod podForName(ExtensionContext context, String service) {
     KubernetesClient client = getKubernetesClient(context);
     Endpoints endpoints = client.endpoints().withName(service).get();
     if (endpoints != null) {
-        String pod = endpoints.getSubsets().stream()
+      String pod = endpoints.getSubsets().stream()
         .flatMap(s -> s.getAddresses().stream())
         .filter(a -> a.getTargetRef().getKind().equals("Pod"))
         .map(a -> a.getTargetRef().getName())
         .findAny().orElseThrow(() -> new IllegalStateException("Failed to detect pod for service:" + service));
 
-        return client.pods().withName(pod).get();
+      return client.pods().withName(pod).get();
     }
     throw new IllegalStateException("Failed to detect endpoints for service:" + service);
   }
@@ -96,6 +95,14 @@ public interface WithPod extends TestInstancePostProcessor, WithKubernetesClient
       .filter(a -> a.annotationType().isAssignableFrom(Named.class))
       .map(a -> field.getAnnotation(Named.class).value())
       .findFirst();
+  }
+
+  /**
+   * Returns the configured name.
+   * @return  The name.
+   */
+  default String getName() {
+    return getKubernetesConfig().getName();
   }
 }
 
