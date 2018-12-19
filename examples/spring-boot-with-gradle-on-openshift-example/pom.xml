@@ -35,9 +35,65 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <sourceDirectory>src/main/groovy</sourceDirectory>
+    <testSourceDirectory>src/test/groovy</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.fortasoft</groupId>
+        <artifactId>gradle-maven-plugin</artifactId>
+        <version>1.0.8</version>
+        <configuration>
+          <gradleVersion>4.10</gradleVersion>
+          <jvmArgs>
+            <arg>-Dap4kVersion=${project.version}</arg>
+          </jvmArgs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>invoke</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <task>build</task>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>invoke</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <task>clean</task>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>integration-test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>invoke</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <task>test</task>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
-      <id>gradle</id>
+      <id>release</id>
       <build>
         <plugins>
           <plugin>
@@ -53,15 +109,7 @@
             <executions>
               <execution>
                 <id>package</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>invoke</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <task>build</task>
-                  </tasks>
-                </configuration>
+                <phase>none</phase>
               </execution>
               <execution>
                 <id>clean</id>
@@ -77,15 +125,21 @@
               </execution>
               <execution>
                 <id>integration-test</id>
-                <phase>integration-test</phase>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.bluetrainsoftware.maven</groupId>
+            <artifactId>groovydoc-maven-plugin</artifactId>
+            <version>${version.groovydoc-maven-plugin}</version>
+            <executions>
+              <execution>
+                <id>attach-docs</id>
+                <phase>package</phase>
                 <goals>
-                  <goal>invoke</goal>
+                  <goal>attach-docs</goal>
                 </goals>
-                <configuration>
-                  <tasks>
-                    <task>test</task>
-                  </tasks>
-                </configuration>
               </execution>
             </executions>
           </plugin>

@@ -53,6 +53,8 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>src/main/groovy</sourceDirectory>
+    <testSourceDirectory>src/test/groovy</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -107,4 +109,28 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.bluetrainsoftware.maven</groupId>
+            <artifactId>groovydoc-maven-plugin</artifactId>
+            <version>${version.groovydoc-maven-plugin}</version>
+            <executions>
+              <execution>
+                <id>attach-docs</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>attach-docs</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
