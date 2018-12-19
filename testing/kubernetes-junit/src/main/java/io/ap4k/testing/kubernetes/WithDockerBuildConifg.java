@@ -22,8 +22,12 @@ import io.ap4k.utils.Serialization;
 public interface WithDockerBuildConifg {
   String DOCKER_CONFIG_PATH = "META-INF/ap4k/.config/dockerbuild.yml";
 
+  default boolean hasDockerBuildConfig()  {
+    return WithDockerBuildConifg.class.getClassLoader().getResource(DOCKER_CONFIG_PATH) != null;
+  }
+
   default DockerBuildConfig getDockerBuildConfig() {
-    return  Serialization.unmarshal(KubernetesExtension.class.getClassLoader().getResourceAsStream(DOCKER_CONFIG_PATH), DockerBuildConfig.class);
+    return  Serialization.unmarshal(WithDockerBuildConifg.class.getClassLoader().getResourceAsStream(DOCKER_CONFIG_PATH), DockerBuildConfig.class);
   }
 
 }
