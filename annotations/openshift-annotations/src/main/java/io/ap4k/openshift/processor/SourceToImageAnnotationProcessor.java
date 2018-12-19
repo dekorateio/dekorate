@@ -22,7 +22,6 @@ import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.openshift.adapter.S2iConfigAdapter;
 import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.config.OpenshiftConfigBuilder;
 import io.ap4k.openshift.config.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.S2iConfig;
@@ -52,18 +51,14 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     .withBuilderImage(DEFAULT_S2I_BUILDER_IMAGE)
     .build();
 
-  public static OpenshiftConfig DEFAULT_OPENSHIFT_CONFIG = new OpenshiftConfigBuilder()
-    .build();
-
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
       session.onClose(this::write);
 
-      OpenshiftConfig openshiftConfig = session.configurators().get(OpenshiftConfig.class).orElse(DEFAULT_OPENSHIFT_CONFIG);
       S2iConfig s2iConfig = session.configurators().get(S2iConfig.class).orElse(DEFAULT_SOURCE_TO_IMAGE_CONFIG);
-      if (s2iConfig.isAutoBuildEnabled() || openshiftConfig.isAutoDeployEnabled()) {
-        OcBuildHook hook = new OcBuildHook(s2iConfig, project);
+      if (s2iConfig.isAutoBuildEnabled() || s2iConfig.isAutoDeployEnabled()) {
+        OcBuildHook hook = new OcBuildHook(s2iConfig, project, getOutputDirectory());
         hook.register();
       }
       return true;
@@ -91,7 +86,7 @@ public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcesso
     OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
     OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication).build();
     return S2iConfigAdapter.newBuilder(enableS2iBuild)
-      .accept(new ApplySourceToImageHook())
+      .accept(new ApplySourceToImageHook(openshiftConfig))
       .accept(new ApplyOpenshiftConfig(openshiftConfig));
   }
 }
