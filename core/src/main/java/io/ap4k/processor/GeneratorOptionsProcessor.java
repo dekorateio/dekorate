@@ -30,7 +30,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
@@ -78,9 +77,9 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor<Gener
     @Override
     public InputStream apply(String resource) {
       try {
-        FileObject fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path + File.separatorChar + resource + DOT + YML);
+        FileObject fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path + "/" + resource + DOT + YML);
         if (fileObject == null) {
-          fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path + File.separatorChar + resource + DOT + JSON);
+          fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path + "/" + resource + DOT + JSON);
         }
         return fileObject != null ? fileObject.openInputStream() : null;
       } catch (IOException e) {

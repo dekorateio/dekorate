@@ -49,8 +49,8 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
 
   protected static final String PACKAGE = "";
   protected static final String FILENAME = "%s.%s";
-  protected static final String CONFIG = ".config" + File.separatorChar + "%s.%s";
-  protected static final String PROJECT = "META-INF" + File.separatorChar + "ap4k" + File.separatorChar + ".project.%s";
+  protected static final String CONFIG = ".config/%s.%s";
+  protected static final String PROJECT = "META-INF/ap4k/.project.%s";
   protected static final String[] STRIP = {"^Editable", "Config$"};
   protected static final String JSON = "json";
   protected static final String YML = "yml";
@@ -118,7 +118,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
         name = name.replaceAll(s, "");
       }
       name = name.toLowerCase();
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + File.separatorChar+ String.format(CONFIG, name, YML));
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + "/" + String.format(CONFIG, name, YML));
       try (Writer writer = yml.openWriter()) {
         writer.write(Serialization.asYaml(config));
       }
@@ -149,11 +149,11 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
    */
   protected void write(String group, KubernetesList list) {
     try {
-      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + File.separatorChar + String.format(FILENAME, group, JSON));
+      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + "/" + String.format(FILENAME, group, JSON));
       try (Writer writer = json.openWriter()) {
         writer.write(Serialization.asJson(list));
       }
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + File.separatorChar + String.format(FILENAME, group, YML));
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + "/" + String.format(FILENAME, group, YML));
       try (Writer writer = yml.openWriter()) {
         writer.write(Serialization.asYaml(list));
       }

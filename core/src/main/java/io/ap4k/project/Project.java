@@ -17,12 +17,11 @@
 
 package io.ap4k.project;
 
-import java.io.File;
 import java.nio.file.Path;
 
 public class Project {
 
-  private static String DEFAULT_GENERATOR_OUTPUT_PATH = "META-INF" + File.separatorChar + "ap4k";
+  private static String DEFAULT_GENERATOR_OUTPUT_PATH = "META-INF/ap4k";
   private Path root;
   private String resourceInputPath;
   private String resourceOutputPath;
