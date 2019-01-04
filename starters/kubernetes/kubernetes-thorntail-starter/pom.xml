@@ -3,7 +3,7 @@
   <parent>
     <artifactId>kubernetes-starters</artifactId>
     <groupId>io.ap4k</groupId>
-    <version>0.1.3</version>
+    <version>0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
