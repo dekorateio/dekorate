@@ -73,7 +73,7 @@ To start using this project you just need to add one of the provided annotations
 
 [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) can be added to your project like:
 
-    import io.ap4k.annotaion.KubernetesApplication;
+    import io.ap4k.kubernetes.annotaion.KubernetesApplication;
     
     @KubernetesApplication
     public class Main {
