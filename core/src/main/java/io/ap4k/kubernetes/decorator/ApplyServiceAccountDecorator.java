@@ -19,6 +19,7 @@ package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.deps.kubernetes.api.model.PodSpecFluent;
 import io.ap4k.doc.Description;
+import io.ap4k.utils.Strings;
 
 @Description("Apply the service account.")
 public class ApplyServiceAccountDecorator extends Decorator<PodSpecFluent> {
@@ -31,6 +32,8 @@ public class ApplyServiceAccountDecorator extends Decorator<PodSpecFluent> {
 
   @Override
   public void visit(PodSpecFluent podSpec) {
-   podSpec.withServiceAccount(serviceAccount);
+    if (Strings.isNotNullOrEmpty(serviceAccount))  {
+      podSpec.withServiceAccount(serviceAccount);
+    }
   }
 }
