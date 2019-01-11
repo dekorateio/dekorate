@@ -91,6 +91,24 @@ import java.lang.annotation.Target;
          */
         Env[] envVars() default {};
 
+       /**
+        * Working directory.
+        * @return The working directory if specified, else empty string.
+        */
+        String workingDir() default "";
+
+       /**
+        * The commands
+        * @return The commands.
+        */
+        String[] command() default {};
+
+       /**
+        * The arguments
+        * @return The arguments.
+        */
+       String[] arguments() default {};
+
         /**
          * The number of replicas to use.
          * @return The number of replicas.
