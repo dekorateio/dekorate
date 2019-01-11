@@ -68,8 +68,8 @@ class KubernetesHandlerTest {
   }
 
   private class KubernetesConfigSubclass extends KubernetesConfig {
-    public KubernetesConfigSubclass(Project project, Map<ConfigKey, Object> attributes, String group, String name, String version, Label[] labels, Annotation[] annotations, Env[] envVars, int replicas, Port[] ports, ServiceType serviceType, PersistentVolumeClaimVolume[] pvcVolumes, SecretVolume[] secretVolumes, ConfigMapVolume[] configMapVolumes, GitRepoVolume[] gitRepoVolumes, AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes, AzureDiskVolume[] azureDiskVolumes, AzureFileVolume[] azureFileVolumes, Mount[] mounts, ImagePullPolicy imagePullPolicy, Probe livenessProbe, Probe readinessProbe, Boolean autodeployEnabled) {
-      super(project, attributes, group, name, version, labels, annotations, envVars, replicas, ports, serviceType, pvcVolumes, secretVolumes, configMapVolumes, gitRepoVolumes, awsElasticBlockStoreVolumes, azureDiskVolumes, azureFileVolumes, mounts, imagePullPolicy, livenessProbe, readinessProbe, autodeployEnabled);
+    public KubernetesConfigSubclass(Project project, Map<ConfigKey, Object> attributes, String group, String name, String version, Label[] labels, Annotation[] annotations, Env[] envVars, int replicas, String serviceAccount, Port[] ports, ServiceType serviceType, PersistentVolumeClaimVolume[] pvcVolumes, SecretVolume[] secretVolumes, ConfigMapVolume[] configMapVolumes, GitRepoVolume[] gitRepoVolumes, AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes, AzureDiskVolume[] azureDiskVolumes, AzureFileVolume[] azureFileVolumes, Mount[] mounts, ImagePullPolicy imagePullPolicy, Probe livenessProbe, Probe readinessProbe, Boolean autodeployEnabled) {
+      super(project, attributes, group, name, version, labels, annotations, envVars, replicas, serviceAccount, ports, serviceType, pvcVolumes, secretVolumes, configMapVolumes, gitRepoVolumes, awsElasticBlockStoreVolumes, azureDiskVolumes, azureFileVolumes, mounts, imagePullPolicy, livenessProbe, readinessProbe, autodeployEnabled);
     }
   }
 }

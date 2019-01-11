@@ -107,6 +107,12 @@ public @interface OpenshiftApplication {
   int replicas() default 1;
 
   /**
+   * The service account.
+   * @return The service account or empty string if not specified.
+   */
+  String serviceAccount() default "";
+
+  /**
    * The application ports.
    */
   Port[] ports() default {};
