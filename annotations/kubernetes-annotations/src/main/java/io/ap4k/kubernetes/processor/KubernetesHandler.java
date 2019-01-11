@@ -18,7 +18,6 @@ package io.ap4k.kubernetes.processor;
 
 import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;
-import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.LabelSelector;
 import io.ap4k.deps.kubernetes.api.model.LabelSelectorBuilder;

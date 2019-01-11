@@ -30,6 +30,7 @@ import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
 import io.ap4k.openshift.decorator.ApplyDeploymentTriggerDecorator;
+import io.ap4k.openshift.decorator.ApplyReplicasDecorator;
 
 import java.util.Optional;
 
@@ -78,6 +79,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   @Override
   protected void addDecorators(String group, OpenshiftConfig config) {
     super.addDecorators(group, config);
+    resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
     resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), config.getName() + ":" + config.getVersion()));
   }
 

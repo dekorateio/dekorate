@@ -100,6 +100,11 @@ public @interface OpenshiftApplication {
    */
   Env[] envVars() default {};
 
+  /**
+   * The number of replicas to use.
+   * @return The number of replicas.
+   */
+  int replicas() default 1;
 
   /**
    * The application ports.
