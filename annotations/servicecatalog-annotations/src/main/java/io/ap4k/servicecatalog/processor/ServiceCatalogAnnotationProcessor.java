@@ -20,9 +20,10 @@ package io.ap4k.servicecatalog.processor;
 import io.ap4k.Session;
 import io.ap4k.kubernetes.config.ConfigurationSupplier;
 import io.ap4k.processor.AbstractAnnotationProcessor;
+import io.ap4k.servicecatalog.adapter.ServiceCatalogConfigAdapter;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
-import io.ap4k.servicecatalog.config.ServiceCatalogConfigAdapter;
+import io.ap4k.servicecatalog.config.ServiceCatalogConfigBuilder;
 import io.ap4k.servicecatalog.handler.ServiceCatalogHandler;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
@@ -56,6 +57,6 @@ public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcess
     ServiceCatalog serviceCatalog = mainClass.getAnnotation(ServiceCatalog.class);
     return serviceCatalog != null
       ? new ConfigurationSupplier<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
-      : new ConfigurationSupplier<>(ServiceCatalogConfigAdapter.newServiceCatalogBuilder());
+      : new ConfigurationSupplier<>(new ServiceCatalogConfigBuilder());
   }
 }

@@ -18,7 +18,7 @@
 package io.ap4k.component.processor;
 
 import io.ap4k.Session;
-import io.ap4k.component.adapt.CompositeConfigAdapter;
+import io.ap4k.component.adapter.CompositeConfigAdapter;
 import io.ap4k.component.annotation.CompositeApplication;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.CompositeConfigBuilder;

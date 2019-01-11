@@ -33,8 +33,8 @@ import java.lang.annotation.Target;
        withStaticBuilderMethod = false,
        withStaticAdapterMethod = false,
        adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter"))
-       @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
-       @Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Retention(RetentionPolicy.SOURCE)
        public @interface ServiceCatalogInstance {
 
          /**

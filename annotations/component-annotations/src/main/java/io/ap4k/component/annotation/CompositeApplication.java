@@ -18,6 +18,7 @@ package io.ap4k.component.annotation;
 
 
 import io.ap4k.component.model.DeploymentType;
+import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.annotation.Env;
 import io.sundr.builder.annotations.Adapter;
@@ -30,7 +31,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
-@Pojo(name = "CompositeConfig", mutable = true, superClass = KubernetesConfig.class, relativePath = "../config", withStaticAdapterMethod = false)
+@Pojo(name = "CompositeConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false,
+       adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter"))
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface CompositeApplication {
