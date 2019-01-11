@@ -86,7 +86,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
   /**
    * Creates a {@link Deployment} for the {@link KubernetesConfig}.
-   * @param config   The sesssion.
+   * @param config   The session.
    * @return          The deployment.
    */
   public static Deployment createDeployment(KubernetesConfig config)  {
