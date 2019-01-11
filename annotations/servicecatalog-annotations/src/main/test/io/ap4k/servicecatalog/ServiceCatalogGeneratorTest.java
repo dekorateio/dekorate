@@ -20,7 +20,6 @@ package io.ap4k.servicecatalog;
 
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
-import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 
 
 public class ServiceCatalogGeneratorTest {
