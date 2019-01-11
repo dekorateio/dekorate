@@ -18,8 +18,10 @@
 package io.ap4k.openshift.decorator;
 
 import io.ap4k.deps.openshift.api.model.DeploymentConfigSpecFluent;
+import io.ap4k.doc.Description;
 import io.ap4k.kubernetes.decorator.Decorator;
 
+@Description("Apply the number of replicas to the DeploymentConfigSpec.")
 public class ApplyReplicasDecorator extends Decorator<DeploymentConfigSpecFluent> {
 
   private final int replicas;
