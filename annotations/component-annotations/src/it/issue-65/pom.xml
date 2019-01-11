@@ -34,6 +34,8 @@ limitations under the License.
     <version.spring-boot>2.1.0.RELEASE</version.spring-boot>
     <version.junit-jupiter>5.1.0</version.junit-jupiter>
     <version.junit-platform>1.1.0</version.junit-platform>
+
+    <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
   </properties>
 
   <dependencies>
@@ -91,6 +93,15 @@ limitations under the License.
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire-plugin}</version>
+        <inherited>true</inherited>
+        <configuration>
+          <useSystemClassLoader>false</useSystemClassLoader>
+        </configuration>
       </plugin>
     </plugins>
   </build>
