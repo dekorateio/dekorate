@@ -16,6 +16,7 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
+import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
 import io.ap4k.kubernetes.config.Probe;
 import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
@@ -24,13 +25,16 @@ import io.ap4k.doc.Description;
 @Description("Add a readiness probe to all containers.")
 public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
 
-  public AddReadinessProbeDecorator(Probe probe) {
-    super(probe);
+  public AddReadinessProbeDecorator(String container, Probe probe) {
+    super(container, probe);
   }
 
   @Override
-  public void visit(ContainerBuilder container) {
+  public void visit(ContainerFluent<?> container) {
     if (probe == null) {
+      return;
+    }
+    if (!isApplicable(container)) {
       return;
     }
     if (Strings.isNullOrEmpty(probe.getExecAction()) &&
@@ -47,5 +51,4 @@ public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
       .withTimeoutSeconds(probe.getTimeoutSeconds())
       .endReadinessProbe();
   }
-
 }

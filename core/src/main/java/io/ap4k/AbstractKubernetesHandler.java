@@ -43,10 +43,8 @@ import io.ap4k.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.ap4k.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.ap4k.kubernetes.decorator.AddServiceDecorator;
 import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
-import io.ap4k.kubernetes.decorator.ApplyLabelSelectorDecorator;
 import io.ap4k.kubernetes.decorator.ApplyReplicasDecorator;
 import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
-import io.ap4k.utils.Strings;
 
 /**
  * An abstract generator.
@@ -125,7 +123,7 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
       resources.decorate(group, new AddServiceDecorator(config));
     }
 
-    resources.decorate(group, new AddLivenessProbeDecorator(config.getLivenessProbe()));
-    resources.decorate(group, new AddReadinessProbeDecorator(config.getReadinessProbe()));
+    resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getLivenessProbe()));
+    resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getReadinessProbe()));
   }
 }

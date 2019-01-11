@@ -16,9 +16,9 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
+import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
 import io.ap4k.kubernetes.config.Probe;
 import io.ap4k.utils.Strings;
-import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 import io.ap4k.deps.kubernetes.api.model.ExecAction;
 import io.ap4k.deps.kubernetes.api.model.HTTPGetAction;
 import io.ap4k.deps.kubernetes.api.model.IntOrString;
@@ -30,15 +30,16 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 
-public abstract class AbstractAddProbeDecorator extends Decorator<ContainerBuilder> {
+public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator {
 
   protected final Probe probe;
 
-  public AbstractAddProbeDecorator(Probe probe) {
+  public AbstractAddProbeDecorator(String container, Probe probe) {
+    super(container);
     this.probe = probe;
   }
 
-  public abstract void visit(ContainerBuilder container);
+  public abstract void visit(ContainerFluent<?> container);
 
 
   /**

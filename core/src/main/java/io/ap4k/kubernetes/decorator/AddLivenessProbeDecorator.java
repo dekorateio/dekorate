@@ -16,6 +16,7 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
+import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
 import io.ap4k.kubernetes.config.Probe;
 import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
@@ -24,13 +25,16 @@ import io.ap4k.doc.Description;
 @Description("Add a liveness probe to all containers.")
 public class AddLivenessProbeDecorator extends AbstractAddProbeDecorator {
 
-  public AddLivenessProbeDecorator(Probe probe) {
-    super(probe);
+  public AddLivenessProbeDecorator(String containerName, Probe probe) {
+    super(containerName, probe);
   }
 
   @Override
-  public void visit(ContainerBuilder container) {
+  public void visit(ContainerFluent<?> container) {
     if (probe == null) {
+      return;
+    }
+    if (!isApplicable(container)) {
       return;
     }
     if (Strings.isNullOrEmpty(probe.getExecAction()) &&
