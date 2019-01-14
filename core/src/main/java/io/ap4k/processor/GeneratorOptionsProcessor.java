@@ -39,6 +39,9 @@ import java.util.function.Function;
 @SupportedAnnotationTypes("io.ap4k.annotation.GeneratorOptions")
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor<GeneratorConfig>  {
 
+  private static final String INPUT_DIR = "ap4k.input.dir";
+  private static final String OUTPUT_DIR = "ap4k.output.dir";
+
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if (roundEnv.processingOver()) {
@@ -52,12 +55,15 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor<Gener
         if (options == null) {
           continue;
         }
-        if (Strings.isNotNullOrEmpty(options.inputPath())) {
-          GeneratorOptionsProcessor.this.project = project.withResourceInputPath(options.inputPath());
-          session.handlers().add(new GeneratorOptionsHandler(session.resources(), new ResourceReader(options.inputPath())));
+        String inputPath = System.getProperty(INPUT_DIR, options.inputPath());
+        String outputPath = System.getProperty(OUTPUT_DIR, options.outputPath());
+
+        if (Strings.isNotNullOrEmpty(inputPath)) {
+          GeneratorOptionsProcessor.this.project = project.withResourceInputPath(inputPath);
+          session.handlers().add(new GeneratorOptionsHandler(session.resources(), new ResourceReader(inputPath)));
         }
-        if (Strings.isNotNullOrEmpty(options.outputPath())) {
-          GeneratorOptionsProcessor.this.project = project.withResourceOutputPath(options.outputPath());
+        if (Strings.isNotNullOrEmpty(outputPath)) {
+          GeneratorOptionsProcessor.this.project = project.withResourceOutputPath(outputPath);
         }
         return false;
        }
