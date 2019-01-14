@@ -30,6 +30,9 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Base class for any kind of {@link Decorator} that acts on probes.
+ */
 public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator {
 
   protected final Probe probe;
@@ -45,7 +48,7 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
   /**
    * Convert the internal {@link Probe} to the kubernetes-model {@link io.ap4k.deps.kubernetes.api.model.Probe}.
    * @param probe The inrenal probe.
-   * @return      The fabirc8 probe.
+   * @return      The fabric8 probe.
    */
   protected io.ap4k.deps.kubernetes.api.model.Probe convert(Probe probe) {
     return new ProbeBuilder()
