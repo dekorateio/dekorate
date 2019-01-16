@@ -19,6 +19,7 @@
 package io.ap4k.openshift.annotation;
 
 import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.annotation.Env;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -66,6 +67,12 @@ public @interface EnableS2iBuild {
    * @return The builder image.
    */
   String builderImage() default "fabric8/s2i-java:2.3";
+
+  /**
+   * Environment variables to add to all containers.
+   * @return The environment variables.
+   */
+  Env[] envVars() default {};
 
   /**
    * Flag to trigger the registration of the build hook.
