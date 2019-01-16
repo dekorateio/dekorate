@@ -14,22 +14,16 @@
  * limitations under the License.
  * 
 **/
+package io.ap4k.examples.openshift;
 
-package io.ap4k.example.sbonopenshift;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.ap4k.kubernetes.annotation.Env;
-import io.ap4k.openshift.annotation.OpenshiftApplication;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import io.ap4k.openshift.annotation.EnableS2iBuild;
+@RestController
+public class Controller {
 
-@OpenshiftApplication
-@EnableS2iBuild(envVars = @Env(name="foo", value = "bar"))
-@SpringBootApplication
-public class Main {
-
-  public static void main(String[] args) {
-    SpringApplication.run(Main.class, args);
+  @RequestMapping("/")
+  public String hello() {
+    return "Hello world";
   }
-
 }

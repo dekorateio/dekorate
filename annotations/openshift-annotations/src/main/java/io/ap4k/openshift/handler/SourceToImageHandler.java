@@ -23,8 +23,10 @@ import io.ap4k.deps.openshift.api.model.BuildConfig;
 import io.ap4k.deps.openshift.api.model.BuildConfigBuilder;
 import io.ap4k.deps.openshift.api.model.ImageStream;
 import io.ap4k.deps.openshift.api.model.ImageStreamBuilder;
+import io.ap4k.kubernetes.config.Env;
 import io.ap4k.openshift.config.EditableS2iConfig;
 import io.ap4k.openshift.config.S2iConfig;
+import io.ap4k.openshift.decorator.AddBuildEnvDecorator;
 import io.ap4k.utils.Images;
 
 public class SourceToImageHandler implements Handler<S2iConfig> {
@@ -48,6 +50,10 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
     resources.add(OPENSHIFT, createBuilderImageStream(config));
     resources.add(OPENSHIFT, createProjectImageStream(config));
     resources.add(OPENSHIFT, createBuildConfig(config));
+
+    for (Env env : config.getEnvVars()) {
+      resources.decorate(OPENSHIFT, new AddBuildEnvDecorator(env));
+    }
   }
 
   @Override
@@ -121,6 +127,7 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
       .endSource()
       .withNewStrategy()
       .withNewSourceStrategy()
+      .withEnv()
       .withNewFrom()
       .withKind(IMAGESTREAMTAG)
       .withName(builderName + ":" + builderTag)
