@@ -60,7 +60,7 @@ For the purpose of integration testing it includes:
     testImplementation("io.ap4k:openshift-junit:${ap4kVersion}")
 
 This annotation will bring in the junit5 extension that ap4k provides, that allows you to run integration tests via the '@OpenshiftIntegrationTest' annotation.
-The integration test is [SpringBootOnOpenshiftIT.java](src/test/groovy/io/ap4k/example/sbonopenshift/SpringBootOnOpenshiftIT.java) and it demonstrates:
+The integration test is [SpringBootOnOpenshiftTests.java](src/test/groovy/io/ap4k/example/sbonopenshift/SpringBootOnOpenshiftTests.java) and it demonstrates:
 
 - how you can deploy the application for end to end testing
 - how use can use the kubernetes client from within the test to connect to the application.

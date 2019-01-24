@@ -8,9 +8,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.ap4k</groupId>
-  <artifactId>spring-boot-with-gradle-on-openshift-example</artifactId>
+  <artifactId>spring-boot-with-gradle-on-kubernetes-example</artifactId>
 
-  <name>AP4K :: Examples :: Spring Boot with Gradle on Openshift</name>
+  <name>AP4K :: Examples :: Spring Boot with Gradle on Kubernetes</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,22 +22,36 @@
   <dependencies>
     <dependency>
       <groupId>io.ap4k</groupId>
-      <artifactId>openshift-spring-starter</artifactId>
+      <artifactId>kubernetes-spring-starter</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.ap4k</groupId>
-      <artifactId>openshift-junit-starter</artifactId>
+      <artifactId>kubernetes-junit-starter</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
-    <sourceDirectory>src/main/groovy</sourceDirectory>
-    <testSourceDirectory>src/test/groovy</testSourceDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
     <plugins>
-
+      <!-- Skip compilation from java -->
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.fortasoft</groupId>
         <artifactId>gradle-maven-plugin</artifactId>
@@ -125,20 +139,6 @@
               <execution>
                 <id>integration-test</id>
                 <phase>none</phase>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>com.bluetrainsoftware.maven</groupId>
-            <artifactId>groovydoc-maven-plugin</artifactId>
-            <version>${version.groovydoc-maven-plugin}</version>
-            <executions>
-              <execution>
-                <id>attach-docs</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>attach-docs</goal>
-                </goals>
               </execution>
             </executions>
           </plugin>

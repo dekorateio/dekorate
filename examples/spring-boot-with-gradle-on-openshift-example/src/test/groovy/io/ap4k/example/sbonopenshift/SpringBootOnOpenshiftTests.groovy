@@ -34,13 +34,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals
 import static org.junit.jupiter.api.Assertions.assertTrue
 
 @OpenshiftIntegrationTest
-class SpringBootOnKubernetesTests {
+class SpringBootOnOpenshiftTests {
 
   @Inject
   private KubernetesClient client
 
   @Inject
-  @Named("spring-boot-with-gradle-on-openshift-example")
   Pod pod
 
   @Test

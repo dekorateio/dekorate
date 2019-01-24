@@ -23,6 +23,7 @@
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-openshift-example</module>
     <module>spring-boot-with-groovy-on-openshift-example</module>
+    <module>spring-boot-with-gradle-on-kubernetes-example</module>
     <module>spring-boot-with-gradle-on-openshift-example</module>
     <module>spring-boot-with-fmp-on-kubernetes-example</module>
   </modules>

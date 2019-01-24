@@ -1,30 +1,23 @@
 buildscript {
-  ext {
-    springBootVersion = '2.1.1.RELEASE'
-    aptPluginVersion = '0.19'
+	ext {
+		springBootVersion = '2.1.1.RELEASE'
     ap4kVersion = System.getProperty("ap4kVersion")
     junitVersion = '5.3.1'
     junitGraldePluginVersion = '1.1.0'
-  }
-  repositories {
-    mavenCentral()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    classpath("net.ltgt.gradle:gradle-apt-plugin:${aptPluginVersion}")
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     classpath("org.junit.platform:junit-platform-gradle-plugin:${junitGraldePluginVersion}")
-
-  }
+	}
 }
 
-apply plugin: 'groovy'
+apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: "net.ltgt.apt"
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 group = 'io.ap4k.examples'
@@ -36,22 +29,18 @@ repositories {
   mavenLocal()
 }
 
-compileGroovy {
-  groovyOptions.javaAnnotationProcessing = true
-}
-
 junitPlatform {
     enableStandardTestTask = true
 }
 
 dependencies {
   implementation('org.springframework.boot:spring-boot-starter-web')
-  implementation('org.codehaus.groovy:groovy')
 
-  compile("io.ap4k:openshift-spring-starter:${ap4kVersion}")
-  annotationProcessor("io.ap4k:openshift-annotations:${ap4kVersion}")
+  compile("io.ap4k:kubernetes-spring-starter:${ap4kVersion}")
+  annotationProcessor("io.ap4k:kubernetes-annotations:${ap4kVersion}")
   annotationProcessor("io.ap4k:ap4k-spring-boot:${ap4kVersion}")
 
+	testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-  testImplementation("io.ap4k:openshift-junit:${ap4kVersion}")
+  testImplementation("io.ap4k:kubernetes-junit:${ap4kVersion}")
 }
