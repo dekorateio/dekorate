@@ -1,1 +1,0 @@
-appName: ${SPRING_BOOT_APP_ENV_CONFIG_APP_DESC:The microservice 1 is up and running (flag 3)}
