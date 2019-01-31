@@ -19,6 +19,7 @@ package io.ap4k.processor;
 
 import io.ap4k.Ap4kException;
 import io.ap4k.Session;
+import io.ap4k.WithProject;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
 import io.ap4k.kubernetes.config.Configuration;
@@ -33,7 +34,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractAnnotationProcessor<C extends Configuration> extends AbstractProcessor {
+public abstract class AbstractAnnotationProcessor<C extends Configuration> extends AbstractProcessor implements WithProject {
 
   protected static final String PACKAGE = "";
   protected static final String FILENAME = "%s.%s";
@@ -57,13 +57,11 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
   protected static final String TMP = "tmp";
   protected static final String DOT = ".";
 
-  protected static Project project;
-
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
-    if (project == null) {
-      this.project = AptProjectFactory.create(processingEnv);
+    if (!projectExists()) {
+      setProject(AptProjectFactory.create(processingEnv));
     }
   }
 
@@ -95,7 +93,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     Set<? extends Configuration> configurations = session.configurators().toSet();
     resources.forEach((g, l) -> write(g, l));
     configurations.forEach(c -> write(c));
-    write(project);
+    write(getProject());
   }
 
 
@@ -118,7 +116,7 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
         name = name.replaceAll(s, "");
       }
       name = name.toLowerCase();
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + "/" + String.format(CONFIG, name, YML));
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(CONFIG, name, YML));
       try (Writer writer = yml.openWriter()) {
         writer.write(Serialization.asYaml(config));
       }
@@ -149,11 +147,11 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
    */
   protected void write(String group, KubernetesList list) {
     try {
-      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + "/" + String.format(FILENAME, group, JSON));
+      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(FILENAME, group, JSON));
       try (Writer writer = json.openWriter()) {
         writer.write(Serialization.asJson(list));
       }
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, project.getResourceOutputPath() + "/" + String.format(FILENAME, group, YML));
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(FILENAME, group, YML));
       try (Writer writer = yml.openWriter()) {
         writer.write(Serialization.asYaml(list));
       }
