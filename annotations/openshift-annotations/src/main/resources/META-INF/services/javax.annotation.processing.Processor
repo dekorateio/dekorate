@@ -1,2 +1,2 @@
-io.ap4k.openshift.processor.OpenshiftAnnotationProcessor
-io.ap4k.openshift.processor.SourceToImageAnnotationProcessor
+io.ap4k.openshift.apt.OpenshiftAnnotationProcessor
+io.ap4k.openshift.apt.SourceToImageAnnotationProcessor

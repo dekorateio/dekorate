@@ -1,1 +1,1 @@
-io.ap4k.servicecatalog.processor.ServiceCatalogAnnotationProcessor
+io.ap4k.servicecatalog.apt.ServiceCatalogAnnotationProcessor

@@ -17,7 +17,7 @@
 package io.ap4k;
 
 import io.ap4k.kubernetes.config.Configuration;
-import io.ap4k.kubernetes.config.ConfigurationSupplier;
+import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.Configurator;
 
 import java.util.HashSet;

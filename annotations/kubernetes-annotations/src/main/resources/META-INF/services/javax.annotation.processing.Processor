@@ -1,1 +1,1 @@
-io.ap4k.kubernetes.processor.KubernetesAnnotationProcessor
+io.ap4k.kubernetes.apt.KubernetesAnnotationProcessor

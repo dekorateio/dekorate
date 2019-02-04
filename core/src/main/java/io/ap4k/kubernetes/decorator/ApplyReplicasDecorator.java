@@ -31,6 +31,8 @@ public class ApplyReplicasDecorator extends Decorator<DeploymentSpecFluent> {
 
   @Override
   public void visit(DeploymentSpecFluent deploymentSpec) {
-   deploymentSpec.withReplicas(replicas);
+    if (replicas > 0) {
+      deploymentSpec.withReplicas(replicas);
+    }
   }
 }

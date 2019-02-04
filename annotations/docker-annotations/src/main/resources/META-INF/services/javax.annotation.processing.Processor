@@ -1,1 +1,1 @@
-io.ap4k.docker.processor.DockerBuildAnnotationProcessor
+io.ap4k.docker.apt.DockerBuildAnnotationProcessor

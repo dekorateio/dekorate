@@ -14,12 +14,13 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.spring.processor;
+package io.ap4k.spring.apt;
 
 import io.ap4k.Session;
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.spring.configurator.SetSpringBootRuntime;
 import io.ap4k.doc.Description;
+import io.ap4k.spring.generator.SpringBootApplicationGenerator;
+
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 
@@ -31,16 +32,17 @@ import java.util.Set;
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
 @SupportedAnnotationTypes({"org.springframework.boot.autoconfigure.SpringBootApplication"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor {
+public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor implements SpringBootApplicationGenerator {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
     return true;
     }
-    session.configurators().add(new SetSpringBootRuntime());
+
+    add(SPRING_BOOT_APPLICATION);
     return false;
   }
 }

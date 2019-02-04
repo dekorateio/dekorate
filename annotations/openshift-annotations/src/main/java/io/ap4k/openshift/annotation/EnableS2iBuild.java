@@ -25,7 +25,7 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
-@Pojo(name = "S2iConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "S2iConfigAdapter", relativePath = "../adapter"))
+@Pojo(name = "S2iConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "S2iConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 public @interface EnableS2iBuild {
 
   /**

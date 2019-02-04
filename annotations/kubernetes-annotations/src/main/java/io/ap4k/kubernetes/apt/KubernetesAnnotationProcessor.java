@@ -15,18 +15,12 @@
  * 
 **/
 
-package io.ap4k.component.processor;
+package io.ap4k.kubernetes.apt;
 
-import io.ap4k.Session;
-import io.ap4k.component.adapter.CompositeConfigAdapter;
-import io.ap4k.component.annotation.CompositeApplication;
-import io.ap4k.component.config.CompositeConfig;
-import io.ap4k.component.config.CompositeConfigBuilder;
-import io.ap4k.component.handler.ComponentHandler;
-import io.ap4k.component.handler.ComponentServiceCatalogHandler;
-import io.ap4k.kubernetes.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.generator.KubernetesApplicationGenerator;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
+
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 
@@ -36,31 +30,21 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-@Description("Generate component custom resources.")
-@SupportedAnnotationTypes("io.ap4k.component.annotation.CompositeApplication")
+@Description("Generates kubernetes manifests.")
+@SupportedAnnotationTypes("io.ap4k.kubernetes.annotation.KubernetesApplication")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor<CompositeConfig> {
+public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor implements KubernetesApplicationGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
       return true;
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        session.configurators().add(config(mainClass));
-        session.handlers().add(new ComponentHandler(session.resources()));
-        session.handlers().add(new ComponentServiceCatalogHandler(session.resources()));
+        add(mainClass);
       }
     }
     return false;
-  }
-
-  public ConfigurationSupplier<CompositeConfig> config(Element mainClass) {
-    CompositeApplication compositeApplication = mainClass.getAnnotation(CompositeApplication.class);
-    return compositeApplication != null
-      ? new ConfigurationSupplier<>(CompositeConfigAdapter.newBuilder(compositeApplication))
-      : new ConfigurationSupplier<>(new CompositeConfigBuilder());
   }
 }

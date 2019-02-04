@@ -18,6 +18,7 @@
 package io.ap4k.processor;
 
 import io.ap4k.Ap4kException;
+import io.ap4k.SessionWriter;
 import io.ap4k.Session;
 import io.ap4k.WithProject;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
@@ -45,13 +46,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractAnnotationProcessor<C extends Configuration> extends AbstractProcessor implements WithProject {
+public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject  {
 
   protected static final String PACKAGE = "";
-  protected static final String FILENAME = "%s.%s";
-  protected static final String CONFIG = ".config/%s.%s";
   protected static final String PROJECT = "META-INF/ap4k/.project.%s";
-  protected static final String[] STRIP = {"^Editable", "Config$"};
   protected static final String JSON = "json";
   protected static final String YML = "yml";
   protected static final String TMP = "tmp";
@@ -62,6 +60,11 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
     super.init(processingEnv);
     if (!projectExists()) {
       setProject(AptProjectFactory.create(processingEnv));
+    }
+
+    Session session = Session.getSession();
+    if (!session.hasWriter()) {
+      session.setWriter(new AptWriter(processingEnv));
     }
   }
 
@@ -85,86 +88,10 @@ public abstract class AbstractAnnotationProcessor<C extends Configuration> exten
   }
 
   /**
-   * Writes all {@link Session} resources.
-   * @param session The target session.
-   */
-  protected void write(Session session) {
-    Map<String, KubernetesList> resources = session.generate();
-    Set<? extends Configuration> configurations = session.configurators().toSet();
-    resources.forEach((g, l) -> write(g, l));
-    configurations.forEach(c -> write(c));
-    write(getProject());
-  }
-
-
-  /**
-   * Writes all {@link Session} resources.
-   * @param resources The target session resources.
-   */
-  private void write(Map<String, KubernetesList> resources) {
-    resources.forEach((g, l) -> write(g, l));
-  }
-
-  /**
-   * Writes a {@link Configuration}.
-   * @param config  The target session configurations.
-   */
-  private void write(Configuration config) {
-    try {
-      String name = config.getClass().getSimpleName();
-      for (String s : STRIP) {
-        name = name.replaceAll(s, "");
-      }
-      name = name.toLowerCase();
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(CONFIG, name, YML));
-      try (Writer writer = yml.openWriter()) {
-        writer.write(Serialization.asYaml(config));
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
-    }
-  }
-
-  /**
-   * Writes a {@link Project}.
-   * @param project  The project.
-   */
-  private void write(Project project) {
-    try {
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(PROJECT, YML));
-      try (Writer writer = yml.openWriter()) {
-        writer.write(Serialization.asYaml(project));
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
-    }
-  }
-
-  /**
-   * Write the resources contained in the {@link KubernetesList} in a directory named after the specififed group.
-   * @param group The group.
-   * @param list  The resource list.
-   */
-  protected void write(String group, KubernetesList list) {
-    try {
-      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(FILENAME, group, JSON));
-      try (Writer writer = json.openWriter()) {
-        writer.write(Serialization.asJson(list));
-      }
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(FILENAME, group, YML));
-      try (Writer writer = yml.openWriter()) {
-        writer.write(Serialization.asYaml(list));
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
-    }
-  }
-
-  /**
    * Get the output directory of the processor.
    * @return  The directroy.
    */
-  protected Path getOutputDirectory() {
+  public Path getOutputDirectory() {
     try {
       FileObject project = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(PROJECT, TMP));
       return Paths.get(Urls.toFile(project.toUri().toURL()).getParentFile().getAbsolutePath());

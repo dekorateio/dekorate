@@ -15,18 +15,10 @@
  *
  **/
 
-package io.ap4k.openshift.processor;
+package io.ap4k.openshift.apt;
 
-import io.ap4k.Session;
-import io.ap4k.kubernetes.config.ConfigurationSupplier;
-import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.config.OpenshiftConfigCustomAdapter;
-import io.ap4k.openshift.config.OpenshiftConfig;
-import io.ap4k.openshift.config.OpenshiftConfigBuilder;
-import io.ap4k.openshift.handler.OpenshiftHandler;
+import io.ap4k.openshift.generator.OpenshiftApplicationGenerator;
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.project.Project;
-import io.ap4k.project.AptProjectFactory;
 import io.ap4k.doc.Description;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
@@ -41,12 +33,11 @@ import java.util.Set;
 @Description("Generates openshift manifests.")
 @SupportedAnnotationTypes("io.ap4k.openshift.annotation.OpenshiftApplication")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<OpenshiftConfig> {
+public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor implements OpenshiftApplicationGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
       return true;
     }
     Set<Element> mainClasses = new HashSet<>();
@@ -57,24 +48,8 @@ public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor<Op
     }
 
     for (Element mainClass : mainClasses) {
-      session.configurators().add(config(mainClass));
-      session.handlers().add(new OpenshiftHandler(session.resources()));
+      add(mainClass);
     }
     return false;
-  }
-
-  public ConfigurationSupplier<OpenshiftConfig> config(Element mainClass) {
-    return new ConfigurationSupplier<>(configurationBuilder(mainClass));
-  }
-
-  /**
-   * Get or newBuilder a new config for the specified {@link Element}.
-   * @param mainClass     The type element of the annotated class (Main).
-   * @return              A new config.
-   */
-  public OpenshiftConfigBuilder configurationBuilder(Element mainClass) {
-    Project project = AptProjectFactory.create(processingEnv);
-    OpenshiftApplication openshiftApplication = mainClass.getAnnotation(OpenshiftApplication.class);
-    return OpenshiftConfigCustomAdapter.newBuilder(project, openshiftApplication);
   }
 }

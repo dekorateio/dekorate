@@ -1,2 +1,2 @@
-io.ap4k.spring.processor.SpringBootMappingProcessor
-io.ap4k.spring.processor.SpringBootApplicationProcessor
+io.ap4k.spring.apt.SpringBootWebProcessor
+io.ap4k.spring.apt.SpringBootApplicationProcessor

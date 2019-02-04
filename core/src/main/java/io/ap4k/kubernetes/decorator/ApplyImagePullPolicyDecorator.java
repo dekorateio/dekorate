@@ -24,7 +24,7 @@ public class ApplyImagePullPolicyDecorator extends Decorator<ContainerFluent>  {
   private final ImagePullPolicy imagePullPolicy;
 
   public ApplyImagePullPolicyDecorator(ImagePullPolicy imagePullPolicy) {
-    this.imagePullPolicy = imagePullPolicy;
+    this.imagePullPolicy = imagePullPolicy != null ? imagePullPolicy : ImagePullPolicy.IfNotPresent;
   }
 
   @Override

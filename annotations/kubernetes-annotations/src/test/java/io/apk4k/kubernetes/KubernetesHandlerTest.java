@@ -34,7 +34,7 @@ import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.kubernetes.config.Probe;
 import io.ap4k.kubernetes.config.SecretVolume;
-import io.ap4k.kubernetes.processor.KubernetesHandler;
+import io.ap4k.kubernetes.handler.KubernetesHandler;
 import io.ap4k.project.Project;
 
 import io.ap4k.kubernetes.config.KubernetesConfig;

@@ -18,11 +18,6 @@
 package io.ap4k.micronaut;
 
 import io.ap4k.Session;
-import io.ap4k.kubernetes.config.Port;
-import io.ap4k.kubernetes.config.PortBuilder;
-import io.ap4k.kubernetes.configurator.AddLivenessProbe;
-import io.ap4k.kubernetes.configurator.AddPort;
-import io.ap4k.kubernetes.configurator.AddReadinessProbe;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -36,23 +31,16 @@ import java.util.Set;
 @Description("Detects the micronaut controller and registers the http port.")
 @SupportedAnnotationTypes("io.micronaut.http.annotation.Controller")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class MicronautProcessor extends AbstractAnnotationProcessor {
+public class MicronautProcessor extends AbstractAnnotationProcessor implements MicronautWebAnnotationGenerator {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
       return true;
     }
-    Port port = detectMicornautPort();
-    session.configurators().add(new AddPort(port));
-    session.configurators().add(new AddReadinessProbe(port.getContainerPort()));
-    session.configurators().add(new AddLivenessProbe(port.getContainerPort()));
+    add(WEB_ANNOTATIONS);
     return false;
-  }
-
-  private Port detectMicornautPort()  {
-    return new PortBuilder().withContainerPort(8080).withName("http").build();
   }
 }

@@ -66,6 +66,12 @@ limitations under the License.
       <version>${version.junit-platform}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${version.assertj}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -119,8 +125,10 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/ap4k/kubernetes/adapter/**</include>
+                    <include>io/ap4k/kubernetes/apt/**</include>
                     <include>io/ap4k/kubernetes/config/**</include>
-                    <include>io/ap4k/kubernetes/processor/**</include>
+                    <include>io/ap4k/kubernetes/handler/**</include>
+                    <include>io/ap4k/kubernetes/generator/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>
