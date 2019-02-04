@@ -62,6 +62,7 @@
             <arg>--stacktrace</arg>
           </args>
           <jvmArgs>
+            <arg>-Xmx1024m</arg>
             <arg>-Dap4kVersion=${project.version}</arg>
           </jvmArgs>
         </configuration>
