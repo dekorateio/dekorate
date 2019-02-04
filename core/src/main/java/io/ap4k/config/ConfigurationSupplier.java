@@ -16,14 +16,19 @@
 **/
 
 
-package io.ap4k.kubernetes.config;
+package io.ap4k.config;
 
 
 import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
+import io.ap4k.kubernetes.config.Configurator;
 
 import java.util.function.Supplier;
 
-public class ConfigurationSupplier<C extends Configuration> implements Supplier<C> {
+/**
+ * This is a Facade around configuration builders, which hide the builder specifics and only allows the use of {@link Configurator} as visitors.
+ * @param <C> The configuration class.
+ */
+public class ConfigurationSupplier<C> implements Supplier<C> {
 
   private final VisitableBuilder<C, ?> builder;
 

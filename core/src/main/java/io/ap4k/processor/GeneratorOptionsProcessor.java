@@ -17,9 +17,8 @@
 
 package io.ap4k.processor;
 
-import io.ap4k.Session;
+import io.ap4k.WithSession;
 import io.ap4k.annotation.GeneratorOptions;
-import io.ap4k.config.GeneratorConfig;
 import io.ap4k.doc.Description;
 import io.ap4k.handler.GeneratorOptionsHandler;
 import io.ap4k.utils.Strings;
@@ -37,15 +36,14 @@ import java.util.function.Function;
 
 @Description("Processing generator options, which are used for customizing the generation process")
 @SupportedAnnotationTypes("io.ap4k.annotation.GeneratorOptions")
-public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor<GeneratorConfig>  {
+public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
   private static final String INPUT_DIR = "ap4k.input.dir";
   private static final String OUTPUT_DIR = "ap4k.output.dir";
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
       return true;
     }
 
@@ -59,11 +57,12 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor<Gener
         String outputPath = System.getProperty(OUTPUT_DIR, options.outputPath());
 
         if (Strings.isNotNullOrEmpty(inputPath)) {
-          GeneratorOptionsProcessor.this.project = project.withResourceInputPath(inputPath);
+
+          applyToProject(p -> p.withResourceInputPath(inputPath));
           session.handlers().add(new GeneratorOptionsHandler(session.resources(), new ResourceReader(inputPath)));
         }
         if (Strings.isNotNullOrEmpty(outputPath)) {
-          GeneratorOptionsProcessor.this.project = project.withResourceOutputPath(outputPath);
+          applyToProject(p -> p.withResourceOutputPath(outputPath));
         }
         return false;
        }

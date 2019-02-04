@@ -13,55 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
-**/
+ **/
+package io.ap4k.servicecatalog.apt;
 
-package io.ap4k.istio.processor;
 
-import io.ap4k.istio.handler.IstioHandler;
-import io.ap4k.kubernetes.config.ConfigurationSupplier;
-import io.ap4k.istio.adapter.IstioConfigAdapter;
-import io.ap4k.istio.annotation.Istio;
-import io.ap4k.istio.config.IstioConfig;
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.doc.Description;
+import io.ap4k.servicecatalog.generator.ServiceCatalogGenerator;
+
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.lang.model.element.TypeElement;
 import javax.annotation.processing.RoundEnvironment;
-import java.util.Set;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
-import io.ap4k.Session;
+import javax.lang.model.element.TypeElement;
+import java.util.Set;
 
-@Description("Inject istio proxy to pods.")
-@SupportedAnnotationTypes("io.ap4k.istio.annotation.Istio")
+@SupportedAnnotationTypes({"io.ap4k.servicecatalog.annotation.ServiceCatalog", "io.ap4k.servicecatalog.annotation.ServiceCatalogInstance"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor<IstioConfig> {
+public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcessor implements ServiceCatalogGenerator {
 
-
-
-  @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
-      Session session = Session.getSession();
-      session.onClose(this::write);
+      session.close();
       return true;
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        Session session = Session.getSession();
-        session.configurators().add(config(mainClass));
-        session.handlers().add(new IstioHandler(session.resources()));
+        add(mainClass);
       }
     }
     return false;
-  }
-
-  public ConfigurationSupplier<IstioConfig> config(Element mainClass) {
-    Istio istio = mainClass.getAnnotation(Istio.class);
-    return istio != null
-      ? new ConfigurationSupplier<>(IstioConfigAdapter.newBuilder(istio))
-      : new ConfigurationSupplier<>(IstioConfig.newIstioConfigBuilder());
   }
 }

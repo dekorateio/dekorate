@@ -26,7 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The object that holds the state used by all processors.
@@ -48,7 +48,11 @@ public class Session {
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
 
-  private final Map<String, KubernetesList> result = new HashMap<>();
+  private final Map<String, KubernetesList> generatedResources= new HashMap<>();
+
+  private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
+
+
   /**
    * Creates or resues a single instance of Session.
    * @return  The Session.
@@ -77,9 +81,26 @@ public class Session {
     return handlers;
   }
 
-  public void onClose(Consumer<Session> consumer) {
+  public Map<String, KubernetesList> getGeneratedResources() {
+    return generatedResources;
+  }
+
+  public void setWriter(SessionWriter resourceWriter) {
+    this.writer.set(resourceWriter);
+  }
+
+  public boolean hasWriter() {
+    return this.writer.get() != null;
+  }
+
+  public void close() {
     if (closed.compareAndSet(false, true)) {
-      consumer.accept(this);
+      generate();
+      SessionWriter w = writer.get();
+      if (w == null) {
+        throw new IllegalStateException("No writer has been specified!");
+      }
+      w.write(this);
     }
   }
 
@@ -96,8 +117,8 @@ public class Session {
             g.handle(c);
           }
         }));
-      this.result.putAll(resources.generate());
+      this.generatedResources.putAll(resources.generate());
     }
-    return Collections.unmodifiableMap(result);
+    return Collections.unmodifiableMap(generatedResources);
   }
 }

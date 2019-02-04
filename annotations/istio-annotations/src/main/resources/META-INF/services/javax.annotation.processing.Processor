@@ -1,1 +1,1 @@
-io.ap4k.istio.processor.IstioAnnotationProcessor
+io.ap4k.istio.apt.IstioAnnotationProcessor

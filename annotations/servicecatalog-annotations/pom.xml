@@ -115,9 +115,10 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/servicecatalog/adapt/**</include>
+                    <include>io/ap4k/servicecatalog/adapter/**</include>
+                    <include>io/ap4k/servicecatalog/apt/**</include>
                     <include>io/ap4k/servicecatalog/config/**</include>
-                    <include>io/ap4k/servicecatalog/processor/**</include>
+                    <include>io/ap4k/servicecatalog/generator/**</include>
                     <include>io/ap4k/servicecatalog/handler/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>

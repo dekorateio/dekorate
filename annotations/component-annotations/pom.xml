@@ -132,7 +132,8 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/component/adapt/**</include>
+                    <include>io/ap4k/component/adapter/**</include>
+                    <include>io/ap4k/component/apt/**</include>
                     <include>io/ap4k/component/config/*</include>
                     <include>io/ap4k/component/decorator/**</include>
                     <include>io/ap4k/component/handler/**</include>

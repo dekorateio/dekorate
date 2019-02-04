@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- **/
-package io.ap4k.servicecatalog.processor;
+**/
 
+package io.ap4k.openshift.apt;
 
-import io.ap4k.Session;
-import io.ap4k.kubernetes.config.ConfigurationSupplier;
+import io.ap4k.openshift.generator.S2iBuildGenerator;
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.servicecatalog.adapter.ServiceCatalogConfigAdapter;
-import io.ap4k.servicecatalog.annotation.ServiceCatalog;
-import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
-import io.ap4k.servicecatalog.config.ServiceCatalogConfigBuilder;
-import io.ap4k.servicecatalog.handler.ServiceCatalogHandler;
+import io.ap4k.doc.Description;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 
@@ -34,29 +29,23 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-@SupportedAnnotationTypes({"io.ap4k.servicecatalog.annotation.ServiceCatalog", "io.ap4k.servicecatalog.annotation.ServiceCatalogInstance"})
+@Description("Adds source to image config in the openshift manifests.")
+@SupportedAnnotationTypes("io.ap4k.openshift.annotation.EnableS2iBuild")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcessor<ServiceCatalogConfig> {
+public class SourceToImageAnnotationProcessor extends AbstractAnnotationProcessor implements S2iBuildGenerator {
+  public static String DEFAULT_S2I_BUILDER_IMAGE = "fabric8/s2i-java:2.3";
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
       return true;
     }
+
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        session.configurators().add(config(mainClass));
-        session.handlers().add(new ServiceCatalogHandler(session.resources()));
+        add(mainClass);
       }
     }
     return false;
-  }
-
-  public ConfigurationSupplier<ServiceCatalogConfig> config(Element mainClass) {
-    ServiceCatalog serviceCatalog = mainClass.getAnnotation(ServiceCatalog.class);
-    return serviceCatalog != null
-      ? new ConfigurationSupplier<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
-      : new ConfigurationSupplier<>(new ServiceCatalogConfigBuilder());
   }
 }

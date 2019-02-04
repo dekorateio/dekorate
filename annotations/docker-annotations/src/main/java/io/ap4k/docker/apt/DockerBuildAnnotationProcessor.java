@@ -14,16 +14,11 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.docker.processor;
+package io.ap4k.docker.apt;
 
-import io.ap4k.Session;
-import io.ap4k.docker.annotation.EnableDockerBuild;
-import io.ap4k.kubernetes.config.ConfigurationSupplier;
-import io.ap4k.docker.adapter.DockerBuildConfigAdapter;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
-import io.ap4k.docker.configurator.ApplyDockerBuildHook;
-import io.ap4k.docker.configurator.ApplyProjectInfoToDockerBuildConfigDecorator;
+import io.ap4k.docker.registrar.EnableDockerBuildRegistrar;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 
@@ -39,35 +34,25 @@ import java.util.Set;
 @Description("Register a docker build hook.")
 @SupportedAnnotationTypes("io.ap4k.docker.annotation.EnableDockerBuild")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor<DockerBuildConfig> {
+public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor implements EnableDockerBuildRegistrar {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-    Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
       Optional<DockerBuildConfig> config = session.configurators().get(DockerBuildConfig.class);
       if (config.isPresent() && config.get().isAutoBuildEnabled()) {
-        DockerBuildHook hook = new DockerBuildHook(project, config.get());
+        DockerBuildHook hook = new DockerBuildHook(getProject(), config.get());
         hook.register();
       }
       return true;
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        session.configurators().add(config(mainClass));
+        add(mainClass);
       }
     }
     return false;
-  }
-
-  public ConfigurationSupplier<DockerBuildConfig> config(Element mainClass) {
-    EnableDockerBuild enableDockerBuild = mainClass.getAnnotation(EnableDockerBuild.class);
-    return new ConfigurationSupplier<DockerBuildConfig>(DockerBuildConfigAdapter
-                                                        .newBuilder(enableDockerBuild)
-                                                        .accept(new ApplyProjectInfoToDockerBuildConfigDecorator(project))
-                                                        .accept(new ApplyDockerBuildHook()));
   }
 
 }

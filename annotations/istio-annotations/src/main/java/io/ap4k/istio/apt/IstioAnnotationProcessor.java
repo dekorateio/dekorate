@@ -15,44 +15,36 @@
  * 
 **/
 
-package io.ap4k.thorntail;
+package io.ap4k.istio.apt;
 
-import io.ap4k.Session;
-import io.ap4k.kubernetes.config.Port;
-import io.ap4k.kubernetes.config.PortBuilder;
-import io.ap4k.kubernetes.configurator.AddLivenessProbe;
-import io.ap4k.kubernetes.configurator.AddPort;
-import io.ap4k.kubernetes.configurator.AddReadinessProbe;
+import io.ap4k.istio.generator.IstioConfigGenerator;
 import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.doc.Description;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 
-import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.TypeElement;
+import javax.annotation.processing.RoundEnvironment;
 import java.util.Set;
+import javax.lang.model.element.Element;
 
-@Description("Detects jaxrs and jaxws annotations and registers the http port.")
-@SupportedAnnotationTypes({"javax.ws.rs.ApplicationPath","javax.jws.WebService"})
+@Description("Inject istio proxy to pods.")
+@SupportedAnnotationTypes("io.ap4k.istio.annotation.Istio")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class ThrorntailProcessor extends AbstractAnnotationProcessor {
+public class IstioAnnotationProcessor extends  AbstractAnnotationProcessor implements IstioConfigGenerator {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.onClose(this::write);
+      session.close();
       return true;
     }
-    Port port = detectThorntailHttpPort();
-    session.configurators().add(new AddPort(port));
-    session.configurators().add(new AddReadinessProbe(port.getContainerPort()));
-    session.configurators().add(new AddLivenessProbe(port.getContainerPort()));
+    for (TypeElement typeElement : annotations) {
+      for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
+        add(mainClass);
+      }
+    }
     return false;
-  }
-
-  private Port detectThorntailHttpPort()  {
-    return new PortBuilder().withContainerPort(8080).withName("http").build();
   }
 }

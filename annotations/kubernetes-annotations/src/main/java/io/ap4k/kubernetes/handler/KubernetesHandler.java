@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.kubernetes.processor;
+package io.ap4k.kubernetes.handler;
 
 import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Resources;

@@ -1,1 +1,1 @@
-io.ap4k.component.processor.CompositeAnnotationProcessor
+io.ap4k.component.apt.CompositeAnnotationProcessor
