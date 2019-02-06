@@ -22,6 +22,7 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +53,7 @@ public class Session {
 
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
 
+  private final Set<SessionListener> listeners = new LinkedHashSet<>();
 
   /**
    * Creates or resues a single instance of Session.
@@ -93,6 +95,10 @@ public class Session {
     return this.writer.get() != null;
   }
 
+  public void addListener(SessionListener listener) {
+    listeners.add(listener);
+  }
+
   public void close() {
     if (closed.compareAndSet(false, true)) {
       generate();
@@ -101,6 +107,7 @@ public class Session {
         throw new IllegalStateException("No writer has been specified!");
       }
       w.write(this);
+      listeners.forEach(SessionListener::onClosed);
     }
   }
 
