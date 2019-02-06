@@ -46,6 +46,8 @@ import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.ap4k.kubernetes.decorator.ApplyReplicasDecorator;
 import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
 
+import java.util.Arrays;
+
 /**
  * An abstract generator.
  * A generator is meant to popullate the initial resources to the {@link Session} as well as adding decorator etc.
@@ -65,6 +67,12 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
    */
   public abstract void handle(C config);
 
+  protected void setApplicationInfo(C config) {
+    resources.setGroup(config.getGroup());
+    resources.setName(config.getName());
+    resources.setVersion(config.getVersion());
+    Arrays.asList(config.getLabels()).forEach(l -> resources.addLabel(l));
+  }
 
   /**
    * Add all decorator to the resources.

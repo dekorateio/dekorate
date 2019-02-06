@@ -48,8 +48,8 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
   @Override
   public void handle(S2iConfig config) {
     resources.add(OPENSHIFT, createBuilderImageStream(config));
-    resources.add(OPENSHIFT, createProjectImageStream(config));
     resources.add(OPENSHIFT, createBuildConfig(config));
+    resources.add(OPENSHIFT, createProjectImageStream());
 
     for (Env env : config.getEnvVars()) {
       resources.decorate(OPENSHIFT, new AddBuildEnvDecorator(env));
@@ -65,7 +65,7 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
    * @param config   The config.
    * @return         The build config.
    */
-  public static ImageStream createBuilderImageStream(S2iConfig config) {
+  public ImageStream createBuilderImageStream(S2iConfig config) {
     String repository = Images.getRepository(config.getBuilderImage());
 
     String name = !repository.contains("/")
@@ -75,6 +75,7 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
     return new ImageStreamBuilder()
       .withNewMetadata()
       .withName(name)
+      .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
       .withDockerImageRepository(repository)
@@ -85,13 +86,13 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
 
   /**
    * Create an {@link ImageStream} for the {@link S2iConfig}.
-   * @param config   The config.
    * @return         The build config.
    */
-  public static ImageStream createProjectImageStream(S2iConfig config) {
+  public ImageStream createProjectImageStream() {
     return new ImageStreamBuilder()
       .withNewMetadata()
-      .withName(config.getName())
+      .withName(resources.getName())
+      .withLabels(resources.getLabels())
       .endMetadata()
       .build();
   }
@@ -101,7 +102,7 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
    * @param config   The config.
    * @return          The build config.
    */
-  public static BuildConfig createBuildConfig(S2iConfig config) {
+  public BuildConfig createBuildConfig(S2iConfig config) {
     String builderRepository = Images.getRepository(config.getBuilderImage());
     String builderTag = Images.getTag(config.getBuilderImage());
 
@@ -112,13 +113,14 @@ public class SourceToImageHandler implements Handler<S2iConfig> {
 
     return new BuildConfigBuilder()
       .withNewMetadata()
-      .withName(config.getName())
+      .withName(resources.getName())
+      .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
       .withNewOutput()
       .withNewTo()
       .withKind(IMAGESTREAMTAG)
-      .withName(config.getName() + ":" + config.getVersion())
+      .withName(resources.getName() + ":" + resources.getVersion())
       .endTo()
       .endOutput()
       .withNewSource()

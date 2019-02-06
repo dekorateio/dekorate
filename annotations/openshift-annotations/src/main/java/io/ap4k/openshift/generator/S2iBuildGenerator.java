@@ -29,7 +29,6 @@ import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.OpenshiftConfigCustomAdapter;
 import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.openshift.config.S2iConfigBuilder;
-import io.ap4k.openshift.configurator.ApplyOpenshiftConfig;
 import io.ap4k.openshift.configurator.ApplySourceToImageHook;
 import io.ap4k.openshift.handler.SourceToImageHandler;
 import io.ap4k.openshift.hook.OcBuildHook;
@@ -49,8 +48,7 @@ public interface S2iBuildGenerator extends Generator, SessionListener, WithSessi
   default void add(Map map) {
     OpenshiftConfig openshiftConfig = OpenshiftConfigAdapter.newBuilder((Map) map.get(OpenshiftApplication.class.getName())).build();
     on(new ConfigurationSupplier<>(S2iConfigAdapter.newBuilder(propertiesMap(map, EnableS2iBuild.class))
-      .accept(new ApplySourceToImageHook(openshiftConfig))
-      .accept(new ApplyOpenshiftConfig(openshiftConfig))));
+      .accept(new ApplySourceToImageHook(openshiftConfig))));
   }
 
   default void add(Element mainClass) {
@@ -59,8 +57,7 @@ public interface S2iBuildGenerator extends Generator, SessionListener, WithSessi
     OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(getProject(), openshiftApplication).build();
 
     on(new ConfigurationSupplier<>(S2iConfigAdapter.newBuilder(enableS2iBuild)
-      .accept(new ApplySourceToImageHook(openshiftConfig))
-      .accept(new ApplyOpenshiftConfig(openshiftConfig))));
+      .accept(new ApplySourceToImageHook(openshiftConfig))));
   }
   default void on(ConfigurationSupplier<S2iConfig> config) {
     session.configurators().add(config);

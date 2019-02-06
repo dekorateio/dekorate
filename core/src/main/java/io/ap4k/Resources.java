@@ -16,6 +16,7 @@
 **/
 package io.ap4k;
 
+import io.ap4k.kubernetes.config.Label;
 import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
@@ -29,6 +30,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class Resources {
 
@@ -38,6 +41,14 @@ public class Resources {
 
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
+
+  // The fields below represents info that is meant to be shared across generators.
+  // These are provided by annotations like: KubernetesApplication, OpenshiftApplication etc, but are used by many others.
+  private final AtomicReference<String> group = new AtomicReference<>();
+  private final AtomicReference<String> name = new AtomicReference<>();
+  private final AtomicReference<String> version = new AtomicReference<>();
+  private final Set<Label> labels = new LinkedHashSet<>();
+
 
   /**
    * Get all registered groups.
@@ -149,5 +160,36 @@ public class Resources {
       resources.put(group, customGroups.get(group).build());
     }
     return resources;
+  }
+
+  public String getGroup() {
+    return group.get();
+  }
+
+  public void setGroup(String group) {
+    this.group.compareAndSet(null, group);
+  }
+
+  public String getName() {
+    return name.get();
+  }
+
+  public void setName(String name) {
+    this.name.compareAndSet(null, name);
+  }
+
+  public String getVersion() {
+    return version.get();
+  }
+
+  public void setVersion(String version) {
+    this.version.compareAndSet(null, version);
+  }
+
+  public void addLabel(Label label) {
+    this.labels.add(label);
+  }
+  public Map<String, String> getLabels() {
+    return labels.stream().collect(Collectors.toMap(Label::getKey, Label::getValue));
   }
 }

@@ -74,6 +74,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       resources.add(OPENSHIFT, createDeploymentConfig(config));
     }
     addDecorators(OPENSHIFT, config);
+    setApplicationInfo(config);
   }
 
   @Override
