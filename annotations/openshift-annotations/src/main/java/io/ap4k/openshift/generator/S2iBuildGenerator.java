@@ -16,6 +16,7 @@
  **/
 package io.ap4k.openshift.generator;
 
+import io.ap4k.SessionListener;
 import io.ap4k.WithProject;
 import io.ap4k.WithSession;
 import io.ap4k.Generator;
@@ -37,7 +38,7 @@ import javax.lang.model.element.Element;
 import java.nio.file.Path;
 import java.util.Map;
 
-public interface S2iBuildGenerator extends Generator, WithSession, WithProject {
+public interface S2iBuildGenerator extends Generator, SessionListener, WithSession, WithProject {
 
   String DEFAULT_S2I_BUILDER_IMAGE = "fabric8/s2i-java:2.3";
 
@@ -64,6 +65,7 @@ public interface S2iBuildGenerator extends Generator, WithSession, WithProject {
   default void on(ConfigurationSupplier<S2iConfig> config) {
     session.configurators().add(config);
     session.handlers().add(new SourceToImageHandler(session.resources()));
+    session.addListener(this);
   }
 
   default void onClosed() {

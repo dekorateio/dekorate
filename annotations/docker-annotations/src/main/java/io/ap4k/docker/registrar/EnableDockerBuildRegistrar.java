@@ -1,5 +1,6 @@
 package io.ap4k.docker.registrar;
 
+import io.ap4k.SessionListener;
 import io.ap4k.WithProject;
 import io.ap4k.Generator;
 import io.ap4k.config.ConfigurationSupplier;
@@ -14,7 +15,7 @@ import javax.lang.model.element.Element;
 import java.util.Map;
 import java.util.Optional;
 
-public interface EnableDockerBuildRegistrar extends Generator, WithProject {
+public interface EnableDockerBuildRegistrar extends Generator, SessionListener, WithProject {
 
   default void add(Element mainClass) {
     EnableDockerBuild enableDockerBuild = mainClass.getAnnotation(EnableDockerBuild.class);
@@ -34,9 +35,10 @@ public interface EnableDockerBuildRegistrar extends Generator, WithProject {
 
   default void on(ConfigurationSupplier<DockerBuildConfig> config) {
       session.configurators().add(config);
+      session.addListener(this);
   }
 
-  default void register() {
+  default void onClosed() {
     Optional<DockerBuildConfig> config = session.configurators().get(DockerBuildConfig.class);
       if (config.isPresent() && config.get().isAutoBuildEnabled()) {
         DockerBuildHook hook = new DockerBuildHook(getProject(), config.get());
