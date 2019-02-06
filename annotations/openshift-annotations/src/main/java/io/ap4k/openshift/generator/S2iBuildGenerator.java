@@ -67,8 +67,9 @@ public interface S2iBuildGenerator extends Generator, SessionListener, WithSessi
 
   default void onClosed() {
     S2iConfig s2iConfig = session.configurators().get(S2iConfig.class).orElse(DEFAULT_SOURCE_TO_IMAGE_CONFIG);
+    String name = session.configurators().get(OpenshiftConfig.class).map(c -> c.getName()).orElse(getProject().getBuildInfo().getName());
     if (s2iConfig.isAutoBuildEnabled() || s2iConfig.isAutoDeployEnabled()) {
-      OcBuildHook hook = new OcBuildHook(s2iConfig, getProject(), getOutputDirectory());
+      OcBuildHook hook = new OcBuildHook(name, s2iConfig, getProject(), getOutputDirectory());
       hook.register();
     }
   }
