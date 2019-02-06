@@ -41,13 +41,14 @@ import java.util.concurrent.TimeUnit;
 public class OcBuildHook extends ProjectHook {
 
   private static final String OPENSHIFT_YML = "openshift.yml";
-
+  private final String name;
   private final S2iConfig config;
   private final Path resourceDir;
   private final OpenShiftClient client = new DefaultOpenShiftClient();
 
-  public OcBuildHook(S2iConfig config, Project project, Path resourceDir) {
+  public OcBuildHook(String name, S2iConfig config, Project project, Path resourceDir) {
     super(project);
+    this.name = name;
     this.config = config;
     this.resourceDir = resourceDir;
   }
@@ -77,7 +78,7 @@ public class OcBuildHook extends ProjectHook {
   @Override
   public void run() {
     if (project.getBuildInfo().getOutputFile().getParent().toFile().exists()) {
-      exec("oc", "start-build", config.getName(), "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");
+      exec("oc", "start-build", name, "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");
     } else {
      throw new IllegalStateException("Can't trigger binary build. " + project.getBuildInfo().getOutputFile().toAbsolutePath().toString() + " does not exist!");
     }
