@@ -70,6 +70,8 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       resources.add(KUBERNETES, createDeployment(config));
     }
     addDecorators(KUBERNETES, config);
+
+    setApplicationInfo(config);
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {

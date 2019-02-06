@@ -29,40 +29,6 @@ import io.sundr.builder.annotations.Pojo;
 public @interface EnableS2iBuild {
 
   /**
-   * The group of the application.
-   * This value will be use as:
-   * - docker image repo
-   * - labeling resources
-   * @return The specified group name.
-   */
-  String group() default "";
-
-  /**
-   * The name of the application.
-   * This value will be used for naming Kubernetes resources like:
-   * - Deployment
-   * - Service
-   * and so on ...
-   * If no value is specified it will attempt to determine the name using the following rules:
-   * If its a maven/gradle project use the artifact id.
-   * Else if its a bazel project use the name.
-   * Else if the system property app.name is present it will be used.
-   * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until .git is found).
-   * @return The specified application name.
-   */
-  String name() default "";
-
-  /**
-   * The version of the application.
-   * This value be used for things like:
-   * - The docker image tag.
-   * If no value specified it will attempt to determine the name using the following rules:
-   * @return The version.
-   */
-  String version() default "";
-
-
-  /**
    * The S2i builder image to use.
    * @return The builder image.
    */
