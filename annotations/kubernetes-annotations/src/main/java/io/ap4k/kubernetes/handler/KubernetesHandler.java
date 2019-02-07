@@ -60,6 +60,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   }
 
   public void handle(KubernetesConfig config) {
+    setApplicationInfo(config);
     Optional<Deployment> existingDeployment = resources.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof Deployment)
       .map(i -> (Deployment)i)
@@ -70,8 +71,6 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       resources.add(KUBERNETES, createDeployment(config));
     }
     addDecorators(KUBERNETES, config);
-
-    setApplicationInfo(config);
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
@@ -82,7 +81,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   @Override
   protected void addDecorators(String group, KubernetesConfig config) {
     super.addDecorators(group, config);
-    resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector(config)));
+    resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector()));
     resources.decorate(group, new ApplyImageDecorator(config.getName(), config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
   }
 
@@ -91,15 +90,16 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
    * @param config   The session.
    * @return          The deployment.
    */
-  public static Deployment createDeployment(KubernetesConfig config)  {
+  public Deployment createDeployment(KubernetesConfig config)  {
     return new DeploymentBuilder()
       .withNewMetadata()
       .withName(config.getName())
+      .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
       .withNewReplicas(1)
       .withTemplate(createPodTemplateSpec(config))
-      .withSelector(createSelector(config))
+      .withSelector(createSelector())
       .endSpec()
       .build();
   }
@@ -107,12 +107,11 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
   /**
    * Creates a {@link LabelSelector} that matches the labels for the {@link KubernetesConfig}.
-   * @param config   The config.
    * @return          A labels selector.
    */
-  public static LabelSelector createSelector(KubernetesConfig config) {
+  public LabelSelector createSelector() {
     return new LabelSelectorBuilder()
-      .withMatchLabels(createLabels(config))
+      .withMatchLabels(resources.getLabels())
       .build();
   }
 

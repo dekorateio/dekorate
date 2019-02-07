@@ -21,10 +21,12 @@ package io.ap4k.kubernetes.decorator;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.deps.kubernetes.api.model.ServicePort;
+import io.ap4k.kubernetes.config.Label;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.deps.kubernetes.api.model.ServicePortBuilder;
 import io.ap4k.deps.kubernetes.api.model.IntOrString;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Collectors;
 import io.ap4k.utils.Labels;
 import io.ap4k.doc.Description;
@@ -33,15 +35,18 @@ import io.ap4k.doc.Description;
 public class AddServiceDecorator extends Decorator<KubernetesListBuilder> {
 
   private final KubernetesConfig config;
+  private final Map<String, String> allLabels; //A combination of config and project labels.
 
-  public AddServiceDecorator(KubernetesConfig config) {
+  public AddServiceDecorator(KubernetesConfig config, Map<String, String> allLabels) {
     this.config = config;
+    this.allLabels = allLabels;
   }
 
   public void visit(KubernetesListBuilder list) {
     list.addNewServiceItem()
       .withNewMetadata()
       .withName(config.getName())
+      .withLabels(allLabels)
       .endMetadata()
       .withNewSpec()
       .withType(config.getServiceType().name())

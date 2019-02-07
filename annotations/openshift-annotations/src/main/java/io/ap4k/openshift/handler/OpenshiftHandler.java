@@ -64,6 +64,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   }
 
   public void handle(OpenshiftConfig config) {
+    setApplicationInfo(config);
     Optional<DeploymentConfig> existingDeploymentConfig = resources.groups().getOrDefault(OPENSHIFT, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof DeploymentConfig)
       .map(i -> (DeploymentConfig)i)
@@ -74,7 +75,6 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       resources.add(OPENSHIFT, createDeploymentConfig(config));
     }
     addDecorators(OPENSHIFT, config);
-    setApplicationInfo(config);
   }
 
   @Override
@@ -94,15 +94,16 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @param config   The sesssion.
    * @return          The deployment config.
    */
-  public static DeploymentConfig createDeploymentConfig(OpenshiftConfig config)  {
+  public DeploymentConfig createDeploymentConfig(OpenshiftConfig config)  {
     return new DeploymentConfigBuilder()
       .withNewMetadata()
       .withName(config.getName())
+      .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
       .withNewReplicas(1)
       .withTemplate(createPodTemplateSpec(config))
-      .withSelector(createLabels(config))
+      .withSelector(resources.getLabels())
       .addNewTrigger()
       .withType(IMAGECHANGE)
       .withNewImageChangeParams()
@@ -123,11 +124,11 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @param config   The sesssion.
    * @return          The pod template specification.
    */
-  public static PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config) {
+  public PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config) {
     return new PodTemplateSpecBuilder()
       .withSpec(createPodSpec(config))
       .withNewMetadata()
-      .withLabels(createLabels(config))
+      .withLabels(resources.getLabels())
       .endMetadata()
       .build();
   }
