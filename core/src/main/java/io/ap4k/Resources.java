@@ -47,7 +47,7 @@ public class Resources {
   private final AtomicReference<String> group = new AtomicReference<>();
   private final AtomicReference<String> name = new AtomicReference<>();
   private final AtomicReference<String> version = new AtomicReference<>();
-  private final Set<Label> labels = new LinkedHashSet<>();
+  private final Map<String, String> labels = new HashMap<String, String>();
 
 
   /**
@@ -187,9 +187,14 @@ public class Resources {
   }
 
   public void addLabel(Label label) {
-    this.labels.add(label);
+    this.labels.put(label.getKey(), label.getValue());
   }
+
+  public void setLabels(Map<String, String> labels) {
+    labels.entrySet().stream().map(e -> new Label(e.getKey(), e.getValue())).forEach(l -> addLabel(l));
+  }
+
   public Map<String, String> getLabels() {
-    return labels.stream().collect(Collectors.toMap(Label::getKey, Label::getValue));
+    return labels;
   }
 }

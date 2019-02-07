@@ -45,6 +45,7 @@ import io.ap4k.kubernetes.decorator.AddServiceDecorator;
 import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.ap4k.kubernetes.decorator.ApplyReplicasDecorator;
 import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
+import io.ap4k.utils.Labels;
 
 import java.util.Arrays;
 
@@ -71,6 +72,7 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
     resources.setGroup(config.getGroup());
     resources.setName(config.getName());
     resources.setVersion(config.getVersion());
+    resources.setLabels(Labels.createLabels(config));
     Arrays.asList(config.getLabels()).forEach(l -> resources.addLabel(l));
   }
 
@@ -128,7 +130,7 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(group, new AddServiceDecorator(config));
+      resources.decorate(group, new AddServiceDecorator(config, resources.getLabels()));
     }
 
     resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getLivenessProbe()));
