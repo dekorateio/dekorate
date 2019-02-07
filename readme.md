@@ -13,6 +13,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
 - Generates manifest via annotation processing
   - [Kubernetes](#kubernetes-annotations)
   - [Openshift](#openshift-annotations)
+  - [Prometheus](#prometheus-annotations)
   - [Service Catalog](#service-catalog-annotations)
   - [Component CRD](#component-annotations)
   - Istio
@@ -26,6 +27,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
   - Openshift 
     - [image streams](#integrating-with-s2i)
     - build configurations
+  - Prometheus
   - Service Catalog
     - service instances
     - inject bindings into pods
@@ -319,7 +321,33 @@ done either by `oc get bc` or by knowing the conventions used to read names from
 - [source to image example](examples/source-to-image-example)
 - [spring boot on openshift example](examples/spring-boot-on-openshift-example)
 - [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-on-openshift-example)
-- [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-on-openshift-example)
+- [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-on-openshift-example) 
+
+### Prometheus annotations
+
+The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.
+In particular it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/ap4k/prometheus/model/ServiceMonitor.java) which are used by the
+[Prometheus Operator](https://github.com/coreos/prometheus-operator) in order to configure [prometheus](https://prometheus.io/) to collect metrics from the target application.
+
+This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/ap4k/prometheus/annotation/EnableServiceMonitor.java) annotation.
+
+Here's an example:
+
+    import io.ap4k.kubernetes.annotation.KubernentesApplication;
+    import io.ap4k.prometheus.annotation.EnableServiceMonitor;
+
+    @KubernetesApplication
+    @EnableServiceMonitor(port = "http", path="/prometheus", interval=20)
+    public class Main {
+        public static void main(String[] args) {
+          //Your code goes here
+        }
+    }
+
+The annotation processor, will automatically configure the required selector and generate the ServiceMonitor.
+Note: Some of the framework integration modules, may further decorate the ServiceMonitor with framework specific configuration.
+For example, the Spring Boot module will decorate the monitor with the Spring Boot specific path, which is `/actuator/prometheus`.
+
 ### Service Catalog annotations
 The [services catalog](https://svc-cat.io) annotation processor is can be used in order to create [services catalog](https://svc-cat.io) resources for:
 

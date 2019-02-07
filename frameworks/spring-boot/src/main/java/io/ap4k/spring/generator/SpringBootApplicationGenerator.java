@@ -16,8 +16,16 @@
 **/
 package io.ap4k.spring.generator;
 
+import io.ap4k.Handler;
 import io.ap4k.WithSession;
 import io.ap4k.Generator;
+import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.prometheus.config.EditableServiceMonitorConfig;
+import io.ap4k.prometheus.decorator.EndpointPathDecorator;
+import io.ap4k.spring.config.SpringApplicationConfig;
+import io.ap4k.spring.config.SpringApplicationConfigBuilder;
 import io.ap4k.spring.configurator.SetSpringBootRuntime;
 
 import java.util.Collections;
@@ -27,8 +35,26 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
   Map SPRING_BOOT_APPLICATION=Collections.emptyMap();
 
+
   @Override
   default void add(Map map) {
-     session.configurators().add(new SetSpringBootRuntime());
+    session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
+     session.handlers().add(new Handler() {
+       @Override
+       public int order() {
+         return 400;
+       }
+
+       @Override
+       public void handle(Configuration config) {
+         session.configurators().add(new SetSpringBootRuntime());
+         session.resources().decorate(new EndpointPathDecorator(session.resources().getName(), "http", "/actuator/prometheus"));
+       }
+
+       @Override
+       public boolean canHandle(Class config) {
+         return SpringApplicationConfig.class.equals(config) || EditableServiceMonitorConfig.class.equals(config);
+       }
+     });
   }
 }

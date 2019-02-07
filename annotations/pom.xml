@@ -35,6 +35,7 @@ limitations under the License.
     <module>servicecatalog-annotations</module>
     <module>component-annotations</module>
     <module>docker-annotations</module>
+    <module>prometheus-annotations</module>
   </modules>
 
 </project>

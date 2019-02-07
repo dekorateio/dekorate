@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
-**/
-package io.ap4k.docker.apt;
+ **/
+package io.ap4k.prometheus.apt;
 
-import io.ap4k.docker.registrar.EnableDockerBuildRegistrar;
+
 import io.ap4k.processor.AbstractAnnotationProcessor;
-import io.ap4k.doc.Description;
+import io.ap4k.prometheus.generator.ServiceMonitorGenerator;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -28,12 +28,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-@Description("Register a docker build hook.")
-@SupportedAnnotationTypes("io.ap4k.docker.annotation.EnableDockerBuild")
+@SupportedAnnotationTypes({"io.ap4k.prometheus.annotation.EnableServiceMonitor"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class DockerBuildAnnotationProcessor extends AbstractAnnotationProcessor implements EnableDockerBuildRegistrar {
+public class ServiceMonitorAnnotationProcessor extends AbstractAnnotationProcessor implements ServiceMonitorGenerator {
 
-  @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
       session.close();
