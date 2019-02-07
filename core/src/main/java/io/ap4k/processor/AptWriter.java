@@ -55,7 +55,8 @@ public class AptWriter implements SessionWriter, WithProject {
    * @param session The target session.
    */
   public void write(Session session) {
-    Map<String, KubernetesList> resources = session.generate();
+    session.close();
+    Map<String, KubernetesList> resources = session.getGeneratedResources();
     Set<? extends Configuration> configurations = session.configurators().toSet();
     resources.forEach((g, l) -> write(g, l));
     configurations.forEach(c -> write(c));

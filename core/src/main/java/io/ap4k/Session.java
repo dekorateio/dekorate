@@ -113,7 +113,7 @@ public class Session {
    * Close the session an get all resource groups.
    * @return A map of {@link KubernetesList} by group name.
    */
-  public Map<String, KubernetesList> generate() {
+  private Map<String, KubernetesList> generate() {
     if (generated.compareAndSet(false, true)) {
       closed.set(true);
       configurators.stream().forEach(c ->
