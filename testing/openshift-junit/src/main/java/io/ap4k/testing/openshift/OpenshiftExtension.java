@@ -25,6 +25,7 @@ import io.ap4k.kubernetes.annotation.Internal;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.openshift.api.model.Build;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
+import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.openshift.util.OpenshiftUtils;
 import io.ap4k.project.Project;
@@ -98,10 +99,10 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       });
 
     Project project = getProject();
-    S2iConfig s2iConfig = getSourceToImageConfig();
+    OpenshiftConfig openshiftConfig = getOpenshiftConfig();
 
     build(context, project);
-    client.adapt(OpenShiftClient.class).deploymentConfigs().withName(s2iConfig.getName()).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+    client.adapt(OpenShiftClient.class).deploymentConfigs().withName(openshiftConfig.getName()).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
   }
 
 
@@ -126,15 +127,16 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     });
 
     S2iConfig s2iConfig = getSourceToImageConfig();
+    OpenshiftConfig openshiftConfig = getOpenshiftConfig();
     List<HasMetadata> buildPods = client.pods().list()
       .getItems()
       .stream()
-      .filter(i -> i.getMetadata().getName().matches(s2iConfig.getName() + "-\\d-build"))
+      .filter(i -> i.getMetadata().getName().matches(openshiftConfig.getName() + "-\\d-build"))
       .collect(Collectors.toList());
 
      try {
        client.resourceList(buildPods).delete();
-       client.deploymentConfigs().withName(s2iConfig.getName()).delete();
+       client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
      } catch (Exception e) {}
   }
 
