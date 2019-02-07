@@ -16,6 +16,7 @@
 **/
 package io.ap4k.kubernetes.generator;
 
+import io.ap4k.SessionListener;
 import io.ap4k.WithProject;
 import io.ap4k.Generator;
 import io.ap4k.config.ConfigurationSupplier;
@@ -32,7 +33,7 @@ import io.ap4k.project.ApplyProjectInfo;
 import javax.lang.model.element.Element;
 import java.util.Map;
 
-public interface KubernetesApplicationGenerator extends Generator, WithProject {
+public interface KubernetesApplicationGenerator extends Generator, SessionListener, WithProject {
 
   String KUBERNETES = "kubernetes";
 
@@ -56,16 +57,15 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
   default void add(ConfigurationSupplier<KubernetesConfig> config)  {
     session.configurators().add(config);
     session.handlers().add(new KubernetesHandler(session.resources()));
-
-    Boolean autoDeployEnabled = session.configurators().get(KubernetesConfig.class).map(c->c.isAutoDeployEnabled()).orElse(false);
-    if (autoDeployEnabled) {
-      deploy();
-    }
+    session.addListener(this);
   }
 
-  default void deploy() {
-    KubernetesList generated = session.generate().getOrDefault(KUBERNETES, new KubernetesList());
-    KubernetesClient client = new DefaultKubernetesClient();
-    client.resourceList(generated).createOrReplace();
+  default void onClosed() {
+    Boolean autoDeployEnabled = session.configurators().get(KubernetesConfig.class).map(c->c.isAutoDeployEnabled()).orElse(false);
+    if (autoDeployEnabled) {
+      KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
+      KubernetesClient client = new DefaultKubernetesClient();
+      client.resourceList(generated).createOrReplace();
+    }
   }
 }
