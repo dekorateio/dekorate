@@ -40,9 +40,6 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-    if (!hasDockerBuildConfig()) {
-      return ConditionEvaluationResult.disabled("Can't run integration tests, due to build not being enabled. Please use @EnableDockerBuild, to enable builds.");
-    }
     try {
       VersionInfo version = getKubernetesClient(context).getVersion();
       return ConditionEvaluationResult.enabled("Found version:" + version);
@@ -57,9 +54,11 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
     KubernetesClient client = getKubernetesClient(context);
     KubernetesList list = getKubernetesResources(context);
 
-    DockerBuildConfig dockerBuildConfig = getDockerBuildConfig();
-    DockerBuildHook build = new DockerBuildHook(getProject(), dockerBuildConfig);
-    build.run();
+    if (hasDockerBuildConfig()) {
+      DockerBuildConfig dockerBuildConfig = getDockerBuildConfig();
+      DockerBuildHook build = new DockerBuildHook(getProject(), dockerBuildConfig);
+      build.run();
+    }
 
     list.getItems().stream()
       .forEach(i -> {
