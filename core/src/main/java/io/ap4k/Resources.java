@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 public class Resources {
 
+  private static final String DEFAULT_GROUP = "kubernetes";
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
   private final KubernetesListBuilder global = new KubernetesListBuilder();
   private final Set<Decorator> decorators = new HashSet<>();
@@ -141,6 +142,9 @@ public class Resources {
    */
   protected Map<String, KubernetesList> generate() {
     List<HasMetadata> allGlobals = global.buildItems();
+    if (groups.isEmpty()) {
+      groups.put(DEFAULT_GROUP, new KubernetesListBuilder());
+    }
     Map<String, KubernetesListBuilder> groups = new HashMap<>(this.groups);
 
     Map<String, KubernetesList> resources = new HashMap<>();
