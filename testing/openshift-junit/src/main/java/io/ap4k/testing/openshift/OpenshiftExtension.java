@@ -78,30 +78,33 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       .filter(i -> i.getKind().equals("BuildConfig") || i.getKind().equals("ImageStream"))
       .collect(Collectors.toList());
 
-    //Apply build resources upfront
-    buildResources.stream()
-      .forEach(i -> {
-        client.resourceList(i).deletingExisting().createOrReplace();
-        System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
-      });
-    OpenshiftUtils.waitForImageStreamTags(buildResources, config.getImageStreamTagTimeout(), TimeUnit.MILLISECONDS);
+    if (config.isBuildEnabled()) {
+      //Apply build resources upfront
+      buildResources.stream()
+        .forEach(i -> {
+          client.resourceList(i).deletingExisting().createOrReplace();
+          System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
+        });
+      OpenshiftUtils.waitForImageStreamTags(buildResources, config.getImageStreamTagTimeout(), TimeUnit.MILLISECONDS);
 
-    //Create the remaining resources.
-    List<HasMetadata> remainingResources = new ArrayList<>(list.getItems());
-    remainingResources.removeAll(buildResources);
-    remainingResources.stream()
-      .forEach(i -> {
-        client.resourceList(i).deletingExisting().createOrReplace();
-        System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
-      });
-
-    Project project = getProject();
-    OpenshiftConfig openshiftConfig = getOpenshiftConfig();
-
-    if (hasSourceToImageConfig()) {
-      build(context, project);
+      if (hasSourceToImageConfig()) {
+        build(context, getProject());
+      }
     }
-    client.adapt(OpenShiftClient.class).deploymentConfigs().withName(openshiftConfig.getName()).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+
+    if (config.isAutoDeployEnabled()) {
+      //Create the remaining resources.
+      List<HasMetadata> remainingResources = new ArrayList<>(list.getItems());
+      remainingResources.removeAll(buildResources);
+      remainingResources.stream()
+        .forEach(i -> {
+          client.resourceList(i).deletingExisting().createOrReplace();
+          System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
+        });
+
+      OpenshiftConfig openshiftConfig = getOpenshiftConfig();
+      client.adapt(OpenShiftClient.class).deploymentConfigs().withName(openshiftConfig.getName()).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+    }
   }
 
 

@@ -43,6 +43,18 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface OpenshiftIntegrationTest {
 
   /**
+   * Flag to define whether the extension should automatically apply resources.
+   * @return True, if extension should automatically deploy ap4k generated resources.
+   */
+  boolean isAutoDeployEnabled() default true;
+
+  /**
+   * Flag to define whether the extension should automatically apply resources.
+   * @return True, if extensions should automatically perform container builds.
+   */
+  boolean isBuildEnabled() default true;
+
+  /**
    * The amount of time in seconds to wait for the image stream tags to be available.
    * @return The max amount in milliseconds.
    */
