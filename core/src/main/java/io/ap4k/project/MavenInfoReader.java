@@ -60,7 +60,10 @@ public class MavenInfoReader implements BuildInfoReader {
     String name = getArtifactId(document);
     String version = getVersion(document);
     String packaging = getPackaging(document);
-    return new BuildInfo(name, version, packaging, root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)));
+    return new BuildInfo(name, version, packaging,
+      root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)),
+      root.resolve(TARGET).resolve(CLASSES)
+    );
   }
 
 

@@ -100,7 +100,11 @@ public class GradleInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension, outputDir.resolve(sb.toString()));
+    return new BuildInfo(name, version, extension,
+      outputDir.resolve(sb.toString()),
+      //TODO: This need to be smarter and also cover groovy code.
+      root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN)
+    );
   }
 
   /**

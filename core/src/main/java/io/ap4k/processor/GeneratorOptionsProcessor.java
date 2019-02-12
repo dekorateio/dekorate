@@ -58,11 +58,11 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
 
         if (Strings.isNotNullOrEmpty(inputPath)) {
 
-          applyToProject(p -> p.withResourceInputPath(inputPath));
+          applyToProject(p -> p.withAp4kInputDir(inputPath));
           session.handlers().add(new GeneratorOptionsHandler(session.resources(), new ResourceReader(inputPath)));
         }
         if (Strings.isNotNullOrEmpty(outputPath)) {
-          applyToProject(p -> p.withResourceOutputPath(outputPath));
+          applyToProject(p -> p.withAp4kOutputDir(outputPath));
         }
         return false;
        }

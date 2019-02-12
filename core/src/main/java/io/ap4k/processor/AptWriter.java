@@ -83,7 +83,7 @@ public class AptWriter implements SessionWriter, WithProject {
         name = name.replaceAll(s, "");
       }
       name = name.toLowerCase();
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(CONFIG, name, YML));
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getAp4kOutputDir() + "/" + String.format(CONFIG, name, YML));
       try (Writer writer = yml.openWriter()) {
         writer.write(Serialization.asYaml(config));
       }
@@ -114,11 +114,11 @@ public class AptWriter implements SessionWriter, WithProject {
    */
   public void write(String group, KubernetesList list) {
     try {
-      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(FILENAME, group, JSON));
+      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getAp4kOutputDir() + "/" + String.format(FILENAME, group, JSON));
       try (Writer writer = json.openWriter()) {
         writer.write(Serialization.asJson(list));
       }
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getResourceOutputPath() + "/" + String.format(FILENAME, group, YML));
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getAp4kOutputDir() + "/" + String.format(FILENAME, group, YML));
       try (Writer writer = yml.openWriter()) {
         writer.write(Serialization.asYaml(list));
       }
