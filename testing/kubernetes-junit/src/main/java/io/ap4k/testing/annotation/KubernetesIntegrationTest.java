@@ -44,6 +44,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface KubernetesIntegrationTest {
 
   /**
+   * Flag to define whether the extension should automatically apply resources.
+   * @return True, if extension should automatically deploy ap4k generated resources.
+   */
+  boolean isAutoDeployEnabled() default true;
+
+  /**
+   * Flag to define whether the extension should automatically apply resources.
+   * @return True, if extensions should automatically perform container builds.
+   */
+  boolean isBuildEnabled() default true;
+
+
+  /**
    * The amount of time in milliseconds to wait for application to become ready.
    * @return  The max amount in milliseconds.
    */

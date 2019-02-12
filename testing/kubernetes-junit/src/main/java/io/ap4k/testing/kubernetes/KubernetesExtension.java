@@ -54,19 +54,21 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
     KubernetesClient client = getKubernetesClient(context);
     KubernetesList list = getKubernetesResources(context);
 
-    if (hasDockerBuildConfig()) {
+    if (config.isBuildEnabled() && hasDockerBuildConfig()) {
       DockerBuildConfig dockerBuildConfig = getDockerBuildConfig();
       DockerBuildHook build = new DockerBuildHook(getProject(), dockerBuildConfig);
       build.run();
     }
 
-    list.getItems().stream()
-      .forEach(i -> {
-        client.resourceList(i).createOrReplace();
-        System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
-      });
+    if (config.isAutoDeployEnabled()) {
+      list.getItems().stream()
+        .forEach(i -> {
+          client.resourceList(i).createOrReplace();
+          System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
+        });
 
-    client.resourceList(list).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      client.resourceList(list).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+    }
   }
 
   @Override
