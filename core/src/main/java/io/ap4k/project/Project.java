@@ -21,23 +21,24 @@ import java.nio.file.Path;
 
 public class Project {
 
-  private static String DEFAULT_GENERATOR_OUTPUT_PATH = "META-INF/ap4k";
+  private static String DEFAULT_AP4K_OUTPUT_DIR = "META-INF/ap4k";
+
   private Path root;
-  private String resourceInputPath;
-  private String resourceOutputPath;
+  private String ap4kInputDir;
+  private String ap4kOutputDir;
   private BuildInfo buildInfo;
 
   public Project() {
   }
 
   public Project(Path root, BuildInfo buildInfo) {
-    this(root, null, DEFAULT_GENERATOR_OUTPUT_PATH, buildInfo);
+    this(root, null, DEFAULT_AP4K_OUTPUT_DIR, buildInfo);
   }
 
-  public Project(Path root, String resourceInputPath, String resourceOutputPath, BuildInfo buildInfo) {
+  public Project(Path root, String ap4kInputDir, String ap4kOutputDir, BuildInfo buildInfo) {
     this.root = root;
-    this.resourceInputPath = resourceInputPath;
-    this.resourceOutputPath = resourceOutputPath;
+    this.ap4kInputDir = ap4kInputDir;
+    this.ap4kOutputDir = ap4kOutputDir;
     this.buildInfo = buildInfo;
   }
 
@@ -49,20 +50,19 @@ public class Project {
     return buildInfo;
   }
 
-  public String getResourceInputPath() {
-    return resourceInputPath;
+  public String getAp4kInputDir() {
+    return ap4kInputDir;
   }
 
-  public String getResourceOutputPath() {
-    return resourceOutputPath;
+  public String getAp4kOutputDir() {
+    return ap4kOutputDir;
   }
 
-
-  public Project withResourceInputPath(String resourceInputPath) {
-   return new Project(root, resourceInputPath, resourceOutputPath, buildInfo);
+  public Project withAp4kInputDir(String ap4kInputDir) {
+   return new Project(root, ap4kInputDir, ap4kOutputDir, buildInfo);
   }
 
-  public Project withResourceOutputPath(String resourceOutputPath) {
-    return new Project(root, resourceInputPath, resourceOutputPath, buildInfo);
+  public Project withAp4kOutputDir(String ap4kOutputDir) {
+    return new Project(root, ap4kInputDir, ap4kOutputDir, buildInfo);
   }
 }

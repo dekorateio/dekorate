@@ -17,10 +17,7 @@
 package io.ap4k.hook;
 
 import io.ap4k.project.Project;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import io.ap4k.utils.Exec;
 
 public abstract class ProjectHook implements Runnable {
 
@@ -53,32 +50,6 @@ public abstract class ProjectHook implements Runnable {
   }
 
   public boolean exec(String... commands) {
-    Process process = null;
-    try {
-      process = new ProcessBuilder()
-        .directory(project.getRoot().toFile())
-        .command(commands)
-        .redirectErrorStream(true)
-        .start();
-
-      try (InputStreamReader isr = new InputStreamReader(process.getInputStream());
-           BufferedReader reader = new BufferedReader(isr)) {
-
-        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-          System.out.println(line);
-        }
-        process.waitFor();
-      }
-    } catch (IOException e) {
-      return false;
-    } catch (InterruptedException e) {
-      return false;
-    } finally {
-      if (process != null)  {
-        return process.exitValue() == 0;
-      } else {
-        return false;
-      }
-    }
+    return Exec.inProject(project).commands(commands);
   }
 }

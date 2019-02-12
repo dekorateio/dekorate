@@ -28,15 +28,26 @@ public class BuildInfo {
   private String version;
   private String packaging;
   private Path outputFile;
+  private Path resourceOutputDir;
 
   public BuildInfo() {
   }
 
-  public BuildInfo(String name, String version, String packaging, Path outputFile) {
+  /**
+   * Constructor
+   * @param name                  The project name (e.g. maven artifactId).
+   * @param version               The project version (e.g. maven version).
+   * @param packaging             The project packaging (e.g. jar, war).
+   * @param outputFile            The output file (the path to the actual jar, war etc).
+   * @param resourceOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
+   */
+  public BuildInfo(String name, String version, String packaging, Path outputFile, Path resourceOutputDir) {
     this.name = name;
     this.version = version;
     this.packaging = packaging;
     this.outputFile = outputFile;
+    this.outputFile = outputFile;
+    this.resourceOutputDir = resourceOutputDir;
   }
 
   /**
@@ -71,6 +82,10 @@ public class BuildInfo {
     return outputFile;
   }
 
+  public Path getResourceOutputDir() {
+    return resourceOutputDir;
+  }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -85,5 +100,9 @@ public class BuildInfo {
 
   public void setOutputFile(Path outputFile) {
     this.outputFile = outputFile;
+  }
+
+  public void setResourceOutputDir(Path resourceOutputDir) {
+    this.resourceOutputDir = resourceOutputDir;
   }
 }

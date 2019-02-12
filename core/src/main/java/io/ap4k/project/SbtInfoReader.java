@@ -37,6 +37,7 @@ public class SbtInfoReader implements BuildInfoReader {
   private static final String SCALA_VERSION = "scalaVersion";
   private static final String SET = ":=";
   private static final String TARGET = "target";
+  private static final String CLASSES = "classes";
 
   private static final String DOUBLE_QUOTE = "\"";
   private static final String DASH = "-";
@@ -86,7 +87,8 @@ public class SbtInfoReader implements BuildInfoReader {
     String scalaVersion = properties.getOrDefault(SCALA_VERSION, getSystemScalaVersion());
     String extension = JAR;
     Path outputFile = root.resolve(TARGET).resolve(name + UNDERSCORE + scalaVersion + DASH + version + DOT + extension);
-    return new BuildInfo(name, version, JAR, outputFile);
+    Path resourceOutputDir = root.resolve(TARGET).resolve(CLASSES);
+    return new BuildInfo(name, version, JAR, outputFile, resourceOutputDir);
   }
 
   /**

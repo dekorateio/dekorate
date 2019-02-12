@@ -95,7 +95,7 @@ public interface WithKubernetesResources extends TestInstancePostProcessor, With
    */
   default KubernetesList fromManifest() {
     KubernetesList result = new KubernetesList();
-    URL manifestUrl = WithKubernetesResources.class.getClassLoader().getResource(getProject().getResourceOutputPath() + File.separatorChar + MANIFEST_PATH);
+    URL manifestUrl = WithKubernetesResources.class.getClassLoader().getResource(getProject().getAp4kOutputDir() + File.separatorChar + MANIFEST_PATH);
     if (manifestUrl == null)  {
       return result;
     }

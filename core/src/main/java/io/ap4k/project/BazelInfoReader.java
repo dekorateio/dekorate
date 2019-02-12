@@ -50,6 +50,7 @@ public class BazelInfoReader implements BuildInfoReader {
 
 
   private static final String BAZEL_BIN = "bazel-bin";
+  private static final String BAZEL_OUT = "bazel-out";
 
   @Override
   public int order() {
@@ -88,7 +89,9 @@ public class BazelInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension, outputDir.resolve(sb.toString()));
+    return new BuildInfo(name, version, extension, outputDir.resolve(sb.toString()),
+      root.resolve(BAZEL_OUT)
+    );
   }
 
 
