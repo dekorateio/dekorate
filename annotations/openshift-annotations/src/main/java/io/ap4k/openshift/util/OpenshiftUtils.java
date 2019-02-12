@@ -41,6 +41,9 @@ public class OpenshiftUtils {
    * @return            True if the items became available false otherwise.
    */
   public static boolean waitForImageStreamTags(List<HasMetadata> items, long amount, TimeUnit timeUnit) {
+    if (items == null || items.isEmpty()) {
+      return true;
+    }
     final List<String> tags = new ArrayList<>();
     new KubernetesListBuilder()
       .withItems(items)
