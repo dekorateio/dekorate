@@ -29,6 +29,7 @@ import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
+import io.ap4k.openshift.decorator.AddRouteDecorator;
 import io.ap4k.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.ap4k.openshift.decorator.ApplyReplicasDecorator;
 
@@ -82,6 +83,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     super.addDecorators(group, config);
     resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
     resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), config.getName() + ":" + config.getVersion()));
+    resources.decorate(group, new AddRouteDecorator(config, resources.getLabels()));
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {

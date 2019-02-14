@@ -38,6 +38,11 @@ public @interface Port {
    */
   int hostPort() default 0;
 
+  /**
+  * The application path (refers to web application path).
+  * @return The path, defaults to /.
+  */
+  String path() default "/";
 
   Protocol protocol() default Protocol.TCP;
 }

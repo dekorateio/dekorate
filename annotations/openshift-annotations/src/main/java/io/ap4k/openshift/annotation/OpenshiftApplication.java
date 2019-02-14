@@ -131,6 +131,12 @@ public @interface OpenshiftApplication {
   String serviceAccount() default "";
 
   /**
+   * The host under which the application is going to be exposed.
+   * @return  The hostname.
+   */
+  String host() default "";
+
+  /**
    * The application ports.
    */
   Port[] ports() default {};
