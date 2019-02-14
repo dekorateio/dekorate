@@ -130,6 +130,29 @@ limitations under the License.
               </filters>
             </configuration>
           </execution>
+          <execution>
+            <id>noapt</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>noapt</shadedClassifierName>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <includes>
+                    <include>io/ap4k/docker/adapter/**</include>
+                    <include>io/ap4k/docker/config/**</include>
+                    <include>io/ap4k/docker/configurator/**</include>
+                    <include>io/ap4k/docker/hook/**</include>
+                    <include>io/ap4k/docker/registrar/**</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

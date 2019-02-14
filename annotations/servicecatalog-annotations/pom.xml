@@ -126,6 +126,28 @@ limitations under the License.
               </filters>
             </configuration>
           </execution>
+          <execution>
+            <id>noapt</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>processors</shadedClassifierName>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <includes>
+                    <include>io/ap4k/servicecatalog/adapter/**</include>
+                    <include>io/ap4k/servicecatalog/config/**</include>
+                    <include>io/ap4k/servicecatalog/generator/**</include>
+                    <include>io/ap4k/servicecatalog/handler/**</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>
