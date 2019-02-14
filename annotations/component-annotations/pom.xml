@@ -144,6 +144,29 @@ limitations under the License.
               </filters>
             </configuration>
           </execution>
+          <execution>
+            <id>noapt</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>noapt</shadedClassifierName>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <includes>
+                    <include>io/ap4k/component/adapter/**</include>
+                    <include>io/ap4k/component/config/*</include>
+                    <include>io/ap4k/component/decorator/**</include>
+                    <include>io/ap4k/component/handler/**</include>
+                    <include>io/ap4k/component/processor/**</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>

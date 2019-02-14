@@ -133,6 +133,29 @@ limitations under the License.
               </filters>
             </configuration>
           </execution>
+          <execution>
+            <id>noapt</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>noapt</shadedClassifierName>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <includes>
+                    <include>io/ap4k/istio/adapter/**</include>
+                    <include>io/ap4k/istio/config/**</include>
+                    <include>io/ap4k/istio/handler/**</include>
+                    <include>io/ap4k/istio/generator/**</include>
+                    <include>io/ap4k/istio/util/**</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

@@ -140,6 +140,32 @@ limitations under the License.
               </filters>
             </configuration>
           </execution>
+          <execution>
+            <id>noapt</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>noapt</shadedClassifierName>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <includes>
+                    <include>io/ap4k/openshift/adapter/**</include>
+                    <include>io/ap4k/openshift/config/**</include>
+                    <include>io/ap4k/openshift/configurator/**</include>
+                    <include>io/ap4k/openshift/generator/**</include>
+                    <include>io/ap4k/openshift/handler/**</include>
+                    <include>io/ap4k/openshift/decorator/**</include>
+                    <include>io/ap4k/openshift/hook/**</include>
+                    <include>io/ap4k/openshift/util/**</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
