@@ -19,47 +19,55 @@
 package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.ap4k.kubernetes.config.KubernetesConfig;
-import io.ap4k.deps.kubernetes.api.model.ServicePort;
-import io.ap4k.kubernetes.config.Port;
-import io.ap4k.deps.kubernetes.api.model.ServicePortBuilder;
-import io.ap4k.deps.kubernetes.api.model.IntOrString;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-import io.ap4k.utils.Labels;
 import io.ap4k.doc.Description;
+import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.Port;
+import io.ap4k.utils.Strings;
 
-@Description("Add a service to the list.")
-public class AddServiceDecorator extends Decorator<KubernetesListBuilder> {
+import java.util.Map;
+import java.util.Optional;
+
+import static io.ap4k.utils.Ports.getHttpPort;
+
+@Description("Add an ingress to the list.")
+public class AddIngressDecorator extends Decorator<KubernetesListBuilder> {
 
   private final KubernetesConfig config;
   private final Map<String, String> allLabels; //A combination of config and project labels.
 
-  public AddServiceDecorator(KubernetesConfig config, Map<String, String> allLabels) {
+
+  public AddIngressDecorator(KubernetesConfig config, Map<String, String> allLabels) {
     this.config = config;
     this.allLabels = allLabels;
   }
 
   public void visit(KubernetesListBuilder list) {
-    list.addNewServiceItem()
+    Optional<Port> p = getHttpPort(config);
+    if (!p.isPresent()  || Strings.isNullOrEmpty(config.getHost())) {
+      return;
+    }
+    Port port = p.get();
+    list.addNewIngressItem()
       .withNewMetadata()
       .withName(config.getName())
       .withLabels(allLabels)
       .endMetadata()
       .withNewSpec()
-      .withType(config.getServiceType().name())
-      .withSelector(Labels.createLabels(config))
-      .withPorts(Arrays.asList(config.getPorts()).stream().map(this::toServicePort).collect(Collectors.toList()))
+      .addNewRule()
+      .withHost(config.getHost())
+      .withNewHttp()
+      .addNewPath()
+        .withPath(port.getPath())
+        .withNewBackend()
+          .withServiceName(config.getName())
+          .withNewServicePort(port.getHostPort())
+        .endBackend()
+      .endPath()
+      .endHttp()
+      .endRule()
       .endSpec()
-      .endServiceItem();
+      .endIngressItem();
   }
 
-  private ServicePort toServicePort(Port port) {
-    return new ServicePortBuilder()
-      .withName(port.getName())
-      .withPort(port.getContainerPort())
-      .withTargetPort(new IntOrString(port.getHostPort() > 0 ? port.getHostPort() : port.getContainerPort()))
-      .build();
-  }
+
 }

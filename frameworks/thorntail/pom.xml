@@ -13,6 +13,10 @@
   <packaging>jar</packaging>
   <name>AP4K :: Frameworks :: Thorntail</name>
 
+  <properties>
+    <version.jaxrs-api-2.0_spec>1.0.0.Final</version.jaxrs-api-2.0_spec>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.ap4k</groupId>
@@ -20,6 +24,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+      <version>${version.jaxrs-api-2.0_spec}</version>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>

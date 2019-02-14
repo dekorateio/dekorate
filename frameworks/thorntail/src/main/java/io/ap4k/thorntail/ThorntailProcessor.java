@@ -25,6 +25,7 @@ import javax.lang.model.SourceVersion;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
@@ -36,11 +37,15 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
-    if  (roundEnv.processingOver()) {
+    if (roundEnv.processingOver()) {
       session.close();
       return true;
     }
-    add(WEB_ANNOTATIONS);
+    for (TypeElement typeElement : annotations) {
+      for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
+        add(mainClass);
+      }
+    }
     return false;
   }
 }

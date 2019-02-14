@@ -127,6 +127,7 @@ limitations under the License.
                     <include>io/ap4k/kubernetes/adapter/**</include>
                     <include>io/ap4k/kubernetes/apt/**</include>
                     <include>io/ap4k/kubernetes/config/**</include>
+                    <include>io/ap4k/kubernetes/decorator/**</include>
                     <include>io/ap4k/kubernetes/handler/**</include>
                     <include>io/ap4k/kubernetes/generator/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>

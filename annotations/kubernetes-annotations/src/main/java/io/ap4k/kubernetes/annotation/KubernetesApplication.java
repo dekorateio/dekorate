@@ -121,6 +121,12 @@ import java.lang.annotation.Target;
          */
         String serviceAccount() default "";
 
+       /**
+        * The host under which the application is going to be exposed.
+        * @return  The hostname.
+        */
+        String host() default "";
+
         /**
          * The application ports.
          */

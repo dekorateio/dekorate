@@ -23,8 +23,12 @@ import io.ap4k.kubernetes.config.PortBuilder;
 import io.ap4k.kubernetes.configurator.AddLivenessProbe;
 import io.ap4k.kubernetes.configurator.AddPort;
 import io.ap4k.kubernetes.configurator.AddReadinessProbe;
+import io.ap4k.kubernetes.configurator.SetPortPath;
 
+import javax.lang.model.element.Element;
+import javax.ws.rs.ApplicationPath;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public interface ThorntailWebAnnotationGenerator extends Generator, WithSession {
@@ -32,11 +36,29 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession 
   Map WEB_ANNOTATIONS=Collections.emptyMap();
 
   @Override
+  default void add(Element element) {
+    ApplicationPath application = element.getAnnotation(ApplicationPath.class);
+    if (application != null) {
+      HashMap<String, Object> map = new HashMap<>();
+      map.put(ApplicationPath.class.getName(), new HashMap<String, String>() {{
+        put("value", application.value());
+        }});
+      add(map);
+    }
+  }
+
+  @Override
   default void add(Map map) {
     Port port = detectHttpPort();
     session.configurators().add(new AddPort(port));
     session.configurators().add(new AddReadinessProbe(port.getContainerPort()));
     session.configurators().add(new AddLivenessProbe(port.getContainerPort()));
+
+    Map<String, Object> applicationPath = propertiesMap(map, ApplicationPath.class);
+    if (applicationPath != null && applicationPath.containsKey("value")) {
+      String path = String.valueOf(applicationPath.get("value"));
+      session.configurators().add(new SetPortPath(port.getName(), path));
+    }
   }
 
   default Port detectHttpPort()  {
