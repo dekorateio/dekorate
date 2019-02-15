@@ -83,7 +83,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
       try (FileWriter writer = new FileWriter(json.toFile())) {
         writer.write(Serialization.asJson(list));
       }
-      Path yml = outputdir.resolve(String.format(FILENAME, group, JSON));
+      Path yml = outputdir.resolve(String.format(FILENAME, group, YML));
       yml.toFile().getParentFile().mkdirs();
       try (FileWriter writer = new FileWriter(yml.toFile())) {
         writer.write(Serialization.asYaml(list));

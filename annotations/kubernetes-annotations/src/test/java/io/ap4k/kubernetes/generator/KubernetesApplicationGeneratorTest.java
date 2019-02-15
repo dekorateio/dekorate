@@ -6,6 +6,7 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.processor.SimpleFileWriter;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -50,5 +51,8 @@ class KubernetesApplicationGeneratorTest {
       .filteredOn(i -> "Deployment".equals(i.getKind()))
       .filteredOn(i -> ((Deployment)i).getSpec().getReplicas() == 2)
       .isNotEmpty();
+
+    assertThat(tempDir.resolve("kubernetes.json")).exists();
+    assertThat(tempDir.resolve("kubernetes.yml")).exists();
   }
 }
