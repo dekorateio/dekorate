@@ -149,6 +149,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/ap4k/kubernetes/adapter/**</include>
+                    <include>io/ap4k/kubernetes/annotation/**</include>
                     <include>io/ap4k/kubernetes/config/**</include>
                     <include>io/ap4k/kubernetes/handler/**</include>
                     <include>io/ap4k/kubernetes/generator/**</include>

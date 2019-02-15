@@ -144,6 +144,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/ap4k/docker/adapter/**</include>
+                    <include>io/ap4k/docker/annotation/**</include>
                     <include>io/ap4k/docker/config/**</include>
                     <include>io/ap4k/docker/configurator/**</include>
                     <include>io/ap4k/docker/hook/**</include>

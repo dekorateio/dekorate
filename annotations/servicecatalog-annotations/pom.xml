@@ -140,6 +140,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/ap4k/servicecatalog/adapter/**</include>
+                    <include>io/ap4k/servicecatalog/annotation/**</include>
                     <include>io/ap4k/servicecatalog/config/**</include>
                     <include>io/ap4k/servicecatalog/generator/**</include>
                     <include>io/ap4k/servicecatalog/handler/**</include>
