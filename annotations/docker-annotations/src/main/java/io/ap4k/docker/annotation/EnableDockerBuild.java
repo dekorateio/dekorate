@@ -79,6 +79,18 @@ import java.lang.annotation.Target;
         String dockerFile() default  "Dockerfile";
 
 
+       /**
+        * The registry that holds the image.
+        * @return The registry or empty string if no registry has been specified.
+        */
+        String registry() default "docker.io";
+
+       /**
+        * Flag to automatically push the image, to the specified registry.
+        * @return  True if hook is to be registered, false otherwise.
+        */
+        boolean autoPushEnabled() default false;
+
         /**
          * Flag to automatically register a build hook after compilation.
          * @return  True if hook is to be registered, false otherwise.

@@ -484,11 +484,12 @@ These features have to do with things like building, deploying and testing.
 
 ### Building and Deploying?
 Ap4k does not generate Dockerfiles, neither it provides internal support for performing docker or s2i builds.
-It does however allow the user to hook external tools (e.g. the `docker` or `oc`) to tigger container image builds after the end of compilation.
+It does however allow the user to hook external tools (e.g. the `docker` or `oc`) to trigger container image builds after the end of compilation.
 
 So, at the moment as an experimental feature the following hooks are provided:
 
 - docker build hook (requires docker binary, triggered with `-Dap4k.build=true`)
+- docker push hook (requires docker binary, triggered with `-Dap4k.push=true`)
 - openshift s2i build hook (requires oc binary, triggered with `-Dap4k.deploy=true`)
 
 #### Docker build hook
@@ -517,6 +518,20 @@ Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argume
 or if you are using gradle:
 
     gradle build -Dap4k.build=true   
+    
+When push is enabled, the registry can be specified as part of the annotation, or via system properties.
+Here's an example via annotation configuration:
+
+    @EnableDockerBuild(registry="quay.io")
+    public class Main {
+    }
+    
+And here's how it can be done via build properties (system properties):
+
+    mvn clean install -Dap4k.docker.registry=quay.io -Dap4k.push=true    
+    
+Note: Ap4k will **NOT** push images on its own. It will delegate to the `docker` binary. So the user needs to make sure
+beforehand that is logged in and has taken all necessary actions for a `docker push` to work.
     
 #### S2i build hook
 This hook will just trigger an s2i binary build, that will pass the output folder as an input to the build

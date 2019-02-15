@@ -24,9 +24,15 @@ import io.ap4k.doc.Description;
 public class ApplyDockerBuildHook extends Configurator<DockerBuildConfigFluent> {
 
   private static final String AP4K_BUILD = "ap4k.build";
+  private static final String AP4K_PUSH = "ap4k.push";
+  private static final String AP4K_DOCKER_REGISTRY = "ap4k.docker.registry";
 
   @Override
   public void visit(DockerBuildConfigFluent config) {
-    config.withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(AP4K_BUILD, String.valueOf(config.isAutoBuildEnabled()))));
+    config.withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(AP4K_BUILD, String.valueOf(config.isAutoBuildEnabled()))))
+      .withAutoPushEnabled(Boolean.parseBoolean(System.getProperty(AP4K_PUSH, String.valueOf(config.isAutoPushEnabled()))))
+      .withRegistry(System.getProperty(AP4K_DOCKER_REGISTRY, String.valueOf(config.getRegistry())));
   }
+
+
 }

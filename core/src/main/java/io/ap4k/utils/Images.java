@@ -18,14 +18,36 @@
 
 package io.ap4k.utils;
 
-import java.util.regex.Pattern;
-
-
 public class Images {
 
   private static final String SLASH = "/";
   private static final String COLN = ":";
 
+  /**
+   * Create an image from the individual parts.
+   * @param registry      The registry.
+   * @param repository    The repository.
+   * @param name          The name.
+   * @param tag           The tag.
+   * @return              The image.
+   */
+  public static String getImage(String registry, String repository, String name, String tag) {
+      if (Strings.isNullOrEmpty(name)) {
+        throw new IllegalArgumentException("Docker image name cannot be null!");
+      }
+      if (Strings.isNullOrEmpty(tag)) {
+        throw new IllegalArgumentException("Docker image tag cannot be null!");
+      }
+      StringBuilder sb = new StringBuilder();
+      if (Strings.isNotNullOrEmpty(registry)) {
+        sb.append(registry).append(SLASH);
+      }
+      if (Strings.isNotNullOrEmpty(repository)) {
+        sb.append(repository).append(SLASH);
+      }
+      sb.append(name).append(COLN).append(tag);
+      return sb.toString();
+  }
 
   /**
    * Return the registry part of the docker image.

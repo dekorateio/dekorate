@@ -9,7 +9,10 @@ import io.ap4k.docker.annotation.EnableDockerBuild;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.configurator.ApplyDockerBuildHook;
 import io.ap4k.docker.configurator.ApplyProjectInfoToDockerBuildConfigDecorator;
+import io.ap4k.docker.decorator.ApplyRegistryToImageDecorator;
 import io.ap4k.docker.hook.DockerBuildHook;
+import io.ap4k.docker.hook.DockerPushHook;
+import io.ap4k.hook.OrderedHook;
 
 import javax.lang.model.element.Element;
 import java.util.Map;
@@ -35,12 +38,25 @@ public interface EnableDockerBuildRegistrar extends Generator, SessionListener, 
 
   default void on(ConfigurationSupplier<DockerBuildConfig> config) {
       session.configurators().add(config);
+      DockerBuildConfig buildConfig = config.get();
+      if (buildConfig.isAutoPushEnabled()) {
+        session.resources().decorate(new ApplyRegistryToImageDecorator(buildConfig.getRegistry(), buildConfig.getGroup(), buildConfig.getName(), buildConfig.getVersion()));
+      }
       session.addListener(this);
   }
 
   default void onClosed() {
     Optional<DockerBuildConfig> config = session.configurators().get(DockerBuildConfig.class);
-      if (config.isPresent() && config.get().isAutoBuildEnabled()) {
+      if (!config.isPresent()) {
+        return;
+      }
+      DockerBuildConfig dockerBuildConfig = config.get();
+      if (dockerBuildConfig.isAutoPushEnabled()) {
+        DockerBuildHook buildHook = new DockerBuildHook(getProject(), config.get());
+        DockerPushHook pushHook = new DockerPushHook(getProject(), config.get());
+        OrderedHook hook = OrderedHook.create(buildHook, pushHook);
+        hook.register();
+      } else if (dockerBuildConfig.isAutoBuildEnabled()) {
         DockerBuildHook hook = new DockerBuildHook(getProject(), config.get());
         hook.register();
       }

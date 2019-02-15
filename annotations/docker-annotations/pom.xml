@@ -122,6 +122,7 @@ limitations under the License.
                     <include>io/ap4k/docker/apt/**</include>
                     <include>io/ap4k/docker/config/**</include>
                     <include>io/ap4k/docker/configurator/**</include>
+                    <include>io/ap4k/docker/decorator/**</include>
                     <include>io/ap4k/docker/hook/**</include>
                     <include>io/ap4k/docker/registrar/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
@@ -148,6 +149,7 @@ limitations under the License.
                     <include>io/ap4k/docker/config/**</include>
                     <include>io/ap4k/docker/configurator/**</include>
                     <include>io/ap4k/docker/hook/**</include>
+                    <include>io/ap4k/docker/decorator/**</include>
                     <include>io/ap4k/docker/registrar/**</include>
                   </includes>
                 </filter>
