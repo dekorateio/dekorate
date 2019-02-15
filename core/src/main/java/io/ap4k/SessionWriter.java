@@ -12,7 +12,8 @@ public interface SessionWriter extends WithProject {
   String PACKAGE = "";
   String FILENAME = "%s.%s";
   String CONFIG = ".config/%s.%s";
-  String PROJECT = "META-INF/ap4k/.project.%s";
+  String PROJECT_ONLY = ".project.%s";
+  String PROJECT = "META-INF/ap4k/" + PROJECT_ONLY;
   String[] STRIP = {"^Editable", "Config$"};
   String JSON = "json";
   String YML = "yml";
