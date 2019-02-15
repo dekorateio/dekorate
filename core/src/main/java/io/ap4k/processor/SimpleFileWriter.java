@@ -80,6 +80,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
   public void write(String group, KubernetesList list) {
     try {
       Path json = outputdir.resolve(String.format(FILENAME, group, JSON));
+      json.toFile().getParentFile().mkdirs();
       try (FileWriter writer = new FileWriter(json.toFile())) {
         writer.write(Serialization.asJson(list));
       }
