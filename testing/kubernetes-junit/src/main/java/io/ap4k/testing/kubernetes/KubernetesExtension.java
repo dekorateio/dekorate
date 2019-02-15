@@ -21,10 +21,11 @@ import io.ap4k.deps.kubernetes.client.KubernetesClient;
 import io.ap4k.deps.kubernetes.client.VersionInfo;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
+import io.ap4k.docker.hook.DockerPushHook;
+import io.ap4k.hook.OrderedHook;
 import io.ap4k.testing.WithKubernetesClient;
 import io.ap4k.testing.WithProject;
 import io.ap4k.testing.WithPod;
-import io.ap4k.testing.annotation.KubernetesIntegrationTest;
 import io.ap4k.testing.config.KubernetesIntegrationTestConfig;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -54,10 +55,22 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
     KubernetesClient client = getKubernetesClient(context);
     KubernetesList list = getKubernetesResources(context);
 
-    if (config.isBuildEnabled() && hasDockerBuildConfig()) {
+    if (hasDockerBuildConfig()) {
       DockerBuildConfig dockerBuildConfig = getDockerBuildConfig();
-      DockerBuildHook build = new DockerBuildHook(getProject(), dockerBuildConfig);
-      build.run();
+
+      //
+      // We use teh isAutoPushEnabled flag of the @EnableDockerBuild annotation and not @KubernetesIntegrationTest.
+      // The reason is that the @EnableDockerBuild.isAutoPushEnabled() affects the generated manifests (adds the registry).
+      // and thus the tests MUST follow.
+      if (dockerBuildConfig.isAutoPushEnabled()) {
+        DockerBuildHook buildHook = new DockerBuildHook(getProject(), dockerBuildConfig);
+        DockerPushHook pushHook = new DockerPushHook(getProject(), dockerBuildConfig);
+        OrderedHook hook = OrderedHook.create(buildHook, pushHook);
+        hook.run();
+      } else if (config.isBuildEnabled()) {
+        DockerBuildHook build = new DockerBuildHook(getProject(), dockerBuildConfig);
+        build.run();
+      }
     }
 
     if (config.isAutoDeployEnabled()) {
