@@ -53,9 +53,9 @@
 
   <properties>
     <!-- Dependencies -->
-    <version.ap4k-deps>0.2.2</version.ap4k-deps>
+    <version.ap4k-deps>0.2.3</version.ap4k-deps>
     <version.servicecatalog-client>1.0.4</version.servicecatalog-client>
-    <version.application-crd-client>1.0.6</version.application-crd-client>
+    <version.application-crd-client>1.0.7</version.application-crd-client>
     <version.sundrio>0.16.1</version.sundrio>
     <!-- Testing Dependencies -->
     <version.junit-jupiter>5.3.2</version.junit-jupiter>
