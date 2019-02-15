@@ -102,6 +102,7 @@
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/ap4k/crd/adapter/**</include>
+                    <include>io/ap4k/crd/annotation/**</include>
                     <include>io/ap4k/crd/apt/**</include>
                     <include>io/ap4k/crd/config/**</include>
                     <include>io/ap4k/crd/configurator/**</include>

@@ -154,6 +154,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/ap4k/openshift/adapter/**</include>
+                    <include>io/ap4k/openshift/annotation/**</include>
                     <include>io/ap4k/openshift/config/**</include>
                     <include>io/ap4k/openshift/configurator/**</include>
                     <include>io/ap4k/openshift/generator/**</include>
