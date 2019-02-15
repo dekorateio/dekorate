@@ -62,7 +62,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
    */
   public void write(Project project) {
     try {
-      Path yml = outputdir.resolve(String.format(PROJECT, YML));
+      Path yml = outputdir.resolve(String.format(PROJECT_ONLY, YML));
       yml.toFile().getParentFile().mkdirs();
       try (FileWriter writer = new FileWriter(yml.toFile())) {
         writer.write(Serialization.asYaml(project));
