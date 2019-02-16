@@ -153,6 +153,7 @@ limitations under the License.
                     <include>io/ap4k/kubernetes/config/**</include>
                     <include>io/ap4k/kubernetes/handler/**</include>
                     <include>io/ap4k/kubernetes/generator/**</include>
+                    <include>META-INF/services/io.ap4k.Generator</include>
                   </includes>
                 </filter>
               </filters>

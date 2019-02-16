@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
       withStaticAdapterMethod = false,
       adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
       @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
-      @Retention(RetentionPolicy.SOURCE)
+      @Retention(RetentionPolicy.RUNTIME)
       public @interface KubernetesApplication {
 
         /**
