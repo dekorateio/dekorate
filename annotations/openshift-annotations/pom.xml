@@ -162,6 +162,7 @@ limitations under the License.
                     <include>io/ap4k/openshift/decorator/**</include>
                     <include>io/ap4k/openshift/hook/**</include>
                     <include>io/ap4k/openshift/util/**</include>
+                    <include>META-INF/services/io.ap4k.Generator</include>
                   </includes>
                 </filter>
               </filters>
