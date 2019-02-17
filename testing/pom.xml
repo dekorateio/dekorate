@@ -16,6 +16,7 @@
     <module>openshift-junit</module>
     <module>kubernetes-junit</module>
     <module>core-junit</module>
+    <module>servicecatalog-junit</module>
   </modules>
 
 </project>
