@@ -40,6 +40,7 @@ public class Resources {
   private final KubernetesListBuilder global = new KubernetesListBuilder();
   private final Set<Decorator> decorators = new HashSet<>();
 
+  private final Map<String, Set<Decorator>> groupDecorators = new HashMap<>();
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
 
@@ -73,11 +74,10 @@ public class Resources {
    * @param decorator   The decorator.
    */
   public void decorate(String group, Decorator decorator) {
-    if (groups.containsKey(group)) {
-      groups.get(group).accept(decorator);
-    } else {
-      groups.put(group, new KubernetesListBuilder().accept(decorator));
+    if (!groupDecorators.containsKey(group))  {
+      groupDecorators.put(group, new LinkedHashSet<>());
     }
+    groupDecorators.get(group).add(decorator);
   }
 
   /**
@@ -85,8 +85,7 @@ public class Resources {
    * @param decorator   The decorator.
    */
   public void decorate(Doneable<? extends Decorator> decorator) {
-    decorators.add(decorator.done());
-  }
+    decorators.add(decorator.done()); }
 
   /**
    * Add a resource to all groups.
@@ -153,6 +152,14 @@ public class Resources {
     }
 
     decorators.forEach(v -> groups.forEach((g, b) -> b.accept(v)));
+
+    groupDecorators.forEach((group, decorators) -> {
+      if (groups.containsKey(group)) {
+        for (Decorator d : decorators) {
+          groups.get(group).accept(d);
+        }
+      }});
+
     groups.forEach((g, b) -> resources.put(g, b.build()));
 
     for (Map.Entry<String, Set<Decorator>> entry : customDecorators.entrySet()) {
