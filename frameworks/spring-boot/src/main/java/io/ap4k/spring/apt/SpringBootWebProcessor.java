@@ -30,7 +30,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 @Description("Detects Spring Boot web endpoints and registers the http port.")
-@SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping"})
+@SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping", "org.springframework.data.rest.core.annotation.RepositoryRestResource"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SpringBootWebProcessor extends AbstractAnnotationProcessor implements SpringBootWebAnnotationGenerator {
 
