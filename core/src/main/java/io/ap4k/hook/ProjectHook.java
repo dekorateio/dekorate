@@ -22,9 +22,12 @@ import io.ap4k.utils.Exec;
 public abstract class ProjectHook implements Runnable {
 
   protected final Project project;
+  //This is added as a class variable to ensure that the class is loaded when the hook is executed.
+  private final Exec.ProjectExec exec;
 
   public ProjectHook(Project project) {
     this.project = project;
+    this.exec = Exec.inProject(project);
   }
 
   /**
@@ -50,6 +53,6 @@ public abstract class ProjectHook implements Runnable {
   }
 
   public boolean exec(String... commands) {
-    return Exec.inProject(project).commands(commands);
+    return exec.commands(commands);
   }
 }
