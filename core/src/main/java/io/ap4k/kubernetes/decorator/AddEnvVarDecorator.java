@@ -44,8 +44,9 @@ public class AddEnvVarDecorator extends Decorator<ContainerBuilder> {
       populateFromConfigMap(builder);
     } else if (Strings.isNotNullOrEmpty(env.getField())) {
       builder.addNewEnv().withName(env.getName()).withNewValueFrom().withNewFieldRef(null, env.getField()).endValueFrom();
+    } else if (Strings.isNotNullOrEmpty(env.getName())) {
+      builder.addNewEnv().withName(env.getName()).withValue(env.getValue()).endEnv();
     }
-    builder.addNewEnv().withName(env.getName()).withValue(env.getValue()).endEnv();
   }
 
 
