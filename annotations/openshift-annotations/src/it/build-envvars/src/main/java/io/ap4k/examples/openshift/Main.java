@@ -21,16 +21,12 @@ package io.ap4k.examples.openshift;
 import io.ap4k.kubernetes.annotation.Env;
 import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenshiftApplication
 @EnableS2iBuild(envVars = @Env(name="MAVEN_ARGS", value="-Popenshift"))
-@SpringBootApplication
 public class Main {
 
   public static void main(String[] args) {
-    SpringApplication.run(Main.class, args);
   }
 
 }

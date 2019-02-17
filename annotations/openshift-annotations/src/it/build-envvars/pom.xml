@@ -45,22 +45,6 @@ limitations under the License.
       <artifactId>openshift-annotations</artifactId>
       <version>@project.version@</version>
     </dependency>
-    <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>ap4k-spring-boot</artifactId>
-      <version>@project.version@</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <version>${version.spring-boot}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.hibernate.validator</groupId>
-          <artifactId>hibernate-validator</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
