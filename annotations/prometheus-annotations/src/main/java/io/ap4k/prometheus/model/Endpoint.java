@@ -22,6 +22,9 @@ public class Endpoint {
   @JsonProperty("honorLabels")
   boolean honorLabels;
 
+  public Endpoint() {
+  }
+
   public Endpoint(String port, String path, String interval, boolean honorLabels) {
     this.port = port;
     this.path = path;

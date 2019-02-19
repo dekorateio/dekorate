@@ -38,6 +38,9 @@ public class ServiceMonitorSpec {
   @Valid
   List<Endpoint> endpoints;
 
+  public ServiceMonitorSpec() {
+  }
+
   public ServiceMonitorSpec(LabelSelector selector, List<Endpoint> endpoints) {
     this.selector = selector;
     this.endpoints = endpoints;
