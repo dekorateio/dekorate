@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
-**/
+ **/
 package io.ap4k.servicecatalog.mapping;
 
 import io.ap4k.deps.kubernetes.api.KubernetesResourceMappingProvider;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.client.DefaultKubernetesClient;
+import io.ap4k.deps.kubernetes.client.KubernetesClient;
 import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.ServiceLoader;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,8 +38,15 @@ public class ServiceCatalogMappingTest {
   }
 
   @Test
-  public void shouldContainDeployment() {
+  public void shouldUnmarshall() {
     KubernetesList list = Serialization.unmarshal(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml"));
+    assertNotNull(list);
+  }
+
+  @Test
+  public void shouldUnmarshallUsingTheClient() {
+    KubernetesClient client = new DefaultKubernetesClient();
+    List<HasMetadata> list = client.load(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml")).get();
     assertNotNull(list);
   }
 }

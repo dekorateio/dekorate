@@ -35,6 +35,12 @@ limitations under the License.
     </dependency>
 
     <dependency>
+      <groupId>me.snowdrop</groupId>
+      <artifactId>servicecatalog-client</artifactId>
+      <version>${version.servicecatalog-client}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
     </dependency>
