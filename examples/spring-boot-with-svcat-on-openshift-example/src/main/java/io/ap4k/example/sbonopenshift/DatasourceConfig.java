@@ -16,6 +16,7 @@
 **/
 package io.ap4k.example.sbonopenshift;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,15 +26,23 @@ import javax.sql.DataSource;
 @Configuration
 public class DatasourceConfig {
 
-  @Bean
-  DataSource create()  {
-         return DataSourceBuilder
-        .create()
-        .username(System.getenv("username"))
-        .password(System.getenv("password"))
-        .url( System.getenv("uri").replaceAll("postgres", "jdbc:postgresql") + "/" + System.getenv("database_name"))
-           .driverClassName("org.postgresql.Driver")
-        .build();
-  }
 
+  @Value("${value}")
+  private String username;
+  @Value("${password}")
+  private String password;
+  @Value("${uri}")
+  private String uri;
+  @Value("${database_name}")
+  private String databaseName;
+
+  @Bean
+  DataSource create() {
+    return DataSourceBuilder.create()
+      .username(username)
+      .password(password)
+      .url(uri.replaceAll("postgres", "jdbc:postgresql") + "/" + databaseName)
+      .driverClassName("org.postgresql.Driver")
+      .build();
+  }
 }
