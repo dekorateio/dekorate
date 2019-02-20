@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -116,8 +117,8 @@ public class Session {
   private Map<String, KubernetesList> generate() {
     if (generated.compareAndSet(false, true)) {
       closed.set(true);
-      configurators.stream().forEach(c ->
-        handlers.stream().sorted(Comparator.comparing(Handler::order)).forEach(g ->  {
+        handlers.forEach(g ->
+          configurators.stream().forEach(c -> {
           if (g.canHandle(c.getClass())) {
             g.handle(c);
           }

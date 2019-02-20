@@ -33,7 +33,7 @@ public class ServiceMonitorHandler implements Handler<ServiceMonitorConfig> {
 
   @Override
   public int order() {
-    return 350;
+    return 450;
   }
 
   @Override
