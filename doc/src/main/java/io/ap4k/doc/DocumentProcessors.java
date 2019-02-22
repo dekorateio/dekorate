@@ -28,7 +28,6 @@ import io.sundr.codegen.annotations.PackageSelector;
                            @PackageSelector(value="io.ap4k.docker.processor"),
                            @PackageSelector(value="io.ap4k.kubernetes.processor"),
                            @PackageSelector(value="io.ap4k.openshift.processor"),
-                           @PackageSelector(value="io.ap4k.isito.processor"),
                            @PackageSelector(value="io.ap4k.servicecatalog.processor"),
                            @PackageSelector(value="io.ap4k.component.processor"),
                            @PackageSelector(value="io.ap4k.spring.processor"),
