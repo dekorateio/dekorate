@@ -42,7 +42,7 @@ public class ApplyProjectInfoToDockerBuildConfigDecorator extends Configurator<D
   @Override
   public void visit(DockerBuildConfigFluent fluent) {
     fluent.withProject(project);
-    fluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : DEFAULT_GROUP))
+    fluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(fluent.getGroup()) ? fluent.getGroup() : DEFAULT_GROUP))
       .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : project.getBuildInfo().getName()))
       .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(fluent.getVersion()) ? fluent.getVersion() : project.getBuildInfo().getVersion()));
   }
