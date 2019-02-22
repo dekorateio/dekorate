@@ -15,7 +15,7 @@ Compile the project using:
 
     mvn clean install
     
-You can find the generated deployment under: `target/classes/ap4k/openshfit.yml`.
+You can find the generated deployment under: `target/classes/META-INF/ap4k/openshift.yml`.
 
 The generated list should now contain the following item:
 
