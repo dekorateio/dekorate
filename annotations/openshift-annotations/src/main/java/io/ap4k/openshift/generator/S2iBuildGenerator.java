@@ -16,10 +16,10 @@
  **/
 package io.ap4k.openshift.generator;
 
+import io.ap4k.Generator;
 import io.ap4k.SessionListener;
 import io.ap4k.WithProject;
 import io.ap4k.WithSession;
-import io.ap4k.Generator;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.openshift.adapter.OpenshiftConfigAdapter;
 import io.ap4k.openshift.adapter.S2iConfigAdapter;
@@ -81,5 +81,7 @@ public interface S2iBuildGenerator extends Generator, SessionListener, WithSessi
     }
   }
 
-  Path getOutputDirectory();
+  default Path getOutputDirectory() {
+    return getProject().getRoot().resolve(getProject().getDefaultAp4kOutputDir());
+  }
 }
