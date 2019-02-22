@@ -152,6 +152,7 @@ limitations under the License.
                     <include>io/ap4k/istio/handler/**</include>
                     <include>io/ap4k/istio/generator/**</include>
                     <include>io/ap4k/istio/util/**</include>
+                    <include>META-INF/services/io.ap4k.Generator</include>
                   </includes>
                 </filter>
               </filters>

@@ -127,6 +127,7 @@
                     <include>io/ap4k/prometheus/config/**</include>
                     <include>io/ap4k/prometheus/processor/**</include>
                     <include>io/ap4k/prometheus/handler/**</include>
+                    <include>META-INF/services/io.ap4k.Generator</include>
                   </includes>
                 </filter>
               </filters>
