@@ -82,6 +82,6 @@ public interface S2iBuildGenerator extends Generator, SessionListener, WithSessi
   }
 
   default Path getOutputDirectory() {
-    return getProject().getRoot().resolve(getProject().getDefaultAp4kOutputDir());
+    return getProject().getBuildInfo().getResourceOutputDir().resolve(getProject().getDefaultAp4kOutputDir());
   }
 }
