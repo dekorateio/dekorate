@@ -100,10 +100,12 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
+                    <include>io/ap4k/prometheus/adapter/**</include>
                     <include>io/ap4k/prometheus/apt/**</include>
                     <include>io/ap4k/prometheus/config/**</include>
-                    <include>io/ap4k/prometheus/processor/**</include>
+                    <include>io/ap4k/prometheus/generator/**</include>
                     <include>io/ap4k/prometheus/handler/**</include>
+                    <include>io/ap4k/prometheus/model/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>
@@ -123,10 +125,12 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
+                    <include>io/ap4k/prometheus/adapter/**</include>
                     <include>io/ap4k/prometheus/annotation/**</include>
                     <include>io/ap4k/prometheus/config/**</include>
-                    <include>io/ap4k/prometheus/processor/**</include>
+                    <include>io/ap4k/prometheus/generator/**</include>
                     <include>io/ap4k/prometheus/handler/**</include>
+                    <include>io/ap4k/prometheus/model/**</include>
                     <include>META-INF/services/io.ap4k.Generator</include>
                   </includes>
                 </filter>
