@@ -277,5 +277,17 @@
         <module>doc</module>
       </modules>
     </profile>
+    <profile>
+      <id>with-incubator</id>
+      <modules>
+        <module>core</module>
+        <module>frameworks</module>
+        <module>annotations</module>
+        <module>incubator</module>
+        <module>testing</module>
+        <module>starters</module>
+        <module>doc</module>
+      </modules>
+    </profile>
   </profiles>
 </project>
