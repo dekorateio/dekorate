@@ -29,6 +29,7 @@ limitations under the License.
   <name>AP4K :: Annotations</name>
 
   <modules>
+    <module>generatoroptions-annotations</module>
     <module>kubernetes-annotations</module>
     <module>openshift-annotations</module>
     <module>servicecatalog-annotations</module>

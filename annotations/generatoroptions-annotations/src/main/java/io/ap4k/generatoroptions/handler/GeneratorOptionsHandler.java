@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  **/
-package io.ap4k.handler;
+package io.ap4k.generatoroptions.handler;
 
 import io.ap4k.Ap4kException;
-import io.ap4k.Handler;
 import io.ap4k.Resources;
-import io.ap4k.config.EditableGeneratorConfig;
-import io.ap4k.config.GeneratorConfig;
+import io.ap4k.Handler;
+import io.ap4k.generatoroptions.config.EditableGeneratorConfig;
+import io.ap4k.generatoroptions.config.GeneratorConfig;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.KubernetesResource;

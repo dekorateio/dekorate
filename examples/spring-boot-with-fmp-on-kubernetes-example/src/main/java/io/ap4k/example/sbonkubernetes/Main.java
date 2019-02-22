@@ -17,7 +17,7 @@
 
 package io.ap4k.example.sbonkubernetes;
 
-import io.ap4k.annotation.GeneratorOptions;
+import io.ap4k.generatoroptions.annotation.GeneratorOptions;
 import io.ap4k.kubernetes.annotation.Label;
 import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
