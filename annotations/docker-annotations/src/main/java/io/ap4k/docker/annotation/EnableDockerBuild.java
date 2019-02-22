@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
       withStaticAdapterMethod = false,
       adapter = @Adapter(name = "DockerBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
       @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
-      @Retention(RetentionPolicy.SOURCE)
+      @Retention(RetentionPolicy.RUNTIME)
       public @interface EnableDockerBuild {
 
         /**
