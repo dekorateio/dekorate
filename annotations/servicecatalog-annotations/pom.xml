@@ -150,6 +150,7 @@ limitations under the License.
                     <include>io/ap4k/servicecatalog/config/**</include>
                     <include>io/ap4k/servicecatalog/generator/**</include>
                     <include>io/ap4k/servicecatalog/handler/**</include>
+                    <include>META-INF/services/io.ap4k.Generator</include>
                   </includes>
                 </filter>
               </filters>
