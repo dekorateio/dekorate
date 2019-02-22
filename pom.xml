@@ -80,7 +80,6 @@
     <module>core</module>
     <module>frameworks</module>
     <module>annotations</module>
-    <module>examples</module>
     <module>testing</module>
     <module>starters</module>
     <module>doc</module>
@@ -265,6 +264,18 @@
       <properties>
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
       </properties>
+    </profile>
+    <profile>
+      <id>with-examples</id>
+      <modules>
+        <module>core</module>
+        <module>frameworks</module>
+        <module>annotations</module>
+        <module>examples</module>
+        <module>testing</module>
+        <module>starters</module>
+        <module>doc</module>
+      </modules>
     </profile>
   </profiles>
 </project>
