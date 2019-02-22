@@ -25,7 +25,7 @@ import io.sundr.builder.annotations.Pojo;
 @Pojo(name = "ServiceMonitorConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "ServiceMonitorConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 public @interface EnableServiceMonitor {
   String port() default "http";
-  String path() default "/metics";
+  String path() default "/metrics";
   int interval() default 10;
   boolean honorLabels() default false;
 }
