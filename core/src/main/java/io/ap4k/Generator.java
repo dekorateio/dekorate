@@ -17,6 +17,9 @@
 package io.ap4k;
 
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Generates resources, based on the detected annotations.
  */
@@ -29,5 +32,14 @@ public interface Generator extends SessionHandler {
   default void generate() {
    //do nothing
     session.close();
+  }
+
+  /**
+   * Returns a list of the annotations that are supported by the generator
+   * This is meant to be used by tools other than APT
+   * When the generator is extended by an APT processor, this method is never consulted
+   */
+  default List<Class> getSupportedAnnotations() {
+    return Collections.emptyList();
   }
 }
