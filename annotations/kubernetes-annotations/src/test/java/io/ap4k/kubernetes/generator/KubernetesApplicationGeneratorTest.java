@@ -3,6 +3,7 @@ package io.ap4k.kubernetes.generator;
 import io.ap4k.Session;
 import io.ap4k.SessionWriter;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.ObjectMeta;
 import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.processor.SimpleFileWriter;
@@ -38,6 +39,7 @@ class KubernetesApplicationGeneratorTest {
     Map<String, Object> map = new HashMap<String, Object>() {{
       put(KubernetesApplication.class.getName(), new HashMap<String, Object>() {{
         put("name", "generator-test");
+        put("group", "generator-test-group");
         put("version", "latest");
         put("replicas", 2);
       }});
@@ -50,7 +52,14 @@ class KubernetesApplicationGeneratorTest {
     assertThat(list.getItems())
       .filteredOn(i -> "Deployment".equals(i.getKind()))
       .filteredOn(i -> ((Deployment)i).getSpec().getReplicas() == 2)
-      .isNotEmpty();
+      .isNotEmpty()
+      .first()
+      .satisfies(d -> {
+        final ObjectMeta metadata = d.getMetadata();
+        assertThat(metadata.getName()).isSameAs("generator-test");
+        final Map<String, String> labels = metadata.getLabels();
+        assertThat(labels).contains(entry("app", "generator-test"), entry("group", "generator-test-group"));
+      });
 
     assertThat(tempDir.resolve("kubernetes.json")).exists();
     assertThat(tempDir.resolve("kubernetes.yml")).exists();
