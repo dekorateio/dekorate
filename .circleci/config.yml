@@ -43,7 +43,7 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn integration-test
+      - run: mvn integration-test -Pwith-examples
 
   OPENSHIFT_3_11:
     machine: true
