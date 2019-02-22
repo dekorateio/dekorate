@@ -1,1 +1,2 @@
 io.ap4k.openshift.generator.DefaultOpenshiftApplicationGenerator
+io.ap4k.openshift.generator.DefaultS2iBuildGenerator

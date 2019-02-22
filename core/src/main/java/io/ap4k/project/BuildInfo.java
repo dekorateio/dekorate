@@ -46,7 +46,6 @@ public class BuildInfo {
     this.version = version;
     this.packaging = packaging;
     this.outputFile = outputFile;
-    this.outputFile = outputFile;
     this.resourceOutputDir = resourceOutputDir;
   }
 
