@@ -147,6 +147,7 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
+                    <include>io/ap4k/istio/annotation/**</include>
                     <include>io/ap4k/istio/adapter/**</include>
                     <include>io/ap4k/istio/config/**</include>
                     <include>io/ap4k/istio/handler/**</include>
