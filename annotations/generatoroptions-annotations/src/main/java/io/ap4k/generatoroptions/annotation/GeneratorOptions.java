@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  **/
-package io.ap4k.annotation;
+package io.ap4k.generatoroptions.annotation;
 
 import io.ap4k.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;

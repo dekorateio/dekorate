@@ -15,12 +15,13 @@
  *
  **/
 
-package io.ap4k.processor;
+package io.ap4k.generatoroptions.processor;
 
 import io.ap4k.WithSession;
-import io.ap4k.annotation.GeneratorOptions;
 import io.ap4k.doc.Description;
-import io.ap4k.handler.GeneratorOptionsHandler;
+import io.ap4k.generatoroptions.annotation.GeneratorOptions;
+import io.ap4k.generatoroptions.handler.GeneratorOptionsHandler;
+import io.ap4k.processor.AbstractAnnotationProcessor;
 import io.ap4k.utils.Strings;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -35,7 +36,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 @Description("Processing generator options, which are used for customizing the generation process")
-@SupportedAnnotationTypes("io.ap4k.annotation.GeneratorOptions")
+@SupportedAnnotationTypes("io.ap4k.generatoroptions.annotation.GeneratorOptions")
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
   private static final String INPUT_DIR = "ap4k.input.dir";

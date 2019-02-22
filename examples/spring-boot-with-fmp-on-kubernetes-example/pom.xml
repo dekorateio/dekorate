@@ -21,6 +21,11 @@
   </properties>
 
  <dependencies>
+   <dependency>
+     <groupId>io.ap4k</groupId>
+     <artifactId>generatoroptions-annotations</artifactId>
+     <version>${project.version}</version>
+   </dependency>
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>openshift-annotations</artifactId>
