@@ -15,7 +15,6 @@
   <modules>
     <module>kubernetes-example</module>
     <module>openshift-example</module>
-    <module>istio-example</module>
     <module>service-catalog-example</module>
     <module>component-example</module>
     <module>component-service-example</module>

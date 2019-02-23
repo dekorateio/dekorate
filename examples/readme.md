@@ -19,6 +19,8 @@ A collection of examples used for showcasing and testing`ap4k`.
 
 # Experimental  
 
-- [Istio Example](istio-example)
 - [Component CRD](component-example)
 - [Component CRD with Service Catalog](component-service-example)
+
+# Incubating
+- [Istio Example](../incubaotr/istio-example)
