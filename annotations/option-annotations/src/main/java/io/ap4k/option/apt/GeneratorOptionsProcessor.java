@@ -15,7 +15,7 @@
  *
  **/
 
-package io.ap4k.option.processor;
+package io.ap4k.option.apt;
 
 import io.ap4k.WithSession;
 import io.ap4k.doc.Description;
