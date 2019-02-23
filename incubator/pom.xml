@@ -14,6 +14,7 @@
 
   <modules>
     <module>istio-annotations</module>
+    <module>istio-example</module>
   </modules>
 
 
