@@ -21,7 +21,7 @@ import java.nio.file.Path;
 
 public class Project {
 
-  private static String DEFAULT_AP4K_OUTPUT_DIR = "META-INF/ap4k";
+  public static String DEFAULT_AP4K_OUTPUT_DIR = "META-INF/ap4k";
 
   private Path root;
   private String ap4kInputDir;
@@ -64,9 +64,5 @@ public class Project {
 
   public Project withAp4kOutputDir(String ap4kOutputDir) {
     return new Project(root, ap4kInputDir, ap4kOutputDir, buildInfo);
-  }
-
-  public String getDefaultAp4kOutputDir() {
-    return DEFAULT_AP4K_OUTPUT_DIR;
   }
 }

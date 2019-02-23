@@ -32,6 +32,7 @@ import io.ap4k.openshift.config.S2iConfigBuilder;
 import io.ap4k.openshift.configurator.ApplySourceToImageHook;
 import io.ap4k.openshift.handler.SourceToImageHandler;
 import io.ap4k.openshift.hook.OcBuildHook;
+import io.ap4k.project.Project;
 
 import javax.lang.model.element.Element;
 import java.nio.file.Path;
@@ -82,6 +83,6 @@ public interface S2iBuildGenerator extends Generator, SessionListener, WithSessi
   }
 
   default Path getOutputDirectory() {
-    return getProject().getBuildInfo().getResourceOutputDir().resolve(getProject().getDefaultAp4kOutputDir());
+    return getProject().getBuildInfo().getResourceOutputDir().resolve(Project.DEFAULT_AP4K_OUTPUT_DIR);
   }
 }
