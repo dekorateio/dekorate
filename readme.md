@@ -24,6 +24,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
     - [environment variables](#adding-container-environment-variables)
     - [mounts](#working-with-volumes-and-mounts)
     - [ports and services](#adding-extra-ports-and-exposing-them-as-services)
+    - [jvm options](#jvm-options)
   - Openshift 
     - [image streams](#integrating-with-s2i)
     - build configurations
@@ -251,6 +252,36 @@ Currently the supported annotations for specifying volumes are:
 - @AzureDiskVolume
 - @AzureFileVolume
    
+#### Jvm Options
+It's common to pass the JVM options in the manifests using the `JAVA_OPTS` environment variable of the application container.
+This is something complex as it usually difficult to remember all options by heart and thus its error prone.
+The worst part is that you don't realize the mistake until its TOO late.
+
+Ap4k provides a way to manage those options using the `@JvmOption` annotation, which is included in the `options-annotations`.
+
+    import io.ap4k.options.annotation.JvmOptions
+    import io.ap4k.options.annotation.GarbageCollector;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
+    
+    @KubernetesApplication
+    @JvmOptions(server=true, xmx=1024, preferIpv4Stack=true, gc=GarbageCollector.SerialGC)
+    public class Main {
+
+      public static void main(String[] args) {
+        //Your code goes here
+      }
+    }
+   
+This module can be added to the project using:
+
+    <dependency>
+     <groupId>io.ap4k</groupId>
+     <artifactId>option-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+Note: The module is included in all starters.    
+    
 #### Adding the kubernetes annotation processor to the classpath
 
 This module can be added to the project using:
