@@ -95,9 +95,11 @@ limitations under the License.
                   <includes>
                     <include>io/ap4k/option/adapter/**</include>
                     <include>io/ap4k/option/config/**</include>
+                    <include>io/ap4k/option/configurator/**</include>
                     <include>io/ap4k/option/decorator/**</include>
+                    <include>io/ap4k/option/generator/**</include>
                     <include>io/ap4k/option/handler/**</include>
-                    <include>io/ap4k/option/processor/**</include>
+                    <include>io/ap4k/option/apt/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>
