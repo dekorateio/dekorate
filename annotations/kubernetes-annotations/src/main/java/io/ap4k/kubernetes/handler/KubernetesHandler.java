@@ -84,7 +84,8 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     super.addDecorators(group, config);
     resources.decorate(group, new AddIngressDecorator(config, resources.getLabels()));
     resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector()));
-    resources.decorate(group, new ApplyImageDecorator(config.getName(), config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
+    final String imagePrefix = config.getRegistry().isEmpty() ? "" : config.getRegistry() + "/";
+    resources.decorate(group, new ApplyImageDecorator(config.getName(), imagePrefix + config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
   }
 
   /**

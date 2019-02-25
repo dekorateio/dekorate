@@ -41,6 +41,12 @@ import java.lang.annotation.Target;
       public @interface KubernetesApplication {
 
         /**
+         * The hostname of the docker registry to use
+         * @return The specified registry name.
+         */
+        String registry() default "";
+
+        /**
          * The group of the application.
          * This value will be use as:
          * - docker image repo
