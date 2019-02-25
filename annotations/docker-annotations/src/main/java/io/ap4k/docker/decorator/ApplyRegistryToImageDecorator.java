@@ -17,12 +17,12 @@
 package io.ap4k.docker.decorator;
 
 import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
-import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
+import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;
+import io.ap4k.kubernetes.decorator.ApplyImageDecorator;
 import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.utils.Images;
 
-
-public class ApplyRegistryToImageDecorator extends Decorator<DeploymentConfigBuilder> {
+public class ApplyRegistryToImageDecorator extends Decorator<DeploymentBuilder> {
 
   private final String name;
   private final String image;
@@ -33,9 +33,9 @@ public class ApplyRegistryToImageDecorator extends Decorator<DeploymentConfigBui
   }
 
   @Override
-  public void visit(DeploymentConfigBuilder deploymentConfig) {
-    if (name.equals(deploymentConfig.getMetadata().getName())) {
-      deploymentConfig.accept(new Decorator<ContainerFluent>() {
+  public void visit(DeploymentBuilder deployment) {
+    if (name.equals(deployment.getMetadata().getName())) {
+      deployment.accept(new Decorator<ContainerFluent>() {
         @Override
         public void visit(ContainerFluent container) {
           if (container.getName().equals(name)) {
@@ -45,4 +45,9 @@ public class ApplyRegistryToImageDecorator extends Decorator<DeploymentConfigBui
       });
     }
   }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ApplyImageDecorator.class};
+    }
 }
