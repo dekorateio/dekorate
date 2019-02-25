@@ -13,12 +13,15 @@ import io.ap4k.docker.decorator.ApplyRegistryToImageDecorator;
 import io.ap4k.docker.hook.DockerBuildHook;
 import io.ap4k.docker.hook.DockerPushHook;
 import io.ap4k.hook.OrderedHook;
+import io.ap4k.utils.Strings;
 
 import javax.lang.model.element.Element;
 import java.util.Map;
 import java.util.Optional;
 
 public interface EnableDockerBuildRegistrar extends Generator, SessionListener, WithProject {
+
+  String DEFAULT_REGISTRY = "docker.io";
 
   default void add(Element mainClass) {
     EnableDockerBuild enableDockerBuild = mainClass.getAnnotation(EnableDockerBuild.class);
@@ -39,8 +42,10 @@ public interface EnableDockerBuildRegistrar extends Generator, SessionListener, 
   default void on(ConfigurationSupplier<DockerBuildConfig> config) {
       session.configurators().add(config);
       DockerBuildConfig buildConfig = config.get();
-      if (buildConfig.isAutoPushEnabled()) {
+      if  (Strings.isNotNullOrEmpty(buildConfig.getRegistry()))  {
         session.resources().decorate(new ApplyRegistryToImageDecorator(buildConfig.getRegistry(), buildConfig.getGroup(), buildConfig.getName(), buildConfig.getVersion()));
+      } else if (buildConfig.isAutoPushEnabled()) {
+        session.resources().decorate(new ApplyRegistryToImageDecorator(DEFAULT_REGISTRY, buildConfig.getGroup(), buildConfig.getName(), buildConfig.getVersion()));
       }
       session.addListener(this);
   }

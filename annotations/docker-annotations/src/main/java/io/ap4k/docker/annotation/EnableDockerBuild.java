@@ -83,7 +83,7 @@ import java.lang.annotation.Target;
         * The registry that holds the image.
         * @return The registry or empty string if no registry has been specified.
         */
-        String registry() default "docker.io";
+        String registry() default "";
 
        /**
         * Flag to automatically push the image, to the specified registry.
