@@ -16,7 +16,6 @@
 **/
 package io.ap4k.openshift.hook;
 
-import io.ap4k.Ap4kException;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.Secret;
@@ -28,46 +27,33 @@ import io.ap4k.hook.ProjectHook;
 import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.openshift.util.OpenshiftUtils;
 import io.ap4k.project.Project;
-import io.ap4k.utils.Serialization;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class OcBuildHook extends ProjectHook {
 
-  private static final String OPENSHIFT_YML = "openshift.yml";
   private final String name;
   private final S2iConfig config;
-  private final Path resourceDir;
   private final OpenShiftClient client = new DefaultOpenShiftClient();
+  private final KubernetesList kubernetesList;
 
-  public OcBuildHook(String name, S2iConfig config, Project project, Path resourceDir) {
+  public OcBuildHook(String name, S2iConfig config, Project project, KubernetesList kubernetesList) {
     super(project);
     this.name = name;
     this.config = config;
-    this.resourceDir = resourceDir;
+    this.kubernetesList = kubernetesList;
   }
 
   public void init () {
-    File yml = resourceDir.resolve(OPENSHIFT_YML).toFile();
-    List<HasMetadata> items = new ArrayList<>();
-    if (yml.exists()) try (FileInputStream fis = new FileInputStream(yml)) {
-      items.addAll(Serialization.unmarshal(fis, KubernetesList.class).getItems());
-      items.stream()
-        .filter(i -> config.isAutoDeployEnabled() || i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret)
-        .forEach(i -> {
-          HasMetadata item = client.resource(i).createOrReplace();
-          System.out.println("Applied: " + item.getKind() + " " + i.getMetadata().getName());
-        });
-      OpenshiftUtils.waitForImageStreamTags(items, 2, TimeUnit.MINUTES);
-    } catch (IOException e) {
-      Ap4kException.launderThrowable(e);
-    }
+    final List<HasMetadata> items = kubernetesList.getItems();
+    items.stream()
+            .filter(i -> config.isAutoDeployEnabled() || i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret)
+            .forEach(i -> {
+              HasMetadata item = client.resource(i).createOrReplace();
+              System.out.println("Applied: " + item.getKind() + " " + i.getMetadata().getName());
+            });
+    OpenshiftUtils.waitForImageStreamTags(items, 2, TimeUnit.MINUTES);
   }
 
   @Override
