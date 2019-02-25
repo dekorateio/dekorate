@@ -29,6 +29,8 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,30 +55,24 @@ public class AptWriter implements SessionWriter, WithProject {
   /**
    * Writes all {@link Session} resources.
    * @param session The target session.
+   * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
-  public void write(Session session) {
+  public Map<String, String> write(Session session) {
     session.close();
     Map<String, KubernetesList> resources = session.getGeneratedResources();
     Set<? extends Configuration> configurations = session.configurators().toSet();
     resources.forEach((g, l) -> write(g, l));
     configurations.forEach(c -> write(c));
     write(getProject());
-  }
-
-
-  /**
-   * Writes all {@link Session} resources.
-   * @param resources The target session resources.
-   */
-  public void write(Map<String, KubernetesList> resources) {
-    resources.forEach((g, l) -> write(g, l));
+    return null;
   }
 
   /**
    * Writes a {@link Configuration}.
    * @param config  The target session configurations.
+   * @return Map Entry containing the file system path of the written configuration and the actual content as the value
    */
-  public void write(Configuration config) {
+  public Map.Entry<String, String> write(Configuration config) {
     try {
       String name = config.getClass().getSimpleName();
       for (String s : STRIP) {
@@ -85,7 +81,9 @@ public class AptWriter implements SessionWriter, WithProject {
       name = name.toLowerCase();
       FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getAp4kOutputDir() + "/" + String.format(CONFIG, name, YML));
       try (Writer writer = yml.openWriter()) {
-        writer.write(Serialization.asYaml(config));
+        final String value = Serialization.asYaml(config);
+        writer.write(value);
+        return new AbstractMap.SimpleEntry<>(yml.toString(), value);
       }
     } catch (IOException e) {
       throw new RuntimeException("Error writing resources");
@@ -95,12 +93,15 @@ public class AptWriter implements SessionWriter, WithProject {
   /**
    * Writes a {@link Project}.
    * @param project  The project.
+   * @return Map Entry containing the file system path of the written project and the actual content as the value
    */
-  public void write(Project project) {
+  public Map.Entry<String, String> write(Project project) {
     try {
       FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(PROJECT, YML));
       try (Writer writer = yml.openWriter()) {
-        writer.write(Serialization.asYaml(project));
+        final String value = Serialization.asYaml(project);
+        writer.write(value);
+        return new AbstractMap.SimpleEntry<>(yml.toString(), value);
       }
     } catch (IOException e) {
       throw new RuntimeException("Error writing resources");
@@ -111,19 +112,26 @@ public class AptWriter implements SessionWriter, WithProject {
    * Write the resources contained in the {@link KubernetesList} in a directory named after the specififed group.
    * @param group The group.
    * @param list  The resource list.
+   * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
-  public void write(String group, KubernetesList list) {
+  public Map<String, String> write(String group, KubernetesList list) {
     try {
+      final Map<String, String> result = new HashMap<>();
       FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getAp4kOutputDir() + "/" + String.format(FILENAME, group, JSON));
       try (Writer writer = json.openWriter()) {
-        writer.write(Serialization.asJson(list));
+        final String jsonValue = Serialization.asJson(list);
+        writer.write(jsonValue);
+        result.put(json.getName(), jsonValue);
       }
       FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getAp4kOutputDir() + "/" + String.format(FILENAME, group, YML));
       try (Writer writer = yml.openWriter()) {
-        writer.write(Serialization.asYaml(list));
+        final String yamlValue = Serialization.asYaml(list);
+        writer.write(yamlValue);
+        result.put(yml.getName(), yamlValue);
       }
     } catch (IOException e) {
       throw new RuntimeException("Error writing resources");
     }
+    return null;
   }
 }
