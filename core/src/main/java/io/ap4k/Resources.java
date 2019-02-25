@@ -26,19 +26,18 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class Resources {
 
   private static final String DEFAULT_GROUP = "kubernetes";
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
   private final KubernetesListBuilder global = new KubernetesListBuilder();
-  private final Set<Decorator> decorators = new HashSet<>();
+  private final Set<Decorator> globalDecorators = new HashSet<>();
 
   private final Map<String, Set<Decorator>> groupDecorators = new HashMap<>();
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
@@ -65,7 +64,7 @@ public class Resources {
    * @param decorator   The decorator.
    */
   public void decorate(Decorator decorator) {
-    decorators.add(decorator);
+    globalDecorators.add(decorator);
   }
 
   /**
@@ -75,7 +74,7 @@ public class Resources {
    */
   public void decorate(String group, Decorator decorator) {
     if (!groupDecorators.containsKey(group))  {
-      groupDecorators.put(group, new LinkedHashSet<>());
+      groupDecorators.put(group, new TreeSet<>());
     }
     groupDecorators.get(group).add(decorator);
   }
@@ -85,7 +84,7 @@ public class Resources {
    * @param decorator   The decorator.
    */
   public void decorate(Doneable<? extends Decorator> decorator) {
-    decorators.add(decorator.done()); }
+    globalDecorators.add(decorator.done()); }
 
   /**
    * Add a resource to all groups.
@@ -116,7 +115,7 @@ public class Resources {
    */
   public void decorateCustom(String group, Decorator decorator) {
     if (!customDecorators.containsKey(group)) {
-      customDecorators.put(group, new LinkedHashSet<>());
+      customDecorators.put(group, new TreeSet<>());
     }
     customDecorators.get(group).add(decorator);
   }
@@ -151,11 +150,12 @@ public class Resources {
       entry.getValue().addAllToItems(allGlobals);
     }
 
-    decorators.forEach(v -> groups.forEach((g, b) -> b.accept(v)));
-
     groupDecorators.forEach((group, decorators) -> {
       if (groups.containsKey(group)) {
-        for (Decorator d : decorators) {
+        Set<Decorator> union = new TreeSet<>();
+        union.addAll(decorators);
+        union.addAll(globalDecorators);
+        for (Decorator d : union) {
           groups.get(group).accept(d);
         }
       }});
