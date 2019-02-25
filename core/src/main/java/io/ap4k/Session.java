@@ -70,6 +70,11 @@ public class Session {
     return INSTANCE;
   }
 
+  //should be used only for testing
+  public static void clearSession() {
+    INSTANCE = null;
+  }
+
   public Configurators configurators() {
     return configurators;
   }
@@ -98,16 +103,22 @@ public class Session {
     listeners.add(listener);
   }
 
-  public void close() {
+  /**
+   * @return Map containing the file system paths of the output files as keys and their actual content as the values
+   */
+  public Map<String, String> close() {
     if (closed.compareAndSet(false, true)) {
       generate();
       SessionWriter w = writer.get();
       if (w == null) {
         throw new IllegalStateException("No writer has been specified!");
       }
-      w.write(this);
+      final Map<String, String> result = w.write(this);
       listeners.forEach(SessionListener::onClosed);
+      return result;
     }
+
+    return new HashMap<>();
   }
 
   /**

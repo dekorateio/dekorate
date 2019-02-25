@@ -28,7 +28,7 @@ class OpenshiftApplicationGeneratorTest {
   }
 
   @Test
-  public void shouldGenerateOpenshift()  {
+  public void shouldGenerateOpenshiftAndWriteToTheFilesystem()  {
     SessionWriter writer = new SimpleFileWriter(tempDir);
     Session session = Session.getSession();
     session.setWriter(writer);
@@ -46,12 +46,17 @@ class OpenshiftApplicationGeneratorTest {
     }};
 
     generator.add(map);
-    session.close();
+    final Map<String, String> result = session.close();
     KubernetesList list=session.getGeneratedResources().get("openshift");
     assertThat(list).isNotNull();
     assertThat(list.getItems())
       .filteredOn(i -> "DeploymentConfig".equals(i.getKind()))
       .filteredOn(i -> ((DeploymentConfig)i).getSpec().getReplicas() == 2)
       .isNotEmpty();
+
+    assertThat(tempDir.resolve("openshift.json")).exists();
+    assertThat(tempDir.resolve("openshift.yml")).exists();
+
+    assertThat(result).hasSize(4);
   }
 }
