@@ -18,7 +18,7 @@
 package io.ap4k.kubernetes.annotation;
 
 
-import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.config.ApplicationConfiguration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
 @Pojo(name = "KubernetesConfig", relativePath = "../config",
       mutable = true,
-      superClass = Configuration.class,
+      superClass = ApplicationConfiguration.class,
       withStaticBuilderMethod = false,
       withStaticAdapterMethod = false,
       adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))

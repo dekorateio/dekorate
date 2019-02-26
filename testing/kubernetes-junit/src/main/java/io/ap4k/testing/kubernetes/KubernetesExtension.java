@@ -23,6 +23,7 @@ import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.hook.DockerBuildHook;
 import io.ap4k.docker.hook.DockerPushHook;
 import io.ap4k.hook.OrderedHook;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.testing.WithKubernetesClient;
 import io.ap4k.testing.WithProject;
 import io.ap4k.testing.WithPod;
@@ -57,18 +58,19 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
 
     if (hasDockerBuildConfig()) {
       DockerBuildConfig dockerBuildConfig = getDockerBuildConfig();
+      KubernetesConfig kubernetesConfig = getKubernetesConfig();
 
       //
       // We use teh isAutoPushEnabled flag of the @EnableDockerBuild annotation and not @KubernetesIntegrationTest.
       // The reason is that the @EnableDockerBuild.isAutoPushEnabled() affects the generated manifests (adds the registry).
       // and thus the tests MUST follow.
       if (dockerBuildConfig.isAutoPushEnabled()) {
-        DockerBuildHook buildHook = new DockerBuildHook(getProject(), dockerBuildConfig);
-        DockerPushHook pushHook = new DockerPushHook(getProject(), dockerBuildConfig);
+        DockerBuildHook buildHook = new DockerBuildHook(getProject(), kubernetesConfig,  dockerBuildConfig);
+        DockerPushHook pushHook = new DockerPushHook(getProject(), kubernetesConfig, dockerBuildConfig);
         OrderedHook hook = OrderedHook.create(buildHook, pushHook);
         hook.run();
       } else if (config.isBuildEnabled()) {
-        DockerBuildHook build = new DockerBuildHook(getProject(), dockerBuildConfig);
+        DockerBuildHook build = new DockerBuildHook(getProject(), kubernetesConfig, dockerBuildConfig);
         build.run();
       }
     }

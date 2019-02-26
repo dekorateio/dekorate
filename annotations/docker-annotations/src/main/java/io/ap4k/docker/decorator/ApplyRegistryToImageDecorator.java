@@ -21,24 +21,27 @@ import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;
 import io.ap4k.kubernetes.decorator.ApplyImageDecorator;
 import io.ap4k.kubernetes.decorator.Decorator;
 import io.ap4k.utils.Images;
+import io.ap4k.Resources;
 
 public class ApplyRegistryToImageDecorator extends Decorator<DeploymentBuilder> {
 
-  private final String name;
-  private final String image;
+  private final String registry;
+  private final Resources resources;
 
-  public ApplyRegistryToImageDecorator(String registry, String group, String name, String version) {
-    this.name = name;
-    this.image = Images.getImage(registry, group, name, version);
+  public ApplyRegistryToImageDecorator(Resources resources, String registry) {
+    this.registry=registry;
+    this.resources=resources;
   }
 
   @Override
   public void visit(DeploymentBuilder deployment) {
+    String name = resources.getName();
     if (name.equals(deployment.getMetadata().getName())) {
       deployment.accept(new Decorator<ContainerFluent>() {
         @Override
         public void visit(ContainerFluent container) {
           if (container.getName().equals(name)) {
+            String image = Images.getImage(registry, resources.getGroup(), resources.getName(), resources.getVersion());
             container.withImage(image);
           }
         }

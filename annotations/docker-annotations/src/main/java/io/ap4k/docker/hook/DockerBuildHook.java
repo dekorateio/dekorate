@@ -16,11 +16,11 @@
 **/
 package io.ap4k.docker.hook;
 
+import io.ap4k.Coordinates;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.hook.ProjectHook;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Images;
-import io.ap4k.utils.Strings;
 
 import java.io.File;
 
@@ -29,10 +29,10 @@ public class DockerBuildHook extends ProjectHook {
   private final File dockerFile;
   private final String image;
 
-  public DockerBuildHook(Project project, DockerBuildConfig config) {
+  public DockerBuildHook(Project project, Coordinates coordinates, DockerBuildConfig config ) {
     super(project);
     this.dockerFile = project.getRoot().resolve(config.getDockerFile()).toFile();
-    this.image = Images.getImage(config.getRegistry(), config.getGroup(), config.getName(), config.getVersion());
+    this.image = Images.getImage(config.getRegistry(), coordinates.getGroup(), coordinates.getName(), coordinates.getVersion());
   }
 
   @Override
