@@ -5,7 +5,7 @@
   <groupId>io.ap4k</groupId>
   <artifactId>ap4k-project</artifactId>
   <packaging>pom</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2.2</version>
   <name>AP4K</name>
   <description>A collection of annotations and processors for Kubernetes</description>
 
@@ -40,7 +40,7 @@
     <connection>scm:git:git@github.com:ap4k/ap4k.git</connection>
     <developerConnection>scm:git:git@github.com:ap4k/ap4k.git</developerConnection>
     <url>http://github.com/ap4k/ap4k</url>
-    <tag>${project.version}</tag>
+    <tag>0.2.2</tag>
   </scm>
 
   <distributionManagement>
