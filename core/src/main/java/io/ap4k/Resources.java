@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Resources {
+public class Resources implements Coordinates {
 
   private static final String DEFAULT_GROUP = "kubernetes";
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();

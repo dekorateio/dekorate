@@ -1,6 +1,7 @@
 package io.ap4k.docker.registrar;
 
 import io.ap4k.Generator;
+import io.ap4k.Resources;
 import io.ap4k.SessionListener;
 import io.ap4k.WithProject;
 import io.ap4k.config.ConfigurationSupplier;
@@ -8,7 +9,6 @@ import io.ap4k.docker.adapter.DockerBuildConfigAdapter;
 import io.ap4k.docker.annotation.EnableDockerBuild;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.docker.configurator.ApplyDockerBuildHook;
-import io.ap4k.docker.configurator.ApplyProjectInfoToDockerBuildConfigDecorator;
 import io.ap4k.docker.decorator.ApplyRegistryToImageDecorator;
 import io.ap4k.docker.hook.DockerBuildHook;
 import io.ap4k.docker.hook.DockerPushHook;
@@ -32,7 +32,6 @@ public interface EnableDockerBuildRegistrar extends Generator, SessionListener, 
     EnableDockerBuild enableDockerBuild = mainClass.getAnnotation(EnableDockerBuild.class);
     on(new ConfigurationSupplier<>(DockerBuildConfigAdapter
       .newBuilder(enableDockerBuild)
-      .accept(new ApplyProjectInfoToDockerBuildConfigDecorator(getProject()))
       .accept(new ApplyDockerBuildHook())));
   }
 
@@ -40,7 +39,6 @@ public interface EnableDockerBuildRegistrar extends Generator, SessionListener, 
   default void add(Map map) {
     on(new ConfigurationSupplier<>(DockerBuildConfigAdapter
       .newBuilder(propertiesMap(map, EnableDockerBuild.class))
-      .accept(new ApplyProjectInfoToDockerBuildConfigDecorator(getProject()))
       .accept(new ApplyDockerBuildHook())));
   }
 
@@ -48,9 +46,9 @@ public interface EnableDockerBuildRegistrar extends Generator, SessionListener, 
       session.configurators().add(config);
       DockerBuildConfig buildConfig = config.get();
       if  (Strings.isNotNullOrEmpty(buildConfig.getRegistry()))  {
-        session.resources().decorate(new ApplyRegistryToImageDecorator(buildConfig.getRegistry(), buildConfig.getGroup(), buildConfig.getName(), buildConfig.getVersion()));
+        session.resources().decorate(new ApplyRegistryToImageDecorator(session.resources(), buildConfig.getRegistry()));
       } else if (buildConfig.isAutoPushEnabled()) {
-        session.resources().decorate(new ApplyRegistryToImageDecorator(DEFAULT_REGISTRY, buildConfig.getGroup(), buildConfig.getName(), buildConfig.getVersion()));
+        session.resources().decorate(new ApplyRegistryToImageDecorator(session.resources(), DEFAULT_REGISTRY));
       }
       session.addListener(this);
   }
@@ -61,23 +59,24 @@ public interface EnableDockerBuildRegistrar extends Generator, SessionListener, 
       return;
     }
     DockerBuildConfig dockerBuildConfig = config.get();
+    Resources resources = session.resources();
     if (dockerBuildConfig.isAutoPushEnabled()) {
       // When deploy is enabled, we scale the Deployment down before push
       // then scale it back up once the image has been successfully pushed
       // This ensure that the pod runs the proper image
       List<ProjectHook> hooks = new ArrayList<>();
       if (isDeployEnabled()) {
-        hooks.add(new ScaleDeploymentHook(getProject(), config.get().getName(), 0));
+        hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 0));
       }
-      hooks.add(new DockerBuildHook(getProject(), config.get()));
-      hooks.add(new DockerPushHook(getProject(), config.get()));
+      hooks.add(new DockerBuildHook(getProject(), resources, config.get()));
+      hooks.add(new DockerPushHook(getProject(), resources, config.get()));
       if (isDeployEnabled()) {
-        hooks.add(new ScaleDeploymentHook(getProject(), config.get().getName(), 1));
+        hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 1));
       }
       OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
       hook.register();
     } else if (dockerBuildConfig.isAutoBuildEnabled()) {
-      DockerBuildHook hook = new DockerBuildHook(getProject(), config.get());
+      DockerBuildHook hook = new DockerBuildHook(getProject(), resources, config.get());
       hook.register();
     }
   }

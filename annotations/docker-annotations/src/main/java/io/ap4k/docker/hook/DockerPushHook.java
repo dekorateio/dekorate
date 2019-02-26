@@ -16,21 +16,19 @@
 **/
 package io.ap4k.docker.hook;
 
+import io.ap4k.Coordinates;
 import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.hook.ProjectHook;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Images;
-import io.ap4k.utils.Strings;
-
-import java.io.File;
 
 public class DockerPushHook extends ProjectHook {
 
   private final String image;
 
-  public DockerPushHook(Project project, DockerBuildConfig config) {
+  public DockerPushHook(Project project, Coordinates coordinates, DockerBuildConfig config) {
     super(project);
-    this.image = Images.getImage(config.getRegistry(), config.getGroup(), config.getName(), config.getVersion());
+    this.image = Images.getImage(config.getRegistry(), coordinates.getGroup(), coordinates.getName(), coordinates.getVersion());
   }
 
   @Override
