@@ -47,6 +47,6 @@ public class DockerBuildHook extends ProjectHook {
 
   @Override
   public void run() {
-    exec("docker", "build", "-t" + image, project.getRoot().toAbsolutePath().toString());
+    exec("docker", "build", "-f" + dockerFile.getAbsolutePath(), "-t" + image, project.getRoot().toAbsolutePath().toString());
   }
 }
