@@ -76,6 +76,12 @@ import java.lang.annotation.Target;
          */
         String version() default "";
 
+       /**
+        * The init containers.
+        * @return the init containers.
+        */
+        Container[] initContainers() default {};
+
         /**
          * Custom labels to add to all resources.
          * @return The labels.
@@ -181,6 +187,13 @@ import java.lang.annotation.Target;
          * @return  The probe.
          */
         Probe readinessProbe() default @Probe();
+
+
+        /**
+         * The sidecars.
+         * @return the sidecar containers.
+         */
+        Container[] sidecars() default {};
 
       /**
        * Flag to trigger the registration of the deploy hook.

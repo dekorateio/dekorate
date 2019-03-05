@@ -26,6 +26,7 @@ import io.ap4k.kubernetes.config.AzureDiskVolume;
 import io.ap4k.kubernetes.config.AzureFileVolume;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.ConfigMapVolume;
+import io.ap4k.kubernetes.config.Container;
 import io.ap4k.kubernetes.config.Env;
 import io.ap4k.kubernetes.config.GitRepoVolume;
 import io.ap4k.kubernetes.config.Label;
@@ -68,8 +69,8 @@ class KubernetesHandlerTest {
   }
 
   private class KubernetesConfigSubclass extends KubernetesConfig {
-    public KubernetesConfigSubclass(Project project, Map<ConfigKey, Object> attributes, String group, String name, String version, Label[] labels, Annotation[] annotations, Env[] envVars, String workingDir, String[] commands, String[] arguments, int replicas, String serviceAccount, String host, Port[] ports, ServiceType serviceType, PersistentVolumeClaimVolume[] pvcVolumes, SecretVolume[] secretVolumes, ConfigMapVolume[] configMapVolumes, GitRepoVolume[] gitRepoVolumes, AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes, AzureDiskVolume[] azureDiskVolumes, AzureFileVolume[] azureFileVolumes, Mount[] mounts, ImagePullPolicy imagePullPolicy, Probe livenessProbe, Probe readinessProbe, Boolean autodeployEnabled) {
-      super(project, attributes, group, name, version, labels, annotations, envVars, workingDir, commands, arguments, replicas, serviceAccount, host, ports, serviceType, pvcVolumes, secretVolumes, configMapVolumes, gitRepoVolumes, awsElasticBlockStoreVolumes, azureDiskVolumes, azureFileVolumes, mounts, imagePullPolicy, livenessProbe, readinessProbe, autodeployEnabled);
+    public KubernetesConfigSubclass(Project project, Map<ConfigKey, Object> attributes, String group, String name, String version, Container[] initContainers, Label[] labels, Annotation[] annotations, Env[] envVars, String workingDir, String[] commands, String[] arguments, int replicas, String serviceAccount, String host, Port[] ports, ServiceType serviceType, PersistentVolumeClaimVolume[] pvcVolumes, SecretVolume[] secretVolumes, ConfigMapVolume[] configMapVolumes, GitRepoVolume[] gitRepoVolumes, AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes, AzureDiskVolume[] azureDiskVolumes, AzureFileVolume[] azureFileVolumes, Mount[] mounts, ImagePullPolicy imagePullPolicy, Probe livenessProbe, Probe readinessProbe, Container[] sidecars, Boolean autodeployEnabled) {
+      super(project, attributes, group, name, version, initContainers, labels, annotations, envVars, workingDir, commands, arguments, replicas, serviceAccount, host, ports, serviceType, pvcVolumes, secretVolumes, configMapVolumes, gitRepoVolumes, awsElasticBlockStoreVolumes, azureDiskVolumes, azureFileVolumes, mounts, imagePullPolicy, livenessProbe, readinessProbe, sidecars, autodeployEnabled);
     }
   }
 }

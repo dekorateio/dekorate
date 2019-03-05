@@ -25,6 +25,8 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
     - [mounts](#working-with-volumes-and-mounts)
     - [ports and services](#adding-extra-ports-and-exposing-them-as-services)
     - [jvm options](#jvm-options)
+    - [init containers](#init-containers)
+    - [sidecars](#sidecars)
   - Openshift 
     - [image streams](#integrating-with-s2i)
     - build configurations
@@ -282,6 +284,58 @@ This module can be added to the project using:
     
 Note: The module is included in all starters.    
     
+#### Init Containers
+
+If for any reason the application requires the use of init containers, they can be easily defined using the `initContainer`
+property, as demonstrated below.
+
+    import io.ap4k.kubernetes.annotation.Container;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
+    
+    @KubernetesApplication(initContainers = @Container(image="foo/bar:latest", command="foo"))
+    public class Main {
+
+      public static void main(String[] args) {
+        //Your code goes here
+      }
+    }
+
+The [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java) supports the following fields:
+
+- Image
+- Image Pull Policy
+- Commands
+- Arguments
+- Environment Variables
+- Mounts
+- Probes
+
+#### Sidecars
+
+Similarly to [init containers](#init-containers) support for sidecars is also provided using the `sidecars` property. For example:
+
+    import io.ap4k.kubernetes.annotation.Container;
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
+    
+    @KubernetesApplication(sidecars = @Container(image="jaegertracing/jaeger-agent",
+                                                 args="--collector.host-port=jaeger-collector.jaeger-infra.svc:14267"))
+    public class Main {
+
+      public static void main(String[] args) {
+        //Your code goes here
+      }
+    }
+    
+As in the case of [init containers](#init-containers) the [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java) supports the following fields:
+
+- Image
+- Image Pull Policy
+- Commands
+- Arguments
+- Environment Variables
+- Mounts
+- Probes
+
 #### Adding the kubernetes annotation processor to the classpath
 
 This module can be added to the project using:

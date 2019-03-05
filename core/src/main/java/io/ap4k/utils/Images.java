@@ -82,6 +82,25 @@ public class Images {
     }
     return tagged;
   }
+  /**
+   * Return the docker image name.
+   * @param image The docker image.
+   * @return The image name.
+   */
+  public static String getName(String image) {
+    String[] parts = image.split(SLASH);
+    String tagged = image;
+    if (parts.length == 1) {
+      tagged = image;
+    } else {
+      tagged = parts[parts.length - 1];
+    }
+
+    if (tagged.contains(COLN)) {
+      return tagged.substring(0, tagged.indexOf(COLN));
+    }
+    return tagged;
+  }
 
   /**
    * Return the tag of the image.

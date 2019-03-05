@@ -22,6 +22,7 @@ import io.ap4k.kubernetes.annotation.Annotation;
 import io.ap4k.kubernetes.annotation.AwsElasticBlockStoreVolume;
 import io.ap4k.kubernetes.annotation.AzureDiskVolume;
 import io.ap4k.kubernetes.annotation.AzureFileVolume;
+import io.ap4k.kubernetes.annotation.Container;
 import io.ap4k.kubernetes.annotation.GitRepoVolume;
 import io.ap4k.kubernetes.annotation.ImagePullPolicy;
 import io.ap4k.kubernetes.annotation.Label;
@@ -81,6 +82,12 @@ public @interface OpenshiftApplication {
    * @return The version.
    */
   String version() default "";
+
+  /**
+  * The init containers.
+  * @return the init containers.
+  */
+  Container[] initContainers() default {};
 
   /**
    * Custom labels to add to all resources.
@@ -184,6 +191,12 @@ public @interface OpenshiftApplication {
    * @return  The probe.
    */
   Probe readinessProbe() default @Probe();
+
+  /**
+  * The sidecars.
+  * @return the sidecar containers.
+  */
+  Container[] sidecars() default {};
 
   boolean exposeRoute() default false;
 
