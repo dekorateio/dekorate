@@ -29,12 +29,13 @@ public class AddLivenessProbeDecorator extends AbstractAddProbeDecorator {
     super(containerName, probe);
   }
 
+  public AddLivenessProbeDecorator(String deploymentName, String containerName, Probe probe) {
+    super(deploymentName, containerName, probe);
+  }
+
   @Override
-  public void visit(ContainerFluent<?> container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     if (probe == null) {
-      return;
-    }
-    if (!isApplicable(container)) {
       return;
     }
     if (Strings.isNullOrEmpty(probe.getExecAction()) &&

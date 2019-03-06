@@ -21,16 +21,21 @@ import io.ap4k.deps.kubernetes.api.model.apps.DeploymentSpecFluent;
 import io.ap4k.doc.Description;
 
 @Description("Apply the number of replicas to the DeploymentSpec.")
-public class ApplyReplicasDecorator extends Decorator<DeploymentSpecFluent> {
+public class ApplyReplicasDecorator extends ApplicationDeploymentDecorator<DeploymentSpecFluent> {
 
   private final int replicas;
 
   public ApplyReplicasDecorator(int replicas) {
+    this(ANY, replicas);
+  }
+
+  public ApplyReplicasDecorator(String deploymentName, int replicas) {
+    super(deploymentName);
     this.replicas = replicas;
   }
 
   @Override
-  public void visit(DeploymentSpecFluent deploymentSpec) {
+  public void andThenVisit(DeploymentSpecFluent deploymentSpec) {
     if (replicas > 0) {
       deploymentSpec.withReplicas(replicas);
     }

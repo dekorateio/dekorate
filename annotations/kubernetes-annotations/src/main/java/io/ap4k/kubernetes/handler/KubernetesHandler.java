@@ -85,12 +85,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   @Override
   protected void addDecorators(String group, KubernetesConfig config) {
     super.addDecorators(group, config);
-    for (Container container : config.getInitContainers()) {
-      resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
-    }
-    for (Container container : config.getSidecars()) {
-      resources.decorate(group, new AddSidecarDecorator(config.getName(), container));
-    }
+
     resources.decorate(group, new AddIngressDecorator(config, resources.getLabels()));
     resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector()));
     resources.decorate(group, new ApplyImageDecorator(config.getName(), config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));

@@ -25,16 +25,17 @@ import io.ap4k.doc.Description;
 @Description("Add a readiness probe to all containers.")
 public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
 
-  public AddReadinessProbeDecorator(String container, Probe probe) {
-    super(container, probe);
+  public AddReadinessProbeDecorator(String containerName, Probe probe) {
+    super(containerName, probe);
+  }
+
+  public AddReadinessProbeDecorator(String deploymentName, String containerName, Probe probe) {
+    super(containerName, probe);
   }
 
   @Override
-  public void visit(ContainerFluent<?> container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     if (probe == null) {
-      return;
-    }
-    if (!isApplicable(container)) {
       return;
     }
     if (Strings.isNullOrEmpty(probe.getExecAction()) &&

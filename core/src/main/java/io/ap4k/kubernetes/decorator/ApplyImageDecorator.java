@@ -18,19 +18,22 @@ package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
 
-public class ApplyImageDecorator extends ApplicationContainerDecorator {
+public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> {
 
   private final String image;
 
   public ApplyImageDecorator(String containerName, String image) {
-    super(containerName);
+    super(null, containerName);
+    this.image = image;
+  }
+
+  public ApplyImageDecorator(String deploymentName, String containerName, String image) {
+    super(deploymentName, containerName);
     this.image = image;
   }
 
   @Override
-  public void visit(ContainerFluent container) {
-    if (isApplicable(container)) {
+  public void andThenVisit(ContainerFluent container) {
       container.withImage(image);
-    }
   }
 }

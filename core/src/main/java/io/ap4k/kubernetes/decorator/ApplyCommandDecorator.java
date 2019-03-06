@@ -20,17 +20,22 @@ import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
 import io.ap4k.doc.Description;
 
 @Description("A decorator that applies the command to the application container.")
-public class ApplyCommandDecorator extends ApplicationContainerDecorator {
+public class ApplyCommandDecorator extends ApplicationContainerDecorator<ContainerFluent> {
 
   private final String[] command;
 
   public ApplyCommandDecorator(String containerName, String... command) {
-    super(containerName);
+    super(null, containerName);
+    this.command = command;
+  }
+
+  public ApplyCommandDecorator(String deployment, String container, String... command) {
+    super(deployment, container);
     this.command = command;
   }
 
   @Override
-  public void visit(ContainerFluent container) {
+  public void andThenVisit(ContainerFluent container) {
     if (isApplicable(container) && command != null && command.length > 0) {
       container.withCommand(command);
     }

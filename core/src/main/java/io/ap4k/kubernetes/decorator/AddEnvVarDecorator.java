@@ -25,19 +25,24 @@ import io.ap4k.doc.Description;
 import java.util.Objects;
 
 /**
- * A decorator that adds an environment variable to all containers.
+ * A decorator that adds an environment variable to the specified container(s).
  */
 @Description("Add a environment variable to the container.")
-public class AddEnvVarDecorator extends Decorator<ContainerBuilder> {
+public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerBuilder> {
 
   private final Env env;
 
   public AddEnvVarDecorator(Env env) {
+    this(ANY, ANY, env);
+  }
+
+  public AddEnvVarDecorator(String deployment, String container, Env env) {
+    super(deployment, container);
     this.env = env;
   }
 
   @Override
-  public void visit(ContainerBuilder builder) {
+  public void andThenVisit(ContainerBuilder builder) {
     if (Strings.isNotNullOrEmpty(env.getSecret())) {
       populateFromSecret(builder);
     } else if (Strings.isNotNullOrEmpty(env.getConfigmap())) {

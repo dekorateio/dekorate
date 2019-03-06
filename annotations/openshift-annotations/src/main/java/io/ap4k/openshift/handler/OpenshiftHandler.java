@@ -30,9 +30,7 @@ import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Container;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
-import io.ap4k.openshift.decorator.AddInitContainerDecorator;
 import io.ap4k.openshift.decorator.AddRouteDecorator;
-import io.ap4k.openshift.decorator.AddSidecarDecorator;
 import io.ap4k.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.ap4k.openshift.decorator.ApplyReplicasDecorator;
 
@@ -84,14 +82,6 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   @Override
   protected void addDecorators(String group, OpenshiftConfig config) {
     super.addDecorators(group, config);
-
-    for (Container container : config.getInitContainers()) {
-      resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
-    }
-    for (Container container : config.getSidecars()) {
-      resources.decorate(group, new AddSidecarDecorator(config.getName(), container));
-    }
-
     resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
     resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), config.getName() + ":" + config.getVersion()));
     resources.decorate(group, new AddRouteDecorator(config, resources.getLabels()));
