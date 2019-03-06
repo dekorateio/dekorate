@@ -21,17 +21,17 @@ import io.ap4k.doc.Description;
 import io.ap4k.utils.Strings;
 
 @Description("A decorator that applies the working directory to the application container.")
-public class ApplyWorkingDirDecorator extends ApplicationContainerDecorator {
+public class ApplyWorkingDirDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
   private final String workingDir;
 
   public ApplyWorkingDirDecorator(String containerName, String workingDir) {
-    super(containerName);
+    super(null, containerName);
     this.workingDir = workingDir;
   }
 
   @Override
-  public void visit(ContainerFluent container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     if (isApplicable(container) && Strings.isNotNullOrEmpty(workingDir)) {
       container.withWorkingDir(workingDir);
     }

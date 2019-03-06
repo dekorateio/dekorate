@@ -44,6 +44,9 @@ import io.ap4k.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.ap4k.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.ap4k.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.ap4k.kubernetes.decorator.AddServiceDecorator;
+import io.ap4k.kubernetes.decorator.AddSidecarDecorator;
+import io.ap4k.kubernetes.decorator.ApplyArgsDecorator;
+import io.ap4k.kubernetes.decorator.ApplyCommandDecorator;
 import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.ap4k.kubernetes.decorator.ApplyReplicasDecorator;
 import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
@@ -87,10 +90,15 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
    */
   protected void addDecorators(String group, C config) {
     resources.decorate(new ApplyServiceAccountDecorator(config.getServiceAccount()));
-
-    resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
     resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
 
+    resources.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+    for (Container container : config.getInitContainers()) {
+      resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
+    }
+    for (Container container : config.getSidecars()) {
+      resources.decorate(group, new AddSidecarDecorator(config.getName(), container));
+    }
     for (Label label : config.getLabels()) {
       resources.decorate(group, new AddLabelDecorator(label));
     }
@@ -98,7 +106,7 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
       resources.decorate(group, new AddAnnotationDecorator(annotation));
     }
     for (Env env : config.getEnvVars()) {
-      resources.decorate(group, new AddEnvVarDecorator(env));
+      resources.decorate(group, new AddEnvVarDecorator(config.getName(), config.getName(), env));
     }
     for (Port port : config.getPorts()) {
       resources.decorate(group, new AddPortDecorator(port));
@@ -135,7 +143,15 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
       resources.decorate(group, new AddServiceDecorator(config, resources.getLabels()));
     }
 
-    resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getLivenessProbe()));
-    resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getReadinessProbe()));
+    if (config.getCommand().length > 0) {
+      resources.decorate(group, new ApplyCommandDecorator(config.getName(), config.getName(), config.getCommand()));
+    }
+
+    if (config.getArguments().length > 0) {
+      resources.decorate(group, new ApplyArgsDecorator(config.getName(), config.getName(), config.getArguments()));
+    }
+
+    resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getName(), config.getLivenessProbe()));
+    resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
   }
 }

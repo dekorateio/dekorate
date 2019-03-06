@@ -17,29 +17,49 @@
 package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.deps.kubernetes.api.builder.TypedVisitor;
-import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;
+import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
+import io.ap4k.deps.kubernetes.api.model.ObjectMeta;
+import io.ap4k.utils.Generics;
+import io.ap4k.utils.Strings;
 
-public abstract class ApplicationDeploymentDecorator<T> extends Decorator<DeploymentBuilder> {
+import java.util.Optional;
 
-  private final String name;
+import static io.ap4k.utils.Metadata.getMetadata;
 
-  public ApplicationDeploymentDecorator(String name) {
-    this.name = name;
+public abstract class ApplicationDeploymentDecorator<T> extends Decorator<VisitableBuilder> {
+  /**
+   * For deployment name null acts as a wildcards.
+   * Let's use a constant instead, for clarity's shake
+   */
+  public static final String ANY = null;
+
+  protected final String deploymentName;
+
+  private final DeploymentVisitor deploymentVisitor = new DeploymentVisitor();
+
+  public ApplicationDeploymentDecorator(String deploymentName) {
+    this.deploymentName = deploymentName;
   }
 
   @Override
-  public void visit(DeploymentBuilder deployment) {
-    if (!deployment.hasMetadata() || !deployment.buildMetadata().getName().equals(name)) {
-      return;
+  public void visit(VisitableBuilder builder) {
+    Optional<ObjectMeta> objectMeta = getMetadata(builder);
+    if (Strings.isNullOrEmpty(deploymentName) || objectMeta.map(m -> m.getName()).filter(s -> s.equals(deploymentName)).isPresent()) {
+      builder.accept(deploymentVisitor);
     }
-    deployment.accept(new TypedVisitor<T>() {
-      @Override
-      public void visit(T item) {
-        andThenVisit(item);
-      }
-    });
   }
 
   public abstract void andThenVisit(T item);
 
+  private class DeploymentVisitor extends TypedVisitor<T> {
+
+    @Override
+    public void visit(T item) {
+     andThenVisit(item);
+    }
+
+    public Class<T> getType() {
+      return (Class)Generics.getTypeArguments(ApplicationDeploymentDecorator.class, ApplicationDeploymentDecorator.this.getClass()).get(0);
+    }
+  }
 }

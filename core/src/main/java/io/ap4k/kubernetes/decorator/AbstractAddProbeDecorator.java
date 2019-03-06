@@ -33,17 +33,19 @@ import java.util.Collections;
 /**
  * Base class for any kind of {@link Decorator} that acts on probes.
  */
-public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator {
+public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
   protected final Probe probe;
 
-  public AbstractAddProbeDecorator(String container, Probe probe) {
-    super(container);
+  public AbstractAddProbeDecorator(String containerName, Probe probe) {
+    super(null, containerName);
     this.probe = probe;
   }
 
-  public abstract void visit(ContainerFluent<?> container);
-
+  public AbstractAddProbeDecorator(String deploymentName, String containerName, Probe probe) {
+    super(deploymentName, containerName);
+    this.probe = probe;
+  }
 
   /**
    * Convert the internal {@link Probe} to the kubernetes-model {@link io.ap4k.deps.kubernetes.api.model.Probe}.

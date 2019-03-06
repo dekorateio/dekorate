@@ -27,8 +27,8 @@ import java.util.Objects;
 /**
  * A decorator that adds a port to all containers.
  */
-@Description("Add port to all containers.")
-public class AddPortDecorator extends Decorator<ContainerBuilder> {
+@Description("Add port to to the specified container(s).")
+public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBuilder> {
 
   private final Port port;
 
@@ -37,7 +37,7 @@ public class AddPortDecorator extends Decorator<ContainerBuilder> {
   }
 
   @Override
-  public void visit(ContainerBuilder container) {
+  public void andThenVisit(ContainerBuilder container) {
     container.addNewPort()
       .withName(port.getName())
       .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)

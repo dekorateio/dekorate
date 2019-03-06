@@ -20,17 +20,21 @@ import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
 import io.ap4k.doc.Description;
 
 @Description("A decorator that applies the command args to the application container.")
-public class ApplyArgsDecorator extends ApplicationContainerDecorator {
+public class ApplyArgsDecorator extends ApplicationContainerDecorator<ContainerFluent> {
 
   private final String[] argument;
 
   public ApplyArgsDecorator(String containerName, String... argument) {
-    super(containerName);
+    super(null, containerName);
+    this.argument = argument;
+  }
+  public ApplyArgsDecorator(String deploymentName, String containerName, String... argument) {
+    super(deploymentName, containerName);
     this.argument = argument;
   }
 
   @Override
-  public void visit(ContainerFluent container) {
+  public void andThenVisit(ContainerFluent container) {
     if (isApplicable(container) && argument != null && argument.length > 0) {
       container.withArgs(argument);
     }
