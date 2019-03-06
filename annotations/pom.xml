@@ -37,7 +37,7 @@ limitations under the License.
     <module>docker-annotations</module>
     <module>prometheus-annotations</module>
     <module>crd-annotations</module>
-    <module>application-crd-annotations</module>
+    <module>application-annotations</module>
   </modules>
 
 </project>

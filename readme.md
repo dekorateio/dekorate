@@ -16,6 +16,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
   - [Prometheus](#prometheus-annotations)
   - [Service Catalog](#service-catalog-annotations)
   - [Component CRD](#component-annotations)
+  - [Application CRD](#application-annotations)
   - Istio
 - Customize manifests using annotations
   - Kubernetes
@@ -550,6 +551,35 @@ This module can be added to the project using:
      <artifactId>component-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+### Application Annotations
+
+The [@EnableApplicationResource](annotations/application-annotations/src/main/java/io/ap4k/application/annotation/EnableApplicationResource.java) enables the generation of the `Application` custom resource, that is defined as part of https://github.com/kubernetes-sigs/application.
+
+To use this annotation, one needs:
+
+    <dependency>
+     <groupId>io.ap4k</groupId>
+     <artifactId>application-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+And then its just a matter of specifying:
+
+    import io.ap4k.kubernetes.annotation.KubernetesApplication;
+    import io.ap4k.application.annotation.EnableApplicationResource;
+
+    @KubernetesApplication
+    @EnableApplicationResource(icons=@Icon(src="url/to/icon"), owners=@Contact(name="John Doe", email="john.doe@somemail.com"))
+    public class Main {
+
+         public static void main(String[] args) {
+             //Your code goes here 
+         }
+    }
+
+Along we the resources that ap4k usually generates, there will be also an `Application` custom resource.
+
     
 ###  Framework integration
 

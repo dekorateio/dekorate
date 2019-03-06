@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
   adapter = @Adapter(name = "ApplicationConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface ApplicationInfo {
+public @interface EnableApplicationResource {
   /**
    * The group of the application.
    * This value will be use as:

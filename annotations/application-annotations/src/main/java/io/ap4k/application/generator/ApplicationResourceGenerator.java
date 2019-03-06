@@ -19,7 +19,7 @@ package io.ap4k.application.generator;
 import io.ap4k.Generator;
 import io.ap4k.WithSession;
 import io.ap4k.application.adapter.ApplicationConfigAdapter;
-import io.ap4k.application.annotation.ApplicationInfo;
+import io.ap4k.application.annotation.EnableApplicationResource;
 import io.ap4k.application.config.ApplicationConfigBuilder;
 import io.ap4k.application.handler.ApplicationHandler;
 import io.ap4k.config.ConfigurationSupplier;
@@ -35,7 +35,7 @@ public interface ApplicationResourceGenerator extends Generator, WithSession {
 
   @Override
   default void add(Element element) {
-    ApplicationInfo info = element.getAnnotation(ApplicationInfo.class);
+    EnableApplicationResource info = element.getAnnotation(EnableApplicationResource.class);
     ApplicationConfigBuilder builder = ApplicationConfigAdapter.newBuilder(info);
     add(new ConfigurationSupplier<>(builder));
   }
