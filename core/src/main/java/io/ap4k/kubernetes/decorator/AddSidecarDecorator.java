@@ -26,7 +26,7 @@ import io.ap4k.kubernetes.config.Container;
  * A decorator that adds an init container to a pod template.
  */
 @Description("Add an init container to a pod template.")
-public class AddSidecarDecorator extends ApplicationDeploymentDecorator<PodSpecBuilder> {
+public class AddSidecarDecorator extends ApplicationResourceDecorator<PodSpecBuilder> {
 
   private final Container container;
 

@@ -26,19 +26,19 @@ import java.util.Optional;
 
 import static io.ap4k.utils.Metadata.getMetadata;
 
-public abstract class ApplicationDeploymentDecorator<T> extends Decorator<VisitableBuilder> {
+public abstract class ApplicationResourceDecorator<T> extends Decorator<VisitableBuilder> {
   /**
-   * For deployment name null acts as a wildcards.
+   * For resource name null acts as a wildcards.
    * Let's use a constant instead, for clarity's shake
    */
   public static final String ANY = null;
 
-  protected final String deploymentName;
+  protected final String name;
 
-  private final DeploymentVisitor deploymentVisitor = new DeploymentVisitor();
+  private final ResourceVisitor visitor = new ResourceVisitor();
 
-  public ApplicationDeploymentDecorator(String deploymentName) {
-    this.deploymentName = deploymentName;
+  public ApplicationResourceDecorator(String name) {
+    this.name = name;
   }
 
   @Override
@@ -47,14 +47,14 @@ public abstract class ApplicationDeploymentDecorator<T> extends Decorator<Visita
     if (!objectMeta.isPresent()) {
       return;
     }
-    if (Strings.isNullOrEmpty(deploymentName) || objectMeta.map(m -> m.getName()).filter(s -> s.equals(deploymentName)).isPresent()) {
-      builder.accept(deploymentVisitor);
+    if (Strings.isNullOrEmpty(name) || objectMeta.map(m -> m.getName()).filter(s -> s.equals(name)).isPresent()) {
+      builder.accept(visitor);
     }
   }
 
   public abstract void andThenVisit(T item);
 
-  private class DeploymentVisitor extends TypedVisitor<T> {
+  private class ResourceVisitor extends TypedVisitor<T> {
 
     @Override
     public void visit(T item) {
@@ -62,7 +62,7 @@ public abstract class ApplicationDeploymentDecorator<T> extends Decorator<Visita
     }
 
     public Class<T> getType() {
-      return (Class)Generics.getTypeArguments(ApplicationDeploymentDecorator.class, ApplicationDeploymentDecorator.this.getClass()).get(0);
+      return (Class)Generics.getTypeArguments(ApplicationResourceDecorator.class, ApplicationResourceDecorator.this.getClass()).get(0);
     }
   }
 }

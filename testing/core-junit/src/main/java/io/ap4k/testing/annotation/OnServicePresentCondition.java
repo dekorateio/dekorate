@@ -14,15 +14,31 @@
  * limitations under the License.
  *
 **/
-package io.ap4k.testing.servicecatalog.annotation;
+package io.ap4k.testing.annotation;
 
-import io.ap4k.testing.servicecatalog.ServiceCatalogExtension;
+import io.ap4k.testing.ServicePresentCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-/**
- * Testing condition that enables test only if service catalog is available.
- */
-@ExtendWith(ServiceCatalogExtension.class)
-public @interface OnServiceCatalog {
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Target({ TYPE })
+@Retention(RUNTIME)
+@ExtendWith(ServicePresentCondition.class)
+public @interface OnServicePresentCondition {
+
+  /**
+   * The name of the service.
+   * @return  The name.
+   */
+  String value();
+
+  /**
+   * The service namespace.
+   * @return  The namespace or "" for the current namespace.
+   */
+  String namespace() default "";
 }

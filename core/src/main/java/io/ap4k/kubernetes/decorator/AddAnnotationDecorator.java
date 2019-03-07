@@ -17,23 +17,27 @@
 
 package io.ap4k.kubernetes.decorator;
 
-import io.ap4k.kubernetes.config.Annotation;
 import io.ap4k.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.ap4k.doc.Description;
+import io.ap4k.kubernetes.config.Annotation;
 
 import java.util.Objects;
 
  @Description("A decorator that adds an annotation to all resources.")
- public class AddAnnotationDecorator extends Decorator<ObjectMetaBuilder> {
+ public class AddAnnotationDecorator extends ApplicationResourceDecorator<ObjectMetaBuilder> {
 
   private final Annotation annotation;
 
   public AddAnnotationDecorator(Annotation annotation) {
-    this.annotation = annotation;
+    this(ANY, annotation);
   }
 
+   public AddAnnotationDecorator(String name, Annotation annotation) {
+    super(name);
+    this.annotation = annotation;
+   }
   @Override
-  public void visit(ObjectMetaBuilder builder) {
+  public void andThenVisit(ObjectMetaBuilder builder) {
     builder.addToAnnotations(annotation.getKey(), annotation.getValue());
   }
 

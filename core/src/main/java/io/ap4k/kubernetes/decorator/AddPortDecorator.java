@@ -33,6 +33,11 @@ public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBui
   private final Port port;
 
   public AddPortDecorator(Port port) {
+    this(ANY, ANY, port);
+  }
+
+  public AddPortDecorator(String deployment, String container, Port port) {
+    super(deployment, container);
     this.port = port;
   }
 
