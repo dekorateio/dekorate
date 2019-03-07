@@ -21,7 +21,7 @@ import io.ap4k.deps.kubernetes.api.model.apps.DeploymentSpecFluent;
 import io.ap4k.doc.Description;
 
 @Description("Apply the number of replicas to the DeploymentSpec.")
-public class ApplyReplicasDecorator extends ApplicationDeploymentDecorator<DeploymentSpecFluent> {
+public class ApplyReplicasDecorator extends ApplicationResourceDecorator<DeploymentSpecFluent> {
 
   private final int replicas;
 

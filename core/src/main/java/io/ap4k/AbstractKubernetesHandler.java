@@ -109,7 +109,7 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
       resources.decorate(group, new AddEnvVarDecorator(config.getName(), config.getName(), env));
     }
     for (Port port : config.getPorts()) {
-      resources.decorate(group, new AddPortDecorator(port));
+      resources.decorate(group, new AddPortDecorator(config.getName(), config.getName(), port));
     }
     for (Mount mount: config.getMounts()) {
       resources.decorate(group, new AddMountDecorator(mount));

@@ -27,16 +27,21 @@ import java.util.Objects;
  * A decorator that adds a label to resources.
  */
 @Description("Add a label to the all metadata.")
-public class AddLabelDecorator extends Decorator<ObjectMetaBuilder> {
+public class AddLabelDecorator extends ApplicationResourceDecorator<ObjectMetaBuilder> {
 
   private final Label label;
 
   public AddLabelDecorator(Label label) {
+    this(ANY, label);
+  }
+
+  public AddLabelDecorator(String name, Label label) {
+    super(name);
     this.label = label;
   }
 
   @Override
-  public void visit(ObjectMetaBuilder builder) {
+  public void andThenVisit(ObjectMetaBuilder builder) {
     builder.addToLabels(label.getKey(), label.getValue());
   }
 
