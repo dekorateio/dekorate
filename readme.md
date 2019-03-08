@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/ap4k/ap4k.svg?style=svg)](https://circleci.com/gh/ap4k/ap4k)
 
-Ap4k is a collection of Java annotations and processors for generating Kubernetes/Openshift manifests at compile time.
+Ap4k is a collection of Java annotations and processors for generating Kubernetes/OpenShift manifests at compile time.
 
 It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) on your main class.
 
@@ -12,7 +12,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
 
 - Generates manifest via annotation processing
   - [Kubernetes](#kubernetes-annotations)
-  - [Openshift](#openshift-annotations)
+  - [OpenShift](#openshift-annotations)
   - [Prometheus](#prometheus-annotations)
   - [Service Catalog](#service-catalog-annotations)
   - [Component CRD](#component-annotations)
@@ -28,7 +28,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
     - [jvm options](#jvm-options)
     - [init containers](#init-containers)
     - [sidecars](#sidecars)
-  - Openshift 
+  - OpenShift 
     - [image streams](#integrating-with-s2i)
     - build configurations
   - Prometheus
@@ -55,7 +55,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
     - Source to image build hook
 - junit5 integration testing extension
   - [Kubernetes](#kubernetes-extension-for-junit5)
-  - [Openshift](#openshift-extension-for-juni5)
+  - [OpenShift](#openshift-extension-for-juni5)
 
 ## Rationale
 
@@ -347,7 +347,7 @@ This module can be added to the project using:
       <version>${project.version}</version>
     </dependency>
 
-### Openshift annotations
+### OpenShift annotations
 
 This module provides two new annotations: 
 
@@ -754,9 +754,9 @@ This is important since in the `test` phase the application is not packaged. Her
 #### related examples
  - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
  
-#### Openshift extension for Juni5 
+#### OpenShift extension for JUnit5 
 
-Similarly to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for Openshift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/ap4k/testing/annotation/OpenshiftIntegrationTest.java).
+Similarly to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/ap4k/testing/annotation/OpenshiftIntegrationTest.java).
 To use that you need to add:
 
     <dependency>

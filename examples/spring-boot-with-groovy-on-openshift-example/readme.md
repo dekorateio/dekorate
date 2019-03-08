@@ -1,6 +1,6 @@
-# Spring Boot on Openshift using Groovy
+# Spring Boot on OpenShift using Groovy
 
-This is a variation of the [Spring Boot on Openshift Example](../spring-boot-on-openshift-example) written in groovy.
+This is a variation of the [Spring Boot on OpenShift Example](../spring-boot-on-openshift-example) written in groovy.
 
 
 The purpose of this example is to demonstrate the following:

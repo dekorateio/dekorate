@@ -1,4 +1,4 @@
-# Openshift Example 
+# OpenShift Example 
 
 A very simple example that demonstrates the use of `@OpenshiftApplication` in its simplest form.
 Check the [Main.java](src/main/java/io/ap4k/examples/openshift/Main.java) which bears the annotation.

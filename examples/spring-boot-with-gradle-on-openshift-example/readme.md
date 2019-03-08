@@ -1,6 +1,6 @@
-# Spring Boot on Openshift using Gradle (and groovy)
+# Spring Boot on OpenShift using Gradle (and groovy)
 
-This is a variation of the [Spring Boot with Groovy on Openshift Example](../spring-boot-with-groovy-on-openshift-example) built with gradle.
+This is a variation of the [Spring Boot with Groovy on OpenShift Example](../spring-boot-with-groovy-on-openshift-example) built with gradle.
 
 The purpose of this example is to demonstrate the following:
 

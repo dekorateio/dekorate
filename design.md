@@ -28,7 +28,7 @@ Refers to the the `Gang of Four` visitor pattern. As Kubernetes resources are de
 structure.
 
 ### Model
-With kubernetes/openshift `model` or just `model` we refer to the java object representation of the Kubernetes/Openshift
+With Kubernetes/OpenShift `model` or just `model` we refer to the java object representation of the Kubernetes/OpenShift
 resource domain. The `model` has the same structure are the actual kubernetes resources and can be easily serialized into 
 json or yml and form the actual resources.
 

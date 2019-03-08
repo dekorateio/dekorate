@@ -9,13 +9,13 @@ A collection of examples used for showcasing and testing`ap4k`.
 - [Spring Boot on Kubernetes Example](spring-boot-on-kubernetes-example)
 - [Service Catalog Example](service-catalog-example)
 
-# Openshift Examples
+# OpenShift Examples
 
-- [Openshift Example](openshift-example)
+- [OpenShift Example](openshift-example)
 - [Source To Image Example](source-to-image-example)
-- [Spring Boot on Openshift Example](spring-boot-on-openshift-example)
-- [Spring Boot with groovy on Openshift Example](spring-boot-with-groovy-on-openshift-example)
-- [Spring Boot with gradle on Openshift Example](spring-boot-with-gradle-on-openshift-example)
+- [Spring Boot on OpenShift Example](spring-boot-on-openshift-example)
+- [Spring Boot with groovy on OpenShift Example](spring-boot-with-groovy-on-openshift-example)
+- [Spring Boot with gradle on OpenShift Example](spring-boot-with-gradle-on-openshift-example)
 
 # Experimental  
 
