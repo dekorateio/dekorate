@@ -44,6 +44,9 @@ public abstract class ApplicationDeploymentDecorator<T> extends Decorator<Visita
   @Override
   public void visit(VisitableBuilder builder) {
     Optional<ObjectMeta> objectMeta = getMetadata(builder);
+    if (!objectMeta.isPresent()) {
+      return;
+    }
     if (Strings.isNullOrEmpty(deploymentName) || objectMeta.map(m -> m.getName()).filter(s -> s.equals(deploymentName)).isPresent()) {
       builder.accept(deploymentVisitor);
     }
