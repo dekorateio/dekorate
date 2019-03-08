@@ -17,5 +17,5 @@ Please, avoid combining code with indentation changes.
 
 ## semantic messages
 
-Please you semantic commit messages.
+Please use [semantic commit messages](https://seesparkbox.com/foundry/semantic_commit_messages).
 
