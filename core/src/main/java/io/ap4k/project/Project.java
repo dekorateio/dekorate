@@ -17,7 +17,15 @@
 
 package io.ap4k.project;
 
+import io.ap4k.deps.jackson.core.type.TypeReference;
+import io.ap4k.utils.Serialization;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class Project {
 
@@ -64,5 +72,27 @@ public class Project {
 
   public Project withAp4kOutputDir(String ap4kOutputDir) {
     return new Project(root, ap4kInputDir, ap4kOutputDir, buildInfo);
+  }
+
+  public Map<String, Object> parseAppResourceFile(String resourceName) throws IOException {
+    final Path path = getBuildInfo().getApplicationResourceOutputDir().resolve(resourceName);
+    if (!path.toFile().exists()) {
+      throw new IllegalArgumentException("No application resources file found at: " + path.toFile().getAbsolutePath());
+    }
+
+    if (resourceName.endsWith(".properties")) {
+      final Properties properties = new Properties();
+      properties.load(new FileInputStream(path.toFile().getAbsoluteFile()));
+      return properties.entrySet().stream().collect(
+              Collectors.toMap(
+                      e -> e.getKey().toString(),
+                      e -> e.getValue().toString()
+              )
+      );
+    } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
+      return Serialization.yamlMapper().readValue(new FileInputStream(path.toFile().getAbsoluteFile()), new TypeReference<Map<String, Object>>(){});
+    } else {
+      throw new IllegalArgumentException("resource type is not supported");
+    }
   }
 }
