@@ -29,6 +29,7 @@ public class BuildInfo {
   private String packaging;
   private Path outputFile;
   private Path resourceOutputDir;
+  private Path applicationResourceOutputDir;
 
   public BuildInfo() {
   }
@@ -42,11 +43,25 @@ public class BuildInfo {
    * @param resourceOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
    */
   public BuildInfo(String name, String version, String packaging, Path outputFile, Path resourceOutputDir) {
+    this(name, version, packaging, outputFile, resourceOutputDir, resourceOutputDir);
+  }
+
+  /**
+   * Constructor
+   * @param name                  The project name (e.g. maven artifactId).
+   * @param version               The project version (e.g. maven version).
+   * @param packaging             The project packaging (e.g. jar, war).
+   * @param outputFile            The output file (the path to the actual jar, war etc).
+   * @param resourceOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
+   * @param applicationResourceOutputDir     The directory where the application resources end up as part of the build process (e.g. target/classes).
+   */
+  public BuildInfo(String name, String version, String packaging, Path outputFile, Path resourceOutputDir, Path applicationResourceOutputDir) {
     this.name = name;
     this.version = version;
     this.packaging = packaging;
     this.outputFile = outputFile;
     this.resourceOutputDir = resourceOutputDir;
+    this.applicationResourceOutputDir = applicationResourceOutputDir;
   }
 
   /**
@@ -85,6 +100,10 @@ public class BuildInfo {
     return resourceOutputDir;
   }
 
+  public Path getApplicationResourceOutputDir() {
+    return applicationResourceOutputDir;
+  }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -103,5 +122,9 @@ public class BuildInfo {
 
   public void setResourceOutputDir(Path resourceOutputDir) {
     this.resourceOutputDir = resourceOutputDir;
+  }
+
+  public void setApplicationResourceOutputDir(Path applicationResourceOutputDir) {
+    this.applicationResourceOutputDir = applicationResourceOutputDir;
   }
 }
