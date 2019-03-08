@@ -55,7 +55,7 @@ public class Session {
 
 
   /**
-   * Creates or resues a single instance of Session.
+   * Creates or reuses a single instance of Session.
    * @return  The Session.
    */
   public static Session getSession() {
