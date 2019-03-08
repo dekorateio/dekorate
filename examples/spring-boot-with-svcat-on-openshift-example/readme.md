@@ -1,4 +1,4 @@
-# Spring Boot with Service Catalog on Openshift 
+# Spring Boot with Service Catalog on OpenShift 
 
 
 The purpose of this example is to demonstrate the following:

@@ -1,4 +1,4 @@
-# Spring Boot on Openshift 
+# Spring Boot on OpenShift 
 
 
 The purpose of this example is to demonstrate the following:
