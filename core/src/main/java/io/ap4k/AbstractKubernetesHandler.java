@@ -56,7 +56,7 @@ import java.util.Arrays;
 
 /**
  * An abstract generator.
- * A generator is meant to popullate the initial resources to the {@link Session} as well as adding decorator etc.
+ * A generator is meant to populate the initial resources to the {@link Session} as well as adding decorator etc.
  * @param <C>   The config type (its expected to vary between processors).
  */
 public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> implements Handler<C> {
