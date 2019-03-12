@@ -25,7 +25,7 @@ import io.ap4k.kubernetes.annotation.ServiceType;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KubernetesApplication(envVars = @Env(name = "MESSAGE", value = "hello world"))
+@KubernetesApplication(envVars = @Env(name = "MESSAGE", value = "Hello world"))
 @EnableDockerBuild
 @SpringBootApplication
 public class Main {
