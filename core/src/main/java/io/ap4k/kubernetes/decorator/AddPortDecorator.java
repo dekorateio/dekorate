@@ -38,12 +38,20 @@ public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBui
 
   @Override
   public void andThenVisit(ContainerBuilder container) {
-    container.addNewPort()
-      .withName(port.getName())
-      .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
-      .withContainerPort(port.getContainerPort())
-      .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
-      .endPort();
+    if (container.buildPorts().stream().anyMatch(p -> p.getName().equals(port.getName())))  {
+      container.editMatchingPort(p -> p.getName().equals(port.getName()))
+        .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
+        .withContainerPort(port.getContainerPort())
+        .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
+        .endPort();
+    } else {
+      container.addNewPort()
+        .withName(port.getName())
+        .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
+        .withContainerPort(port.getContainerPort())
+        .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
+        .endPort();
+    }
   }
 
   @Override
