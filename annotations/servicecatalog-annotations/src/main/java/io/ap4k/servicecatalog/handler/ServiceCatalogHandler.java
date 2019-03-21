@@ -78,7 +78,7 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
                       .endSpec()
                       .build());
 
-        resources.decorate(new AddEnvVarDecorator(new EnvBuilder().withSecret(instance.getBindingSecret()).build()));
+        resources.decorate(new AddEnvVarDecorator(resources.getName(), resources.getName(), new EnvBuilder().withSecret(instance.getBindingSecret()).build()));
       }
     }
   }

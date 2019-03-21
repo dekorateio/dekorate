@@ -19,6 +19,21 @@ package io.ap4k.openshift.decorator;
 import io.ap4k.deps.kubernetes.api.builder.Predicate;
 import io.ap4k.deps.openshift.api.model.DeploymentConfigSpecFluent;
 import io.ap4k.deps.openshift.api.model.DeploymentTriggerPolicyBuilder;
+import io.ap4k.kubernetes.decorator.AddAwsElasticBlockStoreVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddAzureDiskVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddEnvVarDecorator;
+import io.ap4k.kubernetes.decorator.AddInitContainerDecorator;
+import io.ap4k.kubernetes.decorator.AddMountDecorator;
+import io.ap4k.kubernetes.decorator.AddPortDecorator;
+import io.ap4k.kubernetes.decorator.AddPvcVolumeDecorator;
+import io.ap4k.kubernetes.decorator.AddReadinessProbeDecorator;
+import io.ap4k.kubernetes.decorator.AddSidecarDecorator;
+import io.ap4k.kubernetes.decorator.ApplyArgsDecorator;
+import io.ap4k.kubernetes.decorator.ApplyCommandDecorator;
+import io.ap4k.kubernetes.decorator.ApplyImageDecorator;
+import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
+import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
+import io.ap4k.kubernetes.decorator.ApplyWorkingDirDecorator;
 import io.ap4k.kubernetes.decorator.Decorator;
 
 public class ApplyDeploymentTriggerDecorator extends Decorator<DeploymentConfigSpecFluent<?>> {
@@ -55,5 +70,20 @@ public class ApplyDeploymentTriggerDecorator extends Decorator<DeploymentConfigS
       .endFrom()
       .endImageChangeParams()
       .endTrigger();
+  }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    //Due to: https://github.com/sundrio/sundrio/issues/135 this decorator breaks the decoratros below.
+    //So, let's make sure its called after them (as a workaround).
+    return new Class[] {AddEnvVarDecorator.class, AddPortDecorator.class,
+      AddMountDecorator.class, AddPvcVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class, AddAzureDiskVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
+      ApplyImageDecorator.class, ApplyImagePullPolicyDecorator.class,
+      ApplyWorkingDirDecorator.class, ApplyCommandDecorator.class, ApplyArgsDecorator.class,
+      ApplyServiceAccountDecorator.class,
+      AddReadinessProbeDecorator.class,
+      AddReadinessProbeDecorator.class,
+      AddSidecarDecorator.class,
+      AddInitContainerDecorator.class};
   }
 }
