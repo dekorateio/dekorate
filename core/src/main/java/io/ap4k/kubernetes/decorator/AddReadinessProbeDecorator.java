@@ -30,7 +30,7 @@ public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
   }
 
   public AddReadinessProbeDecorator(String deploymentName, String containerName, Probe probe) {
-    super(containerName, probe);
+    super(deploymentName, containerName, probe);
   }
 
   @Override
