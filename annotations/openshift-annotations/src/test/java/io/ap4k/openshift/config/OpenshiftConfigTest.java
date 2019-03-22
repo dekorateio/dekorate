@@ -26,7 +26,7 @@ public class OpenshiftConfigTest {
     OpenshiftConfig config = OpenshiftConfig.newOpenshiftConfigBuilder()
       .withName("myapp")
       .withVersion("1.0.0")
-      .withExposeRoute(true)
+      .withExpose(true)
       .addNewLabel("key1", "val1")
       .build();
 

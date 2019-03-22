@@ -43,7 +43,7 @@ public class AddIngressDecorator extends Decorator<KubernetesListBuilder> {
 
   public void visit(KubernetesListBuilder list) {
     Optional<Port> p = getHttpPort(config);
-    if (!p.isPresent()  || Strings.isNullOrEmpty(config.getHost())) {
+    if (!p.isPresent() || !config.isExpose()) {
       return;
     }
     Port port = p.get();
@@ -60,7 +60,7 @@ public class AddIngressDecorator extends Decorator<KubernetesListBuilder> {
         .withPath(port.getPath())
         .withNewBackend()
           .withServiceName(config.getName())
-          .withNewServicePort(port.getHostPort())
+          .withNewServicePort(port.getContainerPort())
         .endBackend()
       .endPath()
       .endHttp()

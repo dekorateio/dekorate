@@ -198,7 +198,10 @@ public @interface OpenshiftApplication {
   */
   Container[] sidecars() default {};
 
-  boolean exposeRoute() default false;
+  /**
+   * Controls whether the application should be exposed via Route
+   */
+  boolean expose() default false;
 
   /**
    * Flag to trigger the registration of the deploy hook.
