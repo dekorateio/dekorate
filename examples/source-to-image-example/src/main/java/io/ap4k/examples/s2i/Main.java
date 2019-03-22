@@ -23,7 +23,7 @@ import io.ap4k.openshift.annotation.EnableS2iBuild;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication(ports = {@Port(name = "http", containerPort = 8080)}, exposeRoute = true)
+@OpenshiftApplication(ports = {@Port(name = "http", containerPort = 8080)}, expose = true)
 @EnableS2iBuild
 @SpringBootApplication
 public class Main {

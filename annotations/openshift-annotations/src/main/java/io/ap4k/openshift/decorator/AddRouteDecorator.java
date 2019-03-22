@@ -44,7 +44,7 @@ public class AddRouteDecorator extends Decorator<KubernetesListBuilder> {
   public void visit(KubernetesListBuilder list) {
     Optional<Port> p = getHttpPort(config);
 
-    if (!p.isPresent() || !config.isExposeRoute()) {
+    if (!p.isPresent() || !config.isExpose()) {
       return;
     }
 

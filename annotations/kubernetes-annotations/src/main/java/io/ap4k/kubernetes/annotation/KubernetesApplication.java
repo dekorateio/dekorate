@@ -189,6 +189,11 @@ import java.lang.annotation.Target;
          */
         Container[] sidecars() default {};
 
+        /**
+         * Controls whether the application should be exposed via Ingress
+         */
+        boolean expose() default false;
+
       /**
        * Flag to trigger the registration of the deploy hook.
        * It's generally preferable to use `-Dap4k.deploy=true` instead of hardcoding this here.
