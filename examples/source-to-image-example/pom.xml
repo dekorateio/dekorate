@@ -34,6 +34,7 @@ limitations under the License.
     <java.version>1.8</java.version>
 
     <version.spring-boot>2.1.0.RELEASE</version.spring-boot>
+    <version.awaitility>3.1.0</version.awaitility>
   </properties>
 
   <dependencies>
@@ -56,6 +57,12 @@ limitations under the License.
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>${version.awaitility}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -69,6 +76,25 @@ limitations under the License.
             <goals>
               <goal>repackage</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${version.maven-failsafe-plugin}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <phase>integration-test</phase>
+            <configuration>
+              <includes>
+                <include>**/*IT.class</include>
+              </includes>
+            </configuration>
           </execution>
         </executions>
       </plugin>

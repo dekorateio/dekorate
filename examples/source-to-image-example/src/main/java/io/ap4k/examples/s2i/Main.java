@@ -17,12 +17,13 @@
 
 package io.ap4k.examples.s2i;
 
+import io.ap4k.kubernetes.annotation.Port;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 import io.ap4k.openshift.annotation.EnableS2iBuild;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication
+@OpenshiftApplication(ports = {@Port(name = "http", containerPort = 8080)}, exposeRoute = true)
 @EnableS2iBuild
 @SpringBootApplication
 public class Main {
