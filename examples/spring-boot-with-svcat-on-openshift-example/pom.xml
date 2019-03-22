@@ -3,7 +3,7 @@
   <parent>
     <artifactId>examples</artifactId>
     <groupId>io.ap4k</groupId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -60,13 +60,6 @@
     <dependency>
       <groupId>io.ap4k</groupId>
       <artifactId>openshift-junit-starter</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>servicecatalog-junit</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
