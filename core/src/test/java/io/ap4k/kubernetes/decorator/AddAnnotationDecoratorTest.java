@@ -27,7 +27,7 @@ class AddAnnotationDecoratorTest {
 
   @Test
   public void shouldAddAnnotationToResources() {
-    Pod expectecd = new PodBuilder()
+    Pod expected = new PodBuilder()
       .withNewMetadata()
       .withName("pod")
       .addToAnnotations("key1","value1")
@@ -41,6 +41,6 @@ class AddAnnotationDecoratorTest {
       .accept(new AddAnnotationDecorator(new Annotation("key1", "value1")))
       .build();
 
-    assertEquals(expectecd, actual);
+    assertEquals(expected, actual);
   }
 }
