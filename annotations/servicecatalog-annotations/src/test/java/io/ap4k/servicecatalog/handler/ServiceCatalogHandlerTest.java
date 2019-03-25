@@ -27,19 +27,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ServiceCatalogHandlerTest {
 
   @Test
-  public void shouldAccpetServiceCatalogConfig() {
+  public void shouldAcceptServiceCatalogConfig() {
     ServiceCatalogHandler generator = new ServiceCatalogHandler();
     assertTrue(generator.canHandle(ServiceCatalogConfig.class));
   }
 
   @Test
-  public void shouldAccpetEditableServiceCatalogConfig() {
+  public void shouldAcceptEditableServiceCatalogConfig() {
     ServiceCatalogHandler generator = new ServiceCatalogHandler();
     assertTrue(generator.canHandle(EditableServiceCatalogConfig.class));
   }
 
   @Test
-  public void shouldNotAccpetKubernetesConfig() {
+  public void shouldNotAcceptKubernetesConfig() {
     ServiceCatalogHandler generator = new ServiceCatalogHandler();
     assertFalse(generator.canHandle(KubernetesConfig.class));
   }

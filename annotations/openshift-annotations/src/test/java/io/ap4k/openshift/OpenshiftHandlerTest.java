@@ -30,19 +30,19 @@ import org.junit.jupiter.api.Test;
 class OpenshiftHandlerTest {
 
   @Test
-  public void shouldAccpetOpenshiftConfig() {
+  public void shouldAcceptOpenshiftConfig() {
     OpenshiftHandler generator = new OpenshiftHandler();
     assertTrue(generator.canHandle(OpenshiftConfig.class));
   }
 
   @Test
-  public void shouldAccpetEditableOpenshiftConfig() {
+  public void shouldAcceptEditableOpenshiftConfig() {
     OpenshiftHandler generator = new OpenshiftHandler();
     assertTrue(generator.canHandle(EditableOpenshiftConfig.class));
   }
 
   @Test
-  public void shouldNotAccpetKubernetesConfig() {
+  public void shouldNotAcceptKubernetesConfig() {
     OpenshiftHandler generator = new OpenshiftHandler();
     assertFalse(generator.canHandle(KubernetesConfig.class));
   }

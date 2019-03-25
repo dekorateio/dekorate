@@ -29,19 +29,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class IstioHandlerTest {
 
   @Test
-  public void shouldAccpetIstioConfig() {
+  public void shouldAcceptIstioConfig() {
     IstioHandler generator = new IstioHandler();
     assertTrue(generator.canHandle(IstioConfig.class));
   }
 
   @Test
-  public void shouldAccpetEditableIstioConfig() {
+  public void shouldAcceptEditableIstioConfig() {
     IstioHandler generator = new IstioHandler();
     assertTrue(generator.canHandle(EditableIstioConfig.class));
   }
 
   @Test
-  public void shouldNotAccpetKubernetesConfig() {
+  public void shouldNotAcceptKubernetesConfig() {
     IstioHandler generator = new IstioHandler();
     assertFalse(generator.canHandle(KubernetesConfig.class));
   }
