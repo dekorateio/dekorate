@@ -16,7 +16,7 @@
 **/
 
 
-package io.apk4k.kubernetes;
+package io.ap4k.kubernetes;
 
 import io.ap4k.kubernetes.annotation.ImagePullPolicy;
 import io.ap4k.kubernetes.annotation.ServiceType;
@@ -27,8 +27,10 @@ import io.ap4k.kubernetes.config.AzureFileVolume;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.ConfigMapVolume;
 import io.ap4k.kubernetes.config.Container;
+import io.ap4k.kubernetes.config.EditableKubernetesConfig;
 import io.ap4k.kubernetes.config.Env;
 import io.ap4k.kubernetes.config.GitRepoVolume;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.config.Label;
 import io.ap4k.kubernetes.config.Mount;
 import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
@@ -37,9 +39,6 @@ import io.ap4k.kubernetes.config.Probe;
 import io.ap4k.kubernetes.config.SecretVolume;
 import io.ap4k.kubernetes.handler.KubernetesHandler;
 import io.ap4k.project.Project;
-
-import io.ap4k.kubernetes.config.KubernetesConfig;
-import io.ap4k.kubernetes.config.EditableKubernetesConfig;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -51,19 +50,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class KubernetesHandlerTest {
 
   @Test
-  public void shouldAccpetKubernetesConfig()  {
+  public void shouldAcceptKubernetesConfig()  {
     KubernetesHandler generator = new KubernetesHandler();
     assertTrue(generator.canHandle(KubernetesConfig.class));
   }
 
   @Test
-  public void shouldAccpetEditableKubernetesConfig()  {
+  public void shouldAcceptEditableKubernetesConfig()  {
     KubernetesHandler generator = new KubernetesHandler();
     assertTrue(generator.canHandle(EditableKubernetesConfig.class));
   }
 
   @Test
-  public void shouldNotAccpetKubernetesConfigSubclasses()  {
+  public void shouldNotAcceptKubernetesConfigSubclasses()  {
     KubernetesHandler generator = new KubernetesHandler();
     assertFalse(generator.canHandle(KubernetesConfigSubclass.class));
   }
