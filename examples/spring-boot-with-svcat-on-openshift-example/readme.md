@@ -28,7 +28,7 @@ This annotation allows the user to trigger an s2i build after the compilation, b
 
     mvn clean install -Dap4k.build=true
     
-Note: To perform an actual build, the `oc` binary is required to be configured to point to an existing openhisft environment.
+Note: To perform an actual build, the `oc` binary is required to be configured to point to an existing OpenShift environment.
 
 The spring web application processor will detect our [Controller.java](src/main/java/io/ap4k/example/sbonopenshift/Controller.java), and will:
 
@@ -57,4 +57,4 @@ The test are going to be automatically run when building the application. For ex
 
     mvn clean install
     
-Note: To run the integration tests an actual openshift environment is required.
+Note: To run the integration tests an actual OpenShift environment is required.
