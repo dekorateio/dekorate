@@ -34,7 +34,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@OnServicePresentCondition(value = "api-server", namespace = "kube-service-catalog")
+@OnServicePresentCondition(value = "apiserver", namespace = "kube-service-catalog")
 @OpenshiftIntegrationTest
 class SpringBootOnOpenshiftIT {
   @Inject
