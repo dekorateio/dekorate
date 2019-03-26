@@ -14,6 +14,7 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
   - [Kubernetes](#kubernetes-annotations)
   - [OpenShift](#openshift-annotations)
   - [Prometheus](#prometheus-annotations)
+  - [Jaeger](#jaeger-annotations)
   - [Service Catalog](#service-catalog-annotations)
   - [Component CRD](#component-annotations)
   - [Application CRD](#application-annotations)
@@ -433,6 +434,51 @@ Here's an example:
 The annotation processor, will automatically configure the required selector and generate the ServiceMonitor.
 Note: Some of the framework integration modules, may further decorate the ServiceMonitor with framework specific configuration.
 For example, the Spring Boot module will decorate the monitor with the Spring Boot specific path, which is `/actuator/prometheus`.
+
+#### related examples
+- [spring boot with prometheus on kubernetes example](examples/spring-boot-with-prometheus-on-kubernetes-example)
+
+### Jaeger annotations
+
+The [jaeger](https://www.jaegertracing.io) annotation processor provides annotations for injecting the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent) into the application pod.
+
+Most of the work is done with the use of the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/ap4k/jaeger/annotation/EnableJaegerAgent.java) annotation.
+
+#### Using the Jaeger Operator
+
+When the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) is available, you set the `operatorEnabled` property to `true`.
+The annotation processor will automicatlly set the required annotations to the generated deployment, so that the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) can inject the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent).
+
+Here's an example:
+
+    import io.ap4k.kubernetes.annotation.KubernentesApplication;
+    import io.ap4k.jaeger.annotation.EnableJaegerAgent;
+
+    @KubernetesApplication
+    @EnableJaegerAgent(operatorEnabled="true")
+    public class Main {
+        public static void main(String[] args) {
+          //Your code goes here
+        }
+    }
+    
+##### Manually injection the agent sidecar
+
+For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/ap4k/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
+
+    import io.ap4k.kubernetes.annotation.KubernentesApplication;
+    import io.ap4k.jaeger.annotation.EnableJaegerAgent;
+
+    @KubernetesApplication
+    @EnableJaegerAgent
+    public class Main {
+        public static void main(String[] args) {
+          //Your code goes here
+        }
+    }
+
+#### related examples
+- [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
 
 ### Service Catalog annotations
 The [services catalog](https://svc-cat.io) annotation processor is can be used in order to create [services catalog](https://svc-cat.io) resources for:
