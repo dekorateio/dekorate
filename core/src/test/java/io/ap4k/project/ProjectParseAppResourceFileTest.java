@@ -28,7 +28,9 @@ class ProjectParseAppResourceFileTest {
         Project project = new Project(null, new BuildInfo(null, null, null, null, null, tempPath));
 
         Map<String, Object> result = project.parseAppResourceFile(APPLICATION_PROPERTIES);
-        assertThat(result).containsOnly(entry("key1", "value1"), entry("key2", "value2"));
+        assertThat(result).containsOnlyKeys("key1", "key2", "k1")
+                .contains(entry("key1", "value1"), entry("key2", "value2"));
+        assertThat((Map)result.get("k1")).containsOnly(entry("k2", "v"));
     }
 
     @Test
@@ -39,6 +41,8 @@ class ProjectParseAppResourceFileTest {
         Project project = new Project(null, new BuildInfo(null, null, null, null, null, tempPath));
 
         Map<String, Object> result = project.parseAppResourceFile(APPLICATION_YAML);
-        assertThat(result).containsOnly(entry("key1", "value1"), entry("key2", "value2"));
+        assertThat(result).containsOnlyKeys("key1", "key2", "k1")
+                .contains(entry("key1", "value1"), entry("key2", "value2"));
+        assertThat((Map)result.get("k1")).containsOnly(entry("k2", "v"));
     }
 }

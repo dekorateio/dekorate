@@ -81,14 +81,7 @@ public class Project {
     }
 
     if (resourceName.endsWith(".properties")) {
-      final Properties properties = new Properties();
-      properties.load(new FileInputStream(path.toFile().getAbsoluteFile()));
-      return properties.entrySet().stream().collect(
-              Collectors.toMap(
-                      e -> e.getKey().toString(),
-                      e -> e.getValue().toString()
-              )
-      );
+      return Serialization.propertiesMapper().readValue(new FileInputStream(path.toFile().getAbsoluteFile()), new TypeReference<Map<String, Object>>(){});
     } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
       return Serialization.yamlMapper().readValue(new FileInputStream(path.toFile().getAbsoluteFile()), new TypeReference<Map<String, Object>>(){});
     } else {
