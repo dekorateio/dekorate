@@ -20,6 +20,7 @@ import io.ap4k.deps.jackson.core.JsonProcessingException;
 import io.ap4k.deps.jackson.core.type.TypeReference;
 import io.ap4k.deps.jackson.databind.ObjectMapper;
 import io.ap4k.deps.jackson.databind.SerializationFeature;
+import io.ap4k.deps.jackson.dataformat.javaprop.JavaPropsMapper;
 import io.ap4k.deps.jackson.dataformat.yaml.YAMLFactory;
 import io.ap4k.Ap4kException;
 import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
@@ -50,6 +51,7 @@ public class Serialization {
     configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
     configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
   }};
+  private static final JavaPropsMapper PROPERTIES_MAPPER = new JavaPropsMapper();
 
   private static final String DOCUMENT_DELIMITER = "---";
 
@@ -59,6 +61,10 @@ public class Serialization {
 
   public static ObjectMapper yamlMapper() {
     return YAML_MAPPER;
+  }
+
+  public static JavaPropsMapper propertiesMapper() {
+    return PROPERTIES_MAPPER;
   }
 
   public static <T> String asJson(T object) {
