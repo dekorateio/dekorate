@@ -16,19 +16,19 @@
 **/
 package io.ap4k.spring.generator;
 
-import io.ap4k.WithSession;
 import io.ap4k.Generator;
-import io.ap4k.config.ConfigurationSupplier;
+import io.ap4k.WithSession;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.kubernetes.config.PortBuilder;
 import io.ap4k.kubernetes.configurator.AddLivenessProbe;
 import io.ap4k.kubernetes.configurator.AddPort;
 import io.ap4k.kubernetes.configurator.AddReadinessProbe;
+import io.ap4k.spring.SpringPropertiesHolder;
 
 import java.util.Collections;
 import java.util.Map;
 
-public interface SpringBootWebAnnotationGenerator extends Generator, WithSession {
+public interface SpringBootWebAnnotationGenerator extends Generator, WithSession, SpringPropertiesHolder {
 
   Map WEB_ANNOTATIONS=Collections.emptyMap();
 
@@ -41,7 +41,22 @@ public interface SpringBootWebAnnotationGenerator extends Generator, WithSession
   }
 
   default Port detectHttpPort()  {
-    return new PortBuilder().withContainerPort(8080).withName("http").build();
+    return new PortBuilder().withContainerPort(extractPortFromProperties()).withName("http").build();
+  }
+
+  default Integer extractPortFromProperties() {
+    if ((getSpringProperties().containsKey("server"))
+            && Map.class.isAssignableFrom(getSpringProperties().get("server").getClass())){
+      final Map<String, Object> serverProperties = (Map<String, Object>) getSpringProperties().get("server");
+      if(serverProperties.containsKey("port")){
+        final Object port = serverProperties.get("port");
+        if (port instanceof Integer) {
+          return (Integer) port;
+        }
+        return Integer.valueOf(port.toString());
+      }
+    }
+    return 8080;
   }
 
 }

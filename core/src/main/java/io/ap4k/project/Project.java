@@ -18,14 +18,14 @@
 package io.ap4k.project;
 
 import io.ap4k.deps.jackson.core.type.TypeReference;
+import io.ap4k.deps.jackson.databind.ObjectMapper;
 import io.ap4k.utils.Serialization;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class Project {
 
@@ -74,18 +74,26 @@ public class Project {
     return new Project(root, ap4kInputDir, ap4kOutputDir, buildInfo);
   }
 
-  public Map<String, Object> parseAppResourceFile(String resourceName) throws IOException {
+  public Map<String, Object> parseResourceFile(String resourceName) {
     final Path path = getBuildInfo().getApplicationResourceOutputDir().resolve(resourceName);
     if (!path.toFile().exists()) {
-      throw new IllegalArgumentException("No application resources file found at: " + path.toFile().getAbsolutePath());
+      return new HashMap<>();
     }
 
     if (resourceName.endsWith(".properties")) {
-      return Serialization.propertiesMapper().readValue(new FileInputStream(path.toFile().getAbsoluteFile()), new TypeReference<Map<String, Object>>(){});
+      return parse(path, Serialization.propertiesMapper());
     } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
-      return Serialization.yamlMapper().readValue(new FileInputStream(path.toFile().getAbsoluteFile()), new TypeReference<Map<String, Object>>(){});
+      return parse(path, Serialization.yamlMapper());
     } else {
       throw new IllegalArgumentException("resource type is not supported");
+    }
+  }
+
+  private Map<String, Object> parse(Path path, ObjectMapper javaPropsMapper) {
+    try {
+      return javaPropsMapper.readValue(new FileInputStream(path.toFile().getAbsoluteFile()), new TypeReference<Map<String, Object>>() {});
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 }
