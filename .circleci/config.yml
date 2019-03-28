@@ -62,9 +62,7 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-      - openshift/launch_openshift:
-          version: "3.11"
-          withServiceCatalog: true
+      - openshift/launch_openshift_311
       - run:
           name: Run build on openshift
           command: |
