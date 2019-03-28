@@ -7,7 +7,7 @@ version: 2.1
 orbs:
   # defined at https://github.com/snowdrop/circleci-orbs
   # needs to have been published before being used here
-  openshift: snowdrop/openshift@dev:master
+  openshift: snowdrop/openshift@0.4.0
 
 jobs:
   NO_INTEGRATION:
