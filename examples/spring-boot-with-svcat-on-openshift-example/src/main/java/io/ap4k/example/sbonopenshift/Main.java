@@ -29,8 +29,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableAutoConfiguration
 @ServiceCatalog(instances = @ServiceCatalogInstance(
   name = "postgresql-instance",
-  serviceClass = "postgresql-ephemeral",
-  servicePlan = "default",
+  serviceClass = "dh-postgresql-apb",
+  servicePlan = "dev",
   bindingSecret = "postgresql-binding")
 )
 public class Main {
