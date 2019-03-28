@@ -7,7 +7,7 @@ version: 2.1
 orbs:
   # defined at https://github.com/snowdrop/circleci-orbs
   # needs to have been published before being used here
-  openshift: snowdrop/openshift@0.3.0
+  openshift: snowdrop/openshift@dev:master
 
 jobs:
   NO_INTEGRATION:
@@ -62,7 +62,9 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-      - openshift/launch_openshift_311
+      - openshift/launch_openshift:
+          version: 3.11
+          withServiceCatalog: true
       - run:
           name: Run build on openshift
           command: |
