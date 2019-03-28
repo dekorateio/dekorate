@@ -52,7 +52,7 @@ public class SpringBootOnKubernetesIT {
     Assertions.assertNotNull(client);
     Assertions.assertNotNull(list);
     System.out.println("Forwarding port");
-    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
+    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(9090)) { //port matches what is configured in properties file
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:"+p.getLocalPort()+"/");
 
