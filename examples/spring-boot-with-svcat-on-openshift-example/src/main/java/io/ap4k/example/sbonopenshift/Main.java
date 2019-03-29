@@ -24,7 +24,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication(buildEnvVars = @Env(name="foo", value = "bar"))
+@OpenshiftApplication(expose = true, buildEnvVars = @Env(name="foo", value = "bar"))
 @SpringBootApplication
 @EnableAutoConfiguration
 @ServiceCatalog(instances = @ServiceCatalogInstance(
