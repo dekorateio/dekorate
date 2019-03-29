@@ -27,21 +27,23 @@ import javax.sql.DataSource;
 public class DatasourceConfig {
 
 
-  @Value("${value}")
+  @Value("${DB_USER}")
   private String username;
-  @Value("${password}")
+  @Value("${DB_PASSWORD}")
   private String password;
-  @Value("${uri}")
-  private String uri;
-  @Value("${database_name}")
+  @Value("${DB_NAME}")
   private String databaseName;
+  @Value("${DB_HOST}")
+  private String host;
+  @Value("${DB_PORT}")
+  private String port;
 
   @Bean
   DataSource create() {
     return DataSourceBuilder.create()
       .username(username)
       .password(password)
-      .url(uri.replaceAll("postgres", "jdbc:postgresql") + "/" + databaseName)
+      .url("jdbc:postgresql://" + host + ":" + port +  "/" + databaseName)
       .driverClassName("org.postgresql.Driver")
       .build();
   }
