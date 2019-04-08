@@ -80,16 +80,18 @@ To start using this project you just need to add one of the provided annotations
 
 [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) can be added to your project like:
 
-    import io.ap4k.kubernetes.annotaion.KubernetesApplication;
-    
-    @KubernetesApplication
-    public class Main {
+```java
+import io.ap4k.kubernetes.annotaion.KubernetesApplication;
 
-        public static void main(String[] args) {
-          //Your application code goes here.
-        }
+@KubernetesApplication
+public class Main {
+
+    public static void main(String[] args) {
+      //Your application code goes here.
     }
-    
+}
+```
+
 When the project gets compiled, the annotation will trigger the generation of a `Deployment` in both json and yml that
 will end up under 'target/classes/META-INF/apk'. 
 
@@ -100,12 +102,14 @@ the generations of addition resources, like `Service` and `Ingress`.
 
 This module can be added to the project using:
 
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>kubernetes-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>kubernetes-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
+
 #### related examples
  - [kubernetes example](examples/kubernetes-example)
 
@@ -137,57 +141,60 @@ Supported build tools:
 
 For all other build tools, the name and version need to be provided via the core annotations:
 
-      @KubernetesApplication(name = "my-app", version="1.1.0.Final")
-      public class Main {
-      }
-      
-      
+```java
+@KubernetesApplication(name = "my-app", version="1.1.0.Final")
+public class Main {
+}
+```
+     
 or
 
-      @OpenshiftApplication(name = "my-app", version="1.1.0.Final")
-      public class Main {
-      }
-
+```java
+@OpenshiftApplication(name = "my-app", version="1.1.0.Final")
+public class Main {
+}
+```
 and so on...
 
 The information read from the build tool, is added to all resources as labels (name, version).
 They are also used to name images, containers, deployments, services etc.
 
 For example for a gradle app, with the following `gradle.properties`:
+```properties
+name = my-gradle-app
+version = 1.0.0
+```
 
-    name = my-gradle-app
-    version = 1.0.0
-    
 The following deployment will be generated:
-    
-    apiVersion: "apps/v1"
-    kind: "Deployment"
+```yaml
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "kubernetes-example"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "my-gradle-app"
+      version: "1.0-SNAPSHOT"
+      group: "default"
+  template:
     metadata:
-      name: "kubernetes-example"
+      labels:
+        app: "my-gradle-app"
+        version: "1.0-SNAPSHOT"
+        group: "default"
     spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          app: "my-gradle-app"
-          version: "1.0-SNAPSHOT"
-          group: "default"
-      template:
-        metadata:
-          labels:
-            app: "my-gralde-app"
-            version: "1.0-SNAPSHOT"
-            group: "default"
-        spec:
-          containers:
-          - env:
-            - name: "KUBERNETES_NAMESPACE"
-              valueFrom:
-                fieldRef:
-                  fieldPath: "metadata.namespace"
-            image: "default/my-gradle-app:1.0-SNAPSHOT"
-            imagePullPolicy: "IfNotPresent"
-            name: "my-gradle-app"
-            
+      containers:
+      - env:
+        - name: "KUBERNETES_NAMESPACE"
+          valueFrom:
+            fieldRef:
+              fieldPath: "metadata.namespace"
+        image: "default/my-gradle-app:1.0-SNAPSHOT"
+        imagePullPolicy: "IfNotPresent"
+        name: "my-gradle-app"
+```            
 The output file name may be used in certain cases, to set the value of `JAVA_APP_JAR` an environment variable that points to the build jar.
 
 
@@ -195,17 +202,18 @@ The output file name may be used in certain cases, to set the value of `JAVA_APP
 #### Adding extra ports and exposing them as services
 
 To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) :
+```java
+import io.ap4k.kubernetes.annotation.Env;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
-    import io.ap4k.kubernetes.annotation.Env;
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
+@KubernetesApplication(ports = @Port(name = "web", containerPort = 8080))
+public class Main {
 
-    @KubernetesApplication(ports = @Port(name = "web", containerPort = 8080))
-    public class Main {
-
-      public static void main(String[] args) {
-        //Your code goes here
-      }
-    }
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
 
 This will trigger the addition of a container port to the `Deployment` but also will trigger the generation of a `Service` resource.
 
@@ -213,39 +221,40 @@ This will trigger the addition of a container port to the `Deployment` but also 
 
 #### Adding container environment variables
 To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) :
+```java
+import io.ap4k.kubernetes.annotation.Env;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
-    import io.ap4k.kubernetes.annotation.Env;
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
+@KubernetesApplication(envVars = @Env(name = "key1", value = "var1"))
+public class Main {
 
-    @KubernetesApplication(envVars = @Env(name = "key1", value = "var1"))
-    public class Main {
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
 
-      public static void main(String[] args) {
-        //Your code goes here
-      }
-    }
-    
 Additional options are provided for adding environment variables from fields, config maps and secrets.    
 
 #### Working with volumes and mounts
 To define volumes and mounts for your application, you can use something like:
+```java
+import io.ap4k.kubernetes.annotation.Port;
+import io.ap4k.kubernetes.annotation.Mount;
+import io.ap4k.kubernetes.annotation.PersistentVolumeClaimVolume;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
-    import io.ap4k.kubernetes.annotation.Port;
-    import io.ap4k.kubernetes.annotation.Mount;
-    import io.ap4k.kubernetes.annotation.PersistentVolumeClaimVolume;
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    
-    @KubernetesApplication(ports = @Port(name = "http", containerPort = 8080), 
-      pvcVolumes = @PersistentVolumeClaimVolume(volumeName = "mysql-volume", claimName = "mysql-pvc"),
-      mounts = @Mount(name = "mysql-volume", path = "/var/lib/mysql")
-    )
-    public class Main {
+@KubernetesApplication(ports = @Port(name = "http", containerPort = 8080), 
+  pvcVolumes = @PersistentVolumeClaimVolume(volumeName = "mysql-volume", claimName = "mysql-pvc"),
+  mounts = @Mount(name = "mysql-volume", path = "/var/lib/mysql")
+)
+public class Main {
 
-      public static void main(String[] args) {
-        //Your code goes here
-      }
-    }
-    
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```    
     
 Currently the supported annotations for specifying volumes are:
 
@@ -263,44 +272,48 @@ The worst part is that you don't realize the mistake until its TOO late.
 
 Ap4k provides a way to manage those options using the `@JvmOption` annotation, which is included in the `options-annotations`.
 
-    import io.ap4k.options.annotation.JvmOptions
-    import io.ap4k.options.annotation.GarbageCollector;
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    
-    @KubernetesApplication
-    @JvmOptions(server=true, xmx=1024, preferIpv4Stack=true, gc=GarbageCollector.SerialGC)
-    public class Main {
+```java
+import io.ap4k.options.annotation.JvmOptions
+import io.ap4k.options.annotation.GarbageCollector;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
-      public static void main(String[] args) {
-        //Your code goes here
-      }
-    }
-   
+@KubernetesApplication
+@JvmOptions(server=true, xmx=1024, preferIpv4Stack=true, gc=GarbageCollector.SerialGC)
+public class Main {
+
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
+
 This module can be added to the project using:
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>option-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
 
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>option-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
 Note: The module is included in all starters.    
     
 #### Init Containers
 
 If for any reason the application requires the use of init containers, they can be easily defined using the `initContainer`
 property, as demonstrated below.
+```java
+import io.ap4k.kubernetes.annotation.Container;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
-    import io.ap4k.kubernetes.annotation.Container;
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    
-    @KubernetesApplication(initContainers = @Container(image="foo/bar:latest", command="foo"))
-    public class Main {
+@KubernetesApplication(initContainers = @Container(image="foo/bar:latest", command="foo"))
+public class Main {
 
-      public static void main(String[] args) {
-        //Your code goes here
-      }
-    }
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
 
 The [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java) supports the following fields:
 
@@ -315,19 +328,20 @@ The [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java
 #### Sidecars
 
 Similarly to [init containers](#init-containers) support for sidecars is also provided using the `sidecars` property. For example:
+```java
+import io.ap4k.kubernetes.annotation.Container;
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
 
-    import io.ap4k.kubernetes.annotation.Container;
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    
-    @KubernetesApplication(sidecars = @Container(image="jaegertracing/jaeger-agent",
-                                                 args="--collector.host-port=jaeger-collector.jaeger-infra.svc:14267"))
-    public class Main {
+@KubernetesApplication(sidecars = @Container(image="jaegertracing/jaeger-agent",
+                                             args="--collector.host-port=jaeger-collector.jaeger-infra.svc:14267"))
+public class Main {
 
-      public static void main(String[] args) {
-        //Your code goes here
-      }
-    }
-    
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
+
 As in the case of [init containers](#init-containers) the [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java) supports the following fields:
 
 - Image
@@ -341,13 +355,13 @@ As in the case of [init containers](#init-containers) the [@Container](core/src/
 #### Adding the kubernetes annotation processor to the classpath
 
 This module can be added to the project using:
-
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>kubernetes-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>kubernetes-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
 ### OpenShift annotations
 
 This module provides two new annotations: 
@@ -364,13 +378,13 @@ openshift annotation processors are present both kubernetes and openshift resour
 #### Adding the openshift annotation processor to the classpath
 
 This module can be added to the project using:
-
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>openshift-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>openshift-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```    
 #### Integrating with S2i
 To configure s2i for this project one can add the `@EnableS2iBuild` annotation to the project.
 This annotation will configure:
@@ -381,19 +395,19 @@ This annotation will configure:
 - BuildConfig 
 
 Here's an example:
+```java
+import io.ap4k.openshift.annotation.OpenshiftApplication;
+import io.ap4k.openshift.annotation.EnableS2iBuild;
 
-    import io.ap4k.openshift.annotation.OpenshiftApplication;
-    import io.ap4k.openshift.annotation.EnableS2iBuild;
+@OpenshiftApplication(name = "doc-example")
+@EnableS2iBuild
+public class Main {
 
-    @OpenshiftApplication(name = "doc-example")
-    @EnableS2iBuild
-    public class Main {
-
-        public static void main(String[] args) {
-          //Your code goes here
-        }
+    public static void main(String[] args) {
+      //Your code goes here
     }
-    
+}
+```    
 The generated `BuildConfig` will be a binary config. The actual build can be triggered from the command line with something like:
 
     oc start-build doc-example --from-dir=./target --follow
@@ -419,18 +433,18 @@ In particular it can generate [ServiceMonitor](annotations/prometheus-annotation
 This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/ap4k/prometheus/annotation/EnableServiceMonitor.java) annotation.
 
 Here's an example:
+```java
+import io.ap4k.kubernetes.annotation.KubernentesApplication;
+import io.ap4k.prometheus.annotation.EnableServiceMonitor;
 
-    import io.ap4k.kubernetes.annotation.KubernentesApplication;
-    import io.ap4k.prometheus.annotation.EnableServiceMonitor;
-
-    @KubernetesApplication
-    @EnableServiceMonitor(port = "http", path="/prometheus", interval=20)
-    public class Main {
-        public static void main(String[] args) {
-          //Your code goes here
-        }
+@KubernetesApplication
+@EnableServiceMonitor(port = "http", path="/prometheus", interval=20)
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
     }
-
+}
+```
 The annotation processor, will automatically configure the required selector and generate the ServiceMonitor.
 Note: Some of the framework integration modules, may further decorate the ServiceMonitor with framework specific configuration.
 For example, the Spring Boot module will decorate the monitor with the Spring Boot specific path, which is `/actuator/prometheus`.
@@ -450,33 +464,34 @@ When the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) is 
 The annotation processor will automicatlly set the required annotations to the generated deployment, so that the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) can inject the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent).
 
 Here's an example:
+```java
+import io.ap4k.kubernetes.annotation.KubernentesApplication;
+import io.ap4k.jaeger.annotation.EnableJaegerAgent;
 
-    import io.ap4k.kubernetes.annotation.KubernentesApplication;
-    import io.ap4k.jaeger.annotation.EnableJaegerAgent;
-
-    @KubernetesApplication
-    @EnableJaegerAgent(operatorEnabled="true")
-    public class Main {
-        public static void main(String[] args) {
-          //Your code goes here
-        }
+@KubernetesApplication
+@EnableJaegerAgent(operatorEnabled="true")
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
     }
-    
+}
+```    
 ##### Manually injection the agent sidecar
 
 For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/ap4k/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
 
-    import io.ap4k.kubernetes.annotation.KubernentesApplication;
-    import io.ap4k.jaeger.annotation.EnableJaegerAgent;
+```java
+import io.ap4k.kubernetes.annotation.KubernentesApplication;
+import io.ap4k.jaeger.annotation.EnableJaegerAgent;
 
-    @KubernetesApplication
-    @EnableJaegerAgent
-    public class Main {
-        public static void main(String[] args) {
-          //Your code goes here
-        }
+@KubernetesApplication
+@EnableJaegerAgent
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
     }
-
+}
+```
 #### related examples
 - [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
 
@@ -488,34 +503,35 @@ The [services catalog](https://svc-cat.io) annotation processor is can be used i
 - injecting binding info into the container 
 
 Here's an example:
+```java
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
+import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
-    import io.ap4k.servicecatalog.annotation.ServiceCatalog;
-
-    @KubernetesApplication
-    @ServiceCatalog(instances =
-        @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default")
-    )
-    public class Main {
-        public static void main(String[] args) {
-          //Your code goes here
-        }
+@KubernetesApplication
+@ServiceCatalog(instances =
+    @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default")
+)
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
     }
-
+}
+```
 The `@ServiceCatalogInstance` annotation will trigger the generation of a `ServiceInstance` and a `ServiceBinding`resource.
 It will also decorate any `Pod`, `Deployment`, `DeploymentConfig` and so on with additional environment variables containing the binding information.
 
 #### Adding the services catalog annotation processor to the classpath
 
 This module can be added to the project using:
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>servicecatalog-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
 
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>servicecatalog-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
 #### related examples
  - [service catalog example](examples/service-catalog-example)  
  
@@ -523,28 +539,29 @@ This module can be added to the project using:
 
 The [istio](https://istio.io)  annotation processor can be used to automatically inject the istio sidecar to the generated resources. 
 For example:
+```java
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.ap4k.istio.annotation.Istio;
 
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    import io.ap4k.istio.annotation.Istio;
-   
-    @Istio
-    @KubernetesApplication
-    public class Main {
-         public static void main(String[] args) {
-           //Your code goes here
-         }
-    }
-
+@Istio
+@KubernetesApplication
+public class Main {
+     public static void main(String[] args) {
+       //Your code goes here
+     }
+}
+```
 #### Adding the istio annotation processor to the classpath
 
 This module can be added to the project using:
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>istio-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
 
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>istio-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
 ### Component annotations
 The component [CRD](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims on abstracting kubernetes/OpenShift resources and simplify the config, design of an application.
 See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more buildInfo about how the structure, syntax of a Component (runtime, services, links) is defined.
@@ -561,69 +578,72 @@ The content of the component descriptor will be determined by the existing confi
 
 For example, the following code:
 
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    import io.ap4k.component.annotation.CompositeApplication;
-    import io.ap4k.servicecatalog.annotation.ServiceCatalog;
-    import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
+```java
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.ap4k.component.annotation.CompositeApplication;
+import io.ap4k.servicecatalog.annotation.ServiceCatalog;
+import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
 
-    @KubernetesApplication
-    @ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", secretName="mysql-secret"))
-    @CompositeApplication
-    public class Main {
+@KubernetesApplication
+@ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", secretName="mysql-secret"))
+@CompositeApplication
+public class Main {
 
-         public static void main(String[] args) {
-             //Your code goes here 
-         }
-    }
-    
+     public static void main(String[] args) {
+         //Your code goes here 
+     }
+}
+```
+
 Will trigger the creation of the following component:
 
-     apiVersion: "v1beta1"
-     kind: "Component"
-     metadata:
-       name: ""
-     spec:
-       deploymentMode: "innerloop"
-    services:
-    - name: "mysql-instance"
-      class: "apb-mysql"
-      plan: "default"
-      secretName: "mysql-secret"
-
+```yaml
+ apiVersion: "v1beta1"
+ kind: "Component"
+ metadata:
+   name: ""
+ spec:
+   deploymentMode: "innerloop"
+services:
+- name: "mysql-instance"
+  class: "apb-mysql"
+  plan: "default"
+  secretName: "mysql-secret"
+```
 This module can be added to the project using:
-
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>component-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>component-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```  
 ### Application Annotations
 
 The [@EnableApplicationResource](annotations/application-annotations/src/main/java/io/ap4k/application/annotation/EnableApplicationResource.java) enables the generation of the `Application` custom resource, that is defined as part of https://github.com/kubernetes-sigs/application.
 
 To use this annotation, one needs:
-
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>application-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>application-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
 And then its just a matter of specifying:
+```java
+import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.ap4k.application.annotation.EnableApplicationResource;
 
-    import io.ap4k.kubernetes.annotation.KubernetesApplication;
-    import io.ap4k.application.annotation.EnableApplicationResource;
+@KubernetesApplication
+@EnableApplicationResource(icons=@Icon(src="url/to/icon"), owners=@Contact(name="John Doe", email="john.doe@somemail.com"))
+public class Main {
 
-    @KubernetesApplication
-    @EnableApplicationResource(icons=@Icon(src="url/to/icon"), owners=@Contact(name="John Doe", email="john.doe@somemail.com"))
-    public class Main {
-
-         public static void main(String[] args) {
-             //Your code goes here 
-         }
-    }
-
+     public static void main(String[] args) {
+         //Your code goes here 
+     }
+}
+```
 Along we the resources that ap4k usually generates, there will be also an `Application` custom resource.
 
     
@@ -664,33 +684,34 @@ To enable the docker build hook you need:
 - the `docker` binary configured to point the docker daemon of your kubernetes environment.
 
 To add the following dependency into the project:
-
-    <dependency>
-     <groupId>io.ap4k</groupId>
-     <artifactId>docker-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>docker-annotations</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```  
 To enable the hook you need to add the `@EnableDockerBuild` annotation to your main class.    
 Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
-
-    mvn clean install -Dap4k.build=true
-   
+```bash
+mvn clean install -Dap4k.build=true
+```
 or if you are using gradle:
-
-    gradle build -Dap4k.build=true   
-    
+```bash
+gradle build -Dap4k.build=true   
+```
 When push is enabled, the registry can be specified as part of the annotation, or via system properties.
 Here's an example via annotation configuration:
-
-    @EnableDockerBuild(registry="quay.io")
-    public class Main {
-    }
-    
+```java
+@EnableDockerBuild(registry="quay.io")
+public class Main {
+}
+```    
 And here's how it can be done via build properties (system properties):
+```bash
+mvn clean install -Dap4k.docker.registry=quay.io -Dap4k.push=true    
+```
 
-    mvn clean install -Dap4k.docker.registry=quay.io -Dap4k.push=true    
-    
 Note: Ap4k will **NOT** push images on its own. It will delegate to the `docker` binary. So the user needs to make sure
 beforehand that is logged in and has taken all necessary actions for a `docker push` to work.
     
@@ -704,13 +725,13 @@ To enable the docker build hook you need:
 
 To enable the hook you need to add the `@EnableS2iBuild` annotation to your main class.    
 Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
-
-    mvn clean install -Dap4k.build=true
-   
+```bash
+mvn clean install -Dap4k.build=true
+```   
 or if you are using gradle:
-
-    gradle build -Dap4k.build=true  
-    
+```bash
+gradle build -Dap4k.build=true  
+```    
 ### Junit5 extensions 
 
 Ap4k provides two junit5 extensions for:
@@ -733,13 +754,13 @@ for the annotated applications.
 #### Kubernetes extension for Junit5
 
 The kubernetes extension can be used by adding the following dependency:
-
-    <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>kubernetes-junit</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>kubernetes-junit</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```    
 This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/ap4k/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
 
 By adding the annotation to your test class the following things will happen:
@@ -763,39 +784,40 @@ Supported items for injection:
 To inject one of this you need a field in the code annotated with [@Inject](testing/core-junit/src/main/java/io/ap4k/testing/annotation/Inject.java).
 
 For example:
-
-    @Inject
-    KubernetesClient client;
-    
+```java
+@Inject
+KubernetesClient client;
+```    
 When injecting a Pod, its likely that we need to specify the pod name. Since the pod name is not known in advance, we can use the deployment name instead.
 If the deployment is named `hello-world` then you can do something like:
-
-    @Inject
-    @Named("hello-world")
-    Pod pod;
-
+```java
+@Inject
+@Named("hello-world")
+Pod pod;
+```
 Note: It is highly recommended to also add `maven-failsafe-plugin` configuration so that integration tests only run in the `integration-test` phase.
 This is important since in the `test` phase the application is not packaged. Here's an example of how it you can configure the project:
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${version.maven-failsafe-plugin}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-            <phase>integration-test</phase>
-            <configuration>
-              <includes>
-                <include>**/*IT.class</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>   
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-failsafe-plugin</artifactId>
+  <version>${version.maven-failsafe-plugin}</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>integration-test</goal>
+        <goal>verify</goal>
+      </goals>
+      <phase>integration-test</phase>
+      <configuration>
+        <includes>
+          <include>**/*IT.class</include>
+        </includes>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
       
 #### related examples
  - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
@@ -804,13 +826,13 @@ This is important since in the `test` phase the application is not packaged. Her
 
 Similarly to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/ap4k/testing/annotation/OpenshiftIntegrationTest.java).
 To use that you need to add:
-
-    <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>openshift-junit</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>openshift-junit</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```    
 By adding the annotation to your test class the following things will happen:
 
 1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
@@ -844,13 +866,13 @@ A user might choose to build images using fmp, but customize them using `ap4k` a
 An example could be to expose an additional port:
 
 This can by done by configuring ap4k to read the fmp generated manifests from `META-INF/fabric8` which is where fmp stores them and save them back there once decoration is done.
-
-    @GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
-    @KubernetesApplication(port = @Port(name="srv", containerPort=8181)
-    public class Main {
-       ... 
-    }
-
+```java
+@GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
+@KubernetesApplication(port = @Port(name="srv", containerPort=8181)
+public class Main {
+   ... 
+}
+```
 #### related examples
  - [spring boot with fmp on openshift example](examples/spring-boot-with-fmp-on-kubernetes-example)
 
