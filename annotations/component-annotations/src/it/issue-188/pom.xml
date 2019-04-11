@@ -24,8 +24,8 @@ limitations under the License.
   <artifactId>component-it-issue-65a</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>AP4K :: Annotation :: Component :: Integration Test for #65</name>
-  <description>Env annotation appears twice within yaml generated</description>
+  <name>AP4K :: Annotation :: Component :: Integration Test for #188</name>
+  <description>Component yaml/json is not generated</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

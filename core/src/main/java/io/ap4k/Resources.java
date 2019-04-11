@@ -162,14 +162,17 @@ public class Resources implements Coordinates {
 
     groups.forEach((g, b) -> resources.put(g, b.build()));
 
-    for (Map.Entry<String, Set<Decorator>> entry : customDecorators.entrySet()) {
-      String group = entry.getKey();
-      Set<Decorator> groupDecorators = entry.getValue();
-      for (Decorator decorator : groupDecorators)  {
-       customGroups.get(group).accept(decorator);
-      }
-      resources.put(group, customGroups.get(group).build());
-    }
+    customDecorators.forEach((group, decorators) -> {
+      if (customGroups.containsKey(group)) {
+        Set<Decorator> union = new TreeSet<>();
+        union.addAll(decorators);
+        union.addAll(globalDecorators);
+        for (Decorator d : union) {
+          customGroups.get(group).accept(d);
+        }
+      }});
+
+    customGroups.forEach((g, b) -> resources.put(g, b.build()));
     return resources;
   }
 
