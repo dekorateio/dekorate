@@ -45,7 +45,7 @@ public class Session {
   private final AtomicBoolean closed = new AtomicBoolean();
   private final AtomicBoolean generated = new AtomicBoolean();
 
-  private final Set<Handler> handlers = new LinkedHashSet<>();
+  private final Set<Handler> handlers = new TreeSet<>(Comparator.comparing(Handler::order));
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
 

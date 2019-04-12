@@ -17,7 +17,6 @@
     <module>openshift-example</module>
     <module>service-catalog-example</module>
     <module>component-example</module>
-    <module>component-service-example</module>
     <module>source-to-image-example</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-openshift-example</module>
@@ -26,6 +25,7 @@
     <module>spring-boot-with-gradle-on-openshift-example</module>
     <module>spring-boot-with-fmp-on-kubernetes-example</module>
     <module>spring-boot-with-svcat-on-openshift-example</module>
+    <module>spring-boot-with-svcat-and-component-on-kubernetes-example</module>
     <module>spring-boot-with-prometheus-on-kubernetes-example</module>
     <module>spring-boot-with-jaeger-on-kubernetes-example</module>
     <module>pojo-to-custom-resource-example</module>

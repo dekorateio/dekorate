@@ -21,7 +21,6 @@ import io.ap4k.WithSession;
 import io.ap4k.Generator;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.Configuration;
-import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.prometheus.config.EditableServiceMonitorConfig;
 import io.ap4k.prometheus.decorator.EndpointPathDecorator;
 import io.ap4k.spring.config.SpringApplicationConfig;
@@ -39,15 +38,31 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
   @Override
   default void add(Map map) {
     session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
-     session.handlers().add(new Handler() {
+    session.handlers().add(new Handler() {
+      @Override
+      public int order() {
+        return 600;
+      }
+
+      @Override
+      public void handle(Configuration config) {
+        session.configurators().add(new SetSpringBootRuntime());
+      }
+
+      @Override
+      public boolean canHandle(Class config) {
+        return Configuration.class.isAssignableFrom(config);
+      }
+    });
+
+    session.handlers().add(new Handler() {
        @Override
        public int order() {
-         return 400;
+         return 410;
        }
 
        @Override
        public void handle(Configuration config) {
-         session.configurators().add(new SetSpringBootRuntime());
          session.resources().decorate(new EndpointPathDecorator(session.resources().getName(), "http", "/actuator/prometheus"));
        }
 

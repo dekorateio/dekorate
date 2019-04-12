@@ -50,7 +50,7 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
 
   @Override
   public int order() {
-    return 400;
+    return 410;
   }
 
   @Override
