@@ -24,8 +24,8 @@ limitations under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.ap4k</groupId>
-  <artifactId>component-service-example</artifactId>
-  <name>AP4K :: Examples :: Component Service</name>
+  <artifactId>spring-boot-with-svcat-and-component-on-kubernetes-example</artifactId>
+  <name>AP4K :: Examples ::Spring Boot with Service Catalog and Component CRD on Kubernetes</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

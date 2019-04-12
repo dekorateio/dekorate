@@ -45,7 +45,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
 
   @Override
   public int order() {
-    return 600;
+    return 1100;
   }
 
   @Override
@@ -71,7 +71,6 @@ public class ComponentHandler implements Handler<CompositeConfig> {
     for (Link link : config.getLinks()) {
       resources.decorateCustom(COMPONENT, new AddLinkToComponentDecorator(link));
     }
-
   }
 
   /**
@@ -82,11 +81,13 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   private Component createComponent(CompositeConfig config) {
     return new ComponentBuilder()
       .withNewMetadata()
-      .withName(config.getName())
+      .withName(resources.getName())
+      .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
       .withDeploymentMode(DeploymentType.innerloop)
       .withExposeService(config.isExposeService())
+      .withVersion(resources.getVersion())
       .endSpec()
       .build();
   }

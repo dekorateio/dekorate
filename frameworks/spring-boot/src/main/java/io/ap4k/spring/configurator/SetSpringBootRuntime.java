@@ -17,17 +17,17 @@
 package io.ap4k.spring.configurator;
 
 import io.ap4k.kubernetes.config.ConfigKey;
+import io.ap4k.kubernetes.config.ConfigurationFluent;
 import io.ap4k.kubernetes.config.Configurator;
-import io.ap4k.kubernetes.config.KubernetesConfigFluent;
 
-public class SetSpringBootRuntime extends Configurator<KubernetesConfigFluent> {
+public class SetSpringBootRuntime extends Configurator<ConfigurationFluent<?>> {
 
   // TODO : Make this property generic as it will also be ued by Vert.x, Tornthail, ...
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   private static String RUNTIME_SPRING_BOOT = "spring-boot";
 
   @Override
-  public void visit(KubernetesConfigFluent config) {
+  public void visit(ConfigurationFluent<?> config) {
     config.addToAttributes(RUNTIME_TYPE,RUNTIME_SPRING_BOOT);
   }
 }
