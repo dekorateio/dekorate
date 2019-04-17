@@ -23,10 +23,12 @@ import io.ap4k.component.config.EditableCompositeConfig;
 import io.ap4k.component.config.Link;
 import io.ap4k.component.decorator.AddEnvToComponentDecorator;
 import io.ap4k.component.decorator.AddLinkToComponentDecorator;
-import io.ap4k.component.decorator.AddRuntimeToComponentDecorator;
+import io.ap4k.component.decorator.AddRuntimeTypeToComponentDecorator;
+import io.ap4k.component.decorator.AddRuntimeVersionToComponentDecorator;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
 import io.ap4k.component.model.DeploymentType;
+import io.ap4k.deps.zjsonpatch.internal.guava.Strings;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Env;
@@ -36,6 +38,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
 
   private static final String COMPONENT = "component";
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
+  public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
 
   private final Resources resources;
 
@@ -50,6 +53,9 @@ public class ComponentHandler implements Handler<CompositeConfig> {
 
   @Override
   public void handle(CompositeConfig config) {
+    if (Strings.isNullOrEmpty(resources.getName())) {
+      resources.setName(config.getName());
+    }
     resources.addCustom(COMPONENT, createComponent(config));
     addVisitors(config);
   }
@@ -62,8 +68,14 @@ public class ComponentHandler implements Handler<CompositeConfig> {
 
   private void addVisitors(CompositeConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
+    String version = config.getAttribute(RUNTIME_VERSION);
+    
     if (type != null) {
-      resources.decorateCustom(COMPONENT,new AddRuntimeToComponentDecorator(type));
+      resources.decorateCustom(COMPONENT,new AddRuntimeTypeToComponentDecorator(type));
+    }
+
+    if (version != null) {
+      resources.decorateCustom(COMPONENT,new AddRuntimeVersionToComponentDecorator(version));
     }
     for (Env env : config.getEnvVars()) {
       resources.decorateCustom(COMPONENT, new AddEnvToComponentDecorator(env));

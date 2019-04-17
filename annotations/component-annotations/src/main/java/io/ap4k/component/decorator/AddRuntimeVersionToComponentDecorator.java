@@ -18,19 +18,17 @@ package io.ap4k.component.decorator;
 
 import io.ap4k.component.model.ComponentSpecBuilder;
 import io.ap4k.kubernetes.decorator.Decorator;
-import io.ap4k.doc.Description;
 
-@Description("Add the runtime information to the component.")
-public class AddRuntimeToComponentDecorator extends Decorator<ComponentSpecBuilder> {
+public class AddRuntimeVersionToComponentDecorator extends Decorator<ComponentSpecBuilder> {
 
-  private final String runtime;
+  private final String version;
 
-  public AddRuntimeToComponentDecorator(String runtime) {
-    this.runtime = runtime;
+  public AddRuntimeVersionToComponentDecorator(String version) {
+    this.version = version;
   }
 
   @Override
   public void visit(ComponentSpecBuilder component) {
-    component.withRuntime(runtime);
+    component.withVersion(version);
   }
 }

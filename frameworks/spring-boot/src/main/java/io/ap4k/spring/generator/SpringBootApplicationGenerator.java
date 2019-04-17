@@ -26,6 +26,7 @@ import io.ap4k.prometheus.decorator.EndpointPathDecorator;
 import io.ap4k.spring.config.SpringApplicationConfig;
 import io.ap4k.spring.config.SpringApplicationConfigBuilder;
 import io.ap4k.spring.configurator.SetSpringBootRuntime;
+import io.ap4k.spring.configurator.SetSpringBootVersion;
 
 import java.util.Collections;
 import java.util.Map;
@@ -47,6 +48,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
       @Override
       public void handle(Configuration config) {
         session.configurators().add(new SetSpringBootRuntime());
+        session.configurators().add(new SetSpringBootVersion());
       }
 
       @Override

@@ -19,27 +19,29 @@ package io.ap4k.component.generator;
 import io.ap4k.component.adapter.CompositeConfigAdapter;
 import io.ap4k.component.annotation.CompositeApplication;
 import io.ap4k.component.config.CompositeConfig;
+import io.ap4k.component.configurator.ApplyProject;
 import io.ap4k.component.handler.ComponentHandler;
 import io.ap4k.component.handler.ComponentServiceCatalogHandler;
 import io.ap4k.Generator;
+import io.ap4k.WithProject;
 import io.ap4k.config.ConfigurationSupplier;
 
 import javax.lang.model.element.Element;
 import java.util.Map;
 
-public interface CompositeConfigGenerator extends Generator {
+public interface CompositeConfigGenerator extends Generator, WithProject {
 
   @Override
   default void add(Map map) {
-    on(new ConfigurationSupplier<>(CompositeConfigAdapter.newBuilder(propertiesMap(map, CompositeApplication.class))));
+    on(new ConfigurationSupplier<>(CompositeConfigAdapter.newBuilder(propertiesMap(map, CompositeApplication.class)).accept(new ApplyProject(getProject()))));
   }
 
   @Override
   default void add(Element element) {
     CompositeApplication composite = element.getAnnotation(CompositeApplication.class);
     on(composite != null
-      ? new ConfigurationSupplier<>(CompositeConfigAdapter.newBuilder(composite))
-      : new ConfigurationSupplier<>(CompositeConfig.newCompositeConfigBuilder()));
+       ? new ConfigurationSupplier<>(CompositeConfigAdapter.newBuilder(composite).accept(new ApplyProject(getProject())))
+      : new ConfigurationSupplier<>(CompositeConfig.newCompositeConfigBuilder().accept(new ApplyProject(getProject()))));
   }
 
   default void on(ConfigurationSupplier<CompositeConfig> config) {

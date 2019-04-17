@@ -160,6 +160,7 @@ limitations under the License.
                     <include>io/ap4k/component/adapter/**</include>
                     <include>io/ap4k/component/annotation/**</include>
                     <include>io/ap4k/component/config/*</include>
+                    <include>io/ap4k/component/configurator/**</include>
                     <include>io/ap4k/component/decorator/**</include>
                     <include>io/ap4k/component/handler/**</include>
                     <include>io/ap4k/component/processor/**</include>
