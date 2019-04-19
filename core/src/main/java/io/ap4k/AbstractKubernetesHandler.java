@@ -93,19 +93,21 @@ public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> impl
     resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
 
     resources.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+    //Metadata handling
+    for (Label label : config.getLabels()) {
+      resources.decorate(new AddLabelDecorator(label));
+    }
+    for (Annotation annotation : config.getAnnotations()) {
+      resources.decorate(new AddAnnotationDecorator(annotation));
+    }
+
     for (Container container : config.getInitContainers()) {
       resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
     }
     for (Container container : config.getSidecars()) {
       resources.decorate(group, new AddSidecarDecorator(config.getName(), container));
     }
-    for (Label label : config.getLabels()) {
-      resources.decorate(group, new AddLabelDecorator(label));
-    }
-    for (Annotation annotation : config.getAnnotations()) {
-      resources.decorate(group, new AddAnnotationDecorator(annotation));
-    }
-    for (Env env : config.getEnvVars()) {
+   for (Env env : config.getEnvVars()) {
       resources.decorate(group, new AddEnvVarDecorator(config.getName(), config.getName(), env));
     }
     for (Port port : config.getPorts()) {

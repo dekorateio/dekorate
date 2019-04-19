@@ -150,6 +150,9 @@ public class Resources implements Coordinates {
       entry.getValue().addAllToItems(allGlobals);
     }
 
+    if (groupDecorators.isEmpty()) {
+      groups.forEach((group, l) -> groupDecorators.put(group, globalDecorators));
+    }
     groupDecorators.forEach((group, decorators) -> {
       if (groups.containsKey(group)) {
         Set<Decorator> union = new TreeSet<>();
@@ -161,6 +164,10 @@ public class Resources implements Coordinates {
       }});
 
     groups.forEach((g, b) -> resources.put(g, b.build()));
+
+    if (customDecorators.isEmpty()) {
+      customGroups.forEach((group, l) -> customDecorators.put(group, globalDecorators));
+    }
 
     customDecorators.forEach((group, decorators) -> {
       if (customGroups.containsKey(group)) {
