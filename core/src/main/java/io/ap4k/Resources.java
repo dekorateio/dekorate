@@ -140,11 +140,11 @@ public class Resources implements Coordinates {
    * @return A map of {@link KubernetesList} by group name.
    */
   protected Map<String, KubernetesList> generate() {
-    List<HasMetadata> allGlobals = global.buildItems();
-
     if (!this.global.getItems().isEmpty()) {
       if (this.groups.isEmpty()) {
-        this.groups.put(DEFAULT_GROUP, new KubernetesListBuilder(global));
+        KubernetesListBuilder builder = new KubernetesListBuilder();
+        builder.addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()]));
+        this.groups.put(DEFAULT_GROUP, builder);
       } else {
         this.groups.forEach((group, builder) -> builder.addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()])));
       }
@@ -153,9 +153,6 @@ public class Resources implements Coordinates {
     Map<String, KubernetesListBuilder> groups = new HashMap<>(this.groups);
 
     Map<String, KubernetesList> resources = new HashMap<>();
-    for (Map.Entry<String, KubernetesListBuilder> entry : groups.entrySet())  {
-      entry.getValue().addAllToItems(allGlobals);
-    }
 
     if (groupDecorators.isEmpty()) {
       groups.forEach((group, l) -> groupDecorators.put(group, globalDecorators));
