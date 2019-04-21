@@ -18,6 +18,7 @@ package io.ap4k;
 
 import io.ap4k.kubernetes.config.Label;
 import io.ap4k.kubernetes.decorator.Decorator;
+import io.ap4k.deps.javax.validation.constraints.Size;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
@@ -141,9 +142,13 @@ public class Resources implements Coordinates {
   protected Map<String, KubernetesList> generate() {
     List<HasMetadata> allGlobals = global.buildItems();
 
-    //    if (this.groups.isEmpty()) {
-    //  this.groups.put(DEFAULT_GROUP, new KubernetesListBuilder());
-    // }
+    if (!this.global.getItems().isEmpty()) {
+      if (this.groups.isEmpty()) {
+        this.groups.put(DEFAULT_GROUP, new KubernetesListBuilder(global));
+      } else {
+        this.groups.forEach((group, builder) -> builder.addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()])));
+      }
+    }
 
     Map<String, KubernetesListBuilder> groups = new HashMap<>(this.groups);
 
