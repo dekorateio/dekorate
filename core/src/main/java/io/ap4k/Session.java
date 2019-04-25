@@ -18,12 +18,15 @@
 package io.ap4k;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.kubernetes.config.ApplicationConfiguration;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -65,11 +68,22 @@ public class Session {
     synchronized (Session.class) {
       if (INSTANCE == null) {
         INSTANCE = new Session();
+        INSTANCE.loadHandlers();
       }
     }
     return INSTANCE;
   }
 
+  protected Session() {
+  }
+
+  public void loadHandlers() {
+    Iterator<HandlerFactory> iterator = ServiceLoader.load(HandlerFactory.class, Session.class.getClassLoader()).iterator();
+    while(iterator.hasNext())  {
+      this.handlers.add(iterator.next().create(this.resources));
+    }
+  }
+ 
   //should be used only for testing
   public static void clearSession() {
     INSTANCE = null;
@@ -128,15 +142,24 @@ public class Session {
   private Map<String, KubernetesList> generate() {
     if (generated.compareAndSet(false, true)) {
       closed.set(true);
-        handlers.forEach(g ->
-          configurators.stream().forEach(c -> {
-          if (g.canHandle(c.getClass())) {
-            g.handle(c);
-          }
-        }));
+      handlers.forEach(h -> handle(h, configurators));
       this.generatedResources.putAll(resources.generate());
     }
     return Collections.unmodifiableMap(generatedResources);
   }
 
+  private static void handle(Handler h, Configurators configurators) {
+    if (!hasApplicationConfiguration(configurators)) {
+      h.handleDefault();
+    } 
+    configurators.stream().forEach(c -> {
+      if (h.canHandle(c.getClass())) {
+      h.handle(c);
+    }
+   });
+  }
+
+  private static boolean hasApplicationConfiguration(Configurators configurators) {
+    return configurators.stream().anyMatch(c->ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
+  }
 }

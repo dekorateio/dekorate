@@ -2,12 +2,16 @@ package io.ap4k.kubernetes.generator;
 
 import io.ap4k.Session;
 import io.ap4k.SessionWriter;
+import io.ap4k.WithProject;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.processor.SimpleFileWriter;
+import io.ap4k.project.FileProjectFactory;
+
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +31,7 @@ class KubernetesApplicationGeneratorTest {
     session.setWriter(writer);
 
     KubernetesApplicationGenerator generator = new KubernetesApplicationGenerator() {};
+    generator.setProject(FileProjectFactory.create(new File(".")));
 
     Map<String, Object> map = new HashMap<String, Object>() {{
       put(KubernetesApplication.class.getName(), new HashMap<String, Object>() {{

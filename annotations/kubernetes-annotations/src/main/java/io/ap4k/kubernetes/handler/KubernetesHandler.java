@@ -17,7 +17,11 @@
 package io.ap4k.kubernetes.handler;
 
 import io.ap4k.AbstractKubernetesHandler;
+import io.ap4k.Handler;
+import io.ap4k.HandlerFactory;
 import io.ap4k.Resources;
+import io.ap4k.WithProject;
+import io.ap4k.project.Project;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.LabelSelector;
 import io.ap4k.deps.kubernetes.api.model.LabelSelectorBuilder;
@@ -29,6 +33,8 @@ import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
 import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;
 import io.ap4k.kubernetes.config.Container;
 import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.KubernetesConfigBuilder;
+import io.ap4k.kubernetes.configurator.ApplyAutoBuild;
 import io.ap4k.kubernetes.config.EditableKubernetesConfig;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.decorator.AddIngressDecorator;
@@ -36,12 +42,13 @@ import io.ap4k.kubernetes.decorator.AddInitContainerDecorator;
 import io.ap4k.kubernetes.decorator.AddSidecarDecorator;
 import io.ap4k.kubernetes.decorator.ApplyImageDecorator;
 import io.ap4k.kubernetes.decorator.ApplyLabelSelectorDecorator;
+import io.ap4k.project.ApplyProjectInfo;
 
 import java.util.Optional;
 
 import static io.ap4k.utils.Labels.createLabels;
 
-public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> {
+public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> implements HandlerFactory, WithProject {
 
   private static final String KUBERNETES = "kubernetes";
 
@@ -56,6 +63,11 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
   public KubernetesHandler(Resources resources) {
     super(resources);
+  }
+
+  @Override
+  public Handler create(Resources resources) {
+    return new KubernetesHandler(resources);
   }
 
   @Override
@@ -155,6 +167,12 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       .endEnv()
       .endContainer()
       .build();
+  }
+
+  @Override
+  public void handleDefault() {
+    Project p = getProject();
+    handle(new KubernetesConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(p)).build());
   }
 
 }

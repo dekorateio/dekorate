@@ -18,7 +18,10 @@
 package io.ap4k.openshift.handler;
 
 import io.ap4k.AbstractKubernetesHandler;
+import io.ap4k.Handler;
+import io.ap4k.HandlerFactory;
 import io.ap4k.Resources;
+import io.ap4k.WithProject;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodSpec;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
@@ -28,17 +31,20 @@ import io.ap4k.deps.openshift.api.model.DeploymentConfig;
 import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Container;
+import io.ap4k.kubernetes.configurator.ApplyAutoBuild;
 import io.ap4k.openshift.config.OpenshiftConfig;
+import io.ap4k.openshift.config.OpenshiftConfigBuilder;
 import io.ap4k.openshift.config.EditableOpenshiftConfig;
 import io.ap4k.openshift.decorator.AddRouteDecorator;
 import io.ap4k.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.ap4k.openshift.decorator.ApplyReplicasDecorator;
+import io.ap4k.project.ApplyProjectInfo;
 
 import java.util.Optional;
 
 import static io.ap4k.utils.Labels.createLabels;
 
-public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> {
+public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> implements HandlerFactory, WithProject {
 
   private static final String OPENSHIFT = "openshift";
   private static final String APP = "app";
@@ -61,6 +67,11 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   }
 
   @Override
+  public Handler create(Resources resources) {
+    return new OpenshiftHandler(resources);
+  }
+
+  @Override
   public int order() {
     return 300;
   }
@@ -77,6 +88,10 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       resources.add(OPENSHIFT, createDeploymentConfig(config));
     }
     addDecorators(OPENSHIFT, config);
+  }
+  @Override
+  public void handleDefault() {
+    handle(new OpenshiftConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(getProject())).build());
   }
 
   @Override
@@ -160,4 +175,5 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .endContainer()
       .build();
   }
+  
 }
