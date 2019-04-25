@@ -33,6 +33,12 @@ public interface Handler<C extends Configuration> {
    */
   void handle(C config);
 
+  /**
+   * Generate / populate the resources, asusming default configuration.
+   */
+  default void handleDefault() {
+    //by default do noting
+  }
 
   /**
    * Check if config is accepted.

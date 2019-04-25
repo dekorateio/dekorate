@@ -49,6 +49,10 @@ public class Configurators {
       .map(s -> s.configure(configurators).get());
   }
 
+  public boolean isEmpty() {
+    return suppliers.isEmpty();
+  }
+
   public Set<? extends Configuration> toSet()  {
     return stream().collect(Collectors.toSet());
   }
