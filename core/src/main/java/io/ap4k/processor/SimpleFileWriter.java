@@ -68,7 +68,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
         return new AbstractMap.SimpleEntry<>(yml.toString(), value);
       }
     } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
+      throw new RuntimeException("Error writing resources", e);
     }
   }
 
@@ -92,7 +92,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
       }
 
     } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
+      throw new RuntimeException("Error writing resources", e);
     }
   }
 
@@ -134,7 +134,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
 
       return result;
     } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
+      throw new RuntimeException("Error writing resources", e);
     }
   }
 }

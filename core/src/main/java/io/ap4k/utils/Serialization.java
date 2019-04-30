@@ -258,7 +258,7 @@ public class Serialization {
       }
       return outputStream.toString();
     } catch (IOException e) {
-      throw new RuntimeException("Unable to read InputStream." + e);
+      throw new RuntimeException("Unable to read InputStream." , e);
     }
   }
 

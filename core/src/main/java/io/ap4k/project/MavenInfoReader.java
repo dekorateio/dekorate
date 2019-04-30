@@ -73,11 +73,11 @@ public class MavenInfoReader implements BuildInfoReader {
       DocumentBuilder builder = factory.newDocumentBuilder();
       return builder.parse(pom.toFile());
     } catch (IOException e) {
-      throw new RuntimeException(("Failed to read: " + pom.toAbsolutePath()));
+      throw new RuntimeException(("Failed to read: " + pom.toAbsolutePath()), e);
     } catch (ParserConfigurationException e) {
-      throw new RuntimeException(("Failed to parse: " + pom.toAbsolutePath()));
+      throw new RuntimeException(("Failed to parse: " + pom.toAbsolutePath()), e);
     } catch (SAXException e) {
-      throw new RuntimeException(("Failed to parse: " + pom.toAbsolutePath()));
+      throw new RuntimeException(("Failed to parse: " + pom.toAbsolutePath()), e);
     }
   }
 
