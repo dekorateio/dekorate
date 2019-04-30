@@ -22,6 +22,8 @@ package io.ap4k.config;
 import io.ap4k.deps.kubernetes.api.builder.VisitableBuilder;
 import io.ap4k.kubernetes.config.Configurator;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.function.Supplier;
 
 /**
@@ -49,4 +51,12 @@ public class ConfigurationSupplier<C> implements Supplier<C> {
     builder.accept(configurator);
     return this;
   }
+
+  
+  public Type getType() {
+    Class builderClass = builder.getClass();
+    ParameterizedType parameterizedType = (ParameterizedType) builderClass.getGenericSuperclass();
+    return parameterizedType.getActualTypeArguments()[0];
+  }
+
 }

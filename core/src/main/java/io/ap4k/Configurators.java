@@ -20,20 +20,24 @@ import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.Configurator;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Configurators {
 
-  private final Set<ConfigurationSupplier<? extends Configuration>> suppliers = new LinkedHashSet<>();
+  private final Map<Type, ConfigurationSupplier<? extends Configuration>> suppliers = new ConcurrentHashMap<>();
   private final Set<Configurator> configurators = new HashSet<>();
 
   public void add(ConfigurationSupplier supplier) {
-    this.suppliers.add(supplier);
+    this.suppliers.put(supplier.getType(), supplier);
   }
   /**
    * Add a {@link Configurator}.
@@ -45,6 +49,7 @@ public class Configurators {
 
   public Stream<? extends Configuration> stream() {
     return suppliers
+      .values()
       .stream()
       .map(s -> s.configure(configurators).get());
   }
@@ -57,3 +62,4 @@ public class Configurators {
     return stream().filter(i -> type.isAssignableFrom(i.getClass())).map(i -> (C)i).findFirst();
   }
 }
+
