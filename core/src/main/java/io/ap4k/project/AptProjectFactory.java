@@ -51,7 +51,7 @@ public class AptProjectFactory {
       f = environment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", ".marker-" + UUID.randomUUID().toString());
       return FileProjectFactory.create(Paths.get(f.toUri()).toFile());
     } catch (IOException e) {
-      throw new RuntimeException("Failed to determine the project root!");
+      throw new RuntimeException("Failed to determine the project root!", e);
     } finally {
       if (f != null) {
         f.delete();

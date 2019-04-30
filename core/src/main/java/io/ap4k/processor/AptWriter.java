@@ -86,7 +86,7 @@ public class AptWriter implements SessionWriter, WithProject {
         return new AbstractMap.SimpleEntry<>(yml.toString(), value);
       }
     } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
+      throw new RuntimeException("Error writing resources", e);
     }
   }
 
@@ -104,7 +104,7 @@ public class AptWriter implements SessionWriter, WithProject {
         return new AbstractMap.SimpleEntry<>(yml.toString(), value);
       }
     } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
+      throw new RuntimeException("Error writing resources", e);
     }
   }
 
@@ -130,7 +130,7 @@ public class AptWriter implements SessionWriter, WithProject {
         result.put(yml.getName(), yamlValue);
       }
     } catch (IOException e) {
-      throw new RuntimeException("Error writing resources");
+      throw new RuntimeException("Error writing resources", e);
     }
     return null;
   }
