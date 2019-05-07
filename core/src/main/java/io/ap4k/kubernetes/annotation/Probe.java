@@ -20,10 +20,15 @@ package io.ap4k.kubernetes.annotation;
 public @interface Probe {
 
   /**
-   * A string representation of the URL on which to perform an http get.
-   * @return  The http get url.
+   * The http path to use for the probe
+   * For this to work, the container port also needs to be set
+   *
+   * Assuming the container port has been set (as per above comment),
+   * if execAction or tcpSocketAction are not set, an http probe
+   * will be used automatically even if no path is set (which will
+   * result in the root path being used)
    */
-  String httpAction() default "";
+  String httpActionPath() default "";
 
   /**
    * The command to use for the probe.
