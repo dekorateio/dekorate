@@ -19,11 +19,16 @@ package io.ap4k.example.sbonkubernetes;
 
 import io.ap4k.docker.annotation.EnableDockerBuild;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.annotation.Probe;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @EnableDockerBuild
-@KubernetesApplication
+@KubernetesApplication(
+  livenessProbe = @Probe(httpActionPath = "/actuator/health"),
+  readinessProbe = @Probe(httpActionPath = "/actuator/health")
+)
 @SpringBootApplication
 public class Main {
 

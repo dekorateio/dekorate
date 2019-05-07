@@ -17,10 +17,8 @@
 package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
-import io.ap4k.kubernetes.config.Probe;
-import io.ap4k.utils.Strings;
-import io.ap4k.deps.kubernetes.api.model.ContainerBuilder;
 import io.ap4k.doc.Description;
+import io.ap4k.kubernetes.config.Probe;
 
 @Description("Add a readiness probe to all containers.")
 public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
@@ -34,19 +32,11 @@ public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
   }
 
   @Override
-  public void andThenVisit(ContainerFluent<?> container) {
-    if (probe == null) {
-      return;
-    }
-    if (Strings.isNullOrEmpty(probe.getExecAction()) &&
-        Strings.isNullOrEmpty(probe.getHttpAction()) &&
-        Strings.isNullOrEmpty(probe.getTcpSocketAction())) {
-      return;
-    }
+  protected void doCreateProbe(ContainerFluent<?> container, Actions actions) {
     container.withNewReadinessProbe()
-      .withExec(execAction(probe))
-      .withHttpGet(httpGetAction(probe))
-      .withTcpSocket(tcpSocketAction(probe))
+      .withExec(actions.execAction)
+      .withHttpGet(actions.httpGetAction)
+      .withTcpSocket(actions.tcpSocketAction)
       .withInitialDelaySeconds(probe.getInitialDelaySeconds())
       .withPeriodSeconds(probe.getPeriodSeconds())
       .withTimeoutSeconds(probe.getTimeoutSeconds())

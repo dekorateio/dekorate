@@ -16,19 +16,16 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
-import io.ap4k.kubernetes.config.Probe;
-import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.ExecAction;
 import io.ap4k.deps.kubernetes.api.model.HTTPGetAction;
 import io.ap4k.deps.kubernetes.api.model.IntOrString;
-import io.ap4k.deps.kubernetes.api.model.ProbeBuilder;
 import io.ap4k.deps.kubernetes.api.model.TCPSocketAction;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Collections;
+import io.ap4k.kubernetes.config.Probe;
+import io.ap4k.utils.Strings;
 
 /**
  * Base class for any kind of {@link Decorator} that acts on probes.
@@ -36,6 +33,8 @@ import java.util.Collections;
 public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
   protected final Probe probe;
+
+  abstract protected void doCreateProbe(ContainerFluent<?> container, Actions actions);
 
   public AbstractAddProbeDecorator(String containerName, Probe probe) {
     super(null, containerName);
@@ -47,58 +46,39 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     this.probe = probe;
   }
 
-  /**
-   * Convert the internal {@link Probe} to the kubernetes-model {@link io.ap4k.deps.kubernetes.api.model.Probe}.
-   * @param probe The inrenal probe.
-   * @return      The fabric8 probe.
-   */
-  protected io.ap4k.deps.kubernetes.api.model.Probe convert(Probe probe) {
-    return new ProbeBuilder()
-      .withExec(execAction(probe))
-      .withHttpGet(httpGetAction(probe))
-      .withTcpSocket(tcpSocketAction(probe))
-      .withInitialDelaySeconds(probe.getInitialDelaySeconds())
-      .withPeriodSeconds(probe.getPeriodSeconds())
-      .withTimeoutSeconds(probe.getTimeoutSeconds())
-      .build();
+  @Override
+  public void andThenVisit(ContainerFluent<?> container) {
+    if (probe == null) {
+      return;
+    }
+
+    final ExecAction execAction = execAction(probe);
+    final TCPSocketAction tcpSocketAction = tcpSocketAction(probe);
+    final boolean defaultToHttpGetAction = (execAction == null) && (tcpSocketAction == null);
+    final HTTPGetAction httpGetAction = defaultToHttpGetAction ? httpGetAction(probe, container) : null;
+    if (defaultToHttpGetAction && (httpGetAction == null)) {
+      return;
+    }
+
+    doCreateProbe(container, new Actions(execAction, tcpSocketAction, httpGetAction));
   }
 
-  /**
-   * Convert {@link Probe} to an {@link ExecAction}.
-   * @param probe The probe.
-   * @return      The exec action, or null if no exec config is present.
-   */
-  protected ExecAction execAction(Probe probe) {
+  private ExecAction execAction(Probe probe) {
     if (Strings.isNullOrEmpty(probe.getExecAction())) {
       return null;
     }
     return new ExecAction(Arrays.asList(probe.getExecAction().split(" ")));
   }
 
-  /**
-   * Convert the {@link Probe} to an {@link HTTPGetAction}.
-   * @param probe     The probe.
-   * @return          The http get action, or null if not http config is present.
-   */
-  protected HTTPGetAction httpGetAction(Probe probe) {
-    if (Strings.isNullOrEmpty(probe.getHttpAction())) {
+  private HTTPGetAction httpGetAction(Probe probe, ContainerFluent<?> container) {
+    if (!container.hasPorts()) {
       return null;
     }
 
-    try {
-      URI uri = new URI(probe.getHttpAction());
-      return new HTTPGetAction(null, Collections.emptyList(), uri.getPath(), new IntOrString(uri.getPort()), uri.getScheme().toUpperCase());
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
+    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(container.getPorts().get(0).getContainerPort()), "HTTP");
   }
 
-  /**
-   * Convert the {@link Probe} to an {@link TCPSocketAction}.
-   * @param probe     The probe.
-   * @return          The tcp socket action, or null if not tcp socket is present.
-   */
-  protected TCPSocketAction tcpSocketAction(Probe probe) {
+  private TCPSocketAction tcpSocketAction(Probe probe) {
     if (Strings.isNullOrEmpty(probe.getTcpSocketAction()))  {
       return null;
     }
@@ -109,5 +89,17 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     }
 
     return new TCPSocketAction(parts[0], new IntOrString(parts[1]));
+  }
+
+  protected static class Actions {
+    protected final ExecAction execAction;
+    protected final TCPSocketAction tcpSocketAction;
+    protected final HTTPGetAction httpGetAction;
+
+    protected Actions(ExecAction execAction, TCPSocketAction tcpSocketAction, HTTPGetAction httpGetAction) {
+      this.execAction = execAction;
+      this.tcpSocketAction = tcpSocketAction;
+      this.httpGetAction = httpGetAction;
+    }
   }
 }

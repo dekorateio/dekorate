@@ -20,9 +20,7 @@ import io.ap4k.WithSession;
 import io.ap4k.Generator;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.kubernetes.config.PortBuilder;
-import io.ap4k.kubernetes.configurator.AddLivenessProbe;
 import io.ap4k.kubernetes.configurator.AddPort;
-import io.ap4k.kubernetes.configurator.AddReadinessProbe;
 import io.ap4k.kubernetes.configurator.SetPortPath;
 
 import javax.lang.model.element.Element;
@@ -51,8 +49,6 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession 
   default void add(Map map) {
     Port port = detectHttpPort();
     session.configurators().add(new AddPort(port));
-    session.configurators().add(new AddReadinessProbe(port.getContainerPort()));
-    session.configurators().add(new AddLivenessProbe(port.getContainerPort()));
 
     Map<String, Object> applicationPath = propertiesMap(map, ApplicationPath.class);
     if (applicationPath != null && applicationPath.containsKey("value")) {
