@@ -367,7 +367,6 @@ This module can be added to the project using:
 This module provides two new annotations: 
 
 - @OpenshiftApplication
-- @EnableS2iBuild
 
 [@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/ap4k/openshift/annotation/OpenshiftApplication.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `openshift.yml` / `openshift.json` instead.
 Also instead of creating a `Deployment` it will create a `DeploymentConfig`.
@@ -386,8 +385,7 @@ This module can be added to the project using:
 </dependency>
 ```    
 #### Integrating with S2i
-To configure s2i for this project one can add the `@EnableS2iBuild` annotation to the project.
-This annotation will configure:
+Out of the box resources for s2i will be generated.
 
 - ImageStream
   - builder 
@@ -397,10 +395,8 @@ This annotation will configure:
 Here's an example:
 ```java
 import io.ap4k.openshift.annotation.OpenshiftApplication;
-import io.ap4k.openshift.annotation.EnableS2iBuild;
 
 @OpenshiftApplication(name = "doc-example")
-@EnableS2iBuild
 public class Main {
 
     public static void main(String[] args) {
@@ -713,7 +709,6 @@ To enable the docker build hook you need:
 - the `openshift-annotations` module (already included in all openshift starter modules)
 - the `oc` binary configured to point the docker daemon of your kubernetes environment.
 
-To enable the hook you need to add the `@EnableS2iBuild` annotation to your main class.    
 Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
 ```bash
 mvn clean install -Dap4k.build=true
@@ -826,7 +821,7 @@ To use that you need to add:
 By adding the annotation to your test class the following things will happen:
 
 1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
-2. If `@EnableS2iBuild` is present in the project, a docker build will be triggered.
+2. A docker build will be triggered.
 3. All generated manifests will be applied.
 4. Will wait until applied resources are ready.
 5. Dependencies will be injected (e.g. KubernetesClient, Pod etc)

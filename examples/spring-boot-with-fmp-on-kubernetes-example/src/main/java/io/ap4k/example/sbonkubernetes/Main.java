@@ -19,7 +19,6 @@ package io.ap4k.example.sbonkubernetes;
 
 import io.ap4k.option.annotation.GeneratorOptions;
 import io.ap4k.kubernetes.annotation.Label;
-import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
 @OpenshiftApplication(labels = @Label(key = "decorated-by", value = "ap4k"))
-@EnableS2iBuild
 @RestController
 @SpringBootApplication
 public class Main {
