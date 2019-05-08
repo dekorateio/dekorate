@@ -18,11 +18,11 @@ package io.ap4k.openshift.configurator;
 
 import io.ap4k.kubernetes.config.Configurator;
 import io.ap4k.openshift.config.OpenshiftConfig;
-import io.ap4k.openshift.config.S2iConfigFluent;
+import io.ap4k.openshift.config.OpenshiftConfigFluent;
 import io.ap4k.doc.Description;
 
 @Description("Apply source to image build hook.")
-public class ApplySourceToImageHook extends Configurator<S2iConfigFluent> {
+public class ApplySourceToImageHook extends Configurator<OpenshiftConfigFluent> {
 
   private static final String AP4K_BUILD = "ap4k.build";
   private static final String AP4K_DEPLOY = "ap4k.deploy";
@@ -34,7 +34,7 @@ public class ApplySourceToImageHook extends Configurator<S2iConfigFluent> {
   }
 
   @Override
-  public void visit(S2iConfigFluent config) {
+  public void visit(OpenshiftConfigFluent config) {
     config
       .withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(AP4K_BUILD, String.valueOf(config.isAutoBuildEnabled()))))
       .withAutoDeployEnabled(Boolean.parseBoolean(System.getProperty(AP4K_DEPLOY, String.valueOf(config.isAutoDeployEnabled() || openshiftConfig.isAutoDeployEnabled()))));

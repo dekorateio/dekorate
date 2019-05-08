@@ -17,6 +17,8 @@
 
 package io.ap4k.openshift.handler;
 
+import java.util.Optional;
+
 import io.ap4k.AbstractKubernetesHandler;
 import io.ap4k.Handler;
 import io.ap4k.HandlerFactory;
@@ -27,22 +29,24 @@ import io.ap4k.deps.kubernetes.api.model.PodSpec;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodTemplateSpec;
 import io.ap4k.deps.kubernetes.api.model.PodTemplateSpecBuilder;
+import io.ap4k.deps.openshift.api.model.BuildConfig;
+import io.ap4k.deps.openshift.api.model.BuildConfigBuilder;
 import io.ap4k.deps.openshift.api.model.DeploymentConfig;
 import io.ap4k.deps.openshift.api.model.DeploymentConfigBuilder;
+import io.ap4k.deps.openshift.api.model.ImageStream;
+import io.ap4k.deps.openshift.api.model.ImageStreamBuilder;
 import io.ap4k.kubernetes.config.Configuration;
-import io.ap4k.kubernetes.config.Container;
+import io.ap4k.kubernetes.config.Env;
 import io.ap4k.kubernetes.configurator.ApplyAutoBuild;
+import io.ap4k.openshift.config.EditableOpenshiftConfig;
 import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.config.OpenshiftConfigBuilder;
-import io.ap4k.openshift.config.EditableOpenshiftConfig;
+import io.ap4k.openshift.decorator.AddBuildEnvDecorator;
 import io.ap4k.openshift.decorator.AddRouteDecorator;
 import io.ap4k.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.ap4k.openshift.decorator.ApplyReplicasDecorator;
 import io.ap4k.project.ApplyProjectInfo;
-
-import java.util.Optional;
-
-import static io.ap4k.utils.Labels.createLabels;
+import io.ap4k.utils.Images;
 
 public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> implements HandlerFactory, WithProject {
 
@@ -87,6 +91,17 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     if (!existingDeploymentConfig.isPresent()) {
       resources.add(OPENSHIFT, createDeploymentConfig(config));
     }
+
+    if (config.isBuidResourceGenerationEnabled()) {
+      resources.add(OPENSHIFT, createBuilderImageStream(config));
+      resources.add(OPENSHIFT, createBuildConfig(config));
+      resources.add(OPENSHIFT, createProjectImageStream());
+
+      for (Env env : config.getBuildEnvVars()) {
+        resources.decorate(OPENSHIFT, new AddBuildEnvDecorator(env));
+      }
+    }
+
     addDecorators(OPENSHIFT, config);
   }
   @Override
@@ -175,5 +190,86 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .endContainer()
       .build();
   }
-  
+ 
+  /**
+   * Create an {@link ImageStream} for the {@link OpenshiftConfig}.
+   * @param config   The config.
+   * @return         The build config.
+   */
+  public ImageStream createBuilderImageStream(OpenshiftConfig config) {
+    String repository = Images.getRepository(config.getBuilderImage());
+
+    String name = !repository.contains("/")
+      ? repository
+      : repository.substring(repository.lastIndexOf("/") + 1);
+
+    return new ImageStreamBuilder()
+      .withNewMetadata()
+      .withName(name)
+      .withLabels(resources.getLabels())
+      .endMetadata()
+      .withNewSpec()
+      .withDockerImageRepository(repository)
+      .endSpec()
+      .build();
+  }
+
+
+  /**
+   * Create an {@link ImageStream} for the {@link OpenshiftConfig}.
+   * @return         The build config.
+   */
+  public ImageStream createProjectImageStream() {
+    return new ImageStreamBuilder()
+      .withNewMetadata()
+      .withName(resources.getName())
+      .withLabels(resources.getLabels())
+      .endMetadata()
+      .build();
+  }
+
+  /**
+   * Create a {@link BuildConfig} for the {@link OpenshiftConfig}.
+   * @param config   The config.
+   * @return          The build config.
+  */
+  public BuildConfig createBuildConfig(OpenshiftConfig config) {
+    String builderRepository = Images.getRepository(config.getBuilderImage());
+    String builderTag = Images.getTag(config.getBuilderImage());
+
+    String builderName = !builderRepository.contains("/")
+      ? builderRepository
+      : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
+
+
+    return new BuildConfigBuilder()
+      .withNewMetadata()
+      .withName(resources.getName())
+      .withLabels(resources.getLabels())
+      .endMetadata()
+      .withNewSpec()
+      .withNewOutput()
+      .withNewTo()
+      .withKind(IMAGESTREAMTAG)
+      .withName(resources.getName() + ":" + resources.getVersion())
+      .endTo()
+      .endOutput()
+      .withNewSource()
+      .withNewBinary()
+      .endBinary()
+      .endSource()
+      .withNewStrategy()
+      .withNewSourceStrategy()
+      .withEnv()
+      .withNewFrom()
+      .withKind(IMAGESTREAMTAG)
+      .withName(builderName + ":" + builderTag)
+      .endFrom()
+      .endSourceStrategy()
+      .endStrategy()
+      .endSpec()
+      .build();
+  }
+
+ 
 }

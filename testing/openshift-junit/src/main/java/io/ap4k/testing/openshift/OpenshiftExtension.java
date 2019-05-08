@@ -26,7 +26,6 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.openshift.api.model.Build;
 import io.ap4k.deps.openshift.api.model.BuildConfig;
 import io.ap4k.openshift.config.OpenshiftConfig;
-import io.ap4k.openshift.config.S2iConfig;
 import io.ap4k.openshift.util.OpenshiftUtils;
 import io.ap4k.project.Project;
 import io.ap4k.testing.WithKubernetesClient;
@@ -52,7 +51,7 @@ import java.util.stream.Collectors;
 
 @Internal
 public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
-  WithOpenshiftIntegrationTest, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithS2iBuildConfig, WithOpenshiftConfig {
+  WithOpenshiftIntegrationTest, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithOpenshiftConfig {
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -86,13 +85,12 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
           System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
         });
       OpenshiftUtils.waitForImageStreamTags(buildResources, config.getImageStreamTagTimeout(), TimeUnit.MILLISECONDS);
-
-      if (hasSourceToImageConfig()) {
+      if (config.isBuildEnabled()) {
         build(context, getProject());
       }
     }
 
-    if (config.isAutoDeployEnabled()) {
+    if (config.isDeployEnabled()) {
       //Create the remaining resources.
       List<HasMetadata> remainingResources = new ArrayList<>(list.getItems());
       remainingResources.removeAll(buildResources);
@@ -128,7 +126,6 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       } catch (Exception e) {}
     });
 
-    S2iConfig s2iConfig = getSourceToImageConfig();
     OpenshiftConfig openshiftConfig = getOpenshiftConfig();
     List<HasMetadata> buildPods = client.pods().list()
       .getItems()

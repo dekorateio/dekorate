@@ -19,11 +19,9 @@
 package io.ap4k.examples.openshift;
 
 import io.ap4k.kubernetes.annotation.Env;
-import io.ap4k.openshift.annotation.EnableS2iBuild;
 import io.ap4k.openshift.annotation.OpenshiftApplication;
 
-@OpenshiftApplication
-@EnableS2iBuild(envVars = @Env(name="MAVEN_ARGS", value="-Popenshift"))
+@OpenshiftApplication(buildEnvVars = @Env(name="MAVEN_ARGS", value="-Popenshift"))
 public class Main {
 
   public static void main(String[] args) {

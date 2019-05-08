@@ -204,9 +204,33 @@ public @interface OpenshiftApplication {
   boolean expose() default false;
 
   /**
+   * Feature toggle for generating build related resources.
+   */
+  boolean buidResourceGenerationEnabled() default true;
+
+  /**
+   * The S2i builder image to use.
+   * @return The builder image.
+   */
+  String builderImage() default "fabric8/s2i-java:2.3";
+
+  /**
+   * Environment variables to add to all containers.
+   * @return The environment variables.
+   */
+  Env[] buildEnvVars() default {};
+
+  /**
+   * Flag to trigger the registration of the build hook.
+   * It's generally preferable to use `-Dap4k.build=true` instead of hardcoding this here.
+   * @return  True for automatic registration of the build hook.
+   */
+  boolean autoBuildEnabled() default false;
+  /**
    * Flag to trigger the registration of the deploy hook.
    * It's generally preferable to use `-Dap4k.deploy=true` instead of hardcoding this here.
    * @return  True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;
+
 }
