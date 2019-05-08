@@ -18,15 +18,15 @@ package io.ap4k.kubernetes.configurator;
 
 import io.ap4k.doc.Description;
 import io.ap4k.kubernetes.config.Configurator;
-import io.ap4k.kubernetes.config.KubernetesConfigFluent;
+import io.ap4k.kubernetes.config.BaseConfigFluent;
 
 @Description("sets the hostname based on system property: `ap4k.host`.")
-public class ApplyHostBuild extends Configurator<KubernetesConfigFluent> {
+public class ApplyHostBuild extends Configurator<BaseConfigFluent> {
 
   public static final String AP4K_HOST = "ap4k.host";
 
   @Override
-  public void visit(KubernetesConfigFluent config) {
+  public void visit(BaseConfigFluent config) {
     config.withHost(System.getProperty(AP4K_HOST, String.valueOf(config.getHost())));
   }
 }

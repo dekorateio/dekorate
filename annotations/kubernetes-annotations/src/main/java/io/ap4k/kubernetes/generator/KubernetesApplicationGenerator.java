@@ -16,22 +16,33 @@
 **/
 package io.ap4k.kubernetes.generator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.lang.model.element.Element;
+
+import io.ap4k.Generator;
+import io.ap4k.Resources;
 import io.ap4k.SessionListener;
 import io.ap4k.WithProject;
-import io.ap4k.Generator;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.client.DefaultKubernetesClient;
 import io.ap4k.deps.kubernetes.client.KubernetesClient;
+import io.ap4k.hook.OrderedHook;
+import io.ap4k.hook.ProjectHook;
 import io.ap4k.kubernetes.adapter.KubernetesConfigAdapter;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.configurator.ApplyAutoBuild;
+import io.ap4k.kubernetes.configurator.ApplyDockerBuildHook;
 import io.ap4k.kubernetes.handler.KubernetesHandler;
+import io.ap4k.kubernetes.hook.DockerBuildHook;
+import io.ap4k.kubernetes.hook.DockerPushHook;
+import io.ap4k.kubernetes.hook.ScaleDeploymentHook;
 import io.ap4k.project.ApplyProjectInfo;
-
-import javax.lang.model.element.Element;
-import java.util.Map;
 
 public interface KubernetesApplicationGenerator extends Generator, SessionListener, WithProject {
 
@@ -42,7 +53,8 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
             KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesApplication.class))
             .accept(new ApplyAutoBuild())
-            .accept(new ApplyProjectInfo(getProject()))));
+            .accept(new ApplyProjectInfo(getProject()))
+            .accept(new ApplyDockerBuildHook())));
   }
 
   default void add(Element element) {
@@ -51,7 +63,8 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
             KubernetesConfigAdapter
             .newBuilder(application)
             .accept(new ApplyAutoBuild())
-            .accept(new ApplyProjectInfo(getProject()))));
+            .accept(new ApplyProjectInfo(getProject()))
+            .accept(new ApplyDockerBuildHook())));
   }
 
   default void add(ConfigurationSupplier<KubernetesConfig> config)  {
@@ -61,11 +74,35 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
   }
 
   default void onClosed() {
-    Boolean autoDeployEnabled = session.configurators().get(KubernetesConfig.class).map(c->c.isAutoDeployEnabled()).orElse(false);
-    if (autoDeployEnabled) {
-      KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
-      KubernetesClient client = new DefaultKubernetesClient();
-      client.resourceList(generated).createOrReplace();
+    Optional<KubernetesConfig> config = session.configurators().get(KubernetesConfig.class);
+    if (!config.isPresent()) {
+      return;
+    }
+
+    KubernetesConfig kubernetesConfig = config.get();
+    Resources resources = session.resources();
+    if (kubernetesConfig.isAutoPushEnabled()) {
+      // When deploy is enabled, we scale the Deployment down before push
+      // then scale it back up once the image has been successfully pushed
+      // This ensure that the pod runs the proper image
+      List<ProjectHook> hooks = new ArrayList<>();
+      if (kubernetesConfig.isAutoDeployEnabled()) {
+        KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
+        try (KubernetesClient client = new DefaultKubernetesClient()) {
+          client.resourceList(generated).createOrReplace();
+        }
+        hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 0));
+      }
+      hooks.add(new DockerBuildHook(getProject(), config.get()));
+      hooks.add(new DockerPushHook(getProject(), config.get()));
+      if (kubernetesConfig.isAutoDeployEnabled()) {
+        hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 1));
+      }
+      OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
+      hook.register();
+    } else if (kubernetesConfig.isAutoBuildEnabled()) {
+      DockerBuildHook hook = new DockerBuildHook(getProject(), config.get());
+      hook.register();
     }
   }
 }

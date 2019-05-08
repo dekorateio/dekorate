@@ -14,7 +14,7 @@
  * limitations under the License.
  *
 **/
-package io.ap4k.docker.decorator;
+package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.deps.kubernetes.api.model.ContainerFluent;
 import io.ap4k.deps.kubernetes.api.model.apps.DeploymentBuilder;

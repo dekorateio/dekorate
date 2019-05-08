@@ -1,4 +1,4 @@
-package io.ap4k.docker.decorator;
+package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.Resources;
 import io.ap4k.kubernetes.decorator.ApplyImageDecorator;

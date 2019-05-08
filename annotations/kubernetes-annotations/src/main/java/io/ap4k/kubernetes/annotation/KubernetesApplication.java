@@ -19,6 +19,7 @@ package io.ap4k.kubernetes.annotation;
 
 
 import io.ap4k.kubernetes.config.ApplicationConfiguration;
+import io.ap4k.kubernetes.config.BaseConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -32,7 +33,7 @@ import java.lang.annotation.Target;
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
 @Pojo(name = "KubernetesConfig", relativePath = "../config",
       mutable = true,
-      superClass = ApplicationConfiguration.class,
+      superClass = BaseConfig.class,
       withStaticBuilderMethod = false,
       withStaticAdapterMethod = false,
       adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
@@ -194,11 +195,34 @@ import java.lang.annotation.Target;
          */
         boolean expose() default false;
 
+       /**
+        * The relative path of the Dockerfile, from the module root.
+        * @return  The relative path.
+        */
+       String dockerFile() default  "Dockerfile";
+ 
+      /**
+       * The registry that holds the image.
+       * @return The registry or empty string if no registry has been specified.
+       */
+       String registry() default "";
+ 
+      /**
+       * Flag to automatically push the image, to the specified registry.
+       * @return  True if hook is to be registered, false otherwise.
+       */
+       boolean autoPushEnabled() default false;
+ 
+      /**
+       * Flag to automatically register a build hook after compilation.
+       * @return  True if hook is to be registered, false otherwise.
+       */
+        boolean autoBuildEnabled() default false;
+
       /**
        * Flag to trigger the registration of the deploy hook.
        * It's generally preferable to use `-Dap4k.deploy=true` instead of hardcoding this here.
        * @return  True for automatic registration of the build hook.
        */
        boolean autoDeployEnabled() default false;
-
       }

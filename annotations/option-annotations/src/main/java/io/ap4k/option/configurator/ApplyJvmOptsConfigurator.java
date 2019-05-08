@@ -4,7 +4,7 @@ package io.ap4k.option.configurator;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.Configurator;
 import io.ap4k.kubernetes.config.Env;
-import io.ap4k.kubernetes.config.KubernetesConfigFluent;
+import io.ap4k.kubernetes.config.BaseConfigFluent;
 import io.ap4k.option.annotation.GarbageCollector;
 import io.ap4k.option.annotation.SecureRandomSource;
 import io.ap4k.option.config.JvmConfig;
@@ -27,7 +27,7 @@ import java.util.Optional;
  * limitations under the License.
  *
  **/
-public class ApplyJvmOptsConfigurator extends Configurator<KubernetesConfigFluent<?>> {
+public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> {
 
   private static final String JAVA_OPTS = "JAVA_OPTS";
 
@@ -55,7 +55,7 @@ public class ApplyJvmOptsConfigurator extends Configurator<KubernetesConfigFluen
 
 
   @Override
-  public void visit(KubernetesConfigFluent<?> kubernetesConfig) {
+  public void visit(BaseConfigFluent<?> kubernetesConfig) {
     JvmConfig config = this.config.get();
 
     Optional<String> existing = Arrays.stream(kubernetesConfig.getEnvVars()).filter(e -> e.getName().equals(JAVA_OPTS)).map(Env::getValue)

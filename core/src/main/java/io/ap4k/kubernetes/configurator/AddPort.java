@@ -18,14 +18,14 @@
 package io.ap4k.kubernetes.configurator;
 
 import io.ap4k.kubernetes.config.Configurator;
-import io.ap4k.kubernetes.config.KubernetesConfigFluent;
+import io.ap4k.kubernetes.config.BaseConfigFluent;
 import io.ap4k.kubernetes.config.Port;
 import io.ap4k.doc.Description;
 
 import java.util.Objects;
 
 @Description("adds a port to all containers.")
-public class AddPort extends Configurator<KubernetesConfigFluent> {
+public class AddPort extends Configurator<BaseConfigFluent> {
 
   private final Port port;
 
@@ -34,18 +34,18 @@ public class AddPort extends Configurator<KubernetesConfigFluent> {
   }
 
   @Override
-  public void visit(KubernetesConfigFluent config) {
+  public void visit(BaseConfigFluent config) {
     if (!hasPort(config)) {
       config.addToPorts(port);
     }
   }
 
   /**
-   * Check if the {@link io.ap4k.kubernetes.config.KubernetesConfig} already has port.
+   * Check if the {@link io.ap4k.kubernetes.config.BaseConfig} already has port.
    * @param config  The port.
    * @return        True if port with same container port exists.
    */
-  private boolean hasPort(KubernetesConfigFluent config) {
+  private boolean hasPort(BaseConfigFluent config) {
     for (Port p : config.getPorts()) {
       if (p.getContainerPort() == port.getContainerPort())  {
         return true;

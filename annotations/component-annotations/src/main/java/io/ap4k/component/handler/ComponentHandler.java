@@ -28,11 +28,10 @@ import io.ap4k.component.decorator.AddRuntimeVersionToComponentDecorator;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
 import io.ap4k.component.model.DeploymentType;
-import io.ap4k.deps.zjsonpatch.internal.guava.Strings;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Env;
-import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.utils.Strings;
 
 public class ComponentHandler implements Handler<CompositeConfig> {
 
@@ -86,7 +85,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   }
 
   /**
-   * Create a {@link Component} from a {@link KubernetesConfig}.
+   * Create a {@link Component} from a {@link CompositeConfig}.
    * @param config  The config.
    * @return        The component.
    */

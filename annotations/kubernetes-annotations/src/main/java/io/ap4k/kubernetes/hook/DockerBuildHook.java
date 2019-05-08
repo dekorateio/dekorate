@@ -14,11 +14,10 @@
  * limitations under the License.
  * 
 **/
-package io.ap4k.docker.hook;
+package io.ap4k.kubernetes.hook;
 
-import io.ap4k.Coordinates;
-import io.ap4k.docker.config.DockerBuildConfig;
 import io.ap4k.hook.ProjectHook;
+import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Images;
 
@@ -29,10 +28,10 @@ public class DockerBuildHook extends ProjectHook {
   private final File dockerFile;
   private final String image;
 
-  public DockerBuildHook(Project project, Coordinates coordinates, DockerBuildConfig config ) {
+  public DockerBuildHook(Project project, KubernetesConfig config ) {
     super(project);
     this.dockerFile = project.getRoot().resolve(config.getDockerFile()).toFile();
-    this.image = Images.getImage(config.getRegistry(), coordinates.getGroup(), coordinates.getName(), coordinates.getVersion());
+    this.image = Images.getImage(config.getRegistry(), config.getGroup(), config.getName(), config.getVersion());
   }
 
   @Override

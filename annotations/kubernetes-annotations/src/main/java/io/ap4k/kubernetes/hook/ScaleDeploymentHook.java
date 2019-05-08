@@ -1,4 +1,4 @@
-package io.ap4k.docker.hook;
+package io.ap4k.kubernetes.hook;
 
 import io.ap4k.hook.ProjectHook;
 import io.ap4k.project.Project;

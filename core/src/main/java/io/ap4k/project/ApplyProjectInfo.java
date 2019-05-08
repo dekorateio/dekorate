@@ -17,10 +17,10 @@
 package io.ap4k.project;
 
 import io.ap4k.kubernetes.config.Configurator;
-import io.ap4k.kubernetes.config.KubernetesConfigFluent;
+import io.ap4k.kubernetes.config.BaseConfigFluent;
 import io.ap4k.utils.Strings;
 
-public class ApplyProjectInfo extends Configurator<KubernetesConfigFluent> {
+public class ApplyProjectInfo extends Configurator<BaseConfigFluent> {
 
   private static final String APP_GROUP = "app.group";
   private static final String APP_NAME = "app.name";
@@ -38,7 +38,7 @@ public class ApplyProjectInfo extends Configurator<KubernetesConfigFluent> {
   }
 
   @Override
-  public void visit(KubernetesConfigFluent fluent) {
+  public void visit(BaseConfigFluent fluent) {
     fluent.withProject(project);
     fluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(fluent.getGroup()) ? fluent.getGroup() : DEFAULT_GROUP))
       .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : project.getBuildInfo().getName()))

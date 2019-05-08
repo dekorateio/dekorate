@@ -17,14 +17,14 @@
 package io.ap4k.kubernetes.configurator;
 
 import io.ap4k.kubernetes.config.Configurator;
-import io.ap4k.kubernetes.config.KubernetesConfigFluent;
+import io.ap4k.kubernetes.config.BaseConfigFluent;
 
-public class ApplyAutoBuild extends Configurator<KubernetesConfigFluent> {
+public class ApplyAutoBuild extends Configurator<BaseConfigFluent> {
 
   public static final String AP4K_DEPLOY = "ap4k.deploy";
 
   @Override
-  public void visit(KubernetesConfigFluent config) {
+  public void visit(BaseConfigFluent config) {
     config.withAutoDeployEnabled(Boolean.parseBoolean(System.getProperty(AP4K_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
   }
 }

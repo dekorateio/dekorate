@@ -34,7 +34,7 @@ import io.ap4k.kubernetes.annotation.SecretVolume;
 import io.ap4k.kubernetes.annotation.ServiceType;
 import io.ap4k.kubernetes.annotation.ConfigMapVolume;
 import io.ap4k.kubernetes.annotation.Env;
-import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.BaseConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -46,7 +46,7 @@ import java.lang.annotation.Target;
 
 
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
-@Pojo(name = "OpenshiftConfig", mutable = true, superClass = KubernetesConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "OpenshiftConfig", mutable = true, superClass = BaseConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OpenshiftApplication {

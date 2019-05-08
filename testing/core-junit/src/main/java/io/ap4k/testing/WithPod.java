@@ -33,8 +33,7 @@ import static java.util.Arrays.stream;
  * Mixin for storing / loading the KubernetesList to context.
  * It also provides methods for injecting the list.
  */
-public interface WithPod extends TestInstancePostProcessor, WithKubernetesConfig, WithKubernetesClient, WithClosables {
-
+public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, WithKubernetesClient, WithClosables {
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
     stream(testInstance.getClass().getDeclaredFields())
@@ -102,7 +101,7 @@ public interface WithPod extends TestInstancePostProcessor, WithKubernetesConfig
    * @return  The name.
    */
   default String getName() {
-    return getKubernetesConfig().getName();
+    return getBaseConfig().getName();
   }
 }
 
