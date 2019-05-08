@@ -71,9 +71,13 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       } else if (kubernetesConfig.isAutoBuildEnabled()) {
         DockerBuildHook build = new DockerBuildHook(getProject(), kubernetesConfig);
         build.run();
+      } else if (config.isBuildEnabled()) {
+        DockerBuildHook build = new DockerBuildHook(getProject(), kubernetesConfig);
+        build.run();
       }
     }
 
+    
     if (config.isDeployEnabled()) {
       list.getItems().stream()
         .forEach(i -> {
