@@ -39,7 +39,7 @@ To enable annotation processing in gradle:
     apply plugin: 'org.junit.platform.gradle.plugin'
     
 The [Main.groovy](src/main/groovy/io/ap4k/example/sbonopenshift/Main.groovy) is annotated with `@OpenshiftApplication` which triggers the resource generation.
-It's also annotated with `@EnableS2iBuild`. This annotation allows the user to trigger an s2i build after the compilation, by passing the system property 
+This annotation allows the user to trigger an s2i build after the compilation, by passing the system property 
 `ap4k.build=true` to the build for example:
 
     ./gradlew clean build -Dap4k.build=true

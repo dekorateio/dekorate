@@ -1,8 +1,8 @@
 # Source To Image Example 
 
-A very simple example that demonstrates how to use `@EnableS2iBuild` on top of `@OpenshiftApplication` to generate a `BuildConfig` and the required `ImageStreams`.
+A very simple example that demonstrates how to use `@OpenshiftApplication`.
 Check the [Main.java](src/main/java/io/ap4k/examples/openshift/Main.java) which bears the annotation.
-To access the `@EnableS2iBuild` and `@OpenshiftApplication` annotation you just need to have the following dependency in your
+To access the `@OpenshiftApplication` annotation you just need to have the following dependency in your
 class path:
 
     <dependency>

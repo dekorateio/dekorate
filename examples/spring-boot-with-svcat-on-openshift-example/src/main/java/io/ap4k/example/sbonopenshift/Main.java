@@ -24,10 +24,8 @@ import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import io.ap4k.openshift.annotation.EnableS2iBuild;
 
-@OpenshiftApplication
-@EnableS2iBuild(envVars = @Env(name="foo", value = "bar"))
+@OpenshiftApplication(buildEnvVars = @Env(name="foo", value = "bar"))
 @SpringBootApplication
 @EnableAutoConfiguration
 @ServiceCatalog(instances=@ServiceCatalogInstance(name="postgresql-instance",serviceClass="postgresql-persistent", servicePlan="default", bindingSecret="postgresql-binding"))

@@ -158,7 +158,6 @@ A processor may register more than one `config` `handlers` with no restriction o
 
 | Processor                         | Config               | Supported Annotations                                                                                        | Description                                                       |
 |-----------------------------------|----------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| SourceToImageAnnotationProcessor  | SourceToImageConfig  | [io.ap4k.openshift.annotation.EnableS2iBuild]                                                                 | Adds source to image configuration in the openshift manifests.    |
 | CompositeAnnotationProcessor      | CompositeConfig      | [io.ap4k.component.annotation.CompositeApplication]                                                          | Generate component custom resources.                              |
 | SpringBootApplicationProcessor    | none                 | [org.springframework.boot.autoconfigure.SpringBootApplication]                                               | Detects Spring Boot and set the runtime attribute to Spring Boot. |
 | KubernetesAnnotationProcessor     | KubernetesConfig     | [io.ap4k.kubernetes.annotation.KubernetesApplication]                                                                   | Generates kubernetes manifests.                                   |
