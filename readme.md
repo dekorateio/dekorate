@@ -679,20 +679,10 @@ It will not generate or customize the docker build in anyway.
 
 To enable the docker build hook you need:
 
-- the `docker-annotations` module (already included in all kuberentes starter modules)
 - a `Dockerfile` in the project/module root
 - the `docker` binary configured to point the docker daemon of your kubernetes environment.
 
-To add the following dependency into the project:
-```xml
-<dependency>
-  <groupId>io.ap4k</groupId>
-  <artifactId>docker-annotations</artifactId>
-  <version>${project.version}</version>
-</dependency>
-```  
-To enable the hook you need to add the `@EnableDockerBuild` annotation to your main class.    
-Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
+To trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
 ```bash
 mvn clean install -Dap4k.build=true
 ```
