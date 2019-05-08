@@ -17,7 +17,6 @@
 
 package io.ap4k.example.sbonkubernetes;
 
-import io.ap4k.docker.annotation.EnableDockerBuild;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import io.ap4k.prometheus.annotation.EnableServiceMonitor;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @KubernetesApplication
 @EnableServiceMonitor
-@EnableDockerBuild
 @RestController
 @SpringBootApplication
 public class Main {

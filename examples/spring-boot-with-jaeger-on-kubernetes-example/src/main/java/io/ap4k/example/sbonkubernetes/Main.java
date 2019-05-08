@@ -17,7 +17,6 @@
 
 package io.ap4k.example.sbonkubernetes;
 
-import io.ap4k.docker.annotation.EnableDockerBuild;
 import io.ap4k.jaeger.annotation.EnableJaegerAgent;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +25,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @KubernetesApplication
-@EnableDockerBuild
 @SpringBootApplication
 @EnableJaegerAgent(operatorEnabled = true)
 public class Main {
