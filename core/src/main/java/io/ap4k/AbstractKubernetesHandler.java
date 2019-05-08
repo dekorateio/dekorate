@@ -23,7 +23,7 @@ import io.ap4k.kubernetes.config.AzureFileVolume;
 import io.ap4k.kubernetes.config.ConfigMapVolume;
 import io.ap4k.kubernetes.config.Container;
 import io.ap4k.kubernetes.config.Env;
-import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.BaseConfig;
 import io.ap4k.kubernetes.config.Label;
 import io.ap4k.kubernetes.config.Mount;
 import io.ap4k.kubernetes.config.PersistentVolumeClaimVolume;
@@ -59,7 +59,7 @@ import java.util.Arrays;
  * A generator is meant to populate the initial resources to the {@link Session} as well as adding decorator etc.
  * @param <C>   The config type (its expected to vary between processors).
  */
-public abstract class AbstractKubernetesHandler<C extends KubernetesConfig> implements Handler<C> {
+public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements Handler<C> {
 
   protected final Resources resources;
 

@@ -17,31 +17,30 @@
 package io.ap4k.testing;
 
 import io.ap4k.Ap4kException;
-import io.ap4k.kubernetes.config.KubernetesConfig;
-import io.ap4k.project.Project;
+import io.ap4k.kubernetes.config.BaseConfig;
 import io.ap4k.utils.Serialization;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public interface WithKubernetesConfig {
+public interface WithBaseConfig {
 
-  String KUBERNETES_CONFIG_PATH = "META-INF/ap4k/.config/kubernetes.yml";
+  String KUBERNETES_CONFIG_PATH = "META-INF/ap4k/.config/base.yml";
 
-  default KubernetesConfig getKubernetesConfig() {
-    return getKubernetesConfig(KUBERNETES_CONFIG_PATH);
+  default BaseConfig getBaseConfig() {
+    return getBaseConfig(KUBERNETES_CONFIG_PATH);
   }
 
-  default KubernetesConfig getKubernetesConfig (String path) {
-    URL url = WithKubernetesConfig.class.getClassLoader().getResource(path);
+  default BaseConfig getBaseConfig (String path) {
+    URL url = WithBaseConfig.class.getClassLoader().getResource(path);
     if (url != null) {
       try (InputStream is = url.openStream())  {
-        return Serialization.unmarshal(is, KubernetesConfig.class);
+        return Serialization.unmarshal(is, BaseConfig.class);
       } catch (IOException e) {
         throw Ap4kException.launderThrowable(e);
       }
     }
-    throw new IllegalStateException("Expected to find kubernetes config at: "+path+"!");
+    throw new IllegalStateException("Expected to find base config at: "+path+"!");
   }
 }

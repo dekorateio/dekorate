@@ -22,7 +22,6 @@ import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.doc.Description;
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.config.Port;
-import io.ap4k.utils.Strings;
 
 import java.util.Map;
 import java.util.Optional;

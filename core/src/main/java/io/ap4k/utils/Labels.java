@@ -18,26 +18,25 @@
 
 package io.ap4k.utils;
 
-import io.ap4k.kubernetes.config.KubernetesConfig;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Arrays;
+
+import io.ap4k.kubernetes.config.BaseConfig;
 import io.ap4k.kubernetes.config.Label;
 
 
 public class Labels {
 
   private static final String APP = "app";
-  private static final String PROVIDER = "provider";
   private static final String VERSION = "version";
   private static final String GROUP = "group";
 
   /**
-   * Creates a {@link Map} with the labels for the {@link KubernetesConfig}.
+   * Creates a {@link Map} with the labels for the {@link BaseConfig}.
    * @param config   The config.
    * @return          A map containing the lables.
    */
-  public static Map<String, String> createLabels(KubernetesConfig config) {
+  public static Map<String, String> createLabels(BaseConfig config) {
     Map<String,String> result =  new HashMap<String, String >() {{
         put(GROUP, config.getGroup());
         put(APP, config.getName());

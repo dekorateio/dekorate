@@ -16,7 +16,7 @@
 **/
 package io.ap4k.utils;
 
-import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.BaseConfig;
 import io.ap4k.kubernetes.config.Port;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class Ports {
   private static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[]{"http", "https", "web"});
   private static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[]{80, 443, 8080, 8443});
 
-  public static Optional<Port> getHttpPort(KubernetesConfig config) {
+  public static Optional<Port> getHttpPort(BaseConfig config) {
     //If we have a single port, return that no matter what.
     if (config.getPorts().length == 1) {
       return Optional.of(config.getPorts()[0]);

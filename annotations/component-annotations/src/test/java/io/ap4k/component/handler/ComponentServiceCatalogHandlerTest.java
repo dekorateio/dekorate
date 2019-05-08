@@ -16,7 +16,7 @@
 **/
 package io.ap4k.component.handler;
 
-import io.ap4k.kubernetes.config.KubernetesConfig;
+import io.ap4k.kubernetes.config.BaseConfig;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import org.junit.jupiter.api.Test;
@@ -38,8 +38,8 @@ class ComponentServiceCatalogHandlerTest {
   }
 
   @Test
-  public void shouldNotAcceptKubernetesConfig() {
+  public void shouldNotAcceptBaseConfig() {
     ComponentServiceCatalogHandler generator = new ComponentServiceCatalogHandler();
-    assertFalse(generator.canHandle(KubernetesConfig.class));
+    assertFalse(generator.canHandle(BaseConfig.class));
   }
 }

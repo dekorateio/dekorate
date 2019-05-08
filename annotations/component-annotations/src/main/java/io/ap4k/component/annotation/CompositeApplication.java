@@ -19,7 +19,6 @@ package io.ap4k.component.annotation;
 
 import io.ap4k.component.model.DeploymentType;
 import io.ap4k.kubernetes.config.Configuration;
-import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.annotation.Env;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;

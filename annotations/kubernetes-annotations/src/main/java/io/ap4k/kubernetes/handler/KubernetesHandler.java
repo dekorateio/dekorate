@@ -22,6 +22,7 @@ import io.ap4k.HandlerFactory;
 import io.ap4k.Resources;
 import io.ap4k.WithProject;
 import io.ap4k.project.Project;
+import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.LabelSelector;
 import io.ap4k.deps.kubernetes.api.model.LabelSelectorBuilder;
@@ -51,7 +52,7 @@ import static io.ap4k.utils.Labels.createLabels;
 public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> implements HandlerFactory, WithProject {
 
   private static final String KUBERNETES = "kubernetes";
-
+  private static final String DEFAULT_REGISTRY = "docker.io";
 
   private static final String IF_NOT_PRESENT = "IfNotPresent";
   private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";
@@ -100,7 +101,13 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
     resources.decorate(group, new AddIngressDecorator(config, resources.getLabels()));
     resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector()));
-    resources.decorate(group, new ApplyImageDecorator(config.getName(), config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
+    if  (Strings.isNotNullOrEmpty(config.getRegistry()))  {
+      resources.decorate(group, new ApplyImageDecorator(config.getName(), config.getRegistry() + "/" + config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
+    } else if (config.isAutoPushEnabled()) {
+      resources.decorate(group, new ApplyImageDecorator(config.getName(), DEFAULT_REGISTRY + "/" + config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
+    } else {
+      resources.decorate(group, new ApplyImageDecorator(config.getName(), config.getGroup() + "/" + config.getName() + ":" + config.getVersion()));
+    }
   }
 
   /**
