@@ -74,7 +74,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       }
     }
 
-    if (config.isAutoDeployEnabled()) {
+    if (config.isDeployEnabled()) {
       list.getItems().stream()
         .forEach(i -> {
           client.resourceList(i).createOrReplace();

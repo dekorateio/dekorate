@@ -47,13 +47,13 @@ public @interface KubernetesIntegrationTest {
    * Flag to define whether the extension should automatically apply resources.
    * @return True, if extension should automatically deploy ap4k generated resources.
    */
-  boolean isAutoDeployEnabled() default true;
+  boolean deployEnabled() default true;
 
   /**
    * Flag to define whether the extension should automatically apply resources.
    * @return True, if extensions should automatically perform container builds.
    */
-  boolean isBuildEnabled() default true;
+  boolean buildEnabled() default true;
 
 
   /**
