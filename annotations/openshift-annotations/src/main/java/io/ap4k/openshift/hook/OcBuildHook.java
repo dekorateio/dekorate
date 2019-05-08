@@ -24,7 +24,7 @@ import io.ap4k.deps.openshift.api.model.ImageStream;
 import io.ap4k.deps.openshift.client.DefaultOpenShiftClient;
 import io.ap4k.deps.openshift.client.OpenShiftClient;
 import io.ap4k.hook.ProjectHook;
-import io.ap4k.openshift.config.S2iConfig;
+import io.ap4k.openshift.config.OpenshiftConfig;
 import io.ap4k.openshift.util.OpenshiftUtils;
 import io.ap4k.project.Project;
 
@@ -34,11 +34,11 @@ import java.util.concurrent.TimeUnit;
 public class OcBuildHook extends ProjectHook {
 
   private final String name;
-  private final S2iConfig config;
+  private final OpenshiftConfig config;
   private final OpenShiftClient client = new DefaultOpenShiftClient();
   private final KubernetesList kubernetesList;
 
-  public OcBuildHook(String name, S2iConfig config, Project project, KubernetesList kubernetesList) {
+  public OcBuildHook(String name, OpenshiftConfig config, Project project, KubernetesList kubernetesList) {
     super(project);
     this.name = name;
     this.config = config;

@@ -16,13 +16,11 @@
 **/
 package io.ap4k.example.sbonopenshift
 
-import io.ap4k.openshift.annotation.EnableS2iBuild
 import io.ap4k.openshift.annotation.OpenshiftApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.SpringApplication
 
 @OpenshiftApplication
-@EnableS2iBuild
 @SpringBootApplication
 class Main {
 

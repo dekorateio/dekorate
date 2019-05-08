@@ -23,10 +23,8 @@ import io.ap4k.option.annotation.JvmOptions;
 import io.ap4k.option.annotation.SecureRandomSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import io.ap4k.openshift.annotation.EnableS2iBuild;
 
-@OpenshiftApplication
-@EnableS2iBuild(envVars = @Env(name="foo", value = "bar"))
+@OpenshiftApplication(buildEnvVars = @Env(name="foo", value = "bar"))
 @JvmOptions(server = true, xms = 1024, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
 @SpringBootApplication
 public class Main {
