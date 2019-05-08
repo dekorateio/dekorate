@@ -24,7 +24,6 @@ import io.sundr.codegen.annotations.PackageSelector;
 @VelocityTransformations(value = @VelocityTransformation(value="/configurator-doc.vm", outputPath="configurators-table.org", gather=true),
                          packages = {
                            @PackageSelector(value="io.ap4k.kubernetes.configurator"),
-                           @PackageSelector(value="io.ap4k.docker.configurator"),
                            @PackageSelector(value="io.ap4k.openshift.configurator"),
                            @PackageSelector(value="io.ap4k.component.configurator")
                          })

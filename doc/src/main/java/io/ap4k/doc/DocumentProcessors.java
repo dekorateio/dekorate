@@ -25,7 +25,6 @@ import io.sundr.codegen.annotations.PackageSelector;
 @VelocityTransformations(value = @VelocityTransformation(value="/processor-doc.vm", outputPath="processors-table.org", gather=true),
                          packages = {
                            @PackageSelector(value="io.ap4k.processor"),
-                           @PackageSelector(value="io.ap4k.docker.processor"),
                            @PackageSelector(value="io.ap4k.kubernetes.processor"),
                            @PackageSelector(value="io.ap4k.openshift.processor"),
                            @PackageSelector(value="io.ap4k.servicecatalog.processor"),
