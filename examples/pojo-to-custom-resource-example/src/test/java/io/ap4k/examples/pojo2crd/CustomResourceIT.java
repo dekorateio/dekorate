@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@KubernetesIntegrationTest(isAutoDeployEnabled = false)
+@KubernetesIntegrationTest(deployEnabled = false)
 class CustomResourceIT implements WithProject {
 
   Path testResources = getProject().getRoot().resolve("src").resolve("test").resolve("resources");
