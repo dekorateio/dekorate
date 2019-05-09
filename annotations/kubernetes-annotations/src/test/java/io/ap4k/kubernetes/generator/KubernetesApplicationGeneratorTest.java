@@ -2,7 +2,6 @@ package io.ap4k.kubernetes.generator;
 
 import io.ap4k.Session;
 import io.ap4k.SessionWriter;
-import io.ap4k.WithProject;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
@@ -39,6 +38,13 @@ class KubernetesApplicationGeneratorTest {
         put("group", "generator-test-group");
         put("version", "latest");
         put("replicas", 2);
+        put("ports", new Map[] {new HashMap<String, Object>(){{
+          put("containerPort", 8080);
+          put("name", "HTTP");
+        }}});
+        put("livenessProbe", new HashMap<String, Object>() {{
+          put("httpActionPath", "/health");
+        }});
       }});
     }};
 
@@ -48,8 +54,25 @@ class KubernetesApplicationGeneratorTest {
     assertThat(list).isNotNull();
     assertThat(list.getItems())
             .filteredOn(i -> "Deployment".equals(i.getKind()))
-            .filteredOn(i -> ((Deployment)i).getSpec().getReplicas() == 2)
-            .isNotEmpty();
+            .hasOnlyOneElementSatisfying(item -> {
+              assertThat(item).isInstanceOfSatisfying(Deployment.class, dep -> {
+                assertThat(dep.getSpec()).satisfies(spec -> {
+                  assertThat(spec.getReplicas()).isEqualTo(2);
+                  assertThat(spec.getTemplate().getSpec()).satisfies(podSpec -> {
+                    assertThat(podSpec.getContainers()).hasOnlyOneElementSatisfying(container -> {
+                      assertThat(container.getPorts()).hasOnlyOneElementSatisfying(port -> {
+                        assertThat(port.getContainerPort()).isEqualTo(8080);
+                        assertThat(port.getName()).isEqualTo("HTTP");
+                      });
+                      assertThat(container.getLivenessProbe().getHttpGet()).satisfies(httpGetAction -> {
+                        assertThat(httpGetAction.getPath()).isEqualTo("/health");
+                        assertThat(httpGetAction.getPort().getIntVal()).isEqualTo(8080);
+                      });
+                    });
+                  });
+                });
+              });
+            });
 
     assertThat(tempDir.resolve("kubernetes.json")).doesNotExist();
     assertThat(tempDir.resolve("kubernetes.yml")).doesNotExist();
