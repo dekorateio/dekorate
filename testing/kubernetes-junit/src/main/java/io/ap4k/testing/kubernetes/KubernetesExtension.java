@@ -60,8 +60,8 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       KubernetesConfig kubernetesConfig = getKubernetesConfig();
 
       //
-      // We use teh isAutoPushEnabled flag of the @EnableDockerBuild annotation and not @KubernetesIntegrationTest.
-      // The reason is that the @EnableDockerBuild.isAutoPushEnabled() affects the generated manifests (adds the registry).
+      // We use the isAutoPushEnabled flag of the @KubernetesApplication annotation and not @KubernetesIntegrationTest.
+      // The reason is that the @KubernetesApplication.isAutoPushEnabled() affects the generated manifests (adds the registry).
       // and thus the tests MUST follow.
       if (kubernetesConfig.isAutoPushEnabled()) {
         DockerBuildHook buildHook = new DockerBuildHook(getProject(), kubernetesConfig);
@@ -105,4 +105,13 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       System.out.println("Deleting: " + r.getKind() + " name:" +r.getMetadata().getName()+ " status:"+ getKubernetesClient(context).resource(r).cascading(true).delete());
     });
   }
+
+  
+ /**
+   * Returns the configured name.
+   * @return  The name.
+   */
+  public String getName() {
+    return getKubernetesConfig().getName();
+  } 
 }

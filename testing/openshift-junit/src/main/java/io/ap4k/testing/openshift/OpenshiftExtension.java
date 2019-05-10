@@ -85,9 +85,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
           System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
         });
       OpenshiftUtils.waitForImageStreamTags(buildResources, config.getImageStreamTagTimeout(), TimeUnit.MILLISECONDS);
-      if (config.isBuildEnabled()) {
-        build(context, getProject());
-      }
+      build(context, getProject());
     }
 
     if (config.isDeployEnabled()) {
