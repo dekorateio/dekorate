@@ -97,11 +97,9 @@ public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, With
   }
 
   /**
-   * Returns the configured name.
-   * @return  The name.
+   * @return the resource name.
    */
-  default String getName() {
-    return getBaseConfig().getName();
-  }
+  String getName();
+
 }
 
