@@ -5,7 +5,5 @@ ENV TZ "Europe/Berlin"
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY build/libs/kubernetes-java-annotations-0.0.1-SNAPSHOT.jar /opt/
-
-
-CMD java -jar /opt/kubernetes-java-annotations-0.0.1-SNAPSHOT.jar
+COPY build/libs/*.jar kubernetes-example.jar
+CMD java ${JAVA_OPTS} -jar kubernetes-example.jar
