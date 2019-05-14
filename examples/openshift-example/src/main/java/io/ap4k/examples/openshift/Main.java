@@ -21,7 +21,7 @@ import io.ap4k.openshift.annotation.OpenshiftApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication(buidResourceGenerationEnabled=false) //Don't generate build related resources.
+@OpenshiftApplication(buildResourceGenerationEnabled = false) //Don't generate build related resources.
 @SpringBootApplication
 public class Main {
 

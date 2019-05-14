@@ -206,7 +206,7 @@ public @interface OpenshiftApplication {
   /**
    * Feature toggle for generating build related resources.
    */
-  boolean buidResourceGenerationEnabled() default true;
+  boolean buildResourceGenerationEnabled() default true;
 
   /**
    * The S2i builder image to use.
