@@ -29,6 +29,8 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
     - [jvm options](#jvm-options)
     - [init containers](#init-containers)
     - [sidecars](#sidecars)
+- Annotationless mode for known framework
+  - Spring Boot
   - OpenShift 
     - [image streams](#integrating-with-s2i)
     - build configurations
@@ -652,6 +654,36 @@ The frameworks supported so far:
 - Spring Boot
 - Thorntail (or any framework using jaxrs, jaxws annotations)
 - Micronaut
+
+#### Spring Boot
+
+With spring boot its suggested to start with one of the provided starters:
+
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>kubernetes-spring-starter</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
+
+Or if you are on [openshift](https://openshift.com):
+
+```xml
+<dependency>
+  <groupId>io.ap4k</groupId>
+  <artifactId>openshfit-spring-starter</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
+
+##### Annotation less
+For spring boot application all you need to do, is adding one of the starters to the classpath. No need to specify an additonal annotation.
+This provides the fastest way to get started using [ap4k](https://github.com/ap4k/ap4k) with [spring boot](https://spring.io/projects/spring-boot).
+
+Note: Still, if you need to customize the generted manifests, you still have to use annotations.
+
+In future releases, it should be possible to fully customize the manifests just by using `application.properties`.
 
 ## Experimental features
 
