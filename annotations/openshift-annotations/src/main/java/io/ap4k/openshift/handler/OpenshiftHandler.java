@@ -92,7 +92,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       resources.add(OPENSHIFT, createDeploymentConfig(config));
     }
 
-    if (config.isBuidResourceGenerationEnabled()) {
+    if (config.isBuildResourceGenerationEnabled()) {
       resources.add(OPENSHIFT, createBuilderImageStream(config));
       resources.add(OPENSHIFT, createBuildConfig(config));
       resources.add(OPENSHIFT, createProjectImageStream());
