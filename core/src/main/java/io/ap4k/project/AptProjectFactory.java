@@ -54,7 +54,12 @@ public class AptProjectFactory {
       throw new RuntimeException("Failed to determine the project root!", e);
     } finally {
       if (f != null) {
-        f.delete();
+        try {
+          f.delete();
+        } catch (Exception e) {
+          //Some environments do not support deleting FileObjects. Eclipse is such an environment.
+          //So let's ignore.
+        }
       }
     }
   }
