@@ -16,46 +16,37 @@
 **/
 package io.ap4k.kubernetes.decorator;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import io.ap4k.deps.kubernetes.api.model.IntOrString;
+import io.ap4k.Resources;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.ap4k.deps.kubernetes.api.model.ServicePort;
-import io.ap4k.deps.kubernetes.api.model.ServicePortBuilder;
-import io.ap4k.kubernetes.config.BaseConfig;
-import io.ap4k.utils.Labels;
+import io.ap4k.deps.kubernetes.api.model.rbac.KubernetesRoleBindingBuilder;
 
 /**
  * AddRoleBindingDecorator
  */
 public class AddRoleBindingDecorator extends Decorator<KubernetesListBuilder> {
 
-  private final BaseConfig config;
+  private final Resources resources;
   private final String role;
-  private final Map<String, String> allLabels; //A combination of config and project labels.
-
-  public AddRoleBindingDecorator(BaseConfig config, String role, Map<String, String> allLabels) {
-    this.config = config;
+   
+  public AddRoleBindingDecorator(Resources resources, String role) {
+    this.resources = resources;
     this.role = role;
-    this.allLabels = allLabels;
   }
 
+
   public void visit(KubernetesListBuilder list) {
-    list.addNewRoleBindingItem()
+    list.addToItems(new KubernetesRoleBindingBuilder()
       .withNewMetadata()
-      .withName(config.getName()+":view")
-      .withLabels(allLabels)
+      .withName(resources.getName()+":view")
+      .withLabels(resources.getLabels())
       .endMetadata()
       .withNewRoleRef()
       .withName(role)
       .endRoleRef()
       .addNewSubject()
       .withKind("ServiceAccount")
-      .withName(config.getName())
-      .endSubject()
-      .endRoleBindingItem();
+      .withName(resources.getName())
+      .endSubject());
   }
 }
 
