@@ -13,6 +13,9 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+bin
+build/
+
 # Eclipse
 .project
 .settings/
@@ -35,6 +38,9 @@ hs_err_pid*
 
 *.iml
 
+#
+# idee
+.idee
 ## Directory-based project format:
 .idea/
 # if you remove the above rule, at least ignore the following:
@@ -54,6 +60,7 @@ hs_err_pid*
 # Gradle:
 # .idea/gradle.xml
 # .idea/libraries
+.gradle
 
 # Mongo Explorer plugin:
 # .idea/mongoSettings.xml
