@@ -21,6 +21,9 @@ import io.ap4k.WithSession;
 import io.ap4k.Generator;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.decorator.AddRoleBindingDecorator;
+import io.ap4k.kubernetes.decorator.AddServiceAccountDecorator;
+import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
 import io.ap4k.prometheus.config.EditableServiceMonitorConfig;
 import io.ap4k.prometheus.decorator.EndpointPathDecorator;
 import io.ap4k.spring.config.SpringApplicationConfig;
@@ -33,7 +36,7 @@ import java.util.Map;
 
 public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
-  Map SPRING_BOOT_APPLICATION=Collections.emptyMap();
+  Map<String, Object> SPRING_BOOT_APPLICATION = Collections.emptyMap();
 
 
   @Override
@@ -73,5 +76,35 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
          return SpringApplicationConfig.class.equals(config) || EditableServiceMonitorConfig.class.equals(config);
        }
      });
+
+    if (isSpringCloudKubernetesAvailable()) {
+      session.handlers().add(new Handler() {
+          @Override
+           public int order() {
+            return 310; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
+           }
+
+          @Override
+          public void handle(Configuration config) {
+            session.resources().decorate(new ApplyServiceAccountDecorator(session.resources().getName(), session.resources().getName()));
+            session.resources().decorate(new AddServiceAccountDecorator(session.resources()));
+            session.resources().decorate(new AddRoleBindingDecorator(session.resources(), "view"));
+          }
+
+          @Override
+          public boolean canHandle(Class config) {
+            return Configuration.class.isAssignableFrom(config);
+          }
+        });
+    }
+  }
+
+   default boolean isSpringCloudKubernetesAvailable() {
+     try {
+       Class c = Class.forName("org.springframework.cloud.kubernetes.KubernetesAutoConfiguration");
+       return c != null;
+     } catch (ClassNotFoundException | NoClassDefFoundError e) {
+       return false;
+     }
   }
 }

@@ -17,26 +17,24 @@
 
 package io.ap4k.kubernetes.decorator;
 
-import java.util.Map;
-
+import io.ap4k.Resources;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.ap4k.kubernetes.config.BaseConfig;
+import io.ap4k.doc.Description;
 
+@Description("Add a ServiceAccount resource to the list of generated resources.")
 public class AddServiceAccountDecorator extends Decorator<KubernetesListBuilder> {
 
-  private final BaseConfig config;
-  private final Map<String, String> allLabels; //A combination of config and project labels.
-
-  public AddServiceAccountDecorator(BaseConfig config, Map<String, String> allLabels) {
-    this.config = config;
-    this.allLabels = allLabels;
+  private final Resources resources;
+   
+  public AddServiceAccountDecorator(Resources resources) {
+    this.resources = resources;
   }
 
   public void visit(KubernetesListBuilder list) {
     list.addNewServiceAccountItem()
       .withNewMetadata()
-      .withName(config.getName())
-      .withLabels(allLabels)
+      .withName(resources.getName())
+      .withLabels(resources.getLabels())
       .endMetadata()
       .endServiceAccountItem();
   }

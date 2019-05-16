@@ -22,16 +22,18 @@ import io.ap4k.doc.Description;
 import io.ap4k.utils.Strings;
 
 @Description("Apply the service account.")
-public class ApplyServiceAccountDecorator extends Decorator<PodSpecFluent> {
+public class ApplyServiceAccountDecorator extends ApplicationResourceDecorator<PodSpecFluent> {
 
   private final String serviceAccount;
 
-  public ApplyServiceAccountDecorator(String serviceAccount) {
+  public ApplyServiceAccountDecorator(String resourceName, String serviceAccount) {
+    super(resourceName);
     this.serviceAccount = serviceAccount;
   }
 
+
   @Override
-  public void visit(PodSpecFluent podSpec) {
+  public void andThenVisit(PodSpecFluent podSpec) {
     if (Strings.isNotNullOrEmpty(serviceAccount))  {
       podSpec.withServiceAccount(serviceAccount);
     }

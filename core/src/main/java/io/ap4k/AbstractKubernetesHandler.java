@@ -51,6 +51,7 @@ import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.ap4k.kubernetes.decorator.ApplyReplicasDecorator;
 import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
 import io.ap4k.utils.Labels;
+import io.ap4k.utils.Strings;
 
 import java.util.Arrays;
 
@@ -89,7 +90,9 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
    * @param config    The config.
    */
   protected void addDecorators(String group, C config) {
-    resources.decorate(new ApplyServiceAccountDecorator(config.getServiceAccount()));
+    if (!Strings.isNotNullOrEmpty(config.getServiceAccount())) {
+    resources.decorate(new ApplyServiceAccountDecorator(config.getName(), config.getServiceAccount()));
+    }
     resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
 
     resources.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
