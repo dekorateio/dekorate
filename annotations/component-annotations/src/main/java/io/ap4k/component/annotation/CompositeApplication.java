@@ -18,8 +18,8 @@ package io.ap4k.component.annotation;
 
 
 import io.ap4k.component.model.DeploymentType;
-import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.annotation.Env;
+import io.ap4k.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -43,6 +43,4 @@ public @interface CompositeApplication {
   boolean exposeService() default false;
 
   Env[] envVars() default {};
-
-  Link[] links() default {};
 }

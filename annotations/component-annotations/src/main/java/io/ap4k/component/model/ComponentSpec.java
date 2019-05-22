@@ -61,12 +61,12 @@ import javax.annotation.Generated;
         private Env[] envs;
         private Service[] services;
         private Feature[] features;
-        private Link[] links;
+
 
         public ComponentSpec() {
         }
 
-        public ComponentSpec(String name, String packagingMode, String type, DeploymentType deploymentMode, String runtime, String version, boolean exposeService, String cpu, Storage storage, Image[] images, Env[] envs, Service[] services, Feature[] features, Link[] links) {
+        public ComponentSpec(String name, String packagingMode, String type, DeploymentType deploymentMode, String runtime, String version, boolean exposeService, String cpu, Storage storage, Image[] images, Env[] envs, Service[] services, Feature[] features) {
           this.name = name;
           this.packagingMode = packagingMode;
           this.type = type;
@@ -80,7 +80,6 @@ import javax.annotation.Generated;
           this.envs = envs;
           this.services = services;
           this.features = features;
-          this.links = links;
         }
 
         public String getName() {
@@ -187,11 +186,4 @@ import javax.annotation.Generated;
           this.features = features;
         }
 
-        public Link[] getLinks() {
-          return links;
-        }
-
-        public void setLinks(Link[] links) {
-          this.links = links;
-        }
       }
