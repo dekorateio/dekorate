@@ -16,6 +16,6 @@
 **/
 package io.ap4k.component.model;
 
-public enum  DeploymentType {
+public enum DeploymentMode {
   innerloop
 }
