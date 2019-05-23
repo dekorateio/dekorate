@@ -17,5 +17,5 @@
 package io.ap4k.component.model;
 
 public enum DeploymentMode {
-  innerloop
+  dev, build
 }
