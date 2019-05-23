@@ -19,9 +19,7 @@ package io.ap4k.component.handler;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
-import io.ap4k.component.decorator.AddServiceInstanceToComponentDecorator;
 import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
-import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.servicecatalog.config.EditableServiceCatalogConfig;
 
@@ -46,9 +44,9 @@ public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogCon
   }
 
   public void handle(ServiceCatalogConfig config) {
-    for (ServiceCatalogInstance instance : config.getInstances()) {
+    /*for (ServiceCatalogInstance instance : config.getInstances()) {
       resources.decorateCustom(COMPONENT, new AddServiceInstanceToComponentDecorator(instance));
-    }
+    }*/
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
