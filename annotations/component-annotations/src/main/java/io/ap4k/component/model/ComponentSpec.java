@@ -51,7 +51,7 @@ import javax.annotation.Generated;
         private String name;
         private String packagingMode;
         private String type;
-        private DeploymentType deploymentMode;
+        private DeploymentMode deploymentMode;
         private String runtime;
         private String version;
         private boolean exposeService;
@@ -66,7 +66,7 @@ import javax.annotation.Generated;
         public ComponentSpec() {
         }
 
-        public ComponentSpec(String name, String packagingMode, String type, DeploymentType deploymentMode, String runtime, String version, boolean exposeService, String cpu, Storage storage, Image[] images, Env[] envs, Service[] services, Feature[] features) {
+        public ComponentSpec(String name, String packagingMode, String type, DeploymentMode deploymentMode, String runtime, String version, boolean exposeService, String cpu, Storage storage, Image[] images, Env[] envs, Service[] services, Feature[] features, Link[] links) {
           this.name = name;
           this.packagingMode = packagingMode;
           this.type = type;
@@ -106,11 +106,11 @@ import javax.annotation.Generated;
           this.type = type;
         }
 
-        public DeploymentType getDeploymentMode() {
+        public DeploymentMode getDeploymentMode() {
           return deploymentMode;
         }
 
-        public void setDeploymentMode(DeploymentType deploymentMode) {
+        public void setDeploymentMode(DeploymentMode deploymentMode) {
           this.deploymentMode = deploymentMode;
         }
 

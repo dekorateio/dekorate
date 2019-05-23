@@ -17,9 +17,9 @@
 package io.ap4k.component.annotation;
 
 
-import io.ap4k.component.model.DeploymentType;
-import io.ap4k.kubernetes.annotation.Env;
+import io.ap4k.component.model.DeploymentMode;
 import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.annotation.Env;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -38,7 +38,7 @@ public @interface CompositeApplication {
 
   String name() default "";
 
-  DeploymentType deploymentType() default DeploymentType.innerloop;
+  DeploymentMode deploymentType() default DeploymentMode.innerloop;
 
   boolean exposeService() default false;
 
