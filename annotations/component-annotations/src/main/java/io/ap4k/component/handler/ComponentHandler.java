@@ -77,9 +77,6 @@ public class ComponentHandler implements Handler<CompositeConfig> {
     for (Env env : config.getEnvVars()) {
       resources.decorateCustom(COMPONENT, new AddEnvToComponentDecorator(env));
     }
-//    for (Link link : config.getLinks()) {
-//      resources.decorateCustom(COMPONENT, new AddLinkToComponentDecorator(link));
-//    }
   }
 
   /**
