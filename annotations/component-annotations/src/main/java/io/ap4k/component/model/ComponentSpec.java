@@ -29,19 +29,12 @@ import javax.annotation.Generated;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-  "name",
-  "type",
-  "packagingMode",
   "deploymentMode",
   "runtime",
   "version",
   "exposeService",
-  "cpu",
-  "strorage",
-  "images",
-  "envs",
-  "features",
-  "links"
+  "storage",
+  "envs"
 })
 @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 public class ComponentSpec {
