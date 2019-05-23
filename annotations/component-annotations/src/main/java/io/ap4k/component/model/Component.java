@@ -40,7 +40,6 @@ import java.util.Map;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
     "apiVersion",
       "kind",
