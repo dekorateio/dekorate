@@ -28,6 +28,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation is used to generate `CustomResourceDefinition` resources for Kubernetes.
+ * When added on top of a {@link io.ap4k.deps.kubernetes.api.model.HasMetadata} object the CRD is generated.
+ * When added on top of typical POJO, then its wrapped as {@link io.ap4k.deps.kubernetes.api.model.HasMetadata} and
+ * then the CRD is generated.
+ */
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
 @Pojo(name = "CustomResourceConfig", relativePath = "../config",
       mutable = true,
@@ -41,7 +47,7 @@ public @interface CustomResource {
 
   /**
    * The custom resource group.
-   * @return The group, or the package name if group if empty.
+   * @return The group, or the package name if group is empty.
    */
   String group() default "";
 

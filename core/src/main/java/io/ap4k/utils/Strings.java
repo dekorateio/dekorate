@@ -17,6 +17,15 @@
 
 package io.ap4k.utils;
 
+import io.ap4k.Ap4kException;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
+
 public class Strings {
 
   private static final char COMMA = ',';
@@ -50,5 +59,25 @@ public class Strings {
       }
     }
     return buf.toString();
+  }
+
+  public static String fromFile(File file) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+      return reader.lines().collect(Collectors.joining("\n"));
+    } catch (Exception e) {
+      throw Ap4kException.launderThrowable(e);
+    }
+  }
+
+   public static String fromInputStream(InputStream is) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+      return reader.lines().collect(Collectors.joining("\n"));
+    } catch (Exception e) {
+      throw Ap4kException.launderThrowable(e);
+    }
+  }
+
+  public static String fromResource(String resourceName) {
+    return fromInputStream(Strings.class.getClassLoader().getResourceAsStream(resourceName));
   }
 }

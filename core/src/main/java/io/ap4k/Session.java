@@ -19,12 +19,15 @@ package io.ap4k;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.kubernetes.config.ApplicationConfiguration;
+import io.sundr.codegen.model.TypeDef;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -51,6 +54,7 @@ public class Session {
   private final Set<Handler> handlers = new TreeSet<>(Comparator.comparing(Handler::order));
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
+  private final List<TypeDef> sources = new ArrayList<>();
 
   private final Map<String, KubernetesList> generatedResources= new HashMap<>();
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
@@ -103,6 +107,10 @@ public class Session {
 
   public Map<String, KubernetesList> getGeneratedResources() {
     return generatedResources;
+  }
+
+  public List<TypeDef> sources() {
+    return sources;
   }
 
   public void setWriter(SessionWriter resourceWriter) {

@@ -47,8 +47,8 @@ public class JsonSchema {
 
     put(STRING_REF, "string");
     put(DATE_REF, "string");
-    put(INT_REF, "int");
-    put(P_INT_REF, "int");
+    put(INT_REF, "integer");
+    put(P_INT_REF, "integer");
     put(LONG_REF, "number");
     put(P_LONG_REF, "number");
     put(DOUBLE_REF, "number");
@@ -57,6 +57,11 @@ public class JsonSchema {
     put(P_BOOLEAN_REF, "boolean");
   }};
 
+  public static JSONSchemaProps newSpec(TypeDef definition) {
+    return new JSONSchemaPropsBuilder()
+      .addToProperties("spec", from(definition))
+      .build();
+  }
 
   /**
    * Creates the JSON schema for the particular {@TypeDef}.

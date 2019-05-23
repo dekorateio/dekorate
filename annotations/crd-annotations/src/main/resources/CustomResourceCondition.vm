@@ -1,0 +1,135 @@
+#set ($attributes = $model.attributes)
+#foreach ($key in $attributes.keySet())
+  #if ($key.getName().equals("CUSTOM_RESOURCE_CONFIG"))
+    #set ($config = $attributes.get($key))
+    #set ($group = $config.group)
+    #set ($version = $config.version)
+    #set ($kind = $config.kind)
+    #set ($modelPackage = $config.modelPackage)
+  #end
+#end
+
+package ${model.packageName};
+
+import io.ap4k.deps.jackson.annotation.JsonAnyGetter;
+import io.ap4k.deps.jackson.annotation.JsonAnySetter;
+import io.ap4k.deps.jackson.annotation.JsonIgnore;
+import io.ap4k.deps.jackson.annotation.JsonInclude;
+import io.ap4k.deps.jackson.annotation.JsonProperty;
+import io.ap4k.deps.jackson.annotation.JsonPropertyOrder;
+import io.ap4k.deps.jackson.annotation.JsonInclude.Include;
+import io.ap4k.deps.jackson.databind.JsonDeserializer.None;
+import io.ap4k.deps.jackson.databind.annotation.JsonDeserialize;
+import io.ap4k.deps.javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
+import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
+@JsonInclude(Include.NON_NULL)
+@JsonPropertyOrder({"apiVersion", "kind", "metadata", "lastProbeTime", "lastTransitionTime", "message", "reason", "status", "type"})
+@JsonDeserialize(
+    using = None.class
+)
+public class ${kind}Condition implements KubernetesResource {
+    @JsonProperty("lastProbeTime")
+    @Valid
+    private String lastProbeTime;
+    @JsonProperty("lastTransitionTime")
+    @Valid
+    private String lastTransitionTime;
+    @JsonProperty("message")
+    private String message;
+    @JsonProperty("reason")
+    private String reason;
+    @JsonProperty("status")
+    private String status;
+    @JsonProperty("type")
+    private String type;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap();
+
+    public ${kind}Condition() {
+    }
+
+    public ${kind}Condition(String lastProbeTime, String lastTransitionTime, String message, String reason, String status, String type) {
+        this.lastProbeTime = lastProbeTime;
+        this.lastTransitionTime = lastTransitionTime;
+        this.message = message;
+        this.reason = reason;
+        this.status = status;
+        this.type = type;
+    }
+
+    @JsonProperty("lastProbeTime")
+    public String getLastProbeTime() {
+        return this.lastProbeTime;
+    }
+
+    @JsonProperty("lastProbeTime")
+    public void setLastProbeTime(String lastProbeTime) {
+        this.lastProbeTime = lastProbeTime;
+    }
+
+    @JsonProperty("lastTransitionTime")
+    public String getLastTransitionTime() {
+        return this.lastTransitionTime;
+    }
+
+    @JsonProperty("lastTransitionTime")
+    public void setLastTransitionTime(String lastTransitionTime) {
+        this.lastTransitionTime = lastTransitionTime;
+    }
+
+    @JsonProperty("message")
+    public String getMessage() {
+        return this.message;
+    }
+
+    @JsonProperty("message")
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @JsonProperty("reason")
+    public String getReason() {
+        return this.reason;
+    }
+
+    @JsonProperty("reason")
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    @JsonProperty("status")
+    public String getStatus() {
+        return this.status;
+    }
+
+    @JsonProperty("status")
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @JsonProperty("type")
+    public String getType() {
+        return this.type;
+    }
+
+    @JsonProperty("type")
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
+
+    public String toString() {
+        return "${kind}Condition(lastProbeTime=" + this.getLastProbeTime() + ", lastTransitionTime=" + this.getLastTransitionTime() + ", message=" + this.getMessage() + ", reason=" + this.getReason() + ", status=" + this.getStatus() + ", type=" + this.getType() + ", additionalProperties=" + this.getAdditionalProperties() + ")";
+    }
+}

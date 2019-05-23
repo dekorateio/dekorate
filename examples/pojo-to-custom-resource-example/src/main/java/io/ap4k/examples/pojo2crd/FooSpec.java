@@ -5,8 +5,8 @@ import io.ap4k.crd.confg.Scope;
 
 import java.util.List;
 
-@CustomResource(group = "ap4k.io", version = "v1", scope = Scope.Namespaced)
-public class Foo {
+@CustomResource(group = "ap4k.io", version = "v1", kind = "Foo", scope = Scope.Namespaced)
+public class FooSpec {
   int size;
   boolean enabled;
   private Bar bar;

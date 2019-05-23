@@ -27,7 +27,11 @@ public class AddClassNameConfigurator extends Configurator<CustomResourceConfigB
   private final String className;
 
   public AddClassNameConfigurator(String className) {
-    this.className = className;
+    if (Strings.isNullOrEmpty(className)) {
+      throw new IllegalArgumentException("Class name cannot be blank!");
+    }
+
+    this.className = className.replaceAll("Spec$", "");
   }
 
   @Override

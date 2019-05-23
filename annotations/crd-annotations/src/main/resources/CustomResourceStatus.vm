@@ -1,0 +1,116 @@
+#*
+ * Copyright (C) 2015 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *#
+/**
+ * Copyright (C) 2015 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#set ($attributes = $model.attributes)
+#foreach ($key in $attributes.keySet())
+  #if ($key.getName().equals("CUSTOM_RESOURCE_CONFIG"))
+    #set ($config = $attributes.get($key))
+    #set ($group = $config.group)
+    #set ($version = $config.version)
+    #set ($kind = $config.kind)
+    #set ($modelPackage = $config.modelPackage)
+  #end
+#end
+
+package ${model.packageName};
+
+import io.ap4k.deps.jackson.annotation.JsonAnyGetter;
+import io.ap4k.deps.jackson.annotation.JsonAnySetter;
+import io.ap4k.deps.jackson.annotation.JsonIgnore;
+import io.ap4k.deps.jackson.annotation.JsonInclude;
+import io.ap4k.deps.jackson.annotation.JsonProperty;
+import io.ap4k.deps.jackson.annotation.JsonPropertyOrder;
+import io.ap4k.deps.jackson.annotation.JsonInclude.Include;
+import io.ap4k.deps.jackson.databind.JsonDeserializer.None;
+import io.ap4k.deps.jackson.databind.annotation.JsonDeserialize;
+import io.ap4k.deps.javax.validation.Valid;
+import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ${kind}Status implements KubernetesResource {
+
+    @JsonProperty("conditions")
+    @JsonInclude(Include.NON_EMPTY)
+    @Valid
+    private List<${kind}Condition> conditions = new ArrayList();
+    @JsonProperty("message")
+    private String message;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap();
+
+    public ${kind}Status() {
+    }
+
+    public ${kind}Status(List<${kind}Condition> conditions, String message) {
+        this.conditions = conditions;
+        this.message = message;
+    }
+
+    @JsonProperty("conditions")
+    public List<${kind}Condition> getConditions() {
+        return this.conditions;
+    }
+
+    @JsonProperty("conditions")
+    public void setConditions(List<${kind}Condition> conditions) {
+        this.conditions = conditions;
+    }
+
+    @JsonProperty("message")
+    public String getMessage() {
+        return this.message;
+    }
+
+    @JsonProperty("message")
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
+
+    public String toString() {
+        return "${kind}Status(conditions=" + this.getConditions() + ", message=" + this.getMessage() + ", additionalProperties=" + this.getAdditionalProperties() + ")";
+    }
+}
+
+
