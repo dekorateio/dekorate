@@ -38,7 +38,7 @@ public @interface CompositeApplication {
 
   String name() default "";
 
-  DeploymentMode deploymentType() default DeploymentMode.innerloop;
+  DeploymentMode deploymentMode() default DeploymentMode.innerloop;
 
   boolean exposeService() default false;
 
