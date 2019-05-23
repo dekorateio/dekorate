@@ -94,7 +94,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
       .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
-      .withDeploymentMode(DeploymentMode.innerloop)
+      .withDeploymentMode(DeploymentMode.dev)
       .withExposeService(config.isExposeService())
       .withVersion(resources.getVersion())
       .endSpec()
