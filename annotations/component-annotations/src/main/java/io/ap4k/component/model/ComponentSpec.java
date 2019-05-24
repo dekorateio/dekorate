@@ -15,16 +15,16 @@
  **/
 package io.ap4k.component.model;
 
+import io.ap4k.crd.annotation.CustomResource;
 import io.ap4k.deps.jackson.annotation.JsonInclude;
 import io.ap4k.deps.jackson.annotation.JsonPropertyOrder;
 import io.ap4k.deps.kubernetes.api.model.Doneable;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Inline;
-
-import javax.annotation.Generated;
+import io.sundr.transform.annotations.VelocityTransformation;
+import io.sundr.transform.annotations.VelocityTransformations;
 
 /**
- *
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -36,7 +36,12 @@ import javax.annotation.Generated;
   "storage",
   "envs"
 })
-@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+@Buildable(editableEnabled = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+@VelocityTransformations({
+  @VelocityTransformation(value = "/component-resource.vm"),
+  @VelocityTransformation(value = "/component-resource-list.vm"),
+})
+@CustomResource(group = "devexp.runtime.redhat.com", version = "v1alpha2")
 public class ComponentSpec {
 
   private DeploymentMode deploymentMode;

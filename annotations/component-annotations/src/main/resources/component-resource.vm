@@ -1,0 +1,206 @@
+package ${model.packageName};
+
+import java.util.HashMap;
+import java.util.Map;
+
+import io.ap4k.deps.jackson.annotation.JsonIgnore;
+import io.ap4k.deps.jackson.annotation.JsonInclude;
+import io.ap4k.deps.jackson.annotation.JsonProperty;
+import io.ap4k.deps.jackson.annotation.JsonPropertyOrder;
+import io.ap4k.deps.jackson.databind.annotation.JsonDeserialize;
+import io.ap4k.deps.javax.validation.Valid;
+import io.ap4k.deps.javax.validation.constraints.NotNull;
+import io.ap4k.deps.kubernetes.api.model.Doneable;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
+import io.ap4k.deps.kubernetes.api.model.ObjectMeta;
+import io.ap4k.deps.kubernetes.api.model.validators.CheckObjectMeta;
+
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Inline;
+
+
+#set ($spec = $model.name)
+#set ($length = $spec.length())
+#set ($tindex = $length - 4)
+#set ($resource = $spec.substring(0, $tindex))
+#set ($status = $resource + "Status")
+
+#set ($version = "unknown")
+#set ($annotations = $model.annotations)
+#set ($kind = "$resource")
+#set ($plural = "$kind" + "s")
+#foreach ($annotation in $annotations)
+  #if ($annotation.getClassRef().getName().equals("CustomResource"))
+    #set ($version =  $annotation.getParameters().get("group") + "/" + $annotation.getParameters().get("version"))
+    #set( $kindFromAnn = $annotation.getParameters().get("kind"))
+    #set( $pluralFromAnn = $annotation.getParameters().get("plural"))
+    #if( !$kindFromAnn.isEmpty())
+      #set ($kind = $kindFromAnn)
+    #end
+    #if( !$pluralFromAnn.isEmpty())
+      #set ($plural = $pluralFromAnn)
+    #end
+  #end
+#end
+/**
+*
+*
+*/
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+"apiVersion",
+"kind",
+"metadata",
+"spec",
+"status"
+})
+@Buildable(editableEnabled = false, validationEnabled = true, generateBuilderPackage = true, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+public class $resource implements HasMetadata
+{
+
+/**
+*
+* (Required)
+*
+*/
+@NotNull
+@JsonProperty("apiVersion")
+private String apiVersion = "$version";
+/**
+*
+* (Required)
+*
+*/
+@NotNull
+@JsonProperty("kind")
+private String kind = "$kind";
+
+/**
+*
+*
+*/
+@JsonProperty("metadata")
+@Valid
+@CheckObjectMeta(regexp = "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$", max = 253)
+private ObjectMeta metadata;
+/**
+*
+*
+*/
+@JsonProperty("spec")
+@Valid
+private $spec spec;
+
+/**
+* No args constructor for use in serialization
+*
+*/
+public $resource() {
+}
+
+/**
+*
+* @param metadata
+* @param apiVersion
+* @param kind
+* @param spec
+*/
+public $resource(String apiVersion, String kind, ObjectMeta metadata, $spec spec) {
+this.apiVersion = apiVersion;
+this.kind = kind;
+this.metadata = metadata;
+this.spec = spec;
+}
+
+/**
+*
+* (Required)
+*
+* @return
+*     The apiVersion
+*/
+@JsonProperty("apiVersion")
+public String getApiVersion() {
+return apiVersion;
+}
+
+/**
+*
+* (Required)
+*
+* @param apiVersion
+*     The apiVersion
+*/
+@JsonProperty("apiVersion")
+public void setApiVersion(String apiVersion) {
+this.apiVersion = apiVersion;
+}
+
+/**
+*
+* (Required)
+*
+* @return
+*     The kind
+*/
+@JsonProperty("kind")
+public String getKind() {
+return kind;
+}
+
+/**
+*
+* (Required)
+*
+* @param kind
+*     The kind
+*/
+@JsonProperty("kind")
+public void setKind(String kind) {
+this.kind = kind;
+}
+
+/**
+*
+*
+* @return
+*     The metadata
+*/
+@JsonProperty("metadata")
+public ObjectMeta getMetadata() {
+return metadata;
+}
+
+/**
+*
+*
+* @param metadata
+*     The metadata
+*/
+@JsonProperty("metadata")
+public void setMetadata(ObjectMeta metadata) {
+this.metadata = metadata;
+}
+
+/**
+*
+*
+* @return
+*     The spec
+*/
+@JsonProperty("spec")
+public $spec getSpec() {
+return spec;
+}
+
+/**
+*
+*
+* @param spec
+*     The spec
+*/
+@JsonProperty("spec")
+public void setSpec($spec spec) {
+this.spec = spec;
+}
+}
