@@ -33,10 +33,10 @@ import io.sundr.builder.annotations.Inline;
     "phase",
       })
       @JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
-      @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+@Buildable(editableEnabled = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
       public class ComponentStatus {
 
-        String phase;
+  String phase;
 
         public ComponentStatus() {
         }
