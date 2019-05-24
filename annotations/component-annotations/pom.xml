@@ -23,7 +23,6 @@ limitations under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
   <artifactId>component-annotations</artifactId>
   <name>AP4K :: Annotations :: Component CRD</name>
 
@@ -42,8 +41,18 @@ limitations under the License.
     </dependency>
 
     <dependency>
+      <groupId>io.ap4k</groupId>
+      <artifactId>crd-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.sundr</groupId>
+      <artifactId>transform-annotations</artifactId>
     </dependency>
     <!-- Testing -->
     <dependency>
@@ -91,6 +100,7 @@ limitations under the License.
           <source>1.8</source>
           <target>1.8</target>
           <annotationProcessors>
+            <processor>io.sundr.transform.internal.VelocityTransformationProcessor</processor>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
           </annotationProcessors>
         </configuration>

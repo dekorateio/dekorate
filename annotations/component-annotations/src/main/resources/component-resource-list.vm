@@ -1,0 +1,194 @@
+package ${model.packageName};
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import io.ap4k.deps.jackson.annotation.JsonIgnore;
+import io.ap4k.deps.jackson.annotation.JsonInclude;
+import io.ap4k.deps.jackson.annotation.JsonProperty;
+import io.ap4k.deps.jackson.annotation.JsonPropertyOrder;
+import io.ap4k.deps.jackson.databind.annotation.JsonDeserialize;
+import io.ap4k.deps.javax.validation.Valid;
+import io.ap4k.deps.javax.validation.constraints.NotNull;
+import io.ap4k.deps.kubernetes.api.model.Doneable;
+import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
+import io.ap4k.deps.kubernetes.api.model.KubernetesResourceList;
+import io.ap4k.deps.kubernetes.api.model.ListMeta;
+
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Inline;
+
+#set ($version = "unknown")
+#set ($annotations = $model.annotations)
+#foreach ($annotation in $annotations)
+  #if ($annotation.getClassRef().getName().equals("CustomResource"))
+    #set ($version =  $annotation.getParameters().get("group") + "/" + $annotation.getParameters().get("version"))
+  #end
+#end
+
+#set ($spec = $model.name)
+#set ($length = $spec.length())
+#set ($tindex = $length - 4)
+#set ($resource = $spec.substring(0, $tindex))
+
+/**
+*
+*
+*/
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+"apiVersion",
+"kind",
+"metadata",
+"items"
+})
+@Buildable(editableEnabled = false, validationEnabled = true, generateBuilderPackage = true, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+public class ${resource}List implements KubernetesResource, KubernetesResourceList
+{
+
+/**
+*
+* (Required)
+*
+*/
+@NotNull
+@JsonProperty("apiVersion")
+private String apiVersion = "$version";
+/**
+*
+*
+*/
+@JsonProperty("items")
+@Valid
+private List<${resource}> items = new ArrayList<${resource}>();
+/**
+*
+* (Required)
+*
+*/
+@NotNull
+@JsonProperty("kind")
+private String kind = "${resource}List";
+/**
+*
+*
+*/
+@JsonProperty("metadata")
+@Valid
+private ListMeta metadata;
+
+/**
+* No args constructor for use in serialization
+*
+*/
+public ${resource}List() {
+}
+
+/**
+*
+* @param metadata
+* @param apiVersion
+* @param kind
+* @param items
+*/
+public ${resource}List(String apiVersion, List<${resource}> items, String kind, ListMeta metadata) {
+this.apiVersion = apiVersion;
+this.items = items;
+this.kind = kind;
+this.metadata = metadata;
+}
+
+/**
+*
+* (Required)
+*
+* @return
+*     The apiVersion
+*/
+@JsonProperty("apiVersion")
+public String getApiVersion() {
+return apiVersion;
+}
+
+/**
+*
+* (Required)
+*
+* @param apiVersion
+*     The apiVersion
+*/
+@JsonProperty("apiVersion")
+public void setApiVersion(String apiVersion) {
+this.apiVersion = apiVersion;
+}
+
+/**
+*
+*
+* @return
+*     The items
+*/
+@JsonProperty("items")
+public List<${resource}> getItems() {
+return items;
+}
+
+/**
+*
+*
+* @param items
+*     The items
+*/
+@JsonProperty("items")
+public void setItems(List<${resource}> items) {
+this.items = items;
+}
+
+/**
+*
+* (Required)
+*
+* @return
+*     The kind
+*/
+@JsonProperty("kind")
+public String getKind() {
+return kind;
+}
+
+/**
+*
+* (Required)
+*
+* @param kind
+*     The kind
+*/
+@JsonProperty("kind")
+public void setKind(String kind) {
+this.kind = kind;
+}
+
+/**
+*
+*
+* @return
+*     The metadata
+*/
+@JsonProperty("metadata")
+public ListMeta getMetadata() {
+return metadata;
+}
+
+/**
+*
+*
+* @param metadata
+*     The metadata
+*/
+@JsonProperty("metadata")
+public void setMetadata(ListMeta metadata) {
+this.metadata = metadata;
+}
+}
