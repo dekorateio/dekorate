@@ -83,6 +83,10 @@ private ObjectMeta metadata;
 @Valid
 private $spec spec;
 
+@JsonProperty("status")
+@Valid
+private $status status;
+
 /**
 * No args constructor for use in serialization
 */
@@ -95,11 +99,12 @@ public $resource() {
 * @param kind
 * @param spec
 */
-public $resource(String apiVersion, String kind, ObjectMeta metadata, $spec spec) {
+public $resource(String apiVersion, String kind, ObjectMeta metadata, $spec spec, $status status) {
 this.apiVersion = apiVersion;
 this.kind = kind;
 this.metadata = metadata;
 this.spec = spec;
+this.status = status;
 }
 
 /**
@@ -173,4 +178,14 @@ return spec;
 public void setSpec($spec spec) {
 this.spec = spec;
 }
+
+@JsonProperty("status")
+public $status getStatus() {
+return status;
+}
+
+public void setStatus($status status) {
+this.status = status;
+}
+
 }

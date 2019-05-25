@@ -1,0 +1,43 @@
+package ${model.packageName};
+
+import io.ap4k.deps.jackson.annotation.JsonInclude;
+import io.ap4k.deps.jackson.annotation.JsonProperty;
+import io.ap4k.deps.jackson.annotation.JsonPropertyOrder;
+import io.ap4k.deps.jackson.databind.annotation.JsonDeserialize;
+import io.ap4k.deps.kubernetes.api.model.Doneable;
+
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Inline;
+
+#set ($spec = $model.name)
+#set ($length = $spec.length())
+#set ($tindex = $length - 4)
+#set ($resource = $spec.substring(0, $tindex))
+
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+"phase",
+})
+@JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
+@Buildable(editableEnabled = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+public class ${resource}Status {
+
+@JsonProperty("status")
+private String phase;
+
+public ${resource}Status() {
+}
+
+public ${resource}Status(String phase) {
+this.phase = phase;
+}
+
+public String getPhase() {
+return phase;
+}
+
+public void setPhase(String phase) {
+this.phase = phase;
+}
+}
