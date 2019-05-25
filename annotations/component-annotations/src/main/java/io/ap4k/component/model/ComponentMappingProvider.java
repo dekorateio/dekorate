@@ -20,14 +20,17 @@ package io.ap4k.component.model;
 
 import io.ap4k.deps.kubernetes.api.KubernetesResourceMappingProvider;
 import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
-import java.util.Map;
+
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class ComponentMappingProvider implements KubernetesResourceMappingProvider {
 
   private Map<String, Class<? extends KubernetesResource>> mappings = new HashMap<String, Class<? extends KubernetesResource>>() {{
       put("devexp.runtime.redhat.com/v1alpha2#Component", Component.class);
+    put("devexp.runtime.redhat.com/v1alpha2#Link", Link.class);
+    put("devexp.runtime.redhat.com/v1alpha2#Capability", Capability.class);
     }};
 
   public Map<String, Class<? extends KubernetesResource>> getMappings() {
