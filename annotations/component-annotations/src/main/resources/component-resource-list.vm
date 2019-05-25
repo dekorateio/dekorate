@@ -44,6 +44,7 @@ import io.sundr.builder.annotations.Inline;
 "metadata",
 "items"
 })
+@JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 public class ${resource}List implements KubernetesResource, KubernetesResourceList
 {
