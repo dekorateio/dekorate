@@ -44,6 +44,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @VelocityTransformations({
   @VelocityTransformation(value = "/component-resource.vm"),
   @VelocityTransformation(value = "/component-resource-list.vm"),
+  @VelocityTransformation(value = "/component-status.vm"),
 })
 @CustomResource(group = "devexp.runtime.redhat.com", version = "v1alpha2")
 public class CapabilitySpec {
