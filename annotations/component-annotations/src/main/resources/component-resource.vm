@@ -43,10 +43,7 @@ import io.sundr.builder.annotations.Inline;
     #end
   #end
 #end
-/**
-*
-*
-*/
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 "apiVersion",
@@ -57,28 +54,22 @@ import io.sundr.builder.annotations.Inline;
 })
 @JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"), refs = @BuildableReference(ObjectMeta.class))
-public class $resource implements HasMetadata
-{
+public class $resource implements HasMetadata {
 
 /**
-*
 * (Required)
-*
 */
 @NotNull
 @JsonProperty("apiVersion")
 private String apiVersion = "$version";
 /**
-*
 * (Required)
-*
 */
 @NotNull
 @JsonProperty("kind")
 private String kind = "$kind";
 
 /**
-*
 *
 */
 @JsonProperty("metadata")
@@ -87,7 +78,6 @@ private String kind = "$kind";
 private ObjectMeta metadata;
 /**
 *
-*
 */
 @JsonProperty("spec")
 @Valid
@@ -95,13 +85,11 @@ private $spec spec;
 
 /**
 * No args constructor for use in serialization
-*
 */
 public $resource() {
 }
 
 /**
-*
 * @param metadata
 * @param apiVersion
 * @param kind
@@ -115,11 +103,9 @@ this.spec = spec;
 }
 
 /**
-*
 * (Required)
 *
-* @return
-*     The apiVersion
+* @return The apiVersion
 */
 @JsonProperty("apiVersion")
 public String getApiVersion() {
@@ -127,11 +113,9 @@ return apiVersion;
 }
 
 /**
-*
 * (Required)
 *
-* @param apiVersion
-*     The apiVersion
+* @param apiVersion The apiVersion
 */
 @JsonProperty("apiVersion")
 public void setApiVersion(String apiVersion) {
@@ -139,11 +123,9 @@ this.apiVersion = apiVersion;
 }
 
 /**
-*
 * (Required)
 *
-* @return
-*     The kind
+* @return The kind
 */
 @JsonProperty("kind")
 public String getKind() {
@@ -151,11 +133,9 @@ return kind;
 }
 
 /**
-*
 * (Required)
 *
-* @param kind
-*     The kind
+* @param kind The kind
 */
 @JsonProperty("kind")
 public void setKind(String kind) {
@@ -163,10 +143,7 @@ this.kind = kind;
 }
 
 /**
-*
-*
-* @return
-*     The metadata
+* @return The metadata
 */
 @JsonProperty("metadata")
 public ObjectMeta getMetadata() {
@@ -174,10 +151,7 @@ return metadata;
 }
 
 /**
-*
-*
-* @param metadata
-*     The metadata
+* @param metadata The metadata
 */
 @JsonProperty("metadata")
 public void setMetadata(ObjectMeta metadata) {
@@ -185,10 +159,7 @@ this.metadata = metadata;
 }
 
 /**
-*
-*
-* @return
-*     The spec
+* @return The spec
 */
 @JsonProperty("spec")
 public $spec getSpec() {
@@ -196,10 +167,7 @@ return spec;
 }
 
 /**
-*
-*
-* @param spec
-*     The spec
+* @param spec The spec
 */
 @JsonProperty("spec")
 public void setSpec($spec spec) {

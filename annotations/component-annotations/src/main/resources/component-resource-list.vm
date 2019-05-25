@@ -33,10 +33,6 @@ import io.sundr.builder.annotations.Inline;
 #set ($tindex = $length - 4)
 #set ($resource = $spec.substring(0, $tindex))
 
-/**
-*
-*
-*/
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 "apiVersion",
@@ -46,8 +42,7 @@ import io.sundr.builder.annotations.Inline;
 })
 @JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
-public class ${resource}List implements KubernetesResource, KubernetesResourceList
-{
+public class ${resource}List implements KubernetesResource, KubernetesResourceList {
 
 /**
 *
