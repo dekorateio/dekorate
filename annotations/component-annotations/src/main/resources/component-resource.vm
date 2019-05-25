@@ -55,6 +55,7 @@ import io.sundr.builder.annotations.Inline;
 "spec",
 "status"
 })
+@JsonDeserialize(using = io.ap4k.deps.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"), refs = @BuildableReference(ObjectMeta.class))
 public class $resource implements HasMetadata
 {
