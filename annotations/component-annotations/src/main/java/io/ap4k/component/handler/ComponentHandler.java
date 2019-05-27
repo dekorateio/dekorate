@@ -25,7 +25,6 @@ import io.ap4k.component.decorator.AddRuntimeTypeToComponentDecorator;
 import io.ap4k.component.decorator.AddRuntimeVersionToComponentDecorator;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
-import io.ap4k.component.model.DeploymentMode;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Env;
@@ -91,7 +90,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
       .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
-      .withDeploymentMode(DeploymentMode.dev)
+      .withDeploymentMode(config.getDeploymentMode())
       .withExposeService(config.isExposeService())
       .withVersion(resources.getVersion())
       .endSpec()
