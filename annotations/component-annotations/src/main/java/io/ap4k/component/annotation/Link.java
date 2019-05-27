@@ -17,9 +17,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Link {
-  String name();
+  String name() default "";;
   String targetcomponentname();
-  String kind();
-  String ref();
+  String kind() default "";;
+  String ref() default "";;
   Env[] envVars() default {};
 }

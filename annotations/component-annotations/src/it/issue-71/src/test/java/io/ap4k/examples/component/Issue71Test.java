@@ -30,7 +30,7 @@ public class Issue71Test {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshal(Issue65Test.class.getClassLoader().getResourceAsStream("META-INF/ap4k/component.yml"));
+    KubernetesList list = Serialization.unmarshal(Issue71Test.class.getClassLoader().getResourceAsStream("META-INF/ap4k/link.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     assertEquals("Component", list.getItems().get(0).getKind());
