@@ -39,6 +39,7 @@ import java.util.Map;
 
 public interface OpenshiftApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
 
+  String OPENSHIFT = "openshift";
   String DEFAULT_S2I_BUILDER_IMAGE = "fabric8/s2i-java:2.3";
 
   OpenshiftConfig DEFAULT_SOURCE_TO_IMAGE_CONFIG = new OpenshiftConfigBuilder()

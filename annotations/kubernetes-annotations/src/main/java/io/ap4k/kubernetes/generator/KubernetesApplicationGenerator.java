@@ -48,6 +48,7 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
 
   String KUBERNETES = "kubernetes";
 
+  @Override
   default void add(Map map) {
         add(new ConfigurationSupplier<>(
             KubernetesConfigAdapter
