@@ -38,7 +38,6 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
   Map<String, Object> SPRING_BOOT_APPLICATION = Collections.emptyMap();
 
-
   @Override
   default void add(Map map) {
     session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
