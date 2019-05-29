@@ -46,14 +46,14 @@ public class LinkSpec {
 
   private String name;
   private String componentName;
-  private String kind;
+  private Kind kind;
   private String ref;
   private Env[] envs;
 
   public LinkSpec() {
   }
 
-  public LinkSpec(String name, String componentName, String kind, String ref, Env[] envs) {
+  public LinkSpec(String name, String componentName, Kind kind, String ref, Env[] envs) {
     this.name = name;
     this.componentName = componentName;
     this.kind = kind;
@@ -77,11 +77,11 @@ public class LinkSpec {
     this.componentName = componentName;
   }
 
-  public String getKind() {
+  public Kind getKind() {
     return kind;
   }
 
-  public void setKind(String kind) {
+  public void setKind(Kind kind) {
     this.kind = kind;
   }
 
