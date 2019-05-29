@@ -2,13 +2,11 @@ package io.ap4k.component.handler;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
-import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableLinkConfig;
 import io.ap4k.component.config.LinkConfig;
-import io.ap4k.component.decorator.AddEnvToLinkDecorator;
-import io.ap4k.component.model.Component;
 import io.ap4k.component.model.Link;
 import io.ap4k.component.model.LinkBuilder;
+import io.ap4k.component.model.LinkFluent;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Env;
@@ -37,9 +35,6 @@ public class LinkHandler implements Handler<LinkConfig> {
       resources.setName(config.getName());
     }
     resources.addCustom(LINK, createLink(config));
-    for (Env env : config.getEnvVars()) {
-      resources.decorateCustom(LINK, new AddEnvToLinkDecorator(env));
-    }
   }
 
   @Override
@@ -48,39 +43,25 @@ public class LinkHandler implements Handler<LinkConfig> {
       type.equals(EditableLinkConfig.class);
   }
 
-  private void addVisitors(LinkConfig config) {
-//    String type = config.getAttribute(RUNTIME_TYPE);
-//    String version = config.getAttribute(RUNTIME_VERSION);
-//
-//    if (type != null) {
-//      resources.decorateCustom(LINK,new AddRuntimeTypeToComponentDecorator(type));
-//    }
-//
-//    if (version != null) {
-//      resources.decorateCustom(LINK,new AddRuntimeVersionToComponentDecorator(version));
-//    }
-//    for (Env env : config.getEnvVars()) {
-//      resources.decorateCustom(LINK, new AddEnvToComponentDecorator(env));
-//    }
-////    for (Link link : config.getLinks()) {
-////      resources.decorateCustom(LINK, new AddLinkToComponentDecorator(link));
-////    }
-  }
-
   /**
-   * Create a {@link Component} from a {@link CompositeConfig}.
-   * @param config  The config.
-   * @return        The component.
+   * Create a {@link Link} from a {@link LinkConfig}.
+   *
+   * @param config The config.
+   * @return The link.
    */
   private Link createLink(LinkConfig config) {
-    return new LinkBuilder()
+    final LinkFluent.SpecNested<LinkBuilder> linkSpec = new LinkBuilder()
       .withNewMetadata()
       .withName(config.getName())
       .endMetadata()
       .withNewSpec()
       .withName(config.getName())
       .withKind(config.getKind())
-      .withNewRef(config.getRef())
+      .withNewRef(config.getRef());
+    for (Env env : config.getEnvVars()) {
+      linkSpec.addNewEnv(env.getName(), env.getValue());
+    }
+    return linkSpec
       .endSpec()
       .build();
   }
