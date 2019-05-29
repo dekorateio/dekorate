@@ -32,18 +32,18 @@ import java.util.Map;
 
 public interface LinkConfigGenerator extends Generator, WithProject {
 
-//  @Override
-//  default void add(Map map) {
-//    on(new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(propertiesMap(map, Link.class)).accept(new ApplyProject(getProject()))));
-//  }
-//
-//  @Override
-//  default void add(Element element) {
-//    Link link = element.getAnnotation(Link.class);
-//    on(link != null
-//      ? new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(link).accept(new ApplyProject(getProject())))
-//      : new ConfigurationSupplier<>(LinkConfig.newLinkConfigBuilder().accept(new ApplyProject(getProject()))));
-//  }
+  @Override
+  default void add(Map map) {
+    on(new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(propertiesMap(map, Link.class))));
+  }
+
+  @Override
+  default void add(Element element) {
+    Link link = element.getAnnotation(Link.class);
+    on(link != null
+      ? new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(link))
+      : new ConfigurationSupplier<>(LinkConfig.newLinkConfigBuilder()));
+  }
 
   default void on(ConfigurationSupplier<LinkConfig> config) {
     session.configurators().add(config);
