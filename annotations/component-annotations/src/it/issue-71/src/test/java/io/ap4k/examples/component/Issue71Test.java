@@ -19,9 +19,11 @@
 package io.ap4k.examples.component;
 
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.Link;
 import io.ap4k.utils.Serialization;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,10 +33,12 @@ public class Issue71Test {
 
   @Test
   public void shouldContainLink() {
-    KubernetesList list = Serialization.unmarshal(Issue71Test.class.getClassLoader().getResourceAsStream("META-INF/ap4k/link.yml"));
+    KubernetesList list = Serialization.unmarshal(Issue71Test.class.getClassLoader().getResourceAsStream("META-INF/ap4k/component.yml"));
     assertNotNull(list);
-    assertEquals(1, list.getItems().size());
-    assertEquals("Link", list.getItems().get(0).getKind());
-    assertEquals(1, ((Link)list.getItems().get(0)).getSpec().getEnvs().length);
+    List<HasMetadata> items = list.getItems();
+    assertEquals(1, items.size());
+    Link link = (Link) items.get(0);
+    assertEquals("Link", link.getKind());
+    assertEquals(1, link.getSpec().getEnvs().length);
   }
 }

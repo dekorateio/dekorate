@@ -7,17 +7,11 @@ import io.ap4k.component.config.LinkConfig;
 import io.ap4k.component.model.Link;
 import io.ap4k.component.model.LinkBuilder;
 import io.ap4k.component.model.LinkFluent;
-import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Env;
 import io.ap4k.utils.Strings;
 
 public class LinkHandler implements Handler<LinkConfig> {
-
-  private static final String LINK = "link";
-  public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
-  public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
-
   private final Resources resources;
 
   public LinkHandler(Resources resources) {
@@ -34,7 +28,7 @@ public class LinkHandler implements Handler<LinkConfig> {
     if (Strings.isNullOrEmpty(resources.getName())) {
       resources.setName(config.getName());
     }
-    resources.addCustom(LINK, createLink(config));
+    resources.addCustom(ResourceGroup.NAME, createLink(config));
   }
 
   @Override

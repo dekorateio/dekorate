@@ -27,9 +27,6 @@ import io.ap4k.servicecatalog.config.ServiceCatalogConfig;
 import io.ap4k.servicecatalog.config.ServiceCatalogInstance;
 
 public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
-
-  private static final String COMPONENT = "component";
-
   private final Resources resources;
 
   // only used for testing
@@ -48,7 +45,7 @@ public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogCon
 
   public void handle(ServiceCatalogConfig config) {
     for (ServiceCatalogInstance instance : config.getInstances()) {
-      resources.addCustom(COMPONENT, createServiceInstance(instance));
+      resources.addCustom(ResourceGroup.NAME, createServiceInstance(instance));
     }
   }
 
