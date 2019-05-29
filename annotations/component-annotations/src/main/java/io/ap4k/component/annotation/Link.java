@@ -1,5 +1,6 @@
 package io.ap4k.component.annotation;
 
+import io.ap4k.component.model.Kind;
 import io.ap4k.kubernetes.annotation.Env;
 import io.ap4k.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
@@ -19,7 +20,7 @@ import java.lang.annotation.Target;
 public @interface Link {
   String name() default "";;
   String targetcomponentname();
-  String kind() default "";;
+  Kind kind() default Kind.Env;
   String ref() default "";;
   Env[] envVars() default {};
 }

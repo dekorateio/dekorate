@@ -24,6 +24,7 @@ import io.ap4k.component.config.LinkConfig;
 import io.ap4k.component.configurator.ApplyProject;
 import io.ap4k.component.handler.ComponentHandler;
 import io.ap4k.component.handler.ComponentServiceCatalogHandler;
+import io.ap4k.component.handler.LinkHandler;
 import io.ap4k.config.ConfigurationSupplier;
 
 import javax.lang.model.element.Element;
@@ -31,22 +32,21 @@ import java.util.Map;
 
 public interface LinkConfigGenerator extends Generator, WithProject {
 
-  @Override
-  default void add(Map map) {
-    on(new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(propertiesMap(map, Link.class)).accept(new ApplyProject(getProject()))));
-  }
-
-  @Override
-  default void add(Element element) {
-    Link link = element.getAnnotation(Link.class);
-    on(link != null
-      ? new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(link).accept(new ApplyProject(getProject())))
-      : new ConfigurationSupplier<>(LinkConfig.newLinkConfigBuilder().accept(new ApplyProject(getProject()))));
-  }
+//  @Override
+//  default void add(Map map) {
+//    on(new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(propertiesMap(map, Link.class)).accept(new ApplyProject(getProject()))));
+//  }
+//
+//  @Override
+//  default void add(Element element) {
+//    Link link = element.getAnnotation(Link.class);
+//    on(link != null
+//      ? new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(link).accept(new ApplyProject(getProject())))
+//      : new ConfigurationSupplier<>(LinkConfig.newLinkConfigBuilder().accept(new ApplyProject(getProject()))));
+//  }
 
   default void on(ConfigurationSupplier<LinkConfig> config) {
     session.configurators().add(config);
-    session.handlers().add(new ComponentHandler(session.resources()));
-    session.handlers().add(new ComponentServiceCatalogHandler(session.resources()));
+    session.handlers().add(new LinkHandler(session.resources()));
   }
 }
