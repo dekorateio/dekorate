@@ -3,12 +3,15 @@ package io.ap4k.component.handler;
 import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
-import io.ap4k.component.config.EditableCompositeConfig;
 import io.ap4k.component.config.EditableLinkConfig;
 import io.ap4k.component.config.LinkConfig;
-import io.ap4k.component.model.*;
+import io.ap4k.component.decorator.AddEnvToLinkDecorator;
+import io.ap4k.component.model.Component;
+import io.ap4k.component.model.Link;
+import io.ap4k.component.model.LinkBuilder;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.config.Env;
 import io.ap4k.utils.Strings;
 
 public class LinkHandler implements Handler<LinkConfig> {
@@ -34,7 +37,9 @@ public class LinkHandler implements Handler<LinkConfig> {
       resources.setName(config.getName());
     }
     resources.addCustom(LINK, createLink(config));
-//    addVisitors(config);
+    for (Env env : config.getEnvVars()) {
+      resources.decorateCustom(LINK, new AddEnvToLinkDecorator(env));
+    }
   }
 
   @Override
