@@ -29,7 +29,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-@Description("Generate component custom resources.")
+@Description("Generate link custom resources.")
 @SupportedAnnotationTypes("io.ap4k.component.annotation.Link")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class LinkAnnotationProcessor extends AbstractAnnotationProcessor implements LinkConfigGenerator {

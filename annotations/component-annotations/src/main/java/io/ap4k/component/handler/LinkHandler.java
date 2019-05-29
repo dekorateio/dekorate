@@ -4,6 +4,7 @@ import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
+import io.ap4k.component.config.EditableLinkConfig;
 import io.ap4k.component.config.LinkConfig;
 import io.ap4k.component.model.*;
 import io.ap4k.kubernetes.config.ConfigKey;
@@ -24,7 +25,7 @@ public class LinkHandler implements Handler<LinkConfig> {
 
   @Override
   public int order() {
-    return 1150;
+    return 1100;
   }
 
   @Override
@@ -38,8 +39,8 @@ public class LinkHandler implements Handler<LinkConfig> {
 
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {
-    return type.equals(CompositeConfig.class) ||
-      type.equals(EditableCompositeConfig.class);
+    return type.equals(LinkConfig.class) ||
+      type.equals(EditableLinkConfig.class);
   }
 
   private void addVisitors(LinkConfig config) {
