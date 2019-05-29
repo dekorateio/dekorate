@@ -28,8 +28,6 @@ import io.ap4k.kubernetes.config.Env;
 import io.ap4k.utils.Strings;
 
 public class ComponentHandler implements Handler<CompositeConfig> {
-
-  private static final String COMPONENT = "component";
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
 
@@ -49,7 +47,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
     if (Strings.isNullOrEmpty(resources.getName())) {
       resources.setName(config.getName());
     }
-    resources.addCustom(COMPONENT, createComponent(config));
+    resources.addCustom(ResourceGroup.NAME, createComponent(config));
   }
 
   @Override
