@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
+import io.ap4k.utils.Generators;
+
 /**
  * Generates resources, based on the detected annotations.
  */
@@ -48,8 +50,8 @@ public interface Generator extends SessionHandler {
       }
     } finally {
       Thread.currentThread().setContextClassLoader(tccl);
-      return generators;
     }
+    return generators;
   }
 
   /**
@@ -66,6 +68,7 @@ public interface Generator extends SessionHandler {
         Map<String, Object> generatorMap = new HashMap<>();
         Class annotationClass = ANNOTATIONS.get(key);
         String newKey = annotationClass.getName();
+        Generators.populateArrays(annotationClass, (Map<String, Object>)value);
         generatorMap.put(newKey, value);
         generator.add(generatorMap);
       }
