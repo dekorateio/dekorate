@@ -19,9 +19,10 @@
 package io.ap4k.examples.component;
 
 import io.ap4k.component.annotation.Link;
+import io.ap4k.component.annotation.CompositeApplication;
 import io.ap4k.kubernetes.annotation.Env;
 
-
+@CompositeApplication(name = "hello-world", exposeService = true, envVars = @Env(name = "key1", value = "val1"))
 @Link(name = "hello-world", targetcomponentname = "target", envVars = @Env(name = "key1", value = "val1"))
 public class Main {
 

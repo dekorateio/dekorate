@@ -20,7 +20,7 @@ public class LinkHandler implements Handler<LinkConfig> {
 
   @Override
   public int order() {
-    return 1100;
+    return 1200;
   }
 
   @Override
