@@ -36,8 +36,10 @@ public class Issue71Test {
     KubernetesList list = Serialization.unmarshal(Issue71Test.class.getClassLoader().getResourceAsStream("META-INF/ap4k/component.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
-    assertEquals(1, items.size());
-    Link link = (Link) items.get(0);
+    assertEquals(2, items.size());
+    Component component = (Component) items.get(0);
+    assertEquals("Component", component.getKind());
+    Link link = (Link) items.get(1);
     assertEquals("Link", link.getKind());
     assertEquals(1, link.getSpec().getEnvs().length);
   }
