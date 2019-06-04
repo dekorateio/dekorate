@@ -25,9 +25,15 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import io.ap4k.Ap4kException;
+import io.ap4k.deps.jackson.core.type.TypeReference;
 
 public class Maps {
 
+  /**
+   * Read a properties input stream and crate a configuration map.
+   * The configuration map follows all the required conventions in order to be usable by a Generator.
+   * @return a {@link Map} with in the Generator format.
+   */
   public static Map<String, Object> fromProperties(InputStream is) {
     Map<String, Object> result = new HashMap<>();
     Properties properties = new Properties();
@@ -39,6 +45,23 @@ public class Maps {
     for (Object key : properties.keySet()) {
       String k = String.valueOf(key);
       Object value = properties.get(key);
+      Map<String, Object> kv = asMap(k.split(Pattern.quote(".")), value);
+      merge(result, kv);
+    }
+    return result;
+  }
+  /**
+   * Read a yaml input stream and crate a configuration map.
+   * The configuration map follows all the required conventions in order to be usable by a Generator.
+   * @return a {@link Map} with in the Generator format.
+   */
+  public static Map<String, Object> fromYaml(InputStream is) {
+    Map<String, Object> result = new HashMap<>();
+    Map<String, Object> yaml = new HashMap<>();
+    yaml = Serialization.unmarshal(is, new TypeReference<Map<String, Object>>() {});
+    for (Object key : yaml.keySet()) {
+      String k = String.valueOf(key);
+      Object value = yaml.get(key);
       Map<String, Object> kv = asMap(k.split(Pattern.quote(".")), value);
       merge(result, kv);
     }

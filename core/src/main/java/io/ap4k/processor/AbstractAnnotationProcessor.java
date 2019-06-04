@@ -21,20 +21,25 @@ import io.ap4k.Ap4kException;
 import io.ap4k.SessionWriter;
 import io.ap4k.Session;
 import io.ap4k.WithProject;
+import io.ap4k.deps.jackson.core.type.TypeReference;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesResource;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.project.Project;
 import io.ap4k.project.AptProjectFactory;
+import io.ap4k.utils.Maps;
 import io.ap4k.utils.Serialization;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.utils.Urls;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -42,6 +47,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -85,6 +91,31 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, path + " JSON not found.");
     }
     return null;
+  }
+
+  /**
+   * @return the application properties
+   */
+  protected Map<String, Object> readApplicationConfig(String... resourceNames) {
+    Map<String, Object> result = new HashMap<>();
+    Filer filer = this.processingEnv.getFiler();
+    for (String resourceName : resourceNames) {
+      try {
+        FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, "", resourceName);
+        if (resourceName.endsWith(".properties")) {
+          return Maps.fromProperties(f.openInputStream());
+        } else if (resourceName.endsWith(".yml") || resourceName.endsWith(".yaml")) {
+          return Maps.fromYaml(f.openInputStream());
+        } else {
+          throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
+        }
+      } catch (FileNotFoundException e) {
+        continue;
+      } catch (Exception e) {
+        throw Ap4kException.launderThrowable(e);
+      } 
+    }
+    return Collections.emptyMap();
   }
 
   /**

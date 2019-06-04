@@ -18,6 +18,7 @@ package io.ap4k.utils;
 
 import io.ap4k.deps.jackson.core.JsonProcessingException;
 import io.ap4k.deps.jackson.core.type.TypeReference;
+import io.ap4k.deps.jackson.databind.DeserializationFeature;
 import io.ap4k.deps.jackson.databind.ObjectMapper;
 import io.ap4k.deps.jackson.databind.SerializationFeature;
 import io.ap4k.deps.jackson.dataformat.javaprop.JavaPropsMapper;
