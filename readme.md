@@ -1,6 +1,6 @@
 # Annotation processors for Kubernetes
 
-[![CircleCI](https://circleci.com/gh/ap4k/ap4k.svg?style=svg)](https://circleci.com/gh/ap4k/ap4k)
+[![CircleCI](https://circleci.com/gh/ap4k/ap4k.svg?style=svg)](https://circleci.com/gh/ap4k/ap4k) [![Maven Central](https://img.shields.io/maven-central/v/io.ap4k/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.ap4k%22%20AND%20a:%22kubernetes-annotations%22)
 
 Ap4k is a collection of Java annotations and processors for generating Kubernetes/OpenShift manifests at compile time.
 
