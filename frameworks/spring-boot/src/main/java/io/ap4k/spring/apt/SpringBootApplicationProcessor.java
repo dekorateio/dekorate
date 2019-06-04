@@ -52,24 +52,13 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
     return true;
     }
 
-    Generator.init(readApplicationProperties());
+    Generator.init(readApplicationConfig("application.properties",
+                                         "application.yaml",
+                                         "application.yml", 
+                                         "application-kubernetes.properties",
+                                         "application-kubernetes.yaml",
+                                         "application-kubernetes.yml"));
     add(SPRING_BOOT_APPLICATION);
     return false;
-  }
-
-  /**
-   * @return the application properties
-   */
-  Map<String, Object> readApplicationProperties() {
-    Map<String, Object> result = new HashMap<>();
-    Filer filer = this.processingEnv.getFiler();
-    try {
-      FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, "", "application.properties"); 
-      return Maps.fromProperties(f.openInputStream());
-    } catch (FileNotFoundException e) {
-      return Collections.emptyMap();
-    } catch (Exception e) {
-      throw Ap4kException.launderThrowable(e);
-    } 
   }
 }
