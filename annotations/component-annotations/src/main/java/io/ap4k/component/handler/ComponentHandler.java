@@ -19,6 +19,9 @@ import io.ap4k.Handler;
 import io.ap4k.Resources;
 import io.ap4k.component.config.CompositeConfig;
 import io.ap4k.component.config.EditableCompositeConfig;
+import io.ap4k.component.decorator.AddEnvToComponentDecorator;
+import io.ap4k.component.decorator.AddRuntimeTypeToComponentDecorator;
+import io.ap4k.component.decorator.AddRuntimeVersionToComponentDecorator;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
 import io.ap4k.component.model.ComponentFluent;
@@ -54,6 +57,22 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(CompositeConfig.class) ||
       type.equals(EditableCompositeConfig.class);
+  }
+
+  private void addVisitors(CompositeConfig config) {
+    String type = config.getAttribute(RUNTIME_TYPE);
+    String version = config.getAttribute(RUNTIME_VERSION);
+
+    if (type != null) {
+      resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeTypeToComponentDecorator(type));
+    }
+
+    if (version != null) {
+      resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeVersionToComponentDecorator(version));
+    }
+    for (Env env : config.getEnvVars()) {
+      resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
+    }
   }
 
   /**
