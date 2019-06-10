@@ -42,5 +42,7 @@ public class Issue71Test {
     Link link = (Link) items.get(1);
     assertEquals("Link", link.getKind());
     assertEquals(1, link.getSpec().getEnvs().length);
+    assertEquals("target", link.getSpec().getComponentName());
+
   }
 }
