@@ -14,6 +14,11 @@ import io.ap4k.utils.Strings;
 public class LinkHandler implements Handler<LinkConfig> {
   private final Resources resources;
 
+  // only used for testing
+  LinkHandler() {
+    this(new Resources());
+  }
+
   public LinkHandler(Resources resources) {
     this.resources = resources;
   }
@@ -49,6 +54,7 @@ public class LinkHandler implements Handler<LinkConfig> {
       .withName(config.getName())
       .endMetadata()
       .withNewSpec()
+      .withComponentName(config.getTargetcomponentname())
       .withKind(config.getKind())
       .withNewRef(config.getRef());
     for (Env env : config.getEnvVars()) {
