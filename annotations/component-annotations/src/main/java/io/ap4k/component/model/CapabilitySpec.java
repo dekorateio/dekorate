@@ -31,7 +31,6 @@ import io.sundr.transform.annotations.VelocityTransformations;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-  "name",
   "class",
   "plan",
   "externalId",
@@ -49,8 +48,6 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @CustomResource(group = "devexp.runtime.redhat.com", version = "v1alpha2")
 public class CapabilitySpec {
 
-  private String name;
-
   @JsonProperty("class")
   private String serviceClass;
   @JsonProperty("plan")
@@ -63,22 +60,13 @@ public class CapabilitySpec {
   public CapabilitySpec() {
   }
 
-  public CapabilitySpec(String name, String serviceClass, String servicePlan, String externalId, String secretName, Parameter[] parameters, String parametersJson) {
-    this.name = name;
+  public CapabilitySpec(String serviceClass, String servicePlan, String externalId, String secretName, Parameter[] parameters, String parametersJson) {
     this.serviceClass = serviceClass;
     this.servicePlan = servicePlan;
     this.externalId = externalId;
     this.secretName = secretName;
     this.parameters = parameters;
     this.parametersJson = parametersJson;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public String getServiceClass() {
