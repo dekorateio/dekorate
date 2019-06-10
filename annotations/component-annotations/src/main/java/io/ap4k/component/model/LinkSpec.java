@@ -29,7 +29,6 @@ import io.sundr.transform.annotations.VelocityTransformations;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-  "name",
   "componentName",
   "kind",
   "ref",
@@ -44,7 +43,6 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @CustomResource(group = "devexp.runtime.redhat.com", version = "v1alpha2")
 public class LinkSpec {
 
-  private String name;
   private String componentName;
   private Kind kind;
   private String ref;
@@ -53,20 +51,11 @@ public class LinkSpec {
   public LinkSpec() {
   }
 
-  public LinkSpec(String name, String componentName, Kind kind, String ref, Env[] envs) {
-    this.name = name;
+  public LinkSpec(String componentName, Kind kind, String ref, Env[] envs) {
     this.componentName = componentName;
     this.kind = kind;
     this.ref = ref;
     this.envs = envs;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public String getComponentName() {
