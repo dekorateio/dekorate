@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Link {
   String name() default "";;
-  String targetcomponentname();
+  String componentname();
   Kind kind() default Kind.Env;
   String ref() default "";;
   Env[] envVars() default {};
