@@ -1,21 +1,23 @@
 /**
  * Copyright 2018 The original authors.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
-**/
+ **/
 
 package io.ap4k.utils;
+
+import io.ap4k.Ap4kException;
+import io.ap4k.deps.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,14 +26,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import io.ap4k.Ap4kException;
-import io.ap4k.deps.jackson.core.type.TypeReference;
-
 public class Maps {
+  private static final String DEKORATE_PREFIX = "dekorate";
+  private static final String MULTIPART_SEPARATOR_PATTERN = Pattern.quote(".");
+
 
   /**
    * Read a properties input stream and crate a configuration map.
    * The configuration map follows all the required conventions in order to be usable by a Generator.
+   *
    * @return a {@link Map} with in the Generator format.
    */
   public static Map<String, Object> fromProperties(InputStream is) {
@@ -42,28 +45,46 @@ public class Maps {
     } catch (IOException e) {
       throw Ap4kException.launderThrowable(e);
     }
+
     for (Object key : properties.keySet()) {
       String k = String.valueOf(key);
-      Object value = properties.get(key);
-      Map<String, Object> kv = asMap(k.split(Pattern.quote(".")), value);
-      merge(result, kv);
+      // only process entries with the dekorate prefix
+      if (k.startsWith(DEKORATE_PREFIX)) {
+        Object value = properties.get(key);
+        // drop the prefix and then proceed
+        final String[] split = k.split(MULTIPART_SEPARATOR_PATTERN);
+        if (split.length == 1) {
+          throw new IllegalArgumentException("Invalid entry '" + k + "=" + value + "'. Must provide generator key");
+        }
+        final String[] parts = new String[split.length - 1];
+        System.arraycopy(split, 1, parts, 0, split.length - 1);
+
+        Map<String, Object> kv = asMap(parts, value);
+        merge(result, kv);
+      }
     }
     return result;
   }
+
   /**
    * Read a yaml input stream and crate a configuration map.
    * The configuration map follows all the required conventions in order to be usable by a Generator.
+   *
    * @return a {@link Map} with in the Generator format.
    */
   public static Map<String, Object> fromYaml(InputStream is) {
     Map<String, Object> result = new HashMap<>();
-    Map<String, Object> yaml = new HashMap<>();
-    yaml = Serialization.unmarshal(is, new TypeReference<Map<String, Object>>() {});
-    for (Object key : yaml.keySet()) {
-      String k = String.valueOf(key);
-      Object value = yaml.get(key);
-      Map<String, Object> kv = asMap(k.split(Pattern.quote(".")), value);
-      merge(result, kv);
+    Map<Object, Object> yaml = Serialization.unmarshal(is, new TypeReference<Map<Object, Object>>() {
+    });
+    // only deal with dekorate object and move everything one level up
+    final Object dekorate = yaml.get(DEKORATE_PREFIX);
+    if (dekorate != null) {
+      Map<Object, Object> valueAsMap = (Map<Object, Object>) dekorate;
+      for (Map.Entry<Object, Object> entry : valueAsMap.entrySet()) {
+        // value should be a Map<String, Object>
+        Map<String, Object> kv = asMap(new String[]{String.valueOf(entry.getKey())}, entry.getValue());
+        merge(result, kv);
+      }
     }
     return result;
   }
@@ -93,8 +114,9 @@ public class Maps {
 
   /**
    * Merge a nested map to an existing one.
-   * @param An existing map.
-   * @param The map that will be merged into the existing.
+   *
+   * @param existing the existing map.
+   * @param map      the map that will be merged into the existing.
    */
   private static void merge(Map<String, Object> existing, Map<String, Object> map) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
