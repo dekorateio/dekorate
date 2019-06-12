@@ -1,7 +1,8 @@
-kubernetes:
-  group: annotationless
-  labels:
-    - key: foo
-      value: bar
-    - key: zoo
-      value: baz
+dekorate:
+  kubernetes:
+    group: annotationless
+    labels:
+      - key: foo
+        value: bar
+      - key: zoo
+        value: baz
