@@ -54,7 +54,7 @@ public class LinkHandler implements Handler<LinkConfig> {
       .withName(config.getName())
       .endMetadata()
       .withNewSpec()
-      .withComponentName(config.getComponentname())
+      .withComponentName(config.getComponentName())
       .withKind(config.getKind())
       .withNewRef(config.getRef());
     for (Env env : config.getEnvVars()) {
