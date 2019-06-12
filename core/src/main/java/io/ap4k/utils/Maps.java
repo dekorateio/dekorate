@@ -27,7 +27,7 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 public class Maps {
-  private static final String DEKORATE_PREFIX = "dekorate";
+  private static final String PROPERTY_PREFIX = "ap4k";
   private static final String MULTIPART_SEPARATOR_PATTERN = Pattern.quote(".");
 
 
@@ -48,8 +48,8 @@ public class Maps {
 
     for (Object key : properties.keySet()) {
       String k = String.valueOf(key);
-      // only process entries with the dekorate prefix
-      if (k.startsWith(DEKORATE_PREFIX)) {
+      // only process entries with the property prefix
+      if (k.startsWith(PROPERTY_PREFIX)) {
         Object value = properties.get(key);
         // drop the prefix and then proceed
         final String[] split = k.split(MULTIPART_SEPARATOR_PATTERN);
@@ -76,10 +76,10 @@ public class Maps {
     Map<String, Object> result = new HashMap<>();
     Map<Object, Object> yaml = Serialization.unmarshal(is, new TypeReference<Map<Object, Object>>() {
     });
-    // only deal with dekorate object and move everything one level up
-    final Object dekorate = yaml.get(DEKORATE_PREFIX);
-    if (dekorate != null) {
-      Map<Object, Object> valueAsMap = (Map<Object, Object>) dekorate;
+    // only deal with prefixed object and move everything one level up
+    final Object prefixed = yaml.get(PROPERTY_PREFIX);
+    if (prefixed != null) {
+      Map<Object, Object> valueAsMap = (Map<Object, Object>) prefixed;
       for (Map.Entry<Object, Object> entry : valueAsMap.entrySet()) {
         // value should be a Map<String, Object>
         Map<String, Object> kv = asMap(new String[]{String.valueOf(entry.getKey())}, entry.getValue());
