@@ -1,0 +1,14 @@
+dekorate:
+  kubernetes:
+    name: myapp
+    group: mygroup
+    version: 1.0
+    labels:
+      foo: bar
+  openshift:
+    name: boo
+    labels:
+      foo: bar
+kubernetes:
+  labels:
+    foo: baz
