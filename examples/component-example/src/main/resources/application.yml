@@ -1,0 +1,7 @@
+ap4k:
+  link:
+    name: "hello-world"
+    componentName: "target"
+    envVars:
+      - name: "key1"
+        value: "val1"
