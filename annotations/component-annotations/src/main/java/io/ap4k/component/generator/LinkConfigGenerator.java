@@ -21,9 +21,6 @@ import io.ap4k.WithProject;
 import io.ap4k.component.adapter.LinkConfigAdapter;
 import io.ap4k.component.annotation.Link;
 import io.ap4k.component.config.LinkConfig;
-import io.ap4k.component.configurator.ApplyProject;
-import io.ap4k.component.handler.ComponentHandler;
-import io.ap4k.component.handler.ComponentServiceCatalogHandler;
 import io.ap4k.component.handler.LinkHandler;
 import io.ap4k.config.ConfigurationSupplier;
 
@@ -31,21 +28,22 @@ import javax.lang.model.element.Element;
 import java.util.Map;
 
 public interface LinkConfigGenerator extends Generator, WithProject {
+  String GENERATOR_KEY = "link";
 
   @Override
   default void add(Map map) {
-    on(new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(propertiesMap(map, Link.class))));
+    add(new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(propertiesMap(map, Link.class))));
   }
 
   @Override
   default void add(Element element) {
     Link link = element.getAnnotation(Link.class);
-    on(link != null
+    add(link != null
       ? new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(link))
       : new ConfigurationSupplier<>(LinkConfig.newLinkConfigBuilder()));
   }
 
-  default void on(ConfigurationSupplier<LinkConfig> config) {
+  default void add(ConfigurationSupplier<LinkConfig> config) {
     session.configurators().add(config);
     session.handlers().add(new LinkHandler(session.resources()));
   }
