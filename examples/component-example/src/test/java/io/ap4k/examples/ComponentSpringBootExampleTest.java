@@ -41,6 +41,7 @@ public class ComponentSpringBootExampleTest {
     Link link = (Link) items.get(1);
     Assertions.assertEquals("Link", link.getKind());
     Assertions.assertEquals(1, link.getSpec().getEnvs().length);
+    Assertions.assertEquals("hello-world", link.getMetadata().getName());
     Assertions.assertEquals("target", link.getSpec().getComponentName());
   }
 }

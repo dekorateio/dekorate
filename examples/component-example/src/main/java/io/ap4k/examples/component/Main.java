@@ -19,11 +19,13 @@
 package io.ap4k.examples.component;
 
 import io.ap4k.component.annotation.CompositeApplication;
+import io.ap4k.component.annotation.Link;
 import io.ap4k.kubernetes.annotation.Env;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @CompositeApplication(name = "hello-spring-boot", exposeService = true, envs = @Env(name = "key1", value = "val1"))
+@Link(name = "should-be-overridden-by-properties", componentName = "should-be-overridden-by-properties")
 @SpringBootApplication
 public class Main {
 
