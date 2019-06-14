@@ -70,7 +70,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
     if (version != null) {
       resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeVersionToComponentDecorator(version));
     }
-    for (Env env : config.getEnvVars()) {
+    for (Env env : config.getEnvs()) {
       resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
     }
   }
@@ -100,7 +100,7 @@ public class ComponentHandler implements Handler<CompositeConfig> {
       specBuilder.withVersion(resources.getVersion());
     }
 
-    for (Env env : config.getEnvVars()) {
+    for (Env env : config.getEnvs()) {
       specBuilder.addNewEnv(env.getName(), env.getValue());
     }
 

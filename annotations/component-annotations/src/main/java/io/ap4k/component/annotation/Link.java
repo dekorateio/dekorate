@@ -22,5 +22,6 @@ public @interface Link {
   String componentName();
   Kind kind() default Kind.Env;
   String ref() default "";;
-  Env[] envVars() default {};
+
+  Env[] envs() default {};
 }
