@@ -51,6 +51,7 @@ import io.ap4k.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.ap4k.kubernetes.decorator.ApplyReplicasDecorator;
 import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
 import io.ap4k.utils.Labels;
+import io.ap4k.utils.Probes;
 import io.ap4k.utils.Strings;
 
 import java.util.Arrays;
@@ -156,7 +157,11 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
       resources.decorate(group, new ApplyArgsDecorator(config.getName(), config.getName(), config.getArguments()));
     }
 
-    resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getName(), config.getLivenessProbe()));
-    resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
+    if (Probes.isConfigured(config.getLivenessProbe())) {
+      resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getName(), config.getLivenessProbe()));
+    }
+    if (Probes.isConfigured(config.getReadinessProbe())) {
+      resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
+    }
   }
 }

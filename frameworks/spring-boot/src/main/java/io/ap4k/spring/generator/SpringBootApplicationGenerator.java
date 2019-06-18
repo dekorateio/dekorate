@@ -21,6 +21,9 @@ import io.ap4k.WithSession;
 import io.ap4k.Generator;
 import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.Configuration;
+import io.ap4k.kubernetes.config.ProbeBuilder;
+import io.ap4k.kubernetes.decorator.AddLivenessProbeDecorator;
+import io.ap4k.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.ap4k.kubernetes.decorator.AddRoleBindingDecorator;
 import io.ap4k.kubernetes.decorator.AddServiceAccountDecorator;
 import io.ap4k.kubernetes.decorator.ApplyServiceAccountDecorator;
@@ -76,6 +79,26 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
        }
      });
 
+    if (isActuatorAvailable()) {
+      session.handlers().add(new Handler() {
+          @Override
+           public int order() {
+            return 305; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
+           }
+
+          @Override
+          public void handle(Configuration config) {
+            session.resources().decorate(new AddLivenessProbeDecorator(session.resources().getName(), session.resources().getName(), new ProbeBuilder().withHttpActionPath("/actuator/health").build()));
+            session.resources().decorate(new AddReadinessProbeDecorator(session.resources().getName(), session.resources().getName(), new ProbeBuilder().withHttpActionPath("/actuator/health").build()));
+          }
+
+          @Override
+          public boolean canHandle(Class config) {
+            return Configuration.class.isAssignableFrom(config);
+          }
+        });
+    }
+
     if (isSpringCloudKubernetesAvailable()) {
       session.handlers().add(new Handler() {
           @Override
@@ -96,6 +119,15 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
           }
         });
     }
+  }
+
+  default boolean isActuatorAvailable() {
+     try {
+       Class c = Class.forName("org.springframework.boot.actuate.health.HealhtIndicator");
+       return c != null;
+     } catch (ClassNotFoundException | NoClassDefFoundError e) {
+       return false;
+     }
   }
 
    default boolean isSpringCloudKubernetesAvailable() {
