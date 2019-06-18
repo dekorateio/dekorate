@@ -117,55 +117,6 @@ public class Maps {
   }
 
   /**
-   * Convert a multipart-key value pair to a Map.
-   */
-  private static Map<String, Object> asMapWIP(String[] keys, Object value) {
-    if (keys == null || keys.length == 0) {
-      return null;
-    }
-
-    Map<String, Object> result = new HashMap<>();
-    if (keys.length == 1) {
-      result.put(keys[0], value);
-      return result;
-    }
-
-    String key = keys[0];
-    String[] remaining = new String[keys.length - 1];
-    System.arraycopy(keys, 1, remaining, 0, remaining.length);
-    Map<String, Object> nested = asMap(remaining, value);
-    if (key.matches(ARRAY_PATTERN)) {
-      String strippedKey = key.substring(0, key.indexOf("["));
-      int index = Integer.parseInt(key.substring(key.indexOf("[") + 1, key.indexOf("]")));
-      Object obj = result.get(strippedKey);
-      if (obj == null) {
-        obj = new ArrayList<>();
-      }
-      
-      if (obj instanceof List) {
-        List list = (List) obj;
-        if (list.size() <= index) {
-          list.add(nested);
-        } else {
-          Map<String, Object> existing = (Map<String, Object>) list.get(index);
-          if (existing != null) {
-            merge(existing, nested);
-          } else {
-            list.set(index, nested);
-          }
-        }
-        result.put(strippedKey, obj);
-      } else {
-        throw new IllegalStateException("Expected value of key:" + strippedKey + " to be a List");
-      }
-    } else {
-      result.put(key, nested);
-    }
-    return result;
-  }
-
-
-  /**
    * Merge a nested map to an existing one.
    *
    * @param existing the existing map.

@@ -4,7 +4,7 @@
 
 Ap4k is a collection of Java annotations and processors for generating Kubernetes/OpenShift manifests at compile time.
 
-It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) on your main class.
+It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) on your main class (or any other class).
 
 Stop wasting time editing xml, json and yml and customize the kubernetes manifests using annotations.
 
@@ -29,8 +29,6 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
     - [jvm options](#jvm-options)
     - [init containers](#init-containers)
     - [sidecars](#sidecars)
-- Annotationless mode for known framework
-  - Spring Boot
   - OpenShift 
     - [image streams](#integrating-with-s2i)
     - build configurations
@@ -47,6 +45,8 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
     - Spring Boot
     - Thorntail
     - Micronaut
+- [Configuration externalization for known frameworks](#configuration-externalization-for-known-frameworks) (annotationless)
+  - Spring Boot
 - Integration with external generators
 - [Rich set of examples](examples)
 
@@ -865,8 +865,80 @@ By adding the annotation to your test class the following things will happen:
  - [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-openshift-example)
  - [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-openshift-example)
  
- 
- 
+#### Configuration externalization for known frameworks
+It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.
+
+Ap4k is graudally adding support for configuration externalization for the supported frameworks:
+
+- spring boot
+
+For these frameworks, the use of annotations is optional, as everything may be configured via configuration files.
+Each annotation may be expressed using properties or yaml using the following steps.
+
+- Each annotation property is expressed using a key/value pair.
+- All keys start with the `ap4k.<annotation kind>.` prefix, where `annotation kind` is the annotation class name in lowercase, stripped of the `Application` suffix.
+- The remaining part of key is the annotation property name.
+- For nesting properties the key is also nested following the previous rule.
+
+Examples:
+
+The following annotation configuration:
+
+    @KubernetesApplication(labels=@Label(key="foo", value="bar"))
+    public class Main {
+    }
+    
+Can be expressed using properties:
+
+    ap4k.kubernetes.labels[0].key=foo
+    ap4k.kubernetes.labels[0].value=bar
+    
+or using yaml:
+
+    ap4k:
+      kubernetes:
+        labels:
+          - key: foo
+            value: bar
+   
+   
+In the examples above, `ap4k` is the prefix that we use to `namespace` the ap4k configuration. `kubernetes` defines the annotation kind (its `@KubernetesApplication` in lower case and stripped of the `Application` suffix).
+`labels`, `key` and value are the property names and since the `Label` is nested under `@KubernetesApplication` so are the properties.
+
+The exact same example for openshift (where `@OpenshiftApplication` is used instead) would be:
+
+   @OpenshiftApplication(labels=@Label(key="foo", value="bar"))
+    public class Main {
+    }
+    
+Can be expressed using properties:
+
+    ap4k.openshift.labels[0].key=foo
+    ap4k.openshift.labels[0].value=bar
+    
+or using yaml:
+
+    ap4k:
+      openshift:
+        labels:
+          - key: foo
+            value: bar
+   
+##### Spring Boot
+
+For spring boot, ap4k will look for configuration under:
+
+- application.properties
+- application.yml
+- application.yaml
+
+Also it will look for the same files under the kubernetes profile:
+
+- application-kubernetes.properties
+- application-kubernetes.yml
+- application-kubernetes.yaml
+
+
 #### External generator integration
 
 No matter how good a generator/scaffolding tool is, its often desirable to handcraft part of it.
