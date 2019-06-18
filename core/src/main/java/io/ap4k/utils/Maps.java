@@ -21,7 +21,10 @@ import io.ap4k.deps.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -29,7 +32,7 @@ import java.util.regex.Pattern;
 public class Maps {
   private static final String PROPERTY_PREFIX = "ap4k";
   private static final String MULTIPART_SEPARATOR_PATTERN = Pattern.quote(".");
-
+  private static final String ARRAY_PATTERN = "[a-zA-Z0-9_]+\\[\\d+\\]";
 
   /**
    * Read a properties input stream and crate a configuration map.
@@ -63,6 +66,8 @@ public class Maps {
         merge(result, kv);
       }
     }
+    // Second pass unroll arrays
+    unrollArrays(result);
     return result;
   }
 
@@ -106,8 +111,56 @@ public class Maps {
     String key = keys[0];
     String[] remaining = new String[keys.length - 1];
     System.arraycopy(keys, 1, remaining, 0, remaining.length);
-    Object nested = asMap(remaining, value);
+    Map<String, Object> nested = asMap(remaining, value);
     result.put(key, nested);
+    return result;
+  }
+
+  /**
+   * Convert a multipart-key value pair to a Map.
+   */
+  private static Map<String, Object> asMapWIP(String[] keys, Object value) {
+    if (keys == null || keys.length == 0) {
+      return null;
+    }
+
+    Map<String, Object> result = new HashMap<>();
+    if (keys.length == 1) {
+      result.put(keys[0], value);
+      return result;
+    }
+
+    String key = keys[0];
+    String[] remaining = new String[keys.length - 1];
+    System.arraycopy(keys, 1, remaining, 0, remaining.length);
+    Map<String, Object> nested = asMap(remaining, value);
+    if (key.matches(ARRAY_PATTERN)) {
+      String strippedKey = key.substring(0, key.indexOf("["));
+      int index = Integer.parseInt(key.substring(key.indexOf("[") + 1, key.indexOf("]")));
+      Object obj = result.get(strippedKey);
+      if (obj == null) {
+        obj = new ArrayList<>();
+      }
+      
+      if (obj instanceof List) {
+        List list = (List) obj;
+        if (list.size() <= index) {
+          list.add(nested);
+        } else {
+          Map<String, Object> existing = (Map<String, Object>) list.get(index);
+          if (existing != null) {
+            merge(existing, nested);
+          } else {
+            list.set(index, nested);
+          }
+        }
+        result.put(strippedKey, obj);
+      } else {
+        throw new IllegalStateException("Expected value of key:" + strippedKey + " to be a List");
+      }
+    } else {
+      result.put(key, nested);
+    }
     return result;
   }
 
@@ -130,6 +183,32 @@ public class Maps {
         merge((Map<String, Object>) existingValue, (Map<String, Object>) value);
       } else {
         existing.put(key, value);
+      }
+    }
+  }
+
+  private static void unrollArrays(Map<String, Object> result) {
+    Map<String, Object> copy = new HashMap<>(result);
+    for (Map.Entry<String, Object> entry : copy.entrySet()) {
+      String key = entry.getKey();
+      Object value = entry.getValue();
+      if (value instanceof Map) {
+        unrollArrays((Map<String, Object>) value);
+      }
+      if (key.matches(ARRAY_PATTERN)) {
+        String strippedKey = key.substring(0, key.indexOf("["));
+        List<Object> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        for (int i=0;result.containsKey(strippedKey+"["+i+"]");i++) {
+          String currentKey = strippedKey + "[" + i + "]";
+          Object obj = result.get(currentKey);
+          list.add(obj);
+          result.remove(currentKey);
+        }
+
+        if (!list.isEmpty()) {
+          result.put(strippedKey , list);
+        }
       }
     }
   }
