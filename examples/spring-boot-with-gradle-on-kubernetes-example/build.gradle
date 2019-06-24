@@ -35,6 +35,7 @@ junitPlatform {
 
 dependencies {
   implementation('org.springframework.boot:spring-boot-starter-web')
+  implementation('org.springframework.boot:spring-boot-starter-actuator')
 
   compile("io.ap4k:kubernetes-spring-starter:${ap4kVersion}")
   annotationProcessor("io.ap4k:kubernetes-annotations:${ap4kVersion}")
