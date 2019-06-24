@@ -123,7 +123,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
   default boolean isActuatorAvailable() {
      try {
-       Class c = Class.forName("org.springframework.boot.actuate.health.HealhtIndicator");
+       Class c = Class.forName("org.springframework.boot.actuate.health.HealthIndicator");
        return c != null;
      } catch (ClassNotFoundException | NoClassDefFoundError e) {
        return false;
