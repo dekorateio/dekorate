@@ -62,6 +62,11 @@ limitations under the License.
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <version>${version.spring-boot}</version>
+    </dependency>
 
     <!-- Testing -->
     <dependency>
