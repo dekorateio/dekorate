@@ -18,10 +18,14 @@ package io.ap4k.example.sbonkubernetes;
 
 import io.ap4k.kubernetes.annotation.Env;
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.ap4k.kubernetes.annotation.Probe;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KubernetesApplication(envVars = @Env(name = "MESSAGE", value = "Hello world"))
+@KubernetesApplication(envVars = @Env(name = "MESSAGE", value = "Hello world"),
+livenessProbe = @Probe(httpActionPath = "/actuator/health"),
+  readinessProbe = @Probe(httpActionPath = "/actuator/health"))
 @SpringBootApplication
 public class Main {
 
