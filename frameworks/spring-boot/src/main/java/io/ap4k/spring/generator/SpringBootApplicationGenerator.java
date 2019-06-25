@@ -92,7 +92,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
           @Override
           public boolean canHandle(Class config) {
-            return Configuration.class.isAssignableFrom(config);
+            return SpringApplicationConfig.class.isAssignableFrom(config);
           }
         });
     }
