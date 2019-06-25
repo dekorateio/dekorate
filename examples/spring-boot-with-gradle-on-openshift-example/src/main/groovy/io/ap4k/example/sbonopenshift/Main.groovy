@@ -19,8 +19,11 @@ package io.ap4k.example.sbonopenshift
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import io.ap4k.openshift.annotation.OpenshiftApplication
+import io.ap4k.kubernetes.annotation.Probe;
 
-@OpenshiftApplication
+@OpenshiftApplication(
+  livenessProbe = @Probe(httpActionPath = "/actuator/health"),
+  readinessProbe = @Probe(httpActionPath = "/actuator/health"))
 @SpringBootApplication
 class Main {
 

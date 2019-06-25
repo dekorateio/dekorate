@@ -37,7 +37,21 @@
     <sourceDirectory>src/main/groovy</sourceDirectory>
     <testSourceDirectory>src/test/groovy</testSourceDirectory>
     <plugins>
-
+      <!-- Skip compilation from java -->
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.fortasoft</groupId>
         <artifactId>gradle-maven-plugin</artifactId>
@@ -61,6 +75,7 @@
             </goals>
             <configuration>
               <tasks>
+                <task>clean</task>
                 <task>build</task>
               </tasks>
             </configuration>
