@@ -13,13 +13,19 @@ import io.ap4k.deps.kubernetes.api.model.rbac.KubernetesRoleBinding;
 import io.ap4k.deps.kubernetes.api.model.ServiceAccount;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 public class DemoApplicationTests {
 
   @Test
   public void shouldContainerServiceAccount() {
     KubernetesList list = Serialization.unmarshal(getClass().getClassLoader().getResourceAsStream("META-INF/ap4k/kubernetes.yml"));
-    Assert.assertNotNull(list);
+    assertNotNull(list);
     ServiceAccount serviceAccount = findFirst(list, ServiceAccount.class).orElseThrow(IllegalStateException::new);
+    assertNotNull(serviceAccount);
+    assertEquals(1, list.getItems().stream()
+      .filter(i -> ServiceAccount.class.isInstance(i)).count());
     //Desrializing rbac resources is broken at the moment: https://github.com/fabric8io/kubernetes-client/issues/1531
     //KubernetesRoleBinding roleBinding = findFirst(list, KubernetesRoleBinding.class).orElseThrow(IllegalStateException::new);
   }
