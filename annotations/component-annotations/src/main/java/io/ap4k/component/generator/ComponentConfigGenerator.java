@@ -17,9 +17,9 @@ package io.ap4k.component.generator;
 
 import io.ap4k.Generator;
 import io.ap4k.WithProject;
-import io.ap4k.component.adapter.CompositeConfigAdapter;
-import io.ap4k.component.annotation.CompositeApplication;
-import io.ap4k.component.config.CompositeConfig;
+import io.ap4k.component.adapter.ComponentConfigAdapter;
+import io.ap4k.component.annotation.ComponentApplication;
+import io.ap4k.component.config.ComponentConfig;
 import io.ap4k.component.configurator.ApplyProject;
 import io.ap4k.component.handler.ComponentHandler;
 import io.ap4k.component.handler.ComponentServiceCatalogHandler;
@@ -28,26 +28,27 @@ import io.ap4k.config.ConfigurationSupplier;
 import javax.lang.model.element.Element;
 import java.util.Map;
 
-public interface CompositeConfigGenerator extends Generator, WithProject {
+public interface ComponentConfigGenerator extends Generator, WithProject {
+
   String GENERATOR_KEY = "composite";
-  
+
   @Override
   default void add(Map map) {
     add(new ConfigurationSupplier<>(
-      CompositeConfigAdapter
-        .newBuilder(propertiesMap(map, CompositeApplication.class))
+      ComponentConfigAdapter
+        .newBuilder(propertiesMap(map, ComponentApplication.class))
         .accept(new ApplyProject(getProject()))));
   }
 
   @Override
   default void add(Element element) {
-    CompositeApplication composite = element.getAnnotation(CompositeApplication.class);
+    ComponentApplication composite = element.getAnnotation(ComponentApplication.class);
     add(composite != null
-       ? new ConfigurationSupplier<>(CompositeConfigAdapter.newBuilder(composite).accept(new ApplyProject(getProject())))
-      : new ConfigurationSupplier<>(CompositeConfig.newCompositeConfigBuilder().accept(new ApplyProject(getProject()))));
+       ? new ConfigurationSupplier<>(ComponentConfigAdapter.newBuilder(composite).accept(new ApplyProject(getProject())))
+      : new ConfigurationSupplier<>(ComponentConfig.newComponentConfigBuilder().accept(new ApplyProject(getProject()))));
   }
 
-  default void add(ConfigurationSupplier<CompositeConfig> config) {
+  default void add(ConfigurationSupplier<ComponentConfig> config) {
     session.configurators().add(config);
     session.handlers().add(new ComponentHandler(session.resources()));
     session.handlers().add(new ComponentServiceCatalogHandler(session.resources()));

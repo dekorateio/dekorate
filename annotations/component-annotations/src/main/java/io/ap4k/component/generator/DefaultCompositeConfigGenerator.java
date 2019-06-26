@@ -16,7 +16,7 @@
 package io.ap4k.component.generator;
 
 import io.ap4k.Generator;
-import io.ap4k.component.annotation.CompositeApplication;
+import io.ap4k.component.annotation.ComponentApplication;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,14 +24,14 @@ import java.util.List;
 /**
  * @author <a href="claprun@redhat.com">Christophe Laprun</a>
  */
-public class DefaultCompositeConfigGenerator implements CompositeConfigGenerator {
+public class DefaultCompositeConfigGenerator implements ComponentConfigGenerator {
   public DefaultCompositeConfigGenerator() {
-    Generator.registerAnnotationClass(GENERATOR_KEY, CompositeApplication.class);
+    Generator.registerAnnotationClass(GENERATOR_KEY, ComponentApplication.class);
     Generator.registerGenerator(GENERATOR_KEY, this);
   }
 
   @Override
   public List<Class> getSupportedAnnotations() {
-    return Collections.singletonList(CompositeApplication.class);
+    return Collections.singletonList(ComponentApplication.class);
   }
 }

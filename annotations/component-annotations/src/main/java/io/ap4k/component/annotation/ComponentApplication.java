@@ -29,11 +29,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Buildable(builderPackage = "io.ap4k.deps.kubernetes.api.builder")
-@Pojo(name = "CompositeConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false,
+@Pojo(name = "ComponentConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false,
        adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface CompositeApplication {
+public @interface ComponentApplication {
 
   String name() default "";
 

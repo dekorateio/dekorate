@@ -15,22 +15,22 @@
  */
 package io.ap4k.component.apt;
 
-import io.ap4k.component.generator.CompositeConfigGenerator;
-import io.ap4k.processor.AbstractAnnotationProcessor;
+import io.ap4k.component.generator.ComponentConfigGenerator;
 import io.ap4k.doc.Description;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
+import io.ap4k.processor.AbstractAnnotationProcessor;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 @Description("Generate component custom resources.")
-@SupportedAnnotationTypes("io.ap4k.component.annotation.CompositeApplication")
+@SupportedAnnotationTypes("io.ap4k.component.annotation.ComponentApplication")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class CompositeAnnotationProcessor extends AbstractAnnotationProcessor implements CompositeConfigGenerator {
+public class ComponentAnnotationProcessor extends AbstractAnnotationProcessor implements ComponentConfigGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {

@@ -17,9 +17,9 @@
 package io.ap4k.examples.component;
 
 import io.ap4k.kubernetes.annotation.Env;
-import io.ap4k.component.annotation.CompositeApplication;
+import io.ap4k.component.annotation.ComponentApplication;
 
-@CompositeApplication(name = "hello-world", exposeService = true, envs = @Env(name = "key1", value = "val1"))
+@ComponentApplication(name = "hello-world", exposeService = true, envs = @Env(name = "key1", value = "val1"))
 public class Main {
 
   public static void main(String[] args) {

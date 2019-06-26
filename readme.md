@@ -576,7 +576,7 @@ See the following [project](https://github.com/snowdrop/component-operator/blob/
 To play with a Components CRD and its [operator](https://coreos.com/operators/) running on the cloud platform and able to generate the kubernetes resources or manage them, then look to this [project](https://github.com/snowdrop/component-operator-demo).
 This module provides limited/early support of the component operator.
 
-By adding the `@CompositeApplication` annotation to the application, the generation of `target/classes/META-INF/apk/component.yml' is triggered.
+By adding the `@ComponentApplication` annotation to the application, the generation of `target/classes/META-INF/apk/component.yml' is triggered.
 
 The content of the component descriptor will be determined by the existing config provided by annotations like:
 
@@ -588,18 +588,21 @@ For example, the following code:
 
 ```java
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
-import io.ap4k.component.annotation.CompositeApplication;
+import io.ap4k.component.annotation.ComponentApplication;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @KubernetesApplication
-@ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", secretName="mysql-secret"))
-@CompositeApplication
+@ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", bindingSecret="mysql-secret"))
+@ComponentApplication
 public class Main {
 
-     public static void main(String[] args) {
-         //Your code goes here 
-     }
+  public static void main(String[] args) {
+    SpringApplication.run(Main.class, args);
+  }
+
 }
 ```
 

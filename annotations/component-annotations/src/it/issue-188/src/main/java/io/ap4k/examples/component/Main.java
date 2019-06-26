@@ -16,9 +16,9 @@
 
 package io.ap4k.examples.component;
 
-import io.ap4k.component.annotation.CompositeApplication;
+import io.ap4k.component.annotation.ComponentApplication;
 
-@CompositeApplication
+@ComponentApplication
 public class Main {
 
   public static void main(String[] args) {

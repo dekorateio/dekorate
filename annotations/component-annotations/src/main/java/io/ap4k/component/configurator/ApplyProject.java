@@ -15,12 +15,12 @@
  */
 package io.ap4k.component.configurator;
 
+import io.ap4k.component.config.ComponentConfigFluent;
+import io.ap4k.kubernetes.config.Configurator;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Strings;
-import io.ap4k.component.config.CompositeConfigFluent;
-import io.ap4k.kubernetes.config.Configurator;
 
-public class ApplyProject extends Configurator<CompositeConfigFluent<?>> {
+public class ApplyProject extends Configurator<ComponentConfigFluent<?>> {
 
   private static final String APP_NAME = "app.name";
   private final Project project;
@@ -30,7 +30,7 @@ public class ApplyProject extends Configurator<CompositeConfigFluent<?>> {
   }
 
   @Override
-  public void visit(CompositeConfigFluent<?> fluent) {
+  public void visit(ComponentConfigFluent<?> fluent) {
     fluent.withProject(project)
       .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : project.getBuildInfo().getName()));
   }
