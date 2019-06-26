@@ -1,2 +1,2 @@
-io.ap4k.component.apt.CompositeAnnotationProcessor
+io.ap4k.component.apt.ComponentAnnotationProcessor
 io.ap4k.component.apt.LinkAnnotationProcessor

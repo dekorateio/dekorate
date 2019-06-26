@@ -17,7 +17,7 @@
 package io.ap4k.examples.component.service;
 
 import io.ap4k.kubernetes.annotation.KubernetesApplication;
-import io.ap4k.component.annotation.CompositeApplication;
+import io.ap4k.component.annotation.ComponentApplication;
 import io.ap4k.servicecatalog.annotation.ServiceCatalog;
 import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
 import org.springframework.boot.SpringApplication;
@@ -25,8 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @KubernetesApplication
 @ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", bindingSecret="mysql-secret"))
-@CompositeApplication
-@SpringBootApplication
+@ComponentApplication
 public class Main {
 
   public static void main(String[] args) {
