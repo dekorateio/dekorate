@@ -1,2 +1,3 @@
 io.ap4k.spring.apt.SpringBootWebProcessor
 io.ap4k.spring.apt.SpringBootApplicationProcessor
+io.ap4k.spring.apt.SpringBootBeanProcessor
