@@ -5,3 +5,6 @@ ap4k:
     envs:
       - name: "key1"
         value: "val1"
+  component:
+    type: "docker"
+
