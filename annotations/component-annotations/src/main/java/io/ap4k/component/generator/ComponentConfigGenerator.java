@@ -30,7 +30,7 @@ import java.util.Map;
 
 public interface ComponentConfigGenerator extends Generator, WithProject {
 
-  String GENERATOR_KEY = "composite";
+  String GENERATOR_KEY = "component";
 
   @Override
   default void add(Map map) {

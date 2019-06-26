@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AnnotationLessTest {
 
   @Test
-  public void shouldContainComponent() {
+  public void shouldContainDeployment() {
     KubernetesList list = Serialization.unmarshal(AnnotationLessTest.class.getClassLoader().getResourceAsStream("META-INF/ap4k/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());

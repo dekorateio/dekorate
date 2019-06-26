@@ -906,7 +906,7 @@ or using yaml:
    
    
 In the examples above, `ap4k` is the prefix that we use to `namespace` the ap4k configuration. `kubernetes` defines the annotation kind (its `@KubernetesApplication` in lower case and stripped of the `Application` suffix).
-`labels`, `key` and value are the property names and since the `Label` is nested under `@KubernetesApplication` so are the properties.
+`labels`, `key` and `value` are the property names and since the `Label` is nested under `@KubernetesApplication` so are the properties.
 
 The exact same example for openshift (where `@OpenshiftApplication` is used instead) would be:
 
