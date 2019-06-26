@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 
 @Buildable(editableEnabled = false, builderPackage = "io.ap4k.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 public class BuildConfig {
-    private String type = "s2i";
+    private String type;
     private String uri;
     private String ref = "master";
     private String moduleDirName = ".";

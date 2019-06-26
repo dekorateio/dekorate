@@ -42,4 +42,6 @@ public @interface ComponentApplication {
   boolean exposeService() default false;
 
   Env[] envs() default {};
+
+  String type() default "s2i";
 }

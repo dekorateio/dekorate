@@ -17,6 +17,7 @@
     <module>openshift-example</module>
     <module>service-catalog-example</module>
     <module>component-example</module>
+    <module>component-example-annotationless-properties</module>
     <module>source-to-image-example</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-openshift-example</module>

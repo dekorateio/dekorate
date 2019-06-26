@@ -39,7 +39,6 @@ public class ComponentHandler implements Handler<ComponentConfig> {
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
   public static final String GITHUB_SSH = "git@github.com:";
   public static final String GITHUB_HTTPS = "https://github.com/";
-  public static final String S2I_TYPE = "s2i";
 
 
   private final Resources resources;
@@ -87,7 +86,7 @@ public class ComponentHandler implements Handler<ComponentConfig> {
       String uri = repo.getConfig().getString("remote", "origin", "url");
       uri = uri.replace(GITHUB_SSH, GITHUB_HTTPS);
       String branch = repo.getBranch();
-      resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri,branch, config.getProject().getBuildInfo().getName(), S2I_TYPE));
+      resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri,branch, config.getProject().getBuildInfo().getName(), config.getType()));
     } catch (IOException e) {
       e.printStackTrace();
     }
