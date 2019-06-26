@@ -54,6 +54,10 @@ limitations under the License.
       <groupId>io.sundr</groupId>
       <artifactId>transform-annotations</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.jgit</groupId>
+      <artifactId>org.eclipse.jgit</artifactId>
+    </dependency>
     <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>

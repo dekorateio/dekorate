@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class LinkHandlerTest {
 
   @Test
-  public void shouldAcceptServiceCatalogConfig() {
+  public void shouldAcceptLinkConfig() {
     LinkHandler generator = new LinkHandler();
     assertTrue(generator.canHandle(LinkConfig.class));
   }
