@@ -24,8 +24,8 @@ import java.util.List;
 /**
  * @author <a href="claprun@redhat.com">Christophe Laprun</a>
  */
-public class DefaultCompositeConfigGenerator implements ComponentConfigGenerator {
-  public DefaultCompositeConfigGenerator() {
+public class DefaultComponentConfigGenerator implements ComponentConfigGenerator {
+  public DefaultComponentConfigGenerator() {
     Generator.registerAnnotationClass(GENERATOR_KEY, ComponentApplication.class);
     Generator.registerGenerator(GENERATOR_KEY, this);
   }
