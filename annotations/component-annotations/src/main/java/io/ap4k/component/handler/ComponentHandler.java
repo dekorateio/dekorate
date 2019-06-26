@@ -17,24 +17,37 @@ package io.ap4k.component.handler;
 
 import io.ap4k.Handler;
 import io.ap4k.Resources;
-import io.ap4k.component.config.CompositeConfig;
-import io.ap4k.component.config.EditableCompositeConfig;
+import io.ap4k.component.config.ComponentConfig;
+import io.ap4k.component.config.EditableComponentConfig;
+import io.ap4k.component.decorator.AddBuildConfigToComponentDecorator;
 import io.ap4k.component.decorator.AddEnvToComponentDecorator;
 import io.ap4k.component.decorator.AddRuntimeTypeToComponentDecorator;
 import io.ap4k.component.decorator.AddRuntimeVersionToComponentDecorator;
 import io.ap4k.component.model.Component;
 import io.ap4k.component.model.ComponentBuilder;
-import io.ap4k.component.model.ComponentFluent;
 import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Env;
 import io.ap4k.utils.Strings;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-public class ComponentHandler implements Handler<CompositeConfig> {
+import java.io.IOException;
+
+public class ComponentHandler implements Handler<ComponentConfig> {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
+  public static final String GITHUB_SSH = "git@github.com:";
+  public static final String GITHUB_HTTPS = "https://github.com/";
+  public static final String S2I_TYPE = "s2i";
+
 
   private final Resources resources;
+
+  // only used for testing
+  public ComponentHandler() {
+    this(new Resources());
+  }
 
   public ComponentHandler(Resources resources) {
     this.resources = resources;
@@ -46,23 +59,38 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   }
 
   @Override
-  public void handle(CompositeConfig config) {
+  public void handle(ComponentConfig config) {
     if (Strings.isNullOrEmpty(resources.getName())) {
       resources.setName(config.getName());
     }
     resources.addCustom(ResourceGroup.NAME, createComponent(config));
+    addVisitors(config);
+
   }
 
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {
-    return type.equals(CompositeConfig.class) ||
-      type.equals(EditableCompositeConfig.class);
+    return type.equals(ComponentConfig.class) ||
+      type.equals(EditableComponentConfig.class);
   }
 
-  private void addVisitors(CompositeConfig config) {
+  private void addVisitors(ComponentConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
 
+    FileRepositoryBuilder builder = new FileRepositoryBuilder();
+    try {
+      Repository repo = builder
+        .readEnvironment() // scan environment GIT_* variables
+        .findGitDir() // scan up the file system tree
+        .build();
+      String uri = repo.getConfig().getString("remote", "origin", "url");
+      uri = uri.replace(GITHUB_SSH, GITHUB_HTTPS);
+      String branch = repo.getBranch();
+      resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri,branch, config.getProject().getBuildInfo().getName(), S2I_TYPE));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     if (type != null) {
       resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeTypeToComponentDecorator(type));
     }
@@ -76,37 +104,20 @@ public class ComponentHandler implements Handler<CompositeConfig> {
   }
 
   /**
-   * Create a {@link Component} from a {@link CompositeConfig}.
+   * Create a {@link Component} from a {@link ComponentConfig}.
    * @param config  The config.
    * @return The component.
    */
-  private Component createComponent(CompositeConfig config) {
-    final ComponentFluent.SpecNested<ComponentBuilder> specBuilder = new ComponentBuilder()
+  private Component createComponent(ComponentConfig config) {
+       return new ComponentBuilder()
       .withNewMetadata()
       .withName(resources.getName())
       .withLabels(resources.getLabels())
       .endMetadata()
-      .withNewSpec();
-
-    final String type = config.getAttribute(RUNTIME_TYPE);
-    if (type != null) {
-      specBuilder.withRuntime(type);
-    }
-
-    final String version = config.getAttribute(RUNTIME_VERSION);
-    if (version != null) {
-      specBuilder.withVersion(version);
-    } else {
-      specBuilder.withVersion(resources.getVersion());
-    }
-
-    for (Env env : config.getEnvs()) {
-      specBuilder.addNewEnv(env.getName(), env.getValue());
-    }
-
-    return specBuilder
+      .withNewSpec()
       .withDeploymentMode(config.getDeploymentMode())
       .withExposeService(config.isExposeService())
+      .withVersion(resources.getVersion())
       .endSpec()
       .build();
   }
