@@ -18,6 +18,7 @@ package io.ap4k.examples.component;
 
 import io.ap4k.kubernetes.annotation.Env;
 import io.ap4k.component.annotation.ComponentApplication;
+import io.ap4k.component.annotation.Link;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
