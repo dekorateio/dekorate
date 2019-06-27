@@ -26,6 +26,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @KubernetesApplication
 @ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", bindingSecret="mysql-secret"))
 @ComponentApplication
+@SpringBootApplication
 public class Main {
 
   public static void main(String[] args) {
