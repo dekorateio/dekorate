@@ -159,6 +159,22 @@
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <header>header.txt</header>
+          <properties>
+            <owner>Red Hat, Inc.</owner>
+          </properties>
+          <includes>
+            <include>**/*.java</include>
+            <include>**/*.groovy</include>
+          </includes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
