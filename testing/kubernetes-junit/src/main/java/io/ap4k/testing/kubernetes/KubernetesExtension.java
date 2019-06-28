@@ -16,7 +16,9 @@
 package io.ap4k.testing.kubernetes;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -24,20 +26,28 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import io.ap4k.deps.kubernetes.api.model.EventList;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.Pod;
+import io.ap4k.deps.kubernetes.api.model.ReplicationController;
+import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
+import io.ap4k.deps.kubernetes.api.model.apps.ReplicaSet;
 import io.ap4k.deps.kubernetes.client.KubernetesClient;
 import io.ap4k.deps.kubernetes.client.VersionInfo;
+import io.ap4k.deps.kubernetes.client.internal.readiness.Readiness;
 import io.ap4k.hook.OrderedHook;
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.hook.DockerBuildHook;
 import io.ap4k.kubernetes.hook.DockerPushHook;
+import io.ap4k.testing.WithEvents;
 import io.ap4k.testing.WithKubernetesClient;
 import io.ap4k.testing.WithPod;
 import io.ap4k.testing.WithProject;
 import io.ap4k.testing.config.KubernetesIntegrationTestConfig;
 
 public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
-                                             WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithProject, WithKubernetesConfig {
+                                             WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject, WithKubernetesConfig {
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -75,7 +85,6 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
         build.run();
       }
     }
-
     
     if (config.isDeployEnabled()) {
       list.getItems().stream()
@@ -84,7 +93,23 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
           System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
         });
 
-      client.resourceList(list).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      List<HasMetadata> waitables = list.getItems().stream().filter(i->
+                                                                    i instanceof Deployment ||
+                                                                    i instanceof Pod ||
+                                                                    i instanceof ReplicaSet ||
+                                                                    i instanceof ReplicationController).collect(Collectors.toList());
+      System.out.println("Waiting until ready...");
+      client.resourceList(waitables).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      //Display the item status
+      waitables.stream().map(r->client.resource(r).fromServer().get())
+        .forEach(i -> {
+          System.out.println(i.getKind() + ":" + i.getMetadata().getName() + " ready:" + Readiness.isReady(i));
+          if (!Readiness.isReady(i)) {
+            getEvents(context, i).getItems().stream().forEach(e -> {
+                System.out.println(e.getMessage());
+            });
+          }
+        });
     }
   }
 
@@ -113,4 +138,5 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
   public String getName() {
     return getKubernetesConfig().getName();
   } 
+
 }
