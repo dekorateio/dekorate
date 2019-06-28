@@ -40,5 +40,9 @@ class FileProjectFactoryTest {
     assertEquals("gradle", info.getName());
     assertEquals("jar", info.getPackaging());
     assertNull(info.getVersion());
+    ScmInfo scmInfo = project.getScmInfo();
+    assertNotNull(scmInfo);
+    assertEquals("https://github.com/ap4k/ap4k.git",scmInfo.getUri());
+    assertFalse("".equals(scmInfo.getBranch()));
   }
 }

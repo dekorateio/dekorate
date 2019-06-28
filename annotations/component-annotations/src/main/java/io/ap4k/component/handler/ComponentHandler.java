@@ -37,8 +37,8 @@ import java.io.IOException;
 public class ComponentHandler implements Handler<ComponentConfig> {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
-  public static final String GITHUB_SSH = "git@github.com:";
-  public static final String GITHUB_HTTPS = "https://github.com/";
+//  public static final String GITHUB_SSH = "git@github.com:";
+//  public static final String GITHUB_HTTPS = "https://github.com/";
 
 
   private final Resources resources;
@@ -77,19 +77,13 @@ public class ComponentHandler implements Handler<ComponentConfig> {
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
 
-    FileRepositoryBuilder builder = new FileRepositoryBuilder();
-    try {
-      Repository repo = builder
-        .readEnvironment() // scan environment GIT_* variables
-        .findGitDir() // scan up the file system tree
-        .build();
-      String uri = repo.getConfig().getString("remote", "origin", "url");
-      uri = uri.replace(GITHUB_SSH, GITHUB_HTTPS);
-      String branch = repo.getBranch();
-      resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri,branch, config.getProject().getBuildInfo().getName(), config.getBuildconfig().getType()));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    String uri = config.getProject().getScmInfo().getUri();
+    String branch = config.getProject().getScmInfo().getBranch();
+    String name = config.getProject().getBuildInfo().getName();
+    String buildConfigType = config.getBuildconfig().getType();
+
+    resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri, branch, name, buildConfigType));
+
     if (type != null) {
       resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeTypeToComponentDecorator(type));
     }

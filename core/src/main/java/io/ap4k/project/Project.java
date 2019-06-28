@@ -33,12 +33,21 @@ public class Project {
   private String ap4kInputDir;
   private String ap4kOutputDir;
   private BuildInfo buildInfo;
+  private ScmInfo scmInfo;
 
   public Project() {
   }
 
-  public Project(Path root, BuildInfo buildInfo) {
-    this(root, null, DEFAULT_AP4K_OUTPUT_DIR, buildInfo);
+  public Project(Path root, BuildInfo buildInfo, ScmInfo scmInfo) {
+    this(root, null, DEFAULT_AP4K_OUTPUT_DIR, buildInfo, scmInfo);
+  }
+
+  public Project(Path root, String ap4kInputDir, String ap4kOutputDir, BuildInfo buildInfo, ScmInfo scmInfo) {
+    this.root = root;
+    this.ap4kInputDir = ap4kInputDir;
+    this.ap4kOutputDir = ap4kOutputDir;
+    this.buildInfo = buildInfo;
+    this.scmInfo = scmInfo;
   }
 
   public Project(Path root, String ap4kInputDir, String ap4kOutputDir, BuildInfo buildInfo) {
@@ -93,5 +102,13 @@ public class Project {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public ScmInfo getScmInfo() {
+    return scmInfo;
+  }
+
+  public void setScmInfo(ScmInfo scmInfo) {
+    this.scmInfo = scmInfo;
   }
 }
