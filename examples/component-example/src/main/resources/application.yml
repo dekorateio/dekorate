@@ -6,5 +6,6 @@ ap4k:
       - name: "key1"
         value: "val1"
   component:
-    type: "docker"
+    buildconfig:
+      type: "docker"
 

@@ -42,9 +42,9 @@ public interface ComponentConfigGenerator extends Generator, WithProject {
 
   @Override
   default void add(Element element) {
-    ComponentApplication composite = element.getAnnotation(ComponentApplication.class);
-    add(composite != null
-       ? new ConfigurationSupplier<>(ComponentConfigAdapter.newBuilder(composite).accept(new ApplyProject(getProject())))
+    ComponentApplication component = element.getAnnotation(ComponentApplication.class);
+    add(component != null
+       ? new ConfigurationSupplier<>(ComponentConfigAdapter.newBuilder(component).accept(new ApplyProject(getProject())))
       : new ConfigurationSupplier<>(ComponentConfig.newComponentConfigBuilder().accept(new ApplyProject(getProject()))));
   }
 

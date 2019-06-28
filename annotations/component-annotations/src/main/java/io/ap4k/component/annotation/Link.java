@@ -36,7 +36,7 @@ public @interface Link {
   String name() default "";;
   String componentName();
   Kind kind() default Kind.Env;
-  String ref() default "";;
+  String ref() default "";
 
   Env[] envs() default {};
 }

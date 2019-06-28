@@ -86,7 +86,7 @@ public class ComponentHandler implements Handler<ComponentConfig> {
       String uri = repo.getConfig().getString("remote", "origin", "url");
       uri = uri.replace(GITHUB_SSH, GITHUB_HTTPS);
       String branch = repo.getBranch();
-      resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri,branch, config.getProject().getBuildInfo().getName(), config.getType()));
+      resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri,branch, config.getProject().getBuildInfo().getName(), config.getBuildconfig().getType()));
     } catch (IOException e) {
       e.printStackTrace();
     }
