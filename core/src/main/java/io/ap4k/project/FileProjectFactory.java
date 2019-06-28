@@ -15,25 +15,26 @@
  */
 package io.ap4k.project;
 
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.ServiceLoader;
-import java.util.UUID;
 import java.util.stream.StreamSupport;
 
 public class FileProjectFactory {
 
   private static Project PROJECT = null;
+  public static final String GITHUB_SSH = "git@github.com:";
+  public static final String GITHUB_HTTPS = "https://github.com/";
 
   /**
-   * Creates a {@link Project} form the specified {@link ProcessingEnvironment}.
+   * Creates a {@link Project} from the specified {@link ProcessingEnvironment}.
    * @param file          A file within the project.
    * @return              The project.
    */
@@ -52,11 +53,13 @@ public class FileProjectFactory {
   private static Project createInternal(File f) {
     Path path = f.toPath();
     Optional<BuildInfo> info = getProjectInfo(path);
+    Optional<ScmInfo> scmInfo = getScmInfo();
     while (path != null && !info.isPresent()) {
       path = path.getParent();
       info = getProjectInfo(path);
+
     }
-    return new Project(path, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")));
+    return new Project(path, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.get());
   }
 
   /**
@@ -74,6 +77,24 @@ public class FileProjectFactory {
       .sorted(Comparator.comparingInt(BuildInfoReader::order))
       .findFirst()
       .map(r -> r.getInfo(path));
+  }
+
+  private static Optional<ScmInfo> getScmInfo(){
+    FileRepositoryBuilder builder = new FileRepositoryBuilder();
+    Optional<ScmInfo> scmInfoOpt = Optional.empty();
+    try {
+      Repository repo = builder
+        .readEnvironment() // scan environment GIT_* variables
+        .findGitDir() // scan up the file system tree
+        .build();
+      String uri = repo.getConfig().getString("remote", "origin", "url");
+      uri = uri.replace(GITHUB_SSH, GITHUB_HTTPS);
+      String branch = repo.getBranch();
+      scmInfoOpt = Optional.of(new ScmInfo(uri, branch, ""));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return scmInfoOpt;
   }
 
 }

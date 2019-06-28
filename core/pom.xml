@@ -48,6 +48,11 @@ limitations under the License.
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.eclipse.jgit</groupId>
+      <artifactId>org.eclipse.jgit</artifactId>
+    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
