@@ -17,6 +17,7 @@ package io.ap4k.component.annotation;
 
 
 import io.ap4k.component.model.DeploymentMode;
+import io.ap4k.kubernetes.annotation.BuildConfig;
 import io.ap4k.kubernetes.annotation.Env;
 import io.ap4k.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
@@ -43,5 +44,5 @@ public @interface ComponentApplication {
 
   Env[] envs() default {};
 
-  String type() default "s2i";
+  BuildConfig buildconfig() default @BuildConfig;
 }
