@@ -132,7 +132,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
-      .withNewReplicas(1)
+      .withReplicas(1)
       .withTemplate(createPodTemplateSpec(config))
       .withSelector(resources.getLabels())
       .addNewTrigger()

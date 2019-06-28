@@ -35,7 +35,7 @@ public class AddAwsElasticBlockStoreVolumeDecorator extends Decorator<PodSpecBui
       .withNewAwsElasticBlockStore()
       .withVolumeID(volume.getVolumeId())
       .withFsType(volume.getFsType())
-      .withNewPartition(volume.getPartition())
+      .withPartition(volume.getPartition())
       .withReadOnly(volume.isReadOnly())
       .endAwsElasticBlockStore();
   }

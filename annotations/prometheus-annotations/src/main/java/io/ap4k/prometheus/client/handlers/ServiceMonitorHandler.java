@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.ap4k.prometheus.client;
+package io.ap4k.prometheus.client.handlers;
 
+import java.util.function.Predicate;
 
 import io.ap4k.deps.kubernetes.client.Config;
 import io.ap4k.deps.kubernetes.client.ResourceHandler;
 import io.ap4k.deps.kubernetes.client.Watch;
 import io.ap4k.deps.kubernetes.client.Watcher;
+import io.ap4k.prometheus.client.dsl.internal.ServiceMonitorOperationsImpl;
+
+import io.ap4k.deps.kubernetes.client.dsl.base.OperationContext;
 import io.ap4k.deps.okhttp3.OkHttpClient;
+
 import io.ap4k.prometheus.model.ServiceMonitor;
 import io.ap4k.prometheus.model.ServiceMonitorBuilder;
 
@@ -35,18 +40,23 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   }
 
   @Override
+  public String getApiVersion() {
+        return "monitoring.coreos.com/v1";
+      }
+
+  @Override
   public ServiceMonitor create(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
-    return new ServiceMonitorOperationImpl(client, config, "monitoring.coreos.com", "v1", namespace, null, true, item, null, false, -1, new TreeMap<String, String>(), new TreeMap<String, String>(), new TreeMap<String, String[]>(), new TreeMap<String, String[]>(), new TreeMap<String, String>()).create();
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).create();
   }
 
   @Override
   public ServiceMonitor replace(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
-    return new ServiceMonitorOperationImpl(client, config, "monitoring.coreos.com", "v1", namespace, null, true, item, null, true, -1, new TreeMap<String, String>(), new TreeMap<String, String>(), new TreeMap<String, String[]>(), new TreeMap<String, String[]>(), new TreeMap<String, String>()).replace(item);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).replace(item);
   }
 
   @Override
   public ServiceMonitor reload(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
-    return new ServiceMonitorOperationImpl(client, config, "monitoring.coreos.com", "v1", namespace, null, true, item, null, false, -1, new TreeMap<String, String>(), new TreeMap<String, String>(), new TreeMap<String, String[]>(), new TreeMap<String, String[]>(), new TreeMap<String, String>()).fromServer().get();
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).fromServer().get();
   }
 
   @Override
@@ -56,21 +66,26 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
 
   @Override
   public Boolean delete(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
-    return new ServiceMonitorOperationImpl(client, config, "monitoring.coreos.com", "v1", namespace, null, true, item, null, false, -1, new TreeMap<String, String>(), new TreeMap<String, String>(), new TreeMap<String, String[]>(), new TreeMap<String, String[]>(), new TreeMap<String, String>()).delete(item);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).delete(item);
   }
 
   @Override
   public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, Watcher<ServiceMonitor> watcher) {
-    return new ServiceMonitorOperationImpl(client, config, "monitoring.coreos.com", "v1", namespace, null, true, item, null, false, -1, new TreeMap<String, String>(), new TreeMap<String, String>(), new TreeMap<String, String[]>(), new TreeMap<String, String[]>(), new TreeMap<String, String>()).watch(watcher);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(watcher);
   }
 
   @Override
   public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, String resourceVersion, Watcher<ServiceMonitor> watcher) {
-    return new ServiceMonitorOperationImpl(client, config, "monitoring.coreos.com", "v1", namespace, null, true, item, null, false, -1, new TreeMap<String, String>(), new TreeMap<String, String>(), new TreeMap<String, String[]>(), new TreeMap<String, String[]>(), new TreeMap<String, String>()).watch(resourceVersion, watcher);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
   }
 
   @Override
   public ServiceMonitor waitUntilReady(OkHttpClient client, Config config, String namespace, ServiceMonitor item, long amount, TimeUnit timeUnit) throws InterruptedException {
-    return new ServiceMonitorOperationImpl(client, config, "monitoring.coreos.com", "v1", namespace, null, true, item, null, false, -1, new TreeMap<String, String>(), new TreeMap<String, String>(), new TreeMap<String, String[]>(), new TreeMap<String, String[]>(), new TreeMap<String, String>()).waitUntilReady(amount, timeUnit);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).waitUntilReady(amount, timeUnit);
+  }
+
+  @Override
+  public ServiceMonitor waitUntilCondition(OkHttpClient client, Config config, String namespace, ServiceMonitor item, Predicate<ServiceMonitor> condition, long amount, TimeUnit timeUnit) throws InterruptedException {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).waitUntilCondition(condition, amount, timeUnit);
   }
 }

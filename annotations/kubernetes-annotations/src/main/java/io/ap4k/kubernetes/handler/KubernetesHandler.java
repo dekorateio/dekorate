@@ -121,7 +121,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
-      .withNewReplicas(1)
+      .withReplicas(1)
       .withTemplate(createPodTemplateSpec(config))
       .withSelector(createSelector())
       .endSpec()
