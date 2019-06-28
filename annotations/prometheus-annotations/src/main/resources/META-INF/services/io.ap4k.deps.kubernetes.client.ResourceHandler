@@ -1,1 +1,1 @@
-io.ap4k.prometheus.client.ServiceMonitorHandler
+io.ap4k.prometheus.client.handlers.ServiceMonitorHandler

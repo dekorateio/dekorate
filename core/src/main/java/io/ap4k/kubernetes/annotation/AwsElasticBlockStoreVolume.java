@@ -29,7 +29,7 @@ public @interface AwsElasticBlockStoreVolume {
    */
   String volumeId();
 
-  String partition();
+  int partition();
 
   String fsType() default "ext4";
 

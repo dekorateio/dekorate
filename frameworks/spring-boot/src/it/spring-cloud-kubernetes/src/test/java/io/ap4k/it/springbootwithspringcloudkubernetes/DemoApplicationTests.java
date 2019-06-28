@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import io.ap4k.utils.Serialization;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
-import io.ap4k.deps.kubernetes.api.model.rbac.KubernetesRoleBinding;
+import io.ap4k.deps.kubernetes.api.model.rbac.RoleBinding;
 import io.ap4k.deps.kubernetes.api.model.ServiceAccount;
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ public class DemoApplicationTests {
     assertEquals(1, list.getItems().stream()
       .filter(i -> ServiceAccount.class.isInstance(i)).count());
     //Desrializing rbac resources is broken at the moment: https://github.com/fabric8io/kubernetes-client/issues/1531
-    //KubernetesRoleBinding roleBinding = findFirst(list, KubernetesRoleBinding.class).orElseThrow(IllegalStateException::new);
+    //RoleBinding roleBinding = findFirst(list, RoleBinding.class).orElseThrow(IllegalStateException::new);
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

@@ -17,8 +17,8 @@ package io.ap4k.kubernetes.decorator;
 
 import io.ap4k.Resources;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.ap4k.deps.kubernetes.api.model.rbac.KubernetesRoleBindingBuilder;
-import io.ap4k.deps.openshift.api.model.ClusterRole;
+import io.ap4k.deps.kubernetes.api.model.rbac.ClusterRole;
+import io.ap4k.deps.kubernetes.api.model.rbac.RoleBindingBuilder;
 
 /**
  * AddRoleBindingDecorator
@@ -37,7 +37,7 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
 
 
   public void visit(KubernetesListBuilder list) {
-    list.addToItems(new KubernetesRoleBindingBuilder()
+    list.addToItems(new RoleBindingBuilder()
       .withNewMetadata()
       .withName(resources.getName()+":view")
       .withLabels(resources.getLabels())
