@@ -17,9 +17,10 @@ package io.ap4k.testing.openshift;
 
 import io.ap4k.Ap4kException;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
-import io.ap4k.deps.kubernetes.client.KubernetesClient;
-import io.ap4k.deps.kubernetes.client.VersionInfo;
 import io.ap4k.deps.kubernetes.client.internal.readiness.Readiness;
+import io.ap4k.deps.kubernetes.client.KubernetesClient;
+
+import io.ap4k.deps.kubernetes.client.VersionInfo;
 import io.ap4k.deps.openshift.client.OpenShiftClient;
 import io.ap4k.kubernetes.annotation.Internal;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
@@ -111,8 +112,11 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
                                                                     i instanceof Pod ||
                                                                     i instanceof ReplicaSet ||
                                                                     i instanceof ReplicationController).collect(Collectors.toList());
-      System.out.println("Waiting until ready...");
-      client.resourceList(waitables).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      long started = System.currentTimeMillis();
+      System.out.println("Waiting until ready ("+config.getReadinessTimeout()+ " ms)...");
+      waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      long ended = System.currentTimeMillis();
+      System.out.println("Waited: " +  (ended-started)+ " ms.");
       //Display the item status
       waitables.stream().map(r->client.resource(r).fromServer().get())
         .forEach(i -> {
@@ -194,4 +198,5 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
   public String getName() {
     return getOpenshiftConfig().getName();
   }
+
 }
