@@ -26,7 +26,6 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import io.ap4k.deps.kubernetes.api.model.EventList;
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.deps.kubernetes.api.model.Pod;
@@ -36,6 +35,7 @@ import io.ap4k.deps.kubernetes.api.model.apps.ReplicaSet;
 import io.ap4k.deps.kubernetes.client.KubernetesClient;
 import io.ap4k.deps.kubernetes.client.VersionInfo;
 import io.ap4k.deps.kubernetes.client.internal.readiness.Readiness;
+import io.ap4k.deps.openshift.api.model.DeploymentConfig;
 import io.ap4k.hook.OrderedHook;
 import io.ap4k.kubernetes.config.KubernetesConfig;
 import io.ap4k.kubernetes.hook.DockerBuildHook;
@@ -93,13 +93,17 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
           System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
         });
 
-      List<HasMetadata> waitables = list.getItems().stream().filter(i->
+            List<HasMetadata> waitables = list.getItems().stream().filter(i->
                                                                     i instanceof Deployment ||
+                                                                    i instanceof DeploymentConfig ||
                                                                     i instanceof Pod ||
                                                                     i instanceof ReplicaSet ||
                                                                     i instanceof ReplicationController).collect(Collectors.toList());
-      System.out.println("Waiting until ready...");
-      client.resourceList(waitables).waitUntilReady(config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      long started = System.currentTimeMillis();
+      System.out.println("Waiting until ready ("+config.getReadinessTimeout()+ " ms)...");
+      waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      long ended = System.currentTimeMillis();
+      System.out.println("Waited: " +  (ended-started)+ " ms.");
       //Display the item status
       waitables.stream().map(r->client.resource(r).fromServer().get())
         .forEach(i -> {

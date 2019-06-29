@@ -16,12 +16,18 @@
 package io.ap4k.testing;
 
 import io.ap4k.Ap4kException;
+import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.client.DefaultKubernetesClient;
 import io.ap4k.deps.kubernetes.client.KubernetesClient;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static io.ap4k.testing.Testing.AP4K_STORE;
 import static java.util.Arrays.stream;
@@ -78,4 +84,29 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
     context.getStore(AP4K_STORE).put(KUBERNETES_CLIENT, client);
     return (KubernetesClient) client;
   }
+
+
+  /**
+   * Wait until the specified resources satisfy the specified predicate.
+   * Workaround for https://github.com/fabric8io/kubernetes-client/issues/1607.
+   * @param context The context.
+   * @param items   The items.
+   * @param condition The condition.
+   * @param amount The amount of time to wait.
+   * @param timeUnit The time unit of the amount of time to wait.
+   * @return true if condition was met.
+   */
+  default <T extends HasMetadata> boolean waitUntilCondition(ExtensionContext context, Collection<T> items, Predicate<T> condition, long amount, TimeUnit timeUnit) throws InterruptedException {
+    long amountInNanos = timeUnit.toNanos(amount);
+    long end = System.nanoTime() + amountInNanos;
+
+    KubernetesClient client = getKubernetesClient(context);
+    List<T> notReady = items.stream().map(i-> client.resource(i).fromServer().get()).filter(condition.negate()).collect(Collectors.toList());
+    while (System.nanoTime() < end && !notReady.isEmpty()) {
+      Thread.sleep(1000);
+      notReady = items.stream().map(i-> client.resource(i).fromServer().get()).filter(condition.negate()).collect(Collectors.toList());
+    }
+    return notReady.isEmpty();
+  }
+
 }
