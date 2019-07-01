@@ -31,7 +31,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 @Description("Generates kubernetes manifests.")
-@SupportedAnnotationTypes("io.ap4k.kubernetes.annotation.KubernetesApplication")
+@SupportedAnnotationTypes({"io.ap4k.kubernetes.annotation.KubernetesApplication", "org.springframework.boot.autoconfigure.SpringBootApplication"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor implements KubernetesApplicationGenerator {
 

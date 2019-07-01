@@ -17,6 +17,7 @@
 package io.ap4k.kubernetes.generator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,12 +61,18 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
 
   default void add(Element element) {
     KubernetesApplication application = element.getAnnotation(KubernetesApplication.class);
-     add(new ConfigurationSupplier<>(
-            KubernetesConfigAdapter
-            .newBuilder(application)
-            .accept(new ApplyAutoBuild())
-            .accept(new ApplyProjectInfo(getProject()))
-            .accept(new ApplyDockerBuildHook())));
+    if(application == null) {
+      Map m = new HashMap();
+      m.put(KubernetesApplication.class.getName(), new HashMap<>());
+      add(m);
+    } else {
+      add(new ConfigurationSupplier<>(
+        KubernetesConfigAdapter
+          .newBuilder(application)
+          .accept(new ApplyAutoBuild())
+          .accept(new ApplyProjectInfo(getProject()))
+          .accept(new ApplyDockerBuildHook())));
+    }
   }
 
   default void add(ConfigurationSupplier<KubernetesConfig> config)  {
