@@ -15,6 +15,7 @@
  */
 package io.ap4k;
 
+import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.kubernetes.config.Configuration;
 
 public interface Handler<C extends Configuration> {
@@ -33,10 +34,10 @@ public interface Handler<C extends Configuration> {
   void handle(C config);
 
   /**
-   * Generate / populate the resources, asusming default configuration.
+   * The configuration to use if no configuration for the handler has been specified.
    */
-  default void handleDefault() {
-    //by default do noting
+  default ConfigurationSupplier<C> getFallbackConfig() {
+    return (ConfigurationSupplier<C>) ConfigurationSupplier.empty();
   }
 
   /**

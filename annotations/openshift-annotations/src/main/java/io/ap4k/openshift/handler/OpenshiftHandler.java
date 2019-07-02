@@ -22,6 +22,7 @@ import io.ap4k.Handler;
 import io.ap4k.HandlerFactory;
 import io.ap4k.Resources;
 import io.ap4k.WithProject;
+import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.ap4k.deps.kubernetes.api.model.PodSpec;
 import io.ap4k.deps.kubernetes.api.model.PodSpecBuilder;
@@ -44,6 +45,7 @@ import io.ap4k.openshift.decorator.AddRouteDecorator;
 import io.ap4k.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.ap4k.openshift.decorator.ApplyReplicasDecorator;
 import io.ap4k.project.ApplyProjectInfo;
+import io.ap4k.project.Project;
 import io.ap4k.utils.Images;
 
 public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> implements HandlerFactory, WithProject {
@@ -102,10 +104,13 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
 
     addDecorators(OPENSHIFT, config);
   }
+
   @Override
-  public void handleDefault() {
-    handle(new OpenshiftConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(getProject())).build());
+  public ConfigurationSupplier<OpenshiftConfig> getFallbackConfig() {
+    Project p = getProject();
+    return new ConfigurationSupplier<OpenshiftConfig>(new OpenshiftConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(p)));
   }
+
 
   @Override
   protected void addDecorators(String group, OpenshiftConfig config) {

@@ -32,26 +32,44 @@ public class ConfigurationSupplier<C> implements Supplier<C> {
 
   private final VisitableBuilder<C, ?> builder;
 
+  public static ConfigurationSupplier<?> empty() {
+    return new ConfigurationSupplier<>(null);
+  }
+
   public ConfigurationSupplier (VisitableBuilder<C, ?> builder) {
     this.builder = builder; 
   }
 
+  public boolean hasConfiguration() {
+    return builder != null;
+  }
+
+  private void checkBuilder() {
+    if (this.builder == null) {
+      throw new IllegalStateException("ConfiugrationSupplier is empty.");
+    }
+  }
+
   public C get() {
+    checkBuilder();
     return builder.build();
   }
 
   public ConfigurationSupplier<C> configure(Iterable<Configurator> configurators) {
+    checkBuilder();
     configurators.forEach(v -> builder.accept(v));
     return this;
   }
 
   public ConfigurationSupplier<C> configure(Configurator configurator) {
+    checkBuilder();
     builder.accept(configurator);
     return this;
   }
 
   
   public Type getType() {
+    checkBuilder();
     Class builderClass = builder.getClass();
     ParameterizedType parameterizedType = (ParameterizedType) builderClass.getGenericSuperclass();
     return parameterizedType.getActualTypeArguments()[0];

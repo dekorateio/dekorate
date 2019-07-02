@@ -44,6 +44,10 @@ public class Configurators {
     configurators.add(configurator);
   }
 
+  public Set<Configurator> getConfigurators() {
+    return configurators;
+  }
+
   public Stream<? extends Configuration> stream() {
     return suppliers
       .values()
