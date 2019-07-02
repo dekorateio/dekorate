@@ -20,6 +20,7 @@ import io.ap4k.Handler;
 import io.ap4k.HandlerFactory;
 import io.ap4k.Resources;
 import io.ap4k.WithProject;
+import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.project.Project;
 import io.ap4k.utils.Strings;
 import io.ap4k.deps.kubernetes.api.model.KubernetesListBuilder;
@@ -176,9 +177,11 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   }
 
   @Override
-  public void handleDefault() {
+  public ConfigurationSupplier<KubernetesConfig> getFallbackConfig() {
     Project p = getProject();
-    handle(new KubernetesConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(p)).build());
+    return new ConfigurationSupplier<KubernetesConfig>(new KubernetesConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(p)));
   }
+
+  
 
 }

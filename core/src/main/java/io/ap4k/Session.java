@@ -15,8 +15,10 @@
  */
 package io.ap4k;
 
+import io.ap4k.config.ConfigurationSupplier;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
 import io.ap4k.kubernetes.config.ApplicationConfiguration;
+import io.ap4k.kubernetes.config.Configuration;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -148,8 +150,13 @@ public class Session {
 
   private static void handle(Handler h, Configurators configurators) {
     if (!hasApplicationConfiguration(configurators)) {
-      h.handleDefault();
+      ConfigurationSupplier<? extends Configuration> supplier = h.getFallbackConfig();
+      if (supplier.hasConfiguration()) {
+        configurators.getConfigurators().forEach(c -> supplier.configure(c));
+        h.handle(supplier.get());
+      }
     } 
+
     configurators.stream().forEach(c -> {
       if (h.canHandle(c.getClass())) {
       h.handle(c);
