@@ -19,6 +19,7 @@ package io.ap4k.annotationless;
 
 import io.ap4k.deps.kubernetes.api.model.HasMetadata;
 import io.ap4k.deps.kubernetes.api.model.KubernetesList;
+import io.ap4k.deps.kubernetes.api.model.Service;
 import io.ap4k.deps.kubernetes.api.model.apps.Deployment;
 import io.ap4k.utils.Serialization;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,10 @@ public class AnnotationLessTest {
     assertEquals("bar", labels.get("foo"));
     assertEquals("baz", labels.get("zoo"));
     assertEquals("annotationless", labels.get("group"));
+
+    Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
+    assertNotNull(s);
+    assertTrue(s.getSpec().getPorts().get(0).getPort().equals(8080));
   }
 
 
