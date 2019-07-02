@@ -54,7 +54,7 @@
   <properties>
     <!-- Dependencies -->
     <version.ap4k-deps>0.4.1</version.ap4k-deps>
-    <version.sundrio>0.19.0</version.sundrio>
+    <version.sundrio>0.19.1</version.sundrio>
     <!-- Testing Dependencies -->
     <version.junit-jupiter>5.4.0</version.junit-jupiter>
     <version.junit-platform>1.4.0</version.junit-platform>
