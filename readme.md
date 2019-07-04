@@ -1,3 +1,13 @@
+# Rebranding Notice
+
+As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
+
+The new project page will be: http://dekorate.io and the new repository will be: https://github.com/dekorateio/dekorate.
+This repostiory will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
+
+For new issues and pull requests please don't forget to use https://github.com/dekorateio/dekorate.
+
+
 # Annotation processors for Kubernetes
 
 [![CircleCI](https://circleci.com/gh/ap4k/ap4k.svg?style=svg)](https://circleci.com/gh/ap4k/ap4k) [![Maven Central](https://img.shields.io/maven-central/v/io.ap4k/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.ap4k%22%20AND%20a:%22kubernetes-annotations%22)
