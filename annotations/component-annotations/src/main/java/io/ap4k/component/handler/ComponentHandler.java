@@ -75,12 +75,14 @@ public class ComponentHandler implements Handler<ComponentConfig> {
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
 
-    String uri = config.getProject().getScmInfo().getUri();
-    String branch = config.getProject().getScmInfo().getBranch();
-    String name = config.getProject().getBuildInfo().getName();
-    String buildConfigType = config.getBuildconfig().getType();
-
-    resources.decorateCustom(ResourceGroup.NAME,new AddBuildConfigToComponentDecorator(uri, branch, name, buildConfigType));
+    if (config.getProject().getScmInfo() != null) {
+      String uri = config.getProject().getScmInfo().getUri();
+      String branch = config.getProject().getScmInfo().getBranch();
+      String name = config.getProject().getBuildInfo().getName();
+      String buildConfigType = config.getBuildconfig().getType();
+      resources.decorateCustom(ResourceGroup.NAME,
+          new AddBuildConfigToComponentDecorator(uri, branch, name, buildConfigType));
+    }
 
     if (type != null) {
       resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeTypeToComponentDecorator(type));
