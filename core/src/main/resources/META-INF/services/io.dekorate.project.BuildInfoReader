@@ -1,0 +1,4 @@
+io.dekorate.project.MavenInfoReader
+io.dekorate.project.GradleInfoReader
+io.dekorate.project.BazelInfoReader
+io.dekorate.project.GenericReader

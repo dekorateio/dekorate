@@ -1,5 +1,5 @@
 kind: Foo
-apiVersion: ap4k.io/v1
+apiVersion: dekorate.io/v1
 metadata:
   name: foo-1
 spec:

@@ -1,4 +1,4 @@
-package io.ap4k.kubernetes.decorator;
+package io.dekorate.kubernetes.decorator;
 
 
 #set ($targetfn = ${model.implementsList[0].arguments[0].fullyQualifiedName})
@@ -11,24 +11,24 @@ package io.ap4k.kubernetes.decorator;
 // ${model.implementsList[0].arguments[1].fullyQualifiedName}
 // ${model.getImplementsList}
 // $model.getImplementsList.get(0)
-import io.ap4k.deps.kubernetes.api.builder.Function;
-import io.ap4k.deps.kubernetes.api.model.Doneable;
+import io.dekorate.deps.kubernetes.api.builder.Function;
+import io.dekorate.deps.kubernetes.api.model.Doneable;
 
 import $parent;
-import io.ap4k.kubernetes.decorator.Decorator;
-import io.ap4k.deps.kubernetes.api.model.$target;
-import io.ap4k.deps.kubernetes.api.model.${target}Builder;
-import io.ap4k.deps.kubernetes.api.model.${target}FluentImpl;
+import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.deps.kubernetes.api.model.$target;
+import io.dekorate.deps.kubernetes.api.model.${target}Builder;
+import io.dekorate.deps.kubernetes.api.model.${target}FluentImpl;
 
 public class ${target}FluentVisitor extends ${target}FluentImpl<${target}FluentVisitor> implements Doneable<Decorator<$parent>> {
 
     private final ${target}Builder builder;
-    private final io.ap4k.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function;
+    private final io.dekorate.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function;
 
-    public ${target}FluentVisitor(io.ap4k.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function){
+    public ${target}FluentVisitor(io.dekorate.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function){
     super();this.builder=new ${target}Builder(this);this.function=function;
     }
-    public ${target}FluentVisitor($target item,io.ap4k.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function){
+    public ${target}FluentVisitor($target item,io.dekorate.deps.kubernetes.api.builder.Function<$target,Decorator<$parent>> function){
     super(item);this.builder=new ${target}Builder(this, item);this.function=function;
     }
 

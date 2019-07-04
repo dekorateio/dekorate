@@ -18,19 +18,19 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>annotations</artifactId>
-    <groupId>io.ap4k</groupId>
+    <groupId>io.dekorate</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <name>AP4K :: Annotations :: Kubernetes</name>
+  <name>Dekorate :: Annotations :: Kubernetes</name>
 
   <dependencies>
     <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>ap4k-core</artifactId>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -105,7 +105,7 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/kubernetes/annotation/**</include>
+                    <include>io/dekorate/kubernetes/annotation/**</include>
                   </includes>
                 </filter>
               </filters>
@@ -124,14 +124,14 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/kubernetes/adapter/**</include>
-                    <include>io/ap4k/kubernetes/apt/**</include>
-                    <include>io/ap4k/kubernetes/config/**</include>
-                    <include>io/ap4k/kubernetes/configurator/**</include>
-                    <include>io/ap4k/kubernetes/decorator/**</include>
-                    <include>io/ap4k/kubernetes/handler/**</include>
-                    <include>io/ap4k/kubernetes/hook/**</include>
-                    <include>io/ap4k/kubernetes/generator/**</include>
+                    <include>io/dekorate/kubernetes/adapter/**</include>
+                    <include>io/dekorate/kubernetes/apt/**</include>
+                    <include>io/dekorate/kubernetes/config/**</include>
+                    <include>io/dekorate/kubernetes/configurator/**</include>
+                    <include>io/dekorate/kubernetes/decorator/**</include>
+                    <include>io/dekorate/kubernetes/handler/**</include>
+                    <include>io/dekorate/kubernetes/hook/**</include>
+                    <include>io/dekorate/kubernetes/generator/**</include>
                     <include>META-INF/services/*</include>
                   </includes>
                 </filter>
@@ -151,15 +151,15 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/kubernetes/adapter/**</include>
-                    <include>io/ap4k/kubernetes/annotation/**</include>
-                    <include>io/ap4k/kubernetes/config/**</include>
-                    <include>io/ap4k/kubernetes/configurator/**</include>
-                    <include>io/ap4k/kubernetes/decorator/**</include>
-                    <include>io/ap4k/kubernetes/handler/**</include>
-                    <include>io/ap4k/kubernetes/hook/**</include>
-                    <include>io/ap4k/kubernetes/generator/**</include>
-                    <include>META-INF/services/io.ap4k.*</include>
+                    <include>io/dekorate/kubernetes/adapter/**</include>
+                    <include>io/dekorate/kubernetes/annotation/**</include>
+                    <include>io/dekorate/kubernetes/config/**</include>
+                    <include>io/dekorate/kubernetes/configurator/**</include>
+                    <include>io/dekorate/kubernetes/decorator/**</include>
+                    <include>io/dekorate/kubernetes/handler/**</include>
+                    <include>io/dekorate/kubernetes/hook/**</include>
+                    <include>io/dekorate/kubernetes/generator/**</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                   </includes>
                 </filter>
               </filters>

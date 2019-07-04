@@ -18,30 +18,30 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>annotations</artifactId>
-    <groupId>io.ap4k</groupId>
+    <groupId>io.dekorate</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>component-annotations</artifactId>
-  <name>AP4K :: Annotations :: Component CRD</name>
+  <name>Dekorate :: Annotations :: Component CRD</name>
 
   <dependencies>
 
     <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>ap4k-core</artifactId>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>servicecatalog-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>crd-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -84,8 +84,8 @@ limitations under the License.
     <!-- These are internal dependencies used in integration tests via invoker plugin.
          We need to somehow let the reactor know that the integration tests depend on them. -->
     <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>ap4k-spring-boot</artifactId>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-spring-boot</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <optional>true</optional>
@@ -123,7 +123,7 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/component/annotation/**</include>
+                    <include>io/dekorate/component/annotation/**</include>
                   </includes>
                 </filter>
               </filters>
@@ -142,12 +142,12 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/component/adapter/**</include>
-                    <include>io/ap4k/component/apt/**</include>
-                    <include>io/ap4k/component/config/*</include>
-                    <include>io/ap4k/component/decorator/**</include>
-                    <include>io/ap4k/component/handler/**</include>
-                    <include>io/ap4k/component/processor/**</include>
+                    <include>io/dekorate/component/adapter/**</include>
+                    <include>io/dekorate/component/apt/**</include>
+                    <include>io/dekorate/component/config/*</include>
+                    <include>io/dekorate/component/decorator/**</include>
+                    <include>io/dekorate/component/handler/**</include>
+                    <include>io/dekorate/component/processor/**</include>
                     <include>META-INF/services/*</include>
                   </includes>
                 </filter>
@@ -167,14 +167,14 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/component/adapter/**</include>
-                    <include>io/ap4k/component/annotation/**</include>
-                    <include>io/ap4k/component/config/*</include>
-                    <include>io/ap4k/component/configurator/**</include>
-                    <include>io/ap4k/component/decorator/**</include>
-                    <include>io/ap4k/component/handler/**</include>
-                    <include>io/ap4k/component/processor/**</include>
-                    <include>META-INF/services/io.ap4k.*</include>
+                    <include>io/dekorate/component/adapter/**</include>
+                    <include>io/dekorate/component/annotation/**</include>
+                    <include>io/dekorate/component/config/*</include>
+                    <include>io/dekorate/component/configurator/**</include>
+                    <include>io/dekorate/component/decorator/**</include>
+                    <include>io/dekorate/component/handler/**</include>
+                    <include>io/dekorate/component/processor/**</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                   </includes>
                 </filter>
               </filters>

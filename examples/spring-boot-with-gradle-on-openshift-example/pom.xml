@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>examples</artifactId>
-    <groupId>io.ap4k</groupId>
+    <groupId>io.dekorate</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-with-gradle-on-openshift-example</artifactId>
 
-  <name>AP4K :: Examples :: Spring Boot with Gradle on Openshift</name>
+  <name>Dekorate :: Examples :: Spring Boot with Gradle on Openshift</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,12 +21,12 @@
   <!-- we need to express the dependencies here as they affect build order -->
   <dependencies>
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>openshift-spring-starter</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>openshift-junit-starter</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -63,7 +63,7 @@
           </args>
           <jvmArgs>
             <jvmArg>-Xmx1024m</jvmArg>
-            <jvmArg>-Dap4kVersion=${project.version}</jvmArg>
+            <jvmArg>-DdekorateVersion=${project.version}</jvmArg>
           </jvmArgs>
         </configuration>
         <executions>
@@ -121,7 +121,7 @@
             <configuration>
               <gradleVersion>4.10</gradleVersion>
               <jvmArgs>
-                <arg>-Dap4kVersion=${project.version}</arg>
+                <arg>-DdekorateVersion=${project.version}</arg>
               </jvmArgs>
             </configuration>
             <executions>

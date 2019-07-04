@@ -1,10 +1,10 @@
-# AP4K Design
+# Dekorate Design
 
 ## Overview
-This section provides a high level overview on the design of AP4K. The core building blocks are back-quoted and a definition
+This section provides a high level overview on the design of Dekorate. The core building blocks are back-quoted and a definition
 for them is provided in the next section (vocabulary).
 
-AP4K provides multiple annotation processors all targeting at the generation of Kubernetes resources.
+Dekorate provides multiple annotation processors all targeting at the generation of Kubernetes resources.
 Each annotation processor is "supporting" one or more annotations and will be called by the compiler at least twice when
 the annotations are spotted. 
 
@@ -16,11 +16,11 @@ The handlers role is to create or modify the `model` based on the `config`.
 
 Finally, the `model` is serialized to disk as json/yml.
 
-[![sequence diagram](https://raw.githubusercontent.com/ap4k/ap4k/master/doc/src/main/resources/sequence.png)]
+[![sequence diagram](https://raw.githubusercontent.com/dekorate/dekorate/master/doc/src/main/resources/sequence.png)]
 
 ## Vocabulary
 
-The section below describes the core parts of AP4K and tries to describe how they work together.
+The section below describes the core parts of Dekorate and tries to describe how they work together.
 
 ### Visitor
 Refers to the the `Gang of Four` visitor pattern. As Kubernetes resources are deeply nested we are extensively using the 
@@ -57,8 +57,8 @@ An example configuration is the `KubernetesConfig` class:
         private String group;
         private String name;
         private String version;
-        private io.ap4k.kubernetes.config.Label[] labels;
-        private io.ap4k.kubernetes.config.Annotation[] annotations;
+        private io.dekorate.kubernetes.config.Label[] labels;
+        private io.dekorate.kubernetes.config.Annotation[] annotations;
         ...
     }
 
@@ -71,7 +71,7 @@ For example a configurator that can be used to add a label to `KubernetesConfig`
     public class AddLabel extends Configurator<KubernetesConfigFluent> {
     
          public void visit(KubernetesConfigFluent config) {
-             config.addToLabels(new Label("createdBy", "ap4k");
+             config.addToLabels(new Label("createdBy", "dekorate");
          }
     }
 
@@ -108,7 +108,7 @@ It's different than a `configurator` in the sense that it operates on the actual
     public class AddLabel extends Decorator<PodFluent> {
     
          public void vist(PodFluent podFluent) {
-             podFluent.addToLabels(new Label("createdBy", "ap4k");
+             podFluent.addToLabels(new Label("createdBy", "dekorate");
          }
     }
     
@@ -158,14 +158,14 @@ A processor may register more than one `config` `handlers` with no restriction o
 
 | Processor                         | Config               | Supported Annotations                                                                                        | Description                                                       |
 |-----------------------------------|----------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| ComponentAnnotationProcessor      | CompositeConfig      | [io.ap4k.component.annotation.ComponentApplication]                                                          | Generate component custom resources.                              |
-| LinkAnnotationProcessor           | LinkConfig           | [io.ap4k.component.annotation.Link]                                                                          | Generate link custom resources.                                   |
+| ComponentAnnotationProcessor      | CompositeConfig      | [io.dekorate.component.annotation.ComponentApplication]                                                          | Generate component custom resources.                              |
+| LinkAnnotationProcessor           | LinkConfig           | [io.dekorate.component.annotation.Link]                                                                          | Generate link custom resources.                                   |
 | SpringBootApplicationProcessor    | none                 | [org.springframework.boot.autoconfigure.SpringBootApplication]                                               | Detects Spring Boot and set the runtime attribute to Spring Boot. |
-| KubernetesAnnotationProcessor     | KubernetesConfig     | [io.ap4k.kubernetes.annotation.KubernetesApplication]                                                        | Generates kubernetes manifests.                                   |
+| KubernetesAnnotationProcessor     | KubernetesConfig     | [io.dekorate.kubernetes.annotation.KubernetesApplication]                                                        | Generates kubernetes manifests.                                   |
 | ThrorntailProcessor               | none                 | [javax.ws.rs.ApplicationPath, javax.jws.WebService]                                                          | Detects jaxrs and jaxws annotations and registers the http port.  |
 | SpringBootMappingProcessor        | none                 | [org.springframework.web.bind.annotation.RequestMapping, org.springframework.web.bind.annotation.GetMapping] | Detects Spring Boot web endpoints and registers the http port.    |
-| ServiceCatalogAnnotationProcessor | ServiceCatalogConfig | [io.ap4k.servicecatalog.annotation.ServiceCatalog, io.ap4k.servicecatalog.annotation.ServiceCatalogInstance] |                                                                   |
-| OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.ap4k.kubernetes.annotation.KubernetesApplication, io.ap4k.openshift.annotation.OpenshiftApplication]     | Generates openshift manifests.                                    |
+| ServiceCatalogAnnotationProcessor | ServiceCatalogConfig | [io.dekorate.servicecatalog.annotation.ServiceCatalog, io.dekorate.servicecatalog.annotation.ServiceCatalogInstance] |                                                                   |
+| OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.dekorate.kubernetes.annotation.KubernetesApplication, io.dekorate.openshift.annotation.OpenshiftApplication]     | Generates openshift manifests.                                    |
 | MicronautProcessor                | none                 | [io.micronaut.http.annotation.Controller]                                                                    | Detects the micronaut controller and registers the http port.     |
 
 ### Session

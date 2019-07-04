@@ -1,4 +1,0 @@
-io.ap4k.project.MavenInfoReader
-io.ap4k.project.GradleInfoReader
-io.ap4k.project.BazelInfoReader
-io.ap4k.project.GenericReader

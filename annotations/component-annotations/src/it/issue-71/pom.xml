@@ -20,11 +20,11 @@ limitations under the License.
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>component-it-issue-71</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>AP4K :: Annotation :: Component :: Integration Test for #71</name>
+  <name>Dekorate :: Annotation :: Component :: Integration Test for #71</name>
   <description>Env annotation appears twice within yaml generated</description>
 
   <properties>
@@ -35,7 +35,7 @@ limitations under the License.
 
   <dependencies>
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>component-annotations</artifactId>
       <version>@project.version@</version>
     </dependency>

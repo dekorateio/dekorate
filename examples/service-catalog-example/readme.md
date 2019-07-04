@@ -1,7 +1,7 @@
 # Service Catalog Example 
 
 This example demonstrates the use of the `@ServiceCatalog` annotation.
-Check the [Main.java](src/main/java/io/ap4k/examples/svcat/Main.java) which bears the annotation:
+Check the [Main.java](src/main/java/io/dekorate/examples/svcat/Main.java) which bears the annotation:
 
     @ServiceCatalog(instances = 
       @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", bindingSecret = "mysql-secret")
@@ -35,7 +35,7 @@ To access the `@ServiceCatalog` annotation you just need to have the following d
 class path:
 
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>servicecatalog-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>

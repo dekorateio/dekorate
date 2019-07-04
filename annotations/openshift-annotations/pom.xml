@@ -18,19 +18,19 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>annotations</artifactId>
-    <groupId>io.ap4k</groupId>
+    <groupId>io.dekorate</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>openshift-annotations</artifactId>
-  <name>AP4K :: Annotations :: Openshift</name>
+  <name>Dekorate :: Annotations :: Openshift</name>
 
   <dependencies>
     <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>ap4k-core</artifactId>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -106,7 +106,7 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/openshift/annotation/**</include>
+                    <include>io/dekorate/openshift/annotation/**</include>
                   </includes>
                 </filter>
               </filters>
@@ -125,15 +125,15 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/openshift/adapter/**</include>
-                    <include>io/ap4k/openshift/apt/**</include>
-                    <include>io/ap4k/openshift/config/**</include>
-                    <include>io/ap4k/openshift/configurator/**</include>
-                    <include>io/ap4k/openshift/generator/**</include>
-                    <include>io/ap4k/openshift/handler/**</include>
-                    <include>io/ap4k/openshift/decorator/**</include>
-                    <include>io/ap4k/openshift/hook/**</include>
-                    <include>io/ap4k/openshift/util/**</include>
+                    <include>io/dekorate/openshift/adapter/**</include>
+                    <include>io/dekorate/openshift/apt/**</include>
+                    <include>io/dekorate/openshift/config/**</include>
+                    <include>io/dekorate/openshift/configurator/**</include>
+                    <include>io/dekorate/openshift/generator/**</include>
+                    <include>io/dekorate/openshift/handler/**</include>
+                    <include>io/dekorate/openshift/decorator/**</include>
+                    <include>io/dekorate/openshift/hook/**</include>
+                    <include>io/dekorate/openshift/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>
@@ -153,16 +153,16 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/openshift/adapter/**</include>
-                    <include>io/ap4k/openshift/annotation/**</include>
-                    <include>io/ap4k/openshift/config/**</include>
-                    <include>io/ap4k/openshift/configurator/**</include>
-                    <include>io/ap4k/openshift/generator/**</include>
-                    <include>io/ap4k/openshift/handler/**</include>
-                    <include>io/ap4k/openshift/decorator/**</include>
-                    <include>io/ap4k/openshift/hook/**</include>
-                    <include>io/ap4k/openshift/util/**</include>
-                    <include>META-INF/services/io.ap4k.Generator</include>
+                    <include>io/dekorate/openshift/adapter/**</include>
+                    <include>io/dekorate/openshift/annotation/**</include>
+                    <include>io/dekorate/openshift/config/**</include>
+                    <include>io/dekorate/openshift/configurator/**</include>
+                    <include>io/dekorate/openshift/generator/**</include>
+                    <include>io/dekorate/openshift/handler/**</include>
+                    <include>io/dekorate/openshift/decorator/**</include>
+                    <include>io/dekorate/openshift/hook/**</include>
+                    <include>io/dekorate/openshift/util/**</include>
+                    <include>META-INF/services/io.dekorate.Generator</include>
                   </includes>
                 </filter>
               </filters>
