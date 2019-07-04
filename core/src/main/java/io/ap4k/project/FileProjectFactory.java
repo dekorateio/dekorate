@@ -85,6 +85,9 @@ public class FileProjectFactory {
 
   private static Optional<ScmInfo> getScmInfo(Path path) {
     Optional<ScmInfo> scmInfo = Optional.empty();
+    if (path == null) {
+      return scmInfo;
+    }
     String uri = Git.getRemoteUrl(path, Git.ORIGIN).map(u -> u.replace(GITHUB_SSH, GITHUB_HTTPS)).orElse(null);
     String branch = Git.getBranch(path).orElse(null);
     scmInfo = Optional.of(new ScmInfo(uri, branch, ""));
