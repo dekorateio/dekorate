@@ -15,6 +15,12 @@
  */
 package io.ap4k.utils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import io.ap4k.Ap4kException;
+
 public class Strings {
 
   private static final char COMMA = ',';
@@ -49,4 +55,13 @@ public class Strings {
     }
     return buf.toString();
   }
+
+  public static String read(Path path) {
+    try {
+      return new String(Files.readAllBytes(path));
+    } catch (IOException e) {
+      throw Ap4kException.launderThrowable(e);
+    }
+  }
+ 
 }
