@@ -37,8 +37,8 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:dekorate/dekorate.git</connection>
-    <developerConnection>scm:git:git@github.com:dekorate/dekorate.git</developerConnection>
+    <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
+    <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
     <url>http://github.com/dekorateio/dekorate</url>
     <tag>${project.version}</tag>
   </scm>
