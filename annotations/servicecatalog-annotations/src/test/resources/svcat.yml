@@ -4,7 +4,7 @@ items:
   kind: "ServiceBinding"
   metadata:
     labels:
-      generatedBy: "ap4k"
+      generatedBy: "dekorate"
     name: "mysql-instance"
   spec:
     instanceRef:
@@ -14,7 +14,7 @@ items:
   kind: "ServiceInstance"
   metadata:
     labels:
-      generatedBy: "ap4k"
+      generatedBy: "dekorate"
     name: "mysql-instance"
   spec:
     clusterServiceClassExternalName: "mysql-persistent"

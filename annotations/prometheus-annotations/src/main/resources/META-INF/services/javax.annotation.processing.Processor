@@ -1,1 +1,1 @@
-io.ap4k.prometheus.apt.ServiceMonitorAnnotationProcessor
+io.dekorate.prometheus.apt.ServiceMonitorAnnotationProcessor

@@ -1,12 +1,12 @@
 # Spring Boot on Kubernetes using Gradle
 
-This is a simple example of using ap4k with gradle.
+This is a simple example of using dekorate with gradle.
 
 The purpose of this example is to demonstrate the following:
 
-- How to use ap4k with gradle
+- How to use dekorate with gradle
 - How you can use the kubernetes-spring-stater.
-- How ap4k detects that this is a web app and automatically configures services and probes.
+- How dekorate detects that this is a web app and automatically configures services and probes.
 - How you can end-to-end test the application.
 - How you can trigger an docker build after the compilation.
 
@@ -17,20 +17,20 @@ To build the application:
     
 The application is using:
 
-     compile("io.ap4k:kubernetes-spring-starter:${ap4kVersion}")
-     annotationProcessor("io.ap4k:kubernetes-annotations:${ap4kVersion}")
+     compile("io.dekorate:kubernetes-spring-starter:${dekorateVersion}")
+     annotationProcessor("io.dekorate:kubernetes-annotations:${dekorateVersion}")
 
 Which contains all the required modules, including the annotation processors that detect spring web applications.
 
-The [Main.java](src/main/java/io/ap4k/example/sbonkubernetes/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
+The [Main.java](src/main/java/io/dekorate/example/sbonkubernetes/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
 This annotation allows the user to trigger an s2i build after the compilation, by passing the system property 
-`ap4k.build=true` to the build for example:
+`dekorate.build=true` to the build for example:
 
-    ./gradlew clean build -Dap4k.build=true
+    ./gradlew clean build -Ddekorate.build=true
 
 Note: To perform an actual build, the `oc` binary is required to be configured to point to an existing kubernetes environment.
 
-The spring web application processor will detect our [Controller.java](src/main/groovy/io/ap4k/example/sbonkubernetes/Controller.groovy), and will:
+The spring web application processor will detect our [Controller.java](src/main/groovy/io/dekorate/example/sbonkubernetes/Controller.groovy), and will:
 
 - add container port 8080
 - expose port 8080 as a service
@@ -41,10 +41,10 @@ The spring web application processor will detect our [Controller.java](src/main/
 For the purpose of integration testing it includes:
 
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.1.0")
-    testImplementation("io.ap4k:kubernetes-junit:${ap4kVersion}")
+    testImplementation("io.dekorate:kubernetes-junit:${dekorateVersion}")
 
-This annotation will bring in the junit5 extension that ap4k provides, that allows you to run integration tests via the '@KubernetesIntegrationTest' annotation.
-The integration test is [SpringBootOnKubernetesIT.java](src/test/groovy/io/ap4k/example/sbonkubernetes/SpringBootOnKubernetesIT.java) and it demonstrates:
+This annotation will bring in the junit5 extension that dekorate provides, that allows you to run integration tests via the '@KubernetesIntegrationTest' annotation.
+The integration test is [SpringBootOnKubernetesIT.java](src/test/groovy/io/dekorate/example/sbonkubernetes/SpringBootOnKubernetesIT.java) and it demonstrates:
 
 - how you can deploy the application for end to end testing
 - how use can use the kubernetes client from within the test to connect to the application.

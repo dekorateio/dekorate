@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
-  <artifactId>ap4k-project</artifactId>
+  <groupId>io.dekorate</groupId>
+  <artifactId>dekorate-project</artifactId>
   <packaging>pom</packaging>
   <version>0.5-SNAPSHOT</version>
-  <name>AP4K</name>
+  <name>Dekorate</name>
   <description>A collection of annotations and processors for Kubernetes</description>
 
-  <url>https://ap4k.io</url>
+  <url>https://dekorate.io</url>
   <inceptionYear>2018</inceptionYear>
 
   <organization>
@@ -37,9 +37,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:ap4k/ap4k.git</connection>
-    <developerConnection>scm:git:git@github.com:ap4k/ap4k.git</developerConnection>
-    <url>http://github.com/ap4k/ap4k</url>
+    <connection>scm:git:git@github.com:dekorate/dekorate.git</connection>
+    <developerConnection>scm:git:git@github.com:dekorate/dekorate.git</developerConnection>
+    <url>http://github.com/dekorateio/dekorate</url>
     <tag>${project.version}</tag>
   </scm>
 
@@ -53,7 +53,7 @@
 
   <properties>
     <!-- Dependencies -->
-    <version.ap4k-deps>0.4.1</version.ap4k-deps>
+    <version.dekorate-deps>0.5.0</version.dekorate-deps>
     <version.sundrio>0.19.1</version.sundrio>
     <!-- Testing Dependencies -->
     <version.junit-jupiter>5.4.0</version.junit-jupiter>

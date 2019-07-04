@@ -1,1 +1,1 @@
-io.ap4k.jaeger.apt.JaegerAgentAnnotationProcessor
+io.dekorate.jaeger.apt.JaegerAgentAnnotationProcessor

@@ -1,4 +1,4 @@
-title How AP4K works
+title How Dekorate works
 
 participant Compiler as c
 participant Processor as p

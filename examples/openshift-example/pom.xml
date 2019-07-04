@@ -17,14 +17,14 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>examples</artifactId>
-    <groupId>io.ap4k</groupId>
+    <groupId>io.dekorate</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>openshift-example</artifactId>
-  <name>AP4K :: Examples :: Openshift</name>
+  <name>Dekorate :: Examples :: Openshift</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -37,7 +37,7 @@ limitations under the License.
 
   <dependencies>
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>openshift-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -50,7 +50,7 @@ limitations under the License.
 
     <!-- Testing -->
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>openshift-junit-starter</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

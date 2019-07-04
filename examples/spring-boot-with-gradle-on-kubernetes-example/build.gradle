@@ -1,7 +1,7 @@
 buildscript {
 	ext {
 		springBootVersion = '2.1.1.RELEASE'
-    ap4kVersion = System.getProperty("ap4kVersion", "0.1.3")
+    dekorateVersion = System.getProperty("dekorateVersion", "0.1.3")
     junitVersion = '5.3.1'
     junitGraldePluginVersion = '1.1.0'
 	}
@@ -20,7 +20,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
-group = 'io.ap4k.examples'
+group = 'io.dekorate.examples'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
@@ -37,11 +37,11 @@ dependencies {
   implementation('org.springframework.boot:spring-boot-starter-web')
   implementation('org.springframework.boot:spring-boot-starter-actuator')
 
-  compile("io.ap4k:kubernetes-spring-starter:${ap4kVersion}")
-  annotationProcessor("io.ap4k:kubernetes-annotations:${ap4kVersion}")
-  annotationProcessor("io.ap4k:ap4k-spring-boot:${ap4kVersion}")
+  compile("io.dekorate:kubernetes-spring-starter:${dekorateVersion}")
+  annotationProcessor("io.dekorate:kubernetes-annotations:${dekorateVersion}")
+  annotationProcessor("io.dekorate:dekorate-spring-boot:${dekorateVersion}")
 
 	testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-  testImplementation("io.ap4k:kubernetes-junit:${ap4kVersion}")
+  testImplementation("io.dekorate:kubernetes-junit:${dekorateVersion}")
 }

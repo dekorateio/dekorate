@@ -4,9 +4,9 @@ This is a variation of the [Spring Boot with Groovy on OpenShift Example](../spr
 
 The purpose of this example is to demonstrate the following:
 
-- How to use ap4k with gradle
+- How to use dekorate with gradle
 - How you can use the openshift-spring-stater.
-- How ap4k detects that this is a web app and automatically configures services and probes.
+- How dekorate detects that this is a web app and automatically configures services and probes.
 - How you can end-to-end test the application.
 - How you can trigger an s2i build after the compilation.
 
@@ -17,8 +17,8 @@ To build the application:
     
 The application is using:
 
-     compile("io.ap4k:openshift-spring-starter:${ap4kVersion}")
-     annotationProcessor("io.ap4k:openshift-annotations:${ap4kVersion}")
+     compile("io.dekorate:openshift-spring-starter:${dekorateVersion}")
+     annotationProcessor("io.dekorate:openshift-annotations:${dekorateVersion}")
 
 Which contains all the required modules, including the annotation processors that detect spring web applications.
 
@@ -38,15 +38,15 @@ To enable annotation processing in gradle:
     
     apply plugin: 'org.junit.platform.gradle.plugin'
     
-The [Main.groovy](src/main/groovy/io/ap4k/example/sbonopenshift/Main.groovy) is annotated with `@OpenshiftApplication` which triggers the resource generation.
+The [Main.groovy](src/main/groovy/io/dekorate/example/sbonopenshift/Main.groovy) is annotated with `@OpenshiftApplication` which triggers the resource generation.
 This annotation allows the user to trigger an s2i build after the compilation, by passing the system property 
-`ap4k.build=true` to the build for example:
+`dekorate.build=true` to the build for example:
 
-    ./gradlew clean build -Dap4k.build=true
+    ./gradlew clean build -Ddekorate.build=true
 
 Note: To perform an actual build, the `oc` binary is required to be configured to point to an existing openhisft environment.
 
-The spring web application processor will detect our [Controller.java](src/main/groovy/io/ap4k/example/sbonopenshift/Controller.groovy), and will:
+The spring web application processor will detect our [Controller.java](src/main/groovy/io/dekorate/example/sbonopenshift/Controller.groovy), and will:
 
 - add container port 8080
 - expose port 8080 as a service
@@ -57,10 +57,10 @@ The spring web application processor will detect our [Controller.java](src/main/
 For the purpose of integration testing it includes:
 
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.1.0")
-    testImplementation("io.ap4k:openshift-junit:${ap4kVersion}")
+    testImplementation("io.dekorate:openshift-junit:${dekorateVersion}")
 
-This annotation will bring in the junit5 extension that ap4k provides, that allows you to run integration tests via the '@OpenshiftIntegrationTest' annotation.
-The integration test is [SpringBootOnOpenshiftTests.java](src/test/groovy/io/ap4k/example/sbonopenshift/SpringBootOnOpenshiftTests.java) and it demonstrates:
+This annotation will bring in the junit5 extension that dekorate provides, that allows you to run integration tests via the '@OpenshiftIntegrationTest' annotation.
+The integration test is [SpringBootOnOpenshiftTests.java](src/test/groovy/io/dekorate/example/sbonopenshift/SpringBootOnOpenshiftTests.java) and it demonstrates:
 
 - how you can deploy the application for end to end testing
 - how use can use the kubernetes client from within the test to connect to the application.

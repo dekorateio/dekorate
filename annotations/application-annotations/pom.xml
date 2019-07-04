@@ -2,19 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>annotations</artifactId>
-    <groupId>io.ap4k</groupId>
+    <groupId>io.dekorate</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>application-annotations</artifactId>
-  <name>AP4K :: Annotations :: Application CRD</name>
+  <name>Dekorate :: Annotations :: Application CRD</name>
 
   <dependencies>
     <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>ap4k-core</artifactId>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -79,7 +79,7 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/application/annotation/**</include>
+                    <include>io/dekorate/application/annotation/**</include>
                   </includes>
                 </filter>
               </filters>
@@ -98,13 +98,13 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/application/adapter/**</include>
-                    <include>io/ap4k/application/apt/**</include>
-                    <include>io/ap4k/application/config/**</include>
-                    <include>io/ap4k/application/configurator/**</include>
-                    <include>io/ap4k/application/generator/**</include>
-                    <include>io/ap4k/application/handler/**</include>
-                    <include>io/ap4k/application/util/**</include>
+                    <include>io/dekorate/application/adapter/**</include>
+                    <include>io/dekorate/application/apt/**</include>
+                    <include>io/dekorate/application/config/**</include>
+                    <include>io/dekorate/application/configurator/**</include>
+                    <include>io/dekorate/application/generator/**</include>
+                    <include>io/dekorate/application/handler/**</include>
+                    <include>io/dekorate/application/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>

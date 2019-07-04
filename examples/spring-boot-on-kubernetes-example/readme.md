@@ -3,7 +3,7 @@
 The purpose of this example is to demonstrate the following:
 
 - How you can use the kubernetes-spring-stater.
-- How ap4k detects that this is a web app and automatically configures services and probe.
+- How dekorate detects that this is a web app and automatically configures services and probe.
 - How you can end-to-end test the application.
 - How you can trigger a docker build after the compilation.
 
@@ -11,24 +11,24 @@ The purpose of this example is to demonstrate the following:
 The application is using:
 
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-spring-starter</artifactId>
       <version>${project.version}</version>
     </dependency>
     
 Which contains all the required modules, including the annotation processors that detect spring web applications.
 
-The [Main.class](src/main/java/io/ap4k/example/sbonkubernetes/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
+The [Main.class](src/main/java/io/dekorate/example/sbonkubernetes/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
 It's also annotated with `@EnableDockerBuild`. This annotation allows the user to trigger a docker build after the compilation, by passing the system property 
-`ap4k.build=true` to the build for example:
+`dekorate.build=true` to the build for example:
 
-    mvn clean install -Dap4k.build=true
+    mvn clean install -Ddekorate.build=true
 
-Note: Ap4k is not going to generate a Dockerfile for you. It expects to find one in the root of the module and it also expects to find the `docker` binary
+Note: Dekorate is not going to generate a Dockerfile for you. It expects to find one in the root of the module and it also expects to find the `docker` binary
 pointing to a running docker daemon.
 
 
-The spring web application processor will detect our [Controller.java](src/main/java/io/ap4k/example/sbonkubernetes/Controller.java), and will:
+The spring web application processor will detect our [Controller.java](src/main/java/io/dekorate/example/sbonkubernetes/Controller.java), and will:
 
 - add container port 8080
 - expose port 8080 as a service
@@ -39,14 +39,14 @@ The spring web application processor will detect our [Controller.java](src/main/
 For the purpose of integration testing it includes:
 
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-junit-starter</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
 
-This annotation will bring in the junit5 extension that ap4k provides, that allows you to run integration tests via the '@KubernetesIntegrationTest' annotation.
-The integration test is [SpringBootOnKubernetesIT.java](src/test/java/io/ap4k/example/sbonkubernetes/SpringBootOnKubernetesIT.java) and it demonstrates:
+This annotation will bring in the junit5 extension that dekorate provides, that allows you to run integration tests via the '@KubernetesIntegrationTest' annotation.
+The integration test is [SpringBootOnKubernetesIT.java](src/test/java/io/dekorate/example/sbonkubernetes/SpringBootOnKubernetesIT.java) and it demonstrates:
 
 - how you can deploy the application for end to end testing
 - how use can use the kubernetes client from within the test to connect to the application.

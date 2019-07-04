@@ -1,12 +1,12 @@
 # OpenShift Example 
 
 A very simple example that demonstrates the use of `@OpenshiftApplication` in its simplest form.
-Check the [Main.java](src/main/java/io/ap4k/examples/openshift/Main.java) which bears the annotation.
+Check the [Main.java](src/main/java/io/dekorate/examples/openshift/Main.java) which bears the annotation.
 To access the `@OpenshiftApplication` annotation you just need to have the following dependency in your
 class path:
 
     <dependency>
-      <groupId>io.ap4k</groupId>
+      <groupId>io.dekorate</groupId>
       <artifactId>openshift-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -15,7 +15,7 @@ Compile the project using:
 
     mvn clean install
     
-You can find the generated deployment under: `target/classes/ap4k/openshfit.yml`.
+You can find the generated deployment under: `target/classes/dekorate/openshfit.yml`.
 
     ---
     apiVersion: "v1"

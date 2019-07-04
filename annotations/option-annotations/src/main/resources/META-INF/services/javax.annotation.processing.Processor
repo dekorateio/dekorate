@@ -1,3 +1,3 @@
-io.ap4k.option.apt.GeneratorOptionsProcessor
-io.ap4k.option.apt.JvmOptionsProcessor
+io.dekorate.option.apt.GeneratorOptionsProcessor
+io.dekorate.option.apt.JvmOptionsProcessor
 

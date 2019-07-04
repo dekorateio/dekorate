@@ -1,6 +1,6 @@
-# Ap4k Examples
+# Dekorate Examples
 
-A collection of examples used for showcasing and testing`ap4k`.
+A collection of examples used for showcasing and testing`dekorate`.
 
 
 # Kubernetes Examples

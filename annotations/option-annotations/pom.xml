@@ -18,19 +18,19 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>annotations</artifactId>
-    <groupId>io.ap4k</groupId>
+    <groupId>io.dekorate</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>option-annotations</artifactId>
-  <name>AP4K :: Annotations :: Options</name>
+  <name>Dekorate :: Annotations :: Options</name>
 
   <dependencies>
     <dependency>
-      <groupId>io.ap4k</groupId>
-      <artifactId>ap4k-core</artifactId>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -74,7 +74,7 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/option/annotation/**</include>
+                    <include>io/dekorate/option/annotation/**</include>
                   </includes>
                 </filter>
               </filters>
@@ -93,13 +93,13 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/ap4k/option/adapter/**</include>
-                    <include>io/ap4k/option/config/**</include>
-                    <include>io/ap4k/option/configurator/**</include>
-                    <include>io/ap4k/option/decorator/**</include>
-                    <include>io/ap4k/option/generator/**</include>
-                    <include>io/ap4k/option/handler/**</include>
-                    <include>io/ap4k/option/apt/**</include>
+                    <include>io/dekorate/option/adapter/**</include>
+                    <include>io/dekorate/option/config/**</include>
+                    <include>io/dekorate/option/configurator/**</include>
+                    <include>io/dekorate/option/decorator/**</include>
+                    <include>io/dekorate/option/generator/**</include>
+                    <include>io/dekorate/option/handler/**</include>
+                    <include>io/dekorate/option/apt/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>

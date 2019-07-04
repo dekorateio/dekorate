@@ -1,6 +1,6 @@
 # Rebranding Notice
 
-As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
+As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `dekorate` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
 
 The new project page will be: http://dekorate.io and the new repository will be: https://github.com/dekorateio/dekorate.
 This repostiory will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
@@ -10,11 +10,11 @@ For new issues and pull requests please don't forget to use https://github.com/d
 
 # Annotation processors for Kubernetes
 
-[![CircleCI](https://circleci.com/gh/ap4k/ap4k.svg?style=svg)](https://circleci.com/gh/ap4k/ap4k) [![Maven Central](https://img.shields.io/maven-central/v/io.ap4k/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.ap4k%22%20AND%20a:%22kubernetes-annotations%22)
+[![CircleCI](https://circleci.com/gh/dekorateio/dekorate.svg?style=svg)](https://circleci.com/gh/dekorateio/dekorate) [![Maven Central](https://img.shields.io/maven-central/v/io.dekorate/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.dekorate%22%20AND%20a:%22kubernetes-annotations%22)
 
-Ap4k is a collection of Java annotations and processors for generating Kubernetes/OpenShift manifests at compile time.
+Dekorate is a collection of Java annotations and processors for generating Kubernetes/OpenShift manifests at compile time.
 
-It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) on your main class (or any other class).
+It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) on your main class (or any other class).
 
 Stop wasting time editing xml, json and yml and customize the kubernetes manifests using annotations.
 
@@ -90,10 +90,10 @@ To start using this project you just need to add one of the provided annotations
 
 ### Kubernetes annotations
 
-[@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) can be added to your project like:
+[@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) can be added to your project like:
 
 ```java
-import io.ap4k.kubernetes.annotaion.KubernetesApplication;
+import io.dekorate.kubernetes.annotaion.KubernetesApplication;
 
 @KubernetesApplication
 public class Main {
@@ -116,7 +116,7 @@ This module can be added to the project using:
 
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -213,10 +213,10 @@ The output file name may be used in certain cases, to set the value of `JAVA_APP
 
 #### Adding extra ports and exposing them as services
 
-To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) :
+To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
 ```java
-import io.ap4k.kubernetes.annotation.Env;
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.Env;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication(ports = @Port(name = "web", containerPort = 8080))
 public class Main {
@@ -232,10 +232,10 @@ This will trigger the addition of a container port to the `Deployment` but also 
 **Note:**  This doesn't need to be done explicitly, if the application framework is detected and support, ports can be extracted from there *(see below)*.
 
 #### Adding container environment variables
-To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) :
+To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
 ```java
-import io.ap4k.kubernetes.annotation.Env;
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.Env;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication(envVars = @Env(name = "key1", value = "var1"))
 public class Main {
@@ -251,10 +251,10 @@ Additional options are provided for adding environment variables from fields, co
 #### Working with volumes and mounts
 To define volumes and mounts for your application, you can use something like:
 ```java
-import io.ap4k.kubernetes.annotation.Port;
-import io.ap4k.kubernetes.annotation.Mount;
-import io.ap4k.kubernetes.annotation.PersistentVolumeClaimVolume;
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.Port;
+import io.dekorate.kubernetes.annotation.Mount;
+import io.dekorate.kubernetes.annotation.PersistentVolumeClaimVolume;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication(ports = @Port(name = "http", containerPort = 8080), 
   pvcVolumes = @PersistentVolumeClaimVolume(volumeName = "mysql-volume", claimName = "mysql-pvc"),
@@ -282,12 +282,12 @@ It's common to pass the JVM options in the manifests using the `JAVA_OPTS` envir
 This is something complex as it usually difficult to remember all options by heart and thus its error prone.
 The worst part is that you don't realize the mistake until its TOO late.
 
-Ap4k provides a way to manage those options using the `@JvmOption` annotation, which is included in the `options-annotations`.
+Dekorate provides a way to manage those options using the `@JvmOption` annotation, which is included in the `options-annotations`.
 
 ```java
-import io.ap4k.options.annotation.JvmOptions
-import io.ap4k.options.annotation.GarbageCollector;
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.options.annotation.JvmOptions
+import io.dekorate.options.annotation.GarbageCollector;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication
 @JvmOptions(server=true, xmx=1024, preferIpv4Stack=true, gc=GarbageCollector.SerialGC)
@@ -302,7 +302,7 @@ public class Main {
 This module can be added to the project using:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>option-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -315,8 +315,8 @@ Note: The module is included in all starters.
 If for any reason the application requires the use of init containers, they can be easily defined using the `initContainer`
 property, as demonstrated below.
 ```java
-import io.ap4k.kubernetes.annotation.Container;
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.Container;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication(initContainers = @Container(image="foo/bar:latest", command="foo"))
 public class Main {
@@ -327,7 +327,7 @@ public class Main {
 }
 ```
 
-The [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java) supports the following fields:
+The [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
 
 - Image
 - Image Pull Policy
@@ -341,8 +341,8 @@ The [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java
 
 Similarly to [init containers](#init-containers) support for sidecars is also provided using the `sidecars` property. For example:
 ```java
-import io.ap4k.kubernetes.annotation.Container;
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.Container;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication(sidecars = @Container(image="jaegertracing/jaeger-agent",
                                              args="--collector.host-port=jaeger-collector.jaeger-infra.svc:14267"))
@@ -354,7 +354,7 @@ public class Main {
 }
 ```
 
-As in the case of [init containers](#init-containers) the [@Container](core/src/main/java/io/ap4k/kubernetes/annotation/Container.java) supports the following fields:
+As in the case of [init containers](#init-containers) the [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
 
 - Image
 - Image Pull Policy
@@ -369,7 +369,7 @@ As in the case of [init containers](#init-containers) the [@Container](core/src/
 This module can be added to the project using:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -380,10 +380,10 @@ This module provides two new annotations:
 
 - @OpenshiftApplication
 
-[@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/ap4k/openshift/annotation/OpenshiftApplication.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `openshift.yml` / `openshift.json` instead.
+[@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/dekorate/openshift/annotation/OpenshiftApplication.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `openshift.yml` / `openshift.json` instead.
 Also instead of creating a `Deployment` it will create a `DeploymentConfig`.
 
-**NOTE:** A project can use both [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/ap4k/kubernetes/annotation/KubernetesApplication.java) and [@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/ap4k/openshift/annotation/OpenshiftApplication.java). If both the kubernetes and
+**NOTE:** A project can use both [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) and [@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/dekorate/openshift/annotation/OpenshiftApplication.java). If both the kubernetes and
 openshift annotation processors are present both kubernetes and openshift resources will be generated. 
 
 #### Adding the openshift annotation processor to the classpath
@@ -391,7 +391,7 @@ openshift annotation processors are present both kubernetes and openshift resour
 This module can be added to the project using:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>openshift-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -406,7 +406,7 @@ Out of the box resources for s2i will be generated.
 
 Here's an example:
 ```java
-import io.ap4k.openshift.annotation.OpenshiftApplication;
+import io.dekorate.openshift.annotation.OpenshiftApplication;
 
 @OpenshiftApplication(name = "doc-example")
 public class Main {
@@ -435,15 +435,15 @@ done either by `oc get bc` or by knowing the conventions used to read names from
 ### Prometheus annotations
 
 The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.
-In particular it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/ap4k/prometheus/model/ServiceMonitor.java) which are used by the
+In particular it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/model/ServiceMonitor.java) which are used by the
 [Prometheus Operator](https://github.com/coreos/prometheus-operator) in order to configure [prometheus](https://prometheus.io/) to collect metrics from the target application.
 
-This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/ap4k/prometheus/annotation/EnableServiceMonitor.java) annotation.
+This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/annotation/EnableServiceMonitor.java) annotation.
 
 Here's an example:
 ```java
-import io.ap4k.kubernetes.annotation.KubernentesApplication;
-import io.ap4k.prometheus.annotation.EnableServiceMonitor;
+import io.dekorate.kubernetes.annotation.KubernentesApplication;
+import io.dekorate.prometheus.annotation.EnableServiceMonitor;
 
 @KubernetesApplication
 @EnableServiceMonitor(port = "http", path="/prometheus", interval=20)
@@ -464,7 +464,7 @@ For example, the Spring Boot module will decorate the monitor with the Spring Bo
 
 The [jaeger](https://www.jaegertracing.io) annotation processor provides annotations for injecting the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent) into the application pod.
 
-Most of the work is done with the use of the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/ap4k/jaeger/annotation/EnableJaegerAgent.java) annotation.
+Most of the work is done with the use of the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) annotation.
 
 #### Using the Jaeger Operator
 
@@ -473,8 +473,8 @@ The annotation processor will automicatlly set the required annotations to the g
 
 Here's an example:
 ```java
-import io.ap4k.kubernetes.annotation.KubernentesApplication;
-import io.ap4k.jaeger.annotation.EnableJaegerAgent;
+import io.dekorate.kubernetes.annotation.KubernentesApplication;
+import io.dekorate.jaeger.annotation.EnableJaegerAgent;
 
 @KubernetesApplication
 @EnableJaegerAgent(operatorEnabled="true")
@@ -486,11 +486,11 @@ public class Main {
 ```    
 ##### Manually injection the agent sidecar
 
-For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/ap4k/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
+For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
 
 ```java
-import io.ap4k.kubernetes.annotation.KubernentesApplication;
-import io.ap4k.jaeger.annotation.EnableJaegerAgent;
+import io.dekorate.kubernetes.annotation.KubernentesApplication;
+import io.dekorate.jaeger.annotation.EnableJaegerAgent;
 
 @KubernetesApplication
 @EnableJaegerAgent
@@ -512,9 +512,9 @@ The [services catalog](https://svc-cat.io) annotation processor is can be used i
 
 Here's an example:
 ```java
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
-import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
-import io.ap4k.servicecatalog.annotation.ServiceCatalog;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
+import io.dekorate.servicecatalog.annotation.ServiceCatalog;
 
 @KubernetesApplication
 @ServiceCatalog(instances =
@@ -534,7 +534,7 @@ It will also decorate any `Pod`, `Deployment`, `DeploymentConfig` and so on with
 This module can be added to the project using:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>servicecatalog-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -548,8 +548,8 @@ This module can be added to the project using:
 The [istio](https://istio.io)  annotation processor can be used to automatically inject the istio sidecar to the generated resources. 
 For example:
 ```java
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
-import io.ap4k.istio.annotation.Istio;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.istio.annotation.Istio;
 
 @Istio
 @KubernetesApplication
@@ -564,7 +564,7 @@ public class Main {
 This module can be added to the project using:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>istio-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -587,10 +587,10 @@ The content of the component descriptor will be determined by the existing confi
 For example, the following code:
 
 ```java
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
-import io.ap4k.component.annotation.ComponentApplication;
-import io.ap4k.servicecatalog.annotation.ServiceCatalog;
-import io.ap4k.servicecatalog.annotation.ServiceCatalogInstance;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.component.annotation.ComponentApplication;
+import io.dekorate.servicecatalog.annotation.ServiceCatalog;
+import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -624,27 +624,27 @@ services:
 This module can be added to the project using:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>component-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
 ```  
 ### Application Annotations
 
-The [@EnableApplicationResource](annotations/application-annotations/src/main/java/io/ap4k/application/annotation/EnableApplicationResource.java) enables the generation of the `Application` custom resource, that is defined as part of https://github.com/kubernetes-sigs/application.
+The [@EnableApplicationResource](annotations/application-annotations/src/main/java/io/dekorate/application/annotation/EnableApplicationResource.java) enables the generation of the `Application` custom resource, that is defined as part of https://github.com/kubernetes-sigs/application.
 
 To use this annotation, one needs:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>application-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
 ```
 And then its just a matter of specifying:
 ```java
-import io.ap4k.kubernetes.annotation.KubernetesApplication;
-import io.ap4k.application.annotation.EnableApplicationResource;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.application.annotation.EnableApplicationResource;
 
 @KubernetesApplication
 @EnableApplicationResource(icons=@Icon(src="url/to/icon"), owners=@Contact(name="John Doe", email="john.doe@somemail.com"))
@@ -655,7 +655,7 @@ public class Main {
      }
 }
 ```
-Along we the resources that ap4k usually generates, there will be also an `Application` custom resource.
+Along we the resources that dekorate usually generates, there will be also an `Application` custom resource.
 
     
 ###  Framework integration
@@ -674,7 +674,7 @@ With spring boot its suggested to start with one of the provided starters:
 
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -684,7 +684,7 @@ Or if you are on [openshift](https://openshift.com):
 
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>openshfit-spring-starter</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -692,7 +692,7 @@ Or if you are on [openshift](https://openshift.com):
 
 ##### Annotation less
 For spring boot application all you need to do, is adding one of the starters to the classpath. No need to specify an additonal annotation.
-This provides the fastest way to get started using [ap4k](https://github.com/ap4k/ap4k) with [spring boot](https://spring.io/projects/spring-boot).
+This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
 Note: Still, if you need to customize the generted manifests, you still have to use annotations.
 
@@ -705,14 +705,14 @@ Apart from the core feature, which is resource generation, there are a couple of
 These features have to do with things like building, deploying and testing.
 
 ### Building and Deploying?
-Ap4k does not generate Dockerfiles, neither it provides internal support for performing docker or s2i builds.
+Dekorate does not generate Dockerfiles, neither it provides internal support for performing docker or s2i builds.
 It does however allow the user to hook external tools (e.g. the `docker` or `oc`) to trigger container image builds after the end of compilation.
 
 So, at the moment as an experimental feature the following hooks are provided:
 
-- docker build hook (requires docker binary, triggered with `-Dap4k.build=true`)
-- docker push hook (requires docker binary, triggered with `-Dap4k.push=true`)
-- openshift s2i build hook (requires oc binary, triggered with `-Dap4k.deploy=true`)
+- docker build hook (requires docker binary, triggered with `-Ddekorate.build=true`)
+- docker push hook (requires docker binary, triggered with `-Ddekorate.push=true`)
+- openshift s2i build hook (requires oc binary, triggered with `-Ddekorate.deploy=true`)
 
 #### Docker build hook
 This hook will just trigger a docker build, using an existing Dockerfile at the root of the project.
@@ -723,13 +723,13 @@ To enable the docker build hook you need:
 - a `Dockerfile` in the project/module root
 - the `docker` binary configured to point the docker daemon of your kubernetes environment.
 
-To trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
+To trigger the hook, you need to pass `-Ddekorate.build=true`  as an argument to the build, for example:
 ```bash
-mvn clean install -Dap4k.build=true
+mvn clean install -Ddekorate.build=true
 ```
 or if you are using gradle:
 ```bash
-gradle build -Dap4k.build=true   
+gradle build -Ddekorate.build=true   
 ```
 When push is enabled, the registry can be specified as part of the annotation, or via system properties.
 Here's an example via annotation configuration:
@@ -740,10 +740,10 @@ public class Main {
 ```    
 And here's how it can be done via build properties (system properties):
 ```bash
-mvn clean install -Dap4k.docker.registry=quay.io -Dap4k.push=true    
+mvn clean install -Ddekorate.docker.registry=quay.io -Ddekorate.push=true    
 ```
 
-Note: Ap4k will **NOT** push images on its own. It will delegate to the `docker` binary. So the user needs to make sure
+Note: Dekorate will **NOT** push images on its own. It will delegate to the `docker` binary. So the user needs to make sure
 beforehand that is logged in and has taken all necessary actions for a `docker push` to work.
     
 #### S2i build hook
@@ -754,22 +754,22 @@ To enable the docker build hook you need:
 - the `openshift-annotations` module (already included in all openshift starter modules)
 - the `oc` binary configured to point the docker daemon of your kubernetes environment.
 
-Finally, to trigger the hook, you need to pass `-Dap4k.build=true`  as an argument to the build, for example:
+Finally, to trigger the hook, you need to pass `-Ddekorate.build=true`  as an argument to the build, for example:
 ```bash
-mvn clean install -Dap4k.build=true
+mvn clean install -Ddekorate.build=true
 ```   
 or if you are using gradle:
 ```bash
-gradle build -Dap4k.build=true  
+gradle build -Ddekorate.build=true  
 ```    
 ### Junit5 extensions 
 
-Ap4k provides two junit5 extensions for:
+Dekorate provides two junit5 extensions for:
 
 - Kubernetes
 - Openshift
 
-These extensions are `ap4k` aware and can read generated resources and configuration, in order to manage `end to end` tests
+These extensions are `dekorate` aware and can read generated resources and configuration, in order to manage `end to end` tests
 for the annotated applications.
 
 #### Features
@@ -786,12 +786,12 @@ for the annotated applications.
 The kubernetes extension can be used by adding the following dependency:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-junit</artifactId>
   <version>${project.version}</version>
 </dependency>
 ```    
-This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/ap4k/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
+This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
 
 By adding the annotation to your test class the following things will happen:
 
@@ -811,7 +811,7 @@ Supported items for injection:
 - Pod (the application pod)
 - KubernetesList (the list with all generated resources)
 
-To inject one of this you need a field in the code annotated with [@Inject](testing/core-junit/src/main/java/io/ap4k/testing/annotation/Inject.java).
+To inject one of this you need a field in the code annotated with [@Inject](testing/core-junit/src/main/java/io/dekorate/testing/annotation/Inject.java).
 
 For example:
 ```java
@@ -854,11 +854,11 @@ This is important since in the `test` phase the application is not packaged. Her
  
 #### OpenShift extension for JUnit5 
 
-Similarly to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/ap4k/testing/annotation/OpenshiftIntegrationTest.java).
+Similarly to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/dekorate/testing/annotation/OpenshiftIntegrationTest.java).
 To use that you need to add:
 ```xml
 <dependency>
-  <groupId>io.ap4k</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>openshift-junit</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -881,7 +881,7 @@ By adding the annotation to your test class the following things will happen:
 #### Configuration externalization for known frameworks
 It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.
 
-Ap4k is graudally adding support for configuration externalization for the supported frameworks:
+Dekorate is graudally adding support for configuration externalization for the supported frameworks:
 
 - spring boot
 
@@ -889,7 +889,7 @@ For these frameworks, the use of annotations is optional, as everything may be c
 Each annotation may be expressed using properties or yaml using the following steps.
 
 - Each annotation property is expressed using a key/value pair.
-- All keys start with the `ap4k.<annotation kind>.` prefix, where `annotation kind` is the annotation class name in lowercase, stripped of the `Application` suffix.
+- All keys start with the `dekorate.<annotation kind>.` prefix, where `annotation kind` is the annotation class name in lowercase, stripped of the `Application` suffix.
 - The remaining part of key is the annotation property name.
 - For nesting properties the key is also nested following the previous rule.
 
@@ -903,19 +903,19 @@ The following annotation configuration:
     
 Can be expressed using properties:
 
-    ap4k.kubernetes.labels[0].key=foo
-    ap4k.kubernetes.labels[0].value=bar
+    dekorate.kubernetes.labels[0].key=foo
+    dekorate.kubernetes.labels[0].value=bar
     
 or using yaml:
 
-    ap4k:
+    dekorate:
       kubernetes:
         labels:
           - key: foo
             value: bar
    
    
-In the examples above, `ap4k` is the prefix that we use to `namespace` the ap4k configuration. `kubernetes` defines the annotation kind (its `@KubernetesApplication` in lower case and stripped of the `Application` suffix).
+In the examples above, `dekorate` is the prefix that we use to `namespace` the dekorate configuration. `kubernetes` defines the annotation kind (its `@KubernetesApplication` in lower case and stripped of the `Application` suffix).
 `labels`, `key` and `value` are the property names and since the `Label` is nested under `@KubernetesApplication` so are the properties.
 
 The exact same example for openshift (where `@OpenshiftApplication` is used instead) would be:
@@ -926,12 +926,12 @@ The exact same example for openshift (where `@OpenshiftApplication` is used inst
     
 Can be expressed using properties:
 
-    ap4k.openshift.labels[0].key=foo
-    ap4k.openshift.labels[0].value=bar
+    dekorate.openshift.labels[0].key=foo
+    dekorate.openshift.labels[0].value=bar
     
 or using yaml:
 
-    ap4k:
+    dekorate:
       openshift:
         labels:
           - key: foo
@@ -939,7 +939,7 @@ or using yaml:
    
 ##### Spring Boot
 
-For spring boot, ap4k will look for configuration under:
+For spring boot, dekorate will look for configuration under:
 
 - application.properties
 - application.yml
@@ -955,19 +955,19 @@ Also it will look for the same files under the kubernetes profile:
 #### External generator integration
 
 No matter how good a generator/scaffolding tool is, its often desirable to handcraft part of it.
-Other times it might be desirable to combine different tools together (e.g. to generate the manifests using fmp but customize them via ap4k annotations)
+Other times it might be desirable to combine different tools together (e.g. to generate the manifests using fmp but customize them via dekorate annotations)
 
-No matter what the reason is, ap4k supports working on existing resources and decorating them based on the provided annotation configuration.
-This is as simple as letting ap4k know where to read the existing manifests and where to store the generated ones. By adding the [@GeneratorOptions](core/src/main/java/io/ap4k/annotation/GeneratorOptions.java).
+No matter what the reason is, dekorate supports working on existing resources and decorating them based on the provided annotation configuration.
+This is as simple as letting dekorate know where to read the existing manifests and where to store the generated ones. By adding the [@GeneratorOptions](core/src/main/java/io/dekorate/annotation/GeneratorOptions.java).
 
 ##### Integration with Fabric8 Maven Plugin.
 
 The fabric8-maven-plugin can be used to package applications for kubernetes and openshift. It also supports generating manifests.
-A user might choose to build images using fmp, but customize them using `ap4k` annotations instead of xml.
+A user might choose to build images using fmp, but customize them using `dekorate` annotations instead of xml.
 
 An example could be to expose an additional port:
 
-This can by done by configuring ap4k to read the fmp generated manifests from `META-INF/fabric8` which is where fmp stores them and save them back there once decoration is done.
+This can by done by configuring dekorate to read the fmp generated manifests from `META-INF/fabric8` which is where fmp stores them and save them back there once decoration is done.
 ```java
 @GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
 @KubernetesApplication(port = @Port(name="srv", containerPort=8181)
@@ -985,5 +985,5 @@ By all means please do! We love contributions!
 Docs, Bug fixes, New features ... everything is important!
 
 Make sure you take a look at contributor [guidelines](contributor-guideliness.md).
-Also, it can be useful to have a look at the ap4k [design](design.md).
+Also, it can be useful to have a look at the dekorate [design](design.md).
 
