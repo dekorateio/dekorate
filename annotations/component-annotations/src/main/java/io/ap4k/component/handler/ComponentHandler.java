@@ -29,8 +29,6 @@ import io.ap4k.kubernetes.config.ConfigKey;
 import io.ap4k.kubernetes.config.Configuration;
 import io.ap4k.kubernetes.config.Env;
 import io.ap4k.utils.Strings;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.IOException;
 

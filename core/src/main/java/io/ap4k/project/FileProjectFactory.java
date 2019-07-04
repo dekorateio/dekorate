@@ -15,10 +15,6 @@
  */
 package io.ap4k.project;
 
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-
-import javax.annotation.processing.ProcessingEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,6 +23,9 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.StreamSupport;
 
+import io.ap4k.Ap4kException;
+import io.ap4k.utils.Git;
+
 public class FileProjectFactory {
 
   private static Project PROJECT = null;
@@ -34,7 +33,7 @@ public class FileProjectFactory {
   public static final String GITHUB_HTTPS = "https://github.com/";
 
   /**
-   * Creates a {@link Project} from the specified {@link ProcessingEnvironment}.
+   * Creates a {@link Project} from the specified {@link File}.
    * @param file          A file within the project.
    * @return              The project.
    */
@@ -51,15 +50,20 @@ public class FileProjectFactory {
   }
 
   private static Project createInternal(File f) {
-    Path path = f.toPath();
-    Optional<BuildInfo> info = getProjectInfo(path);
-    Optional<ScmInfo> scmInfo = getScmInfo();
-    while (path != null && !info.isPresent()) {
-      path = path.getParent();
-      info = getProjectInfo(path);
-
+    Path infoPath = f.toPath();
+    Optional<BuildInfo> info = getProjectInfo(infoPath);
+    while (infoPath != null && !info.isPresent()) {
+      infoPath = infoPath.getParent();
+      info = getProjectInfo(infoPath);
     }
-    return new Project(path, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.get());
+
+    Path scmPath = f.toPath();
+    while (scmPath != null && !scmPath.resolve(Git.DOT_GIT).toFile().exists()) {
+      System.out.println(scmPath.toAbsolutePath().toString());
+      scmPath = scmPath.getParent();
+    }
+    Optional<ScmInfo> scmInfo = getScmInfo(scmPath);
+    return new Project(infoPath, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.get());
   }
 
   /**
@@ -79,22 +83,12 @@ public class FileProjectFactory {
       .map(r -> r.getInfo(path));
   }
 
-  private static Optional<ScmInfo> getScmInfo(){
-    FileRepositoryBuilder builder = new FileRepositoryBuilder();
-    Optional<ScmInfo> scmInfoOpt = Optional.empty();
-    try {
-      Repository repo = builder
-        .readEnvironment() // scan environment GIT_* variables
-        .findGitDir() // scan up the file system tree
-        .build();
-      String uri = repo.getConfig().getString("remote", "origin", "url");
-      uri = uri.replace(GITHUB_SSH, GITHUB_HTTPS);
-      String branch = repo.getBranch();
-      scmInfoOpt = Optional.of(new ScmInfo(uri, branch, ""));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return scmInfoOpt;
+  private static Optional<ScmInfo> getScmInfo(Path path) {
+    Optional<ScmInfo> scmInfo = Optional.empty();
+    String uri = Git.getRemoteUrl(path, Git.ORIGIN).map(u -> u.replace(GITHUB_SSH, GITHUB_HTTPS)).orElse(null);
+    String branch = Git.getBranch(path).orElse(null);
+    scmInfo = Optional.of(new ScmInfo(uri, branch, ""));
+    return scmInfo;
   }
 
 }
