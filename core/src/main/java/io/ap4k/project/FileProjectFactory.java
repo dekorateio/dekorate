@@ -63,7 +63,7 @@ public class FileProjectFactory {
       scmPath = scmPath.getParent();
     }
     Optional<ScmInfo> scmInfo = getScmInfo(scmPath);
-    return new Project(infoPath, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.get());
+    return new Project(infoPath, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.orElse(null));
   }
 
   /**
