@@ -1,14 +1,6 @@
-# Rebranding Notice
+![dekorate logo](logo.png "Dekorate") 
 
-As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `dekorate` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
-
-The new project page will be: http://dekorate.io and the new repository will be: https://github.com/dekorateio/dekorate.
-This repostiory will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
-
-For new issues and pull requests please don't forget to use https://github.com/dekorateio/dekorate.
-
-
-# Annotation processors for Kubernetes
+# Dekorate
 
 [![CircleCI](https://circleci.com/gh/dekorateio/dekorate.svg?style=svg)](https://circleci.com/gh/dekorateio/dekorate) [![Maven Central](https://img.shields.io/maven-central/v/io.dekorate/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.dekorate%22%20AND%20a:%22kubernetes-annotations%22)
 
@@ -17,6 +9,15 @@ Dekorate is a collection of Java annotations and processors for generating Kuber
 It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) on your main class (or any other class).
 
 Stop wasting time editing xml, json and yml and customize the kubernetes manifests using annotations.
+
+## Rebranding Notice
+
+As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `dekorate` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
+
+The new project page will be: http://dekorate.io and the new repository will be: https://github.com/dekorateio/dekorate.
+This repostiory will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
+
+For new issues and pull requests please don't forget to use https://github.com/dekorateio/dekorate.
 
 ## Features
 
