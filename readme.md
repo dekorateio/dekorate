@@ -12,10 +12,10 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
 
 ## Rebranding Notice
 
-As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `dekorate` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
+As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
 
 The new project page will be: http://dekorate.io and the new repository will be: https://github.com/dekorateio/dekorate.
-This repostiory will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
+This repository will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
 
 For new issues and pull requests please don't forget to use https://github.com/dekorateio/dekorate.
 
