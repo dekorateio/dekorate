@@ -22,7 +22,7 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 
 ## Kubernetes
 | Property                                        | Type                                          | Description | Default Value                            |
-|-------------------------------------------------+-----------------------------------------------+-------------+------------------------------------------|
+|-------------------------------------------------|-----------------------------------------------|-------------|------------------------------------------|
 | dekorate.kubernetes.group                       | String                                        |             |                                          |
 | dekorate.kubernetes.name                        | String                                        |             |                                          |
 | dekorate.kubernetes.version                     | String                                        |             |                                          |
@@ -60,7 +60,7 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 
 ## Openshift
 | Property                                          | Type                                          | Description | Default Value                            |
-|---------------------------------------------------+-----------------------------------------------+-------------+------------------------------------------|
+|---------------------------------------------------|-----------------------------------------------|-------------|------------------------------------------|
 | dekorate.openshift.group                          | String                                        |             |                                          |
 | dekorate.openshift.name                           | String                                        |             |                                          |
 | dekorate.openshift.version                        | String                                        |             |                                          |
@@ -99,14 +99,14 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 
 #### BuildConfig
 | Property | Type   | Description | Default Value |
-|----------+--------+-------------+---------------|
+|----------|--------|-------------|---------------|
 | type     | String |             | s2i           |
 
 
 ## Component
 
 | Property                          | Type                                          | Description | Default Value                                  |
-|-----------------------------------+-----------------------------------------------+-------------+------------------------------------------------|
+|-----------------------------------|-----------------------------------------------|-------------|------------------------------------------------|
 | dekorate.component.name           | String                                        |             |                                                |
 | dekorate.component.deploymentMode | DeploymentMode                                |             | dev                                            |
 | dekorate.component.exposeService  | boolean                                       |             | false                                          |
@@ -117,7 +117,7 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 
 #### Link
 | Property      | Type                                    | Description | Default Value |
-|---------------+-----------------------------------------+-------------+---------------|
+|---------------|-----------------------------------------|-------------|---------------|
 | name          | String                                  |             |               |
 | componentName | String                                  |             |               |
 | kind          | Kind                                    |             | Env           |
@@ -129,17 +129,17 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 The section below describes all the avialables subtypes
 #### Annotation
 | Property | Type   | Description | Default Value |
-|----------+--------+-------------+---------------|
+|----------|--------|-------------|---------------|
 | key      | String |             |               |
 | value    | String |             |               |
 #### Label
 | Property | Type   | Description | Default Value |
-|----------+--------+-------------+---------------|
+|----------|--------|-------------|---------------|
 | key      | String |             |               |
 | value    | String |             |               |
 #### Env
 | Property  | Type   | Description | Default Value |
-|-----------+--------+-------------+---------------|
+|-----------|--------|-------------|---------------|
 | name      | String |             |               |
 | value     | String |             |               |
 | secret    | String |             |               |
@@ -148,7 +148,7 @@ The section below describes all the avialables subtypes
 
 #### Port
 | Property      | Type     | Description | Default Value |
-|---------------+----------+-------------+---------------|
+|---------------|----------|-------------|---------------|
 | name          | String   |             |               |
 | containerPort | int      |             |               |
 | hostPort      | int      |             | 0             |
@@ -157,7 +157,7 @@ The section below describes all the avialables subtypes
 
 #### Container
 | Property        | Type                                    | Description | Default Value                            |
-|-----------------+-----------------------------------------+-------------+------------------------------------------|
+|-----------------|-----------------------------------------|-------------|------------------------------------------|
 | image           | String                                  |             |                                          |
 | name            | String                                  |             |                                          |
 | envVars         | io.dekorate.kubernetes.annotation.Env[] |             |                                          |
@@ -171,7 +171,7 @@ The section below describes all the avialables subtypes
 | readinessProbe  | io.dekorate.kubernetes.annotation.Probe |             | @io.dekorate.kubernetes.annotation.Probe |
 #### Probe
 | Property            | Type   | Description | Default Value |
-|---------------------+--------+-------------+---------------|
+|---------------------|--------|-------------|---------------|
 | httpActionPath      | String |             |               |
 | execAction          | String |             |               |
 | tcpSocketAction     | String |             |               |
@@ -180,14 +180,14 @@ The section below describes all the avialables subtypes
 | timeoutSeconds      | int    |             |            10 |
 #### Mount
 | Property | Type    | Description | Default Value |
-|----------+---------+-------------+---------------|
+|----------|---------|-------------|---------------|
 | name     | String  |             |               |
 | path     | String  |             |               |
 | subPath  | String  |             |               |
 | readOnly | boolean |             | false         |
 #### SecretVolume
 | Property    | Type    | Description | Default Value |
-|-------------+---------+-------------+---------------|
+|-------------|---------|-------------|---------------|
 | volumeName  | String  |             |               |
 | secretName  | String  |             |               |
 | defaultMode | int     |             | 600           |
@@ -195,7 +195,7 @@ The section below describes all the avialables subtypes
 
 #### AzureDiskVolume
 | Property    | Type    | Description | Default Value |
-|-------------+---------+-------------+---------------|
+|-------------|---------|-------------|---------------|
 | volumeName  | String  |             |               |
 | diskName    | String  |             |               |
 | diskURI     | String  |             |               |
@@ -205,7 +205,7 @@ The section below describes all the avialables subtypes
 | readOnly    | boolean |             | false         |
 #### AwsElasticBlockStoreVolume
 | Property   | Type    | Description | Default Value |
-|------------+---------+-------------+---------------|
+|------------|---------|-------------|---------------|
 | volumeName | String  |             |               |
 | volumeId   | String  |             |               |
 | partition  | int     |             |               |
@@ -213,27 +213,27 @@ The section below describes all the avialables subtypes
 | readOnly   | boolean |             | false         |
 #### GitRepoVolume
 | Property   | Type   | Description | Default Value |
-|------------+--------+-------------+---------------|
+|------------|--------|-------------|---------------|
 | volumeName | String |             |               |
 | repository | String |             |               |
 | directory  | String |             |               |
 | revision   | String |             |               |
 #### PersistentVolumeClaimVolume
 | Property   | Type    | Description | Default Value |
-|------------+---------+-------------+---------------|
+|------------|---------|-------------|---------------|
 | volumeName | String  |             |               |
 | claimName  | String  |             |               |
 | readOnly   | boolean |             | false         |
 #### AzureFileVolume
 | Property   | Type    | Description | Default Value |
-|------------+---------+-------------+---------------|
+|------------|---------|-------------|---------------|
 | volumeName | String  |             |               |
 | shareName  | String  |             |               |
 | secretName | String  |             |               |
 | readOnly   | boolean |             | false         |
 #### ConfigMapVolume
 | Property      | Type    | Description | Default Value |
-|---------------+---------+-------------+---------------|
+|---------------|---------|-------------|---------------|
 | volumeName    | String  |             |               |
 | configMapName | String  |             |               |
 | defaultMode   | int     |             | 600           |
