@@ -1,0 +1,48 @@
+#foreach ($m in ${model.values()})
+#set ($key = $m.name.toLowerCase().replaceAll("application", ""))
+#foreach ($method in ${m.getMethods()})
+#set ($name = $method.getName())
+#set ($type = $method.getReturnType())
+##
+## Default Value
+##
+#set ($default = " ")
+#foreach ($attributeKey in ${method.getAttributes().keySet()})
+#if ($attributeKey.getName().equals("DEFAULT_VALUE"))
+#set ($default = $method.getAttribute($attributeKey))
+#end
+#end
+##
+## Description
+##
+#set ($description = " ")
+#set  ($annotations = $m.annotations)
+#foreach  ($annotation in $annotations)
+#if ($annotation.getClassRef().getName().equals("Description"))
+#set ($description = $annotation.getParameters().get("value"))
+#end
+#end
+##
+## Filter out Enums
+##
+#if (!$m.isEnum())
+##
+## Header
+## 
+#if (!$key.equals($lastkey))
+$m.name
+| Property | Type | Description | Default Value |
+|-
+#end
+#set ($lastkey=$key)
+##
+## Line
+## 
+#if ($m.name.contains("Application"))
+| dekorate.${key}.$name | $type | $description | $default |
+#else
+| $name | $type | $description | $default |
+#end
+#end
+#end
+#end

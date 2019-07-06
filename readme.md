@@ -695,9 +695,8 @@ Or if you are on [openshift](https://openshift.com):
 For spring boot application all you need to do, is adding one of the starters to the classpath. No need to specify an additonal annotation.
 This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
-Note: Still, if you need to customize the generted manifests, you still have to use annotations.
-
-In future releases, it should be possible to fully customize the manifests just by using `application.properties`.
+To customize/dekorate the generated manifests you can use `application.yml` or `application.properties`.
+Here's the full list of supported [configuration options](config.md).
 
 ## Experimental features
 
