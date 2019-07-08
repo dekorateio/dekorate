@@ -54,9 +54,6 @@ public class ComponentServiceCatalogHandler implements Handler<ServiceCatalogCon
       .withName(instance.getName())
       .endMetadata()
       .withNewSpec()
-      .withServiceClass(instance.getServiceClass())
-      .withServicePlan(instance.getServicePlan())
-      .withSecretName(instance.getBindingSecret())
       .withParameters(convertToModelParameter(instance.getParameters()))
       .endSpec().build();
   }
