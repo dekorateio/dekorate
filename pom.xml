@@ -300,6 +300,32 @@
         <java.source>11</java.source>
         <java.target>11</java.target>
       </properties>
+      <dependencyManagement>
+        <dependencies>
+            <dependency>
+              <groupId>io.sundr</groupId>
+              <artifactId>builder-annotations</artifactId>
+              <version>${version.sundrio}</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>com.sun</groupId>
+                  <artifactId>tools</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+            <dependency>
+              <groupId>io.sundr</groupId>
+              <artifactId>transform-annotations</artifactId>
+              <version>${version.sundrio}</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>com.sun</groupId>
+                  <artifactId>tools</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+          </dependencies>
+        </dependencyManagement>  
     </profile>
     <profile>
       <id>doclint-java8-disable</id>
