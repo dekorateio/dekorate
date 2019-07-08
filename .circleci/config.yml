@@ -32,15 +32,15 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
+          - v8-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - v8-dependencies-
 
       - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+          key: v8-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
       - run: mvn integration-test -Pwith-examples
@@ -66,15 +66,15 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
+          - v11-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - v11-dependencies-
 
       - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+          key: v11-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
       - run: mvn integration-test -Pwith-examples
@@ -87,15 +87,15 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
+          - v8-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - v8-dependencies-
 
       - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+          key: v8-dependencies-{{ checksum "pom.xml" }}
       - openshift/launch_openshift_311
       - run:
           name: Run build on openshift
