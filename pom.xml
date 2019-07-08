@@ -145,8 +145,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${java.source}</source>
+          <target>${java.target}</target>
         </configuration>
       </plugin>
       <plugin>
@@ -275,7 +275,11 @@
       <activation>
         <jdk>[1,1.9)</jdk>
       </activation>
-     <dependencyManagement>
+      <properties>
+        <java.source>1.8</java.source>
+        <java.target>1.8</java.target>
+      </properties>
+      <dependencyManagement>
        <dependencies>
          <dependency>
            <groupId>com.sun</groupId>
@@ -286,6 +290,16 @@
          </dependency>
         </dependencies>
       </dependencyManagement>
+    </profile>
+    <profile>
+      <id>jdk11</id>
+      <activation>
+        <jdk>[11,)</jdk>
+      </activation>
+      <properties>
+        <java.source>11</java.source>
+        <java.target>11</java.target>
+      </properties>
     </profile>
     <profile>
       <id>doclint-java8-disable</id>

@@ -47,7 +47,7 @@ public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> 
   private static final String JAVA_OPTS = "JAVA_OPTS";
 
   private static final String EQ = "=";
-  private static final String _ = " ";
+  private static final String EMPTY = " ";
   private static final String M = "M";
 
   private static final String XMS = "-Xms";
@@ -91,39 +91,39 @@ public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> 
   private static String mergeOptions(String existing, JvmConfig config) {
     StringBuilder sb = new StringBuilder().append(existing);
     if (!existing.contains(XMS) && config.getXms() > 0) {
-      sb.append(XMS).append(EQ).append(config.getXms()).append(M).append(_);
+      sb.append(XMS).append(EQ).append(config.getXms()).append(M).append(EMPTY);
     }
 
     if (!existing.contains(XMX) && config.getXmx() > 0) {
-      sb.append(XMX).append(EQ).append(config.getXmx()).append(M).append(_);
+      sb.append(XMX).append(EQ).append(config.getXmx()).append(M).append(EMPTY);
     }
 
     if (config.getGc() != GarbageCollector.Undefined && !existing.contains(config.getGc().getValue())) {
-      sb.append(config.getGc().getValue()).append(_);
+      sb.append(config.getGc().getValue()).append(EMPTY);
     }
 
     if (config.getSecureRandom() != SecureRandomSource.Undefined && !existing.contains(SECURITY_EDG)) {
-      sb.append(SECURITY_EDG).append(EQ).append(config.getSecureRandom().getValue()).append(_);
+      sb.append(SECURITY_EDG).append(EQ).append(config.getSecureRandom().getValue()).append(EMPTY);
     }
 
     //Handle Flags
     if (!existing.contains(SERVER) && config.isServer()) {
-      sb.append(SERVER).append(_);
+      sb.append(SERVER).append(EMPTY);
     }
 
     if (!existing.contains(STRING_DEDUPLICATION) && config.isUseStringDeduplication()) {
-      sb.append(STRING_DEDUPLICATION).append(_);
+      sb.append(STRING_DEDUPLICATION).append(EMPTY);
     }
 
     if (!existing.contains(PREFER_IPV4_STACK) && config.isPreferIPv4Stack()) {
-      sb.append(PREFER_IPV4_STACK).append(EQ).append(true).append(_);
+      sb.append(PREFER_IPV4_STACK).append(EQ).append(true).append(EMPTY);
     }
 
     if (!existing.contains(GC_OVERHEAD_LIMIT) && config.isUseGCOverheadLimit()) {
-      sb.append(GC_OVERHEAD_LIMIT).append(_);
+      sb.append(GC_OVERHEAD_LIMIT).append(EMPTY);
     }
     if (!existing.contains(HEAP_DUMP_ON_MEMORY_ERROR) && config.isHeapDumpOnOutOfMemoryError()) {
-      sb.append(HEAP_DUMP_ON_MEMORY_ERROR).append(_);
+      sb.append(HEAP_DUMP_ON_MEMORY_ERROR).append(EMPTY);
     }
     return sb.toString().trim();
   }

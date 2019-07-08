@@ -29,8 +29,6 @@ limitations under the License.
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
-
     <version.spring-boot>2.1.0.RELEASE</version.spring-boot>
     <version.junit-jupiter>5.1.0</version.junit-jupiter>
     <version.junit-platform>1.1.0</version.junit-platform>
@@ -66,8 +64,8 @@ limitations under the License.
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>@java.source@</source>
+          <target>@java.target@</target>
         </configuration>
       </plugin>
       <plugin>
