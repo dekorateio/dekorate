@@ -31,10 +31,9 @@ import io.sundr.transform.annotations.VelocityTransformations;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-  "class",
-  "plan",
-  "externalId",
-  "secretName",
+  "category",
+  "kind",
+  "version",
   "parameters",
   "parametersJson",
 })
@@ -48,57 +47,45 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @CustomResource(group = "devexp.runtime.redhat.com", version = "v1alpha2")
 public class CapabilitySpec {
 
-  @JsonProperty("class")
-  private String serviceClass;
-  @JsonProperty("plan")
-  private String servicePlan;
-  private String externalId;
-  private String secretName;
+  private String category;
+  private String kind;
+  private String version;
   private Parameter[] parameters;
   private String parametersJson;
 
   public CapabilitySpec() {
   }
 
-  public CapabilitySpec(String serviceClass, String servicePlan, String externalId, String secretName, Parameter[] parameters, String parametersJson) {
-    this.serviceClass = serviceClass;
-    this.servicePlan = servicePlan;
-    this.externalId = externalId;
-    this.secretName = secretName;
+  public CapabilitySpec(String category, String kind, Parameter[] parameters, String parametersJson) {
+    this.category = category;
+    this.kind = kind;
+    this.version = version;
     this.parameters = parameters;
     this.parametersJson = parametersJson;
   }
 
-  public String getServiceClass() {
-    return serviceClass;
+  public String getCategory() {
+    return this.category;
   }
 
-  public void setServiceClass(String serviceClass) {
-    this.serviceClass = serviceClass;
+  public void setCategory(String category) {
+    this.category=category;
   }
 
-  public String getServicePlan() {
-    return servicePlan;
+  public String getKind() {
+    return this.kind;
   }
 
-  public void setServicePlan(String servicePlan) {
-    this.servicePlan = servicePlan;
+  public void setKind(String kind) {
+    this.kind=kind;
   }
 
-  public String getExternalId() {
-    return externalId;
+  public String getVersion() {
+    return this.version;
   }
 
-  public void setExternalId(String externalId) {
-    this.externalId = externalId;
-  }
-
-  public String getSecretName() {
-    return secretName;
-  }
-
-  public void setSecretName(String secretName) {
-    this.secretName = secretName;
+  public void setVersion(String version) {
+    this.version=version;
   }
 
   public Parameter[] getParameters() {

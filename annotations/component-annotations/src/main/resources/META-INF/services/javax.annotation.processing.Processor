@@ -1,2 +1,3 @@
 io.dekorate.component.apt.ComponentAnnotationProcessor
 io.dekorate.component.apt.LinkAnnotationProcessor
+io.dekorate.component.apt.CapabilityAnnotationProcessor
