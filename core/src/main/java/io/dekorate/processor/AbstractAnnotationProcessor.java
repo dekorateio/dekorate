@@ -41,6 +41,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -107,7 +108,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
         } else {
           throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
         }
-      } catch (FileNotFoundException e) {
+      } catch (FileNotFoundException | NoSuchFileException e) {
         continue;
       } catch (Exception e) {
         throw DekorateException.launderThrowable(e);
