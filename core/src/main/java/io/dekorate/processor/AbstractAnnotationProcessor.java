@@ -16,14 +16,10 @@
 package io.dekorate.processor;
 
 import io.dekorate.DekorateException;
-import io.dekorate.SessionWriter;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
-import io.dekorate.deps.jackson.core.type.TypeReference;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
-import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.project.Project;
 import io.dekorate.project.AptProjectFactory;
 import io.dekorate.utils.Maps;
 import io.dekorate.utils.Serialization;
@@ -40,7 +36,6 @@ import javax.tools.StandardLocation;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,7 +44,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject  {
 
@@ -103,10 +97,10 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
         FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, "", resourceName);
         if (resourceName.endsWith(".properties")) {
           Map<String, Object> newProps = Maps.fromProperties(f.openInputStream());
-          mergeKubernetesProperties(result, newProps);
+          mergeProperties(result, newProps);
         } else if (resourceName.endsWith(".yml") || resourceName.endsWith(".yaml")) {
           Map<String, Object> newProps = Maps.fromYaml(f.openInputStream());
-          mergeKubernetesProperties(result, newProps);
+          mergeProperties(result, newProps);
         } else {
           throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
         }
@@ -119,11 +113,13 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
     return result;
   }
 
-  private void mergeKubernetesProperties(Map<String, Object> result, Map<String, Object> newProps) {
-    if(newProps.containsKey("kubernetes") && result.containsKey("kubernetes")) {
-      ((Map)result.get("kubernetes")).putAll((Map)newProps.get("kubernetes"));
-    } else {
-      result.putAll(newProps);
+  private void mergeProperties(Map<String, Object> result, Map<String, Object> newProps) {
+    for(String newKey : newProps.keySet()) {
+      if(result.containsKey(newKey)) {
+        mergeProperties((Map)result.get(newKey), (Map)newProps.get(newKey));
+      } else {
+        result.putAll(newProps);
+      }
     }
   }
 
