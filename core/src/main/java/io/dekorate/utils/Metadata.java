@@ -16,6 +16,10 @@
 package io.dekorate.utils;
 
 import io.dekorate.deps.kubernetes.api.builder.Builder;
+import io.dekorate.deps.kubernetes.api.builder.Predicate;import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
+
+import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,5 +39,31 @@ public class Metadata {
       //ignore
     }
     return Optional.empty();
+  }
+
+  /**
+   * Create a {@link Predicate} that checks that a resource builder doesn't match the name and kind.
+   * @param HasMetadata The specified resource.
+   * @return The predicate.
+   */
+  public static Predicate<VisitableBuilder<? extends HasMetadata, ?>> matching(HasMetadata candidate) {
+    return matching(candidate.getApiVersion(), candidate.getKind(), candidate.getMetadata().getName());
+  }
+
+  /**
+   * Create a {@link Predicate} that checks that a resource builder doesn't match the name and kind.
+   * @param kind The specified kind.
+   * @param name The specified name.
+   * @return The predicate.
+   */
+  public static Predicate<VisitableBuilder<? extends HasMetadata, ?>> matching(String apiVersion, String kind, String name) {
+    return new Predicate<VisitableBuilder<? extends HasMetadata, ?>>() {
+      @Override
+      public Boolean apply(VisitableBuilder<? extends HasMetadata, ?> builder) {
+        HasMetadata item = builder.build();
+        ObjectMeta metadata = item.getMetadata();
+        return apiVersion.equals(item.getApiVersion()) && kind.equals(item.getKind()) && name.equals(metadata.getName());
+      }
+    };
   }
 }

@@ -17,16 +17,14 @@ package io.dekorate;
 
 import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.deps.javax.validation.constraints.Size;
+import io.dekorate.utils.Metadata;
 import io.dekorate.deps.kubernetes.api.model.Doneable;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -103,7 +101,10 @@ public class Resources implements Coordinates {
     if (!groups.containsKey(group)) {
       groups.put(group, new KubernetesListBuilder());
     }
-    groups.get(group).addToItems(metadata);
+
+    if (!groups.get(group).hasMatchingItem(Metadata.matching(metadata))) {
+      groups.get(group).addToItems(metadata);
+    }
   }
 
   /**
@@ -131,7 +132,9 @@ public class Resources implements Coordinates {
     if (!customGroups.containsKey(group)) {
       customGroups.put(group, new KubernetesListBuilder());
     }
-    customGroups.get(group).addToItems(metadata);
+    if (!customGroups.get(group).hasMatchingItem(Metadata.matching(metadata))) {
+      customGroups.get(group).addToItems(metadata);
+    }
   }
 
   /**
