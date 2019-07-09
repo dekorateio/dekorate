@@ -16,9 +16,15 @@
 package io.dekorate.component.handler;
 
 import io.dekorate.Handler;
+import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
+import io.dekorate.WithProject;
+import io.dekorate.project.Project;
+import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.component.config.ComponentConfig;
 import io.dekorate.component.config.EditableComponentConfig;
+import io.dekorate.component.config.ComponentConfigBuilder;
 import io.dekorate.component.decorator.AddBuildConfigToComponentDecorator;
 import io.dekorate.component.decorator.AddEnvToComponentDecorator;
 import io.dekorate.component.decorator.AddRuntimeTypeToComponentDecorator;
@@ -28,11 +34,11 @@ import io.dekorate.component.model.ComponentBuilder;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Env;
+import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.utils.Strings;
-
 import java.io.IOException;
 
-public class ComponentHandler implements Handler<ComponentConfig> {
+public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig>, WithProject {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
 //  public static final String GITHUB_SSH = "git@github.com:";
@@ -40,6 +46,10 @@ public class ComponentHandler implements Handler<ComponentConfig> {
 
 
   private final Resources resources;
+
+  public Handler create(Resources resources) {
+    return new ComponentHandler(resources);
+  }
 
   // only used for testing
   public ComponentHandler() {
@@ -57,12 +67,14 @@ public class ComponentHandler implements Handler<ComponentConfig> {
 
   @Override
   public void handle(ComponentConfig config) {
-    if (Strings.isNullOrEmpty(resources.getName())) {
+    if (Strings.isNullOrEmpty(resources.getName()) && !Strings.isNullOrEmpty(config.getName())) {
       resources.setName(config.getName());
     }
-    resources.addCustom(ResourceGroup.NAME, createComponent(config));
-    addVisitors(config);
 
+    if (!Strings.isNullOrEmpty(config.getName())) {
+      resources.addCustom(ResourceGroup.NAME, createComponent(config));
+      addVisitors(config);
+    }
   }
 
   @Override
@@ -85,7 +97,7 @@ public class ComponentHandler implements Handler<ComponentConfig> {
     }
 
     if (type != null) {
-      resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeTypeToComponentDecorator(type));
+      resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeTypeToComponentDecorator(type)); // 
     }
 
     if (version != null) {
@@ -113,5 +125,14 @@ public class ComponentHandler implements Handler<ComponentConfig> {
       .withVersion(resources.getVersion())
       .endSpec()
       .build();
+  }
+
+  @Override
+  public ConfigurationSupplier<ComponentConfig> getFallbackConfig() {
+    Project p = getProject();
+    return new ConfigurationSupplier<ComponentConfig>(new ComponentConfigBuilder()
+                                                      .withName(p.getBuildInfo().getName())
+                                                      .accept(new ApplyAutoBuild())
+                                                      .accept(new ApplyProjectInfo(p)));
   }
 }

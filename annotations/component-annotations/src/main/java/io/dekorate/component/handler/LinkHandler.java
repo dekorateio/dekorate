@@ -16,21 +16,28 @@
 package io.dekorate.component.handler;
 
 import io.dekorate.Handler;
+import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
 import io.dekorate.component.config.EditableLinkConfig;
+import io.dekorate.component.config.LinkConfigBuilder;
 import io.dekorate.component.config.LinkConfig;
 import io.dekorate.component.model.Link;
 import io.dekorate.component.model.LinkBuilder;
 import io.dekorate.component.model.LinkFluent;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Env;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.utils.Strings;
 
-public class LinkHandler implements Handler<LinkConfig> {
+public class LinkHandler implements HandlerFactory, Handler<LinkConfig> {
   private final Resources resources;
 
-  // only used for testing
-  LinkHandler() {
+  public Handler create(Resources resources) {
+    return new LinkHandler(resources);
+  }
+
+  // Used in HandlerFactory
+  public LinkHandler() {
     this(new Resources());
   }
 
@@ -48,7 +55,9 @@ public class LinkHandler implements Handler<LinkConfig> {
     if (Strings.isNullOrEmpty(resources.getName())) {
       resources.setName(config.getName());
     }
-    resources.addCustom(ResourceGroup.NAME, createLink(config));
+    if (!Strings.isNullOrEmpty(config.getComponentName())) {
+      resources.addCustom(ResourceGroup.NAME, createLink(config));
+    }
   }
 
   @Override
@@ -79,4 +88,10 @@ public class LinkHandler implements Handler<LinkConfig> {
       .endSpec()
       .build();
   }
+
+  @Override
+  public ConfigurationSupplier<LinkConfig> getFallbackConfig() {
+    return new ConfigurationSupplier<LinkConfig>(new LinkConfigBuilder());
+  }
+  
 }

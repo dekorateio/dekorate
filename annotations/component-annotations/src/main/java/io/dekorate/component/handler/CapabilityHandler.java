@@ -18,24 +18,31 @@
 package io.dekorate.component.handler;
 
 import io.dekorate.Handler;
+import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
 import io.dekorate.component.config.CapabilityConfig;
 import io.dekorate.component.config.EditableCapabilityConfig;
+import io.dekorate.component.config.CapabilityConfigBuilder;
 import io.dekorate.component.model.Capability;
 import io.dekorate.component.model.CapabilityBuilder;
 import io.dekorate.component.model.CapabilityFluent;
 import io.dekorate.component.model.Parameter;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.utils.Strings;
 
 import java.util.stream.Collectors;
 import java.util.Arrays;
 
-public class CapabilityHandler implements Handler<CapabilityConfig> {
+public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConfig> {
 
   private final Resources resources;
-  
-  CapabilityHandler() {
+
+  public Handler create(Resources resources) {
+    return new CapabilityHandler(resources);
+  }
+ 
+  public CapabilityHandler() {
     this(new Resources());
          
   }
@@ -53,7 +60,9 @@ public class CapabilityHandler implements Handler<CapabilityConfig> {
     if (Strings.isNullOrEmpty(resources.getName())) {
       resources.setName(config.getName());
     }
-    resources.addCustom(ResourceGroup.NAME, createCapability(config));
+    if (!Strings.isNullOrEmpty(config.getCategory()) && !Strings.isNullOrEmpty(config.getKind())) {
+      resources.addCustom(ResourceGroup.NAME, createCapability(config));
+    }
   }
 
   @Override
@@ -83,6 +92,11 @@ public class CapabilityHandler implements Handler<CapabilityConfig> {
 
       .endSpec()
       .build();
+  }
+
+  @Override
+  public ConfigurationSupplier<CapabilityConfig> getFallbackConfig() {
+    return new ConfigurationSupplier<CapabilityConfig>(new CapabilityConfigBuilder());
   }
 
 }

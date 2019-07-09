@@ -1,2 +1,3 @@
 io.dekorate.component.generator.DefaultComponentConfigGenerator
 io.dekorate.component.generator.DefaultLinkConfigGenerator
+io.dekorate.component.generator.DefaultCapabilityConfigGenerator
