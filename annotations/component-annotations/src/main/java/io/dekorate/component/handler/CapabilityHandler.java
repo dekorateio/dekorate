@@ -87,7 +87,7 @@ public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConf
       .withKind(config.getKind())
       .withVersion(config.getVersion())
       .addAllToParameters(Arrays.stream(config.getParameters())
-                                 .map(p->new Parameter(p.getKey(),p.getValue()))
+                                 .map(p->new Parameter(p.getName(),p.getValue()))
                                  .collect(Collectors.toList()))
 
       .endSpec()
