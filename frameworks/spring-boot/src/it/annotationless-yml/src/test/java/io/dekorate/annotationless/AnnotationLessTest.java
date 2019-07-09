@@ -36,6 +36,7 @@ public class AnnotationLessTest {
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     final Map<String, String> labels = d.getMetadata().getLabels();
+    assertEquals(2, d.getSpec().getReplicas().intValue());
     assertEquals("bar", labels.get("foo"));
     assertEquals("baz", labels.get("zoo"));
     assertEquals("annotationless", labels.get("group"));

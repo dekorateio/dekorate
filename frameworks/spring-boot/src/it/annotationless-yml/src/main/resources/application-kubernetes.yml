@@ -1,0 +1,3 @@
+dekorate:
+  kubernetes:
+    replicas: 2

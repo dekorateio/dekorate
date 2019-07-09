@@ -102,9 +102,11 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
       try {
         FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, "", resourceName);
         if (resourceName.endsWith(".properties")) {
-          return Maps.fromProperties(f.openInputStream());
+          Map<String, Object> newProps = Maps.fromProperties(f.openInputStream());
+          mergeKubernetesProperties(result, newProps);
         } else if (resourceName.endsWith(".yml") || resourceName.endsWith(".yaml")) {
-          return Maps.fromYaml(f.openInputStream());
+          Map<String, Object> newProps = Maps.fromYaml(f.openInputStream());
+          mergeKubernetesProperties(result, newProps);
         } else {
           throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
         }
@@ -114,7 +116,15 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
         throw DekorateException.launderThrowable(e);
       } 
     }
-    return Collections.emptyMap();
+    return result;
+  }
+
+  private void mergeKubernetesProperties(Map<String, Object> result, Map<String, Object> newProps) {
+    if(newProps.containsKey("kubernetes") && result.containsKey("kubernetes")) {
+      ((Map)result.get("kubernetes")).putAll((Map)newProps.get("kubernetes"));
+    } else {
+      result.putAll(newProps);
+    }
   }
 
   /**
