@@ -115,7 +115,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
 
   private void mergeProperties(Map<String, Object> result, Map<String, Object> newProps) {
     for(String newKey : newProps.keySet()) {
-      if(result.containsKey(newKey)) {
+      if(result.containsKey(newKey) && Map.class.isInstance(result.get(newKey)) && Map.class.isInstance(newProps.get(newKey))) {
         mergeProperties((Map)result.get(newKey), (Map)newProps.get(newKey));
       } else {
         result.putAll(newProps);
