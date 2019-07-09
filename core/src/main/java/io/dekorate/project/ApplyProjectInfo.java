@@ -17,10 +17,11 @@ package io.dekorate.project;
 
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
+import io.dekorate.kubernetes.config.ConfigurationFluent;
 import io.dekorate.utils.Strings;
 
-public class ApplyProjectInfo extends Configurator<BaseConfigFluent> {
-
+public class ApplyProjectInfo extends Configurator<ConfigurationFluent> {
+ 
   private static final String APP_GROUP = "app.group";
   private static final String APP_NAME = "app.name";
   private static final String APP_VERSION = "app.version";
@@ -37,10 +38,13 @@ public class ApplyProjectInfo extends Configurator<BaseConfigFluent> {
   }
 
   @Override
-  public void visit(BaseConfigFluent fluent) {
+  public void visit(ConfigurationFluent fluent) {
     fluent.withProject(project);
-    fluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(fluent.getGroup()) ? fluent.getGroup() : DEFAULT_GROUP))
-      .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : project.getBuildInfo().getName()))
-      .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(fluent.getVersion()) ? fluent.getVersion() : project.getBuildInfo().getVersion()));
+    if (fluent instanceof BaseConfigFluent) {
+      BaseConfigFluent baseConfigFluent = (BaseConfigFluent) fluent;
+      baseConfigFluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(baseConfigFluent.getGroup()) ? baseConfigFluent.getGroup() : DEFAULT_GROUP))
+            .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(baseConfigFluent.getName()) ? baseConfigFluent.getName() : project.getBuildInfo().getName()))
+            .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(baseConfigFluent.getVersion()) ? baseConfigFluent.getVersion() : project.getBuildInfo().getVersion()));
+    }
   }
 }
