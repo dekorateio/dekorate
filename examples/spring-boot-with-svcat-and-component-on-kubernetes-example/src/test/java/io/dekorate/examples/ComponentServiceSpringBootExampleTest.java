@@ -49,6 +49,5 @@ public class ComponentServiceSpringBootExampleTest {
 
     final Capability capability = items.stream().filter(i -> i instanceof Capability).map(i -> (Capability) i).findFirst().orElseThrow(RuntimeException::new);
     assertEquals("mysql-instance", capability.getMetadata().getName());
-    assertEquals("mysql-secret", capability.getSpec().getSecretName());
   }
 }

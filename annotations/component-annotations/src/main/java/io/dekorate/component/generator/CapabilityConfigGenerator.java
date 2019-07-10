@@ -30,7 +30,7 @@ import java.util.Map;
 
 public interface CapabilityConfigGenerator extends Generator, WithProject {
 
-  String GENERATOR_KEY = "component";
+  String GENERATOR_KEY = "capability";
 
   @Override
   default void add(Map map) {

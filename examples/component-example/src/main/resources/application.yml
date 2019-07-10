@@ -6,6 +6,5 @@ dekorate:
       - name: "key1"
         value: "val1"
   component:
-    buildconfig:
-      type: "docker"
+    buildType: "docker"
 
