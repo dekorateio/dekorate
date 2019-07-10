@@ -17,7 +17,6 @@ package io.dekorate.component.annotation;
 
 
 import io.dekorate.component.model.DeploymentMode;
-import io.dekorate.kubernetes.annotation.BuildConfig;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
@@ -44,5 +43,5 @@ public @interface ComponentApplication {
 
   Env[] envs() default {};
 
-  BuildConfig buildconfig() default @BuildConfig;
+  String buildType() default "s2i";
 }

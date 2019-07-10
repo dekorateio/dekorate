@@ -73,8 +73,8 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
 
     if (!Strings.isNullOrEmpty(config.getName())) {
       resources.addCustom(ResourceGroup.NAME, createComponent(config));
-      addVisitors(config);
     }
+    addVisitors(config);
   }
 
   @Override
@@ -91,9 +91,9 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       String uri = config.getProject().getScmInfo().getUri();
       String branch = config.getProject().getScmInfo().getBranch();
       String name = config.getProject().getBuildInfo().getName();
-      String buildConfigType = config.getBuildconfig().getType();
+      String buildTypeType = config.getBuildType();
       resources.decorateCustom(ResourceGroup.NAME,
-          new AddBuildConfigToComponentDecorator(uri, branch, name, buildConfigType));
+          new AddBuildConfigToComponentDecorator(uri, branch, name, buildTypeType));
     }
 
     if (type != null) {
