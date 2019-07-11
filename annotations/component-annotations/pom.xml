@@ -54,6 +54,16 @@ limitations under the License.
       <groupId>io.sundr</groupId>
       <artifactId>transform-annotations</artifactId>
     </dependency>
+    <!-- Integration Test
+         These are used to force the order in the reactor. Thus test scoped and optional.
+	 -->
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>kubernetes-spring-starter</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+      <scope>test</scope>
+    </dependency>
     <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
