@@ -28,15 +28,17 @@ public class BuildConfig {
     private String type;
     private String uri;
     private String ref = "master";
+    private String contextPath = ".";
     private String moduleDirName = ".";
 
   public BuildConfig() {
   }
 
-  public BuildConfig(String type, String uri, String ref, String moduleDirName) {
+  public BuildConfig(String type, String uri, String ref, String contextPath, String moduleDirName) {
     this.type = type;
     this.uri = uri;
     this.ref = ref;
+    this.contextPath = contextPath;
     this.moduleDirName = moduleDirName;
   }
 
@@ -62,6 +64,14 @@ public class BuildConfig {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public String getContextPath() {
+    return contextPath;
+  }
+
+  public void setContextPath(String contextPath) {
+    this.contextPath = contextPath;
   }
 
   public String getModuleDirName() {
