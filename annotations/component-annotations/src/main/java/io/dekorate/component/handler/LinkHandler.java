@@ -47,7 +47,7 @@ public class LinkHandler implements HandlerFactory, Handler<LinkConfig> {
 
   @Override
   public int order() {
-    return 1200;
+    return 1300;
   }
 
   @Override
