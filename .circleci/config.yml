@@ -102,7 +102,7 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project itests
-            mvn -B install -Pbuild -Pwith-examples
+            mvn -B clean install -Pbuild -Pwith-examples
 
 workflows:
   version: 2
