@@ -4,7 +4,7 @@
   <parent>
     <artifactId>dekorate-project</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.7.1</version>
   </parent>
   <groupId>io.dekorate</groupId>
   <artifactId>dekorate-dependencies</artifactId>
@@ -41,7 +41,7 @@
     <connection>scm:git:git@github.com:dekorate/dependencies.git</connection>
     <developerConnection>scm:git:git@github.com:dekorate/dependencies.git</developerConnection>
     <url>http://github.com/dekorate/dependencies</url>
-    <tag>${project.version}</tag>
+    <tag>0.7.1</tag>
   </scm>
 
   <distributionManagement>
