@@ -53,7 +53,6 @@
 
   <properties>
     <!-- Dependencies -->
-    <version.dekorate-deps>0.5.0</version.dekorate-deps>
     <version.sundrio>0.19.1</version.sundrio>
     <!-- Testing Dependencies -->
     <version.junit-jupiter>5.4.0</version.junit-jupiter>
@@ -75,6 +74,7 @@
   </properties>
 
   <modules>
+    <module>dependencies</module>
     <module>core</module>
     <module>frameworks</module>
     <module>annotations</module>
@@ -339,25 +339,13 @@
     <profile>
       <id>with-examples</id>
       <modules>
-        <module>core</module>
-        <module>frameworks</module>
-        <module>annotations</module>
         <module>examples</module>
-        <module>testing</module>
-        <module>starters</module>
-        <module>doc</module>
       </modules>
     </profile>
     <profile>
       <id>with-incubator</id>
       <modules>
-        <module>core</module>
-        <module>frameworks</module>
-        <module>annotations</module>
         <module>incubator</module>
-        <module>testing</module>
-        <module>starters</module>
-        <module>doc</module>
       </modules>
     </profile>
   </profiles>

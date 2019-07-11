@@ -33,7 +33,7 @@ limitations under the License.
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>dekorate-dependencies</artifactId>
-      <version>${version.dekorate-deps}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
