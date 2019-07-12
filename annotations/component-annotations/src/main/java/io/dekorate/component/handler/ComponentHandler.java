@@ -29,6 +29,7 @@ import io.dekorate.component.decorator.AddBuildConfigToComponentDecorator;
 import io.dekorate.component.decorator.AddEnvToComponentDecorator;
 import io.dekorate.component.decorator.AddRuntimeTypeToComponentDecorator;
 import io.dekorate.component.decorator.AddRuntimeVersionToComponentDecorator;
+import io.dekorate.component.decorator.ExposeServiceDecorator;
 import io.dekorate.component.model.Component;
 import io.dekorate.component.model.ComponentBuilder;
 import io.dekorate.kubernetes.config.ConfigKey;
@@ -96,6 +97,10 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
           new AddBuildConfigToComponentDecorator(uri, branch, name, buildTypeType));
     }
 
+    if (config.isExposeService()) {
+      resources.decorateCustom(ResourceGroup.NAME,new ExposeServiceDecorator()); 
+    }
+
     if (type != null) {
       resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeTypeToComponentDecorator(type)); // 
     }
@@ -121,7 +126,6 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       .endMetadata()
       .withNewSpec()
       .withDeploymentMode(config.getDeploymentMode())
-      .withExposeService(config.isExposeService())
       .withVersion(resources.getVersion())
       .endSpec()
       .build();
