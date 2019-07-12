@@ -42,7 +42,7 @@ public class Issue52Test {
     //TODO: This is breaking the release because the git repo is being changed to local, during release
     //assertEquals("https://github.com/dekorateio/dekorate.git", component.getSpec().getBuildConfig().getUri());
     assertEquals("s2i", component.getSpec().getBuildConfig().getType());
-    assertEquals("component-it-issue-52", component.getSpec().getBuildConfig().getModuleDirName());
+    assertEquals("issue-52", component.getSpec().getBuildConfig().getModuleDirName());
     assertNotNull("", component.getSpec().getBuildConfig().getRef());
   }
 }
