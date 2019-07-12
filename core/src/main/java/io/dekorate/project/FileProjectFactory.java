@@ -90,7 +90,7 @@ public class FileProjectFactory {
     }
     String uri = Git.getRemoteUrl(path, Git.ORIGIN).map(u -> u.replace(GITHUB_SSH, GITHUB_HTTPS)).orElse(null);
     String branch = Git.getBranch(path).orElse(null);
-    scmInfo = Optional.of(new ScmInfo(uri, branch, ""));
+    scmInfo = Optional.of(new ScmInfo(path, uri, branch, ""));
     return scmInfo;
   }
 
