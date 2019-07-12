@@ -35,13 +35,7 @@
     <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>@version.junit-jupiter@</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
+      <artifactId>junit-jupiter</artifactId>
       <version>@version.junit-jupiter@</version>
       <scope>test</scope>
     </dependency>
