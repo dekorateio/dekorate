@@ -55,7 +55,7 @@
     <!-- Dependencies -->
     <version.sundrio>0.19.1</version.sundrio>
     <!-- Testing Dependencies -->
-    <version.junit-jupiter>5.4.2</version.junit-jupiter>
+    <version.junit-jupiter>5.5.0</version.junit-jupiter>
     <version.junit-platform>1.4.0</version.junit-platform>
     <version.assertj>3.11.1</version.assertj>
     <!-- Plugins -->
