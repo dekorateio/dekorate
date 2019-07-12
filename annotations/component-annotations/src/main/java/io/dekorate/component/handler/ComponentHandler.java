@@ -37,7 +37,10 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.utils.Strings;
+
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig>, WithProject {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
@@ -91,10 +94,11 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     if (config.getProject().getScmInfo() != null) {
       String uri = config.getProject().getScmInfo().getUri();
       String branch = config.getProject().getScmInfo().getBranch();
-      String name = config.getProject().getBuildInfo().getName();
       String buildTypeType = config.getBuildType();
-      resources.decorateCustom(ResourceGroup.NAME,
-          new AddBuildConfigToComponentDecorator(uri, branch, name, buildTypeType));
+      Path modulePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
+
+       resources.decorateCustom(ResourceGroup.NAME,
+                                new AddBuildConfigToComponentDecorator(modulePath, uri, branch, buildTypeType));
     }
 
     if (config.isExposeService()) {

@@ -18,6 +18,7 @@ package io.dekorate.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
 
 import io.dekorate.DekorateException;
 

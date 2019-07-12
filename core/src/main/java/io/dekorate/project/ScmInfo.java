@@ -16,8 +16,11 @@
  **/
 package io.dekorate.project;
 
+import java.nio.file.Path;
+
 public class ScmInfo {
 
+  private Path root;
   private String uri;
   private String branch;
   private String commit;
@@ -25,10 +28,25 @@ public class ScmInfo {
   public ScmInfo() {
   }
 
-  public ScmInfo(String uri, String branch, String commit) {
+  public ScmInfo(Path root, String uri, String branch, String commit) {
+    this.root=root;
     this.uri = uri;
     this.branch = branch;
     this.commit = commit;
+  }
+
+  /**
+   * @return the root
+   */
+  public Path getRoot() {
+    return root;
+  }
+
+  /**
+   * @param root the root to set
+   */
+  public void setRoot(Path root) {
+    this.root = root;
   }
 
   public String getUri() {
