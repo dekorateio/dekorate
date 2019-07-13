@@ -36,7 +36,8 @@ public class AddSecretVolumeDecorator extends Decorator<PodSpecBuilder> {
       .withSecretName(volume.getSecretName())
       .withDefaultMode(volume.getDefaultMode())
       .withOptional(volume.isOptional())
-      .endSecret();
+      .endSecret()
+      .endVolume();
 
   }
 }

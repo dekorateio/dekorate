@@ -39,7 +39,8 @@ public class AddAzureDiskVolumeDecorator extends Decorator<PodSpecBuilder> {
       .withFsType(volume.getFsType())
       .withCachingMode(volume.getCachingMode())
       .withReadOnly(volume.isReadOnly())
-      .endAzureDisk();
+      .endAzureDisk()
+      .endVolume();
 
   }
 }

@@ -36,7 +36,8 @@ public class AddAzureFileVolumeDecorator extends Decorator<PodSpecBuilder> {
       .withSecretName(volume.getSecretName())
       .withShareName(volume.getShareName())
       .withReadOnly(volume.isReadOnly())
-      .endAzureFile();
+      .endAzureFile()
+      .endVolume();
 
   }
 }
