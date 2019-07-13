@@ -36,7 +36,8 @@ public class AddConfigMapVolumeDecorator extends Decorator<PodSpecBuilder> {
       .withName(volume.getConfigMapName())
       .withDefaultMode(volume.getDefaultMode())
       .withOptional(volume.isOptional())
-      .endConfigMap();
+      .endConfigMap()
+      .endVolume();
 
   }
 }
