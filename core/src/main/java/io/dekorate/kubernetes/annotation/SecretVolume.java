@@ -33,7 +33,7 @@ public @interface SecretVolume {
    * Default mode.
    * @return  The default mode.
    */
-  int defaultMode() default 600;
+  int defaultMode() default 0600;
 
   /**
    * Optional

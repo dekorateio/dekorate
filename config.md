@@ -190,7 +190,7 @@ The section below describes all the avialables subtypes
 |-------------|---------|-------------|---------------|
 | volumeName  | String  |             |               |
 | secretName  | String  |             |               |
-| defaultMode | int     |             | 600           |
+| defaultMode | int     |             | 0600           |
 | optional    | boolean |             | false         |
 
 #### AzureDiskVolume
@@ -236,6 +236,6 @@ The section below describes all the avialables subtypes
 |---------------|---------|-------------|---------------|
 | volumeName    | String  |             |               |
 | configMapName | String  |             |               |
-| defaultMode   | int     |             | 600           |
+| defaultMode   | int     |             | 0600           |
 | optional      | boolean |             | false         |
 

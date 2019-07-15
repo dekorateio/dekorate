@@ -121,10 +121,12 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     }
 
     for (SecretVolume volume : config.getSecretVolumes()) {
+      validateVolume(volume);
       resources.decorate(group, new AddSecretVolumeDecorator(volume));
     }
 
     for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
+      validateVolume(volume);
       resources.decorate(group, new AddConfigMapVolumeDecorator(volume));
     }
 
@@ -159,8 +161,21 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     if (Probes.isConfigured(config.getLivenessProbe())) {
       resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getName(), config.getLivenessProbe()));
     }
+    
     if (Probes.isConfigured(config.getReadinessProbe())) {
       resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
+    }
+  }
+
+  private static void validateVolume(SecretVolume volume) {
+    if (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777) {
+      throw new IllegalArgumentException("Secret volume: "+ volume.getVolumeName()+". Illegal defaultMode: "+volume.getDefaultMode()+". Should be between: 0000 and 0777!");
+    }
+  }
+
+  private static void validateVolume(ConfigMapVolume volume) {
+    if (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777) {
+      throw new IllegalArgumentException("ConfigMap volume: "+ volume.getVolumeName()+". Illegal defaultMode: "+volume.getDefaultMode()+". Should be between: 0000 and 0777!");
     }
   }
 }
