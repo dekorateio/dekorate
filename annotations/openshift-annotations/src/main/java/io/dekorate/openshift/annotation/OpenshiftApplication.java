@@ -213,7 +213,7 @@ public @interface OpenshiftApplication {
   String builderImage() default "fabric8/s2i-java:2.3";
 
   /**
-   * Environment variables to add to all containers.
+   * Environment variables to use for the s2i build.
    * @return The environment variables.
    */
   Env[] buildEnvVars() default {};
