@@ -4,15 +4,16 @@
 
 [![CircleCI](https://circleci.com/gh/dekorateio/dekorate.svg?style=svg)](https://circleci.com/gh/dekorateio/dekorate) [![Maven Central](https://img.shields.io/maven-central/v/io.dekorate/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.dekorate%22%20AND%20a:%22kubernetes-annotations%22)
 
-Dekorate is a collection of Java annotations and processors for generating Kubernetes/OpenShift manifests at compile time.
+Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
 
-It makes generating Kubernetes manifests as easy as adding:  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) on your main class (or any other class).
+It makes generating Kubernetes manifests as easy as adding a dependency to the classpath and customizing as simple as setting an annotation or application property.
 
-Stop wasting time editing xml, json and yml and customize the kubernetes manifests using annotations.
+Stop wasting time editing xml, json and yml and customize the kubernetes manifests as you configure your java application.
 
 ## Rebranding Notice
 
-As the project nowdays supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project will be renamed to `dekorate`.
+This project was originally called `ap4k` which stood for `Annotation Processors for Kubernetes`.
+As the project now supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project has been renamed to `dekorate`.
 
 The new project page will be: http://dekorate.io and the new repository will be: https://github.com/dekorateio/dekorate.
 This repository will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
@@ -692,11 +693,36 @@ Or if you are on [openshift](https://openshift.com):
 ```
 
 ##### Annotation less
-For spring boot application all you need to do, is adding one of the starters to the classpath. No need to specify an additonal annotation.
+For spring boot applications all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additonal annotation.
 This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
-To customize/dekorate the generated manifests you can use `application.yml` or `application.properties`.
+To customize/dekorate the generated manifests you can use `application.yml` / `application.properties` both, or even use annotations along with  `application.yml` / `application.properties`.
+
+The order where these resources are used are:
+
+1. Annotations
+2. `application.properties`
+3. `application.yaml`
+4. `application.yml`
+5. `application-kubernetes.properties`
+6. `application-kubernetes.yaml`
+7. `application-kubernetes.yml`
+
 Here's the full list of supported [configuration options](config.md).
+
+
+###### Generated resources when not using annotations
+
+When no annotations are used, the kind of resources to be generated is determined by the `dekorate` artifacts found in the classpath.
+
+| File                | Required Dependency                |
+|---------------------|------------------------------------|
+| kubernetes.json/yml | io.dekorate:kubernetes-annotations |
+| openshift.json/yml  | io.dekorate:openshift-annotations  |
+| component.json/yml  | io.dekorate:component-annotations  |
+
+
+Note: that starter modules for `kubernetes` and `openshift` do transitively add `kubernetes-annotations` and `openshift-annotations` respectively.
 
 ## Experimental features
 
