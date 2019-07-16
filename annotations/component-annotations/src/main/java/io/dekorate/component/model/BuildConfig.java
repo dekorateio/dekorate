@@ -20,13 +20,10 @@ import io.dekorate.deps.kubernetes.api.model.Doneable;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Inline;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 @Buildable(editableEnabled = false, builderPackage = "io.dekorate.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 public class BuildConfig {
     private String type;
-    private String uri;
+    private String url;
     private String ref = "master";
     private String contextPath = ".";
     private String moduleDirName = ".";
@@ -34,20 +31,20 @@ public class BuildConfig {
   public BuildConfig() {
   }
 
-  public BuildConfig(String type, String uri, String ref, String contextPath, String moduleDirName) {
+  public BuildConfig(String type, String url, String ref, String contextPath, String moduleDirName) {
     this.type = type;
-    this.uri = uri;
+    this.url = url;
     this.ref = ref;
     this.contextPath = contextPath;
     this.moduleDirName = moduleDirName;
   }
 
-  public String getUri() {
-    return uri;
+  public String getUrl() {
+    return url;
   }
 
-  public void setUri(String uri) {
-    this.uri = uri;
+  public void setUrl(String url) {
+    this.url = url;
   }
 
   public String getRef() {
