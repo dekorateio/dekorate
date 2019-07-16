@@ -19,6 +19,7 @@ package io.dekorate.examples.component;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.component.model.Component;
+import io.dekorate.component.model.DeploymentMode;
 import io.dekorate.component.model.Link;
 import io.dekorate.utils.Serialization;
 import java.util.List;
@@ -37,6 +38,8 @@ public class Issue71Test {
     assertEquals(2, items.size());
     Component component = (Component) items.get(0);
     assertEquals("Component", component.getKind());
+    assertEquals(DeploymentMode.build, component.getSpec().getDeploymentMode());
+    assertEquals(true, component.getSpec().isExposeService());
     Link link = (Link) items.get(1);
     assertEquals("Link", link.getKind());
     assertEquals(1, link.getSpec().getEnvs().length);

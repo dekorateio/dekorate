@@ -18,6 +18,7 @@ package io.dekorate.examples;
 
 import io.dekorate.component.model.Component;
 import io.dekorate.component.model.Link;
+import io.dekorate.component.model.DeploymentMode;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;
@@ -42,6 +43,7 @@ public class ComponentSpringBootExampleTest {
     assertEquals("https://github.com/dekorateio/dekorate.git", component.getSpec().getBuildConfig().getUri());
     assertEquals("docker", component.getSpec().getBuildConfig().getType());
     assertEquals("component-example-annotationless-properties", component.getSpec().getBuildConfig().getModuleDirName());
+    assertEquals(DeploymentMode.build, component.getSpec().getDeploymentMode());
     assertNotNull("", component.getSpec().getBuildConfig().getRef());
     Link link = (Link) items.get(1);
     Assertions.assertEquals("Link", link.getKind());
