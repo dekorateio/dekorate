@@ -12,13 +12,13 @@ import java.util.Iterator;
 public class AddBuildConfigToComponentDecorator extends Decorator<ComponentSpecBuilder> {
 
   private final Path modulePath;
-  private final String uri;
+  private final String url;
   private final String ref;
   private final String type;
 
-  public AddBuildConfigToComponentDecorator(Path modulePath, String uri, String ref, String type) {
+  public AddBuildConfigToComponentDecorator(Path modulePath, String url, String ref, String type) {
     this.modulePath = modulePath;
-    this.uri = uri;
+    this.url = url;
     this.ref = ref;
     this.type = type;
   }
@@ -27,7 +27,7 @@ public class AddBuildConfigToComponentDecorator extends Decorator<ComponentSpecB
   public void visit(ComponentSpecBuilder component) {
     component
       .withNewBuildConfig()
-      .withUri(uri)
+      .withUrl(url)
       .withRef(ref)
       .withType(type)
       .withContextPath(toContextPath(modulePath))
