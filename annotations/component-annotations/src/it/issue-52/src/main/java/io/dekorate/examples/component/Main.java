@@ -21,6 +21,7 @@ package io.dekorate.examples.component;
 import io.dekorate.component.annotation.Link;
 import io.dekorate.component.annotation.ComponentApplication;
 import io.dekorate.kubernetes.annotation.Env;
+import io.dekorate.component.model.DeploymentMode;
 
 @ComponentApplication(name = "hello-world", exposeService = true, envs = @Env(name = "key1", value = "val1"))
 public class Main {

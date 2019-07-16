@@ -19,34 +19,26 @@ import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
-import io.dekorate.project.Project;
-import io.dekorate.project.ApplyProjectInfo;
-import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.component.config.ComponentConfig;
-import io.dekorate.component.config.EditableComponentConfig;
 import io.dekorate.component.config.ComponentConfigBuilder;
-import io.dekorate.component.decorator.AddBuildConfigToComponentDecorator;
-import io.dekorate.component.decorator.AddEnvToComponentDecorator;
-import io.dekorate.component.decorator.AddRuntimeTypeToComponentDecorator;
-import io.dekorate.component.decorator.AddRuntimeVersionToComponentDecorator;
-import io.dekorate.component.decorator.ExposeServiceDecorator;
+import io.dekorate.component.config.EditableComponentConfig;
+import io.dekorate.component.decorator.*;
 import io.dekorate.component.model.Component;
 import io.dekorate.component.model.ComponentBuilder;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
+import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 
 public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig>, WithProject {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
-//  public static final String GITHUB_SSH = "git@github.com:";
-//  public static final String GITHUB_HTTPS = "https://github.com/";
 
 
   private final Resources resources;
@@ -112,6 +104,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     if (version != null) {
       resources.decorateCustom(ResourceGroup.NAME,new AddRuntimeVersionToComponentDecorator(version));
     }
+    resources.decorateCustom(ResourceGroup.NAME,new DeploymentModeDecorator(config.getDeploymentMode()));
     for (Env env : config.getEnvs()) {
       resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
     }
