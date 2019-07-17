@@ -50,6 +50,7 @@ public class ComponentSpec {
   private String runtime;
   private String version;
   private boolean exposeService;
+  private Integer port;
   private Storage storage;
   private Env[] envs;
   private BuildConfig buildConfig;
@@ -57,11 +58,12 @@ public class ComponentSpec {
   public ComponentSpec() {
   }
 
-  public ComponentSpec(DeploymentMode deploymentMode, String runtime, String version, boolean exposeService, Storage storage, Env[] envs, BuildConfig buildConfig) {
+  public ComponentSpec(DeploymentMode deploymentMode, String runtime, String version, boolean exposeService, Integer port, Storage storage, Env[] envs, BuildConfig buildConfig) {
     this.deploymentMode = deploymentMode;
     this.runtime = runtime;
     this.version = version;
     this.exposeService = exposeService;
+    this.port = port;
     this.storage = storage;
     this.envs = envs;
     this.buildConfig = buildConfig;
@@ -97,6 +99,14 @@ public class ComponentSpec {
 
   public void setExposeService(boolean exposeService) {
     this.exposeService = exposeService;
+  }
+
+  public Integer getPort() {
+    return port;
+  }
+
+  public void setPort(Integer port) {
+    this.port = port;
   }
 
   public Storage getStorage() {

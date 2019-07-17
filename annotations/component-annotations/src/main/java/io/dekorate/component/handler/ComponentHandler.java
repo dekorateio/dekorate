@@ -29,13 +29,17 @@ import io.dekorate.component.model.ComponentBuilder;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.config.EditableKubernetesConfig;
 import io.dekorate.kubernetes.config.Env;
+import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig>, WithProject {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
@@ -97,7 +101,14 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     }
 
     if (config.isExposeService()) {
-      resources.decorateCustom(ResourceGroup.NAME,new ExposeServiceDecorator()); 
+      resources.decorateCustom(ResourceGroup.NAME,new ExposeServiceDecorator());
+
+      KubernetesConfig kubernetesConfig = getKubernetesConfig();
+      Port[] ports = kubernetesConfig.getPorts();
+      if (ports.length == 0) {
+        throw new IllegalStateException("Ports need to be present on KubernetesConfig");
+      }
+      resources.decorateCustom(ResourceGroup.NAME,new AddExposedPortToComponentDecorator(ports[0].getContainerPort()));
     }
 
     if (type != null) {
@@ -111,6 +122,20 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     for (Env env : config.getEnvs()) {
       resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
     }
+  }
+
+  private KubernetesConfig getKubernetesConfig() {
+    Optional<KubernetesConfig> optionalKubernetesConfig = configurators.get(KubernetesConfig.class);
+    if (optionalKubernetesConfig.isPresent()) {
+      return optionalKubernetesConfig.get();
+    }
+
+    Optional<EditableKubernetesConfig> editableKubernetesConfig = configurators.get(EditableKubernetesConfig.class);
+    if (editableKubernetesConfig.isPresent()) {
+      return editableKubernetesConfig.get();
+    }
+
+    throw new IllegalStateException("KubernetesConfig needs to be present when using exposeService=true");
   }
 
   /**

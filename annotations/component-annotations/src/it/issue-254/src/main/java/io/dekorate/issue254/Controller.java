@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.dekorate.issue254;
 
-package io.dekorate.examples.component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.dekorate.component.annotation.ComponentApplication;
-import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.annotation.Port;
+@RestController
+public class Controller {
 
-@KubernetesApplication(ports = @Port(name = "http", containerPort = 8080))
-@ComponentApplication(name = "hello-world", exposeService = true, envs = @Env(name = "key1", value = "val1"))
-public class Main {
-
-  public static void main(String[] args) {
+  @RequestMapping("/")
+  public String hello() {
+    return "Hello world";
   }
-
 }
