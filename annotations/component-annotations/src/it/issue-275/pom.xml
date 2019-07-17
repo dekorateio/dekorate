@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.dekorate</groupId>
-	<artifactId>issue-254</artifactId>
+	<artifactId>issue-275</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-  <name>Dekorate :: Annotation :: Component :: Integration Test for #254</name>
-	<description>Regression test for issue #254. Ensure that exposeService=true works when combining annotations with properties.</description>
+  <name>Dekorate :: Annotation :: Component :: Integration Test for #275</name>
+	<description>Regression test for issue #275. Ensure that port is added to Component when expose=True is used</description>
 
 	<dependencies>
         <dependency>

@@ -39,6 +39,7 @@ public class Issue71Test {
     Component component = (Component) items.get(0);
     assertEquals("Component", component.getKind());
     assertEquals(DeploymentMode.build, component.getSpec().getDeploymentMode());
+    assertEquals(8080, component.getSpec().getPort());
     assertEquals(true, component.getSpec().isExposeService());
     Link link = (Link) items.get(1);
     assertEquals("Link", link.getKind());
