@@ -80,7 +80,7 @@ public class Session {
   public void loadHandlers() {
     Iterator<HandlerFactory> iterator = ServiceLoader.load(HandlerFactory.class, Session.class.getClassLoader()).iterator();
     while(iterator.hasNext())  {
-      this.handlers.add(iterator.next().create(this.resources));
+      this.handlers.add(iterator.next().create(this.resources, this.configurators));
     }
   }
  

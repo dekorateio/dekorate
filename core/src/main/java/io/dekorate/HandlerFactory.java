@@ -17,5 +17,5 @@ package io.dekorate;
 
 public interface HandlerFactory {
 
-  Handler create(Resources resources);
+  Handler create(Resources resources, Configurators configurators);
 }

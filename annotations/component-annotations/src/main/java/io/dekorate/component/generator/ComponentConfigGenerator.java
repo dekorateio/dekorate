@@ -50,7 +50,7 @@ public interface ComponentConfigGenerator extends Generator, WithProject {
 
   default void add(ConfigurationSupplier<ComponentConfig> config) {
     session.configurators().add(config);
-    session.handlers().add(new ComponentHandler(session.resources()));
+    session.handlers().add(new ComponentHandler(session.resources(), session.configurators()));
     session.handlers().add(new ComponentServiceCatalogHandler(session.resources()));
   }
 }

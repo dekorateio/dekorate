@@ -17,28 +17,28 @@
 
 package io.dekorate.component.handler;
 
+import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
 import io.dekorate.component.config.CapabilityConfig;
-import io.dekorate.component.config.EditableCapabilityConfig;
 import io.dekorate.component.config.CapabilityConfigBuilder;
+import io.dekorate.component.config.EditableCapabilityConfig;
 import io.dekorate.component.model.Capability;
 import io.dekorate.component.model.CapabilityBuilder;
-import io.dekorate.component.model.CapabilityFluent;
 import io.dekorate.component.model.Parameter;
-import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.utils.Strings;
 
-import java.util.stream.Collectors;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConfig> {
 
   private final Resources resources;
 
-  public Handler create(Resources resources) {
+  public Handler create(Resources resources, Configurators configurators) {
     return new CapabilityHandler(resources);
   }
  

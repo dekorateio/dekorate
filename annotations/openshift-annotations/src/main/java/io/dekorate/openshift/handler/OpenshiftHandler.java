@@ -18,6 +18,7 @@ package io.dekorate.openshift.handler;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesHandler;
+import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
@@ -35,6 +36,7 @@ import io.dekorate.deps.openshift.api.model.DeploymentConfigBuilder;
 import io.dekorate.deps.openshift.api.model.ImageStream;
 import io.dekorate.deps.openshift.api.model.ImageStreamBuilder;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
@@ -71,7 +73,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   }
 
   @Override
-  public Handler create(Resources resources) {
+  public Handler create(Resources resources, Configurators configurators) {
     return new OpenshiftHandler(resources);
   }
 
