@@ -142,29 +142,38 @@ public class Session {
   private Map<String, KubernetesList> generate() {
     if (generated.compareAndSet(false, true)) {
       closed.set(true);
+      populateFallbackConfig();
       handlers.forEach(h -> handle(h, configurators));
       this.generatedResources.putAll(resources.generate());
     }
     return Collections.unmodifiableMap(generatedResources);
   }
 
-  private static void handle(Handler h, Configurators configurators) {
+  private void populateFallbackConfig() {
     if (!hasApplicationConfiguration(configurators)) {
-      ConfigurationSupplier<? extends Configuration> supplier = h.getFallbackConfig();
-      if (supplier.hasConfiguration()) {
-        configurators.getConfigurators().forEach(c -> supplier.configure(c));
-        h.handle(supplier.get());
-      }
-    } 
+      handlers.stream().forEach(h -> {
+        if (!hasMatchingConfiguration(h, configurators)) {
+          ConfigurationSupplier<? extends Configuration> supplier = h.getFallbackConfig();
+          if (supplier.hasConfiguration()) {
+            configurators.add(supplier);
+          }
+        }
+      });
+    }
+  }
 
+  private static void handle(Handler h, Configurators configurators) {
     configurators.stream().forEach(c -> {
       if (h.canHandle(c.getClass())) {
       h.handle(c);
     }
    });
   }
-
   private static boolean hasApplicationConfiguration(Configurators configurators) {
     return configurators.stream().anyMatch(c->ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
+  }
+
+  private static boolean hasMatchingConfiguration(Handler h, Configurators configurators) {
+    return configurators.stream().anyMatch(c->h.canHandle(c.getClass()));
   }
 }
