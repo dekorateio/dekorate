@@ -15,6 +15,7 @@
  */
 package io.dekorate.component.handler;
 
+import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
@@ -42,18 +43,20 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
 
 
   private final Resources resources;
+  private final Configurators configurators;
 
-  public Handler create(Resources resources) {
-    return new ComponentHandler(resources);
+  public Handler create(Resources resources, Configurators configurators) {
+    return new ComponentHandler(resources, configurators);
   }
 
   // only used for testing
   public ComponentHandler() {
-    this(new Resources());
+    this(new Resources(), new Configurators());
   }
 
-  public ComponentHandler(Resources resources) {
+  public ComponentHandler(Resources resources, Configurators configurators) {
     this.resources = resources;
+    this.configurators = configurators;
   }
 
   @Override

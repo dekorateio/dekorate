@@ -36,6 +36,12 @@ limitations under the License.
 
     <dependency>
       <groupId>io.dekorate</groupId>
+      <artifactId>kubernetes-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.dekorate</groupId>
       <artifactId>servicecatalog-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>

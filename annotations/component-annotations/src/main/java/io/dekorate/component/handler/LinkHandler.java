@@ -15,6 +15,7 @@
  */
 package io.dekorate.component.handler;
 
+import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
@@ -32,7 +33,7 @@ import io.dekorate.utils.Strings;
 public class LinkHandler implements HandlerFactory, Handler<LinkConfig> {
   private final Resources resources;
 
-  public Handler create(Resources resources) {
+  public Handler create(Resources resources, Configurators configurators) {
     return new LinkHandler(resources);
   }
 

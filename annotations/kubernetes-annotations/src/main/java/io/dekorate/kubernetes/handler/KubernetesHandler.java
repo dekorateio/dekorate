@@ -16,6 +16,7 @@
 package io.dekorate.kubernetes.handler;
 
 import io.dekorate.AbstractKubernetesHandler;
+import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
@@ -67,7 +68,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   }
 
   @Override
-  public Handler create(Resources resources) {
+  public Handler create(Resources resources, Configurators configurators) {
     return new KubernetesHandler(resources);
   }
 
