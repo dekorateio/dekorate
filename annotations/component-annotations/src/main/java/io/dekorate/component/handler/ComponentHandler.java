@@ -23,15 +23,21 @@ import io.dekorate.WithProject;
 import io.dekorate.component.config.ComponentConfig;
 import io.dekorate.component.config.ComponentConfigBuilder;
 import io.dekorate.component.config.EditableComponentConfig;
-import io.dekorate.component.decorator.*;
+import io.dekorate.component.decorator.AddBuildConfigToComponentDecorator;
+import io.dekorate.component.decorator.AddEnvToComponentDecorator;
+import io.dekorate.component.decorator.AddExposedPortToComponentDecorator;
+import io.dekorate.component.decorator.AddRuntimeTypeToComponentDecorator;
+import io.dekorate.component.decorator.AddRuntimeVersionToComponentDecorator;
+import io.dekorate.component.decorator.DeploymentModeDecorator;
+import io.dekorate.component.decorator.ExposeServiceDecorator;
 import io.dekorate.component.model.Component;
 import io.dekorate.component.model.ComponentBuilder;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.config.EditableKubernetesConfig;
+import io.dekorate.kubernetes.config.EditableBaseConfig;
 import io.dekorate.kubernetes.config.Env;
-import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.project.ApplyProjectInfo;
@@ -103,7 +109,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     if (config.isExposeService()) {
       resources.decorateCustom(ResourceGroup.NAME,new ExposeServiceDecorator());
 
-      KubernetesConfig kubernetesConfig = getKubernetesConfig();
+      BaseConfig kubernetesConfig = getKubernetesConfig();
       Port[] ports = kubernetesConfig.getPorts();
       if (ports.length == 0) {
         throw new IllegalStateException("Ports need to be present on KubernetesConfig");
@@ -124,18 +130,18 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     }
   }
 
-  private KubernetesConfig getKubernetesConfig() {
-    Optional<KubernetesConfig> optionalKubernetesConfig = configurators.get(KubernetesConfig.class);
+  private BaseConfig getKubernetesConfig() {
+    Optional<BaseConfig> optionalKubernetesConfig = configurators.get(BaseConfig.class);
     if (optionalKubernetesConfig.isPresent()) {
       return optionalKubernetesConfig.get();
     }
 
-    Optional<EditableKubernetesConfig> editableKubernetesConfig = configurators.get(EditableKubernetesConfig.class);
+    Optional<EditableBaseConfig> editableKubernetesConfig = configurators.get(EditableBaseConfig.class);
     if (editableKubernetesConfig.isPresent()) {
       return editableKubernetesConfig.get();
     }
 
-    throw new IllegalStateException("KubernetesConfig needs to be present when using exposeService=true");
+    throw new IllegalStateException("BaseConfig needs to be present when using exposeService=true");
   }
 
   /**

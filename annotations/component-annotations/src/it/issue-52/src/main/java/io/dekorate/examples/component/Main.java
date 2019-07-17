@@ -20,13 +20,10 @@ package io.dekorate.examples.component;
 
 import io.dekorate.component.annotation.Link;
 import io.dekorate.component.annotation.ComponentApplication;
-import io.dekorate.component.model.DeploymentMode;
 import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.annotation.Port;
+import io.dekorate.component.model.DeploymentMode;
 
-@KubernetesApplication(ports = @Port(name = "http", containerPort = 8080))
-@ComponentApplication(name = "hello-world", exposeService = true, envs = @Env(name = "key1", value = "val1"))
+@ComponentApplication(name = "hello-world", exposeService = false, envs = @Env(name = "key1", value = "val1"))
 public class Main {
 
   public static void main(String[] args) {

@@ -1,3 +1,4 @@
 io.dekorate.component.handler.ComponentHandler
 io.dekorate.component.handler.LinkHandler
 io.dekorate.component.handler.CapabilityHandler
+io.dekorate.component.handler.ComponentBaseConfigHandler
