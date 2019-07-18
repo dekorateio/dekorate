@@ -15,7 +15,7 @@
  * 
 **/
 
-package io.dekorate.issue254;
+package io.dekorate.issue276;
 
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
@@ -29,17 +29,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class Issue254Test {
+public class Issue276Test {
 
   @Test
-  public void shouldExposeService() {
+  public void shouldExposeServiceAndHaveCorrectPort() {
     KubernetesList list = Serialization.unmarshal(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/component.yml"));
     assertNotNull(list);
     Optional<Component> component = findFirst(list, Component.class);
     assertTrue(component.isPresent());
     assertTrue(component.get().getSpec().isExposeService());
-    assertEquals("issue-254", component.get().getMetadata().getName());
-    assertEquals(8080, (long)component.get().getSpec().getPort());
+    assertEquals("customName", component.get().getMetadata().getName());
+    assertEquals("customName", component.get().getMetadata().getLabels().get("app"));
+    assertEquals(9090, (long)component.get().getSpec().getPort());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
