@@ -42,9 +42,11 @@ import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Optional;
 
 public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig>, WithProject {
@@ -150,10 +152,12 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
    * @return The component.
    */
   private Component createComponent(ComponentConfig config) {
-       return new ComponentBuilder()
+    Map<String, String> labels = resources.getLabels();
+    labels.put(Labels.APP, config.getName());
+    return new ComponentBuilder()
       .withNewMetadata()
-      .withName(resources.getName())
-      .withLabels(resources.getLabels())
+      .withName(config.getName())
+      .withLabels(labels)
       .endMetadata()
       .withNewSpec()
       .withDeploymentMode(config.getDeploymentMode())
