@@ -106,7 +106,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       Path modulePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
 
 
-      if (!Strings.isNullOrEmpty(config.getRemote())) {
+      if (!config.getRemote().equals(Git.ORIGIN)) {
         url = Git.getRemoteUrl(config.getProject().getScmInfo().getRoot(), config.getRemote())
           .map(u -> u.replace(Git.GITHUB_SSH,Git.GITHUB_HTTPS))
           .orElse(url);
