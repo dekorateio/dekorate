@@ -112,8 +112,7 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 | dekorate.component.exposeService  | boolean                                       |             | false                                          |
 | dekorate.component.envs           | io.dekorate.kubernetes.annotation.Env[]       |             |                                                |
 | dekorate.component.buildconfig    | io.dekorate.kubernetes.annotation.BuildConfig |             | @io.dekorate.kubernetes.annotation.BuildConfig |
-
-### Component types
+| dekorate.component.remote         | String                                        |             |                                                |                           
 
 #### Link
 | Property      | Type                                    | Description | Default Value |
