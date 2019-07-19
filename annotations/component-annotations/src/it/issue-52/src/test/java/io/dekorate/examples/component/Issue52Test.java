@@ -39,10 +39,10 @@ public class Issue52Test {
     assertEquals(1, items.size());
     Component component = (Component) items.get(0);
     assertEquals("Component", component.getKind());
-    //TODO: This is breaking the release because the git repo is being changed to local, during release
-    //assertEquals("https://github.com/dekorateio/dekorate.git", component.getSpec().getBuildConfig().getUrl());
+    //As the git repo is being changed to local, only not null value is checked
+    assertNotNull(component.getSpec().getBuildConfig().getUrl(), "Git url shouldn't be null.");
     assertEquals("s2i", component.getSpec().getBuildConfig().getType());
     assertEquals("issue-52", component.getSpec().getBuildConfig().getModuleDirName());
-    assertNotNull("", component.getSpec().getBuildConfig().getRef());
+    assertNotNull(component.getSpec().getBuildConfig().getRef(), "Git ref shouldn't be null.");
   }
 }
