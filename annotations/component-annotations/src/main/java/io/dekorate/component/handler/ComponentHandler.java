@@ -42,6 +42,7 @@ import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Git;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
 
@@ -99,13 +100,17 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     String version = config.getAttribute(RUNTIME_VERSION);
 
     if (config.getProject().getScmInfo() != null) {
-      String uri = config.getProject().getScmInfo().getUri();
+      String url = config.getProject().getScmInfo().getUrl();
       String branch = config.getProject().getScmInfo().getBranch();
       String buildTypeType = config.getBuildType();
       Path modulePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
 
+
+      if (!Strings.isNullOrEmpty(config.getRemote())) {
+        url = Git.getRemoteUrl(config.getProject().getScmInfo().getRoot(), config.getRemote()).map(u -> u.replace(Git.GITHUB_SSH,Git.GITHUB_HTTPS)).orElse(url);
+      }
        resources.decorateCustom(ResourceGroup.NAME,
-                                new AddBuildConfigToComponentDecorator(modulePath, uri, branch, buildTypeType));
+                                new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildTypeType));
     }
 
     if (config.isExposeService()) {

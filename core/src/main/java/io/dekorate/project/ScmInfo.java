@@ -21,16 +21,16 @@ import java.nio.file.Path;
 public class ScmInfo {
 
   private Path root;
-  private String uri;
+  private String url;
   private String branch;
   private String commit;
 
   public ScmInfo() {
   }
 
-  public ScmInfo(Path root, String uri, String branch, String commit) {
+  public ScmInfo(Path root, String url, String branch, String commit) {
     this.root=root;
-    this.uri = uri;
+    this.url = url;
     this.branch = branch;
     this.commit = commit;
   }
@@ -49,12 +49,12 @@ public class ScmInfo {
     this.root = root;
   }
 
-  public String getUri() {
-    return uri;
+  public String getUrl() {
+    return url;
   }
 
-  public void setUri(String uri) {
-    this.uri = uri;
+  public void setUrl(String url) {
+    this.url = url;
   }
 
   public String getBranch() {

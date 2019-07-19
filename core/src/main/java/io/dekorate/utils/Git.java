@@ -44,6 +44,8 @@ public class Git {
   public static final String HEAD = "HEAD";
   public static final String URL = "url";
   public static final String REF = "ref";
+  public static final String GITHUB_SSH = "git@github.com:";
+  public static final String GITHUB_HTTPS = "https://github.com/";
 
   /**
    * Get the git root.

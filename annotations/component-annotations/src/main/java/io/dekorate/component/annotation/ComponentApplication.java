@@ -44,4 +44,6 @@ public @interface ComponentApplication {
   Env[] envs() default {};
 
   String buildType() default "s2i";
+
+  String remote() default "";
 }
