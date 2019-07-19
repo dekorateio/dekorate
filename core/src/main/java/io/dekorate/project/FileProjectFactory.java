@@ -29,8 +29,7 @@ import io.dekorate.utils.Git;
 public class FileProjectFactory {
 
   private static Project PROJECT = null;
-  public static final String GITHUB_SSH = "git@github.com:";
-  public static final String GITHUB_HTTPS = "https://github.com/";
+
 
   /**
    * Creates a {@link Project} from the specified {@link File}.
@@ -88,9 +87,9 @@ public class FileProjectFactory {
     if (path == null) {
       return scmInfo;
     }
-    String uri = Git.getRemoteUrl(path, Git.ORIGIN).map(u -> u.replace(GITHUB_SSH, GITHUB_HTTPS)).orElse(null);
+    String url = Git.getRemoteUrl(path, Git.ORIGIN).map(u -> u.replace(Git.GITHUB_SSH, Git.GITHUB_HTTPS)).orElse(null);
     String branch = Git.getBranch(path).orElse(null);
-    scmInfo = Optional.of(new ScmInfo(path, uri, branch, ""));
+    scmInfo = Optional.of(new ScmInfo(path, url, branch, ""));
     return scmInfo;
   }
 
