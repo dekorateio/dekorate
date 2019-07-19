@@ -19,6 +19,7 @@ package io.dekorate.component.annotation;
 import io.dekorate.component.model.DeploymentMode;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.utils.Git;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -45,5 +46,5 @@ public @interface ComponentApplication {
 
   String buildType() default "s2i";
 
-  String remote() default "";
+  String remote() default Git.ORIGIN;
 }
