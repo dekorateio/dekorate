@@ -57,6 +57,7 @@ For new issues and pull requests please don't forget to use https://github.com/d
   - Spring Boot
 - Integration with external generators
 - [Rich set of examples](examples)
+- [Interaction with other annotation processors](#interaction-with-other-annotation-processors)
 
 ### Experimental features
 
@@ -1062,6 +1063,38 @@ public class Main {
 #### related examples
  - [spring boot with fmp on openshift example](examples/spring-boot-with-fmp-on-kubernetes-example)
 
+#### Interaction with other annotation processors
+
+In the maven pom.xml configure the annotation processor path in the maven compiler plugin settings. 
+
+The example below configures the Mapstruct, Lombok and Dekorate annotation processors
+
+```xml
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.dekorate</groupId>
+                            <artifactId>kubernetes-annotations</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin> 
+```
 
 ## Want to get involved?
 
