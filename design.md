@@ -16,7 +16,7 @@ The handlers role is to create or modify the `model` based on the `config`.
 
 Finally, the `model` is serialized to disk as json/yml.
 
-[![sequence diagram](https://raw.githubusercontent.com/dekorate/dekorate/master/doc/src/main/resources/sequence.png)]
+[![sequence diagram](https://raw.githubusercontent.com/dekorateio/dekorate/master/doc/src/main/resources/sequence.png)]
 
 ## Vocabulary
 
