@@ -177,6 +177,10 @@ public @interface OpenshiftApplication {
    */
   ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
 
+  /**
+   * The image pull secret
+   */
+   String[] imagePullSecrets() default {};
 
   /**
    * The liveness probe.

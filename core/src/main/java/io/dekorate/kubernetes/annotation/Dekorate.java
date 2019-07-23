@@ -173,6 +173,10 @@ import java.lang.annotation.Target;
          */
         ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
 
+        /**
+        * The image pull secret
+        */
+        String[] imagePullSecrets() default {};
 
         /**
          * The liveness probe.

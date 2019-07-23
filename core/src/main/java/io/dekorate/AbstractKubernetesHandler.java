@@ -35,6 +35,7 @@ import io.dekorate.kubernetes.decorator.AddAzureFileVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
+import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
@@ -94,6 +95,10 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     resources.decorate(new ApplyServiceAccountDecorator(config.getName(), config.getServiceAccount()));
     }
     resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
+
+    for (String imagePullSecret: config.getImagePullSecrets()) {
+      resources.decorate(new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
+    }
 
     resources.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     //Metadata handling
