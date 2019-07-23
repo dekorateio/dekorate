@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Link {
-  String name() default "";;
+  String name() default "";
   String componentName();
   Kind kind() default Kind.Env;
   String ref() default "";
