@@ -21,6 +21,7 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 
 
 ## Kubernetes
+
 | Property                                        | Type                                          | Description | Default Value                            |
 |-------------------------------------------------|-----------------------------------------------|-------------|------------------------------------------|
 | dekorate.kubernetes.group                       | String                                        |             |                                          |
@@ -47,6 +48,7 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 | dekorate.kubernetes.azureFileVolumes            | AzureFileVolume[]                             |             |                                          |
 | dekorate.kubernetes.mounts                      | Mount[]                                       |             |                                          |
 | dekorate.kubernetes.imagePullPolicy             | ImagePullPolicy                               |             | IfNotPresent                             |
+| dekorate.kubernetes.imagePullSecrets            | String[]                                      |             |                                          |
 | dekorate.kubernetes.livenessProbe               | io.dekorate.kubernetes.annotation.Probe       |             | @io.dekorate.kubernetes.annotation.Probe |
 | dekorate.kubernetes.readinessProbe              | io.dekorate.kubernetes.annotation.Probe       |             | @io.dekorate.kubernetes.annotation.Probe |
 | dekorate.kubernetes.sidecars                    | io.dekorate.kubernetes.annotation.Container[] |             |                                          |
@@ -85,6 +87,7 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 | dekorate.openshift.azureFileVolumes               | AzureFileVolume[]                             |             |                                          |
 | dekorate.openshift.mounts                         | Mount[]                                       |             |                                          |
 | dekorate.openshift.imagePullPolicy                | ImagePullPolicy                               |             | IfNotPresent                             |
+| dekorate.kubernetes.imagePullSecrets              | String[]                                      |             |                                          |
 | dekorate.openshift.livenessProbe                  | io.dekorate.kubernetes.annotation.Probe       |             | @io.dekorate.kubernetes.annotation.Probe |
 | dekorate.openshift.readinessProbe                 | io.dekorate.kubernetes.annotation.Probe       |             | @io.dekorate.kubernetes.annotation.Probe |
 | dekorate.openshift.sidecars                       | io.dekorate.kubernetes.annotation.Container[] |             |                                          |
