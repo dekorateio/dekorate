@@ -102,7 +102,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     if (config.getProject().getScmInfo() != null) {
       String url = config.getProject().getScmInfo().getUrl();
       String branch = config.getProject().getScmInfo().getBranch();
-      String buildTypeType = config.getBuildType();
+      String buildType = config.getBuildType();
       Path modulePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
 
 
@@ -112,7 +112,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
           .orElse(url);
       }
        resources.decorateCustom(ResourceGroup.NAME,
-                                new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildTypeType));
+                                new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
     }
 
     if (config.isExposeService()) {
