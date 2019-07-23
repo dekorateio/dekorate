@@ -107,7 +107,7 @@ public class Main {
 ```
 
 When the project gets compiled, the annotation will trigger the generation of a `Deployment` in both json and yml that
-will end up under 'target/classes/META-INF/apk'. 
+will end up under 'target/classes/META-INF/dekorate'. 
 
 The annotation comes with a lot of parameters, which can be used in order to customize the `Deployment` and/or trigger
 the generations of addition resources, like `Service` and `Ingress`.

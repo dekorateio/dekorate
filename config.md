@@ -97,12 +97,6 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 
 ### Openshift types
 
-#### BuildConfig
-| Property | Type   | Description | Default Value |
-|----------|--------|-------------|---------------|
-| type     | String |             | s2i           |
-
-
 ## Component
 
 | Property                          | Type                                          | Description | Default Value                                  |
@@ -111,8 +105,8 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 | dekorate.component.deploymentMode | DeploymentMode                                |             | dev                                            |
 | dekorate.component.exposeService  | boolean                                       |             | false                                          |
 | dekorate.component.envs           | io.dekorate.kubernetes.annotation.Env[]       |             |                                                |
-| dekorate.component.buildconfig    | io.dekorate.kubernetes.annotation.BuildConfig |             | @io.dekorate.kubernetes.annotation.BuildConfig |
-| dekorate.component.remote         | String                                        |             |                                                |                           
+| dekorate.component.buildType      | String                                        |             | s2i                                            |
+| dekorate.component.remote         | String                                        |             | origin                                         |                           
 
 #### Link
 | Property      | Type                                    | Description | Default Value |
@@ -122,6 +116,15 @@ For example to reference the `httpActionPath` of the complex object `Probe` whic
 | kind          | Kind                                    |             | Env           |
 | ref           | String                                  |             |               |
 | envs          | io.dekorate.kubernetes.annotation.Env[] |             |               |
+
+#### Capability
+| Property   | Type        | Description | Default Value |
+|------------|-------------|-------------|---------------|
+| category   | String      |             |               |
+| kind       | String      |             |               |
+| name       | String      |             |               |
+| version    | String      |             |               |
+| parameters | Parameter[] |             |               |
 #
 ## Global Types
 
@@ -189,7 +192,7 @@ The section below describes all the avialables subtypes
 |-------------|---------|-------------|---------------|
 | volumeName  | String  |             |               |
 | secretName  | String  |             |               |
-| defaultMode | int     |             | 0600           |
+| defaultMode | int     |             | 384           |
 | optional    | boolean |             | false         |
 
 #### AzureDiskVolume
@@ -202,6 +205,13 @@ The section below describes all the avialables subtypes
 | cachingMode | String  |             | ReadWrite     |
 | fsType      | String  |             | ext4          |
 | readOnly    | boolean |             | false         |
+####AzureFileVolume
+| Property     | Type      | Description   | Default Value   |
+|-- ---------- | --------- | ------------- | ------------- --|
+| volumeName   | String    |               |                 |
+| shareName    | String    |               |                 |
+| secretName   | String    |               |                 |
+| readOnly     | boolean   |               | false           |
 #### AwsElasticBlockStoreVolume
 | Property   | Type    | Description | Default Value |
 |------------|---------|-------------|---------------|
@@ -223,18 +233,21 @@ The section below describes all the avialables subtypes
 | volumeName | String  |             |               |
 | claimName  | String  |             |               |
 | readOnly   | boolean |             | false         |
-#### AzureFileVolume
-| Property   | Type    | Description | Default Value |
-|------------|---------|-------------|---------------|
-| volumeName | String  |             |               |
-| shareName  | String  |             |               |
-| secretName | String  |             |               |
-| readOnly   | boolean |             | false         |
+#### AzureDiskVolume
+| Property     | Type      | Description   | Default Value   |
+|-- ---------- | --------- | ------------- | ------------- --|
+| volumeName   | String    |               |                 |
+| diskName     | String    |               |                 |
+| diskURI      | String    |               |                 |
+| kind         | String    |               | Managed         |
+| cachingMode  | String    |               | ReadWrite       |
+| fsType       | String    |               | ext4            |
+| readOnly     | boolean   |               | false           |
 #### ConfigMapVolume
-| Property      | Type    | Description | Default Value |
-|---------------|---------|-------------|---------------|
-| volumeName    | String  |             |               |
-| configMapName | String  |             |               |
-| defaultMode   | int     |             | 0600           |
-| optional      | boolean |             | false         |
+| Property        | Type      | Description   | Default Value   |
+|-- ------------- | --------- | ------------- | ------------- --|
+| volumeName      | String    |               |                 |
+| configMapName   | String    |               |                 |
+| defaultMode     | int       |               | 384             |
+| optional        | boolean   |               | false           |
 
