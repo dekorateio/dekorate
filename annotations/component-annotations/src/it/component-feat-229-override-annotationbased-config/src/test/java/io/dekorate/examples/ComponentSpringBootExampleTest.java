@@ -17,6 +17,7 @@ package io.dekorate.examples;
 
 import io.dekorate.component.model.Component;
 import io.dekorate.component.model.Link;
+import io.dekorate.component.model.Env;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;
@@ -27,25 +28,29 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import io.dekorate.component.model.Component;
-import io.dekorate.component.model.DeploymentMode;
 
 public class ComponentSpringBootExampleTest {
 
   @Test
-  public void shouldContainComponentWithDefaultValues() {
+  public void shouldContainComponentAndLink() {
     KubernetesList list = Serialization.unmarshal(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/component.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
-    Assertions.assertEquals(1, items.size());
+    Assertions.assertEquals(2, items.size());
     Component component = (Component) items.get(0);
     Assertions.assertEquals("Component", component.getKind());
     assertEquals("https://github.com/dekorateio/dekorate.git", component.getSpec().getBuildConfig().getUrl());
-    assertEquals("component-example", component.getMetadata().getName());
-    assertEquals(DeploymentMode.dev, component.getSpec().getDeploymentMode());
-    assertEquals(false, component.getSpec().isExposeService());
-    assertEquals("component-example", component.getSpec().getBuildConfig().getModuleDirName());
-    assertEquals("s2i", component.getSpec().getBuildConfig().getType());
+    assertEquals("docker", component.getSpec().getBuildConfig().getType());
+    assertEquals("component-feat-229-override-annotationbased-config", component.getSpec().getBuildConfig().getModuleDirName());
+    assertNotNull("", component.getSpec().getBuildConfig().getRef());
+    Link link = (Link) items.get(1);
+    Assertions.assertEquals("Link", link.getKind());
+    Env[] envs = link.getSpec().getEnvs();
+    Assertions.assertEquals(1, envs.length);
+    Assertions.assertEquals("key1-from-properties", envs[0].getName());
+    Assertions.assertEquals("val1-from-properties", envs[0].getValue());
+    Assertions.assertEquals("hello-world", link.getMetadata().getName());
+    Assertions.assertEquals("target", link.getSpec().getComponentName());
   }
 
 }

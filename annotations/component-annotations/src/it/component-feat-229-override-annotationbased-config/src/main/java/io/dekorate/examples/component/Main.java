@@ -22,10 +22,13 @@ import io.dekorate.component.annotation.Link;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@ComponentApplication
+@ComponentApplication(name = "hello-spring-boot", exposeService = true, envs = @Env(name = "key1", value = "val1"))
+@Link(name = "should-be-overridden-by-properties", componentName = "should-be-overridden-by-properties")
+@SpringBootApplication
 public class Main {
 
   public static void main(String[] args) {
+    SpringApplication.run(Main.class, args);
   }
 
 }
