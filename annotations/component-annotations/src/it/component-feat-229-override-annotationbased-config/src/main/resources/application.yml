@@ -1,0 +1,10 @@
+dekorate:
+  link:
+    name: "hello-world"
+    componentName: "target"
+    envs:
+      - name: "key1-from-properties"
+        value: "val1-from-properties"
+  component:
+    buildType: "docker"
+

@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.dekorate.examples.component;
 
-import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.component.annotation.ComponentApplication;
-import io.dekorate.component.annotation.Link;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@ComponentApplication
-public class Main {
+@RestController
+public class Controller {
 
-  public static void main(String[] args) {
+  @RequestMapping("/")
+  public String hello() {
+    return "Hello world";
   }
-
 }
