@@ -15,10 +15,23 @@ They can be referenced by index inside brackets as in java for example: `dekorat
 
 ## Complex object
 Each property of the complex object can be specified, by expanding the the property key.
-For example to reference the `httpActionPath` of the complex object `Probe` which is used to defined the `readinessProbe`:
+For example lets assume the object `Probe` that looks like:
+
+| Property            | Type   | Description | Default Value |
+|---------------------|--------|-------------|---------------|
+| httpActionPath      | String |             |               |
+| execAction          | String |             |               |
+| tcpSocketAction     | String |             |               |
+| initialDelaySeconds | int    |             |             0 |
+| periodSeconds       | int    |             |            30 |
+| timeoutSeconds      | int    |             |            10 |
+
+
+To reference the `httpActionPath` of the complex object `Probe` which is used to define the `readinessProbe` property of `Kubernetes`:
 
     dekorate.kubernetes.readinessProbe.httpActionPath=/some/path
 
+Below is a list of all the available options
 
 ## Kubernetes
 
@@ -238,7 +251,7 @@ The section below describes all the avialables subtypes
 | readOnly   | boolean |             | false         |
 #### AzureDiskVolume
 | Property     | Type      | Description   | Default Value   |
-|-- ---------- | --------- | ------------- | ------------- --|
+|--------------|-----------|---------------|-----------------|
 | volumeName   | String    |               |                 |
 | diskName     | String    |               |                 |
 | diskURI      | String    |               |                 |
@@ -248,7 +261,7 @@ The section below describes all the avialables subtypes
 | readOnly     | boolean   |               | false           |
 #### ConfigMapVolume
 | Property        | Type      | Description   | Default Value   |
-|-- ------------- | --------- | ------------- | ------------- --|
+|-----------------| ----------|---------------|-----------------|
 | volumeName      | String    |               |                 |
 | configMapName   | String    |               |                 |
 | defaultMode     | int       |               | 384             |
