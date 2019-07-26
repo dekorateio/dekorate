@@ -32,6 +32,7 @@ import io.dekorate.component.decorator.DeploymentModeDecorator;
 import io.dekorate.component.decorator.ExposeServiceDecorator;
 import io.dekorate.component.model.Component;
 import io.dekorate.component.model.ComponentBuilder;
+import io.dekorate.component.model.DeploymentMode;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.ConfigKey;
@@ -99,20 +100,8 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
 
-    if (config.getProject().getScmInfo() != null) {
-      String url = config.getProject().getScmInfo().getUrl();
-      String branch = config.getProject().getScmInfo().getBranch();
-      String buildType = config.getBuildType();
-      Path modulePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
-
-
-      if (!config.getRemote().equals(Git.ORIGIN)) {
-        url = Git.getRemoteUrl(config.getProject().getScmInfo().getRoot(), config.getRemote())
-          .map(u -> u.replace(Git.GITHUB_SSH,Git.GITHUB_HTTPS))
-          .orElse(url);
-      }
-       resources.decorateCustom(ResourceGroup.NAME,
-                                new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
+    if(DeploymentMode.build.equals(config.getDeploymentMode())) {
+      generateBuildConfig(config);
     }
 
     if (config.isExposeService()) {
@@ -136,6 +125,24 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     resources.decorateCustom(ResourceGroup.NAME,new DeploymentModeDecorator(config.getDeploymentMode()));
     for (Env env : config.getEnvs()) {
       resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
+    }
+  }
+
+  private void generateBuildConfig(ComponentConfig config) {
+    if (config.getProject().getScmInfo() != null) {
+      String url = config.getProject().getScmInfo().getUrl();
+      String branch = config.getProject().getScmInfo().getBranch();
+      String buildType = config.getBuildType();
+      Path modulePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
+
+
+      if (!config.getRemote().equals(Git.ORIGIN)) {
+        url = Git.getRemoteUrl(config.getProject().getScmInfo().getRoot(), config.getRemote())
+          .map(u -> u.replace(Git.GITHUB_SSH,Git.GITHUB_HTTPS))
+          .orElse(url);
+      }
+       resources.decorateCustom(ResourceGroup.NAME,
+                                new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
     }
   }
 
