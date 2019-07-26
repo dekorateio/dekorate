@@ -82,7 +82,7 @@ public class Project {
   }
 
   public Map<String, Object> parseResourceFile(String resourceName) {
-    final Path path = getBuildInfo().getApplicationResourceOutputDir().resolve(resourceName);
+    final Path path = getBuildInfo().getResourceDir().resolve(resourceName);
     if (!path.toFile().exists()) {
       return new HashMap<>();
     }
