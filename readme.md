@@ -388,7 +388,7 @@ Also instead of creating a `Deployment` it will create a `DeploymentConfig`.
 **NOTE:** A project can use both [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) and [@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/dekorate/openshift/annotation/OpenshiftApplication.java). If both the kubernetes and
 openshift annotation processors are present both kubernetes and openshift resources will be generated. 
 
-#### Adding the openshift annotation processor to the classpath
+#### Adding the OpenShift annotation processor to the classpath
 
 This module can be added to the project using:
 ```xml
@@ -572,65 +572,32 @@ This module can be added to the project using:
 </dependency>
 ```
 
-### Component annotations
-The component [CRD](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims on abstracting kubernetes/OpenShift resources and simplify the config, design of an application.
-See the following [project](https://github.com/snowdrop/component-operator/blob/master/pkg/apis/component/v1alpha1/component_types.go) to get more buildInfo about how the structure, syntax of a Component (runtime, services, links) is defined.
-To play with a Components CRD and its [operator](https://coreos.com/operators/) running on the cloud platform and able to generate the kubernetes resources or manage them, then look to this [project](https://github.com/snowdrop/component-operator-demo).
-This module provides limited/early support of the component operator.
+### Component CRD support
+The Component [Custom Resource Definition (CRD)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims 
+to abstract kubernetes/OpenShift resources and simplify the configuration and design of cloud-native applications.
+See the following [project](https://github.com/snowdrop/component-operator) to get more information about the Component CRD and
+its associated operator, more specifically you can take a look at the 
+[demo project](https://github.com/snowdrop/component-operator/tree/master/demo).
+This module provides support for the Component CRD.
 
-By adding the `@ComponentApplication` annotation to the application, the generation of `target/classes/META-INF/apk/component.yml' is triggered.
+The generation of a Component CRD descriptor is triggered by adding the `component-annotations` dependency to the project and
+annotate one of your classes with `@ComponentApplication`. Note that in the case of Spring Boot applications, as explained 
+[here](#annotation-less), only adding the dependency is needed:
 
-The content of the component descriptor will be determined by the existing config provided by annotations like:
-
-- @KubernetesApplication
-- @ServiceCatalog
-- and more...
-
-For example, the following code:
-
-```java
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.component.annotation.ComponentApplication;
-import io.dekorate.servicecatalog.annotation.ServiceCatalog;
-import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@KubernetesApplication
-@ServiceCatalog(instances = @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default", bindingSecret="mysql-secret"))
-@ComponentApplication
-public class Main {
-
-  public static void main(String[] args) {
-    SpringApplication.run(Main.class, args);
-  }
-
-}
-```
-
-Will trigger the creation of the following component:
-
-```yaml
- apiVersion: "v1beta1"
- kind: "Component"
- metadata:
-   name: ""
- spec:
-   deploymentMode: "innerloop"
-services:
-- name: "mysql-instance"
-  class: "apb-mysql"
-  plan: "default"
-  secretName: "mysql-secret"
-```
-This module can be added to the project using:
 ```xml
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>component-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
-```  
+```
+
+If everything went well, building your project will also generate `component.yml` and `component.json` files in the 
+`target/classes/META-INF/dekorate` is triggered.
+
+The content of the component descriptor will be determined by the existing config provided by other annotations such as 
+`@KubernetesApplication` and can be also controlled using application properties.
+
 ### Application Annotations
 
 The [@EnableApplicationResource](annotations/application-annotations/src/main/java/io/dekorate/application/annotation/EnableApplicationResource.java) enables the generation of the `Application` custom resource, that is defined as part of https://github.com/kubernetes-sigs/application.
@@ -693,7 +660,7 @@ Or if you are on [openshift](https://openshift.com):
 ```
 
 ##### Annotation less
-For spring boot applications all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additonal annotation.
+For Spring Boot applications (i.e. at least one project class is annotated with `@SpringBootApplication`) all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additional annotation.
 This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
 To customize/dekorate the generated manifests you can use `application.yml` / `application.properties` both, or even use annotations along with  `application.yml` / `application.properties`.
