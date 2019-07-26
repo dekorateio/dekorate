@@ -28,7 +28,7 @@ For new issues and pull requests please don't forget to use https://github.com/d
   - [Prometheus](#prometheus-annotations)
   - [Jaeger](#jaeger-annotations)
   - [Service Catalog](#service-catalog-annotations)
-  - [Component CRD](#component-annotations)
+  - [Component CRD](#component-crd-support)
   - [Application CRD](#application-annotations)
   - Istio
 - Customize manifests using annotations
