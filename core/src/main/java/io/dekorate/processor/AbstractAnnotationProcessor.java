@@ -33,6 +33,7 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,18 +69,15 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   }
 
   protected List<HasMetadata> read(String path) {
-    try {
-      FileObject fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path);
-      try (InputStream is = fileObject.openInputStream()) {
+    try (InputStream is = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve(path).toFile())) {
         KubernetesResource resource = Serialization.unmarshal(is, KubernetesResource.class);
         if (resource instanceof KubernetesList) {
           return ((KubernetesList) resource).getItems();
         } else if (resource instanceof HasMetadata) {
           return Arrays.asList((HasMetadata)resource);
         } else {
-          return Collections.emptyList();
+          return Collections.<HasMetadata>emptyList();
         }
-      }
     } catch (IOException e) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, path + " JSON not found.");
     }
@@ -91,15 +89,13 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
    */
   protected Map<String, Object> readApplicationConfig(String... resourceNames) {
     Map<String, Object> result = new HashMap<>();
-    Filer filer = this.processingEnv.getFiler();
     for (String resourceName : resourceNames) {
-      try {
-        FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, "", resourceName);
+      try (InputStream is = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve(resourceName).toFile())) {
         if (resourceName.endsWith(".properties")) {
-          Map<String, Object> newProps = Maps.fromProperties(f.openInputStream());
+          Map<String, Object> newProps = Maps.fromProperties(is);
           mergeProperties(result, newProps);
         } else if (resourceName.endsWith(".yml") || resourceName.endsWith(".yaml")) {
-          Map<String, Object> newProps = Maps.fromYaml(f.openInputStream());
+          Map<String, Object> newProps = Maps.fromYaml(is);
           mergeProperties(result, newProps);
         } else {
           throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
