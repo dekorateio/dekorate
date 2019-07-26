@@ -18,14 +18,15 @@ package io.dekorate.examples.component;
 
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.component.annotation.ComponentApplication;
-import io.dekorate.component.annotation.Link;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @ComponentApplication
+@SpringBootApplication
 public class Main {
 
   public static void main(String[] args) {
+    SpringApplication.run(Main.class, args);
   }
 
 }
