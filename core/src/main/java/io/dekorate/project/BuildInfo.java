@@ -21,13 +21,12 @@ public class BuildInfo {
 
   public static String DEFAULT_PACKAGING = "jar";
 
-
   private String name;
   private String version;
   private String packaging;
   private Path outputFile;
   private Path classOutputDir;
-  private Path applicationResourceOutputDir;
+  private Path resourceDir;
 
   public BuildInfo() {
   }
@@ -38,7 +37,7 @@ public class BuildInfo {
    * @param version               The project version (e.g. maven version).
    * @param packaging             The project packaging (e.g. jar, war).
    * @param outputFile            The output file (the path to the actual jar, war etc).
-   * @param classOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
+   * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
    */
   public BuildInfo(String name, String version, String packaging, Path outputFile, Path classOutputDir) {
     this(name, version, packaging, outputFile, classOutputDir, classOutputDir);
@@ -50,16 +49,16 @@ public class BuildInfo {
    * @param version               The project version (e.g. maven version).
    * @param packaging             The project packaging (e.g. jar, war).
    * @param outputFile            The output file (the path to the actual jar, war etc).
-   * @param classOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
-   * @param applicationResourceOutputDir     The directory where the application resources end up as part of the build process (e.g. target/classes).
+   * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
+   * @param resourceDir           The directory from which application resources should be read. (e.g. target/classes for maven, src/main/resources from gralde and so on).
    */
-  public BuildInfo(String name, String version, String packaging, Path outputFile, Path classOutputDir, Path applicationResourceOutputDir) {
+  public BuildInfo(String name, String version, String packaging, Path outputFile, Path classOutputDir, Path resourceDir) {
     this.name = name;
     this.version = version;
     this.packaging = packaging;
     this.outputFile = outputFile;
     this.classOutputDir = classOutputDir;
-    this.applicationResourceOutputDir = applicationResourceOutputDir;
+    this.resourceDir = resourceDir;
   }
 
   /**
@@ -98,8 +97,8 @@ public class BuildInfo {
     return classOutputDir;
   }
 
-  public Path getApplicationResourceOutputDir() {
-    return applicationResourceOutputDir;
+  public Path getResourceDir() {
+    return resourceDir;
   }
 
   public void setName(String name) {
@@ -122,7 +121,7 @@ public class BuildInfo {
     this.classOutputDir = classOutputDir;
   }
 
-  public void setApplicationResourceOutputDir(Path applicationResourceOutputDir) {
-    this.applicationResourceOutputDir = applicationResourceOutputDir;
+  public void setApplicationResourceOutputDir(Path resourceDir) {
+    this.resourceDir = resourceDir;
   }
 }
