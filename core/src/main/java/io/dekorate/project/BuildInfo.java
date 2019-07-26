@@ -26,7 +26,7 @@ public class BuildInfo {
   private String version;
   private String packaging;
   private Path outputFile;
-  private Path resourceOutputDir;
+  private Path classOutputDir;
   private Path applicationResourceOutputDir;
 
   public BuildInfo() {
@@ -38,10 +38,10 @@ public class BuildInfo {
    * @param version               The project version (e.g. maven version).
    * @param packaging             The project packaging (e.g. jar, war).
    * @param outputFile            The output file (the path to the actual jar, war etc).
-   * @param resourceOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
+   * @param classOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
    */
-  public BuildInfo(String name, String version, String packaging, Path outputFile, Path resourceOutputDir) {
-    this(name, version, packaging, outputFile, resourceOutputDir, resourceOutputDir);
+  public BuildInfo(String name, String version, String packaging, Path outputFile, Path classOutputDir) {
+    this(name, version, packaging, outputFile, classOutputDir, classOutputDir);
   }
 
   /**
@@ -50,15 +50,15 @@ public class BuildInfo {
    * @param version               The project version (e.g. maven version).
    * @param packaging             The project packaging (e.g. jar, war).
    * @param outputFile            The output file (the path to the actual jar, war etc).
-   * @param resourceOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
+   * @param classOutputDir     The resource output directory (e.g. target, build/classes/main/java etc).
    * @param applicationResourceOutputDir     The directory where the application resources end up as part of the build process (e.g. target/classes).
    */
-  public BuildInfo(String name, String version, String packaging, Path outputFile, Path resourceOutputDir, Path applicationResourceOutputDir) {
+  public BuildInfo(String name, String version, String packaging, Path outputFile, Path classOutputDir, Path applicationResourceOutputDir) {
     this.name = name;
     this.version = version;
     this.packaging = packaging;
     this.outputFile = outputFile;
-    this.resourceOutputDir = resourceOutputDir;
+    this.classOutputDir = classOutputDir;
     this.applicationResourceOutputDir = applicationResourceOutputDir;
   }
 
@@ -94,8 +94,8 @@ public class BuildInfo {
     return outputFile;
   }
 
-  public Path getResourceOutputDir() {
-    return resourceOutputDir;
+  public Path getClassOutputDir() {
+    return classOutputDir;
   }
 
   public Path getApplicationResourceOutputDir() {
@@ -118,8 +118,8 @@ public class BuildInfo {
     this.outputFile = outputFile;
   }
 
-  public void setResourceOutputDir(Path resourceOutputDir) {
-    this.resourceOutputDir = resourceOutputDir;
+  public void setResourceOutputDir(Path classOutputDir) {
+    this.classOutputDir = classOutputDir;
   }
 
   public void setApplicationResourceOutputDir(Path applicationResourceOutputDir) {
