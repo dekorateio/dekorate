@@ -130,7 +130,7 @@ This module can be added to the project using:
 
 #### Name and Version
 
-So where did the generated `Deployment` gets its name, docker images etc from?
+So where did the generated `Deployment` gets its name, docker image etc from?
 
 Everything can be customized via annotation parameters and system properties.
 On top of that `lightweight` integration with build tools is provided in order to reduce duplication.
@@ -506,9 +506,9 @@ public class Main {
 - [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
 
 ### Service Catalog annotations
-The [services catalog](https://svc-cat.io) annotation processor is can be used in order to create [services catalog](https://svc-cat.io) resources for:
+The [service catalog](https://svc-cat.io) annotation processor is can be used in order to create [service catalog](https://svc-cat.io) resources for:
 
-- creating services instances
+- creating service instances
 - binding to services
 - injecting binding info into the container 
 
@@ -531,7 +531,7 @@ public class Main {
 The `@ServiceCatalogInstance` annotation will trigger the generation of a `ServiceInstance` and a `ServiceBinding`resource.
 It will also decorate any `Pod`, `Deployment`, `DeploymentConfig` and so on with additional environment variables containing the binding information.
 
-#### Adding the services catalog annotation processor to the classpath
+#### Adding the service catalog annotation processor to the classpath
 
 This module can be added to the project using:
 ```xml
