@@ -35,13 +35,16 @@ public class GradleInfoReader implements BuildInfoReader {
   private static final String BUILD_GRADLE = "build.gradle";
   private static final String SETTINGS_GRADLE = "settings.gradle";
   private static final String GRADLE_PROPERTIES = "gradle.properties";
+  private static final String SRC = "src";
+  private static final String MAIN = "main";
+  private static final String RESOURCES = "resources";
+
   private static final String BUILD = "build";
   private static final String LIBS = "libs";
 
   private static final String CLASSES = "classes";
   private static final String GROOVY = "groovy";
   private static final String JAVA = "groovy";
-  private static final String MAIN = "main";
 
   private static final String OPEN_BRACKET = "{";
   private static final String CLOSE_BRACKET = "}";
@@ -99,8 +102,9 @@ public class GradleInfoReader implements BuildInfoReader {
 
     return new BuildInfo(name, version, extension,
       outputDir.resolve(sb.toString()),
-      //TODO: This need to be smarter and also cover groovy code.
-      root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN)
+                         //TODO: This need to be smarter and also cover groovy code.
+                         root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN),
+                         root.resolve(SRC).resolve(MAIN).resolve(RESOURCES)
     );
   }
 
