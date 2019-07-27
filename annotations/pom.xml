@@ -31,6 +31,7 @@ limitations under the License.
     <module>option-annotations</module>
     <module>kubernetes-annotations</module>
     <module>openshift-annotations</module>
+    <module>knative-annotations</module>
     <module>servicecatalog-annotations</module>
     <module>halkyon-annotations</module>
     <module>prometheus-annotations</module>
