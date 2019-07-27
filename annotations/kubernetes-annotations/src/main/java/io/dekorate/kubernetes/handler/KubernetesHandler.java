@@ -46,6 +46,7 @@ import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLabelSelectorDecorator;
+import io.dekorate.kubernetes.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 
 import java.util.Optional;
@@ -92,6 +93,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     if (!existingDeployment.isPresent()) {
       resources.add(KUBERNETES, createDeployment(config));
     }
+    resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     addDecorators(KUBERNETES, config);
   }
 
