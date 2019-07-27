@@ -65,9 +65,6 @@ class KubernetesHandlerTest {
     assertFalse(generator.canHandle(KubernetesConfigSubclass.class));
   }
 
-  private class KubernetesConfigSubclass extends KubernetesConfig {
-    public KubernetesConfigSubclass(Project project, Map<ConfigKey, Object> attributes, String group, String name, String version, Container[] initContainers, Label[] labels, Annotation[] annotations, Env[] envVars, String workingDir, String[] commands, String[] arguments, int replicas, String serviceAccount, String host, Port[] ports, ServiceType serviceType, PersistentVolumeClaimVolume[] pvcVolumes, SecretVolume[] secretVolumes, ConfigMapVolume[] configMapVolumes, GitRepoVolume[] gitRepoVolumes, AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes, AzureDiskVolume[] azureDiskVolumes, AzureFileVolume[] azureFileVolumes, Mount[] mounts, ImagePullPolicy imagePullPolicy, String[] imagePullSecret, Probe livenessProbe, Probe readinessProbe, Container[] sidecars, Boolean expose, Boolean autodeployEnabled,String dockerFile,String registry,boolean autoPushEnabled,boolean autoBuildEnabled) {
-      super(project, attributes, group, name, version, initContainers, labels, annotations, envVars, workingDir, commands, arguments, replicas, serviceAccount, host, ports, serviceType, pvcVolumes, secretVolumes, configMapVolumes, gitRepoVolumes, awsElasticBlockStoreVolumes, azureDiskVolumes, azureFileVolumes, mounts, imagePullPolicy, imagePullSecret, livenessProbe, readinessProbe, sidecars, expose, autodeployEnabled, dockerFile, registry, autoPushEnabled, autoBuildEnabled);
-    }
+  private abstract class KubernetesConfigSubclass extends KubernetesConfig {
   }
 }

@@ -34,7 +34,6 @@ import io.dekorate.kubernetes.decorator.AddAzureDiskVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureFileVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
-import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
@@ -109,9 +108,6 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
       resources.decorate(new AddAnnotationDecorator(annotation));
     }
 
-    for (Container container : config.getInitContainers()) {
-      resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
-    }
     for (Container container : config.getSidecars()) {
       resources.decorate(group, new AddSidecarDecorator(config.getName(), container));
     }
