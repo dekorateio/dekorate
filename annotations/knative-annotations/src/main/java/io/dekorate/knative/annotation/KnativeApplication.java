@@ -81,12 +81,6 @@ public @interface KnativeApplication {
   String version() default "";
 
   /**
-  * The init containers.
-  * @return the init containers.
-  */
-  Container[] initContainers() default {};
-
-  /**
    * Custom labels to add to all resources.
    * @return The labels.
    */
