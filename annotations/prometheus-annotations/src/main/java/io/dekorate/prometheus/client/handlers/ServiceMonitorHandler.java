@@ -65,8 +65,12 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   }
 
   @Override
-  public Boolean delete(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).delete(item);
+  public Boolean delete(OkHttpClient client, Config config, String namespace, Boolean cascading, ServiceMonitor item) {
+    if (cascading) {
+      return new ServiceMonitorOperationsImpl(client, config).withItem(item).cascading(cascading).delete();
+    } else {
+      return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).delete(item);
+    }
   }
 
   @Override
