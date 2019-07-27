@@ -98,6 +98,14 @@
     </dependency>
 
     <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>knative-client</artifactId>
+       <version>${version.kubernetes-client}</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    
+    <dependency>
       <groupId>me.snowdrop</groupId>
       <artifactId>servicecatalog-model</artifactId>
       <version>${version.servicecatalog-client}</version>
@@ -189,6 +197,8 @@
                   <include>io.fabric8:kubernetes-model</include>
                   <include>io.fabric8:kubernetes-client</include>
                   <include>io.fabric8:openshift-client</include>
+                  <include>io.fabric8:knative-model</include>
+                  <include>io.fabric8:knative-client</include>
                   <include>me.snowdrop:servicecatalog-model</include>
                   <include>me.snowdrop:servicecatalog-client</include>
                   <include>me.snowdrop:application-crd-model</include>
@@ -222,6 +232,10 @@
                 <relocation>
                   <pattern>io.fabric8.openshift</pattern>
                   <shadedPattern>io.dekorate.deps.openshift</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>io.fabric8.knative</pattern>
+                  <shadedPattern>io.dekorate.deps.knative</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>me.snowdrop.servicecatalog</pattern>
