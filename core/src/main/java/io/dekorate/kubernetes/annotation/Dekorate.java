@@ -110,13 +110,6 @@ import java.lang.annotation.Target;
         */
        String[] arguments() default {};
 
-
-        /**
-         * The number of replicas to use.
-         * @return The number of replicas.
-         */
-        int replicas() default 1;
-
         /**
          * The service account.
          * @return The service account or empty string if not specified.

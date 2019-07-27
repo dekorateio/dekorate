@@ -47,7 +47,6 @@ import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
-import io.dekorate.kubernetes.decorator.ApplyReplicasDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
@@ -99,7 +98,6 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
       resources.decorate(new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
     }
 
-    resources.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     //Metadata handling
     for (Label label : config.getLabels()) {
       resources.decorate(new AddLabelDecorator(label));
