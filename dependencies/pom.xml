@@ -63,22 +63,11 @@
     <version.slf4j>1.7.13</version.slf4j>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>kubernetes-client-bom-with-deps</artifactId>
-        <version>${version.kubernetes-client}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>kubernetes-model</artifactId>
+       <version>${version.kubernetes-client}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -86,6 +75,7 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>kubernetes-client</artifactId>
+      <version>${version.kubernetes-client}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -93,6 +83,7 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>openshift-client</artifactId>
+      <version>${version.kubernetes-client}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -100,7 +91,7 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>knative-client</artifactId>
-       <version>${version.kubernetes-client}</version>
+      <version>${version.kubernetes-client}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
