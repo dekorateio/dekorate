@@ -193,11 +193,6 @@ public @interface KnativeApplication {
   boolean expose() default false;
 
   /**
-   * Feature toggle for generating build related resources.
-   */
-  boolean buildResourceGenerationEnabled() default true;
-
-  /**
    * Flag to trigger the registration of the build hook.
    * It's generally preferable to use `-Ddekorate.build=true` instead of hardcoding this here.
    * @return  True for automatic registration of the build hook.
