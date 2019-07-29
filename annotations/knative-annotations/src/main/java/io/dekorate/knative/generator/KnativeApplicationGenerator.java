@@ -18,6 +18,7 @@ package io.dekorate.knative.generator;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.knative.adapter.KnativeConfigAdapter;
@@ -53,6 +54,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
   }
 
     default void on(ConfigurationSupplier<KnativeConfig> config) {
+      Session session = getSession();
       session.configurators().add(config);
       session.handlers().add(new KnativeHandler(session.resources()));
       session.addListener(this);
@@ -62,6 +64,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {
+      Session session = getSession();
       Thread.currentThread().setContextClassLoader(KnBuildHook.class.getClassLoader());
       KnativeConfig config = session.configurators().get(KnativeConfig.class).get();
       if (config != null) {

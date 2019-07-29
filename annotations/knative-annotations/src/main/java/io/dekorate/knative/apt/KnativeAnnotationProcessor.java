@@ -35,7 +35,7 @@ public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor impl
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
     Set<Element> mainClasses = new HashSet<>();
