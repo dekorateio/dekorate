@@ -46,6 +46,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.dekorate.utils.Maps.*;
+
 public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject  {
 
   protected static final String PACKAGE = "";
@@ -92,11 +94,11 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
     for (String resourceName : resourceNames) {
       try (InputStream is = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve(resourceName).toFile())) {
         if (resourceName.endsWith(".properties")) {
-          Map<String, Object> newProps = Maps.fromProperties(is);
-          mergeProperties(result, newProps);
+          Map<String, Object> newProps = fromProperties(is);
+          merge(result, newProps);
         } else if (resourceName.endsWith(".yml") || resourceName.endsWith(".yaml")) {
-          Map<String, Object> newProps = Maps.fromYaml(is);
-          mergeProperties(result, newProps);
+          Map<String, Object> newProps = fromYaml(is);
+          merge(result, newProps);
         } else {
           throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
         }
@@ -109,6 +111,12 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
     return result;
   }
 
+  /**
+   * Does exactly the same thing than Maps.merge. Let's just keep Maps.merge which has a wider scope..
+   *
+   * @deprecated use {@link Maps#merge(Map, Map)} ()} instead.
+   */
+  @Deprecated
   private void mergeProperties(Map<String, Object> result, Map<String, Object> newProps) {
     for(String newKey : newProps.keySet()) {
       if(result.containsKey(newKey) && Map.class.isInstance(result.get(newKey)) && Map.class.isInstance(newProps.get(newKey))) {
