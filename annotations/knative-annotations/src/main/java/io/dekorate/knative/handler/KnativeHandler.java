@@ -40,14 +40,7 @@ import io.dekorate.utils.Images;
 public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> implements HandlerFactory, WithProject {
 
   private static final String KNATIVE = "knative";
-  private static final String APP = "app";
-  private static final String VERSION = "version";
 
-  private static final String IF_NOT_PRESENT = "IfNotPresent";
-  private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";
-  private static final String METADATA_NAMESPACE = "metadata.namespace";
-
-  private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
 
   public KnativeHandler() {
     super(new Resources());
@@ -109,6 +102,13 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
+      .withNewTemplate()
+      .withNewSpec()
+      .addNewContainer()
+      .withImage("dev.local" + config.getGroup() + "/" + config.getName() + ":" + config.getVersion())
+      .endContainer()
+      .endSpec()
+      .endTemplate()
       .endSpec()
       .build();
   }
