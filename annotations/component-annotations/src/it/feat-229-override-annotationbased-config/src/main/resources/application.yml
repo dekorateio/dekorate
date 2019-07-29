@@ -7,4 +7,5 @@ dekorate:
         value: "val1-from-properties"
   component:
     buildType: "docker"
+    deploymentMode : build
 
