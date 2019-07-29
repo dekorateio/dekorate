@@ -29,8 +29,6 @@ For new issues and pull requests please don't forget to use https://github.com/d
   - [Jaeger](#jaeger-annotations)
   - [Service Catalog](#service-catalog-annotations)
   - [Component CRD](#component-crd-support)
-  - [Application CRD](#application-annotations)
-  - Istio
 - Customize manifests using annotations
   - Kubernetes
     - labels
@@ -48,15 +46,11 @@ For new issues and pull requests please don't forget to use https://github.com/d
   - Service Catalog
     - service instances
     - inject bindings into pods
-  - Istio 
-    - proxy injection
   - Component CRD
 - Build tool independent (works with maven, gradle, bazel and so on)
 - [Rich framework integration](#framework-integration)
   - Port, Service and Probe auto configuration
     - Spring Boot
-    - Thorntail
-    - Micronaut
 - [Configuration externalization for known frameworks](#configuration-externalization-for-known-frameworks) (annotationless)
   - Spring Boot
 - Integration with external generators
@@ -545,33 +539,6 @@ This module can be added to the project using:
 #### related examples
  - [service catalog example](examples/service-catalog-example)  
  
-### Istio annotations
-
-The [istio](https://istio.io)  annotation processor can be used to automatically inject the istio sidecar to the generated resources. 
-For example:
-```java
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.istio.annotation.Istio;
-
-@Istio
-@KubernetesApplication
-public class Main {
-     public static void main(String[] args) {
-       //Your code goes here
-     }
-}
-```
-#### Adding the istio annotation processor to the classpath
-
-This module can be added to the project using:
-```xml
-<dependency>
-  <groupId>io.dekorate</groupId>
-  <artifactId>istio-annotations</artifactId>
-  <version>${project.version}</version>
-</dependency>
-```
-
 ### Component CRD support
 The Component [Custom Resource Definition (CRD)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims 
 to abstract kubernetes/OpenShift resources and simplify the configuration and design of cloud-native applications.
@@ -598,35 +565,6 @@ If everything went well, building your project will also generate `component.yml
 The content of the component descriptor will be determined by the existing config provided by other annotations such as 
 `@KubernetesApplication` and can be also controlled using application properties.
 
-### Application Annotations
-
-The [@EnableApplicationResource](annotations/application-annotations/src/main/java/io/dekorate/application/annotation/EnableApplicationResource.java) enables the generation of the `Application` custom resource, that is defined as part of https://github.com/kubernetes-sigs/application.
-
-To use this annotation, one needs:
-```xml
-<dependency>
-  <groupId>io.dekorate</groupId>
-  <artifactId>application-annotations</artifactId>
-  <version>${project.version}</version>
-</dependency>
-```
-And then its just a matter of specifying:
-```java
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.application.annotation.EnableApplicationResource;
-
-@KubernetesApplication
-@EnableApplicationResource(icons=@Icon(src="url/to/icon"), owners=@Contact(name="John Doe", email="john.doe@somemail.com"))
-public class Main {
-
-     public static void main(String[] args) {
-         //Your code goes here 
-     }
-}
-```
-Along we the resources that dekorate usually generates, there will be also an `Application` custom resource.
-
-    
 ###  Framework integration
 
 Framework integration modules are provided that we are able to detect framework annotations and adapt to the framework (e.g. expose ports).
@@ -634,8 +572,6 @@ Framework integration modules are provided that we are able to detect framework 
 The frameworks supported so far: 
 
 - Spring Boot
-- Thorntail (or any framework using jaxrs, jaxws annotations)
-- Micronaut
 
 #### Spring Boot
 
@@ -979,4 +915,3 @@ Docs, Bug fixes, New features ... everything is important!
 
 Make sure you take a look at contributor [guidelines](contributor-guideliness.md).
 Also, it can be useful to have a look at the dekorate [design](design.md).
-
