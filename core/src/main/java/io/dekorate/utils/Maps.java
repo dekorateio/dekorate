@@ -121,7 +121,7 @@ public class Maps {
    * @param existing the existing map.
    * @param map      the map that will be merged into the existing.
    */
-  private static void merge(Map<String, Object> existing, Map<String, Object> map) {
+  public static void merge(Map<String, Object> existing, Map<String, Object> map) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
