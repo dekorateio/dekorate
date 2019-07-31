@@ -16,6 +16,8 @@
 package io.dekorate.testing.openshift;
 
 import io.dekorate.DekorateException;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.client.internal.readiness.Readiness;
 import io.dekorate.deps.kubernetes.client.KubernetesClient;
@@ -40,6 +42,8 @@ import io.dekorate.testing.WithPod;
 import io.dekorate.testing.WithProject;
 import io.dekorate.testing.openshift.config.OpenshiftIntegrationTestConfig;
 import io.dekorate.utils.Packaging;
+import io.dekorate.utils.Strings;
+
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
@@ -60,17 +64,24 @@ import java.util.stream.Collectors;
 public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
                                            WithOpenshiftIntegrationTest, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithEvents, WithOpenshiftConfig {
 
+  private final Logger LOGGER = LoggerFactory.getLogger();
+
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     try {
       KubernetesClient client = getKubernetesClient(context);
       if (!client.isAdaptable(OpenShiftClient.class)) {
-        return ConditionEvaluationResult.disabled("Could not detect openshift.");
+        String reason = "Could not detect Openshift!";
+        return ConditionEvaluationResult.disabled(reason);
       }
       VersionInfo version = getKubernetesClient(context).getVersion();
-      return ConditionEvaluationResult.enabled("Found version:" + version);
+      String reason = "Found version:" + version;
+      LOGGER.info(reason);
+      return ConditionEvaluationResult.enabled(reason);
     } catch (Throwable t) {
-      return ConditionEvaluationResult.disabled("Could not communicate with KubernetesExtension API server.");
+      String reason = "Could not communicate with Openshift API server.";
+      LOGGER.error(reason);
+      return ConditionEvaluationResult.disabled(reason);
     }
   }
 
@@ -89,7 +100,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       buildResources.stream()
         .forEach(i -> {
           client.resourceList(i).deletingExisting().createOrReplace();
-          System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
+          LOGGER.info("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
         });
       OpenshiftUtils.waitForImageStreamTags(buildResources, config.getImageStreamTagTimeout(), TimeUnit.MILLISECONDS);
       build(context, getProject());
@@ -102,7 +113,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       remainingResources.stream()
         .forEach(i -> {
           client.resourceList(i).deletingExisting().createOrReplace();
-          System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
+          LOGGER.info("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
         });
 
       OpenshiftConfig openshiftConfig = getOpenshiftConfig();
@@ -113,17 +124,19 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
                                                                     i instanceof ReplicaSet ||
                                                                     i instanceof ReplicationController).collect(Collectors.toList());
       long started = System.currentTimeMillis();
-      System.out.println("Waiting until ready ("+config.getReadinessTimeout()+ " ms)...");
+      LOGGER.info("Waiting until ready ("+config.getReadinessTimeout()+ " ms)...");
       waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
       long ended = System.currentTimeMillis();
-      System.out.println("Waited: " +  (ended-started)+ " ms.");
+      LOGGER.info("Waited: " +  (ended-started)+ " ms.");
       //Display the item status
       waitables.stream().map(r->client.resource(r).fromServer().get())
         .forEach(i -> {
-          System.out.println(i.getKind() + ":" + i.getMetadata().getName() + " ready:" + Readiness.isReady(i));
           if (!Readiness.isReady(i)) {
+            LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             getEvents(context, i).getItems().stream().forEach(e -> {
-                System.out.println(e.getMessage());
+                if (Strings.isNotNullOrEmpty(e.getMessage())) {
+                  LOGGER.warning(e.getMessage());
+                }
             });
           }
         });
@@ -147,7 +160,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
     getOpenshiftResources(context).getItems().stream().forEach(r -> {
       try {
-        System.out.println("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + " status:" + client.resource(r).delete());
+        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + " status:" + client.resource(r).delete());
       } catch (Exception e) {}
     });
 
@@ -183,7 +196,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
    * @param binaryFile  The binary file.
    */
   private void binaryBuild(OpenShiftClient client, BuildConfig buildConfig, File binaryFile) {
-    System.out.println("Running binary build:"+buildConfig.getMetadata().getName()+ " for:" +binaryFile.getAbsolutePath());
+    LOGGER.info("Running binary build:"+buildConfig.getMetadata().getName()+ " for:" +binaryFile.getAbsolutePath());
     Build build = client.buildConfigs().withName(buildConfig.getMetadata().getName()).instantiateBinary().fromFile(binaryFile);
     try  (BufferedReader reader = new BufferedReader(client.builds().withName(build.getMetadata().getName()).getLogReader())) {
       for (String line = reader.readLine(); line != null; line = reader.readLine()) {
