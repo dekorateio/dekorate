@@ -16,6 +16,7 @@
 package io.dekorate.jaeger.apt;
 
 
+import io.dekorate.Session;
 import io.dekorate.jaeger.generator.JaegerAgentGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
@@ -32,6 +33,7 @@ import java.util.Set;
 public class JaegerAgentAnnotationProcessor extends AbstractAnnotationProcessor implements JaegerAgentGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Session session = getSession();
     if  (roundEnv.processingOver()) {
       session.close();
       return true;

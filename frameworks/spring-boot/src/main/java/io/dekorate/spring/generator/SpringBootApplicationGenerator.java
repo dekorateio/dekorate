@@ -16,6 +16,7 @@
 package io.dekorate.spring.generator;
 
 import io.dekorate.Handler;
+import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.Generator;
 import io.dekorate.config.ConfigurationSupplier;
@@ -42,6 +43,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
   @Override
   default void add(Map map) {
+    Session session = getSession();
     session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
     session.handlers().add(new Handler() {
       @Override

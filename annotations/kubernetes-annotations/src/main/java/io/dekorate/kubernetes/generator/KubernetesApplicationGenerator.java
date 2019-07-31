@@ -24,6 +24,7 @@ import javax.lang.model.element.Element;
 
 import io.dekorate.Generator;
 import io.dekorate.Resources;
+import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
@@ -68,12 +69,14 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
   }
 
   default void add(ConfigurationSupplier<KubernetesConfig> config)  {
+    Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new KubernetesHandler(session.resources()));
     session.addListener(this);
   }
 
   default void onClosed() {
+    Session session = getSession();
     Optional<KubernetesConfig> config = session.configurators().get(KubernetesConfig.class);
     if (!config.isPresent()) {
       return;

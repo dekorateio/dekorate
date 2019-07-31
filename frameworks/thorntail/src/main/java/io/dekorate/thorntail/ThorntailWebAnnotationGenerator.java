@@ -17,6 +17,7 @@ package io.dekorate.thorntail;
 
 import io.dekorate.WithSession;
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
 import io.dekorate.kubernetes.configurator.AddPort;
@@ -46,6 +47,7 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession 
 
   @Override
   default void add(Map map) {
+    Session session = getSession();
     Port port = detectHttpPort();
     session.configurators().add(new AddPort(port));
 

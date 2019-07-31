@@ -17,6 +17,7 @@ package io.dekorate.openshift.apt;
 
 import io.dekorate.openshift.generator.OpenshiftApplicationGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
@@ -34,6 +35,7 @@ import java.util.Set;
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor implements OpenshiftApplicationGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Session session = getSession();
     if  (roundEnv.processingOver()) {
       session.close();
       return true;

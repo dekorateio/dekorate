@@ -18,6 +18,7 @@
 package io.dekorate.component.generator;
 
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.component.adapter.CapabilityConfigAdapter;
 import io.dekorate.component.annotation.Capability;
@@ -48,6 +49,7 @@ public interface CapabilityConfigGenerator extends Generator, WithProject {
   }
 
   default void add(ConfigurationSupplier<CapabilityConfig> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new CapabilityHandler(session.resources()));
   }

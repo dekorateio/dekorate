@@ -16,6 +16,7 @@
 package io.dekorate.jaeger.generator;
 
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.jaeger.adapter.JaegerAgentConfigAdapter;
@@ -44,6 +45,7 @@ public interface JaegerAgentGenerator extends Generator, WithSession {
   }
 
   default void on(ConfigurationSupplier<JaegerAgentConfig> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.configurators().add(new AddDefaultPortsToAgentConfigurator());
     session.handlers().add(new JaegerAgentHandler(session.resources()));

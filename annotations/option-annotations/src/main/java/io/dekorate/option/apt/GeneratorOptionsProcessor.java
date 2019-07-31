@@ -15,6 +15,7 @@
  */
 package io.dekorate.option.apt;
 
+import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.doc.Description;
 import io.dekorate.option.annotation.GeneratorOptions;
@@ -41,6 +42,7 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
   private static final String OUTPUT_DIR = "dekorate.output.dir";
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Session session = getSession();
     if (roundEnv.processingOver()) {
       session.close();
       return true;

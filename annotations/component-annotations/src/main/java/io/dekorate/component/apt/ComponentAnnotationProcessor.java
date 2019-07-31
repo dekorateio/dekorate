@@ -15,6 +15,7 @@
  */
 package io.dekorate.component.apt;
 
+import io.dekorate.Session;
 import io.dekorate.component.generator.ComponentConfigGenerator;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
@@ -33,6 +34,7 @@ import java.util.Set;
 public class ComponentAnnotationProcessor extends AbstractAnnotationProcessor implements ComponentConfigGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Session session = getSession();
     if (roundEnv.processingOver()) {
       session.close();
       return true;

@@ -16,6 +16,7 @@
 package io.dekorate.component.generator;
 
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.component.adapter.LinkConfigAdapter;
 import io.dekorate.component.annotation.Link;
@@ -43,6 +44,7 @@ public interface LinkConfigGenerator extends Generator, WithProject {
   }
 
   default void add(ConfigurationSupplier<LinkConfig> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new LinkHandler(session.resources()));
   }

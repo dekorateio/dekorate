@@ -17,10 +17,8 @@ package io.dekorate;
 
 public interface WithSession {
 
-  Session session = Session.getSession();
-
   default Session getSession() {
-    return session;
+    return Session.getSession();
   }
 
 }

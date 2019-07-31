@@ -16,6 +16,7 @@
 package io.dekorate.component.generator;
 
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.component.adapter.ComponentConfigAdapter;
 import io.dekorate.component.annotation.ComponentApplication;
@@ -49,6 +50,7 @@ public interface ComponentConfigGenerator extends Generator, WithProject {
   }
 
   default void add(ConfigurationSupplier<ComponentConfig> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new ComponentHandler(session.resources(), session.configurators()));
     session.handlers().add(new ComponentServiceCatalogHandler(session.resources()));
