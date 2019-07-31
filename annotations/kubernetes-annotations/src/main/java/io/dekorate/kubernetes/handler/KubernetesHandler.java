@@ -19,6 +19,8 @@ import io.dekorate.AbstractKubernetesHandler;
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
@@ -58,6 +60,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   private static final String IF_NOT_PRESENT = "IfNotPresent";
   private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";
   private static final String METADATA_NAMESPACE = "metadata.namespace";
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public KubernetesHandler() {
     this(new Resources());
@@ -78,6 +81,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   }
 
   public void handle(KubernetesConfig config) {
+    LOGGER.info("Processing kubernetes configuration.");
     setApplicationInfo(config);
     Optional<Deployment> existingDeployment = resources.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof Deployment)

@@ -18,6 +18,9 @@ package io.dekorate.component.handler;
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
+import io.dekorate.Logger;
 import io.dekorate.Resources;
 import io.dekorate.component.config.EditableLinkConfig;
 import io.dekorate.component.config.LinkConfigBuilder;
@@ -32,6 +35,7 @@ import io.dekorate.utils.Strings;
 
 public class LinkHandler implements HandlerFactory, Handler<LinkConfig> {
   private final Resources resources;
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public Handler create(Resources resources, Configurators configurators) {
     return new LinkHandler(resources);
@@ -53,6 +57,7 @@ public class LinkHandler implements HandlerFactory, Handler<LinkConfig> {
 
   @Override
   public void handle(LinkConfig config) {
+    LOGGER.info("Processing link config.");
     if (Strings.isNullOrEmpty(resources.getName())) {
       resources.setName(config.getName());
     }

@@ -16,6 +16,8 @@
 package io.dekorate.processor;
 
 import io.dekorate.DekorateException;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
@@ -56,6 +58,8 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   protected static final String YML = "yml";
   protected static final String TMP = "tmp";
   protected static final String DOT = ".";
+
+  protected Logger LOGGER;
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
