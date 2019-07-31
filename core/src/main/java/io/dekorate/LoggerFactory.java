@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
 import java.util.ServiceLoader;
 import java.util.stream.StreamSupport;
 
-import io.dekorate.logger.PrintStreamLogger;
+import io.dekorate.logger.AnsiLogger;
 
 public abstract class LoggerFactory<C> {
 
@@ -42,7 +42,7 @@ public abstract class LoggerFactory<C> {
     }
     synchronized (LoggerFactory.class) {
       if (LOGGER == null) {
-        LOGGER = new PrintStreamLogger(System.out);
+        LOGGER = new AnsiLogger();
       }
     }
     return LOGGER;

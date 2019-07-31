@@ -19,10 +19,10 @@ package io.dekorate;
 
 public interface Logger {
 
-  String DEBUG = "[DEBUG] %s";
-  String INFO = "[INFO] %s";
-  String WARN = "[WARN] %s.";
-  String ERROR = "[ERROR] %s";
+  String DEBUG = "DEBUG";
+  String INFO = "INFO";
+  String WARN = "WARN";
+  String ERROR = "ERROR";
 
   void debug(String message);
   void info(String message);
