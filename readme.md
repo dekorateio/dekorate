@@ -51,6 +51,7 @@ For new issues and pull requests please don't forget to use https://github.com/d
 - [Rich framework integration](#framework-integration)
   - Port, Service and Probe auto configuration
     - Spring Boot
+    - [Quarkus](#quarkus)
 - [Configuration externalization for known frameworks](#configuration-externalization-for-known-frameworks) (annotationless)
   - Spring Boot
 - Integration with external generators
@@ -572,6 +573,7 @@ Framework integration modules are provided that we are able to detect framework 
 The frameworks supported so far: 
 
 - Spring Boot
+- Quarkus
 
 #### Spring Boot
 
@@ -595,7 +597,7 @@ Or if you are on [openshift](https://openshift.com):
 </dependency>
 ```
 
-##### Annotation less
+###### Annotation less
 For Spring Boot applications (i.e. at least one project class is annotated with `@SpringBootApplication`) all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additional annotation.
 This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
@@ -626,6 +628,23 @@ When no annotations are used, the kind of resources to be generated is determine
 
 
 Note: that starter modules for `kubernetes` and `openshift` do transitively add `kubernetes-annotations` and `openshift-annotations` respectively.
+
+#### Quarkus
+
+[quarkus](https://quarkus.io) provides rich set of [extensions](https://quarkus.io/extensions) including one for [kubernetes](https://quarkus.io/guides/ap4k).
+The [kubernetes extension](https://quarkus.io/guides/ap4k) uses internally [dekorate](https://github.com/dekorateio/dekorate) for generating and customizing manifests.
+
+The extension can be added to any [quarkus](https://quarkus.io) project:
+
+    mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-kubernetes"
+    
+After the project compilation the generated manifests will be available under: `target/wiring-classes/META-INF/kubernetes/`.
+
+At the moment this extension will handle ports, health checks etc, with zero configuration from the user side.
+
+It's important to note, that by design this extension will NOT use the [dekorate](https://github.com/dekorateio/dekorate) annotations for customizing the generated manifests.
+
+For more information plese check: the extension [docs](https://quarkus.io/guides/ap4k).
 
 ## Experimental features
 
