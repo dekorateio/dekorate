@@ -16,6 +16,7 @@
 package io.dekorate.prometheus.generator;
 
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.prometheus.adapter.ServiceMonitorConfigAdapter;
@@ -43,6 +44,7 @@ public interface ServiceMonitorGenerator extends Generator, WithSession {
   }
 
   default void on(ConfigurationSupplier<ServiceMonitorConfig> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new ServiceMonitorHandler(session.resources()));
   }

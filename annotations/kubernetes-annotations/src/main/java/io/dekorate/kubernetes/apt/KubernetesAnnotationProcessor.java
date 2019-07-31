@@ -35,7 +35,7 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor i
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
     for (TypeElement typeElement : annotations) {

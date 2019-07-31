@@ -17,6 +17,7 @@ package io.dekorate.servicecatalog.generator;
 
 import io.dekorate.WithSession;
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.servicecatalog.adapter.ServiceCatalogConfigAdapter;
 import io.dekorate.servicecatalog.annotation.ServiceCatalog;
@@ -43,6 +44,7 @@ public interface ServiceCatalogGenerator extends Generator, WithSession {
   }
 
   default void on(ConfigurationSupplier<ServiceCatalogConfig> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new ServiceCatalogHandler(session.resources()));
   }

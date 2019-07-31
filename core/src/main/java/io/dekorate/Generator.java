@@ -98,7 +98,7 @@ public interface Generator extends SessionHandler {
    */
   default void generate() {
     // do nothing
-    session.close();
+    getSession().close();
   }
 
   /**

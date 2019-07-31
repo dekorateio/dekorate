@@ -16,6 +16,7 @@
 package io.dekorate.application.generator;
 
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.application.adapter.ApplicationConfigAdapter;
 import io.dekorate.application.annotation.EnableApplicationResource;
@@ -40,6 +41,7 @@ public interface ApplicationResourceGenerator extends Generator, WithSession {
   }
 
   default void add(ConfigurationSupplier<?> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new ApplicationHandler(session.resources()));
   }

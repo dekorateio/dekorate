@@ -18,6 +18,7 @@ package io.dekorate.openshift.generator;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
@@ -62,12 +63,14 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
   }
 
     default void on(ConfigurationSupplier<OpenshiftConfig> config) {
+      Session session = getSession();
       session.configurators().add(config);
       session.handlers().add(new OpenshiftHandler(session.resources()));
       session.addListener(this);
   }
 
   default void onClosed() {
+    Session session = getSession();
     //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {

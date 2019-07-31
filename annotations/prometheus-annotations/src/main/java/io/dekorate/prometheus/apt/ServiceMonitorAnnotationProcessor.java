@@ -16,6 +16,7 @@
 package io.dekorate.prometheus.apt;
 
 
+import io.dekorate.Session;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.prometheus.generator.ServiceMonitorGenerator;
 
@@ -32,6 +33,7 @@ import java.util.Set;
 public class ServiceMonitorAnnotationProcessor extends AbstractAnnotationProcessor implements ServiceMonitorGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Session session = getSession();
     if  (roundEnv.processingOver()) {
       session.close();
       return true;

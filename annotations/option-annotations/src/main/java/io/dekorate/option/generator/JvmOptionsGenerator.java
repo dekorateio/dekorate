@@ -16,6 +16,7 @@
 package io.dekorate.option.generator;
 
 import io.dekorate.Generator;
+import io.dekorate.Session;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.option.adapter.JvmConfigAdapter;
 import io.dekorate.option.annotation.JvmOptions;
@@ -45,6 +46,7 @@ public interface JvmOptionsGenerator extends Generator  {
   }
 
   default void on(ConfigurationSupplier<JvmConfig> config) {
+    Session session = getSession();
     session.configurators().add(config);
     session.configurators().add(new ApplyJvmOptsConfigurator(config));
   }
