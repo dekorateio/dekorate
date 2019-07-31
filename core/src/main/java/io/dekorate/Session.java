@@ -55,7 +55,7 @@ public class Session {
   private final Map<String, KubernetesList> generatedResources= new HashMap<>();
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
   private final Set<SessionListener> listeners = new LinkedHashSet<>();
-
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   /**
    * Creates or reuses a single instance of Session.
@@ -75,6 +75,7 @@ public class Session {
   }
 
   protected Session() {
+    LOGGER.info("Intializing dekorate session.");
   }
 
   public void loadHandlers() {
@@ -129,6 +130,7 @@ public class Session {
       }
       final Map<String, String> result = w.write(this);
       listeners.forEach(SessionListener::onClosed);
+      LOGGER.info("Closing dekorate session.");
       return result;
     }
 
@@ -141,6 +143,7 @@ public class Session {
    */
   private Map<String, KubernetesList> generate() {
     if (generated.compareAndSet(false, true)) {
+      LOGGER.info("Generating manifests.");
       closed.set(true);
       populateFallbackConfig();
       handlers.forEach(h -> handle(h, configurators));

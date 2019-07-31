@@ -15,6 +15,8 @@
  */
 package io.dekorate.processor;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
@@ -46,6 +48,7 @@ public class AptWriter implements SessionWriter, WithProject {
   protected static final String DOT = ".";
 
   private final ProcessingEnvironment processingEnv;
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public AptWriter(ProcessingEnvironment processingEnv) {
     this.processingEnv = processingEnv;
@@ -114,17 +117,20 @@ public class AptWriter implements SessionWriter, WithProject {
    * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
   public Map<String, String> write(String group, KubernetesList list) {
+    
     try {
       final Map<String, String> result = new HashMap<>();
       FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getDekorateOutputDir() + "/" + String.format(FILENAME, group, JSON));
       try (Writer writer = json.openWriter()) {
         final String jsonValue = Serialization.asJson(list);
+        LOGGER.info("Writing: "+json.toUri());
         writer.write(jsonValue);
         result.put(json.getName(), jsonValue);
       }
       FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getDekorateOutputDir() + "/" + String.format(FILENAME, group, YML));
       try (Writer writer = yml.openWriter()) {
         final String yamlValue = Serialization.asYaml(list);
+        LOGGER.info("Writing: "+yml.toUri());
         writer.write(yamlValue);
         result.put(yml.getName(), yamlValue);
       }

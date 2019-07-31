@@ -17,7 +17,9 @@ package io.dekorate.component.handler;
 
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
-import io.dekorate.HandlerFactory;
+import io.dekorate.HandlerFactory;import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
+import io.dekorate.Logger;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.component.config.ComponentConfig;
@@ -58,6 +60,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
 
   private final Resources resources;
   private final Configurators configurators;
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public Handler create(Resources resources, Configurators configurators) {
     return new ComponentHandler(resources, configurators);
@@ -80,6 +83,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
 
   @Override
   public void handle(ComponentConfig config) {
+    LOGGER.info("Processing capability config.");
     if (Strings.isNullOrEmpty(resources.getName()) && !Strings.isNullOrEmpty(config.getName())) {
       resources.setName(config.getName());
     }

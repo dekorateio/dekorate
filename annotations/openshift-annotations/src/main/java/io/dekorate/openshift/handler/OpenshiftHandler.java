@@ -20,7 +20,10 @@ import java.util.Optional;
 import io.dekorate.AbstractKubernetesHandler;
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
-import io.dekorate.HandlerFactory;
+import io.dekorate.HandlerFactory;import io.dekorate.Logger;
+
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
@@ -65,6 +68,8 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
 
   private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
 
+  private final Logger LOGGER = LoggerFactory.getLogger();
+
   public OpenshiftHandler() {
     super(new Resources());
   }
@@ -83,6 +88,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   }
 
   public void handle(OpenshiftConfig config) {
+    LOGGER.info("Processing openshift configuration.");
     setApplicationInfo(config);
     Optional<DeploymentConfig> existingDeploymentConfig = resources.groups().getOrDefault(OPENSHIFT, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof DeploymentConfig)

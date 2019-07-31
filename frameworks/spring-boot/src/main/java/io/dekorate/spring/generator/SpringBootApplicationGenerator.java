@@ -15,7 +15,9 @@
  */
 package io.dekorate.spring.generator;
 
-import io.dekorate.Handler;
+import io.dekorate.Handler;import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
+import io.dekorate.Logger;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.Generator;
@@ -40,6 +42,7 @@ import java.util.Map;
 public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
   Map<String, Object> SPRING_BOOT_APPLICATION = Collections.emptyMap();
+  Logger LOGGER = LoggerFactory.getLogger();
 
   @Override
   default void add(Map map) {
@@ -71,6 +74,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
        @Override
        public void handle(Configuration config) {
+         LOGGER.info("Processing service monitor config.");
          session.resources().decorate(new EndpointPathDecorator(session.resources().getName(), "http", "/actuator/prometheus"));
        }
 
@@ -89,6 +93,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
           @Override
           public void handle(Configuration config) {
+            LOGGER.info("Detected actuator.");
             session.resources().decorate(new AddLivenessProbeDecorator(session.resources().getName(), session.resources().getName(), new ProbeBuilder().withHttpActionPath("/actuator/health").build()));
             session.resources().decorate(new AddReadinessProbeDecorator(session.resources().getName(), session.resources().getName(), new ProbeBuilder().withHttpActionPath("/actuator/health").build()));
           }
@@ -109,6 +114,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
           @Override
           public void handle(Configuration config) {
+            LOGGER.info("Detected spring cloud kubernetes.");
             session.resources().decorate(new ApplyServiceAccountDecorator(session.resources().getName(), session.resources().getName()));
             session.resources().decorate(new AddServiceAccountDecorator(session.resources()));
             session.resources().decorate(new AddRoleBindingDecorator(session.resources(), "view"));
