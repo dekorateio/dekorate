@@ -1,2 +1,2 @@
 io.dekorate.logger.AptLogger
-io.dekorate.logger.PrintStreamLogger
+io.dekorate.logger.AnsiLogger

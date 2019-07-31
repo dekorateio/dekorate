@@ -21,52 +21,56 @@ import java.io.PrintStream;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.deps.jansi.*;
+import static io.dekorate.deps.jansi.Ansi.*;
+import static io.dekorate.deps.jansi.Ansi.Color.*;
 
-public class PrintStreamLogger extends LoggerFactory<PrintStream> implements Logger {
+public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
+
 
   private final PrintStream stream;
-
+  
   public Logger create(PrintStream stream) {
-    return new PrintStreamLogger(stream);
+    return new AnsiLogger(stream);
   }
 
   //Should not be used by user code. Only needed for Java SPI.
-  public PrintStreamLogger() {
-    this.stream = null;
+  public AnsiLogger() {
+    this.stream = AnsiConsole.out;
   }
 
-  public PrintStreamLogger (PrintStream stream) {
-    this.stream = stream;
+  public AnsiLogger (PrintStream stream) {
     check();
+    this.stream = stream != null ? AnsiConsole.wrapPrintStream(stream, 0) : AnsiConsole.out;
   }
   
 	@Override
 	public void debug(String message) {
     check();
-    stream.println(String.format(DEBUG, message));
+    stream.println(ansi().a("[").fg(CYAN).bold().a(DEBUG).reset().a("] ").a(message));
 	}
 
 	@Override
 	public void info(String message) {
     check();
-    stream.println(String.format(INFO, message));
+    stream.println(ansi().a("[").fg(BLUE).bold().a(INFO).reset().a("] ").a(message));
 	}
 
 	@Override
 	public void warning(String message) {
     check();
-    stream.println(String.format(WARN, message));
+    stream.println(ansi().a("[").fg(MAGENTA).bold().a(WARN).reset().a("] ").a(message));
 	}
 
 	@Override
 	public void error(String message) {
     check();
-    stream.println(String.format(ERROR, message));
+    stream.println(ansi().a("[").fg(RED).bold().a(ERROR).reset().a("] ").a(message));
 	}
 
   private void check() {
     if (stream == null) {
-      throw new IllegalStateException("PrintStreamLogger requires a PrintStream instance.");
+      throw new IllegalStateException("AnsiLogger requires a PrintStream instance.");
     }
   }
 }
