@@ -15,6 +15,8 @@
  */
 package io.dekorate.kubernetes.hook;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.project.Project;
@@ -23,6 +25,7 @@ import io.dekorate.utils.Images;
 public class DockerPushHook extends ProjectHook {
 
   private final String image;
+  private Logger LOGGER = LoggerFactory.getLogger();
 
   public DockerPushHook(Project project,  KubernetesConfig config) {
     super(project);
@@ -41,6 +44,7 @@ public class DockerPushHook extends ProjectHook {
 
   @Override
   public void run() {
-      exec("docker", "push",  image);
+    LOGGER.info("Performing docker push.");
+    exec("docker", "push",  image);
   }
 }

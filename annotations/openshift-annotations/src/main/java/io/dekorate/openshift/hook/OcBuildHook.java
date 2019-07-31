@@ -15,6 +15,8 @@
  */
 package io.dekorate.openshift.hook;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.Secret;
@@ -36,6 +38,7 @@ public class OcBuildHook extends ProjectHook {
   private final OpenshiftConfig config;
   private final OpenShiftClient client = new DefaultOpenShiftClient();
   private final KubernetesList kubernetesList;
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public OcBuildHook(String name, OpenshiftConfig config, Project project, KubernetesList kubernetesList) {
     super(project);
@@ -50,7 +53,7 @@ public class OcBuildHook extends ProjectHook {
             .filter(i -> config.isAutoDeployEnabled() || i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret)
             .forEach(i -> {
               HasMetadata item = client.resource(i).createOrReplace();
-              System.out.println("Applied: " + item.getKind() + " " + i.getMetadata().getName());
+              LOGGER.info("Applied: " + item.getKind() + " " + i.getMetadata().getName());
             });
     OpenshiftUtils.waitForImageStreamTags(items, 2, TimeUnit.MINUTES);
   }
@@ -63,6 +66,7 @@ public class OcBuildHook extends ProjectHook {
   @Override
   public void run() {
     if (project.getBuildInfo().getOutputFile().getParent().toFile().exists()) {
+      LOGGER.info("Performing s2i build.");
       exec("oc", "start-build", name, "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");
     } else {
      throw new IllegalStateException("Can't trigger binary build. " + project.getBuildInfo().getOutputFile().toAbsolutePath().toString() + " does not exist!");

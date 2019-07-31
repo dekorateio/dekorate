@@ -26,6 +26,8 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.Pod;
@@ -45,17 +47,24 @@ import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
 import io.dekorate.testing.WithProject;
 import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
+import io.dekorate.utils.Strings;
 
 public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
                                              WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject, WithKubernetesConfig {
 
+  private final Logger LOGGER = LoggerFactory.getLogger();
+   
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     try {
       VersionInfo version = getKubernetesClient(context).getVersion();
-      return ConditionEvaluationResult.enabled("Found version:" + version);
+      String message = "Found version:" + version;
+      LOGGER.info(message);
+      return ConditionEvaluationResult.enabled(message);
     } catch (Throwable t) {
-      return ConditionEvaluationResult.disabled("Could not communicate with KubernetesExtension API server.");
+      String reason = "Could not communicate with KubernetesExtension API server.";
+      LOGGER.error(reason);
+      return ConditionEvaluationResult.disabled(reason);
     }
   }
 
@@ -90,7 +99,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       list.getItems().stream()
         .forEach(i -> {
           client.resourceList(i).createOrReplace();
-          System.out.println("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
+          LOGGER.info("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
         });
 
             List<HasMetadata> waitables = list.getItems().stream().filter(i->
@@ -100,17 +109,19 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
                                                                     i instanceof ReplicaSet ||
                                                                     i instanceof ReplicationController).collect(Collectors.toList());
       long started = System.currentTimeMillis();
-      System.out.println("Waiting until ready ("+config.getReadinessTimeout()+ " ms)...");
+      LOGGER.info("Waiting until ready ("+config.getReadinessTimeout()+ " ms)...");
       waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
       long ended = System.currentTimeMillis();
-      System.out.println("Waited: " +  (ended-started)+ " ms.");
+      LOGGER.info("Waited: " +  (ended-started)+ " ms.");
       //Display the item status
       waitables.stream().map(r->client.resource(r).fromServer().get())
         .forEach(i -> {
-          System.out.println(i.getKind() + ":" + i.getMetadata().getName() + " ready:" + Readiness.isReady(i));
           if (!Readiness.isReady(i)) {
+            LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             getEvents(context, i).getItems().stream().forEach(e -> {
-                System.out.println(e.getMessage());
+                if (Strings.isNotNullOrEmpty(e.getMessage())) {
+                  LOGGER.warning(e.getMessage());
+                }
             });
           }
         });
@@ -130,7 +141,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
   @Override
   public void afterAll(ExtensionContext context) {
     getKubernetesResources(context).getItems().stream().forEach(r -> {
-      System.out.println("Deleting: " + r.getKind() + " name:" +r.getMetadata().getName()+ " status:"+ getKubernetesClient(context).resource(r).cascading(true).delete());
+      LOGGER.info("Deleting: " + r.getKind() + " name:" +r.getMetadata().getName()+ " status:"+ getKubernetesClient(context).resource(r).cascading(true).delete());
     });
   }
 

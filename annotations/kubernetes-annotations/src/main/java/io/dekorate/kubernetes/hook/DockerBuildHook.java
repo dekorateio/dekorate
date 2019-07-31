@@ -15,6 +15,8 @@
  */
 package io.dekorate.kubernetes.hook;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.project.Project;
@@ -26,6 +28,7 @@ public class DockerBuildHook extends ProjectHook {
 
   private final File dockerFile;
   private final String image;
+  private Logger LOGGER = LoggerFactory.getLogger();
 
   public DockerBuildHook(Project project, KubernetesConfig config ) {
     super(project);
@@ -45,6 +48,7 @@ public class DockerBuildHook extends ProjectHook {
 
   @Override
   public void run() {
+    LOGGER.info("Performing docker build.");
     exec("docker", "build", "-f" + dockerFile.getAbsolutePath(), "-t" + image, project.getRoot().toAbsolutePath().toString());
   }
 }

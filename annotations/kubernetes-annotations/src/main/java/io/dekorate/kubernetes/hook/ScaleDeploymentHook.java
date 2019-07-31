@@ -15,6 +15,8 @@
  */
 package io.dekorate.kubernetes.hook;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.project.Project;
 
@@ -22,6 +24,7 @@ public class ScaleDeploymentHook extends ProjectHook {
 
     private final String name;
     private final int replicas;
+    private Logger LOGGER = LoggerFactory.getLogger();
 
     public ScaleDeploymentHook(Project project, String name, int replicas) {
         super(project);
@@ -41,6 +44,7 @@ public class ScaleDeploymentHook extends ProjectHook {
 
     @Override
     public void run() {
-        exec("kubectl", "scale", "deployment/" + name, "--replicas="+replicas);
+      LOGGER.info("Performing docker build.");
+      exec("kubectl", "scale", "deployment/" + name, "--replicas="+replicas);
     }
 }
