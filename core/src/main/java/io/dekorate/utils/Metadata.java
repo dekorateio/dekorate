@@ -16,7 +16,7 @@
 package io.dekorate.utils;
 
 import io.dekorate.deps.kubernetes.api.builder.Builder;
-import io.dekorate.deps.kubernetes.api.builder.Predicate;import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
+import io.dekorate.deps.kubernetes.api.builder.Predicate;
 
 import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;

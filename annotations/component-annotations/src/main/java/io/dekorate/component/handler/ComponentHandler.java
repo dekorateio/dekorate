@@ -17,7 +17,7 @@ package io.dekorate.component.handler;
 
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
-import io.dekorate.HandlerFactory;import io.dekorate.Logger;
+import io.dekorate.HandlerFactory;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Logger;
 import io.dekorate.Resources;
