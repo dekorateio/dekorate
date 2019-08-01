@@ -20,8 +20,7 @@ import java.util.Optional;
 import io.dekorate.AbstractKubernetesHandler;
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
-import io.dekorate.HandlerFactory;import io.dekorate.Logger;
-
+import io.dekorate.HandlerFactory;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;

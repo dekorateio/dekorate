@@ -15,7 +15,7 @@
  */
 package io.dekorate.spring.generator;
 
-import io.dekorate.Handler;import io.dekorate.Logger;
+import io.dekorate.Handler;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Logger;
 import io.dekorate.Session;
