@@ -57,7 +57,7 @@ For new issues and pull requests please don't forget to use https://github.com/d
   - Spring Boot
 - Integration with external generators
 - [Rich set of examples](examples)
-- [Interaction with other annotation processors](#interaction-with-other-annotation-processors)
+- [Explicit configuration of annotation processors](#explicit-configuration-of-annotation-processors)
 
 ### Experimental features
 
@@ -1063,7 +1063,10 @@ public class Main {
 #### related examples
  - [spring boot with fmp on openshift example](examples/spring-boot-with-fmp-on-kubernetes-example)
 
-#### Interaction with other annotation processors
+#### Explicit configuration of annotation processors
+
+By default Dekorate doesn't require any specific configuration of its annotation processors. 
+However it is possible to manually define the annotation processors if required.
 
 In the maven pom.xml configure the annotation processor path in the maven compiler plugin settings. 
 
