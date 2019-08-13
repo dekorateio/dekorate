@@ -3,7 +3,7 @@ package io.dekorate.issue276;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import io.dekorate.component.annotation.ComponentApplication;
+import io.dekorate.halkyon.annotation.ComponentApplication;
 
 @SpringBootApplication
 @ComponentApplication(exposeService=true, name="customName")

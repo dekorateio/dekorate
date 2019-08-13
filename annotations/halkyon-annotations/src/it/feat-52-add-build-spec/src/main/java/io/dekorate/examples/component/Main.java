@@ -18,10 +18,10 @@
 
 package io.dekorate.examples.component;
 
-import io.dekorate.component.annotation.Link;
-import io.dekorate.component.annotation.ComponentApplication;
+import io.dekorate.halkyon.annotation.Link;
+import io.dekorate.halkyon.annotation.ComponentApplication;
 import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.component.model.DeploymentMode;
+import io.dekorate.halkyon.model.DeploymentMode;
 
 @ComponentApplication(name = "hello-world", deploymentMode = DeploymentMode.build, exposeService = false, envs = @Env(name = "key1", value = "val1"))
 public class Main {

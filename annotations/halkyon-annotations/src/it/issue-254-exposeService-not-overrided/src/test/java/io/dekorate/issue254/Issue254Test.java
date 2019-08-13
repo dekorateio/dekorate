@@ -19,7 +19,7 @@ package io.dekorate.issue254;
 
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.component.model.Component;
+import io.dekorate.halkyon.model.Component;
 import io.dekorate.utils.Serialization;
 import java.util.List;
 import java.util.Optional;

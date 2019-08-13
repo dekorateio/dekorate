@@ -1,4 +1,4 @@
-io.dekorate.component.handler.ComponentHandler
-io.dekorate.component.handler.LinkHandler
-io.dekorate.component.handler.CapabilityHandler
-io.dekorate.component.handler.ComponentBaseConfigHandler
+io.dekorate.halkyon.handler.ComponentHandler
+io.dekorate.halkyon.handler.LinkHandler
+io.dekorate.halkyon.handler.CapabilityHandler
+io.dekorate.halkyon.handler.ComponentBaseConfigHandler

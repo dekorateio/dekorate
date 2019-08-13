@@ -18,9 +18,9 @@ package io.dekorate.examples.component;
 
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.component.model.Component;
-import io.dekorate.component.model.DeploymentMode;
-import io.dekorate.component.model.Link;
+import io.dekorate.halkyon.model.Component;
+import io.dekorate.halkyon.model.DeploymentMode;
+import io.dekorate.halkyon.model.Link;
 import io.dekorate.utils.Serialization;
 import java.util.List;
 import org.junit.jupiter.api.Test;

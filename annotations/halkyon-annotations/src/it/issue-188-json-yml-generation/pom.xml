@@ -42,7 +42,7 @@ limitations under the License.
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>component-annotations</artifactId>
+      <artifactId>halkyon-annotations</artifactId>
       <version>@project.version@</version>
     </dependency>
     <!-- Testing -->

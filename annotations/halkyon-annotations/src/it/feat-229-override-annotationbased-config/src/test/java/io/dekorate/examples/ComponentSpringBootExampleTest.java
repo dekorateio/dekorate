@@ -15,9 +15,9 @@
  */
 package io.dekorate.examples;
 
-import io.dekorate.component.model.Component;
-import io.dekorate.component.model.Link;
-import io.dekorate.component.model.Env;
+import io.dekorate.halkyon.model.Component;
+import io.dekorate.halkyon.model.Link;
+import io.dekorate.halkyon.model.Env;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;

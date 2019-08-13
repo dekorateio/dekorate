@@ -15,7 +15,6 @@
  */
 package io.dekorate.examples;
 
-import io.dekorate.component.model.Component;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;
@@ -27,8 +26,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import io.dekorate.component.model.Component;
-import io.dekorate.component.model.DeploymentMode;
+import io.dekorate.halkyon.model.Component;
+import io.dekorate.halkyon.model.DeploymentMode;
 
 public class ComponentSpringBootExampleTest {
 

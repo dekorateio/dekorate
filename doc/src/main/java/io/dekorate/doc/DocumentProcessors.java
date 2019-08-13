@@ -15,9 +15,9 @@
  */
 package io.dekorate.doc;
 
+import io.sundr.codegen.annotations.PackageSelector;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
-import io.sundr.codegen.annotations.PackageSelector;
 
 
 @VelocityTransformations(value = @VelocityTransformation(value="/processor-doc.vm", outputPath="processors-table.org", gather=true),
@@ -26,7 +26,7 @@ import io.sundr.codegen.annotations.PackageSelector;
                            @PackageSelector(value="io.dekorate.kubernetes.processor"),
                            @PackageSelector(value="io.dekorate.openshift.processor"),
                            @PackageSelector(value="io.dekorate.servicecatalog.processor"),
-                           @PackageSelector(value="io.dekorate.component.processor"),
+                           @PackageSelector(value = "io.dekorate.halkyon.processor"),
                            @PackageSelector(value="io.dekorate.spring.processor"),
                            @PackageSelector(value="io.dekorate.thorntail"),
                            @PackageSelector(value="io.dekorate.micronaut")
