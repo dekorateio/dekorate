@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LinkHandlerTest {
+public class HalkyonLinkHandlerTest {
   
   @Test
   public void shouldAcceptLinkConfig() {

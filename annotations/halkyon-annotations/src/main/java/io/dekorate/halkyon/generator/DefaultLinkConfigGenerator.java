@@ -19,19 +19,19 @@ import java.util.Collections;
 import java.util.List;
 
 import io.dekorate.Generator;
-import io.dekorate.halkyon.annotation.Link;
+import io.dekorate.halkyon.annotation.HalkyonLink;
 
 /**
  * @author <a href="claprun@redhat.com">Christophe Laprun</a>
  */
 public class DefaultLinkConfigGenerator implements LinkConfigGenerator {
   public DefaultLinkConfigGenerator() {
-    Generator.registerAnnotationClass(GENERATOR_KEY, Link.class);
+    Generator.registerAnnotationClass(GENERATOR_KEY, HalkyonLink.class);
     Generator.registerGenerator(GENERATOR_KEY, this);
   }
   
   @Override
   public List<Class> getSupportedAnnotations() {
-    return Collections.singletonList(Link.class);
+    return Collections.singletonList(HalkyonLink.class);
   }
 }
