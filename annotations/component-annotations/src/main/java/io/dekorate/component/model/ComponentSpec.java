@@ -43,7 +43,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
   @VelocityTransformation(value = "/component-resource-list.vm"),
   @VelocityTransformation(value = "/component-status.vm"),
 })
-@CustomResource(group = "devexp.runtime.redhat.com", version = "v1alpha2")
+@CustomResource(group = "halkyon.io", version = "v1beta1")
 public class ComponentSpec {
 
   private DeploymentMode deploymentMode;
