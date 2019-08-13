@@ -16,9 +16,9 @@
 
 package io.dekorate.examples.component;
 
-import io.dekorate.halkyon.annotation.ComponentApplication;
+import io.dekorate.halkyon.annotation.HalkyonComponent;
 
-@ComponentApplication
+@HalkyonComponent
 public class Main {
 
   public static void main(String[] args) {

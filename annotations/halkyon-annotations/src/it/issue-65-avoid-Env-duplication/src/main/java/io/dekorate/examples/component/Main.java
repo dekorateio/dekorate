@@ -16,13 +16,13 @@
 
 package io.dekorate.examples.component;
 
-import io.dekorate.halkyon.annotation.ComponentApplication;
+import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Port;
 
 @KubernetesApplication(ports = @Port(name = "http", containerPort = 8080))
-@ComponentApplication(name = "hello-world", exposeService = true, envs = @Env(name = "key1", value = "val1"))
+@HalkyonComponent(name = "hello-world", exposeService = true, envs = @Env(name = "key1", value = "val1"))
 public class Main {
 
   public static void main(String[] args) {

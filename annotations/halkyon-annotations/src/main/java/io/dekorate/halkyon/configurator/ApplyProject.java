@@ -15,12 +15,12 @@
  */
 package io.dekorate.halkyon.configurator;
 
-import io.dekorate.halkyon.config.ComponentConfigFluent;
+import io.dekorate.halkyon.config.HalkyonConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 
-public class ApplyProject extends Configurator<ComponentConfigFluent<?>> {
+public class ApplyProject extends Configurator<HalkyonConfigFluent<?>> {
   
   private static final String APP_NAME = "app.name";
   private final Project project;
@@ -30,7 +30,7 @@ public class ApplyProject extends Configurator<ComponentConfigFluent<?>> {
   }
   
   @Override
-  public void visit(ComponentConfigFluent<?> fluent) {
+  public void visit(HalkyonConfigFluent<?> fluent) {
     fluent.withProject(project)
       .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : project.getBuildInfo().getName()));
   }
