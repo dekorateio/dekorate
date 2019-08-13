@@ -32,7 +32,7 @@ import io.sundr.builder.annotations.Pojo;
   adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface Capability {
+public @interface HalkyonCapability {
   String category();
   
   String kind();
