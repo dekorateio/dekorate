@@ -31,7 +31,7 @@ import io.dekorate.halkyon.generator.CapabilityConfigGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generate link custom resources.")
-@SupportedAnnotationTypes("io.dekorate.halkyon.annotation.Capability")
+@SupportedAnnotationTypes("io.dekorate.halkyon.annotation.HalkyonCapability")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class CapabilityAnnotationProcessor extends AbstractAnnotationProcessor implements CapabilityConfigGenerator {
   

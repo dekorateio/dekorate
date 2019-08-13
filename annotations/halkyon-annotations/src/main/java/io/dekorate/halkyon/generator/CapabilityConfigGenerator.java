@@ -25,7 +25,7 @@ import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.halkyon.adapter.CapabilityConfigAdapter;
-import io.dekorate.halkyon.annotation.Capability;
+import io.dekorate.halkyon.annotation.HalkyonCapability;
 import io.dekorate.halkyon.config.CapabilityConfig;
 import io.dekorate.halkyon.handler.CapabilityHandler;
 
@@ -37,12 +37,12 @@ public interface CapabilityConfigGenerator extends Generator, WithProject {
   default void add(Map map) {
     add(new ConfigurationSupplier<>(
       CapabilityConfigAdapter
-        .newBuilder(propertiesMap(map, Capability.class))));
+        .newBuilder(propertiesMap(map, HalkyonCapability.class))));
   }
   
   @Override
   default void add(Element element) {
-    Capability capability = element.getAnnotation(Capability.class);
+    HalkyonCapability capability = element.getAnnotation(HalkyonCapability.class);
     add(capability != null
       ? new ConfigurationSupplier<>(CapabilityConfigAdapter.newBuilder(capability))
       : new ConfigurationSupplier<>(CapabilityConfig.newCapabilityConfigBuilder()));

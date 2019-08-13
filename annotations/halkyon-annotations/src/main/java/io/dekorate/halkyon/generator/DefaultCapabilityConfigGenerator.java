@@ -20,17 +20,17 @@ import java.util.Collections;
 import java.util.List;
 
 import io.dekorate.Generator;
-import io.dekorate.halkyon.annotation.Capability;
+import io.dekorate.halkyon.annotation.HalkyonCapability;
 
 public class DefaultCapabilityConfigGenerator implements CapabilityConfigGenerator {
   public DefaultCapabilityConfigGenerator() {
-    Generator.registerAnnotationClass(GENERATOR_KEY, Capability.class);
+    Generator.registerAnnotationClass(GENERATOR_KEY, HalkyonCapability.class);
     Generator.registerGenerator(GENERATOR_KEY, this);
   }
   
   @Override
   public List<Class> getSupportedAnnotations() {
-    return Collections.singletonList(Capability.class);
+    return Collections.singletonList(HalkyonCapability.class);
   }
 }
 
