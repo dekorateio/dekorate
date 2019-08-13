@@ -27,9 +27,9 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.halkyon.config.EditableHalkyonConfig;
-import io.dekorate.halkyon.config.HalkyonConfig;
-import io.dekorate.halkyon.config.HalkyonConfigBuilder;
+import io.dekorate.halkyon.config.ComponentConfig;
+import io.dekorate.halkyon.config.ComponentConfigBuilder;
+import io.dekorate.halkyon.config.EditableComponentConfig;
 import io.dekorate.halkyon.decorator.AddBuildConfigToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddEnvToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddExposedPortToComponentDecorator;
@@ -53,7 +53,7 @@ import io.dekorate.utils.Git;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
 
-public class ComponentHandler implements HandlerFactory, Handler<HalkyonConfig>, WithProject {
+public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig>, WithProject {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
   
@@ -82,7 +82,7 @@ public class ComponentHandler implements HandlerFactory, Handler<HalkyonConfig>,
   }
   
   @Override
-  public void handle(HalkyonConfig config) {
+  public void handle(ComponentConfig config) {
     LOGGER.info("Processing capability config.");
     if (Strings.isNullOrEmpty(resources.getName()) && !Strings.isNullOrEmpty(config.getName())) {
       resources.setName(config.getName());
@@ -96,11 +96,11 @@ public class ComponentHandler implements HandlerFactory, Handler<HalkyonConfig>,
   
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {
-    return type.equals(HalkyonConfig.class) ||
-      type.equals(EditableHalkyonConfig.class);
+    return type.equals(ComponentConfig.class) ||
+      type.equals(EditableComponentConfig.class);
   }
   
-  private void addVisitors(HalkyonConfig config) {
+  private void addVisitors(ComponentConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
     
@@ -132,7 +132,7 @@ public class ComponentHandler implements HandlerFactory, Handler<HalkyonConfig>,
     }
   }
   
-  private void generateBuildConfig(HalkyonConfig config) {
+  private void generateBuildConfig(ComponentConfig config) {
     if (config.getProject().getScmInfo() != null) {
       String url = config.getProject().getScmInfo().getUrl();
       String branch = config.getProject().getScmInfo().getBranch();
@@ -165,11 +165,11 @@ public class ComponentHandler implements HandlerFactory, Handler<HalkyonConfig>,
   }
   
   /**
-   * Create a {@link Component} from a {@link HalkyonConfig}.
+   * Create a {@link Component} from a {@link ComponentConfig}.
    * @param config  The config.
    * @return The component.
    */
-  private Component createComponent(HalkyonConfig config) {
+  private Component createComponent(ComponentConfig config) {
     Map<String, String> labels = resources.getLabels();
     labels.put(Labels.APP, config.getName());
     return new ComponentBuilder()
@@ -185,9 +185,9 @@ public class ComponentHandler implements HandlerFactory, Handler<HalkyonConfig>,
   }
   
   @Override
-  public ConfigurationSupplier<HalkyonConfig> getFallbackConfig() {
+  public ConfigurationSupplier<ComponentConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<HalkyonConfig>(new HalkyonConfigBuilder()
+    return new ConfigurationSupplier<ComponentConfig>(new ComponentConfigBuilder()
       .withName(p.getBuildInfo().getName())
       .accept(new ApplyAutoBuild())
       .accept(new ApplyProjectInfo(p)));
