@@ -39,9 +39,9 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @JsonDeserialize(using = io.dekorate.deps.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, builderPackage = "io.dekorate.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 @VelocityTransformations({
-  @VelocityTransformation(value = "/component-resource.vm"),
-  @VelocityTransformation(value = "/component-resource-list.vm"),
-  @VelocityTransformation(value = "/component-status.vm"),
+  @VelocityTransformation(value = "/halkyon-resource.vm"),
+  @VelocityTransformation(value = "/halkyon-resource-list.vm"),
+  @VelocityTransformation(value = "/halkyon-status.vm"),
 })
 @CustomResource(group = "halkyon.io", version = "v1beta1")
 public class CapabilitySpec {
