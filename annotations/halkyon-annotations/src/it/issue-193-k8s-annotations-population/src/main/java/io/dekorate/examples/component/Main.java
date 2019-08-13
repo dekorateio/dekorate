@@ -17,7 +17,7 @@
 package io.dekorate.examples.component;
 
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.component.annotation.ComponentApplication;
+import io.dekorate.halkyon.annotation.ComponentApplication;
 import io.dekorate.kubernetes.annotation.Annotation;
 
 @KubernetesApplication(annotations=@Annotation(key="foo", value="bar"))

@@ -23,8 +23,8 @@ limitations under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>component-annotations</artifactId>
-  <name>Dekorate :: Annotations :: Component CRD</name>
+  <artifactId>halkyon-annotations</artifactId>
+  <name>Dekorate :: Annotations :: Halkyon CRD</name>
 
   <dependencies>
 

@@ -17,7 +17,7 @@
 package io.dekorate.examples.component.service;
 
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.component.annotation.ComponentApplication;
+import io.dekorate.halkyon.annotation.ComponentApplication;
 import io.dekorate.servicecatalog.annotation.ServiceCatalog;
 import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
 import org.springframework.boot.SpringApplication;

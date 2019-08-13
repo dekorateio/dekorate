@@ -16,7 +16,7 @@
 
 package io.dekorate.examples.component;
 
-import io.dekorate.component.annotation.ComponentApplication;
+import io.dekorate.halkyon.annotation.ComponentApplication;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Port;
