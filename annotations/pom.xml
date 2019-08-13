@@ -22,8 +22,7 @@ limitations under the License.
     <version>0.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>io.dekorate</groupId>
+  
   <artifactId>annotations</artifactId>
   <packaging>pom</packaging>
   <name>Dekorate :: Annotations</name>
@@ -33,7 +32,7 @@ limitations under the License.
     <module>kubernetes-annotations</module>
     <module>openshift-annotations</module>
     <module>servicecatalog-annotations</module>
-    <module>component-annotations</module>
+    <module>halkyon-annotations</module>
     <module>prometheus-annotations</module>
     <module>crd-annotations</module>
     <module>application-annotations</module>
