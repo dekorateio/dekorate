@@ -30,7 +30,7 @@ import io.dekorate.halkyon.generator.LinkConfigGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generate link custom resources.")
-@SupportedAnnotationTypes("io.dekorate.halkyon.annotation.Link")
+@SupportedAnnotationTypes("io.dekorate.halkyon.annotation.HalkyonLink")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class LinkAnnotationProcessor extends AbstractAnnotationProcessor implements LinkConfigGenerator {
   
