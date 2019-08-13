@@ -30,7 +30,7 @@ import io.dekorate.halkyon.generator.ComponentConfigGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generate component custom resources.")
-@SupportedAnnotationTypes("io.dekorate.halkyon.annotation.ComponentApplication")
+@SupportedAnnotationTypes("io.dekorate.halkyon.annotation.HalkyonComponent")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ComponentAnnotationProcessor extends AbstractAnnotationProcessor implements ComponentConfigGenerator {
   

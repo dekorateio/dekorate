@@ -16,13 +16,13 @@
 
 package io.dekorate.examples.component;
 
+import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.halkyon.annotation.ComponentApplication;
 import io.dekorate.halkyon.annotation.Link;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@ComponentApplication(name = "hello-spring-boot", exposeService = true, envs = @Env(name = "key1", value = "val1"))
+@HalkyonComponent(name = "hello-spring-boot", exposeService = true, envs = @Env(name = "key1", value = "val1"))
 @Link(name = "should-be-overridden-by-properties", componentName = "should-be-overridden-by-properties")
 @SpringBootApplication
 public class Main {
