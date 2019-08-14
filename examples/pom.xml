@@ -7,7 +7,6 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.dekorate</groupId>
   <artifactId>examples</artifactId>
   <packaging>pom</packaging>
   <name>Dekorate :: Examples</name>
@@ -16,15 +15,15 @@
     <module>kubernetes-example</module>
     <module>openshift-example</module>
     <module>service-catalog-example</module>
-    <module>component-example</module>
-    <module>component-example-annotationless-properties</module>
+    <module>halkyon-example</module>
+    <module>halkyon-example-annotationless-properties</module>
     <module>source-to-image-example</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-openshift-example</module>
     <module>spring-boot-with-groovy-on-openshift-example</module>
     <module>spring-boot-with-fmp-on-kubernetes-example</module>
     <module>spring-boot-with-svcat-on-openshift-example</module>
-    <module>spring-boot-with-svcat-and-component-on-kubernetes-example</module>
+    <module>spring-boot-with-svcat-and-halkyon-on-kubernetes-example</module>
     <module>spring-boot-with-prometheus-on-kubernetes-example</module>
     <module>spring-boot-with-jaeger-on-kubernetes-example</module>
     <module>pojo-to-custom-resource-example</module>
