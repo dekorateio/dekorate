@@ -31,7 +31,7 @@ public class ComponentSpringBootExampleTest {
 
   @Test
   public void shouldContainComponentWithDefaultValues() {
-    KubernetesList list = Serialization.unmarshal(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/component.yml"));
+    KubernetesList list = Serialization.unmarshal(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
     Assertions.assertEquals(1, items.size());
