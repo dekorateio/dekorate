@@ -19,3 +19,11 @@ Please, avoid combining code with indentation changes.
 
 Please use [semantic commit messages](https://seesparkbox.com/foundry/semantic_commit_messages).
 
+## Frequently Asked Questions
+
+* IntelliJ fails to compile dekorate with `Cannot resolve method 'withName(java.lang.String)'` and this kind of errors. 
+In order to get dekorate built on IntelliJ you need to manually add generated sources as module sources.
+
+* IntelliJ cannot resolve packages name of dependencies in module 'dependencies'. You need to exclude the uber-jar `dependencies` module from IntelliJ and do 
+`mvn clean install` do the deps module ends up in local `.m2`. 
+
