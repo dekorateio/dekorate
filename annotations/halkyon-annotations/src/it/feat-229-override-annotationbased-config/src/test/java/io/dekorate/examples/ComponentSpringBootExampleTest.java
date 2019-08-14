@@ -23,6 +23,7 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import io.dekorate.component.model.DeploymentMode;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class ComponentSpringBootExampleTest {
     assertEquals("docker", component.getSpec().getBuildConfig().getType());
     assertEquals("feat-229-override-annotationbased-config", component.getSpec().getBuildConfig().getModuleDirName());
     assertNotNull("", component.getSpec().getBuildConfig().getRef());
+    assertEquals(DeploymentMode.build, component.getSpec().getDeploymentMode());
     Link link = (Link) items.get(1);
     Assertions.assertEquals("Link", link.getKind());
     Env[] envs = link.getSpec().getEnvs();
