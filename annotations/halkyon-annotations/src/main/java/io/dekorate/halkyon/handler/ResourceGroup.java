@@ -19,7 +19,7 @@ package io.dekorate.halkyon.handler;
  * @author <a href="claprun@redhat.com">Christophe Laprun</a>
  */
 final class ResourceGroup {
-  static final String NAME = "component";
+  static final String NAME = "halkyon";
   
   private ResourceGroup() {
   }

@@ -33,7 +33,7 @@ public class Issue254Test {
 
   @Test
   public void shouldExposeService() {
-    KubernetesList list = Serialization.unmarshal(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/component.yml"));
+    KubernetesList list = Serialization.unmarshal(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     Optional<Component> component = findFirst(list, Component.class);
     assertTrue(component.isPresent());

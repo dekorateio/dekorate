@@ -37,8 +37,8 @@ public class ComponentServiceSpringBootExampleTest {
     final ClassLoader classLoader = ComponentServiceSpringBootExampleTest.class.getClassLoader();
     final Properties properties = new Properties();
     properties.load(classLoader.getResourceAsStream("app.properties"));
-
-    KubernetesList list = Serialization.unmarshal(classLoader.getResourceAsStream("META-INF/dekorate/component.yml"));
+  
+    KubernetesList list = Serialization.unmarshal(classLoader.getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
     assertEquals(2, items.size());

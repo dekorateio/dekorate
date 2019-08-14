@@ -28,7 +28,7 @@ public class Issue65Test {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshal(Issue65Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/component.yml"));
+    KubernetesList list = Serialization.unmarshal(Issue65Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     assertEquals("Component", list.getItems().get(0).getKind());
