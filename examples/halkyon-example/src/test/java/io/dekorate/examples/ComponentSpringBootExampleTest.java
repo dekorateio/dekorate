@@ -37,7 +37,7 @@ public class ComponentSpringBootExampleTest {
     Assertions.assertEquals(1, items.size());
     Component component = (Component) items.get(0);
     Assertions.assertEquals("Component", component.getKind());
-    assertEquals("component-example", component.getMetadata().getName());
+    assertEquals("halkyon-example", component.getMetadata().getName());
     assertEquals(1, component.getMetadata().getLabels().size());
     assertNull(component.getSpec().getBuildConfig());
   }
