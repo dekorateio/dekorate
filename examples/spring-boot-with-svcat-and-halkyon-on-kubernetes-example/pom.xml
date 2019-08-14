@@ -24,7 +24,7 @@ limitations under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>spring-boot-with-svcat-and-halkyon-on-kubernetes-example</artifactId>
-  <name>Dekorate :: Examples ::Spring Boot with Service Catalog and Halkyon CRD on Kubernetes</name>
+  <name>Dekorate :: Examples :: Spring Boot with Service Catalog and Halkyon CRD on Kubernetes</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
