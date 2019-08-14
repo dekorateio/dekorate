@@ -23,7 +23,7 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.dekorate.component.model.DeploymentMode;
+import io.dekorate.halkyon.model.DeploymentMode;
 
 import java.util.List;
 
