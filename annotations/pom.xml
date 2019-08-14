@@ -40,6 +40,7 @@ limitations under the License.
     <module>jaeger-annotations</module>
     <module>docker-annotations</module>
     <module>s2i-annotations</module>
+    <module>jib-annotations</module>
   </modules>
 
 </project>
