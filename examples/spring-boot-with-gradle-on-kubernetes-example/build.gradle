@@ -1,11 +1,12 @@
 buildscript {
 	ext {
-		springBootVersion = '2.1.1.RELEASE'
-    dekorateVersion = System.getProperty("dekorateVersion", "0.1.3")
+		springBootVersion = '2.1.6.RELEASE'
+    dekorateVersion = System.getProperty("dekorateVersion", "0.7.5")
     junitVersion = '5.3.1'
     junitGraldePluginVersion = '1.1.0'
 	}
 	repositories {
+    mavenLocal()
 		mavenCentral()
 	}
 	dependencies {
@@ -35,9 +36,12 @@ junitPlatform {
 
 dependencies {
   implementation('org.springframework.boot:spring-boot-starter-web')
-  implementation('org.springframework.boot:spring-boot-starter-actuator')
+  compile('org.springframework.boot:spring-boot-starter-actuator')
+  compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
 
-  compile("io.dekorate:kubernetes-spring-starter:${dekorateVersion}")
+
+  implementation("io.dekorate:dekorate-spring-boot:${dekorateVersion}")
+  implementation("io.dekorate:kubernetes-annotations:${dekorateVersion}")
   annotationProcessor("io.dekorate:kubernetes-annotations:${dekorateVersion}")
   annotationProcessor("io.dekorate:dekorate-spring-boot:${dekorateVersion}")
 
