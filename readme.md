@@ -615,6 +615,27 @@ The order where these resources are used are:
 
 Here's the full list of supported [configuration options](config.md).
 
+####### Examples
+You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) and [here](https://github.com/dekorateio/dekorate/blob/master/annotations/halkyon-annotations/src/it/feat-229-override-annotationbased-config/src/main/resources/application.yml) some examples of usage. Note that some items does not end up in the same hierarchical place where they were configured. Let's take an example:
+
+the following deployment mode configuration:
+
+```
+dekorate:
+  component:
+    deploymentMode: build
+```
+results as follows:
+```
+- apiVersion: "halkyon.io/v1beta1"
+  kind: "Component"
+  metadata:
+    name: "hello-world"
+  spec:
+    deploymentMode: "build"
+
+```
+Note that an additional level `spec` has been introduced.
 
 ###### Generated resources when not using annotations
 
