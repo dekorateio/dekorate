@@ -84,7 +84,7 @@ public class LinkHandler implements HandlerFactory, Handler<LinkConfig> {
       .endMetadata()
       .withNewSpec()
       .withComponentName(config.getComponentName())
-      .withKind(config.getKind())
+      .withType(config.getType())
       .withNewRef(config.getRef());
     for (Env env : config.getEnvs()) {
       linkSpec.addNewEnv(env.getName(), env.getValue());

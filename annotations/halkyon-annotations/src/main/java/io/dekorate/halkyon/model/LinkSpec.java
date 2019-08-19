@@ -44,16 +44,16 @@ import io.sundr.transform.annotations.VelocityTransformations;
 public class LinkSpec {
   
   private String componentName;
-  private Kind kind;
+  private Type type;
   private String ref;
   private Env[] envs;
   
   public LinkSpec() {
   }
   
-  public LinkSpec(String componentName, Kind kind, String ref, Env[] envs) {
+  public LinkSpec(String componentName, Type type, String ref, Env[] envs) {
     this.componentName = componentName;
-    this.kind = kind;
+    this.type = type;
     this.ref = ref;
     this.envs = envs;
   }
@@ -66,12 +66,12 @@ public class LinkSpec {
     this.componentName = componentName;
   }
   
-  public Kind getKind() {
-    return kind;
+  public Type getType() {
+    return type;
   }
   
-  public void setKind(Kind kind) {
-    this.kind = kind;
+  public void setType(Type type) {
+    this.type = type;
   }
   
   public String getRef() {

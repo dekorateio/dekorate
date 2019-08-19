@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import io.dekorate.halkyon.model.Kind;
+import io.dekorate.halkyon.model.Type;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
@@ -37,7 +37,7 @@ public @interface HalkyonLink {
   
   String componentName();
   
-  Kind kind() default Kind.Env;
+  Type type() default Type.Env;
   
   String ref() default "";
   
