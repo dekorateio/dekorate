@@ -17,6 +17,5 @@ package io.dekorate.halkyon.model;
 
 public enum Type {
   Secret,
-  ConfigMap,
   Env
 }
