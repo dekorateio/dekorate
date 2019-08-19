@@ -23,7 +23,6 @@ limitations under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.dekorate</groupId>
   <artifactId>dekorate-core</artifactId>
   <packaging>jar</packaging>
   <name>Dekorate :: Core</name>
@@ -52,6 +51,13 @@ limitations under the License.
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <version>${version.junit-jupiter}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- this dependency is needed to create parameterized tests -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
       <version>${version.junit-jupiter}</version>
       <scope>test</scope>
     </dependency>

@@ -20,15 +20,12 @@
 
 package io.dekorate.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
-
-import io.dekorate.DekorateException;
 
 public class Git {
 
@@ -44,9 +41,7 @@ public class Git {
   public static final String HEAD = "HEAD";
   public static final String URL = "url";
   public static final String REF = "ref";
-  public static final String GITHUB_SSH = "git@github.com:";
-  public static final String GITHUB_HTTPS = "https://github.com/";
-
+  
   /**
    * Get the git root.
    * @param path Any path under the target git repo.
@@ -74,11 +69,10 @@ public class Git {
   }
   /**
    * Get the git remote url.
-   * @param root the git root.
+   * @param path the path to the git config.
    * @param remote the remote.
    * @return The an {@link Optional} String with the URL of the specified remote.
    */
-
   public static Optional<String> getRemoteUrl(Path path, String remote) {
     try {
       return Files.lines(getConfig(path)).map(String::trim)
@@ -90,10 +84,28 @@ public class Git {
       return Optional.empty();
     }
   }
+  
+  public static Optional<String> getSafeRemoteUrl(Path path, String remote) {
+    final Optional<String> remoteUrl = getRemoteUrl(path, remote);
+    return remoteUrl.map(Git::sanitizeRemoteUrl);
+  }
+  
+  static String sanitizeRemoteUrl(String remoteUrl) {
+    final int atSign = remoteUrl.indexOf('@');
+    if (atSign > 0) {
+      remoteUrl = remoteUrl.substring(atSign + 1);
+      remoteUrl = remoteUrl.replaceFirst(":", "/");
+      remoteUrl = "https://" + remoteUrl;
+    }
+    if (!remoteUrl.endsWith(".git")) {
+      remoteUrl += ".git";
+    }
+    return remoteUrl;
+  }
 
   /**
    * Get the git branch.
-   * @param root the git root.
+   * @param path the path to the git config.
    * @return The an {@link Optional} String with the branch.
    */
   public static Optional<String> getBranch(Path path) {
@@ -109,7 +121,7 @@ public class Git {
 
   /**
    * Get the git branch.
-   * @param root the git root.
+   * @param path the path to the git config.
    * @return The an {@link Optional} String with the branch.
    */
   public static Optional<String> getCommitSHA(Path path) {
@@ -133,15 +145,13 @@ public class Git {
    * @reuturn The predicate.
    */
   public static Predicate<String> inRemote(String remote, AtomicBoolean state) {
-    return new Predicate<String>() {
-      public boolean test(String l) {
-            if (l.startsWith(OB) && l.contains(REMOTE) && l.contains(remote) && l.endsWith(CB)) {
-              state.set(true);
-            } else if (l.startsWith(OB) && l.endsWith(CB)) {
-              state.set(false);
-            }
-            return state.get();
+    return l -> {
+      if (l.startsWith(OB) && l.contains(REMOTE) && l.contains(remote) && l.endsWith(CB)) {
+        state.set(true);
+      } else if (l.startsWith(OB) && l.endsWith(CB)) {
+        state.set(false);
       }
+      return state.get();
     };
   }
 

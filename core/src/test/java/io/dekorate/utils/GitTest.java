@@ -1,74 +1,126 @@
 /**
  * Copyright 2018 The original authors.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
- * 
- * 
-**/
+ **/
 
 package io.dekorate.utils;
 
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class GitTest {
-
-  static String GIT_CONFIG = "git-simple/git/config";
-  static URL CONFIG_URL = GitTest.class.getClassLoader().getResource(GIT_CONFIG);
-  static File CONFIG_FILE = Urls.toFile(CONFIG_URL);
-  static Path DOT_GIT = CONFIG_FILE.toPath().getParent().getParent().resolve(Git.DOT_GIT);
-  static Path ROOT = CONFIG_FILE.toPath().getParent().getParent();
-
+  
+  private static final ClassLoader loader = GitTest.class.getClassLoader();
+  private static final String CONFIG_SUFFIX = "/git/config";
+  private static final String GIT_SIMPLE = "git-simple";
+  private static final String GIT_SSH = "git-ssh";
+  private static final String GIT_GITLAB = "git-gitlab";
+  private static final Map<String, Path> configurationNameToConfigRoot = new HashMap<>(7);
+  
   @BeforeAll
-  public static void setup() {
-    CONFIG_FILE.toPath().getParent().toFile().renameTo(DOT_GIT.toFile());
+  static void setup() {
+    setup(GIT_SIMPLE);
+    setup(GIT_SSH);
+    setup(GIT_GITLAB);
   }
-
-  @Test
-  public void shouldDetectRoot() {
-    Path root = Git.getRoot(CONFIG_FILE.toPath());
-    assertEquals(ROOT, root);
+  
+  private static Path getDotGit(File configFile) {
+    return configFile.toPath().getParent().getParent().resolve(Git.DOT_GIT);
   }
-
-  @Test
-  public void shouldGetUrl() throws Exception {
-    Optional<String> repoUrl = Git.getRemoteUrl(ROOT, Git.ORIGIN);
+  
+  private static Path getRoot(File configFile) {
+    return configFile.toPath().getParent().getParent();
+  }
+  
+  static void setup(String gitConfig) {
+    final URL configURL = loader.getResource(gitConfig + CONFIG_SUFFIX);
+    final File configFile = Urls.toFile(configURL);
+    configFile.toPath().getParent().toFile().renameTo(getDotGit(configFile).toFile());
+    configurationNameToConfigRoot.put(gitConfig, getRoot(configFile));
+  }
+  
+  @ParameterizedTest
+  @ValueSource(strings = {GIT_SIMPLE, GIT_SSH})
+  void shouldDetectRoot(String configFile) {
+    final Path root = getRootFor(configFile);
+    final Path detected = Git.getRoot(root);
+    assertEquals(root, detected);
+  }
+  
+  @ParameterizedTest(name = "{0} should have \"{1}\" as remote url")
+  @CsvSource({GIT_SIMPLE + ", git@github.com:myorg/myproject.git", GIT_SSH + ", git+ssh://git@github.com/halkyonio/operator"})
+  void shouldGetRemoteUrl(String configFile, String expected) throws Exception {
+    final Path root = getRootFor(configFile);
+    Optional<String> repoUrl = Git.getRemoteUrl(root, Git.ORIGIN);
     assertNotNull(repoUrl);
     assertTrue(repoUrl.isPresent());
-    assertEquals("git@github.com:myorg/myproject.git", repoUrl.get());
+    assertEquals(expected, repoUrl.get());
   }
-
-  @Test
-  public void shouldGetBranch() throws Exception {
-    Optional<String> branch = Git.getBranch(ROOT);
+  
+  private Path getRootFor(String configFile) {
+    final Path root = configurationNameToConfigRoot.get(configFile);
+    if (root == null) {
+      fail("No configuration named '" + configFile + "' exist. Did you properly set it up in @BeforeAll annotated method?");
+    }
+    return root;
+  }
+  
+  @ParameterizedTest(name = "{0} should have \"{1}\" as safe remote url")
+  @CsvSource({
+    GIT_SIMPLE + ", https://github.com/myorg/myproject.git",
+    GIT_SSH + ", https://github.com/halkyonio/operator.git",
+    GIT_GITLAB + ", https://gitlab.com/foo/bar.git"
+  })
+  void shouldGetSafeRemoteUrl(String configFile, String expected) throws Exception {
+    final Path root = getRootFor(configFile);
+    Optional<String> repoUrl = Git.getSafeRemoteUrl(root, Git.ORIGIN);
+    assertNotNull(repoUrl);
+    assertTrue(repoUrl.isPresent());
+    assertEquals(expected, repoUrl.get());
+  }
+  
+  @ParameterizedTest(name = "{0} should have \"{1}\" as branch")
+  @CsvSource({GIT_SIMPLE + ", master", GIT_SSH + ", extract-api"})
+  void shouldGetBranch(String configFile, String expected) throws Exception {
+    final Path root = getRootFor(configFile);
+    Optional<String> branch = Git.getBranch(root);
     assertNotNull(branch);
     assertTrue(branch.isPresent());
-    assertEquals("master", branch.get());
+    assertEquals(expected, branch.get());
   }
-
-  @Test
-  public void shouldGetCommitSHA() throws Exception {
-    Optional<String> sha = Git.getCommitSHA(ROOT);
+  
+  @ParameterizedTest(name = "{0} should have \"{1}\" as commit sha")
+  @CsvSource({GIT_SIMPLE + ", myawesomegitsha"})
+  void shouldGetCommitSHA(String configFile, String expected) throws Exception {
+    final Path root = getRootFor(configFile);
+    Optional<String> sha = Git.getCommitSHA(root);
     assertNotNull(sha);
     assertTrue(sha.isPresent());
-    assertEquals("myawesomegitsha", sha.get());
+    assertEquals(expected, sha.get());
   }
 }
