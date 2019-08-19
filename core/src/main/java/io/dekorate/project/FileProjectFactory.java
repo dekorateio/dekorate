@@ -16,14 +16,12 @@
 package io.dekorate.project;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.StreamSupport;
 
-import io.dekorate.DekorateException;
 import io.dekorate.utils.Git;
 
 public class FileProjectFactory {
@@ -58,7 +56,6 @@ public class FileProjectFactory {
 
     Path scmPath = f.toPath();
     while (scmPath != null && !scmPath.resolve(Git.DOT_GIT).toFile().exists()) {
-      System.out.println(scmPath.toAbsolutePath().toString());
       scmPath = scmPath.getParent();
     }
     Optional<ScmInfo> scmInfo = getScmInfo(scmPath);
@@ -87,7 +84,7 @@ public class FileProjectFactory {
     if (path == null) {
       return scmInfo;
     }
-    String url = Git.getRemoteUrl(path, Git.ORIGIN).map(u -> u.replace(Git.GITHUB_SSH, Git.GITHUB_HTTPS)).orElse(null);
+    String url = Git.getSafeRemoteUrl(path, Git.ORIGIN).orElse(null);
     String branch = Git.getBranch(path).orElse(null);
     scmInfo = Optional.of(new ScmInfo(path, url, branch, ""));
     return scmInfo;

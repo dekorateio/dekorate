@@ -141,9 +141,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       
       
       if (!config.getRemote().equals(Git.ORIGIN)) {
-        url = Git.getRemoteUrl(config.getProject().getScmInfo().getRoot(), config.getRemote())
-          .map(u -> u.replace(Git.GITHUB_SSH, Git.GITHUB_HTTPS))
-          .orElse(url);
+        url = Git.getSafeRemoteUrl(config.getProject().getScmInfo().getRoot(), config.getRemote()).orElse(url);
       }
       resources.decorateCustom(ResourceGroup.NAME,
         new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
