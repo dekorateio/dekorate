@@ -1,3 +1,4 @@
+
 ![dekorate logo](logo.png "Dekorate") 
 
 # Dekorate
@@ -543,19 +544,19 @@ This module can be added to the project using:
 ### Component CRD support
 The Component [Custom Resource Definition (CRD)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims 
 to abstract kubernetes/OpenShift resources and simplify the configuration and design of cloud-native applications.
-See the following [project](https://github.com/snowdrop/component-operator) to get more information about the Component CRD and
+See the following [project](https://github.com/halkyonio/operator) to get more information about the Component CRD and
 its associated operator, more specifically you can take a look at the 
-[demo project](https://github.com/snowdrop/component-operator/tree/master/demo).
+[demo project](https://github.com/halkyonio/operator/tree/master/demo).
 This module provides support for the Component CRD.
 
-The generation of a Component CRD descriptor is triggered by adding the `component-annotations` dependency to the project and
+The generation of a Component CRD descriptor is triggered by adding the `halkyon-annotations` dependency to the project and
 annotate one of your classes with `@ComponentApplication`. Note that in the case of Spring Boot applications, as explained 
 [here](#annotation-less), only adding the dependency is needed:
 
 ```xml
 <dependency>
   <groupId>io.dekorate</groupId>
-  <artifactId>component-annotations</artifactId>
+  <artifactId>halkyon-annotations</artifactId>
   <version>${project.version}</version>
 </dependency>
 ```
@@ -597,7 +598,7 @@ Or if you are on [openshift](https://openshift.com):
 </dependency>
 ```
 
-###### Annotation less
+#### Halkyon Component CRD and  Annotationless configuration
 For Spring Boot applications (i.e. at least one project class is annotated with `@SpringBootApplication`) all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additional annotation.
 This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
@@ -615,17 +616,16 @@ The order where these resources are used are:
 
 Here's the full list of supported [configuration options](config.md).
 
-###### Examples
-You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) and [here](https://github.com/dekorateio/dekorate/blob/master/annotations/halkyon-annotations/src/it/feat-229-override-annotationbased-config/src/main/resources/application.yml) some examples of usage. Note that some items does not end up in the same hierarchical place where they were configured. Let's take an example:
+##### How to use annotation less mode: examples
+You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) and [here](https://github.com/dekorateio/dekorate/blob/master/annotations/halkyon-annotations/src/it/feat-229-override-annotationbased-config/src/main/resources/application.yml) some use cases. Let's take an example in order to show how you can use the annotationless mode:
 
-the following deployment mode configuration:
-
+If you want to set up `deploymentMode` to `build` you could create an entry in the `application.yml` as follows:
 ```
 dekorate:
   component:
     deploymentMode: build
 ```
-results as follows:
+this would result in a manifiest as follows:
 ```
 - apiVersion: "halkyon.io/v1beta1"
   kind: "Component"
@@ -645,7 +645,7 @@ When no annotations are used, the kind of resources to be generated is determine
 |---------------------|------------------------------------|
 | kubernetes.json/yml | io.dekorate:kubernetes-annotations |
 | openshift.json/yml  | io.dekorate:openshift-annotations  |
-| component.json/yml  | io.dekorate:component-annotations  |
+| component.json/yml  | io.dekorate:halkyon-annotations  |
 
 
 Note: that starter modules for `kubernetes` and `openshift` do transitively add `kubernetes-annotations` and `openshift-annotations` respectively.
