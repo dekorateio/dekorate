@@ -597,12 +597,11 @@ Or if you are on [openshift](https://openshift.com):
   <version>${project.version}</version>
 </dependency>
 ```
-
-#### Halkyon Component CRD and  Annotationless configuration
-For Spring Boot applications (i.e. at least one project class is annotated with `@SpringBootApplication`) all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additional annotation.
+#### Annotation less configuration
+The annotation less configuration is only supported for Spring Boot applications (i.e. at least one project class is annotated with `@SpringBootApplication`). So, for Spring Boot applications, all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additional annotation.
 This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
-To customize/dekorate the generated manifests you can use `application.yml` / `application.properties` both, or even use annotations along with  `application.yml` / `application.properties`.
+To customize/dekorate the generated manifests you can use `application.yml` / `application.properties` both, or even use annotations along with  `application.yml` / `application.properties`. Note that `application.yml` / `application.properties` take precedence over annotation configuration.
 
 The order where these resources are used are:
 
@@ -616,26 +615,116 @@ The order where these resources are used are:
 
 Here's the full list of supported [configuration options](config.md).
 
-##### How to use annotation less mode: examples
-You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) and [here](https://github.com/dekorateio/dekorate/blob/master/annotations/halkyon-annotations/src/it/feat-229-override-annotationbased-config/src/main/resources/application.yml) some use cases. Let's take an example in order to show how you can use the annotationless mode:
+##### How to use annotation less mode
+ Let's see in details how you can use annotation less mode:
+###### how to use annotation less configuration
+As described above, we only need to annotate a class with `@SpringBootApplication` and provide the configuration for `Dekorate` in the `application.properties`/`application.yml` file. Pay special attention to the path of these properties, you may need follow the [guide](config.md).
+```
+package io.dekorate.examples.component;  
+  
+import org.springframework.boot.SpringApplication;  
+import org.springframework.boot.autoconfigure.SpringBootApplication;  
+  
+@SpringBootApplication  
+public class Main {  
+  
+  public static void main(String[] args) {  
+    SpringApplication.run(Main.class, args);  
+  }  
+  
+}
+```
+the `application.properties`
+```
+dekorate.component.name=hello-annotationless-world  
+dekorate.component.envs[0].name=key_from_properties  
+dekorate.component.envs[0].value=value_from_properties  
+dekorate.component.deploymentMode=build
+``` 
+the result of this configuration:
+```
+---  
+apiVersion: "v1"  
+kind: "List"  
+items:  
+- apiVersion: "halkyon.io/v1beta1"  
+  kind: "Component"  
+  metadata:  
+    labels:  
+      app: "hello-annotationless-world"  
+  name: "hello-annotationless-world"  
+  spec:  
+    deploymentMode: "build"  
+  runtime: "spring-boot"  
+  version: "2.1.6.RELEASE"  
+  exposeService: false  
+  envs:  
+    - name: "key_from_properties"  
+    value: "value_from_properties"  
+  buildConfig:  
+      type: "s2i"  
+      url: "https://github.com/dekorateio/dekorate.git"  
+      ref: "master"  
+      contextPath: "examples/"  
+      moduleDirName: "halkyon-example-annotationless-properties"
+```
+Note that some items does not end up in the same hierarchical place where they were configured, in the case of `deploymentMode` an additional level `spec` has been introduced.
+You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) the code of this example.
+###### how to override annotationbased-config
+Given a spring boot application class:
+```
+package io.dekorate.examples.component;  
+  
+import io.dekorate.halkyon.annotation.HalkyonComponent;  
+import io.dekorate.kubernetes.annotation.Env;  
+import org.springframework.boot.SpringApplication;  
+import org.springframework.boot.autoconfigure.SpringBootApplication;  
+  
+@HalkyonComponent(name = "halkyon", exposeService = true, envs = @Env(name = "key1", value = "val1"))  
+@SpringBootApplication  
+public class Application {  
+  
+  public static void main(String[] args) {  
+    SpringApplication.run(Application.class, args);  
+  }  
+}
+```
+If we provide an `application.yml` file as follows:
+```
+dekorate:  
+  component:  
+    name: "hello-world"  
+    buildType: "docker"  
+    deploymentMode : build
+```
+the halkyon component crd will contain the configuration provided by file:
+```
+---  
+apiVersion: "v1"  
+kind: "List"  
+items:  
+- apiVersion: "halkyon.io/v1beta1"  
+  kind: "Component"  
+  metadata:  
+    labels:  
+      app: "hello-world"  
+  version: "0.0.1-SNAPSHOT"  
+  name: "hello-world"  
+  spec:  
+    deploymentMode: "build"  
+  runtime: "spring-boot"  
+  version: "2.1.6.RELEASE"  
+  exposeService: false  
+  buildConfig:  
+    type: "docker"  
+    url: "https://github.com/dekorateio/dekorate.git"  
+    ref: "master"  
+    contextPath: "annotations/halkyon-annotations/target/it/"  
+    moduleDirName: "feat-229-override-annotationbased-config"
 
-If you want to set up `deploymentMode` to `build` you could create an entry in the `application.yml` as follows:
 ```
-dekorate:
-  component:
-    deploymentMode: build
-```
-this would result in a manifiest as follows:
-```
-- apiVersion: "halkyon.io/v1beta1"
-  kind: "Component"
-  metadata:
-    name: "hello-world"
-  spec:
-    deploymentMode: "build"
-
-```
-Note that an additional level `spec` has been introduced.
+As in the previous example an additional level `spec` has been introduced for `deploymentMode`. 
+You can file this code [here](https://github.com/dekorateio/dekorate/blob/master/annotations/halkyon-annotations/src/it/feat-229-override-annotationbased-config/src/main/resources/application.yml) 
 
 ###### Generated resources when not using annotations
 
@@ -955,3 +1044,4 @@ Docs, Bug fixes, New features ... everything is important!
 
 Make sure you take a look at contributor [guidelines](contributor-guideliness.md).
 Also, it can be useful to have a look at the dekorate [design](design.md).
+
