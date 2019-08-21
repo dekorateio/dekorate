@@ -29,7 +29,7 @@ For new issues and pull requests please don't forget to use https://github.com/d
   - [Prometheus](#prometheus-annotations)
   - [Jaeger](#jaeger-annotations)
   - [Service Catalog](#service-catalog-annotations)
-  - [Component CRD](#component-crd-support)
+  - [Halkyon CRD](#halkyon-crd-support)
 - Customize manifests using annotations
   - Kubernetes
     - labels
@@ -541,17 +541,17 @@ This module can be added to the project using:
 #### related examples
  - [service catalog example](examples/service-catalog-example)  
  
-### Component CRD support
-The Component [Custom Resource Definition (CRD)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) aims 
-to abstract kubernetes/OpenShift resources and simplify the configuration and design of cloud-native applications.
-See the following [project](https://github.com/halkyonio/operator) to get more information about the Component CRD and
-its associated operator, more specifically you can take a look at the 
+### Halkyon CRD support
+[Halkyon](http://halkyon.io) provides 
+[Custom Resource Definitions (CRD)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) 
+and associated operator to abstract kubernetes/OpenShift resources and simplify the configuration and design of cloud-native applications.
+See the following [project](https://github.com/halkyonio/operator) to get more information. Specifically, you can take a look at the 
 [demo project](https://github.com/halkyonio/operator/tree/master/demo).
-This module provides support for the Component CRD.
+This module provides support for generating halkyon CRDs from a combination of user-provided and automatically extracted metadata.
 
-The generation of a Component CRD descriptor is triggered by adding the `halkyon-annotations` dependency to the project and
+The generation of halkyon CRDs is triggered by adding the `halkyon-annotations` dependency to the project and
 annotate one of your classes with `@HalkyonComponent`. Note that in the case of Spring Boot applications, as explained 
-[here](#annotation-less), only adding the dependency is needed:
+[here](#annotation-less-configuration), only adding the dependency is needed:
 
 ```xml
 <dependency>
@@ -564,7 +564,7 @@ annotate one of your classes with `@HalkyonComponent`. Note that in the case of 
 If everything went well, building your project will also generate `halkyon.yml` and `halkyon.json` files in the 
 `target/classes/META-INF/dekorate` is triggered.
 
-The content of the component descriptor will be determined by the existing config provided by other annotations such as 
+The content of the halkyon descriptor will be determined by the existing config provided by other annotations such as 
 `@KubernetesApplication` and can be also controlled using application properties.
 
 ###  Framework integration
@@ -598,12 +598,20 @@ Or if you are on [openshift](https://openshift.com):
 </dependency>
 ```
 #### Annotation less configuration
-The annotation less configuration is only supported for Spring Boot applications (i.e. at least one project class is annotated with `@SpringBootApplication`). So, for Spring Boot applications, all you need to do, is adding one of the starters (`io.dekorate:kubernetes-spring-starter` or `io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additional annotation.
-This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [spring boot](https://spring.io/projects/spring-boot).
 
-To customize/dekorate the generated manifests you can use `application.yml` / `application.properties` both, or even use annotations along with  `application.yml` / `application.properties`. Note that `application.yml` / `application.properties` take precedence over annotation configuration.
+It is possible to completely bypass annotations by utilizing already-existing, framework-specific metadata. This mode is 
+currently only supported for Spring Boot applications (i.e. at least one project class is annotated with `@SpringBootApplication`).
 
-The order where these resources are used are:
+So, for Spring Boot applications, all you need to do is add one of the starters (`io.dekorate:kubernetes-spring-starter` or 
+`io.dekorate:openshift-spring-starter`) to the classpath. No need to specify an additional annotation.
+This provides the fastest way to get started using [dekorate](https://github.com/dekorateio/dekorate) with [Spring Boot](https://spring.io/projects/spring-boot).
+
+To customize the generated manifests you can add `dekorate` properties to your `application.yml` or `application.properties` 
+descriptors, or even use annotations along with `application.yml` / `application.properties` though if you define `dekorate`
+properties then the annotation configuration will be replaced by the one specified using properties.
+
+Dekorate looks for supported configuration as follows in increasing order of priority, meaning that any configuration found in 
+an `application` descriptor will override any existing annotation-specified configuration:
 
 1. Annotations
 2. `application.properties`
@@ -613,16 +621,22 @@ The order where these resources are used are:
 6. `application-kubernetes.yaml`
 7. `application-kubernetes.yml`
 
-Here's the full list of supported [configuration options](config.md).
+It's important to repeat that the override that occurs by *fully* replacing any lower-priority configuration and not via any kind
+of merge between the existing and higher-priority values. This means that if you choose to override the annotation-specified
+configuration, you need to repeat all the configuration you want in the annotation-less configuration.
 
-##### How to use annotation less mode
-As described above, we only need to annotate a class with `@SpringBootApplication` and provide the configuration for `Dekorate` in the `application.properties`/`application.yml` file. Special attention should be payed to the path of these properties. The properties path need to reflect the annotation properties and not what would end up in the manifest. While there is some overlap between how the annotations are configured and the resulting manifest, the properties (or YAML file) still need to provide values for the annotation fields, hence why they need to match how the annotations are configured. This is why there is no spec path when dealing with deploymentMode because deploymentMode is set at the top-level of the annotation. To be sure you may need to check the [guide](config.md).
+Here's the full list of supported [configuration options](config.md). Special attention should be paid to the path of these 
+properties. The properties' path match the annotation properties and not what would end up in the manifest, meaning that the 
+annotation-less configuration matches the model defined by the annotations. More precisely, what is being configured using 
+properties is the same model than what is configured using annotations. While there is some overlap between how the annotations 
+are configured and the resulting manifest, the properties (or YAML file) still need to provide values for the annotation fields,
+hence why they need to match how the annotations are configured. Always refer to the [configuration options guide](config.md) 
+if in doubt.
 
+###### Examples
+Here a simple example of how to use the annotation-less mode. We have a simple `@SpringBootApplication` annotated class:
 
-###### how to use annotation less configuration
-The simplest case of this mode: `@SpringBootApplication` annotated class and `application.properties`/`application.yml`.
-
-```
+```java
 package io.dekorate.examples.component;  
   
 import org.springframework.boot.SpringApplication;  
@@ -637,16 +651,18 @@ public class Main {
   
 }
 ```
-the `application.properties`
-```
-dekorate.component.name=hello-annotationless-world  
-dekorate.component.envs[0].name=key_from_properties  
-dekorate.component.envs[0].value=value_from_properties  
+
+along with an `application.properties` to override the default values:
+```properties
+dekorate.component.name=hello-annotationless-world
+dekorate.component.envs[0].name=key_from_properties\
+dekorate.component.envs[0].value=value_from_properties
 dekorate.component.deploymentMode=build
 ``` 
-we should obtain the following halkyon CRD manifest::
-```
----  
+
+The combination of both, when processed, should result in the following halkyon CRD manifest:
+```yaml
+---
 apiVersion: "v1"  
 kind: "List"  
 items:  
@@ -671,12 +687,15 @@ items:
       contextPath: "examples/"  
       moduleDirName: "halkyon-example-annotationless-properties"
 ```
-Note that some items do not end up in the same hierarchical place where they were configured, in the case of `deploymentMode` an additional level `spec` has been introduced.
+
+As explained before, you can note, for example, that `deploymentMode` does not appear at the same hierarchical level as 
+configured in the properties: an additional level `spec` has been introduced.
+
 You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) the code of this example.
 
-###### how to override annotationbased-config
-Given a Spring Boot application class that is annotated with `@HalkyonComponent` as well:
-```
+Let's now consider the following Spring Boot application class that is annotated with `@HalkyonComponent` as well:
+
+```java
 package io.dekorate.examples.component;  
   
 import io.dekorate.halkyon.annotation.HalkyonComponent;  
@@ -691,18 +710,21 @@ public class Application {
   public static void main(String[] args) {  
     SpringApplication.run(Application.class, args);  
   }  
-}
+}  
 ```
+
 If we provide an `application.yml` file as follows:
-```
+```yaml
 dekorate:  
   component:  
     name: "hello-world"  
     buildType: "docker"  
     deploymentMode : build
 ```
-the halkyon component crd will contain the configuration provided by file:
-```
+
+You can notice that the resulting manifest will match what is configured in `application.yml`, completly overriding the values
+provided via annotations:
+```yaml
 ---  
 apiVersion: "v1"  
 kind: "List"  
@@ -727,7 +749,7 @@ items:
     moduleDirName: "feat-229-override-annotationbased-config"
 
 ```
-As in the previous example an additional level `spec` has been introduced for `deploymentMode`. 
+ 
 You can file this code [here](https://github.com/dekorateio/dekorate/blob/master/annotations/halkyon-annotations/src/it/feat-229-override-annotationbased-config/src/main/resources/application.yml) 
 
 ###### Generated resources when not using annotations
@@ -829,7 +851,7 @@ gradle build -Ddekorate.build=true
 Dekorate provides two junit5 extensions for:
 
 - Kubernetes
-- Openshift
+- OpenShift
 
 These extensions are `dekorate` aware and can read generated resources and configuration, in order to manage `end to end` tests
 for the annotated applications.

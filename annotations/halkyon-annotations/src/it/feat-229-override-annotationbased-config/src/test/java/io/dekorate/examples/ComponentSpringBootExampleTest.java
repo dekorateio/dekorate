@@ -40,7 +40,7 @@ public class ComponentSpringBootExampleTest {
     Assertions.assertEquals(2, items.size());
     Component component = (Component) items.get(0);
     Assertions.assertEquals("Component", component.getKind());
-    // This doens't work during release.
+    // This doesn't work during release.
     //assertEquals("https://github.com/dekorateio/dekorate.git", component.getSpec().getBuildConfig().getUrl());
     assertEquals("docker", component.getSpec().getBuildConfig().getType());
     assertEquals("feat-229-override-annotationbased-config", component.getSpec().getBuildConfig().getModuleDirName());
