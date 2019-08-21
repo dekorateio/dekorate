@@ -550,7 +550,7 @@ its associated operator, more specifically you can take a look at the
 This module provides support for the Component CRD.
 
 The generation of a Component CRD descriptor is triggered by adding the `halkyon-annotations` dependency to the project and
-annotate one of your classes with `@ComponentApplication`. Note that in the case of Spring Boot applications, as explained 
+annotate one of your classes with `@HalkyonComponent`. Note that in the case of Spring Boot applications, as explained 
 [here](#annotation-less), only adding the dependency is needed:
 
 ```xml
@@ -561,7 +561,7 @@ annotate one of your classes with `@ComponentApplication`. Note that in the case
 </dependency>
 ```
 
-If everything went well, building your project will also generate `component.yml` and `component.json` files in the 
+If everything went well, building your project will also generate `halkyon.yml` and `halkyon.json` files in the 
 `target/classes/META-INF/dekorate` is triggered.
 
 The content of the component descriptor will be determined by the existing config provided by other annotations such as 
@@ -616,9 +616,12 @@ The order where these resources are used are:
 Here's the full list of supported [configuration options](config.md).
 
 ##### How to use annotation less mode
- Let's see in details how you can use annotation less mode:
+As described above, we only need to annotate a class with `@SpringBootApplication` and provide the configuration for `Dekorate` in the `application.properties`/`application.yml` file. Special attention should be payed to the path of these properties. The properties path need to reflect the annotation properties and not what would end up in the manifest. While there is some overlap between how the annotations are configured and the resulting manifest, the properties (or YAML file) still need to provide values for the annotation fields, hence why they need to match how the annotations are configured. This is why there is no spec path when dealing with deploymentMode because deploymentMode is set at the top-level of the annotation. To be sure you may need to check the [guide](config.md).
+
+
 ###### how to use annotation less configuration
-As described above, we only need to annotate a class with `@SpringBootApplication` and provide the configuration for `Dekorate` in the `application.properties`/`application.yml` file. Pay special attention to the path of these properties, you may need follow the [guide](config.md).
+The simplest case of this mode: `@SpringBootApplication` annotated class and `application.properties`/`application.yml`.
+
 ```
 package io.dekorate.examples.component;  
   
@@ -641,7 +644,7 @@ dekorate.component.envs[0].name=key_from_properties
 dekorate.component.envs[0].value=value_from_properties  
 dekorate.component.deploymentMode=build
 ``` 
-the result of this configuration:
+we should obtain the following halkyon CRD manifest::
 ```
 ---  
 apiVersion: "v1"  
@@ -668,10 +671,11 @@ items:
       contextPath: "examples/"  
       moduleDirName: "halkyon-example-annotationless-properties"
 ```
-Note that some items does not end up in the same hierarchical place where they were configured, in the case of `deploymentMode` an additional level `spec` has been introduced.
+Note that some items do not end up in the same hierarchical place where they were configured, in the case of `deploymentMode` an additional level `spec` has been introduced.
 You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) the code of this example.
+
 ###### how to override annotationbased-config
-Given a spring boot application class:
+Given a Spring Boot application class that is annotated with `@HalkyonComponent` as well:
 ```
 package io.dekorate.examples.component;  
   
@@ -734,7 +738,7 @@ When no annotations are used, the kind of resources to be generated is determine
 |---------------------|------------------------------------|
 | kubernetes.json/yml | io.dekorate:kubernetes-annotations |
 | openshift.json/yml  | io.dekorate:openshift-annotations  |
-| component.json/yml  | io.dekorate:halkyon-annotations  |
+| halkyon.json/yml    | io.dekorate:halkyon-annotations    |
 
 
 Note: that starter modules for `kubernetes` and `openshift` do transitively add `kubernetes-annotations` and `openshift-annotations` respectively.
