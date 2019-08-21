@@ -111,9 +111,9 @@ Below is a list of all the available options
 | dekorate.openshift.autoBuildEnabled               | boolean                                       |             | false                                    |
 | dekorate.openshift.autoDeployEnabled              | boolean                                       |             | false                                    |
 
-### Openshift types
+## Halkyon types
 
-## Component
+### HalkyonComponent
 
 | Property                          | Type                                          | Description | Default Value                                  |
 |-----------------------------------|-----------------------------------------------|-------------|------------------------------------------------|
@@ -124,27 +124,27 @@ Below is a list of all the available options
 | dekorate.component.buildType      | String                                        |             | s2i                                            |
 | dekorate.component.remote         | String                                        |             | origin                                         |                           
 
-#### Link
-| Property      | Type                                    | Description | Default Value |
-|---------------|-----------------------------------------|-------------|---------------|
-| name          | String                                  |             |               |
-| componentName | String                                  |             |               |
-| kind          | Kind                                    |             | Env           |
-| ref           | String                                  |             |               |
-| envs          | io.dekorate.kubernetes.annotation.Env[] |             |               |
+#### HalkyonLink
+| Property                    | Type                                    | Description | Default Value |
+|-----------------------------|-----------------------------------------|-------------|---------------|
+| dekorate.link.name          | String                                  |             |               |
+| dekorate.link.componentName | String                                  |             |               |
+| dekorate.link.type          | Type                                    |             | Env           |
+| dekorate.link.ref           | String                                  |             |               |
+| dekorate.link.envs          | io.dekorate.kubernetes.annotation.Env[] |             |               |
 
-#### Capability
-| Property   | Type        | Description | Default Value |
-|------------|-------------|-------------|---------------|
-| category   | String      |             |               |
-| kind       | String      |             |               |
-| name       | String      |             |               |
-| version    | String      |             |               |
-| parameters | Parameter[] |             |               |
-#
+#### HalkyonCapability
+| Property                       | Type        | Description | Default Value |
+|--------------------------------|-------------|-------------|---------------|
+| dekorate.capability.category   | String      |             |               |
+| dekorate.capability.kind       | String      |             |               |
+| dekorate.capability.name       | String      |             |               |
+| dekorate.capability.version    | String      |             |               |
+| dekorate.capability.parameters | Parameter[] |             |               |
+
 ## Global Types
 
-The section below describes all the avialables subtypes
+The section below describes all the available subtypes
 #### Annotation
 | Property | Type   | Description | Default Value |
 |----------|--------|-------------|---------------|
