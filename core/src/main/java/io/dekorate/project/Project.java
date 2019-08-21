@@ -15,19 +15,19 @@
  */
 package io.dekorate.project;
 
-import io.dekorate.deps.jackson.core.type.TypeReference;
-import io.dekorate.deps.jackson.databind.ObjectMapper;
-import io.dekorate.utils.Serialization;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Project {
+import io.dekorate.deps.jackson.core.type.TypeReference;
+import io.dekorate.deps.jackson.databind.ObjectMapper;
+import io.dekorate.utils.Serialization;
 
-  public static String DEFAULT_Dekorate_OUTPUT_DIR = "META-INF/dekorate";
+public class Project {
+  
+  private static String DEFAULT_DEKORATE_OUTPUT_DIR = "META-INF/dekorate";
 
   private Path root;
   private String dekorateInputDir;
@@ -39,7 +39,7 @@ public class Project {
   }
 
   public Project(Path root, BuildInfo buildInfo, ScmInfo scmInfo) {
-    this(root, null, DEFAULT_Dekorate_OUTPUT_DIR, buildInfo, scmInfo);
+    this(root, null, DEFAULT_DEKORATE_OUTPUT_DIR, buildInfo, scmInfo);
   }
 
   public Project(Path root, String dekorateInputDir, String dekorateOutputDir, BuildInfo buildInfo, ScmInfo scmInfo) {
@@ -51,10 +51,7 @@ public class Project {
   }
 
   public Project(Path root, String dekorateInputDir, String dekorateOutputDir, BuildInfo buildInfo) {
-    this.root = root;
-    this.dekorateInputDir = dekorateInputDir;
-    this.dekorateOutputDir = dekorateOutputDir;
-    this.buildInfo = buildInfo;
+    this(root, dekorateInputDir, dekorateOutputDir, buildInfo, null);
   }
 
   public Path getRoot() {
