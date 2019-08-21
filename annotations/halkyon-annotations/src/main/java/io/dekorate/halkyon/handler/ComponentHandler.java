@@ -39,7 +39,6 @@ import io.dekorate.halkyon.decorator.DeploymentModeDecorator;
 import io.dekorate.halkyon.decorator.ExposeServiceDecorator;
 import io.dekorate.halkyon.model.Component;
 import io.dekorate.halkyon.model.ComponentBuilder;
-import io.dekorate.halkyon.model.DeploymentMode;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
@@ -49,6 +48,7 @@ import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.project.ScmInfo;
 import io.dekorate.utils.Git;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
@@ -103,10 +103,8 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   private void addVisitors(ComponentConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
-    
-    if (DeploymentMode.build.equals(config.getDeploymentMode())) {
-      generateBuildConfig(config);
-    }
+  
+    generateBuildConfigIfNeeded(config);
     
     if (config.isExposeService()) {
       resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
@@ -132,19 +130,22 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     }
   }
   
-  private void generateBuildConfig(ComponentConfig config) {
-    if (config.getProject().getScmInfo() != null) {
-      String url = config.getProject().getScmInfo().getUrl();
-      String branch = config.getProject().getScmInfo().getBranch();
-      String buildType = config.getBuildType();
-      Path modulePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
-      
-      
-      if (!config.getRemote().equals(Git.ORIGIN)) {
-        url = Git.getSafeRemoteUrl(config.getProject().getScmInfo().getRoot(), config.getRemote()).orElse(url);
+  private void generateBuildConfigIfNeeded(ComponentConfig config) {
+    final ScmInfo scmInfo = config.getProject().getScmInfo();
+    if (scmInfo != null) {
+      String url = scmInfo.getUrl();
+      // only generate buildconfig if we have a remote
+      if (url != null) {
+        String branch = scmInfo.getBranch();
+        String buildType = config.getBuildType();
+        Path modulePath = scmInfo.getRoot().relativize(config.getProject().getRoot());
+        
+        final String remote = config.getRemote();
+        if (!remote.equals(Git.ORIGIN)) {
+          url = Git.getSafeRemoteUrl(scmInfo.getRoot(), remote).orElse(url);
+        }
+        resources.decorateCustom(ResourceGroup.NAME, new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
       }
-      resources.decorateCustom(ResourceGroup.NAME,
-        new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
     }
   }
   
