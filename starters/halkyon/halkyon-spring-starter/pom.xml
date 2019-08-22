@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.dekorate</groupId>
+    <artifactId>halkyon-starters</artifactId>
+    <version>0.8-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>halkyon-spring-starter</artifactId>
+  <name>Dekorate :: Starters :: Halkyon :: Spring</name>
+
+  <dependencies>
+    <!-- Annotations -->
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>option-annotations</artifactId>
+      <version>${project.version}</version>
+      <classifier>annotations</classifier>
+    </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>halkyon-annotations</artifactId>
+      <version>${project.version}</version>
+      <classifier>annotations</classifier>
+    </dependency>
+
+    <!-- Processors -->
+    <!-- Are handled separately from annotations, because there are build tools that exclude artifacts containing
+         processors from compile path. -->
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>option-annotations</artifactId>
+      <version>${project.version}</version>
+      <classifier>processors</classifier>
+    </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>halkyon-annotations</artifactId>
+      <version>${project.version}</version>
+      <classifier>processors</classifier>
+    </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-spring-boot</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+</project>
