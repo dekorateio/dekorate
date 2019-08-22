@@ -28,7 +28,6 @@ import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.halkyon.config.ComponentConfig;
 import io.dekorate.halkyon.configurator.ApplyProject;
 import io.dekorate.halkyon.handler.ComponentHandler;
-import io.dekorate.halkyon.handler.ComponentServiceCatalogHandler;
 
 public interface ComponentConfigGenerator extends Generator, WithProject {
   
@@ -54,6 +53,5 @@ public interface ComponentConfigGenerator extends Generator, WithProject {
     Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new ComponentHandler(session.resources(), session.configurators()));
-    session.handlers().add(new ComponentServiceCatalogHandler(session.resources()));
   }
 }
