@@ -133,7 +133,8 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/dekorate/component/annotation/**</include>
+                    <include>io/dekorate/halkyon/annotation/**</include>
+                    <include>io/dekorate/halkyon/model/**</include>
                   </includes>
                 </filter>
               </filters>
@@ -152,12 +153,14 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/dekorate/component/adapter/**</include>
-                    <include>io/dekorate/component/apt/**</include>
-                    <include>io/dekorate/component/config/*</include>
-                    <include>io/dekorate/component/decorator/**</include>
-                    <include>io/dekorate/component/handler/**</include>
-                    <include>io/dekorate/component/processor/**</include>
+                    <include>io/dekorate/halkyon/adapter/**</include>
+                    <include>io/dekorate/halkyon/apt/**</include>
+                    <include>io/dekorate/halkyon/config/**</include>
+                    <include>io/dekorate/halkyon/configurator/**</include>
+                    <include>io/dekorate/halkyon/decorator/**</include>
+                    <include>io/dekorate/halkyon/generator/**</include>
+                    <include>io/dekorate/halkyon/handler/**</include>
+                    <include>io/dekorate/halkyon/model/**</include>
                     <include>META-INF/services/*</include>
                   </includes>
                 </filter>
