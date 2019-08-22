@@ -30,7 +30,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
   "componentName",
-  "kind",
+  "type",
   "ref",
   "envs"
 })

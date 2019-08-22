@@ -64,7 +64,7 @@ public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConf
     if (Strings.isNullOrEmpty(resources.getName())) {
       resources.setName(config.getName());
     }
-    if (!Strings.isNullOrEmpty(config.getCategory()) && !Strings.isNullOrEmpty(config.getKind())) {
+    if (!Strings.isNullOrEmpty(config.getCategory()) && !Strings.isNullOrEmpty(config.getType())) {
       resources.addCustom(ResourceGroup.NAME, createCapability(config));
     }
   }
@@ -88,7 +88,7 @@ public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConf
       .endMetadata()
       .withNewSpec()
       .withCategory(config.getCategory())
-      .withKind(config.getKind())
+      .withType(config.getType())
       .withVersion(config.getVersion())
       .addAllToParameters(Arrays.stream(config.getParameters())
         .map(p -> new Parameter(p.getName(), p.getValue()))

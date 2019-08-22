@@ -31,7 +31,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
   "category",
-  "kind",
+  "type",
   "version",
   "parameters",
   "parametersJson",
@@ -47,7 +47,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
 public class CapabilitySpec {
   
   private String category;
-  private String kind;
+  private String type;
   private String version;
   private Parameter[] parameters;
   private String parametersJson;
@@ -55,9 +55,9 @@ public class CapabilitySpec {
   public CapabilitySpec() {
   }
   
-  public CapabilitySpec(String category, String kind, Parameter[] parameters, String parametersJson) {
+  public CapabilitySpec(String category, String type, String version, Parameter[] parameters, String parametersJson) {
     this.category = category;
-    this.kind = kind;
+    this.type = type;
     this.version = version;
     this.parameters = parameters;
     this.parametersJson = parametersJson;
@@ -71,12 +71,12 @@ public class CapabilitySpec {
     this.category = category;
   }
   
-  public String getKind() {
-    return this.kind;
+  public String getType() {
+    return this.type;
   }
   
-  public void setKind(String kind) {
-    this.kind = kind;
+  public void setType(String type) {
+    this.type = type;
   }
   
   public String getVersion() {
