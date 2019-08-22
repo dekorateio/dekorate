@@ -129,7 +129,7 @@ This module can be added to the project using:
 So where did the generated `Deployment` gets its name, docker image etc from?
 
 Everything can be customized via annotation parameters and system properties.
-On top of that `lightweight` integration with build tools is provided in order to reduce duplication.
+On top of that lightweight integration with build tools is provided in order to reduce duplication.
 
 ##### Lightweight build tool integration
 
