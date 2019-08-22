@@ -137,7 +137,7 @@ Below is a list of all the available options
 | Property                       | Type        | Description | Default Value |
 |--------------------------------|-------------|-------------|---------------|
 | dekorate.capability.category   | String      |             |               |
-| dekorate.capability.kind       | String      |             |               |
+| dekorate.capability.type       | String      |             |               |
 | dekorate.capability.name       | String      |             |               |
 | dekorate.capability.version    | String      |             |               |
 | dekorate.capability.parameters | Parameter[] |             |               |

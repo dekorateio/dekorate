@@ -35,7 +35,7 @@ import io.sundr.builder.annotations.Pojo;
 public @interface HalkyonCapability {
   String category();
   
-  String kind();
+  String type();
   
   String name();
   
