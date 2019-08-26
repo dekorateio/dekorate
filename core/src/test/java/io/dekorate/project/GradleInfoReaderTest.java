@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GradleInfoReaderTest {
   String GRADLE_INITIAL = "gradle/gradle-initial/build.gradle";
   String GRADLE_VERSIONED = "gradle/gradle-versioned/build.gradle";
+  String GRADLE_WITH_SETTINGS = "gradle/gradle-with-settings/build.gradle";
 
   @Test
   void shouldParsePlainBuildGradle() {
@@ -51,4 +52,13 @@ class GradleInfoReaderTest {
     assertEquals("jar", info.getPackaging());
   }
 
+  @Test
+  void shouldParseBuildGradleWithSettings() {
+    URL gradleInitial = GradleInfoReaderTest.class.getClassLoader().getResource(GRADLE_WITH_SETTINGS);
+    File file = Urls.toFile(gradleInitial);
+    Path root = file.toPath().getParent();
+    BuildInfo info = new GradleInfoReader().getInfo(root);
+    assertNotNull(info);
+    assertEquals("with-settings", info.getName());
+  }
 }
