@@ -119,6 +119,7 @@ public class GradleInfoReader implements BuildInfoReader {
       try {
         Files.lines(path)
           .map(l -> l.replaceAll("[ ]*", ""))
+          .filter(l -> l.contains(EQUALS))
           .forEach(l -> {
             String key = l.substring(0, l.lastIndexOf(EQUALS));
             if (key.startsWith(ROOT_PROJECT_PREFIX)) {
