@@ -141,6 +141,42 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>io.sundr</groupId>
+        <artifactId>sundr-maven-plugin</artifactId>
+        <version>${version.sundrio}</version>
+        <configuration>
+          <boms>
+            <bom>
+              <artifactId>dekorate-bom</artifactId>
+              <name>Dekorate :: Bom</name>
+              <properties>
+                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
+              </properties>
+            </bom>
+            <bom>
+              <artifactId>dekorate-spring-bom</artifactId>
+              <name>Dekorate :: Bom :: Spring</name>
+              <modules>
+                <excludes>
+                  <exclude>io.dekorate:*thorntail*</exclude>
+                  <exclude>io.dekorate:*micronaut*</exclude>
+                </excludes>
+              </modules>
+              <properties>
+                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
+              </properties>
+            </bom>
+          </boms>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-bom</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
