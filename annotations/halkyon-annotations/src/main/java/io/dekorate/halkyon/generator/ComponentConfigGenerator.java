@@ -23,6 +23,8 @@ import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.halkyon.adapter.ComponentConfigAdapter;
 import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.halkyon.config.ComponentConfig;
@@ -35,7 +37,7 @@ public interface ComponentConfigGenerator extends Generator, WithProject {
   
   @Override
   default void add(Map map) {
-    add(new ConfigurationSupplier<>(
+    add(new PropertyConfiguration<>(
       ComponentConfigAdapter
         .newBuilder(propertiesMap(map, HalkyonComponent.class))
         .accept(new ApplyProject(getProject()))));
@@ -45,8 +47,8 @@ public interface ComponentConfigGenerator extends Generator, WithProject {
   default void add(Element element) {
     HalkyonComponent component = element.getAnnotation(HalkyonComponent.class);
     add(component != null
-      ? new ConfigurationSupplier<>(ComponentConfigAdapter.newBuilder(component).accept(new ApplyProject(getProject())))
-      : new ConfigurationSupplier<>(ComponentConfig.newComponentConfigBuilder().accept(new ApplyProject(getProject()))));
+      ? new AnnotationConfiguration<>(ComponentConfigAdapter.newBuilder(component).accept(new ApplyProject(getProject())))
+      : new AnnotationConfiguration<>(ComponentConfig.newComponentConfigBuilder().accept(new ApplyProject(getProject()))));
   }
   
   default void add(ConfigurationSupplier<ComponentConfig> config) {

@@ -28,6 +28,8 @@ import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.client.DefaultKubernetesClient;
 import io.dekorate.deps.kubernetes.client.KubernetesClient;
@@ -50,7 +52,7 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
 
   @Override
   default void add(Map map) {
-        add(new ConfigurationSupplier<>(
+        add(new PropertyConfiguration<>(
             KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesApplication.class))
             .accept(new ApplyAutoBuild())
@@ -60,7 +62,7 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
 
   default void add(Element element) {
     KubernetesApplication application = element.getAnnotation(KubernetesApplication.class);
-     add(new ConfigurationSupplier<>(
+     add(new AnnotationConfiguration<>(
             KubernetesConfigAdapter
             .newBuilder(application)
             .accept(new ApplyAutoBuild())

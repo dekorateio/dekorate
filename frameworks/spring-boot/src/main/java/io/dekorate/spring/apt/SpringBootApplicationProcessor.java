@@ -17,6 +17,8 @@ package io.dekorate.spring.apt;
 
 import io.dekorate.DekorateException;
 import io.dekorate.Generator;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.doc.Description;
@@ -28,6 +30,7 @@ import javax.lang.model.SourceVersion;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
@@ -43,6 +46,8 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor implements SpringBootApplicationGenerator {
 
+  private final Logger LOGGER = LoggerFactory.getLogger();
+
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
@@ -51,6 +56,11 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
     return true;
     }
 
+    for (TypeElement typeElement : annotations) {
+      for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
+        LOGGER.info("Found @SpringBootApplication on: " + mainClass.toString());
+      }
+    }
     Generator.init(readApplicationConfig("application.properties",
                                          "application.yaml",
                                          "application.yml", 

@@ -19,6 +19,8 @@ import io.dekorate.WithSession;
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.servicecatalog.adapter.ServiceCatalogConfigAdapter;
 import io.dekorate.servicecatalog.annotation.ServiceCatalog;
 import io.dekorate.servicecatalog.config.ServiceCatalogConfig;
@@ -32,15 +34,15 @@ public interface ServiceCatalogGenerator extends Generator, WithSession {
 
   @Override
   default void add(Map map) {
-    on(new ConfigurationSupplier<>(ServiceCatalogConfigAdapter.newBuilder(propertiesMap(map, ServiceCatalog.class))));
+    on(new PropertyConfiguration<>(ServiceCatalogConfigAdapter.newBuilder(propertiesMap(map, ServiceCatalog.class))));
   }
 
   @Override
   default void add(Element element) {
     ServiceCatalog serviceCatalog = element.getAnnotation(ServiceCatalog.class);
     on(serviceCatalog != null
-      ? new ConfigurationSupplier<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
-      : new ConfigurationSupplier<>(new ServiceCatalogConfigBuilder()));
+      ? new AnnotationConfiguration<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
+      : new AnnotationConfiguration<>(new ServiceCatalogConfigBuilder()));
   }
 
   default void on(ConfigurationSupplier<ServiceCatalogConfig> config) {

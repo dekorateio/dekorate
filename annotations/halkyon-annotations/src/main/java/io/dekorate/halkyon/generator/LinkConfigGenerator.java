@@ -23,6 +23,8 @@ import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.halkyon.adapter.LinkConfigAdapter;
 import io.dekorate.halkyon.annotation.HalkyonLink;
 import io.dekorate.halkyon.config.LinkConfig;
@@ -33,15 +35,15 @@ public interface LinkConfigGenerator extends Generator, WithProject {
   
   @Override
   default void add(Map map) {
-    add(new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(propertiesMap(map, HalkyonLink.class))));
+    add(new PropertyConfiguration<>(LinkConfigAdapter.newBuilder(propertiesMap(map, HalkyonLink.class))));
   }
   
   @Override
   default void add(Element element) {
     HalkyonLink link = element.getAnnotation(HalkyonLink.class);
     add(link != null
-      ? new ConfigurationSupplier<>(LinkConfigAdapter.newBuilder(link))
-      : new ConfigurationSupplier<>(LinkConfig.newLinkConfigBuilder()));
+      ? new AnnotationConfiguration<>(LinkConfigAdapter.newBuilder(link))
+      : new AnnotationConfiguration<>(LinkConfig.newLinkConfigBuilder()));
   }
   
   default void add(ConfigurationSupplier<LinkConfig> config) {
