@@ -15,11 +15,6 @@
  */
 package io.dekorate;
 
-import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.kubernetes.config.ApplicationConfiguration;
-import io.dekorate.kubernetes.config.Configuration;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,6 +26,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.kubernetes.config.ApplicationConfiguration;
+import io.dekorate.kubernetes.config.Configuration;
 
 /**
  * The object that holds the state used by all processors.
@@ -75,7 +75,7 @@ public class Session {
   }
 
   protected Session() {
-    LOGGER.info("Intializing dekorate session.");
+    LOGGER.info("Initializing dekorate session.");
   }
 
   public void loadHandlers() {
