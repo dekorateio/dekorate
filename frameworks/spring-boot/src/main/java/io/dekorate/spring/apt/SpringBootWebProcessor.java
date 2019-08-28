@@ -15,20 +15,21 @@
  */
 package io.dekorate.spring.apt;
 
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.Session;
-import io.dekorate.doc.Description;
-import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
-import java.util.Set;
+
+import io.dekorate.Session;
+import io.dekorate.doc.Description;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
 
 @Description("Detects Spring Boot web endpoints and registers the http port.")
-@SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping", "org.springframework.data.rest.core.annotation.RepositoryRestResource"})
+@SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping", "org.springframework.data.rest.core.annotation.RepositoryRestResource", "javax.ws.rs.GET", "javax.ws.rs.POST", "javax.ws.rs.PUT", "javax.ws.rs.DELETE", "javax.ws.rs.OPTIONS", "javax.ws.rs.HEAD", "javax.ws.rs.PATCH"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SpringBootWebProcessor extends AbstractAnnotationProcessor implements SpringBootWebAnnotationGenerator {
 
