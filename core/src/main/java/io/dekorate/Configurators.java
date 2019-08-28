@@ -18,23 +18,31 @@ package io.dekorate;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.Configurator;
+import io.dekorate.utils.Beans;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Configurators {
 
-  private final Map<Type, ConfigurationSupplier<? extends Configuration>> suppliers = new ConcurrentHashMap<>();
+  private final Map<Type, List<ConfigurationSupplier<? extends Configuration>>> suppliers = new ConcurrentHashMap<>();
   private final Set<Configurator> configurators = new HashSet<>();
 
   public void add(ConfigurationSupplier supplier) {
-    this.suppliers.put(supplier.getType(), supplier);
+    Type type = supplier.getType();
+    if (!suppliers.containsKey(type)) {
+      suppliers.put(type, new ArrayList<>());
+    }
+    this.suppliers.get(supplier.getType()).add(supplier);
   }
   /**
    * Add a {@link Configurator}.
@@ -49,10 +57,9 @@ public class Configurators {
   }
 
   public Stream<? extends Configuration> stream() {
-    return suppliers
-      .values()
+    return suppliers.values()
       .stream()
-      .map(s -> s.configure(configurators).get());
+        .map(l -> combine(l.stream().map(s -> s.configure(configurators)).collect(Collectors.toList())));
   }
 
   public boolean isEmpty() {
@@ -65,6 +72,26 @@ public class Configurators {
 
   public <C extends Configuration> Optional<C> get(Class<C> type) {
     return stream().filter(i -> type.isAssignableFrom(i.getClass())).map(i -> (C)i).findFirst();
+  }
+
+  private static <C extends Configuration> C combine(ConfigurationSupplier<C> origin, ConfigurationSupplier<C> override) {
+    return Beans.combine(origin.get(), override.get());
+  }
+
+  private static <C extends Configuration> C combine(List<ConfigurationSupplier<C>> suppliers) {
+    if (suppliers.isEmpty()) {
+      return null;
+    }
+
+    if (suppliers.size() == 1) {
+      return suppliers.get(0).get();
+    }
+
+    List<ConfigurationSupplier<C>> copy = new ArrayList<>(suppliers);
+    Collections.sort(copy);
+    ConfigurationSupplier<C> origin = copy.get(0);
+    copy.remove(0);
+    return Beans.combine(origin.get(), combine(copy));
   }
 }
 

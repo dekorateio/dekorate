@@ -24,6 +24,9 @@ import io.dekorate.deps.kubernetes.api.model.ServicePortBuilder;
 import io.dekorate.deps.kubernetes.api.model.IntOrString;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import io.dekorate.utils.Labels;
 import io.dekorate.doc.Description;
@@ -48,7 +51,7 @@ public class AddServiceDecorator extends Decorator<KubernetesListBuilder> {
       .withNewSpec()
       .withType(config.getServiceType().name())
       .withSelector(Labels.createLabels(config))
-      .withPorts(Arrays.asList(config.getPorts()).stream().map(this::toServicePort).collect(Collectors.toList()))
+      .withPorts(Arrays.asList(config.getPorts()).stream().filter(distinct(p->p.getName())).map(this::toServicePort).collect(Collectors.toList()))
       .endSpec()
       .endServiceItem();
   }
@@ -59,5 +62,10 @@ public class AddServiceDecorator extends Decorator<KubernetesListBuilder> {
       .withPort(port.getContainerPort())
       .withTargetPort(new IntOrString(port.getHostPort() > 0 ? port.getHostPort() : port.getContainerPort()))
       .build();
+  }
+
+  public static <T> Predicate<T> distinct(Function<? super T, Object> keyExtractor) {
+    Map<Object, Boolean> map = new ConcurrentHashMap<>();
+    return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
   }
 }

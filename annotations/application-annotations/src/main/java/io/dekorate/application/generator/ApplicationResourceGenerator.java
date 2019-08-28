@@ -23,6 +23,7 @@ import io.dekorate.application.annotation.EnableApplicationResource;
 import io.dekorate.application.config.ApplicationConfigBuilder;
 import io.dekorate.application.handler.ApplicationHandler;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
 
 import javax.lang.model.element.Element;
 import java.util.Map;
@@ -37,7 +38,7 @@ public interface ApplicationResourceGenerator extends Generator, WithSession {
   default void add(Element element) {
     EnableApplicationResource info = element.getAnnotation(EnableApplicationResource.class);
     ApplicationConfigBuilder builder = ApplicationConfigAdapter.newBuilder(info);
-    add(new ConfigurationSupplier<>(builder));
+    add(new AnnotationConfiguration<>(builder));
   }
 
   default void add(ConfigurationSupplier<?> config) {

@@ -18,6 +18,8 @@ package io.dekorate.istio.generator;
 import io.dekorate.WithSession;
 import io.dekorate.Generator;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.istio.adapter.IstioConfigAdapter;
 import io.dekorate.istio.annotation.Istio;
 import io.dekorate.istio.config.IstioConfig;
@@ -30,15 +32,15 @@ public interface IstioConfigGenerator extends Generator, WithSession {
 
   @Override
   default void add(Map map) {
-    on(new ConfigurationSupplier<>(IstioConfigAdapter.newBuilder(propertiesMap(map, Istio.class))));
+    on(new PropertyConfiguration<>(IstioConfigAdapter.newBuilder(propertiesMap(map, Istio.class))));
   }
 
   @Override
   default void add(Element element) {
     Istio istio = element.getAnnotation(Istio.class);
     on(istio != null
-      ? new ConfigurationSupplier<>(IstioConfigAdapter.newBuilder(istio))
-      : new ConfigurationSupplier<>(IstioConfig.newIstioConfigBuilder()));
+      ? new AnnotatinConfiguration<>(IstioConfigAdapter.newBuilder(istio))
+      : new AnnotatinConfiguration<>(IstioConfig.newIstioConfigBuilder()));
   }
 
   default void on(ConfigurationSupplier<IstioConfig> config) {

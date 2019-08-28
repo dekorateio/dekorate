@@ -21,6 +21,8 @@ import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.openshift.config.OpenshiftConfig;
@@ -50,14 +52,14 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
     OpenshiftApplication openshiftApplication = element.getAnnotation(OpenshiftApplication.class);
     OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(getProject(), openshiftApplication).build();
 
-    on(new ConfigurationSupplier<>(OpenshiftConfigAdapter.newBuilder(element.getAnnotation(OpenshiftApplication.class))
+    on(new AnnotationConfiguration<>(OpenshiftConfigAdapter.newBuilder(element.getAnnotation(OpenshiftApplication.class))
         .accept(new ApplyProjectInfo(getProject()))
         .accept(new ApplySourceToImageHook(openshiftConfig))));
   }
 
   default void add(Map map) {
     OpenshiftConfig openshiftConfig = OpenshiftConfigAdapter.newBuilder((Map) map.get(OpenshiftApplication.class.getName())).build();
-    on(new ConfigurationSupplier<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftApplication.class))
+    on(new PropertyConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftApplication.class))
         .accept(new ApplyProjectInfo(getProject()))
         .accept(new ApplySourceToImageHook(openshiftConfig))));
   }

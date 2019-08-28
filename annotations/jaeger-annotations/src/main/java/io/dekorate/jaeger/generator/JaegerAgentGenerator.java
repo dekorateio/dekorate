@@ -19,6 +19,8 @@ import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.jaeger.adapter.JaegerAgentConfigAdapter;
 import io.dekorate.jaeger.annotation.EnableJaegerAgent;
 import io.dekorate.jaeger.config.AddDefaultPortsToAgentConfigurator;
@@ -33,15 +35,15 @@ public interface JaegerAgentGenerator extends Generator, WithSession {
 
   @Override
   default void add(Map map) {
-    on(new ConfigurationSupplier<>(JaegerAgentConfigAdapter.newBuilder(propertiesMap(map, EnableJaegerAgent.class))));
+    on(new PropertyConfiguration<>(JaegerAgentConfigAdapter.newBuilder(propertiesMap(map, EnableJaegerAgent.class))));
   }
 
   @Override
   default void add(Element element) {
     EnableJaegerAgent serviceMonitor = element.getAnnotation(EnableJaegerAgent.class);
     on(serviceMonitor != null
-      ? new ConfigurationSupplier<>(JaegerAgentConfigAdapter.newBuilder(serviceMonitor))
-      : new ConfigurationSupplier<>(new JaegerAgentConfigBuilder()));
+      ? new AnnotationConfiguration<>(JaegerAgentConfigAdapter.newBuilder(serviceMonitor))
+      : new AnnotationConfiguration<>(new JaegerAgentConfigBuilder()));
   }
 
   default void on(ConfigurationSupplier<JaegerAgentConfig> config) {

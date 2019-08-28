@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * This is a Facade around configuration builders, which hide the builder specifics and only allows the use of {@link Configurator} as visitors.
  * @param <C> The configuration class.
  */
-public class ConfigurationSupplier<C> implements Supplier<C> {
+public class ConfigurationSupplier<C> implements Supplier<C>, Comparable<ConfigurationSupplier<C>> {
 
   private final VisitableBuilder<C, ?> builder;
 
@@ -46,7 +46,7 @@ public class ConfigurationSupplier<C> implements Supplier<C> {
 
   private void checkBuilder() {
     if (this.builder == null) {
-      throw new IllegalStateException("ConfiugrationSupplier is empty.");
+      throw new IllegalStateException("ConfigurationSupplier is empty.");
     }
   }
 
@@ -75,4 +75,8 @@ public class ConfigurationSupplier<C> implements Supplier<C> {
     return parameterizedType.getActualTypeArguments()[0];
   }
 
+  @Override
+  public int compareTo(ConfigurationSupplier<C> o) {
+    return 0;
+  }
 }

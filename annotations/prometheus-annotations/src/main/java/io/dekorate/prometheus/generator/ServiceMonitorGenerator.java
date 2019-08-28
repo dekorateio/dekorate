@@ -19,6 +19,8 @@ import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.prometheus.adapter.ServiceMonitorConfigAdapter;
 import io.dekorate.prometheus.annotation.EnableServiceMonitor;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
@@ -32,15 +34,15 @@ public interface ServiceMonitorGenerator extends Generator, WithSession {
 
   @Override
   default void add(Map map) {
-    on(new ConfigurationSupplier<>(ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, EnableServiceMonitor.class))));
+    on(new PropertyConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, EnableServiceMonitor.class))));
   }
 
   @Override
   default void add(Element element) {
     EnableServiceMonitor serviceMonitor = element.getAnnotation(EnableServiceMonitor.class);
     on(serviceMonitor != null
-      ? new ConfigurationSupplier<>(ServiceMonitorConfigAdapter.newBuilder(serviceMonitor))
-      : new ConfigurationSupplier<>(new ServiceMonitorConfigBuilder()));
+      ? new AnnotationConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(serviceMonitor))
+      : new AnnotationConfiguration<>(new ServiceMonitorConfigBuilder()));
   }
 
   default void on(ConfigurationSupplier<ServiceMonitorConfig> config) {

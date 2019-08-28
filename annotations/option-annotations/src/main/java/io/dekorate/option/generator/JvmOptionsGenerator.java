@@ -18,6 +18,8 @@ package io.dekorate.option.generator;
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.option.adapter.JvmConfigAdapter;
 import io.dekorate.option.annotation.JvmOptions;
 import io.dekorate.option.config.JvmConfig;
@@ -32,14 +34,14 @@ public interface JvmOptionsGenerator extends Generator  {
   default void add(Element element) {
     JvmOptions jvmOptions = element.getAnnotation(JvmOptions.class);
     if (jvmOptions != null) {
-      ConfigurationSupplier<JvmConfig> config = new ConfigurationSupplier<>(JvmConfigAdapter.newBuilder(jvmOptions));
+      AnnotationConfiguration<JvmConfig> config = new AnnotationConfiguration<>(JvmConfigAdapter.newBuilder(jvmOptions));
       on(config);
     }
   }
 
   @Override
   default void add(Map map) {
-        on(new ConfigurationSupplier<>(
+        on(new PropertyConfiguration<>(
             JvmConfigAdapter
             .newBuilder(propertiesMap(map, JvmOptions.class))
         ));

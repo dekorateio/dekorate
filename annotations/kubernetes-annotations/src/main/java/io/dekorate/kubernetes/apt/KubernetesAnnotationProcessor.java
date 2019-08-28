@@ -17,6 +17,8 @@ package io.dekorate.kubernetes.apt;
 
 import io.dekorate.kubernetes.generator.KubernetesApplicationGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
 
 import javax.annotation.processing.SupportedSourceVersion;
@@ -33,6 +35,8 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor implements KubernetesApplicationGenerator {
 
+  private final Logger LOGGER = LoggerFactory.getLogger();
+
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
       getSession().close();
@@ -40,6 +44,7 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor i
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
+        LOGGER.info("Found @KubernetesApplication on: " + mainClass.toString());
         add(mainClass);
       }
     }
