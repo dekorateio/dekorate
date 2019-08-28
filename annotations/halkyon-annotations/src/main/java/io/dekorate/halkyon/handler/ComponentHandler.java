@@ -83,7 +83,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   
   @Override
   public void handle(ComponentConfig config) {
-    LOGGER.info("Processing capability config.");
+    LOGGER.info("Processing component config.");
     if (Strings.isNullOrEmpty(resources.getName()) && !Strings.isNullOrEmpty(config.getName())) {
       resources.setName(config.getName());
     }
