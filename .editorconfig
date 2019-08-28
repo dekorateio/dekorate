@@ -5,3 +5,4 @@ end_of_line = lf
 insert_final_newline = true
 indent_style = space
 indent_size = 2
+ij_any_keep_indents_on_empty_lines = false
