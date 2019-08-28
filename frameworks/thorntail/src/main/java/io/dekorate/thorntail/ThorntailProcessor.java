@@ -27,7 +27,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-@Description("Detects jaxrs and jaxws annotations and registers the http port.")
+@Description("Detects JAX-RS and JAX-WS annotations and registers the http port.")
 @SupportedAnnotationTypes({"javax.ws.rs.ApplicationPath","javax.jws.WebService"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ThorntailProcessor extends AbstractAnnotationProcessor implements ThorntailWebAnnotationGenerator {

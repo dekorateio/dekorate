@@ -9,7 +9,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-thorntail-starter</artifactId>
-  <name>Dekorate :: Starters :: Openshift :: Throrntail</name>
+  <name>Dekorate :: Starters :: Openshift :: Thorntail</name>
 
   <dependencies>
     <!-- Annotations -->

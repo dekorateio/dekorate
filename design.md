@@ -53,7 +53,7 @@ The base interface that all `model` objects implement is the HasMetadata. For ex
 An object / pojo that encapsulates the information provided by an annotation and the project (e.g. name, version etc).
 An example configuration is the `KubernetesConfig` class:
 
-    public class KubernetecConfig  {
+    public class KubernetesConfig  {
         private String group;
         private String name;
         private String version;
@@ -79,7 +79,7 @@ For example a configurator that can be used to add a label to `KubernetesConfig`
 | Configurator           | Target              | Description                                                                   |
 |------------------------|---------------------|-------------------------------------------------------------------------------|
 | ApplyOpenshiftConfig   | SourceToImageConfig | Applies group, name and version from OpenshiftConfig to SourceToImage config. |
-| AddPort                | KubernetesConfig    | adds a port to all containers.                                                |
+| AddPort                | KubernetesConfig    | Adds a port to all containers.                                                |
 | ApplyDockerBuildHook   | DockerBuildConfig   | Apply the docker build hook configuration.                                    |
 | ApplySourceToImageHook | SourceToImageConfig | Apply source to image build hook.                                             |
 
@@ -143,7 +143,7 @@ The `decorator` looks pretty similar to the `configurator` the only difference b
 The kubernetes `model` is very complex and deeply nested object structure and for a good reason: `It needs to fit to every signle deployment use case out there.`
 The deployment of a java application though is something more concrete and can be described by something simpler than the actual model.
 
-During the process of gathering and combining information from multiple annotation processors its more practical and less error prone to apply them to a more simplified representation of the `model`.
+During the process of gathering and combining information from multiple annotation processors its more practical and less error prone to apply them to a more simplified representation of the `model`,
 which is what the `config` essentially is. So, during the processing phase we use `configurators` to apply the information gathered in each step to the `config`.
 
 Once the `configuration` is finalized, the actual `model` is populated. Since different `processors` are creating different kinds of `config` we need to combine them all in order to build the `model`.
@@ -162,7 +162,7 @@ A processor may register more than one `config` `handlers` with no restriction o
 | LinkAnnotationProcessor           | LinkConfig           | [io.dekorate.halkyon.annotation.HalkyonLink]                                                                          | Generate link custom resources.                                   |
 | SpringBootApplicationProcessor    | none                 | [org.springframework.boot.autoconfigure.SpringBootApplication]                                               | Detects Spring Boot and set the runtime attribute to Spring Boot. |
 | KubernetesAnnotationProcessor     | KubernetesConfig     | [io.dekorate.kubernetes.annotation.KubernetesApplication]                                                        | Generates kubernetes manifests.                                   |
-| ThrorntailProcessor               | none                 | [javax.ws.rs.ApplicationPath, javax.jws.WebService]                                                          | Detects jaxrs and jaxws annotations and registers the http port.  |
+| ThorntailProcessor                | none                 | [javax.ws.rs.ApplicationPath, javax.jws.WebService]                                                          | Detects JAX-RS and JAX-WS annotations and registers the http port.  |
 | SpringBootMappingProcessor        | none                 | [org.springframework.web.bind.annotation.RequestMapping, org.springframework.web.bind.annotation.GetMapping] | Detects Spring Boot web endpoints and registers the http port.    |
 | ServiceCatalogAnnotationProcessor | ServiceCatalogConfig | [io.dekorate.servicecatalog.annotation.ServiceCatalog, io.dekorate.servicecatalog.annotation.ServiceCatalogInstance] |                                                                   |
 | OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.dekorate.kubernetes.annotation.KubernetesApplication, io.dekorate.openshift.annotation.OpenshiftApplication]     | Generates openshift manifests.                                    |
