@@ -726,7 +726,6 @@ dekorate:
 You can notice that the resulting manifest will match what is configured in `application.yml`, completly overriding the values
 provided via annotations:
 ```yaml
----  
 apiVersion: "v1"  
 kind: "List"  
 items:  
@@ -966,7 +965,7 @@ By adding the annotation to your test class the following things will happen:
 #### Configuration externalization for known frameworks
 It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.
 
-Dekorate is graudally adding support for configuration externalization for the supported frameworks:
+Dekorate is gradually adding support for configuration externalization for the supported frameworks:
 
 - spring boot
 
@@ -1003,9 +1002,9 @@ or using yaml:
 In the examples above, `dekorate` is the prefix that we use to `namespace` the dekorate configuration. `kubernetes` defines the annotation kind (its `@KubernetesApplication` in lower case and stripped of the `Application` suffix).
 `labels`, `key` and `value` are the property names and since the `Label` is nested under `@KubernetesApplication` so are the properties.
 
-The exact same example for openshift (where `@OpenshiftApplication` is used instead) would be:
+The exact same example for OpenShift (where `@OpenshiftApplication` is used instead) would be:
 
-   @OpenshiftApplication(labels=@Label(key="foo", value="bar"))
+    @OpenshiftApplication(labels=@Label(key="foo", value="bar"))
     public class Main {
     }
     
