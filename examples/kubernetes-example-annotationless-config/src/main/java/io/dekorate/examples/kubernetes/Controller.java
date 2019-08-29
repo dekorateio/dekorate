@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.annotationless;
+package io.dekorate.examples.kubernetes;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-public class DemoApplication {
+@RestController
+public class Controller {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+  @RequestMapping("/")
+  public String hello() {
+    return "Hello world";
+  }
 }

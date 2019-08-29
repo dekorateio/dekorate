@@ -14,36 +14,40 @@
  * limitations under the License.
  */
 
-package io.dekorate.annotationless;
+package io.dekorate.examples;
 
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 
 import java.util.Optional;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class AnnotationLessTest {
+class KubernetesExampleTest {
 
   @Test
-  public void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshal(AnnotationLessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+  public void shouldContainConfigMap() {
+    KubernetesList list = Serialization.unmarshal(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
-    Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
-    assertNotNull(d);
-    final Map<String, String> labels = d.getMetadata().getLabels();
+    Deployment deployment = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
+    assertNotNull(deployment);
+    assertEquals("Deployment", deployment.getKind());
+    final Map<String, String> labels = deployment.getMetadata().getLabels();
     assertEquals("bar", labels.get("foo"));
     assertEquals("annotationless", labels.get("group"));
+    assertEquals("bar-volume", deployment.getSpec().getTemplate().getSpec().getVolumes().get(0).getName());
+    assertEquals("foo-map", deployment.getSpec().getTemplate().getSpec().getVolumes().get(0).getConfigMap().getName());
   }
-
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
       .filter(i -> t.isInstance(i))
       .findFirst();
   }
+
 }
