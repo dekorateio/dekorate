@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <version.spring-boot>2.1.0.RELEASE</version.spring-boot>
+    <version.spring-boot>2.1.6.RELEASE</version.spring-boot>
     <version.micrometer>1.0.9</version.micrometer>
     <version.fabric8-maven-plugin>3.5.42</version.fabric8-maven-plugin>
   </properties>
