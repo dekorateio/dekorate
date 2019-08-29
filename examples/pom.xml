@@ -13,6 +13,7 @@
 
   <modules>
     <module>kubernetes-example</module>
+    <module>kubernetes-example-with-configMapVolume</module>
     <module>openshift-example</module>
     <module>service-catalog-example</module>
     <module>halkyon-example</module>
