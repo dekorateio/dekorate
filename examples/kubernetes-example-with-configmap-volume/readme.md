@@ -38,15 +38,15 @@ You can find the generated deployment under: `target/classes/dekorate/kubernetes
      kind: "Deployment"
      metadata:
        labels:
-         app: "kubernetes-example-with-configMapVolume"
+         app: "kubernetes-example-with-configmap-volume"
          version: "0.8-SNAPSHOT"
-       name: "kubernetes-example-with-configMapVolume"
+       name: "kubernetes-example-with-configmap-volume"
      spec:
        replicas: 1
         template:
          metadata:
            labels:
-             app: "kubernetes-example-with-configMapVolume"
+             app: "kubernetes-example-with-configmap-volume"
              version: "0.8-SNAPSHOT"
          spec:
            volumes:
