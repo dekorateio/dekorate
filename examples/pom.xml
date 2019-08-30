@@ -13,13 +13,13 @@
 
   <modules>
     <module>kubernetes-example</module>
-    <module>kubernetes-example-annotationless-config</module>
     <module>kubernetes-example-with-configMapVolume</module>
     <module>openshift-example</module>
     <module>service-catalog-example</module>
     <module>halkyon-example</module>
     <module>halkyon-example-annotationless-properties</module>
     <module>source-to-image-example</module>
+    <module>spring-boot-on-kubernetes-without-annotations</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-openshift-example</module>
     <module>spring-boot-with-groovy-on-openshift-example</module>
