@@ -25,7 +25,7 @@ public class Main {
   }
 }
 ```
-Can be expressed using properties:
+Can be expressed using dekorate kubernetes properties (if you use an application.properties file)
 ```
 dekorate.kubernetes.group=hello-world
 dekorate.kubernetes.labels[0].key=foo
