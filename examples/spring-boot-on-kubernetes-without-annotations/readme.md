@@ -93,3 +93,4 @@ You can find the generated deployment under: `target/classes/dekorate/kubernetes
              name: "bar-volume"
 
 ```
+Now, if you want learn more about how to make this `configMap` instances avalaible from your Spring Boot application you can check the [Spring Cloud Kubernetes docs](https://github.com/spring-cloud/spring-cloud-kubernetes#kubernetes-propertysource-implementations)
