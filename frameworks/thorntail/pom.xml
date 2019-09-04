@@ -14,7 +14,8 @@
   <name>Dekorate :: Frameworks :: Thorntail</name>
 
   <properties>
-    <version.jaxrs-api-2.0_spec>1.0.0.Final</version.jaxrs-api-2.0_spec>
+    <version.jboss-jaxrs-api_2.1_spec>1.0.2.Final</version.jboss-jaxrs-api_2.1_spec>
+    <version.jboss-servlet-api_4.0_spec>1.0.0.Final</version.jboss-servlet-api_4.0_spec>
   </properties>
 
   <dependencies>
@@ -23,11 +24,22 @@
       <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>openshift-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
-      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-      <version>${version.jaxrs-api-2.0_spec}</version>
+      <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+      <version>${version.jboss-jaxrs-api_2.1_spec}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet</groupId>
+      <artifactId>jboss-servlet-api_4.0_spec</artifactId>
+      <version>${version.jboss-servlet-api_4.0_spec}</version>
       <scope>provided</scope>
     </dependency>
 

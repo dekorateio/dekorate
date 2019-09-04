@@ -576,6 +576,7 @@ The frameworks supported so far:
 
 - Spring Boot
 - Quarkus
+- Thorntail
 
 #### Spring Boot
 
@@ -781,6 +782,37 @@ At the moment this extension will handle ports, health checks etc, with zero con
 It's important to note, that by design this extension will NOT use the [dekorate](https://github.com/dekorateio/dekorate) annotations for customizing the generated manifests.
 
 For more information plese check: the extension [docs](https://quarkus.io/guides/ap4k).
+
+#### Thorntail
+
+With Thorntail, it is recommended to add a dependency on one of the provided starters:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>kubernetes-thorntail-starter</artifactId>
+  <version>${project.version}</version>
+  <scope>provided</scope>
+</dependency>
+```
+
+Or, if you use [OpenShift](https://openshift.com):
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>openshfit-thorntail-starter</artifactId>
+  <version>${project.version}</version>
+  <scope>provided</scope>
+</dependency>
+```
+
+Then, you can use the annotations described above, such `@KubernetesApplication`, `@OpenShiftApplication`, etc.
+
+Note that the Thorntail annotation processor reads the `thorntail.http.port` configuration from the usual `project-defaults.yml`.
+It doesn't read any other `project-*.yml` profiles.
+
+Unlike Spring Boot, the annotation-less configuration is not supported for Thorntail (yet).
 
 ## Experimental features
 

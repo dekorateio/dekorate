@@ -24,24 +24,33 @@ import io.dekorate.kubernetes.configurator.AddPort;
 import io.dekorate.kubernetes.configurator.SetPortPath;
 
 import javax.lang.model.element.Element;
+import javax.servlet.annotation.WebServlet;
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface ThorntailWebAnnotationGenerator extends Generator, WithSession {
-
-  Map WEB_ANNOTATIONS=Collections.emptyMap();
-
+public interface ThorntailWebAnnotationGenerator extends Generator, WithSession, ThorntailConfigHolder {
   @Override
   default void add(Element element) {
-    ApplicationPath application = element.getAnnotation(ApplicationPath.class);
-    if (application != null) {
+    // JAX-RS
+    ApplicationPath applicationPath = element.getAnnotation(ApplicationPath.class);
+    if (applicationPath != null) {
       HashMap<String, Object> map = new HashMap<>();
       map.put(ApplicationPath.class.getName(), new HashMap<String, String>() {{
-        put("value", application.value());
-        }});
+        put("value", applicationPath.value());
+      }});
       add(map);
+    }
+
+    if (element.getAnnotation(Path.class) != null) {
+      add(Collections.emptyMap());
+    }
+
+    // servlet
+    if (element.getAnnotation(WebServlet.class) != null) {
+      add(Collections.emptyMap());
     }
   }
 
@@ -50,16 +59,41 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession 
     Session session = getSession();
     Port port = detectHttpPort();
     session.configurators().add(new AddPort(port));
+    //TODO add support for detecting microprofile-health and setting the liveness/readiness probes
 
-    Map<String, Object> applicationPath = propertiesMap(map, ApplicationPath.class);
-    if (applicationPath != null && applicationPath.containsKey("value")) {
-      String path = String.valueOf(applicationPath.get("value"));
-      session.configurators().add(new SetPortPath(port.getName(), path));
+    if (map.containsKey(ApplicationPath.class.getName())) {
+      Map<String, Object> applicationPath = propertiesMap(map, ApplicationPath.class);
+      if (applicationPath != null && applicationPath.containsKey("value")) {
+        String path = String.valueOf(applicationPath.get("value"));
+        session.configurators().add(new SetPortPath(port.getName(), path));
+      }
     }
   }
 
-  default Port detectHttpPort()  {
-    return new PortBuilder().withContainerPort(8080).withName("http").build();
+  default Port detectHttpPort() {
+    return new PortBuilder().withContainerPort(extractPortFromConfig()).withName("http").build();
+  }
+
+  @SuppressWarnings("unchecked")
+  default Integer extractPortFromConfig() {
+    Map<String, Object> config = getThorntailConfig();
+    if (config.containsKey("swarm") && !config.containsKey("thorntail")) {
+      config.put("thorntail", config.get("swarm"));
+    }
+    if (config.containsKey("thorntail") && config.get("thorntail") instanceof Map) {
+      Map<String, Object> thorntail = (Map<String, Object>) config.get("thorntail");
+      if (thorntail.containsKey("http") && thorntail.get("http") instanceof Map) {
+        Map<String, Object> http = (Map<String, Object>) thorntail.get("http");
+        if (http.containsKey("port")) {
+          Object port = http.get("port");
+          if (port instanceof Integer) {
+            return (Integer) port;
+          }
+          return Integer.valueOf(port.toString());
+        }
+      }
+    }
+    return 8080;
   }
 
 }
