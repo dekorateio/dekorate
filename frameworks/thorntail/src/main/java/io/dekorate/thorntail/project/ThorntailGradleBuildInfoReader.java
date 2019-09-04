@@ -1,0 +1,28 @@
+package io.dekorate.thorntail.project;
+
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.GradleInfoReader;
+
+import java.nio.file.Path;
+
+public class ThorntailGradleBuildInfoReader extends GradleInfoReader {
+  private static final String THORNTAIL_JAR = "-thorntail.jar";
+
+  @Override
+  public int order() {
+    // we only need to modify `order`, so that this class comes sooner than generic MavenInfoReader
+    //
+    // we don't have to modify `isApplicable`, because this class is only present when the Thorntail support
+    // is explicitly requested by the user
+    return super.order() - 10;
+  }
+
+  @Override
+  public BuildInfo getInfo(Path root) {
+    BuildInfo result = super.getInfo(root);
+    String fileName = result.getOutputFile().getFileName().toString();
+    String uberjar = fileName.replace("." + result.getPackaging(), THORNTAIL_JAR);
+    result.setOutputFile(result.getOutputFile().getParent().resolve(uberjar));
+    return result;
+  }
+}

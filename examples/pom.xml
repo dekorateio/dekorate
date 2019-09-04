@@ -29,6 +29,8 @@
     <module>spring-boot-with-prometheus-on-kubernetes-example</module>
     <module>spring-boot-with-jaeger-on-kubernetes-example</module>
     <module>pojo-to-custom-resource-example</module>
+    <module>thorntail-on-kubernetes-example</module>
+    <module>thorntail-on-openshift-example</module>
   </modules>
 
   <profiles>

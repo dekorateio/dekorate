@@ -16,25 +16,28 @@
 package io.dekorate.thorntail;
 
 import io.dekorate.Session;
-import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.doc.Description;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.thorntail.configurator.ThorntailPrometheusAgentConfigurator;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-@Description("Detects JAX-RS and JAX-WS annotations and registers the http port.")
-@SupportedAnnotationTypes({"javax.ws.rs.ApplicationPath","javax.jws.WebService"})
+@Description("Detects JAX-RS and servlet annotations and registers the http port.")
+@SupportedAnnotationTypes({"javax.ws.rs.ApplicationPath", "javax.ws.rs.Path", "javax.servlet.annotation.WebServlet"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ThorntailProcessor extends AbstractAnnotationProcessor implements ThorntailWebAnnotationGenerator {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = Session.getSession();
+    session.configurators().add(new ThorntailPrometheusAgentConfigurator());
+
     if (roundEnv.processingOver()) {
       session.close();
       return true;
