@@ -21,12 +21,12 @@ import io.dekorate.deps.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Maps {
   private static final String PROPERTY_PREFIX = "dekorate";
@@ -34,19 +34,15 @@ public class Maps {
   private static final String ARRAY_PATTERN = "[a-zA-Z0-9_]+\\[\\d+\\]";
 
   /**
-   * Read a properties input stream and crate a configuration map.
+   * Read a Map representing a properties file and create a config map.
+   * The method performs the following conversions:
+   * 1. Unrolls nested entries (keys separated with dots) into nested maps.
+   * 2. Unrolls arrays.
    * The configuration map follows all the required conventions in order to be usable by a Generator.
-   *
    * @return a {@link Map} with in the Generator format.
    */
-  public static Map<String, Object> fromProperties(InputStream is) {
+  public static Map<String, Object> fromProperties(Map<String, Object> properties) {
     Map<String, Object> result = new HashMap<>();
-    Properties properties = new Properties();
-    try {
-      properties.load(is);
-    } catch (IOException e) {
-      throw DekorateException.launderThrowable(e);
-    }
 
     for (Object key : properties.keySet()) {
       String k = String.valueOf(key);
@@ -68,6 +64,23 @@ public class Maps {
     // Second pass unroll arrays
     unrollArrays(result);
     return result;
+ 
+  }
+ 
+  /**
+   * Read a properties input stream and crate a configuration map.
+   * The configuration map follows all the required conventions in order to be usable by a Generator.
+   *
+   * @return a {@link Map} with in the Generator format.
+   */
+  public static Map<String, Object> fromProperties(InputStream is) {
+    Properties properties = new Properties();
+    try {
+      properties.load(is);
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable(e);
+    }
+    return fromProperties(properties.entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), e -> e.getValue())));
   }
 
   /**
