@@ -57,8 +57,7 @@
     <version.commons-compress>1.18</version.commons-compress>
     <version.jansi>1.18</version.jansi>
     <version.jackson>2.9.7</version.jackson>
-    <version.kubernetes-client>4.3-SNAPSHOT</version.kubernetes-client>
-    <version.servicecatalog-client>1.1.1</version.servicecatalog-client>
+    <version.kubernetes-client>4.5.1</version.kubernetes-client>
     <version.application-crd-client>1.1.1</version.application-crd-client>
     <version.slf4j>1.7.13</version.slf4j>
   </properties>
@@ -97,17 +96,17 @@
     </dependency>
     
     <dependency>
-      <groupId>me.snowdrop</groupId>
+      <groupId>io.fabric8</groupId>
       <artifactId>servicecatalog-model</artifactId>
-      <version>${version.servicecatalog-client}</version>
+      <version>${version.kubernetes-client}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
 
     <dependency>
-      <groupId>me.snowdrop</groupId>
+      <groupId>io.fabric8</groupId>
       <artifactId>servicecatalog-client</artifactId>
-      <version>${version.servicecatalog-client}</version>
+      <version>${version.kubernetes-client}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -190,8 +189,8 @@
                   <include>io.fabric8:openshift-client</include>
                   <include>io.fabric8:knative-model</include>
                   <include>io.fabric8:knative-client</include>
-                  <include>me.snowdrop:servicecatalog-model</include>
-                  <include>me.snowdrop:servicecatalog-client</include>
+                  <include>io.fabric8:servicecatalog-model</include>
+                  <include>io.fabric8:servicecatalog-client</include>
                   <include>me.snowdrop:application-crd-model</include>
                   <include>me.snowdrop:application-crd-client</include>
 
@@ -229,7 +228,7 @@
                   <shadedPattern>io.dekorate.deps.knative</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>me.snowdrop.servicecatalog</pattern>
+                  <pattern>io.fabric8.servicecatalog</pattern>
                   <shadedPattern>io.dekorate.deps.servicecatalog</shadedPattern>
                 </relocation>
                  <relocation>
