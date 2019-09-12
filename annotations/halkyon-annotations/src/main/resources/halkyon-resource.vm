@@ -8,12 +8,9 @@ import io.dekorate.deps.jackson.annotation.JsonInclude;
 import io.dekorate.deps.jackson.annotation.JsonProperty;
 import io.dekorate.deps.jackson.annotation.JsonPropertyOrder;
 import io.dekorate.deps.jackson.databind.annotation.JsonDeserialize;
-import io.dekorate.deps.javax.validation.Valid;
-import io.dekorate.deps.javax.validation.constraints.NotNull;
 import io.dekorate.deps.kubernetes.api.model.Doneable;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.kubernetes.api.model.validators.CheckObjectMeta;
 
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
@@ -59,13 +56,11 @@ public class $resource implements HasMetadata {
 /**
 * (Required)
 */
-@NotNull
 @JsonProperty("apiVersion")
 private String apiVersion = "$version";
 /**
 * (Required)
 */
-@NotNull
 @JsonProperty("kind")
 private String kind = "$kind";
 
@@ -73,18 +68,14 @@ private String kind = "$kind";
 *
 */
 @JsonProperty("metadata")
-@Valid
-@CheckObjectMeta(regexp = "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$", max = 253)
 private ObjectMeta metadata;
 /**
 *
 */
 @JsonProperty("spec")
-@Valid
 private $spec spec;
 
 @JsonProperty("status")
-@Valid
 private $status status;
 
 /**

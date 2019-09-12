@@ -19,13 +19,11 @@ import io.dekorate.deps.jackson.annotation.JsonInclude;
 import io.dekorate.deps.jackson.annotation.JsonProperty;
 import io.dekorate.deps.jackson.annotation.JsonPropertyOrder;
 import io.dekorate.deps.jackson.databind.annotation.JsonDeserialize;
-import io.dekorate.deps.javax.validation.Valid;
 import io.dekorate.deps.javax.validation.constraints.NotNull;
 import io.dekorate.deps.kubernetes.api.model.Doneable;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.LabelSelector;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.kubernetes.api.model.validators.CheckObjectMeta;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Inline;
@@ -65,15 +63,12 @@ public class ServiceMonitor implements HasMetadata {
    *
    */
   @JsonProperty("metadata")
-  @Valid
-  @CheckObjectMeta(regexp = "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$", max = 253)
   private ObjectMeta metadata;
   /**
    *
    *
    */
   @JsonProperty("spec")
-  @Valid
   private ServiceMonitorSpec spec;
 
   private Map<String, Object> additionalProperties = new HashMap<String, Object>();
