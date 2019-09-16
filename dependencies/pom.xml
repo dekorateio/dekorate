@@ -129,7 +129,7 @@
 
      <dependency>
        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-simple</artifactId>
+        <artifactId>slf4j-api</artifactId>
        <version>${version.slf4j}</version>
      </dependency>
 
@@ -209,8 +209,6 @@
                   <include>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</include>
                   <include>com.fasterxml.jackson.dataformat:jackson-dataformat-properties</include>
                   <include>org.yaml:snakeyaml</include>
-                  <include>org.slf4j:slf4j-api</include>
-                  <include>org.slf4j:slf4j-simple</include>
                   <include>org.fusesource.jansi:jansi</include>
                 </includes>
               </artifactSet>
@@ -262,10 +260,6 @@
                 <relocation>
                   <pattern>javax.validation</pattern>
                   <shadedPattern>io.dekorate.deps.javax.validation</shadedPattern>
-                </relocation>
-                <relocation>
-                    <pattern>org.slf4j</pattern>
-                    <shadedPattern>io.dekorate.deps.org.slf4j</shadedPattern>
                 </relocation>
                 <relocation>
                     <pattern>org.fusesource.jansi</pattern>
