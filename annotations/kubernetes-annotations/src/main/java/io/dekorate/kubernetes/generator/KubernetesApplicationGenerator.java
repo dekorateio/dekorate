@@ -22,27 +22,33 @@ import java.util.Optional;
 
 import javax.lang.model.element.Element;
 
+import io.dekorate.BuildService;
+import io.dekorate.BuildServiceFactories;
+import io.dekorate.BuildServiceFactory;
+import io.dekorate.DekorateException;
 import io.dekorate.Generator;
 import io.dekorate.Resources;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
-import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.client.DefaultKubernetesClient;
 import io.dekorate.deps.kubernetes.client.KubernetesClient;
+import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.hook.ImagePushHook;
 import io.dekorate.hook.OrderedHook;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
 import io.dekorate.kubernetes.configurator.ApplyDockerBuildHook;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
-import io.dekorate.kubernetes.hook.DockerBuildHook;
-import io.dekorate.kubernetes.hook.DockerPushHook;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
 import io.dekorate.project.ApplyProjectInfo;
 
@@ -86,28 +92,48 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
 
     KubernetesConfig kubernetesConfig = config.get();
     Resources resources = session.resources();
+    KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
+
+    ImageConfiguration imageConfiguration = new ImageConfigurationBuilder()
+        .withName(kubernetesConfig.getName())
+        .withGroup(kubernetesConfig.getGroup())
+        .withVersion(kubernetesConfig.getVersion())
+        .withRegistry(kubernetesConfig.getRegistry())
+        .build();
+
+    BuildService buildService = null;
+
+    if (kubernetesConfig.isAutoPushEnabled() || kubernetesConfig.isAutoBuildEnabled()) {
+      try {
+        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
+            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+        buildService = buildServiceFactory.create(getProject(), imageConfiguration, generated.getItems());
+      } catch (Exception e) {
+        throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
+      }
+    }
+
     if (kubernetesConfig.isAutoPushEnabled()) {
       // When deploy is enabled, we scale the Deployment down before push
       // then scale it back up once the image has been successfully pushed
       // This ensure that the pod runs the proper image
       List<ProjectHook> hooks = new ArrayList<>();
       if (kubernetesConfig.isAutoDeployEnabled()) {
-        KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
         try (KubernetesClient client = new DefaultKubernetesClient()) {
           client.resourceList(generated).createOrReplace();
         }
         hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 0));
       }
-      hooks.add(new DockerBuildHook(getProject(), config.get()));
-      hooks.add(new DockerPushHook(getProject(), config.get()));
+
+      hooks.add(new ImageBuildHook(getProject(), buildService));
+      hooks.add(new ImagePushHook(getProject(), buildService));
       if (kubernetesConfig.isAutoDeployEnabled()) {
         hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 1));
       }
       OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
       hook.register();
     } else if (kubernetesConfig.isAutoBuildEnabled()) {
-      DockerBuildHook hook = new DockerBuildHook(getProject(), config.get());
-      hook.register();
+      new ImageBuildHook(getProject(), buildService).register();;
     }
   }
 }

@@ -26,6 +26,10 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import io.dekorate.BuildService;
+import io.dekorate.BuildServiceFactories;
+import io.dekorate.BuildServiceFactory;
+import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
@@ -38,10 +42,9 @@ import io.dekorate.deps.kubernetes.client.KubernetesClient;
 import io.dekorate.deps.kubernetes.client.VersionInfo;
 import io.dekorate.deps.kubernetes.client.internal.readiness.Readiness;
 import io.dekorate.deps.openshift.api.model.DeploymentConfig;
-import io.dekorate.hook.OrderedHook;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.kubernetes.hook.DockerBuildHook;
-import io.dekorate.kubernetes.hook.DockerPushHook;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
@@ -77,21 +80,30 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
     if (hasKubernetesConfig()) {
       KubernetesConfig kubernetesConfig = getKubernetesConfig();
 
+      ImageConfiguration imageConfiguration = new ImageConfigurationBuilder().withName(kubernetesConfig.getName())
+          .withGroup(kubernetesConfig.getGroup()).withVersion(kubernetesConfig.getVersion())
+          .withRegistry(kubernetesConfig.getRegistry()).build();
+
+      BuildService buildService = null;
+      try {
+        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration).get();
+        buildService = buildServiceFactory.create(getProject(), imageConfiguration, list.getItems());
+      } catch (Exception e) {
+        throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
+      }
+
       //
       // We use the isAutoPushEnabled flag of the @KubernetesApplication annotation and not @KubernetesIntegrationTest.
       // The reason is that the @KubernetesApplication.isAutoPushEnabled() affects the generated manifests (adds the registry).
       // and thus the tests MUST follow.
       if (kubernetesConfig.isAutoPushEnabled()) {
-        DockerBuildHook buildHook = new DockerBuildHook(getProject(), kubernetesConfig);
-        DockerPushHook pushHook = new DockerPushHook(getProject(), kubernetesConfig);
-        OrderedHook hook = OrderedHook.create(buildHook, pushHook);
-        hook.run();
+        buildService.build();
+        buildService.push();
+
       } else if (kubernetesConfig.isAutoBuildEnabled()) {
-        DockerBuildHook build = new DockerBuildHook(getProject(), kubernetesConfig);
-        build.run();
+        buildService.build();
       } else if (config.isBuildEnabled()) {
-        DockerBuildHook build = new DockerBuildHook(getProject(), kubernetesConfig);
-        build.run();
+        buildService.build();
       }
     }
     

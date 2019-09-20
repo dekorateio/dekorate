@@ -15,25 +15,30 @@
  */
 package io.dekorate.knative.generator;
 
-import io.dekorate.WithProject;
-import io.dekorate.WithSession;
-import io.dekorate.Generator;
-import io.dekorate.Session;
-import io.dekorate.SessionListener;
-import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.knative.adapter.KnativeConfigAdapter;
-import io.dekorate.knative.annotation.KnativeApplication;
-import io.dekorate.knative.config.KnativeConfig;
-import io.dekorate.knative.config.KnativeConfigBuilder;
-import io.dekorate.knative.config.KnativeConfigCustomAdapter;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 
+import io.dekorate.BuildService;
+import io.dekorate.BuildServiceFactories;
+import io.dekorate.BuildServiceFactory;
+import io.dekorate.DekorateException;
+import io.dekorate.Generator;
+import io.dekorate.Session;
+import io.dekorate.SessionListener;
+import io.dekorate.WithProject;
+import io.dekorate.WithSession;
+import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.knative.adapter.KnativeConfigAdapter;
+import io.dekorate.knative.annotation.KnativeApplication;
+import io.dekorate.knative.config.KnativeConfig;
+import io.dekorate.knative.config.KnativeConfigCustomAdapter;
 import io.dekorate.knative.handler.KnativeHandler;
-import io.dekorate.knative.hook.KnBuildHook;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.project.ApplyProjectInfo;
-
-import java.util.Map;
 
 public interface KnativeApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
 
@@ -65,12 +70,30 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {
       Session session = getSession();
-      Thread.currentThread().setContextClassLoader(KnBuildHook.class.getClassLoader());
+      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       KnativeConfig config = session.configurators().get(KnativeConfig.class).get();
       if (config != null) {
         String name = session.configurators().get(KnativeConfig.class).map(c -> c.getName()).orElse(getProject().getBuildInfo().getName());
         if (config.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {
-          KnBuildHook hook = new KnBuildHook(name, config, getProject(), session.getGeneratedResources().get("knative"));
+          ImageConfiguration imageConfiguration = new ImageConfigurationBuilder()
+            .withName(config.getName())
+            .withGroup(config.getGroup())
+            .withVersion(config.getVersion())
+            .withRegistry(config.getRegistry())
+            .build();
+
+          KubernetesList generated = session.getGeneratedResources().get("knative");
+
+          BuildService buildService;
+          try {
+            BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
+              .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+            buildService = buildServiceFactory.create(getProject(), imageConfiguration, generated.getItems());
+          } catch (Exception e) {
+            throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
+          }
+
+          ImageBuildHook hook = new ImageBuildHook(getProject(), buildService);
           hook.register();
         }
       }
