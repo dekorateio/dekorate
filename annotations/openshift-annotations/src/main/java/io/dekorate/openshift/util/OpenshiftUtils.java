@@ -26,6 +26,7 @@ import io.dekorate.deps.openshift.client.OpenShiftClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 public class OpenshiftUtils {
@@ -39,13 +40,13 @@ public class OpenshiftUtils {
    * @param timeUnit    The time unit of the time to wait.
    * @return            True if the items became available false otherwise.
    */
-  public static boolean waitForImageStreamTags(List<HasMetadata> items, long amount, TimeUnit timeUnit) {
+  public static boolean waitForImageStreamTags(Collection<HasMetadata> items, long amount, TimeUnit timeUnit) {
     if (items == null || items.isEmpty()) {
       return true;
     }
     final List<String> tags = new ArrayList<>();
     new KubernetesListBuilder()
-      .withItems(items)
+      .withItems(new ArrayList<>(items))
       .accept(new Decorator<SourceBuildStrategyFluent>() {
           @Override
           public void visit(SourceBuildStrategyFluent strategy) {

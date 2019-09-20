@@ -15,28 +15,36 @@
  */
 package io.dekorate.openshift.generator;
 
-import io.dekorate.WithProject;
-import io.dekorate.WithSession;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.lang.model.element.Element;
+
+import io.dekorate.BuildService;
+import io.dekorate.BuildServiceFactories;
+import io.dekorate.BuildServiceFactory;
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
-import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.WithProject;
+import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
 import io.dekorate.openshift.config.OpenshiftConfigCustomAdapter;
 import io.dekorate.openshift.configurator.ApplySourceToImageHook;
-
-import javax.lang.model.element.Element;
-
 import io.dekorate.openshift.handler.OpenshiftHandler;
-import io.dekorate.openshift.hook.OcBuildHook;
 import io.dekorate.project.ApplyProjectInfo;
-
-import java.util.Map;
 
 public interface OpenshiftApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
 
@@ -76,12 +84,22 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
     //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {
-      Thread.currentThread().setContextClassLoader(OcBuildHook.class.getClassLoader());
+      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       OpenshiftConfig config = session.configurators().get(OpenshiftConfig.class).orElse(DEFAULT_SOURCE_TO_IMAGE_CONFIG);
       String name = session.configurators().get(OpenshiftConfig.class).map(c -> c.getName()).orElse(getProject().getBuildInfo().getName());
       if (config.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {
-        OcBuildHook hook = new OcBuildHook(name, config, getProject(), session.getGeneratedResources().get("openshift"));
-        hook.register();
+
+        ImageConfiguration imageConfiguration = new ImageConfigurationBuilder().withName(config.getName())
+            .withGroup(config.getGroup()).withVersion(config.getVersion())
+            .build();
+
+        KubernetesList list = session.getGeneratedResources().get("openshift");
+        List<HasMetadata> generated = list != null ? list.getItems() : Collections.emptyList();
+
+        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
+          .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+        BuildService buildService = buildServiceFactory.create(getProject(), imageConfiguration, generated);
+        new ImageBuildHook(getProject(), buildService).register();
       }
     } finally {
       Thread.currentThread().setContextClassLoader(tccl);
