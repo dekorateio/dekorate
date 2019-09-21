@@ -23,6 +23,7 @@ import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Exec;
 import io.dekorate.utils.Images;
+import io.dekorate.utils.Strings;
 
 public class DockerBuildService implements BuildService {
     
@@ -40,7 +41,7 @@ public class DockerBuildService implements BuildService {
     this.config = config;
 
     this.exec = Exec.inProject(project);
-    this.dockerFile = project.getRoot().resolve(config.getDockerFile()).toFile();
+    this.dockerFile = project.getRoot().resolve(Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile").toFile();
     this.image = Images.getImage(config.getRegistry(), config.getGroup(), config.getName(), config.getVersion());
 	}
 

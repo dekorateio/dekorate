@@ -18,7 +18,6 @@
 package io.dekorate;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -29,17 +28,18 @@ public class DockerBuildServiceFactory implements BuildServiceFactory {
 
 	@Override
 	public boolean isApplicable(Project project, ImageConfiguration config) {
-    return project.getRoot().resolve(Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile").toFile().exists();
+    boolean result = project.getRoot().resolve(Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile").toFile().exists();
+    return result;
 	}
 
 	@Override
 	public BuildService create(Project project, ImageConfiguration config) {
-		return new DockerBuildService(project, config);
+    return new DockerBuildService(project, config);
 	}
 
 	@Override
 	public BuildService create(Project project, ImageConfiguration config, Collection<HasMetadata> resources) {
-    return create(project, config, Collections.emptyList());
+    return new DockerBuildService(project, config);
 	}
 
 	@Override
