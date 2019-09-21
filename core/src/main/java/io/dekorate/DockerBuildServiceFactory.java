@@ -29,7 +29,7 @@ public class DockerBuildServiceFactory implements BuildServiceFactory {
 
 	@Override
 	public boolean isApplicable(Project project, ImageConfiguration config) {
-    return Strings.isNotNullOrEmpty(config.getDockerFile()) && project.getRoot().resolve(config.getDockerFile()).toFile().exists();
+    return project.getRoot().resolve(Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile").toFile().exists();
 	}
 
 	@Override
