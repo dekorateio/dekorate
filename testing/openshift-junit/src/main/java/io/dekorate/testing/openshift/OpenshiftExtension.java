@@ -80,9 +80,9 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
         return ConditionEvaluationResult.disabled(reason);
       }
       VersionInfo version = getKubernetesClient(context).getVersion();
-      String reason = "Found version:" + version;
-      LOGGER.info(reason);
-      return ConditionEvaluationResult.enabled(reason);
+      String message = "Found version:" + version.getMajor() + "." + version.getMinor();
+      LOGGER.info(message);
+      return ConditionEvaluationResult.enabled(message);
     } catch (Throwable t) {
       String reason = "Could not communicate with Openshift API server.";
       LOGGER.error(reason);
