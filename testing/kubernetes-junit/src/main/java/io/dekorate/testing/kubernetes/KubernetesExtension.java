@@ -62,7 +62,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     try {
       VersionInfo version = getKubernetesClient(context).getVersion();
-      String message = "Found version:" + version;
+      String message = "Found version:" + version.getMajor() + "." + version.getMinor();
       LOGGER.info(message);
       return ConditionEvaluationResult.enabled(message);
     } catch (Throwable t) {
