@@ -87,7 +87,8 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
 
       BuildService buildService = null;
       try {
-        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration).get();
+        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
+          .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
         buildService = buildServiceFactory.create(getProject(), imageConfiguration, list.getItems());
       } catch (Exception e) {
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
