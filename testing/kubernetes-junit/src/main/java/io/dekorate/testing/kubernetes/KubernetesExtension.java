@@ -45,6 +45,7 @@ import io.dekorate.deps.openshift.api.model.DeploymentConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.testing.Diagnostics;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
@@ -126,15 +127,13 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " +  (ended-started)+ " ms.");
       //Display the item status
+
+      final Diagnostics diagnostics = new Diagnostics(client);
       waitables.stream().map(r->client.resource(r).fromServer().get())
         .forEach(i -> {
           if (!Readiness.isReady(i)) {
             LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
-            getEvents(context, i).getItems().stream().forEach(e -> {
-                if (Strings.isNotNullOrEmpty(e.getMessage())) {
-                  LOGGER.warning(e.getMessage());
-                }
-            });
+            diagnostics.display(i);
           }
         });
     }
