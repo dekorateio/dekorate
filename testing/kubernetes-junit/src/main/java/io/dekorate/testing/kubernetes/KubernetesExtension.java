@@ -51,7 +51,6 @@ import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
 import io.dekorate.testing.WithProject;
 import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
-import io.dekorate.utils.Strings;
 
 public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
                                              WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject, WithKubernetesConfig {
@@ -128,13 +127,10 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " +  (ended-started)+ " ms.");
       //Display the item status
-
-      final Diagnostics diagnostics = new Diagnostics(client);
       waitables.stream().map(r->client.resource(r).fromServer().get())
         .forEach(i -> {
           if (!Readiness.isReady(i)) {
             LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
-            diagnostics.display(i);
           }
         });
     }
@@ -152,8 +148,14 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
 
   @Override
   public void afterAll(ExtensionContext context) {
+    KubernetesClient client = getKubernetesClient(context);
+    final Diagnostics diagnostics = new Diagnostics(client);
+    boolean failed = context.getExecutionException().isPresent();
     getKubernetesResources(context).getItems().stream().forEach(r -> {
-      LOGGER.info("Deleting: " + r.getKind() + " name:" +r.getMetadata().getName()+ " status:"+ getKubernetesClient(context).resource(r).cascading(true).delete());
+        if (failed) {
+          diagnostics.display(r);
+        }
+        LOGGER.info("Deleting: " + r.getKind() + " name:" +r.getMetadata().getName()+ ". Deleted:"+ getKubernetesClient(context).resource(r).cascading(true).delete());
     });
   }
 
@@ -165,5 +167,4 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
   public String getName() {
     return getKubernetesConfig().getName();
   } 
-
 }
