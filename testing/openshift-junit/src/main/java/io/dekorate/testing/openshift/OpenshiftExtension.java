@@ -142,12 +142,10 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " +  (ended-started)+ " ms.");
       //Display the item status
-      final Diagnostics diagnostics = new Diagnostics(client);
       waitables.stream().map(r->client.resource(r).fromServer().get())
         .forEach(i -> {
           if (!Readiness.isReady(i)) {
             LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
-            diagnostics.display(i);
           }
         });
     }
@@ -166,9 +164,14 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
   @Override
   public void afterAll(ExtensionContext context) {
     OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
+    boolean failed = context.getExecutionException().isPresent();
+    final Diagnostics diagnostics = new Diagnostics(client);
     getOpenshiftResources(context).getItems().stream().forEach(r -> {
       try {
-        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + " status:" + client.resource(r).delete());
+        if (failed) {
+          diagnostics.display(r);
+        }
+        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:" + client.resource(r).delete());
       } catch (Exception e) {}
     });
 
