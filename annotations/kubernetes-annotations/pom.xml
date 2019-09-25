@@ -33,7 +33,11 @@ limitations under the License.
       <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>docker-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
