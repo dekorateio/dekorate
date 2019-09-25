@@ -38,6 +38,8 @@ limitations under the License.
     <module>crd-annotations</module>
     <module>application-annotations</module>
     <module>jaeger-annotations</module>
+    <module>docker-annotations</module>
+    <module>s2i-annotations</module>
   </modules>
 
 </project>
