@@ -18,6 +18,7 @@ package io.dekorate.openshift.generator;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.lang.model.element.Element;
 
@@ -45,6 +46,7 @@ import io.dekorate.openshift.config.OpenshiftConfigCustomAdapter;
 import io.dekorate.openshift.configurator.ApplySourceToImageHook;
 import io.dekorate.openshift.handler.OpenshiftHandler;
 import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.project.Project;
 
 public interface OpenshiftApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
 
@@ -81,24 +83,22 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
 
   default void onClosed() {
     Session session = getSession();
+    Project project = getProject();
     //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+      Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
       OpenshiftConfig config = session.configurators().get(OpenshiftConfig.class).orElse(DEFAULT_SOURCE_TO_IMAGE_CONFIG);
       String name = session.configurators().get(OpenshiftConfig.class).map(c -> c.getName()).orElse(getProject().getBuildInfo().getName());
       if (config.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {
 
-        ImageConfiguration imageConfiguration = new ImageConfigurationBuilder().withName(config.getName())
-            .withGroup(config.getGroup()).withVersion(config.getVersion())
-            .build();
-
         KubernetesList list = session.getGeneratedResources().get("openshift");
         List<HasMetadata> generated = list != null ? list.getItems() : Collections.emptyList();
 
-        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
-          .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-        BuildService buildService = buildServiceFactory.create(getProject(), imageConfiguration, generated);
+        BuildService buildService = imageConfiguration
+            .map(BuildServiceFactories.create(project, generated))
+            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
         new ImageBuildHook(getProject(), buildService).register();
       }
     } finally {

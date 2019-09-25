@@ -17,20 +17,31 @@
 
 package io.dekorate;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 
 public class BuildServiceFactories {
 
   public static Optional<BuildServiceFactory> find(Project project, ImageConfiguration config) {
-    ServiceLoader<BuildServiceFactory> loader = ServiceLoader.load(BuildServiceFactory.class, BuildServiceFactory.class.getClassLoader());
-    return StreamSupport.stream(loader.spliterator(), false)
-      .filter(f -> f.isApplicable(project, config))
-      .sorted()
-      .findFirst();
+    ServiceLoader<BuildServiceFactory> loader = ServiceLoader.load(BuildServiceFactory.class,
+        BuildServiceFactory.class.getClassLoader());
+    return StreamSupport.stream(loader.spliterator(), false).filter(f -> f.isApplicable(project, config)).sorted()
+        .findFirst();
+  }
+
+  public static Function<ImageConfiguration, BuildService> create(Project project, Collection<HasMetadata> items) {
+    return c -> find(project, c).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found.")).create(project, c, items);
+  }
+
+  public static Predicate<ImageConfiguration> matches(Project project) {
+    return c -> find(project, c).isPresent();
   }
 }

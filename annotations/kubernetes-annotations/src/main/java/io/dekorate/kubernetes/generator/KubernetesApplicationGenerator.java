@@ -51,6 +51,7 @@ import io.dekorate.kubernetes.configurator.ApplyDockerBuildHook;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
 import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.project.Project;
 
 public interface KubernetesApplicationGenerator extends Generator, SessionListener, WithProject {
 
@@ -85,7 +86,9 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
 
   default void onClosed() {
     Session session = getSession();
+    Project project = getProject();
     Optional<KubernetesConfig> config = session.configurators().get(KubernetesConfig.class);
+    Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
     if (!config.isPresent()) {
       return;
     }
@@ -94,20 +97,10 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
     Resources resources = session.resources();
     KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
 
-    ImageConfiguration imageConfiguration = new ImageConfigurationBuilder()
-        .withName(kubernetesConfig.getName())
-        .withGroup(kubernetesConfig.getGroup())
-        .withVersion(kubernetesConfig.getVersion())
-        .withRegistry(kubernetesConfig.getRegistry())
-        .build();
-
     BuildService buildService = null;
-
     if (kubernetesConfig.isAutoPushEnabled() || kubernetesConfig.isAutoBuildEnabled()) {
       try {
-        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
-            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-        buildService = buildServiceFactory.create(getProject(), imageConfiguration, generated.getItems());
+          buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated.getItems())).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
       } catch (Exception e) {
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
       }

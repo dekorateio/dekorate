@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -71,8 +72,16 @@ public class Configurators {
   }
 
   public <C extends Configuration> Optional<C> get(Class<C> type) {
-    return stream().filter(i -> type.isAssignableFrom(i.getClass())).map(i -> (C)i).findFirst();
+    return get(type, c -> true);
   }
+
+  public <C extends Configuration> Optional<C> get(Class<C> type, Predicate<C> predicate) {
+    return stream().filter(i -> type.isAssignableFrom(i.getClass()))
+        .map(i -> (C) i)
+        .filter(predicate)
+        .findFirst();
+  }
+  
 
   private static <C extends Configuration> C combine(ConfigurationSupplier<C> origin, ConfigurationSupplier<C> override) {
     return Beans.combine(origin.get(), override.get());
