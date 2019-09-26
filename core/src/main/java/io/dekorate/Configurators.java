@@ -76,7 +76,7 @@ public class Configurators {
   }
 
   public <C extends Configuration> Optional<C> get(Class<C> type, Predicate<C> predicate) {
-    return stream().filter(i -> type.isAssignableFrom(i.getClass()))
+    return stream().filter(i -> type.isInstance(i))
         .map(i -> (C) i)
         .filter(predicate)
         .findFirst();
