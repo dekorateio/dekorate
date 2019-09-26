@@ -16,12 +16,12 @@
 package io.dekorate.knative.generator;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.lang.model.element.Element;
 
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactories;
-import io.dekorate.BuildServiceFactory;
 import io.dekorate.DekorateException;
 import io.dekorate.Generator;
 import io.dekorate.Session;
@@ -37,10 +37,10 @@ import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigCustomAdapter;
 import io.dekorate.knative.handler.KnativeHandler;
 import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeploy;
 import io.dekorate.kubernetes.configurator.ApplyBuild;
 import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.project.Project;
 
 public interface KnativeApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
 
@@ -76,25 +76,18 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {
       Session session = getSession();
+      Project project = getProject();
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       KnativeConfig config = session.configurators().get(KnativeConfig.class).get();
-      if (config != null) {
-        String name = session.configurators().get(KnativeConfig.class).map(c -> c.getName()).orElse(getProject().getBuildInfo().getName());
-        if (config.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {
-          ImageConfiguration imageConfiguration = new ImageConfigurationBuilder()
-            .withName(config.getName())
-            .withGroup(config.getGroup())
-            .withVersion(config.getVersion())
-            .withRegistry(config.getRegistry())
-            .build();
-
+      Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
+      imageConfiguration.ifPresent(i -> {
+        String name = i.getName();
+        if (i.isAutoBuildEnabled() || i.isAutoDeployEnabled()) {
           KubernetesList generated = session.getGeneratedResources().get("knative");
-
           BuildService buildService;
           try {
-            BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
-              .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-            buildService = buildServiceFactory.create(getProject(), imageConfiguration, generated.getItems());
+            buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated.getItems()))
+                .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
           } catch (Exception e) {
             throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
           }
@@ -102,7 +95,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
           ImageBuildHook hook = new ImageBuildHook(getProject(), buildService);
           hook.register();
         }
-      }
+      });
     } finally {
       Thread.currentThread().setContextClassLoader(tccl);
     }
