@@ -15,9 +15,10 @@
  */
 package io.dekorate.project;
 
-import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.ConfigurationFluent;
+import io.dekorate.kubernetes.config.Configurator;
+import io.dekorate.kubernetes.config.ImageConfigurationFluent;
 import io.dekorate.utils.Strings;
 
 public class ApplyProjectInfo extends Configurator<ConfigurationFluent> {
@@ -45,6 +46,12 @@ public class ApplyProjectInfo extends Configurator<ConfigurationFluent> {
       baseConfigFluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(baseConfigFluent.getGroup()) ? baseConfigFluent.getGroup() : DEFAULT_GROUP))
             .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(baseConfigFluent.getName()) ? baseConfigFluent.getName() : project.getBuildInfo().getName()))
             .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(baseConfigFluent.getVersion()) ? baseConfigFluent.getVersion() : project.getBuildInfo().getVersion()));
+    } else if (fluent instanceof ImageConfigurationFluent) {
+      ImageConfigurationFluent imageConfigurationFluent = (ImageConfigurationFluent) fluent;
+      imageConfigurationFluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(imageConfigurationFluent.getGroup()) ? imageConfigurationFluent.getGroup() : DEFAULT_GROUP))
+            .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(imageConfigurationFluent.getName()) ? imageConfigurationFluent.getName() : project.getBuildInfo().getName()))
+            .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(imageConfigurationFluent.getVersion()) ? imageConfigurationFluent.getVersion() : project.getBuildInfo().getVersion()));
+ 
     }
   }
 }

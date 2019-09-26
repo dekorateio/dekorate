@@ -41,7 +41,7 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.Container;
-import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
+import io.dekorate.kubernetes.configurator.ApplyDeploy;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
@@ -121,7 +121,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   @Override
   public ConfigurationSupplier<OpenshiftConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<OpenshiftConfig>(new OpenshiftConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(p)));
+    return new ConfigurationSupplier<OpenshiftConfig>(new OpenshiftConfigBuilder().accept(new ApplyDeploy()).accept(new ApplyProjectInfo(p)));
   }
 
 

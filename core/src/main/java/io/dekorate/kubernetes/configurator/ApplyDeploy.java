@@ -16,14 +16,15 @@
 package io.dekorate.kubernetes.configurator;
 
 import io.dekorate.kubernetes.config.Configurator;
+import io.dekorate.kubernetes.config.ImageConfigurationFluent;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
 
-public class ApplyAutoBuild extends Configurator<BaseConfigFluent> {
+public class ApplyDeploy extends Configurator<ImageConfigurationFluent> {
 
-  public static final String Dekorate_DEPLOY = "dekorate.deploy";
+  public static final String DEKORATE_DEPLOY = "dekorate.deploy";
 
   @Override
-  public void visit(BaseConfigFluent config) {
-    config.withAutoDeployEnabled(Boolean.parseBoolean(System.getProperty(Dekorate_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
+  public void visit(ImageConfigurationFluent config) {
+    config.withAutoDeployEnabled(Boolean.parseBoolean(System.getProperty(DEKORATE_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
   }
 }

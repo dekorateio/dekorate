@@ -20,12 +20,12 @@ import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
 
 @Description("sets the hostname based on system property: `dekorate.host`.")
-public class ApplyHostBuild extends Configurator<BaseConfigFluent> {
+public class ApplyHost extends Configurator<BaseConfigFluent> {
 
-  public static final String Dekorate_HOST = "dekorate.host";
+  public static final String DEKORATE_HOST = "dekorate.host";
 
   @Override
   public void visit(BaseConfigFluent config) {
-    config.withHost(System.getProperty(Dekorate_HOST, String.valueOf(config.getHost())));
+    config.withHost(System.getProperty(DEKORATE_HOST, String.valueOf(config.getHost())));
   }
 }
