@@ -46,8 +46,8 @@ import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
-import io.dekorate.kubernetes.configurator.ApplyDockerBuildHook;
+import io.dekorate.kubernetes.configurator.ApplyDeploy;
+import io.dekorate.kubernetes.configurator.ApplyBuild;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
 import io.dekorate.project.ApplyProjectInfo;
@@ -62,9 +62,9 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
         add(new PropertyConfiguration<>(
             KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesApplication.class))
-            .accept(new ApplyAutoBuild())
-            .accept(new ApplyProjectInfo(getProject()))
-            .accept(new ApplyDockerBuildHook())));
+            .accept(new ApplyBuild())
+            .accept(new ApplyDeploy())
+            .accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void add(Element element) {
@@ -72,9 +72,9 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
      add(new AnnotationConfiguration<>(
             KubernetesConfigAdapter
             .newBuilder(application)
-            .accept(new ApplyAutoBuild())
-            .accept(new ApplyProjectInfo(getProject()))
-            .accept(new ApplyDockerBuildHook())));
+            .accept(new ApplyBuild())
+            .accept(new ApplyDeploy())
+            .accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void add(ConfigurationSupplier<KubernetesConfig> config)  {

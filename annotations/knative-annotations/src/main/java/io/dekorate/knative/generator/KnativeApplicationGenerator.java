@@ -38,6 +38,8 @@ import io.dekorate.knative.config.KnativeConfigCustomAdapter;
 import io.dekorate.knative.handler.KnativeHandler;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
+import io.dekorate.kubernetes.configurator.ApplyDeploy;
+import io.dekorate.kubernetes.configurator.ApplyBuild;
 import io.dekorate.project.ApplyProjectInfo;
 
 public interface KnativeApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
@@ -49,12 +51,16 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     KnativeConfig knativeConfig = KnativeConfigCustomAdapter.newBuilder(getProject(), knativeApplication).build();
 
     on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(element.getAnnotation(KnativeApplication.class))
+                                   .accept(new ApplyBuild())
+                                   .accept(new ApplyDeploy())
                                    .accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void add(Map map) {
     KnativeConfig knativeConfig = KnativeConfigAdapter.newBuilder((Map) map.get(KnativeApplication.class.getName())).build();
     on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeApplication.class))
+                                   .accept(new ApplyBuild())
+                                   .accept(new ApplyDeploy())
                                    .accept(new ApplyProjectInfo(getProject()))));
   }
 

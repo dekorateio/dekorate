@@ -45,7 +45,7 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.EditableBaseConfig;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.Port;
-import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
+import io.dekorate.kubernetes.configurator.ApplyDeploy;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.project.ScmInfo;
@@ -188,7 +188,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     Project p = getProject();
     return new ConfigurationSupplier<ComponentConfig>(new ComponentConfigBuilder()
       .withName(p.getBuildInfo().getName())
-      .accept(new ApplyAutoBuild())
+      .accept(new ApplyDeploy())
       .accept(new ApplyProjectInfo(p)));
   }
 }
