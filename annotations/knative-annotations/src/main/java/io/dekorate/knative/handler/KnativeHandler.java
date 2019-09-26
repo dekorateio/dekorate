@@ -105,7 +105,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       .withNewTemplate()
       .withNewSpec()
       .addNewContainer()
-      .withImage("dev.local" + config.getGroup() + "/" + config.getName() + ":" + config.getVersion())
+      .withImage("dev.local/" + config.getGroup() + "/" + config.getName() + ":" + config.getVersion())
       .endContainer()
       .endSpec()
       .endTemplate()
