@@ -29,7 +29,7 @@ import io.dekorate.deps.knative.serving.v1beta1.*;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Env;
-import io.dekorate.kubernetes.configurator.ApplyAutoBuild;
+import io.dekorate.kubernetes.configurator.ApplyDeploy;
 import io.dekorate.knative.config.EditableKnativeConfig;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigBuilder;
@@ -76,7 +76,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
   @Override
   public ConfigurationSupplier<KnativeConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<KnativeConfig>(new KnativeConfigBuilder().accept(new ApplyAutoBuild()).accept(new ApplyProjectInfo(p)));
+    return new ConfigurationSupplier<KnativeConfig>(new KnativeConfigBuilder().accept(new ApplyDeploy()).accept(new ApplyProjectInfo(p)));
   }
 
 
