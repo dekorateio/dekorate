@@ -15,15 +15,28 @@
  * 
 **/
 
-package io.dekorate;
+package io.dekorate.config;
 
-public interface BuildService {
+import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
 
-  default void prepare() {
+public class DefaultConfiguration<C> extends ConfigurationSupplier<C> {
+
+	public DefaultConfiguration() {
+    super(null);
+	}
+
+  public DefaultConfiguration(VisitableBuilder<C, ?> builder) {
+    super(builder);
   }
 
-  void build();
-
-  void push();
-
+	@Override
+	public int compareTo(ConfigurationSupplier<C> o) {
+    if (o instanceof AnnotationConfiguration) {
+      return -1;
+    }
+    if (o instanceof PropertyConfiguration) {
+      return -1;
+    }
+		return super.compareTo(o);
+	}
 }

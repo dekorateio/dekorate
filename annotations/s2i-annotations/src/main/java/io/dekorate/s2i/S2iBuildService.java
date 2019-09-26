@@ -20,20 +20,20 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import io.dekorate.BuildService;
+import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.Secret;
+import io.dekorate.deps.openshift.api.model.BuildConfig;
+import io.dekorate.deps.openshift.api.model.BuildList;
+import io.dekorate.deps.openshift.api.model.ImageStream;
+import io.dekorate.deps.openshift.client.DefaultOpenShiftClient;
+import io.dekorate.deps.openshift.client.OpenShiftClient;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Exec;
 import io.dekorate.s2i.util.S2iUtils;
-
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.Secret;
-import io.dekorate.deps.openshift.api.model.Build;
-import io.dekorate.deps.openshift.api.model.BuildConfig;
-import io.dekorate.deps.openshift.api.model.ImageStream;
-import io.dekorate.deps.openshift.client.DefaultOpenShiftClient;
-import io.dekorate.deps.openshift.client.OpenShiftClient;
 
 public class S2iBuildService implements BuildService {
 
@@ -52,21 +52,36 @@ public class S2iBuildService implements BuildService {
   }
 
   public void prepare() {
+    ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try (OpenShiftClient client = new DefaultOpenShiftClient()) {
-      resources.stream().filter(i -> i instanceof BuildConfig
-          || i instanceof ImageStream || i instanceof Secret).forEach(i -> {
-            HasMetadata item = client.resource(i).deletingExisting().createOrReplace();
-            if (item instanceof BuildConfig) {
-              client.builds().withLabel("openshift.io/build-config.name", item.getMetadata().getName()).delete();
-            }
-            LOGGER.info("Applied: " + item.getKind() + " " + i.getMetadata().getName());
+      Thread.currentThread().setContextClassLoader(S2iBuildService.class.getClassLoader());
+      resources.stream().filter(i -> i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret).forEach(i -> {
+              HasMetadata item = client.resource(i).fromServer().get();
+              if (item instanceof BuildConfig) {
+                LOGGER.info("Found BuildConfig: "+item.getMetadata().getName() + " Cleaning up stale builds...");
+                BuildList builds = client.builds().withLabel("openshift.io/build-config.name", item.getMetadata().getName()).list();
+                builds.getItems().stream().forEach(b -> {LOGGER.info("Deleting stale build:"+b); client.resource(b).cascading(true).delete();});
+              }
+              client.resource(i).cascading(true).delete();
+              try {
+                client.resource(i).waitUntilCondition(d -> d == null, 10, TimeUnit.SECONDS);
+              } catch (IllegalArgumentException e) {
+                LOGGER.warning(e.getMessage());
+                //We can should ignore that, as its expected to be thrown when item is actually deleted.
+              } catch (InterruptedException e) {
+                LOGGER.warning(e.getMessage());
+                throw DekorateException.launderThrowable(e);
+              }
+             client.resource(i).createOrReplace();
+             LOGGER.info("Applied: " + i.getKind() + " " + i.getMetadata().getName());
           });
       S2iUtils.waitForImageStreamTags(resources, 2, TimeUnit.MINUTES);
+    } finally {
+      Thread.currentThread().setContextClassLoader(tccl);
     }
   }
 
   public void build() {
-    prepare();
     if (project.getBuildInfo().getOutputFile().getParent().toFile().exists()) {
       LOGGER.info("Performing s2i build.");
       exec.commands("oc", "start-build", config.getName(), "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");

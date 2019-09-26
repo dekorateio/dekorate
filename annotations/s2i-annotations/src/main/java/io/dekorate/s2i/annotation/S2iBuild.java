@@ -22,14 +22,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import io.dekorate.kubernetes.config.ApplicationConfiguration;
+import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.annotation.Env;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
-@Pojo(name = "S2iBuildConfig", mutable = true, superClass = ApplicationConfiguration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "S2iBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "S2iBuildConfig", mutable = true, superClass = ImageConfiguration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "S2iBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 
 @Retention(RetentionPolicy.RUNTIME)
