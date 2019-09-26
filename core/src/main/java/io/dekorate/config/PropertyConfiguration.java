@@ -18,6 +18,10 @@ package io.dekorate.config;
 
 import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
 
+/**
+ * This is a {@link ConfigurationSupplier} that is used to wrap property files config.
+ * This kind of configuration takes precedence over {@link AnnotationConfiguration} and {@link DefaultConfiguration}.
+ */
 public class PropertyConfiguration<C> extends ConfigurationSupplier<C> {
 
 	public PropertyConfiguration() {
@@ -30,6 +34,9 @@ public class PropertyConfiguration<C> extends ConfigurationSupplier<C> {
 
   @Override
 	public int compareTo(ConfigurationSupplier<C> o) {
+    if (o instanceof DefaultConfiguration) {
+      return 1;
+    }
     if (o instanceof AnnotationConfiguration) {
       return 1;
     }

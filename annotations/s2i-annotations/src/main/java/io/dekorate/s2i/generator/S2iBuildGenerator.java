@@ -30,6 +30,7 @@ import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.s2i.adapter.*;
 import io.dekorate.s2i.annotation.S2iBuild;
 import io.dekorate.s2i.config.*;
+import io.dekorate.s2i.handler.S2iHanlder;
 
 public interface S2iBuildGenerator extends Generator, WithSession {
 
@@ -49,5 +50,6 @@ public interface S2iBuildGenerator extends Generator, WithSession {
   default void on(ConfigurationSupplier<S2iBuildConfig> config) {
     Session session = getSession();
     session.configurators().add(config);
+    session.handlers().add(new S2iHanlder(session.resources()));
   }
 }

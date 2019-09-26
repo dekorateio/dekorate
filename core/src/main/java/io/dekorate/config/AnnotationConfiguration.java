@@ -31,6 +31,9 @@ public class AnnotationConfiguration<C> extends ConfigurationSupplier<C> {
 
 	@Override
 	public int compareTo(ConfigurationSupplier<C> o) {
+    if (o instanceof DefaultConfiguration) {
+      return 1;
+    }
     if (o instanceof PropertyConfiguration) {
       return -1;
     }

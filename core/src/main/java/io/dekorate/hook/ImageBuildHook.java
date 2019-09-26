@@ -35,6 +35,7 @@ public class ImageBuildHook extends ProjectHook {
 
 	@Override
 	public void warmup() {
+    build.prepare();
 	}
 
 	@Override
