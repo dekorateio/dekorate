@@ -45,6 +45,7 @@ import java.util.Optional;
 public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> {
 
   private static final String JAVA_OPTS = "JAVA_OPTS";
+  private static final String JAVA_OPTIONS = "JAVA_OPTIONS";
 
   private static final String EQ = "=";
   private static final String EMPTY = " ";
@@ -73,17 +74,24 @@ public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> 
   public void visit(BaseConfigFluent<?> kubernetesConfig) {
     JvmConfig config = this.config.get();
 
-    Optional<String> existing = Arrays.stream(kubernetesConfig.getEnvVars()).filter(e -> e.getName().equals(JAVA_OPTS)).map(Env::getValue)
+    setJavaOptsEnvVar(JAVA_OPTS, kubernetesConfig, config);
+    setJavaOptsEnvVar(JAVA_OPTIONS, kubernetesConfig, config);
+  }
+
+  private void setJavaOptsEnvVar(String envVar, BaseConfigFluent<?> kubernetesConfig, JvmConfig jvmConfig) {
+    Optional<String> existing = Arrays.stream(kubernetesConfig.getEnvVars())
+      .filter(e -> e.getName().equals(envVar))
+      .map(Env::getValue)
       .findFirst();
 
     if (existing.isPresent()) {
-      kubernetesConfig.editMatchingEnvVar(e -> e.getName().equals(JAVA_OPTS))
-        .withValue(mergeOptions(existing.get(), config))
+      kubernetesConfig.editMatchingEnvVar(e -> e.getName().equals(envVar))
+        .withValue(mergeOptions(existing.get(), jvmConfig))
         .endEnvVar();
     } else {
       kubernetesConfig.addNewEnvVar()
-        .withName(JAVA_OPTS)
-        .withValue(mergeOptions("", config))
+        .withName(envVar)
+        .withValue(mergeOptions("", jvmConfig))
         .endEnvVar();
     }
   }

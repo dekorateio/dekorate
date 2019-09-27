@@ -23,7 +23,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenshiftApplication(buildEnvVars = @Env(name="foo", value = "bar"))
-@JvmOptions(server = true, xms = 1024, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
+@JvmOptions(server = true, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
 @SpringBootApplication
 public class Main {
 

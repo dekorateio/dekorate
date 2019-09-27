@@ -277,11 +277,11 @@ Currently the supported annotations for specifying volumes are:
 - @AzureFileVolume
    
 #### Jvm Options
-It's common to pass the JVM options in the manifests using the `JAVA_OPTS` environment variable of the application container.
+It's common to pass the JVM options in the manifests using the `JAVA_OPTS` or `JAVA_OPTIONS` environment variable of the application container.
 This is something complex as it usually difficult to remember all options by heart and thus its error prone.
 The worst part is that you don't realize the mistake until its TOO late.
 
-Dekorate provides a way to manage those options using the `@JvmOption` annotation, which is included in the `options-annotations`.
+Dekorate provides a way to manage those options using the `@JvmOptions` annotation, which is included in the `options-annotations` module.
 
 ```java
 import io.dekorate.options.annotation.JvmOptions
