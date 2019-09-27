@@ -28,7 +28,7 @@ import javax.ws.rs.core.Application;
   readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 10),
   expose = true
 )
-@JvmOptions(server = true, xms = 1024, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
+@JvmOptions(server = true, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
 @ApplicationPath("/")
 public class RestApplication extends Application {
 }
