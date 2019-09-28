@@ -15,17 +15,27 @@
  */
 package io.dekorate.kubernetes.generator;
 
-import io.dekorate.Generator;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-
 import java.util.Collections;
 import java.util.List;
+
+import io.dekorate.Generator;
+import io.dekorate.config.DefaultConfiguration;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
+import io.dekorate.kubernetes.configurator.ApplyBuild;
+import io.dekorate.kubernetes.configurator.ApplyDeploy;
+import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultKubernetesApplicationGenerator implements KubernetesApplicationGenerator {
 
     public DefaultKubernetesApplicationGenerator () {
         Generator.registerAnnotationClass(KUBERNETES, KubernetesApplication.class);
         Generator.registerGenerator(KUBERNETES, this);
+        add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()
+                                                        .accept(new ApplyProjectInfo(getProject()))
+                                                        .accept(new ApplyBuild())
+                                                        .accept(new ApplyDeploy())));
     }
 
     @Override

@@ -49,7 +49,7 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
 
   @Override
   public int order() {
-    return 1300;
+    return 1301;
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {

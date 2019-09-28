@@ -46,7 +46,6 @@ import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
-import io.dekorate.openshift.decorator.AddBuildEnvDecorator;
 import io.dekorate.openshift.decorator.AddRouteDecorator;
 import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
@@ -103,16 +102,6 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
 
     for (Container container : config.getInitContainers()) {
       resources.decorate(OPENSHIFT, new AddInitContainerDecorator(config.getName(), container));
-    }
-
-    if (config.isBuildResourceGenerationEnabled()) {
-      resources.add(OPENSHIFT, createBuilderImageStream(config));
-      resources.add(OPENSHIFT, createBuildConfig(config));
-      resources.add(OPENSHIFT, createProjectImageStream());
-
-      for (Env env : config.getBuildEnvVars()) {
-        resources.decorate(OPENSHIFT, new AddBuildEnvDecorator(env));
-      }
     }
 
     addDecorators(OPENSHIFT, config);
