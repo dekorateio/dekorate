@@ -15,6 +15,7 @@
  */
 package io.dekorate.thorntail;
 
+import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
@@ -42,6 +43,8 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
       session.close();
       return true;
     }
+
+    session.feed(readApplicationConfig("project-defaults.yml"));
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         add(mainClass);
