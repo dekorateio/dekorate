@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 
 import io.dekorate.Generator;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
@@ -48,6 +50,9 @@ public interface S2iBuildGenerator extends Generator, WithSession {
   }
 
   default void on(ConfigurationSupplier<S2iBuildConfig> config) {
+    Logger log = LoggerFactory.getLogger();
+
+    log.info("Registering s2i handler!");
     Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new S2iHanlder(session.resources()));

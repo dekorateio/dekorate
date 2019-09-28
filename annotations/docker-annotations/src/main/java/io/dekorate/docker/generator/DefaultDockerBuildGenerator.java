@@ -22,7 +22,8 @@ import java.util.List;
 
 import io.dekorate.Generator;
 import io.dekorate.config.DefaultConfiguration;
-import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.docker.annotation.DockerBuild;
+import io.dekorate.docker.config.*;
 import io.dekorate.kubernetes.configurator.ApplyBuild;
 import io.dekorate.kubernetes.configurator.ApplyDeploy;
 
@@ -30,9 +31,9 @@ public class DefaultDockerBuildGenerator implements DockerBuildGenerator {
 
     public static final String DOCKER = "docker";
   
-    public DefaultKubernetesApplicationGenerator () {
-        Generator.registerAnnotationClass(Docker, DokcerBuild.class);
-        Generator.registerGenerator(Docker, this);
+    public DefaultDockerBuildGenerator () {
+        Generator.registerAnnotationClass(DOCKER, DockerBuild.class);
+        Generator.registerGenerator(DOCKER, this);
         on(new DefaultConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
                                                         .accept(new ApplyBuild())
                                                         .accept(new ApplyDeploy())));
@@ -40,6 +41,6 @@ public class DefaultDockerBuildGenerator implements DockerBuildGenerator {
 
     @Override
     public List<Class> getSupportedAnnotations() {
-        return Collections.singletonList(DokcerBuild.class);
+        return Collections.singletonList(DockerBuild.class);
     }
 }
