@@ -102,6 +102,7 @@
                     <include>io/dekorate/s2i/adapter/**</include>
                     <include>io/dekorate/s2i/annotation/**</include>
                     <include>io/dekorate/s2i/apt/**</include>
+                    <include>io/dekorate/s2i/buildservice/**</include>
                     <include>io/dekorate/s2i/config/**</include>
                     <include>io/dekorate/s2i/configurator/**</include>
                     <include>io/dekorate/s2i/generator/**</include>
@@ -127,6 +128,7 @@
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/s2i/adapter/**</include>
+                    <include>io/dekorate/s2i/buildservice/**</include>
                     <include>io/dekorate/s2i/config/**</include>
                     <include>io/dekorate/s2i/configurator/**</include>
                     <include>io/dekorate/s2i/generator/**</include>

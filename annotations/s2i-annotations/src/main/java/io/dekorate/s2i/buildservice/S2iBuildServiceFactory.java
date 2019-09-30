@@ -15,7 +15,7 @@
  * 
 **/
 
-package io.dekorate.s2i;
+package io.dekorate.s2i.buildservice;
 
 import java.util.Collection;
 import java.util.Collections;

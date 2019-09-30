@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
 **/
-package io.dekorate.s2i;
+package io.dekorate.s2i.buildservice;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -56,11 +56,10 @@ public class S2iBuildService implements BuildService {
     try (OpenShiftClient client = new DefaultOpenShiftClient()) {
       Thread.currentThread().setContextClassLoader(S2iBuildService.class.getClassLoader());
       resources.stream().filter(i -> i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret).forEach(i -> {
-              HasMetadata item = client.resource(i).fromServer().get();
-              if (item instanceof BuildConfig) {
-                LOGGER.info("Found BuildConfig: "+item.getMetadata().getName() + " Cleaning up stale builds...");
-                BuildList builds = client.builds().withLabel("openshift.io/build-config.name", item.getMetadata().getName()).list();
-                builds.getItems().stream().forEach(b -> {LOGGER.info("Deleting stale build:"+b); client.resource(b).cascading(true).delete();});
+              if (i instanceof BuildConfig) {
+                LOGGER.info("Found BuildConfig: "+i.getMetadata().getName() + " Cleaning up stale builds...");
+                BuildList builds = client.builds().withLabel("openshift.io/build-config.name", i.getMetadata().getName()).list();
+                builds.getItems().stream().forEach(b -> {LOGGER.info("Deleting stale build:"+b.getMetadata().getName()); client.resource(b).cascading(true).delete();});
               }
               client.resource(i).cascading(true).delete();
               try {
