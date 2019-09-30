@@ -40,6 +40,7 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.Pod;
+import io.dekorate.deps.kubernetes.api.model.PodList;
 import io.dekorate.deps.kubernetes.api.model.ReplicationController;
 import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
 import io.dekorate.deps.kubernetes.api.model.apps.ReplicaSet;
@@ -57,6 +58,7 @@ import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.project.Project;
 import io.dekorate.testing.Diagnostics;
+import io.dekorate.testing.Pods;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
@@ -114,6 +116,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     }
 
     if (config.isBuildEnabled()) {
+      buildService.prepare();
       buildService.build();
     }
 
@@ -123,7 +126,10 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
         .filter(i -> !(i instanceof BuildConfig || i instanceof ImageStream))
         .forEach(i -> {
             try {
-              client.resource(i).deletingExisting().createOrReplace();
+              HasMetadata r = client.resource(i).fromServer().get();
+              if (r == null || client.resource(r).delete()) {
+                client.resource(i).apply();
+              }
             } catch (Exception e) {
               e.printStackTrace(System.err);
             }
@@ -164,30 +170,48 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
   @Override
   public void afterAll(ExtensionContext context) {
     OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
-    boolean failed = context.getExecutionException().isPresent();
-    final Diagnostics diagnostics = new Diagnostics(client);
-    getOpenshiftResources(context).getItems().stream().forEach(r -> {
-      try {
-        if (failed) {
-          diagnostics.display(r);
+    try {
+      boolean failed = context.getExecutionException().isPresent();
+      final Diagnostics diagnostics = new Diagnostics(client);
+      if (failed) {
+        displayDiagnostics(context);
+      }
+      getOpenshiftResources(context).getItems().stream().forEach(r -> {
+        try {
+          LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
+              + client.resource(r).delete());
+        } catch (Exception e) {
         }
-        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:" + client.resource(r).delete());
-      } catch (Exception e) {}
-    });
+      });
 
-    OpenshiftConfig openshiftConfig = getOpenshiftConfig();
-    List<HasMetadata> buildPods = client.pods().list()
-      .getItems()
-      .stream()
-      .filter(i -> i.getMetadata().getName().matches(openshiftConfig.getName() + "-\\d-build"))
-      .collect(Collectors.toList());
+      OpenshiftConfig openshiftConfig = getOpenshiftConfig();
+      List<HasMetadata> buildPods = client.pods().list().getItems().stream()
+          .filter(i -> i.getMetadata().getName().matches(openshiftConfig.getName() + "-\\d-build"))
+          .collect(Collectors.toList());
 
-     try {
-       client.resourceList(buildPods).delete();
-       client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
-     } catch (Exception e) {}
+      try {
+        client.resourceList(buildPods).delete();
+        client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
+      } catch (Exception e) {
+     }
+    } finally {
+      closeKubernetesClient(context);
+    }
   }
 
+  public void displayDiagnostics(ExtensionContext context) {
+    KubernetesClient client = getKubernetesClient(context);
+    List<? extends HasMetadata> resources = getOpenshiftResources(context).getItems();
+    Pods pods = new Pods(client);
+    PodList podList = pods.list(resources);
+
+    final Diagnostics diagnostics = new Diagnostics(client, pods);
+    if (podList == null || podList.getItems().isEmpty()) {
+      diagnostics.displayAll();
+    } else {
+      getOpenshiftResources(context).getItems().stream().forEach(r -> diagnostics.display(r));
+    }
+  }
 
   public void build(ExtensionContext context, Project project) {
     KubernetesList kubernetesList = getOpenshiftResources(context);
@@ -222,5 +246,4 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
   public String getName() {
     return getOpenshiftConfig().getName();
   }
-
 }

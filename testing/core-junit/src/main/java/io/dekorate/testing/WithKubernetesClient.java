@@ -17,6 +17,7 @@ package io.dekorate.testing;
 
 import io.dekorate.DekorateException;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.client.BaseClient;
 import io.dekorate.deps.kubernetes.client.DefaultKubernetesClient;
 import io.dekorate.deps.kubernetes.client.KubernetesClient;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -83,6 +84,13 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
     client = new DefaultKubernetesClient();
     context.getStore(Dekorate_STORE).put(KUBERNETES_CLIENT, client);
     return (KubernetesClient) client;
+  }
+
+  default void closeKubernetesClient(ExtensionContext context) {
+    Object client = context.getStore(Dekorate_STORE).remove(KUBERNETES_CLIENT);
+    if (client instanceof KubernetesClient) {
+      ((BaseClient) client).close();
+    }
   }
 
 

@@ -35,6 +35,7 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.Pod;
+import io.dekorate.deps.kubernetes.api.model.PodList;
 import io.dekorate.deps.kubernetes.api.model.ReplicationController;
 import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
 import io.dekorate.deps.kubernetes.api.model.apps.ReplicaSet;
@@ -46,6 +47,7 @@ import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.testing.Diagnostics;
+import io.dekorate.testing.Pods;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
@@ -98,12 +100,15 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       // The reason is that the @KubernetesApplication.isAutoPushEnabled() affects the generated manifests (adds the registry).
       // and thus the tests MUST follow.
       if (kubernetesConfig.isAutoPushEnabled()) {
+        buildService.prepare();
         buildService.build();
         buildService.push();
 
       } else if (kubernetesConfig.isAutoBuildEnabled()) {
+        buildService.prepare();
         buildService.build();
       } else if (config.isBuildEnabled()) {
+        buildService.prepare();
         buildService.build();
       }
     }
@@ -148,15 +153,33 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
 
   @Override
   public void afterAll(ExtensionContext context) {
+    try {
+      KubernetesClient client = getKubernetesClient(context);
+      final Diagnostics diagnostics = new Diagnostics(client);
+      boolean failed = context.getExecutionException().isPresent();
+      if (failed) {
+        displayDiagnostics(context);
+      }
+      getKubernetesResources(context).getItems().stream().forEach(r -> {
+        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
+            + getKubernetesClient(context).resource(r).cascading(true).delete());
+      });
+    } finally {
+      closeKubernetesClient(context);
+    }
+  }
+
+  public void displayDiagnostics(ExtensionContext context) {
     KubernetesClient client = getKubernetesClient(context);
-    final Diagnostics diagnostics = new Diagnostics(client);
-    boolean failed = context.getExecutionException().isPresent();
-    getKubernetesResources(context).getItems().stream().forEach(r -> {
-        if (failed) {
-          diagnostics.display(r);
-        }
-        LOGGER.info("Deleting: " + r.getKind() + " name:" +r.getMetadata().getName()+ ". Deleted:"+ getKubernetesClient(context).resource(r).cascading(true).delete());
-    });
+    Pods pods = new Pods(client);
+    PodList podList = pods.list(pods);
+
+    final Diagnostics diagnostics = new Diagnostics(client, pods);
+    if (podList == null || podList.getItems().isEmpty()) {
+      diagnostics.displayAll();
+    } else {
+      getKubernetesResources(context).getItems().stream().forEach(r -> diagnostics.display(r));
+    }
   }
 
   
