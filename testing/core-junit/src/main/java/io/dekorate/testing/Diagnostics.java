@@ -45,13 +45,23 @@ public class Diagnostics {
     this.pods = new Pods(client);
   }
 
+  public Diagnostics(KubernetesClient client, Pods pods) {
+    this.client = client;
+    this.pods = pods;
+  }
+
+  public void displayAll() {
+    PodList pods = client.pods().list(); 
+    pods.getItems().stream().forEach(p->display(p));
+  }
+  
   public <T extends HasMetadata> void display(T resource) {
+   logger.info("Diagnostics for kind: [" + resource.getKind() + "] with name : [" + resource.getMetadata().getName() + "].");
     try {
       PodList podList = pods.list(resource);
       if (podList == null) {
         return;
       }
-
       for (Pod pod : podList.getItems()) {
         // That should only happen in tests.
         if (pod.getSpec() == null || pod.getSpec().getContainers() == null) {
@@ -59,7 +69,6 @@ public class Diagnostics {
         }
 
         events(pod);
-
         for (Container container : pod.getSpec().getContainers()) {
           log(pod, container);
         }
@@ -71,10 +80,8 @@ public class Diagnostics {
 
   protected void log(Pod pod, Container container) {
     try {
-      logger.warning("Logs of pod: [" + pod.getMetadata().getName() + "], container: ["
-          + container.getName() + "]");
-      logger.info(client.pods().inNamespace(pod.getMetadata().getNamespace()).withName(pod.getMetadata().getName())
-          .inContainer(container.getName()).tailingLines(100).withPrettyOutput().getLog());
+      logger.info("Logs of pod: [" + pod.getMetadata().getName() + "], container: [" + container.getName() + "]");
+      logger.info(client.pods().inNamespace(pod.getMetadata().getNamespace()).withName(pod.getMetadata().getName()).inContainer(container.getName()).tailingLines(100).withPrettyOutput().getLog());
     } catch (Throwable t) {
       logger.error("Failed to read logs, due to:" + t.getMessage());
     } finally {
@@ -100,7 +107,7 @@ public class Diagnostics {
     } catch (Throwable t) {
       logger.error("Failed to read events, due to:" + t.getMessage());
     } finally {
-      logger.warning("---");
+      logger.warning("\t---");
     }
   }
 }

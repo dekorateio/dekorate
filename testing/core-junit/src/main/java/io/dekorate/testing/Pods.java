@@ -17,8 +17,12 @@
 
 package io.dekorate.testing;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import io.dekorate.deps.kubernetes.api.model.Endpoints;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.LabelSelectorRequirement;
 import io.dekorate.deps.kubernetes.api.model.Pod;
 import io.dekorate.deps.kubernetes.api.model.PodList;
@@ -45,17 +49,23 @@ public class Pods {
    * @param resource The resource.
    * @return The podList with the matching pods.
    */
-  public <T extends HasMetadata> PodList list(T resource) {
+  public PodList list(Object resource) {
+    if (resource instanceof KubernetesList) {
+      KubernetesList list = (KubernetesList) resource;
+      return new PodListBuilder()
+        .withItems(list.getItems().stream() .map(i -> list(i)).filter(i -> i != null && !i.getItems().isEmpty()).flatMap(i->i.getItems().stream()).collect(Collectors.toList()))
+        .build();
+    }
     if (resource instanceof Pod) {
       return new PodListBuilder().withItems((Pod) resource).build();
     } else if (resource instanceof Endpoints) {
-      return list(client.services().inNamespace(resource.getMetadata().getNamespace())
-          .withName(resource.getMetadata().getName()).get());
+      return list(client.services().inNamespace(((Endpoints) resource).getMetadata().getNamespace())
+          .withName(((Endpoints) resource).getMetadata().getName()).get());
     } else if (resource instanceof Service) {
-      return client.pods().inNamespace(resource.getMetadata().getNamespace())
+      return client.pods().inNamespace(((Service) resource).getMetadata().getNamespace())
           .withLabels(((Service) resource).getSpec().getSelector()).list();
     } else if (resource instanceof ReplicationController) {
-      return client.pods().inNamespace(resource.getMetadata().getNamespace())
+      return client.pods().inNamespace(((ReplicationController) resource).getMetadata().getNamespace())
           .withLabels(((ReplicationController) resource).getSpec().getSelector()).list();
     } else if (resource instanceof ReplicaSet) {
       return map((ReplicaSet) resource);

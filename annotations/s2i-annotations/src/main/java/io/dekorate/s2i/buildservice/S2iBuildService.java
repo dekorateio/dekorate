@@ -55,12 +55,9 @@ public class S2iBuildService implements BuildService {
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try (OpenShiftClient client = new DefaultOpenShiftClient()) {
       Thread.currentThread().setContextClassLoader(S2iBuildService.class.getClassLoader());
+      BuildList builds = client.builds().withLabel("openshift.io/build-config.name", config.getName()).list();
+      builds.getItems().stream().forEach(b -> { LOGGER.info("Deleting stale build:"+b.getMetadata().getName()); client.resource(b).cascading(true).delete(); });
       resources.stream().filter(i -> i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret).forEach(i -> {
-              if (i instanceof BuildConfig) {
-                LOGGER.info("Found BuildConfig: "+i.getMetadata().getName() + " Cleaning up stale builds...");
-                BuildList builds = client.builds().withLabel("openshift.io/build-config.name", i.getMetadata().getName()).list();
-                builds.getItems().stream().forEach(b -> {LOGGER.info("Deleting stale build:"+b.getMetadata().getName()); client.resource(b).cascading(true).delete();});
-              }
               client.resource(i).cascading(true).delete();
               try {
                 client.resource(i).waitUntilCondition(d -> d == null, 10, TimeUnit.SECONDS);
