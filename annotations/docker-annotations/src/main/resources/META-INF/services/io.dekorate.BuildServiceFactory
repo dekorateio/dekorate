@@ -1,1 +1,1 @@
-io.dekorate.docker.DockerBuildServiceFactory
+io.dekorate.docker.buildservice.DockerBuildServiceFactory

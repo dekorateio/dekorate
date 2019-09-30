@@ -15,10 +15,13 @@
  * 
 **/
 
-package io.dekorate;
+package io.dekorate.docker.buildservice;
 
 import java.io.File;
 
+import io.dekorate.BuildService;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Exec;

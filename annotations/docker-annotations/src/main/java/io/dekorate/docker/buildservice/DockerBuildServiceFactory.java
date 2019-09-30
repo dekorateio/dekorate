@@ -15,10 +15,12 @@
  * 
 **/
 
-package io.dekorate;
+package io.dekorate.docker.buildservice;
 
 import java.util.Collection;
 
+import io.dekorate.BuildService;
+import io.dekorate.BuildServiceFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;

@@ -102,11 +102,9 @@
                     <include>io/dekorate/docker/adapter/**</include>
                     <include>io/dekorate/docker/annotation/**</include>
                     <include>io/dekorate/docker/apt/**</include>
+                    <include>io/dekorate/docker/buildservice/**</include>
                     <include>io/dekorate/docker/config/**</include>
-                    <include>io/dekorate/docker/configurator/**</include>
                     <include>io/dekorate/docker/generator/**</include>
-                    <include>io/dekorate/docker/handler/**</include>
-                    <include>io/dekorate/docker/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>
@@ -127,11 +125,9 @@
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/docker/adapter/**</include>
+                    <include>io/dekorate/docker/buildservice/**</include>
                     <include>io/dekorate/docker/config/**</include>
-                    <include>io/dekorate/docker/configurator/**</include>
                     <include>io/dekorate/docker/generator/**</include>
-                    <include>io/dekorate/docker/handler/**</include>
-                    <include>io/dekorate/docker/util/**</include>
                   </includes>
                 </filter>
               </filters>
