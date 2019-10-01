@@ -15,11 +15,12 @@
  */
 package io.dekorate.examples.openshift;
 
-import io.dekorate.openshift.annotation.OpenshiftApplication;
+import io.dekorate.s2i.annotation.S2iBuild;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication(buildResourceGenerationEnabled = false) //Don't generate build related resources.
+@S2iBuild(enabled = false) //Don't generate build related resources.
 @SpringBootApplication
 public class Main {
 

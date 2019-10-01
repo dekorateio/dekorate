@@ -35,6 +35,8 @@ import io.sundr.builder.annotations.Pojo;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface S2iBuild {
 
+  boolean enabled() default true;
+
   /**
    * The relative path of the Dockerfile, from the module root.
    * 
