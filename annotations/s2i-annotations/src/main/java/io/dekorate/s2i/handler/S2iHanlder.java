@@ -63,13 +63,15 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
   }
 
   public void handle(S2iBuildConfig config) {
-    LOGGER.info("Processing s2i configuration.");
-    resources.add(createBuilderImageStream(config));
-    resources.add(createProjectImageStream());
-    resources.add(createBuildConfig(config));
+    if (config.isEnabled()) {
+      LOGGER.info("Processing s2i configuration.");
+      resources.add(createBuilderImageStream(config));
+      resources.add(createProjectImageStream());
+      resources.add(createBuildConfig(config));
 
-    for (Env env : config.getBuildEnvVars()) {
-      resources.decorate(new AddBuildEnvDecorator(env));
+      for (Env env : config.getBuildEnvVars()) {
+        resources.decorate(new AddBuildEnvDecorator(env));
+      }
     }
   }
 

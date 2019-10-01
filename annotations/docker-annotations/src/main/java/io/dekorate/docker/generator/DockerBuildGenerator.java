@@ -17,6 +17,7 @@
 
 package io.dekorate.docker.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -32,6 +33,15 @@ import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.docker.config.*;
 
 public interface DockerBuildGenerator extends Generator, WithSession {
+
+  default String getKey() {
+    return "docker";
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return DockerBuild.class;
+  }
+
 
   @Override
   default void add(Map map) {

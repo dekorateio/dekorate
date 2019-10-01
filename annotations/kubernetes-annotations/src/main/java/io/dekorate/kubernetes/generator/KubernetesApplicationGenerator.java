@@ -15,6 +15,7 @@
  */
 package io.dekorate.kubernetes.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,14 @@ import io.dekorate.project.Project;
 public interface KubernetesApplicationGenerator extends Generator, SessionListener, WithProject {
 
   String KUBERNETES = "kubernetes";
+
+  default String getKey() {
+    return KUBERNETES;
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return KubernetesApplication.class;
+  }
 
   @Override
   default void add(Map map) {

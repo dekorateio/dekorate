@@ -28,9 +28,19 @@ import io.dekorate.servicecatalog.config.ServiceCatalogConfigBuilder;
 import io.dekorate.servicecatalog.handler.ServiceCatalogHandler;
 
 import javax.lang.model.element.Element;
+
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 public interface ServiceCatalogGenerator extends Generator, WithSession {
+
+  default String getKey() {
+    return "servicecatalog";
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return ServiceCatalog.class;
+  }
 
   @Override
   default void add(Map map) {

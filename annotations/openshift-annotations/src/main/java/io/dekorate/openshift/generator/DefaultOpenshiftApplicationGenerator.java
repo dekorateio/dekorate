@@ -15,14 +15,9 @@
  */
 package io.dekorate.openshift.generator;
 
-import java.util.Collections;
-import java.util.List;
-
-import io.dekorate.Generator;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyBuild;
 import io.dekorate.kubernetes.configurator.ApplyDeploy;
-import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
 import io.dekorate.project.ApplyProjectInfo;
@@ -30,17 +25,9 @@ import io.dekorate.project.ApplyProjectInfo;
 public class DefaultOpenshiftApplicationGenerator implements OpenshiftApplicationGenerator {
 
     public DefaultOpenshiftApplicationGenerator () {
-        Generator.registerAnnotationClass(OPENSHIFT, OpenshiftApplication.class); 
-        Generator.registerGenerator(OPENSHIFT, this);
         on(new DefaultConfiguration<OpenshiftConfig>(new OpenshiftConfigBuilder()
                                                         .accept(new ApplyProjectInfo(getProject()))
                                                         .accept(new ApplyBuild())
                                                         .accept(new ApplyDeploy())));
-
-    }
-
-    @Override
-    public List<Class> getSupportedAnnotations() {
-        return Collections.singletonList(OpenshiftApplication.class);
     }
 }

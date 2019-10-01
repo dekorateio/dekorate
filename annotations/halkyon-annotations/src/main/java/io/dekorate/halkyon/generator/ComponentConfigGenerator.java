@@ -15,6 +15,7 @@
  */
 package io.dekorate.halkyon.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -34,6 +35,14 @@ import io.dekorate.halkyon.handler.ComponentHandler;
 public interface ComponentConfigGenerator extends Generator, WithProject {
   
   String GENERATOR_KEY = "component";
+
+  default String getKey() {
+    return GENERATOR_KEY;
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return HalkyonComponent.class;
+  }
   
   @Override
   default void add(Map map) {

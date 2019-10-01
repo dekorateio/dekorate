@@ -15,6 +15,7 @@
  */
 package io.dekorate.knative.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,6 +46,15 @@ import io.dekorate.project.Project;
 public interface KnativeApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
 
   String KNATIVE = "knative";
+
+  default String getKey() {
+    return KNATIVE;
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return KnativeApplication.class;
+  }
+
 
   default void add(Element element) {
     KnativeApplication knativeApplication = element.getAnnotation(KnativeApplication.class);

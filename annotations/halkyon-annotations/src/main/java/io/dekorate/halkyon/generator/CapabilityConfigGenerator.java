@@ -16,6 +16,7 @@
 
 package io.dekorate.halkyon.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -35,6 +36,15 @@ public interface CapabilityConfigGenerator extends Generator, WithProject {
   
   String GENERATOR_KEY = "capability";
   
+  default String getKey() {
+    return GENERATOR_KEY;
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return HalkyonCapability.class;
+  }
+
+
   @Override
   default void add(Map map) {
     add(new PropertyConfiguration<>(

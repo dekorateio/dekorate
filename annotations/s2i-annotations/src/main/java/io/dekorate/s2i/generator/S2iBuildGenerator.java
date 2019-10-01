@@ -17,6 +17,7 @@
 
 package io.dekorate.s2i.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -35,6 +36,16 @@ import io.dekorate.s2i.config.*;
 import io.dekorate.s2i.handler.S2iHanlder;
 
 public interface S2iBuildGenerator extends Generator, WithSession {
+
+  String S2I = "s2i";
+
+  default String getKey() {
+    return S2I;
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return S2iBuild.class;
+  }
 
   @Override
   default void add(Map map) {

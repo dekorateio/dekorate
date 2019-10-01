@@ -26,11 +26,22 @@ import io.dekorate.prometheus.annotation.EnableServiceMonitor;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
 import io.dekorate.prometheus.config.ServiceMonitorConfigBuilder;
 import io.dekorate.prometheus.handler.ServiceMonitorHandler;
+import io.dekorate.prometheus.model.ServiceMonitor;
 
 import javax.lang.model.element.Element;
+
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 public interface ServiceMonitorGenerator extends Generator, WithSession {
+
+  default String getKey() {
+    return "servicemonitor";
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return EnableServiceMonitor.class;
+  }
 
   @Override
   default void add(Map map) {

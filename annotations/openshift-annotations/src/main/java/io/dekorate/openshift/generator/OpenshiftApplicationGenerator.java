@@ -15,6 +15,7 @@
  */
 package io.dekorate.openshift.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,14 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
   OpenshiftConfig DEFAULT_SOURCE_TO_IMAGE_CONFIG = new OpenshiftConfigBuilder()
     .withBuilderImage(DEFAULT_S2I_BUILDER_IMAGE)
     .build();
+
+  default String getKey() {
+    return OPENSHIFT;
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return OpenshiftApplication.class;
+  }
 
 
   default void add(Element element) {

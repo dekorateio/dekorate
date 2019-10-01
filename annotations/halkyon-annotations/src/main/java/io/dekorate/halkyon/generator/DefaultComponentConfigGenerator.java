@@ -15,23 +15,9 @@
  */
 package io.dekorate.halkyon.generator;
 
-import java.util.Collections;
-import java.util.List;
-
-import io.dekorate.Generator;
-import io.dekorate.halkyon.annotation.HalkyonComponent;
-
 /**
  * @author <a href="claprun@redhat.com">Christophe Laprun</a>
  */
 public class DefaultComponentConfigGenerator implements ComponentConfigGenerator {
-  public DefaultComponentConfigGenerator() {
-    Generator.registerAnnotationClass(GENERATOR_KEY, HalkyonComponent.class);
-    Generator.registerGenerator(GENERATOR_KEY, this);
-  }
-  
-  @Override
-  public List<Class> getSupportedAnnotations() {
-    return Collections.singletonList(HalkyonComponent.class);
-  }
+
 }

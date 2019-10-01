@@ -15,15 +15,5 @@
  */
 package io.dekorate.jaeger.generator;
 
-import io.dekorate.jaeger.annotation.EnableJaegerAgent;
-
-import java.util.Collections;
-import java.util.List;
-
 public class DefaultJaegerGenerator implements JaegerAgentGenerator {
-
-    @Override
-    public List<Class> getSupportedAnnotations() {
-        return Collections.singletonList(EnableJaegerAgent.class);
-    }
 }
