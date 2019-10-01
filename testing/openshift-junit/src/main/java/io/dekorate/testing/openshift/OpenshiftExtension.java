@@ -127,7 +127,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
         .forEach(i -> {
             try {
               HasMetadata r = client.resource(i).fromServer().get();
-              if (r == null || client.resource(r).delete()) {
+              if (r == null || deleteAndWait(context, i, 1, TimeUnit.MINUTES)) {
                 client.resource(i).apply();
               }
             } catch (Exception e) {

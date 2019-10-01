@@ -20,12 +20,18 @@ import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.client.BaseClient;
 import io.dekorate.deps.kubernetes.client.DefaultKubernetesClient;
 import io.dekorate.deps.kubernetes.client.KubernetesClient;
+import io.dekorate.deps.kubernetes.client.KubernetesClientException;
+
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -116,5 +122,50 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
     }
     return notReady.isEmpty();
   }
+
+  default <T extends HasMetadata> boolean deleteAndWait(ExtensionContext context, T item, long amount, TimeUnit timeUnit) throws InterruptedException {
+    return deleteAndWait(context, Arrays.asList(item), amount, timeUnit);
+  }
+
+  default <T extends HasMetadata> boolean deleteAndWait(ExtensionContext context, Collection<T> items, long amount, TimeUnit timeUnit) throws InterruptedException {
+    long amountInNanos = timeUnit.toNanos(amount);
+    long end = System.nanoTime() + amountInNanos;
+
+    KubernetesClient client = getKubernetesClient(context);
+
+    for (T item : items) {
+      try {
+        T existing = client.resource(item).fromServer().get();
+        if (existing != null) {
+          client.resource(existing).delete();
+        }
+      } catch (KubernetesClientException e) {
+        if (e.getCode() != 404) {
+          throw e;
+        }
+      }
+    }
+
+    List<T> notDeleted = new ArrayList<>(items);
+    while (System.nanoTime() < end && !notDeleted.isEmpty()) {
+    for (T item : items) {
+      if (!notDeleted.contains(item)) {
+          continue;
+      }
+      try {
+        if (client.resource(item).fromServer().get() == null) {
+            notDeleted.remove(item);
+        }
+      } catch (KubernetesClientException e) {
+        if (e.getCode() == 404) {
+            notDeleted.remove(item);
+        }
+      }
+      Thread.sleep(1000);
+    }
+  }
+    return notDeleted.isEmpty();
+  }
+  
 
 }
