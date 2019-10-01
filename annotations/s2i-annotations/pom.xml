@@ -108,6 +108,8 @@
                     <include>io/dekorate/s2i/generator/**</include>
                     <include>io/dekorate/s2i/handler/**</include>
                     <include>io/dekorate/s2i/util/**</include>
+                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
+                    <include>META-INF/services/io.dekorate.Generator</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
                 </filter>
@@ -134,6 +136,8 @@
                     <include>io/dekorate/s2i/generator/**</include>
                     <include>io/dekorate/s2i/handler/**</include>
                     <include>io/dekorate/s2i/util/**</include>
+                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
+                    <include>META-INF/services/io.dekorate.Generator</include>
                   </includes>
                 </filter>
               </filters>
