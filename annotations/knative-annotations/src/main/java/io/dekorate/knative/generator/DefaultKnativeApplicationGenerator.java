@@ -16,20 +16,10 @@
 package io.dekorate.knative.generator;
 
 import io.dekorate.Generator;
-import io.dekorate.knative.annotation.KnativeApplication;
 
 import java.util.Collections;
 import java.util.List;
 
 public class DefaultKnativeApplicationGenerator implements KnativeApplicationGenerator {
 
-    public DefaultKnativeApplicationGenerator () {
-        Generator.registerAnnotationClass(KNATIVE, KnativeApplication.class); 
-        Generator.registerGenerator(KNATIVE, this);
-    }
-
-    @Override
-    public List<Class> getSupportedAnnotations() {
-        return Collections.singletonList(KnativeApplication.class);
-    }
 }

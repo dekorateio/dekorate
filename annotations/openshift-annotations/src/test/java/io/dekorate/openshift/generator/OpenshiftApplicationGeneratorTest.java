@@ -17,6 +17,7 @@ package io.dekorate.openshift.generator;
 
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
+import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.openshift.api.model.DeploymentConfig;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
@@ -44,12 +45,14 @@ class OpenshiftApplicationGeneratorTest {
 
   @Test
   public void shouldGenerateOpenshiftAndWriteToTheFilesystem()  {
+    WithProject withProject = new WithProject() {};
+    withProject.setProject(FileProjectFactory.create(new File(".")));
+
     SessionWriter writer = new SimpleFileWriter(tempDir);
     Session session = Session.getSession();
     session.setWriter(writer);
 
     OpenshiftApplicationGenerator generator = new OpenshiftApplicationGenerator() {};
-    generator.setProject(FileProjectFactory.create(new File(".")));
     System.out.println("Project root:" + generator.getProject());
 
     Map<String, Object> map = new HashMap<String, Object>() {{
@@ -72,6 +75,6 @@ class OpenshiftApplicationGeneratorTest {
     assertThat(tempDir.resolve("openshift.json")).exists();
     assertThat(tempDir.resolve("openshift.yml")).exists();
 
-    assertThat(result).hasSize(4);
+    assertThat(result).hasSize(5);
   }
 }

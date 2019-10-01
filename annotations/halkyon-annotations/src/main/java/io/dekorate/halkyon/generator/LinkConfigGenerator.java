@@ -15,6 +15,7 @@
  */
 package io.dekorate.halkyon.generator;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -33,6 +34,14 @@ import io.dekorate.halkyon.handler.LinkHandler;
 public interface LinkConfigGenerator extends Generator, WithProject {
   String GENERATOR_KEY = "link";
   
+    default String getKey() {
+    return GENERATOR_KEY;
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return HalkyonLink.class;
+  }
+
   @Override
   default void add(Map map) {
     add(new PropertyConfiguration<>(LinkConfigAdapter.newBuilder(propertiesMap(map, HalkyonLink.class))));

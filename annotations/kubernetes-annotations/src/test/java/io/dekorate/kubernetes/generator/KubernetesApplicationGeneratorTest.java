@@ -17,6 +17,7 @@ package io.dekorate.kubernetes.generator;
 
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
+import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
@@ -40,12 +41,14 @@ class KubernetesApplicationGeneratorTest {
   public void shouldGenerateKubernetesWithoutWritingToFileSystem() throws IOException {
     Path tempDir = Files.createTempDirectory("dekorate");
 
+    WithProject withProject = new WithProject() {};
+    withProject.setProject(FileProjectFactory.create(new File(".")));
+
     SessionWriter writer = new SimpleFileWriter(tempDir, false);
     Session session = Session.getSession();
     session.setWriter(writer);
 
     KubernetesApplicationGenerator generator = new KubernetesApplicationGenerator() {};
-    generator.setProject(FileProjectFactory.create(new File(".")));
 
     Map<String, Object> map = new HashMap<String, Object>() {{
       put(KubernetesApplication.class.getName(), new HashMap<String, Object>() {{
@@ -92,6 +95,6 @@ class KubernetesApplicationGeneratorTest {
     assertThat(tempDir.resolve("kubernetes.json")).doesNotExist();
     assertThat(tempDir.resolve("kubernetes.yml")).doesNotExist();
 
-    assertThat(result).hasSize(4);
+    assertThat(result).hasSize(5);
   }
 }

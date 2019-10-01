@@ -29,9 +29,20 @@ import io.dekorate.jaeger.config.JaegerAgentConfigBuilder;
 import io.dekorate.jaeger.handler.JaegerAgentHandler;
 
 import javax.lang.model.element.Element;
+
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 public interface JaegerAgentGenerator extends Generator, WithSession {
+
+  default String getKey() {
+    return "jaeger";
+  }
+
+  default Class<? extends Annotation> getAnnotation() {
+    return EnableJaegerAgent.class;
+  }
+
 
   @Override
   default void add(Map map) {

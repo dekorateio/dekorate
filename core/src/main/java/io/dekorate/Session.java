@@ -15,6 +15,7 @@
  */
 package io.dekorate;
 
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.utils.Generators;
 
 /**
  * The object that holds the state used by all processors.
@@ -49,12 +51,17 @@ public class Session {
   private final AtomicBoolean generated = new AtomicBoolean();
 
   private final Set<Handler> handlers = new TreeSet<>(Comparator.comparing(Handler::order));
+
+  private final Map<String, Generator> generators = new HashMap<>();
+  private final Map<String, Class<? extends Annotation>> annotations = new HashMap<>();
+
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
 
   private final Map<String, KubernetesList> generatedResources= new HashMap<>();
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
   private final Set<SessionListener> listeners = new LinkedHashSet<>();
+
   private final Logger LOGGER = LoggerFactory.getLogger();
 
   /**
@@ -69,6 +76,7 @@ public class Session {
       if (INSTANCE == null) {
         INSTANCE = new Session();
         INSTANCE.loadHandlers();
+        INSTANCE.loadGenerators();
       }
     }
     return INSTANCE;
@@ -84,7 +92,55 @@ public class Session {
       this.handlers.add(iterator.next().create(this.resources, this.configurators));
     }
   }
- 
+
+  public void loadGenerators() {
+    Iterator<Generator> iterator = ServiceLoader.load(Generator.class, Session.class.getClassLoader()).iterator();
+    while (iterator.hasNext()) {
+      Generator g = iterator.next();
+      if (g.getKey() != null) {
+        this.generators.put(g.getKey(), g);
+        if (g.getAnnotation() != null) {
+          this.annotations.put(g.getKey(), g.getAnnotation());
+        }
+      }
+    }
+  }
+
+  public void feed(Map<String, Object> map) {
+    for (Map.Entry<String, Object> entry : map.entrySet()) {
+      String key = entry.getKey();
+      Object value = entry.getValue();
+      Generator generator = generators.get(key);
+      if (generator == null) {
+        throw new IllegalArgumentException("Unknown generator '" + key + "'. Known generators are: " + generators.keySet());
+      }
+
+      if (value instanceof Map) {
+        Map<String, Object> generatorMap = new HashMap<>();
+        Class annotationClass = annotations.get(key);
+        String newKey = annotationClass.getName();
+        Generators.populateArrays(annotationClass, (Map<String, Object>) value);
+        generatorMap.put(newKey, value);
+        generator.add(generatorMap);
+      }
+    }
+  }
+
+  private Map<String, Object> filter(Map<String, Object> properties) {
+    Map<String, Object> result = new HashMap<>();
+    for (Map.Entry<String, Object> entry : properties.entrySet()) {
+      String key = entry.getKey();
+      Object value = entry.getValue();
+      if (annotations.containsKey(key)) {
+        result.put(annotations.get(key).getName(), value);
+      } else {
+        result.put(key, value);
+      }
+    }
+    return result;
+  }
+
+
   //should be used only for testing
   public static void clearSession() {
     INSTANCE = null;
@@ -179,4 +235,5 @@ public class Session {
   private static boolean hasMatchingConfiguration(Handler h, Configurators configurators) {
     return configurators.stream().anyMatch(c->h.canHandle(c.getClass()));
   }
+
 }
