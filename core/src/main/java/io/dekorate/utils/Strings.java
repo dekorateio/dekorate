@@ -18,7 +18,10 @@ package io.dekorate.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import io.dekorate.DekorateException;
 
@@ -57,6 +60,69 @@ public class Strings {
     return buf.toString();
   }
 
+  /**
+   * Uppercase the first character of the word and ignore the rest.
+   * Examples:
+   * null -> null
+   * "" -> ""
+   * "a" -> "A"
+   * "string" -> "String"
+   * "myString" -> "MyString"
+   * @param str The input string.
+   * @return The input string with the first character upper cased. 
+   */
+  public static String uppercaseFirst(String str) {
+    if (str == null) {
+      return null;
+    }
+
+    if (str.isEmpty()) {
+      return str;
+    }
+
+    if (str.length() == 1) {
+      return str.toUpperCase();
+    }
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+  }
+
+  /**
+   * Lowercase the first character of the word and ignore the rest.
+   * Examples:
+   * null -> null
+   * "" -> ""
+   * "A" -> "a"
+   * "String" -> "string"
+   * "MyString" -> "myString"
+   * @param str The input string.
+   * @return The input string with the first character lower cased. 
+   */
+ 
+  public static String lowerFirst(String str) {
+    if (str == null) {
+      return null;
+    }
+
+    if (str.isEmpty()) {
+      return str;
+    }
+
+    if (str.length() == 1) {
+      return str.toLowerCase();
+    }
+    return str.substring(0, 1).toLowerCase() + str.substring(1);
+  }
+
+  /**
+   * Convert kebab case to camel case.
+   * @param The input string.
+   * @return The camel cased string.
+   */
+  public static String kebabToCamelCase(String str) {
+      final AtomicBoolean first = new AtomicBoolean(true);
+      return str != null && str.contains("-") ? Arrays.stream(str.split("-")).map(s -> first.getAndSet(false) ? s : Strings.uppercaseFirst(s)).collect(Collectors.joining()) : str;
+  }
+
   public static String read(Path path) {
     try {
       return new String(Files.readAllBytes(path));
@@ -64,5 +130,4 @@ public class Strings {
       throw DekorateException.launderThrowable(e);
     }
   }
- 
 }

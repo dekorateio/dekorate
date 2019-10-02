@@ -33,6 +33,7 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.utils.Generators;
+import io.dekorate.utils.Maps;
 
 /**
  * The object that holds the state used by all processors.
@@ -121,7 +122,7 @@ public class Session {
         String newKey = annotationClass.getName();
         Generators.populateArrays(annotationClass, (Map<String, Object>) value);
         generatorMap.put(newKey, value);
-        generator.add(generatorMap);
+        generator.add(Maps.kebabToCamelCase(generatorMap));
       }
     }
   }

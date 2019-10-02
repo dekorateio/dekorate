@@ -150,6 +150,23 @@ public class Maps {
     }
   }
 
+  /**
+   * Recursively convert all {@link Map} keys from kebab case to camel case.
+   * Recursively here means that if a value is a {@link Map} it will also be converted.
+   * @param The input string.
+   * @return The camel cased string.
+   */
+  public static Map<String, Object> kebabToCamelCase(Map<String, Object> map) {
+    Map<String, Object> result = new HashMap<>();
+    for (Map.Entry<String, Object> entry : map.entrySet()) {
+      String key = entry.getKey();
+      Object value = entry.getValue();
+      String newKey = Strings.kebabToCamelCase(key);
+      result.put(newKey, value instanceof Map ? kebabToCamelCase((Map<String, Object>) value) : value);
+    }
+    return result;
+  }
+
   private static void unrollArrays(Map<String, Object> result) {
     Map<String, Object> copy = new HashMap<>(result);
     for (Map.Entry<String, Object> entry : copy.entrySet()) {
