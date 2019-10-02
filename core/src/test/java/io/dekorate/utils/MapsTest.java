@@ -40,6 +40,17 @@ class MapsTest {
     }
   }
 
+  @Test
+  public void testKebabToCamelCase() throws Exception {
+    try (InputStream is = MapsTest.class.getClassLoader().getResourceAsStream("kebab.yml")) {
+      Map<String, Object> map = Maps.fromYaml(is);
+      Map<String, Object> result = Maps.kebabToCamelCase(map);
+      Map<String, Object> kubernetes = (Map<String, Object>) result.get("kubernetes");
+      Map<String, Object> readinesProbe = (Map<String, Object>) kubernetes.get("readinesProbe");
+      assertEquals(10, readinesProbe.get("periodSeconds"));
+    }
+  }
+
   private void checkFlattenMap(Map<String, Object> map) {
     assertNotNull(map);
     Map kubernetes = (Map) map.get("kubernetes");

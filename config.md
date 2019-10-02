@@ -31,6 +31,15 @@ To reference the `httpActionPath` of the complex object `Probe` which is used to
 
     dekorate.kubernetes.readinessProbe.httpActionPath=/some/path
 
+## Casing
+
+Please note that the casings for these properties are:
+
+- camel case
+- kebab
+
+For example both of `dekorate.kubernetes.initContainers` and `dekorate.kubernetes.init-containers` are supported.
+
 Below is a list of all the available options
 
 ## Kubernetes

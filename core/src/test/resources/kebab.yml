@@ -1,0 +1,4 @@
+dekorate:
+  kubernetes:
+    readines-probe:
+      period-seconds: 10
