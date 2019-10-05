@@ -24,6 +24,7 @@ import javax.lang.model.element.Element;
 
 import io.dekorate.Generator;
 import io.dekorate.Session;
+import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
@@ -32,7 +33,7 @@ import io.dekorate.docker.adapter.*;
 import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.docker.config.*;
 
-public interface DockerBuildGenerator extends Generator, WithSession {
+public interface DockerBuildGenerator extends Generator, WithSession, WithProject {
 
   default String getKey() {
     return "docker";
