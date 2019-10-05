@@ -15,11 +15,12 @@
  */
 package io.dekorate.kubernetes.configurator;
 
+import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.ImageConfigurationFluent;
-import io.dekorate.kubernetes.config.BaseConfigFluent;
 
-public class ApplyDeploy extends Configurator<ImageConfigurationFluent> {
+@Description("Apply deployment related info to image configuration.")
+public class ApplyDeployToImageConfiguration extends Configurator<ImageConfigurationFluent> {
 
   public static final String DEKORATE_DEPLOY = "dekorate.deploy";
 

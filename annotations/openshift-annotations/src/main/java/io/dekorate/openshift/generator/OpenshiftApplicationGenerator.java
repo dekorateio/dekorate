@@ -87,7 +87,6 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
       Session session = getSession();
       session.configurators().add(config);
       session.handlers().add(new OpenshiftHandler(session.resources()));
-      session.addListener(this);
   }
 
   default void onClosed() {

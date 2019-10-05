@@ -38,7 +38,7 @@ import io.dekorate.deps.kubernetes.api.model.apps.DeploymentBuilder;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
-import io.dekorate.kubernetes.configurator.ApplyDeploy;
+import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.kubernetes.config.EditableKubernetesConfig;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
@@ -190,7 +190,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   @Override
   public ConfigurationSupplier<KubernetesConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<KubernetesConfig>(new KubernetesConfigBuilder().accept(new ApplyDeploy()).accept(new ApplyProjectInfo(p)));
+    return new ConfigurationSupplier<KubernetesConfig>(new KubernetesConfigBuilder().accept(new ApplyDeployToImageConfiguration()).accept(new ApplyProjectInfo(p)));
   }
 
   
