@@ -19,14 +19,16 @@ package io.dekorate.docker.generator;
 
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.docker.config.*;
-import io.dekorate.kubernetes.configurator.ApplyBuild;
-import io.dekorate.kubernetes.configurator.ApplyDeploy;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
+import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultDockerBuildGenerator implements DockerBuildGenerator {
 
     public DefaultDockerBuildGenerator () {
         on(new DefaultConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
-                                                        .accept(new ApplyBuild())
-                                                        .accept(new ApplyDeploy())));
+                                                       .accept(new ApplyProjectInfo(getProject()))
+                                                       .accept(new ApplyBuildToImageConfiguration())
+                                                       .accept(new ApplyDeployToImageConfiguration())));
     }
 }

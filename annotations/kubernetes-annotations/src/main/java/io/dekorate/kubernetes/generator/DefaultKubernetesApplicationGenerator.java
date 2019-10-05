@@ -15,20 +15,22 @@
  */
 package io.dekorate.kubernetes.generator;
 
+import io.dekorate.Session;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
-import io.dekorate.kubernetes.configurator.ApplyBuild;
-import io.dekorate.kubernetes.configurator.ApplyDeploy;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
-import io.dekorate.project.Project;
 
 public class DefaultKubernetesApplicationGenerator implements KubernetesApplicationGenerator {
 
     public DefaultKubernetesApplicationGenerator () {
-        add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()
-                                                        .accept(new ApplyProjectInfo(getProject()))
-                                                        .accept(new ApplyBuild())
-                                                        .accept(new ApplyDeploy())));
+      Session session = getSession();
+      session.addListener(this);
+      add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()
+                                                     .accept(new ApplyProjectInfo(getProject()))
+                                                     .accept(new ApplyBuildToImageConfiguration())
+                                                     .accept(new ApplyDeployToImageConfiguration())));
     }
 }

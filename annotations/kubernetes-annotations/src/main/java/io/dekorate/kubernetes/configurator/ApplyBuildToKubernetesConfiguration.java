@@ -16,21 +16,20 @@
 package io.dekorate.kubernetes.configurator;
 
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
-import io.dekorate.kubernetes.config.ImageConfigurationFluent;
+import io.dekorate.kubernetes.config.KubernetesConfigFluent;
 
-@Description("Apply the docker build hook configuration.")
-public class ApplyBuild extends Configurator<ImageConfigurationFluent> {
+@Description("Apply build related info to image configuration.")
+public class ApplyBuildToKubernetesConfiguration extends Configurator<KubernetesConfigFluent> {
 
   private static final String DEKORATE_BUILD = "dekorate.build";
   private static final String DEKORATE_PUSH = "dekorate.push";
   private static final String DEKORATE_DOCKER_REGISTRY = "dekorate.docker.registry";
 
   @Override
-  public void visit(ImageConfigurationFluent config) {
+  public void visit(KubernetesConfigFluent config) {
     config.withAutoBuildEnabled(Boolean.parseBoolean(System.getProperty(DEKORATE_BUILD, String.valueOf(config.isAutoBuildEnabled()))))
       .withAutoPushEnabled(Boolean.parseBoolean(System.getProperty(DEKORATE_PUSH, String.valueOf(config.isAutoPushEnabled()))))
-      .withRegistry(System.getProperty(DEKORATE_DOCKER_REGISTRY, String.valueOf(config.getRegistry())));
+      .withRegistry(System.getProperty(DEKORATE_DOCKER_REGISTRY, config.getRegistry()));
   }
 }

@@ -20,8 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import javax.lang.model.element.Element;
+
+import com.sun.tools.javac.util.ServiceLoader;
 
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactories;
@@ -47,8 +50,10 @@ import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.kubernetes.configurator.ApplyDeploy;
-import io.dekorate.kubernetes.configurator.ApplyBuild;
+import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToKubernetesConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyBuildToKubernetesConfiguration;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
 import io.dekorate.project.ApplyProjectInfo;
@@ -71,8 +76,10 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
         add(new PropertyConfiguration<>(
             KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesApplication.class))
-            .accept(new ApplyBuild())
-            .accept(new ApplyDeploy())
+            .accept(new ApplyBuildToImageConfiguration())
+            .accept(new ApplyDeployToImageConfiguration())
+            .accept(new ApplyBuildToKubernetesConfiguration())
+            .accept(new ApplyDeployToKubernetesConfiguration())
             .accept(new ApplyProjectInfo(getProject()))));
   }
 
@@ -81,8 +88,10 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
      add(new AnnotationConfiguration<>(
             KubernetesConfigAdapter
             .newBuilder(application)
-            .accept(new ApplyBuild())
-            .accept(new ApplyDeploy())
+            .accept(new ApplyBuildToImageConfiguration())
+            .accept(new ApplyDeployToImageConfiguration())
+            .accept(new ApplyBuildToKubernetesConfiguration())
+            .accept(new ApplyDeployToKubernetesConfiguration())
             .accept(new ApplyProjectInfo(getProject()))));
   }
 
@@ -90,7 +99,6 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
     Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new KubernetesHandler(session.resources()));
-    session.addListener(this);
   }
 
   default void onClosed() {
@@ -115,11 +123,12 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
       }
     }
 
+    List<ProjectHook> hooks = new ArrayList<>();
+
     if (kubernetesConfig.isAutoPushEnabled()) {
       // When deploy is enabled, we scale the Deployment down before push
       // then scale it back up once the image has been successfully pushed
       // This ensure that the pod runs the proper image
-      List<ProjectHook> hooks = new ArrayList<>();
       if (kubernetesConfig.isAutoDeployEnabled()) {
         try (KubernetesClient client = new DefaultKubernetesClient()) {
           client.resourceList(generated).createOrReplace();
@@ -129,13 +138,14 @@ public interface KubernetesApplicationGenerator extends Generator, SessionListen
 
       hooks.add(new ImageBuildHook(getProject(), buildService));
       hooks.add(new ImagePushHook(getProject(), buildService));
-      if (kubernetesConfig.isAutoDeployEnabled()) {
-        hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 1));
-      }
-      OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
-      hook.register();
     } else if (kubernetesConfig.isAutoBuildEnabled()) {
-      new ImageBuildHook(getProject(), buildService).register();;
+      hooks.add(new ImageBuildHook(getProject(), buildService));
     }
+
+    if (kubernetesConfig.isAutoDeployEnabled()) {
+      hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 1));
+    }
+    OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
+    hook.register();
   }
 }
