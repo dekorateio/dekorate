@@ -15,6 +15,7 @@
  */
 package io.dekorate.kubernetes.generator;
 
+import io.dekorate.Session;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
