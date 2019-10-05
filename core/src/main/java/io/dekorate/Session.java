@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -61,7 +60,7 @@ public class Session {
 
   private final Map<String, KubernetesList> generatedResources= new HashMap<>();
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
-  private final Set<SessionListener> listeners = new LinkedHashSet<>();
+  private final Map<Class<? extends SessionListener>, SessionListener> listeners = new HashMap<>();
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
@@ -172,7 +171,7 @@ public class Session {
   }
 
   public void addListener(SessionListener listener) {
-    listeners.add(listener);
+    listeners.put(listener.getClass(), listener);
   }
 
   /**
@@ -186,7 +185,7 @@ public class Session {
         throw new IllegalStateException("No writer has been specified!");
       }
       final Map<String, String> result = w.write(this);
-      listeners.forEach(SessionListener::onClosed);
+      listeners.values().stream().forEach(SessionListener::onClosed);
       LOGGER.info("Closing dekorate session.");
       return result;
     }
