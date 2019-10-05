@@ -15,11 +15,6 @@
  */
 package io.dekorate.knative.generator;
 
-import io.dekorate.Generator;
-
-import java.util.Collections;
-import java.util.List;
-
 public class DefaultKnativeApplicationGenerator implements KnativeApplicationGenerator {
 
 }

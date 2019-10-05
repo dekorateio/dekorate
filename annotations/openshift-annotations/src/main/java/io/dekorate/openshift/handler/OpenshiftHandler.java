@@ -31,15 +31,9 @@ import io.dekorate.deps.kubernetes.api.model.PodSpec;
 import io.dekorate.deps.kubernetes.api.model.PodSpecBuilder;
 import io.dekorate.deps.kubernetes.api.model.PodTemplateSpec;
 import io.dekorate.deps.kubernetes.api.model.PodTemplateSpecBuilder;
-import io.dekorate.deps.openshift.api.model.BuildConfig;
-import io.dekorate.deps.openshift.api.model.BuildConfigBuilder;
 import io.dekorate.deps.openshift.api.model.DeploymentConfig;
 import io.dekorate.deps.openshift.api.model.DeploymentConfigBuilder;
-import io.dekorate.deps.openshift.api.model.ImageStream;
-import io.dekorate.deps.openshift.api.model.ImageStreamBuilder;
 import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.config.Configurator;
-import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
@@ -51,13 +45,10 @@ import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
-import io.dekorate.utils.Images;
 
 public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> implements HandlerFactory, WithProject {
 
   private static final String OPENSHIFT = "openshift";
-  private static final String APP = "app";
-  private static final String VERSION = "version";
 
   private static final String IF_NOT_PRESENT = "IfNotPresent";
   private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";
