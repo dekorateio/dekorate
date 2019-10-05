@@ -15,6 +15,7 @@
  */
 package io.dekorate.openshift.generator;
 
+import io.dekorate.Session;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
