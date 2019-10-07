@@ -51,9 +51,10 @@ For new issues and pull requests please don't forget to use https://github.com/d
 - Build tool independent (works with maven, gradle, bazel and so on)
 - [Rich framework integration](#framework-integration)
   - Port, Service and Probe auto configuration
+    - Generic Java
     - Spring Boot
     - [Quarkus](#quarkus)
-- [Configuration externalization for known frameworks](#configuration-externalization-for-known-frameworks) (annotationless)
+- [Configuration externalization for known frameworks](#configuration-externalization) (annotationless)
   - Spring Boot
 - Integration with external generators
 - [Rich set of examples](examples)
@@ -994,12 +995,17 @@ By adding the annotation to your test class the following things will happen:
  - [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-openshift-example)
  - [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-openshift-example)
  
-#### Configuration externalization for known frameworks
+#### Configuration externalization
 It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.
 
-Dekorate is gradually adding support for configuration externalization for the supported frameworks:
+Dekorate provides the ability to externalize configuration to configuration files (properites or yml).
+This can be done to either override the configuration values provided by annotations, or to use dekorate without annotations.
+
+For supported frameworks, this is done out of the box, as long as the corresponding framework jar is present.
+The frameworks supporting this feature are:
 
 - spring boot
+- thorntail
 
 For these frameworks, the use of annotations is optional, as everything may be configured via configuration files.
 Each annotation may be expressed using properties or yaml using the following steps.
@@ -1008,6 +1014,11 @@ Each annotation may be expressed using properties or yaml using the following st
 - All keys start with the `dekorate.<annotation kind>.` prefix, where `annotation kind` is the annotation class name in lowercase, stripped of the `Application` suffix.
 - The remaining part of key is the annotation property name.
 - For nesting properties the key is also nested following the previous rule.
+
+For all other frameworks or generic java application this can be done with the use of the `@Dekorate` annotation.
+The presence of this annotation will trigger the dekorate processes. Dekorate will then look for `application.properites` or `application.yml` resources.
+If present, they will be loaded. If not the default configuration will be used.
+
 
 Examples:
 
@@ -1053,6 +1064,7 @@ or using yaml:
           - key: foo
             value: bar
    
+
 ##### Spring Boot
 
 For spring boot, dekorate will look for configuration under:
@@ -1067,6 +1079,46 @@ Also it will look for the same files under the kubernetes profile:
 - application-kubernetes.yml
 - application-kubernetes.yaml
 
+##### Vert.x & generic Java
+
+For generic java, if the @Dekorate annotion is present, then dekorate will look for confiugration uder:
+
+- application.properties
+- application.yml
+
+These files can be overriden using the `configFiles` property on the `@Dekorate` annotation.
+
+For example:
+
+A generic java application annotated with `@Dekorate`:
+
+```java
+
+    import io.dekorate.annotation.Dekorate
+    
+    @Dekorate
+    public Main {
+        //do stuff
+    }
+```
+
+During compilation kubernetes, openshift or both resources will be generated (depending on what dekorate jars are present in the classpath).
+These resources can be customized using properties:
+
+    dekorate.openshift.labels[0].key=foo
+    dekorate.openshift.labels[0].value=bar
+    
+or using yaml:
+
+    dekorate:
+      openshift:
+        labels:
+          - key: foo
+            value: bar
+  
+#### related examples
+ - [Vert.x on kubernetes example](examples/vertx-on-kubernetes-example)
+ - [Vert.x on openshift example](examples/vertx-on-openshift-example)
 
 #### External generator integration
 
