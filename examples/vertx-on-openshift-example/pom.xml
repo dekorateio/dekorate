@@ -45,6 +45,12 @@ limitations under the License.
       <artifactId>vertx-core</artifactId>
       <version>${version.vertx}</version>
     </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>openshift-junit-starter</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
