@@ -35,6 +35,7 @@ limitations under the License.
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-annotations</artifactId>
@@ -44,6 +45,12 @@ limitations under the License.
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
       <version>${version.vertx}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>kubernetes-junit-starter</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
