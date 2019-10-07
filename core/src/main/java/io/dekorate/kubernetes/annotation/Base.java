@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
       withStaticAdapterMethod = false)
       @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
       @Retention(RetentionPolicy.SOURCE)
-@interface Dekorate {
+@interface Base {
 
         /**
          * The group of the application.
