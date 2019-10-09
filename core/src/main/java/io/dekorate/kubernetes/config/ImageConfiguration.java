@@ -31,6 +31,16 @@ public class ImageConfiguration extends ApplicationConfiguration {
   private boolean autoDeployEnabled;
   private boolean autoPushEnabled;
 
+  public static ImageConfiguration from(ApplicationConfiguration applicationConfiguration) {
+    return new ImageConfigurationBuilder()
+      .withProject(applicationConfiguration.getProject())
+      .withGroup(applicationConfiguration.getGroup())
+      .withName(applicationConfiguration.getName())
+      .withVersion(applicationConfiguration.getVersion())
+      .withAttributes(applicationConfiguration.getAttributes())
+      .build();
+  }
+
   public ImageConfiguration() {
   }
 

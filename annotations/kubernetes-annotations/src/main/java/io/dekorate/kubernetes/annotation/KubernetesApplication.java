@@ -16,7 +16,6 @@
 package io.dekorate.kubernetes.annotation;
 
 
-import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;

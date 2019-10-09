@@ -70,7 +70,7 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
       Session session = getSession();
       session.configurators().add(config);
       session.addListener(LISTENER);
-      session.handlers().add(new OpenshiftHandler(session.resources()));
+      session.handlers().add(new OpenshiftHandler(session.resources(), session.configurators()));
   }
 
 }

@@ -77,7 +77,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     default void on(ConfigurationSupplier<KnativeConfig> config) {
       Session session = getSession();
       session.configurators().add(config);
-      session.handlers().add(new KnativeHandler(session.resources()));
+      session.handlers().add(new KnativeHandler(session.resources(), session.configurators()));
       session.addListener(this);
   }
 
