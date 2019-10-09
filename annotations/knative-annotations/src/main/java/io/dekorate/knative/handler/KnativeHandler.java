@@ -18,40 +18,42 @@ package io.dekorate.knative.handler;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesHandler;
+import io.dekorate.BuildServiceFactories;
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.deps.knative.serving.v1beta1.Service;
+import io.dekorate.deps.knative.serving.v1beta1.ServiceBuilder;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.knative.serving.v1beta1.*;
-import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.config.Configurator;
-import io.dekorate.kubernetes.config.Env;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.knative.config.EditableKnativeConfig;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigBuilder;
+import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
+import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
-import io.dekorate.utils.Images;
 
 public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> implements HandlerFactory, WithProject {
 
   private static final String KNATIVE = "knative";
-
+  private final Configurators configurators;
 
   public KnativeHandler() {
-    super(new Resources());
+    this(new Resources(), new Configurators());
   }
-  public KnativeHandler(Resources resources) {
+  public KnativeHandler(Resources resources, Configurators configurators) {
     super(resources);
+    this.configurators = configurators;
   }
 
   @Override
   public Handler create(Resources resources, Configurators configurators) {
-    return new KnativeHandler(resources);
+    return new KnativeHandler(resources, configurators);
   }
 
   @Override
@@ -110,6 +112,30 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       .endSpec()
       .endTemplate()
       .endSpec()
+      .build();
+  }
+
+  private static ImageConfiguration getImageConfiguration(Project project, KnativeConfig config, Configurators configurators) {
+    return configurators.get(ImageConfiguration.class, BuildServiceFactories.matches(project)).map(i -> merge(config, i)).orElse(ImageConfiguration.from(config));
+  }
+
+  private static ImageConfiguration merge(KnativeConfig config, ImageConfiguration imageConfig) {
+    if (config == null) {
+      throw new NullPointerException("KnativeConfig is null.");
+    }
+    if (imageConfig == null) {
+      return ImageConfiguration.from(config);
+    }
+    return new ImageConfigurationBuilder()
+      .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
+      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : config.getGroup())
+      .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
+      .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
+      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : config.getRegistry())
+      .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : null)
+      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : config.isAutoBuildEnabled())
+      .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
+      .withAutoDeployEnabled(imageConfig.isAutoDeployEnabled() ? imageConfig.isAutoDeployEnabled() : config.isAutoDeployEnabled())
       .build();
   }
 }

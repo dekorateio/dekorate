@@ -18,6 +18,7 @@ package io.dekorate.openshift.handler;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesHandler;
+import io.dekorate.BuildServiceFactories;
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
@@ -36,6 +37,8 @@ import io.dekorate.deps.openshift.api.model.DeploymentConfigBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
@@ -60,17 +63,19 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
 
   private final Logger LOGGER = LoggerFactory.getLogger();
+  private final Configurators configurators;
 
   public OpenshiftHandler() {
-    super(new Resources());
+    this(new Resources(), new Configurators());
   }
-  public OpenshiftHandler(Resources resources) {
+  public OpenshiftHandler(Resources resources, Configurators configurators) {
     super(resources);
+    this.configurators = configurators;
   }
 
   @Override
   public Handler create(Resources resources, Configurators configurators) {
-    return new OpenshiftHandler(resources);
+    return new OpenshiftHandler(resources, configurators);
   }
 
   @Override
@@ -81,6 +86,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   public void handle(OpenshiftConfig config) {
     LOGGER.info("Processing openshift configuration.");
     setApplicationInfo(config);
+    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
     Optional<DeploymentConfig> existingDeploymentConfig = resources.groups().getOrDefault(OPENSHIFT, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof DeploymentConfig)
       .map(i -> (DeploymentConfig)i)
@@ -88,7 +94,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .findAny();
 
     if (!existingDeploymentConfig.isPresent()) {
-      resources.add(OPENSHIFT, createDeploymentConfig(config));
+      resources.add(OPENSHIFT, createDeploymentConfig(config, imageConfig));
     }
 
     for (Container container : config.getInitContainers()) {
@@ -123,7 +129,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @param config   The sesssion.
    * @return          The deployment config.
    */
-  public DeploymentConfig createDeploymentConfig(OpenshiftConfig config)  {
+  public DeploymentConfig createDeploymentConfig(OpenshiftConfig config, ImageConfiguration imageConfig)  {
     return new DeploymentConfigBuilder()
       .withNewMetadata()
       .withName(config.getName())
@@ -140,7 +146,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .withContainerNames(config.getName())
       .withNewFrom()
       .withKind(IMAGESTREAMTAG)
-      .withName(config.getName() + ":" + config.getVersion())
+      .withName(imageConfig.getName() + ":" + imageConfig.getVersion())
       .endFrom()
       .endImageChangeParams()
       .endTrigger()
@@ -187,5 +193,25 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .build();
   }
  
- 
+  private static ImageConfiguration getImageConfiguration(Project project, OpenshiftConfig config, Configurators configurators) {
+    return configurators.get(ImageConfiguration.class, BuildServiceFactories.matches(project)).map(i -> merge(config, i)).orElse(ImageConfiguration.from(config));
+  }
+
+  private static ImageConfiguration merge(OpenshiftConfig config, ImageConfiguration imageConfig) {
+    if (config == null) {
+      throw new NullPointerException("OpenshiftConfig is null.");
+    }
+    if (imageConfig == null) {
+      return ImageConfiguration.from(config);
+    }
+    return new ImageConfigurationBuilder()
+      .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
+      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : config.getGroup())
+      .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
+      .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
+      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : config.isAutoBuildEnabled())
+      .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
+      .withAutoDeployEnabled(imageConfig.isAutoDeployEnabled() ? imageConfig.isAutoDeployEnabled() : config.isAutoDeployEnabled())
+      .build();
+  }
 }

@@ -1,4 +1,6 @@
 dekorate:
+  docker:
+    registry: quay.io
   kubernetes:
     group: annotationless
     labels:

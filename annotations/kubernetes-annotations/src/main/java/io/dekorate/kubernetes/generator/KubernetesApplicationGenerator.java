@@ -77,7 +77,7 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
   default void add(ConfigurationSupplier<KubernetesConfig> config)  {
     Session session = getSession();
     session.configurators().add(config);
-    session.handlers().add(new KubernetesHandler(session.resources()));
+    session.handlers().add(new KubernetesHandler(session.resources(), session.configurators()));
     session.addListener(LISTENER);
   }
 }
