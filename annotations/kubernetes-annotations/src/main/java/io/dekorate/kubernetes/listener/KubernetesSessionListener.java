@@ -36,6 +36,7 @@ import io.dekorate.hook.ImageBuildHook;
 import io.dekorate.hook.ImagePushHook;
 import io.dekorate.hook.OrderedHook;
 import io.dekorate.hook.ProjectHook;
+import io.dekorate.hook.ResourcesApplyHook;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
@@ -60,7 +61,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
     KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
 
     BuildService buildService = null;
-    if (kubernetesConfig.isAutoPushEnabled() || kubernetesConfig.isAutoBuildEnabled()) {
+    if (kubernetesConfig.isAutoPushEnabled() || kubernetesConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
       try {
           buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated.getItems())).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
       } catch (Exception e) {
@@ -68,22 +69,19 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
       }
     }
 
-    List<ProjectHook> hooks = new ArrayList<>();
+    List<ProjectHook> hooks = new ArrayList<>() ;
+    if (kubernetesConfig.isAutoDeployEnabled()) {
+      hooks.add(new ResourcesApplyHook(getProject(), KUBERNETES, "kubectl"));
+      hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 0));
+    }
 
     if (kubernetesConfig.isAutoPushEnabled()) {
       // When deploy is enabled, we scale the Deployment down before push
       // then scale it back up once the image has been successfully pushed
       // This ensure that the pod runs the proper image
-      if (kubernetesConfig.isAutoDeployEnabled()) {
-        try (KubernetesClient client = new DefaultKubernetesClient()) {
-          client.resourceList(generated).createOrReplace();
-        }
-        hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 0));
-      }
-
       hooks.add(new ImageBuildHook(getProject(), buildService));
       hooks.add(new ImagePushHook(getProject(), buildService));
-    } else if (kubernetesConfig.isAutoBuildEnabled()) {
+    } else if (kubernetesConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
       hooks.add(new ImageBuildHook(getProject(), buildService));
     }
 
@@ -93,5 +91,4 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
     OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
     hook.register();
 	}
-
 }

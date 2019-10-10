@@ -15,6 +15,13 @@
  */
 package io.dekorate.hook;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import io.dekorate.project.Project;
 
 /**
@@ -35,22 +42,33 @@ public class OrderedHook extends ProjectHook {
 
   @Override
   public void init() {
-    for(ProjectHook h : hooks) {
-      h.init();
-    }
+    doWithHooks(ProjectHook::init);
   }
 
   @Override
   public void warmup() {
-    for(ProjectHook h : hooks) {
-      h.warmup();
-    }
+    doWithHooks(ProjectHook::warmup);
   }
 
   @Override
   public void run() {
-    for(ProjectHook h : hooks) {
-      h.run();
+    doWithHooks(ProjectHook::run);
+  }
+
+  public void doWithHooks(Consumer<ProjectHook> c) {
+    List<ProjectHook> all = Arrays.asList(hooks);
+    List<ProjectHook> visited = new ArrayList<>();
+    List<ProjectHook> pending = new ArrayList<>(all);
+    for (ProjectHook h : all) {
+      try {
+        c.accept(h);
+        visited.add(h);
+        pending.remove(h);
+      } catch (Exception e) {
+        System.out.println("Error while calling hook:" + h.getClass().getTypeName()+". Message:" + e.getMessage());
+        System.out.println("Aborting execution of hooks:" + pending.stream().map(a -> a.getClass().getTypeName()).collect(Collectors.joining(", "))+ ".");
+        e.printStackTrace();
+      }
     }
   }
 

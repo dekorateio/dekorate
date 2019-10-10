@@ -44,7 +44,7 @@ public class ScaleDeploymentHook extends ProjectHook {
 
     @Override
     public void run() {
-      LOGGER.info("Performing docker build.");
+      LOGGER.info("Scaling deployment: "+name +" to: "+replicas+".");
       exec("kubectl", "scale", "deployment/" + name, "--replicas="+replicas);
     }
 }
