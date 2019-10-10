@@ -104,6 +104,72 @@ jobs:
             oc new-project itests
             mvn -B clean install -Pbuild -Pwith-examples
 
+  CLI_OPTIONS:
+    machine: true
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v8-dependencies-{{ checksum "pom.xml" }}
+          # fallback to using the latest cache if no exact match is found
+          - v8-dependencies-
+
+      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v8-dependencies-{{ checksum "pom.xml" }}
+      - openshift/launch_openshift_311
+      - run:
+          name: Run build on openshift
+          command: |
+            oc login -u admin -p admin
+            oc new-project itests
+            mvn -B clean install -Pbuild
+      - run:
+          name: Run build using -Ddekorate.build=true on kubernetes
+          command: |
+            oc login -u admin -p admin
+            oc new-project dekorate-k8s-build
+            mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-kubernetes-example -Pwith-examples -Dapp.name=sbk-one
+            docker images | grep sbk-one 
+            IMAGES=`docker images | grep sbk-one | wc -l`
+            if [ $IMAGES -lt 1 ]; then echo "Docker image sbk-one" exit 1; fi
+      - run:
+          name: Run build using -Ddekorate.deploy=true on kubernetes
+          command: |
+            oc login -u admin -p admin
+            oc new-project dekorate-k8s-deploy
+            mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-kubernetes-example -Pwith-examples -Dapp.name=sbk-two
+            docker images 
+            IMAGES=`docker images | grep sbk-two | wc -l`
+            if [ $IMAGES -lt 1 ]; then exit 1; fi
+            oc get deployments 
+            DC=`oc get deployments | grep sbk | wc -l`
+            if [ $DC -lt 1 ]; then echo "Deployment sbk-two not found."; exit 1; fi
+      - run:
+          name: Run build using -Ddekorate.build=true on openshift
+          command: |
+            oc login -u admin -p admin
+            oc new-project dekorate-os-build
+            mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-one
+            docker images 
+            IMAGES=`oc get istag | grep sbo-one | wc -l`
+            if [ $IMAGES -lt 1 ]; then echo "Docker image sbo-one"; exit 1; fi
+      - run:
+          name: Run build using -Ddekorate.deploy=true on openshift
+          command: |
+            oc login -u admin -p admin
+            oc new-project dekorate-os-deploy
+            mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-two
+            docker images | grep sbo-two
+            IMAGES=`docker images | grep sbo-two | wc -l`
+            if [ $IMAGES -lt 1 ]; then echo "Docker image sbo-two not found."; exit 1; fi
+            oc get dc 
+            DCS=`oc get dc | grep sbo | wc -l`
+            if [ $DCS -lt 1 ]; then echo "DeploymentConfig sbo-two not found"; exit 1; fi
 workflows:
   version: 2
   build_and_test:
@@ -111,3 +177,4 @@ workflows:
       - JDK8
       - JDK11
       - OPENSHIFT_3_11
+      - CLI_OPTIONS
