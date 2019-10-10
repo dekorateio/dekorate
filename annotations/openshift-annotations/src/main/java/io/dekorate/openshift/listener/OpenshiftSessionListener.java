@@ -17,6 +17,7 @@
 
 package io.dekorate.openshift.listener;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,9 @@ import io.dekorate.WithSession;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.hook.OrderedHook;
+import io.dekorate.hook.ProjectHook;
+import io.dekorate.hook.ResourcesApplyHook;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
@@ -37,6 +41,7 @@ import io.dekorate.project.Project;
 
 public class OpenshiftSessionListener implements SessionListener, WithProject, WithSession {
 
+  private final String OPENSHIFT = "openshift";
   private static final String DEFAULT_S2I_BUILDER_IMAGE = "fabric8/s2i-java:2.3";
 
  private static final OpenshiftConfig DEFAULT_SOURCE_TO_IMAGE_CONFIG = new OpenshiftConfigBuilder()
@@ -51,6 +56,8 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
     // We ned to set the TTCL, becuase the KubenretesClient used in this part of
     // code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+    List<ProjectHook> hooks = new ArrayList<>();
+
     try {
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class,
@@ -66,11 +73,17 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
 
         BuildService buildService = imageConfiguration.map(BuildServiceFactories.create(project, generated))
             .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-        new ImageBuildHook(getProject(), buildService).register();
+        hooks.add(new ImageBuildHook(getProject(), buildService));
       }
+
+      if (config.isAutoDeployEnabled()) {
+        hooks.add(new ResourcesApplyHook(getProject(), OPENSHIFT, "oc"));
+      }
+
     } finally {
       Thread.currentThread().setContextClassLoader(tccl);
+      OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
+      hook.register();
     }
-
   }
 }
