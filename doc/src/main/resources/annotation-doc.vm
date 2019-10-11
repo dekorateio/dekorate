@@ -1,5 +1,11 @@
 #foreach ($m in ${model.values()})
-#set ($key = $m.name.toLowerCase().replaceAll("application", ""))
+#set ($key = $m.name)
+#if ($key.contains("Application"))
+  #set ($key = $key.toLowerCase().replaceAll("application", ""))
+#end
+#if ($key.contains("Halkyon"))
+  #set ($key = $key.toLowerCase().replaceAll("halkyon", ""))
+#end
 #foreach ($method in ${m.getMethods()})
 #set ($name = $method.getName())
 #set ($type = $method.getReturnType())
@@ -38,7 +44,7 @@ $m.name
 ##
 ## Line
 ## 
-#if ($m.name.contains("Application"))
+#if ($m.name.contains("Application") || $m.name.contains("Halkyon"))
 | dekorate.${key}.$name | $type | $description | $default |
 #else
 | $name | $type | $description | $default |
