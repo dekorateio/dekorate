@@ -18,14 +18,13 @@ package io.dekorate.example.thorntailonkubernetes;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Probe;
 import io.dekorate.option.annotation.JvmOptions;
-import io.dekorate.option.annotation.SecureRandomSource;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 @KubernetesApplication(
   livenessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 180),
-  readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 10)
+  readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 20)
 )
 @JvmOptions(preferIPv4Stack = true)
 @ApplicationPath("/")

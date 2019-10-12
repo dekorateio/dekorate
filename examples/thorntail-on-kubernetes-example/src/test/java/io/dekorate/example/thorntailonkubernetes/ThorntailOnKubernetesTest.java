@@ -60,7 +60,7 @@ class ThorntailOnKubernetesTest {
     assertNotNull(readinessProbe);
     assertEquals("/health", readinessProbe.getPath());
     assertEquals(9090, readinessProbe.getPort().getIntVal());
-    assertEquals(10, container.getReadinessProbe().getInitialDelaySeconds());
+    assertEquals(20, container.getReadinessProbe().getInitialDelaySeconds());
 
     Optional<Service> service = findFirst(list, Service.class);
     assertTrue(service.isPresent());

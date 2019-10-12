@@ -64,7 +64,7 @@ class ThorntailOnOpenshiftTest {
     assertNotNull(readinessProbe);
     assertEquals("/health", readinessProbe.getPath());
     assertEquals(8080, readinessProbe.getPort().getIntVal());
-    assertEquals(10, container.getReadinessProbe().getInitialDelaySeconds());
+    assertEquals(20, container.getReadinessProbe().getInitialDelaySeconds());
 
     Optional<Service> service = findFirst(list, Service.class);
     assertTrue(service.isPresent());
