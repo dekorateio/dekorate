@@ -25,7 +25,7 @@ import javax.ws.rs.core.Application;
 
 @OpenshiftApplication(
   livenessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 180),
-  readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 10),
+  readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 20),
   expose = true
 )
 @JvmOptions(server = true, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
