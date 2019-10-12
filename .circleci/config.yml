@@ -164,7 +164,7 @@ jobs:
             oc login -u admin -p admin
             oc new-project dekorate-os-deploy
             mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-two
-            `docker images | grep sbo-two`
+            docker images | grep sbo-two
             IMAGES=`docker images | grep sbo-two | wc -l`
             if [ $IMAGES -lt 1 ]; then echo "Docker image sbo-two not found."; exit 1; fi
             oc get dc 
