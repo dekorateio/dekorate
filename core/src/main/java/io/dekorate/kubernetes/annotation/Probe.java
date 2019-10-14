@@ -58,5 +58,19 @@ public @interface Probe {
    */
   int timeoutSeconds() default 10;
 
+
+  /**
+   * The success threshold to use.
+   * @return The threshold.
+   */
+  int successThreshold() default 1;
+
+
+  /**
+   * The failure threshold to use.
+   * @return The threshold.
+   */
+  int failureThreshold() default 3;
+
 }
 

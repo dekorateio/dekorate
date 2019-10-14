@@ -39,6 +39,8 @@ public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
       .withInitialDelaySeconds(probe.getInitialDelaySeconds())
       .withPeriodSeconds(probe.getPeriodSeconds())
       .withTimeoutSeconds(probe.getTimeoutSeconds())
+      .withSuccessThreshold(probe.getSuccessThreshold())
+      .withFailureThreshold(probe.getFailureThreshold())
       .endReadinessProbe();
   }
 }
