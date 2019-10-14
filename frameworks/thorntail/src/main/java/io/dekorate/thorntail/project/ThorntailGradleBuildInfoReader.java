@@ -10,7 +10,7 @@ public class ThorntailGradleBuildInfoReader extends GradleInfoReader {
 
   @Override
   public int order() {
-    // we only need to modify `order`, so that this class comes sooner than generic MavenInfoReader
+    // we only need to modify `order`, so that this class comes sooner than generic GradleInfoReader
     //
     // we don't have to modify `isApplicable`, because this class is only present when the Thorntail support
     // is explicitly requested by the user

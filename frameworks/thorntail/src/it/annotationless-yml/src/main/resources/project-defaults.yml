@@ -1,3 +1,8 @@
 dekorate:
   kubernetes:
     expose: true
+  openshift:
+    expose: true
+thorntail:
+  http:
+    port: 9090
