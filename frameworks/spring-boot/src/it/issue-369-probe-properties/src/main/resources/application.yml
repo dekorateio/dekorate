@@ -1,0 +1,5 @@
+dekorate:
+  kubernetes:
+    livenessProbe:
+      periodSeconds: 100
+      initialDelaySeconds: 100
