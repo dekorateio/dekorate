@@ -15,12 +15,16 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Probe;
 
 @Description("Add a liveness probe to all containers.")
 public class AddLivenessProbeDecorator extends AbstractAddProbeDecorator {
+
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public AddLivenessProbeDecorator(String containerName, Probe probe) {
     super(containerName, probe);
@@ -32,6 +36,9 @@ public class AddLivenessProbeDecorator extends AbstractAddProbeDecorator {
 
   @Override
   protected void doCreateProbe(ContainerFluent<?> container, Actions actions) {
+    if (probe.getSuccessThreshold() != 1) {
+      LOGGER.warning("Invalid success threshold value for liveness probe. It must be 1, found: " + probe.getSuccessThreshold() + "! The correct value of 1 will be forced!");
+    }
     container.withNewLivenessProbe()
       .withExec(actions.execAction)
       .withHttpGet(actions.httpGetAction)
@@ -39,6 +46,8 @@ public class AddLivenessProbeDecorator extends AbstractAddProbeDecorator {
       .withInitialDelaySeconds(probe.getInitialDelaySeconds())
       .withPeriodSeconds(probe.getPeriodSeconds())
       .withTimeoutSeconds(probe.getTimeoutSeconds())
+      .withSuccessThreshold(1)
+      .withFailureThreshold(probe.getFailureThreshold())
       .endLivenessProbe();
   }
 
