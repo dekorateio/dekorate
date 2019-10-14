@@ -15,17 +15,59 @@
  */
 package io.dekorate.utils;
 
-import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.kubernetes.config.Port;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
+import io.dekorate.deps.kubernetes.api.model.ContainerPort;
+import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.kubernetes.config.Container;
+import io.dekorate.kubernetes.config.Port;
 
 public class Ports {
 
   private static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[]{"http", "https", "web"});
   private static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[]{80, 443, 8080, 8443});
+
+  public static Optional<ContainerPort> getHttpPort(ContainerFluent<?> container) {
+    //If we have a single port, return that no matter what.
+    if (container.getPorts().size() == 1) {
+      return Optional.of(container.getPorts().get(0));
+    }
+
+    //Check the service name
+    Optional<ContainerPort> port = container.getPorts().stream().filter(p -> HTTP_PORT_NAMES.contains(p.getName())).findFirst();
+    if (port.isPresent()) {
+      return port;
+    }
+
+    port = container.getPorts().stream().filter(p -> HTTP_PORT_NUMBERS.contains(p.getHostPort())).findFirst();
+    if (port.isPresent()) {
+      return port;
+    }
+    return Optional.empty();
+  }
+
+
+  public static Optional<Port> getHttpPort(Container container) {
+    //If we have a single port, return that no matter what.
+    if (container.getPorts().length == 1) {
+      return Optional.of(container.getPorts()[0]);
+    }
+
+    //Check the service name
+    Optional<Port> port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NAMES.contains(p.getName())).findFirst();
+    if (port.isPresent()) {
+      return port;
+    }
+
+    port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NUMBERS.contains(p.getHostPort())).findFirst();
+    if (port.isPresent()) {
+      return port;
+    }
+    return Optional.empty();
+  }
 
   public static Optional<Port> getHttpPort(BaseConfig config) {
     //If we have a single port, return that no matter what.

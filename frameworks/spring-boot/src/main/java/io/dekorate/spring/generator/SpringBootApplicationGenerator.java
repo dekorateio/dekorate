@@ -15,17 +15,20 @@
  */
 package io.dekorate.spring.generator;
 
+import java.util.Collections;
+import java.util.Map;
+
+import io.dekorate.Generator;
 import io.dekorate.Handler;
-import io.dekorate.LoggerFactory;
 import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
-import io.dekorate.Generator;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ProbeBuilder;
-import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
-import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
+import io.dekorate.kubernetes.configurator.AddLivenessProbeConfigurator;
+import io.dekorate.kubernetes.configurator.AddReadinessProbeConfigurator;
 import io.dekorate.kubernetes.decorator.AddRoleBindingDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceAccountDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountDecorator;
@@ -35,9 +38,6 @@ import io.dekorate.spring.config.SpringApplicationConfig;
 import io.dekorate.spring.config.SpringApplicationConfigBuilder;
 import io.dekorate.spring.configurator.SetSpringBootRuntime;
 import io.dekorate.spring.configurator.SetSpringBootVersion;
-
-import java.util.Collections;
-import java.util.Map;
 
 public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
@@ -85,24 +85,9 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
      });
 
     if (isActuatorAvailable()) {
-      session.handlers().add(new Handler() {
-          @Override
-           public int order() {
-            return 305; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
-           }
-
-          @Override
-          public void handle(Configuration config) {
-            LOGGER.info("Detected actuator.");
-            session.resources().decorate(new AddLivenessProbeDecorator(session.resources().getName(), session.resources().getName(), new ProbeBuilder().withHttpActionPath("/actuator/health").build()));
-            session.resources().decorate(new AddReadinessProbeDecorator(session.resources().getName(), session.resources().getName(), new ProbeBuilder().withHttpActionPath("/actuator/health").build()));
-          }
-
-          @Override
-          public boolean canHandle(Class config) {
-            return SpringApplicationConfig.class.isAssignableFrom(config);
-          }
-        });
+      //Users configuration should take priority, so add but don't overwrite.
+      session.configurators().add(new AddLivenessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
+      session.configurators().add(new AddReadinessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
     }
 
     if (isSpringCloudKubernetesAvailable()) {

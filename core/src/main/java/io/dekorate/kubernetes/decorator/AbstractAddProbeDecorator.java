@@ -18,12 +18,14 @@ package io.dekorate.kubernetes.decorator;
 import java.util.Arrays;
 import java.util.Collections;
 
+import io.dekorate.deps.kubernetes.api.model.Container;
 import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
 import io.dekorate.deps.kubernetes.api.model.ExecAction;
 import io.dekorate.deps.kubernetes.api.model.HTTPGetAction;
 import io.dekorate.deps.kubernetes.api.model.IntOrString;
 import io.dekorate.deps.kubernetes.api.model.TCPSocketAction;
 import io.dekorate.kubernetes.config.Probe;
+import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 
 /**
@@ -71,10 +73,10 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
 
   private HTTPGetAction httpGetAction(Probe probe, ContainerFluent<?> container) {
     if (!container.hasPorts()) {
-      return null;
+      return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(8080), "HTTP");
     }
 
-    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(container.getPorts().get(0).getContainerPort()), "HTTP");
+    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(Ports.getHttpPort(container).get().getContainerPort()), "HTTP");
   }
 
   private TCPSocketAction tcpSocketAction(Probe probe) {
