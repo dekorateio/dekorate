@@ -93,7 +93,7 @@ To start using this project you just need to add one of the provided annotations
 [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) can be added to your project like:
 
 ```java
-import io.dekorate.kubernetes.annotaion.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication
 public class Main {
