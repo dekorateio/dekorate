@@ -22,6 +22,7 @@ import io.dekorate.kubernetes.decorator.AddAwsElasticBlockStoreVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureDiskVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
+import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
 import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
@@ -81,7 +82,7 @@ public class ApplyDeploymentTriggerDecorator extends Decorator<DeploymentConfigS
       ApplyWorkingDirDecorator.class, ApplyCommandDecorator.class, ApplyArgsDecorator.class,
       ApplyServiceAccountDecorator.class,
       AddReadinessProbeDecorator.class,
-      AddReadinessProbeDecorator.class,
+      AddLivenessProbeDecorator.class,
       AddSidecarDecorator.class,
       AddInitContainerDecorator.class};
   }
