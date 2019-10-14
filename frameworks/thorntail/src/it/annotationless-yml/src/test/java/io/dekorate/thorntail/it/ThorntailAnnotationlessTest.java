@@ -18,10 +18,10 @@ package io.dekorate.thorntail.it;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.extensions.Ingress;
+import io.dekorate.deps.openshift.api.model.Route;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,12 +31,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ThorntailAnnotationlessTest {
 
   @Test
-  void shouldContainIngress() {
+  void shouldContainKubernetesIngress() {
     KubernetesList list = Serialization.unmarshal(ThorntailAnnotationlessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
 
     Optional<Ingress> ingress = findFirst(list, Ingress.class);
     assertTrue(ingress.isPresent());
+    assertEquals(9090, ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getServicePort().getIntVal().intValue());
+  }
+
+  @Test
+  void shouldContainOpenShiftRoute() {
+    KubernetesList list = Serialization.unmarshal(ThorntailAnnotationlessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    assertNotNull(list);
+
+    Optional<Route> route = findFirst(list, Route.class);
+    assertTrue(route.isPresent());
+    assertEquals(9090, route.get().getSpec().getPort().getTargetPort().getIntVal().intValue());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> type) {

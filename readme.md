@@ -813,8 +813,6 @@ Then, you can use the annotations described above, such `@KubernetesApplication`
 Note that the Thorntail annotation processor reads the `thorntail.http.port` configuration from the usual `project-defaults.yml`.
 It doesn't read any other `project-*.yml` profiles.
 
-Unlike Spring Boot, the annotation-less configuration is not supported for Thorntail (yet).
-
 ## Experimental features
 
 Apart from the core feature, which is resource generation, there are a couple of experimental features that do add to the developer experience.
