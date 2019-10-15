@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactories;
+import io.dekorate.DekorateException;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
@@ -71,8 +72,15 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
         KubernetesList list = session.getGeneratedResources().get("openshift");
         List<HasMetadata> generated = list != null ? list.getItems() : Collections.emptyList();
 
-        BuildService buildService = imageConfiguration.map(BuildServiceFactories.create(project, generated))
-            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+        BuildService buildService = null;
+        try {
+          buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated))
+              .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+        } catch (Exception e) {
+          BuildServiceFactories.log(project, session.configurators().getAll(ImageConfiguration.class));
+          throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
+        }
+
         hooks.add(new ImageBuildHook(getProject(), buildService));
       }
 

@@ -81,6 +81,17 @@ public class Configurators {
         .filter(predicate)
         .findFirst();
   }
+
+  public <C extends Configuration> List<C> getAll(Class<C> type) {
+    return getAll(type, c -> true);
+  }
+
+  public <C extends Configuration> List<C> getAll(Class<C> type, Predicate<C> predicate) {
+    return stream().filter(i -> type.isInstance(i))
+        .map(i -> (C) i)
+        .filter(predicate)
+        .collect(Collectors.toList());
+  }
   
 
   private static <C extends Configuration> C combine(ConfigurationSupplier<C> origin, ConfigurationSupplier<C> override) {

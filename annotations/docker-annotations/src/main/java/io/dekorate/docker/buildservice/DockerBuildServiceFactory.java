@@ -20,6 +20,7 @@ package io.dekorate.docker.buildservice;
 import java.util.Collection;
 
 import io.dekorate.BuildService;
+import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -28,11 +29,9 @@ import io.dekorate.utils.Strings;
 
 public class DockerBuildServiceFactory implements BuildServiceFactory {
 
-	@Override
-	public boolean isApplicable(Project project, ImageConfiguration config) {
-    boolean result = project.getRoot().resolve(Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile").toFile().exists();
-    return result;
-	}
+  private static final String DOCKER = "docker";
+  private static final String MESSAGE_OK = "Docker build service is applicable.";
+  private static final String MESSAGE_NOK = "Docker build service is not applicable to the project, due to not being able find Dockerfile at: %s. Please configure the correct path to the Dockerfile.";
 
 	@Override
 	public BuildService create(Project project, ImageConfiguration config) {
@@ -48,5 +47,19 @@ public class DockerBuildServiceFactory implements BuildServiceFactory {
 	public int order() {
 		return 10;
 	}
-	
+
+	@Override
+	public String name() {
+    return DOCKER;
+	}
+
+	@Override
+	public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
+    String dockerFile = Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile";
+    boolean applicable = project.getRoot().resolve(dockerFile).toFile().exists();
+    String message = applicable
+      ? MESSAGE_OK
+        : String.format(MESSAGE_NOK, project.getRoot().resolve(dockerFile));
+		return new BuildServiceApplicablility(applicable, message);
+	}
 }

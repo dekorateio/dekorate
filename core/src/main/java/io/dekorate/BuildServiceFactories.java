@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
@@ -30,10 +31,10 @@ import io.dekorate.project.Project;
 
 public class BuildServiceFactories {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger();
+
   public static Optional<BuildServiceFactory> find(Project project, ImageConfiguration config) {
-    ServiceLoader<BuildServiceFactory> loader = ServiceLoader.load(BuildServiceFactory.class,
-        BuildServiceFactory.class.getClassLoader());
-    return StreamSupport.stream(loader.spliterator(), false).filter(f -> f.isApplicable(project, config)).sorted()
+    return stream().filter(f -> f.checkApplicablility(project, config).isApplicable()).sorted()
         .findFirst();
   }
 
@@ -44,4 +45,14 @@ public class BuildServiceFactories {
   public static Predicate<ImageConfiguration> matches(Project project) {
     return c -> find(project, c).isPresent();
   }
+
+  public static void log(Project project, Collection<ImageConfiguration> configs) {
+    configs.stream().forEach(c -> stream().map(f -> f.checkApplicablility(project, c).getMessage()).forEach(s -> LOGGER.warning(s)));
+  }
+
+  private static Stream<BuildServiceFactory> stream() {
+     ServiceLoader<BuildServiceFactory> loader = ServiceLoader.load(BuildServiceFactory.class, BuildServiceFactory.class.getClassLoader());
+     return StreamSupport.stream(loader.spliterator(), false);
+  }
+
 }
