@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import io.dekorate.BuildService;
+import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -28,10 +29,8 @@ import io.dekorate.project.Project;
 
 public class S2iBuildServiceFactory implements BuildServiceFactory {
 
-	@Override
-	public boolean isApplicable(Project project, ImageConfiguration config) {
-    return true;
-	}
+  private final String S2I = "s2i";
+  private final String MESSAGE_OK = "S2i build service is applicable.";
 
 	@Override
 	public BuildService create(Project project, ImageConfiguration config) {
@@ -46,6 +45,16 @@ public class S2iBuildServiceFactory implements BuildServiceFactory {
 	@Override
 	public int order() {
 		return 20;
+	}
+
+	@Override
+	public String name() {
+    return S2I;
+	}
+
+	@Override
+	public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
+		return new BuildServiceApplicablility(true, MESSAGE_OK);
 	}
 
 }

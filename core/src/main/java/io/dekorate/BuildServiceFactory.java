@@ -26,8 +26,10 @@ import io.dekorate.project.Project;
 public interface BuildServiceFactory extends Comparable<BuildServiceFactory> {
 
   int order();
+
+  String name();
   
-  boolean isApplicable(Project project, ImageConfiguration config);
+  BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config);
 
   BuildService create(Project project, ImageConfiguration config);
   
@@ -36,5 +38,4 @@ public interface BuildServiceFactory extends Comparable<BuildServiceFactory> {
 	default int compareTo(BuildServiceFactory o) {
 		return order() - o.order();
 	}
-
 }

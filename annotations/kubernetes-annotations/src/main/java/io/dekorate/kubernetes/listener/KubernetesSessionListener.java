@@ -65,6 +65,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
       try {
           buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated.getItems())).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
       } catch (Exception e) {
+        BuildServiceFactories.log(project, session.configurators().getAll(ImageConfiguration.class));
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
       }
     }
