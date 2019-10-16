@@ -18,10 +18,12 @@
 package io.dekorate;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -48,6 +50,10 @@ public class BuildServiceFactories {
 
   public static void log(Project project, Collection<ImageConfiguration> configs) {
     configs.stream().forEach(c -> stream().map(f -> f.checkApplicablility(project, c).getMessage()).forEach(s -> LOGGER.warning(s)));
+  }
+
+  public static List<String> names() {
+    return stream().map(f -> f.name()).collect(Collectors.toList());
   }
 
   private static Stream<BuildServiceFactory> stream() {

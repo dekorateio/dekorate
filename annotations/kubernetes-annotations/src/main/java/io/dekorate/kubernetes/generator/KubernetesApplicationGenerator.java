@@ -29,10 +29,8 @@ import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyDeployToKubernetesConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToKubernetesConfiguration;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.listener.KubernetesSessionListener;
 import io.dekorate.project.ApplyProjectInfo;
@@ -56,9 +54,7 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
             KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesApplication.class))
             .accept(new ApplyBuildToImageConfiguration())
-            .accept(new ApplyDeployToImageConfiguration())
-            .accept(new ApplyBuildToKubernetesConfiguration())
-            .accept(new ApplyDeployToKubernetesConfiguration())
+            .accept(new ApplyDeployToApplicationConfiguration())
             .accept(new ApplyProjectInfo(getProject()))));
   }
 
@@ -68,9 +64,7 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
             KubernetesConfigAdapter
             .newBuilder(application)
             .accept(new ApplyBuildToImageConfiguration())
-            .accept(new ApplyDeployToImageConfiguration())
-            .accept(new ApplyBuildToKubernetesConfiguration())
-            .accept(new ApplyDeployToKubernetesConfiguration())
+            .accept(new ApplyDeployToApplicationConfiguration())
             .accept(new ApplyProjectInfo(getProject()))));
   }
 

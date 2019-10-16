@@ -15,15 +15,11 @@
  */
 package io.dekorate.example.sbonopenshift;
 
-import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
-import io.dekorate.option.annotation.JvmOptions;
-import io.dekorate.option.annotation.SecureRandomSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication(buildEnvVars = @Env(name="foo", value = "bar"))
-@JvmOptions(server = true, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
+@OpenshiftApplication
 @SpringBootApplication
 public class Main {
 

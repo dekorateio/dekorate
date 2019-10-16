@@ -41,7 +41,7 @@ public class AptWriter implements SessionWriter, WithProject {
   protected static final String FILENAME = "%s.%s";
   protected static final String CONFIG = ".config/%s.%s";
   protected static final String PROJECT = "META-INF/dekorate/.project.%s";
-  protected static final String[] STRIP = {"^Editable", "Config$"};
+  protected static final String[] STRIP = {"^Editable", "BuildConfig$", "Config$"};
   protected static final String JSON = "json";
   protected static final String YML = "yml";
   protected static final String TMP = "tmp";

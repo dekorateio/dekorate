@@ -40,7 +40,7 @@ import io.dekorate.deps.kubernetes.api.model.apps.DeploymentBuilder;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.config.EditableKubernetesConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
@@ -202,7 +202,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   @Override
   public ConfigurationSupplier<KubernetesConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<KubernetesConfig>(new KubernetesConfigBuilder().accept(new ApplyDeployToImageConfiguration()).accept(new ApplyProjectInfo(p)));
+    return new ConfigurationSupplier<KubernetesConfig>(new KubernetesConfigBuilder().accept(new ApplyDeployToApplicationConfiguration()).accept(new ApplyProjectInfo(p)));
   }
   
   private static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig config, Configurators configurators) {
@@ -225,11 +225,10 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : config.getGroup())
       .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
       .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
-      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : config.getRegistry())
-      .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : config.getDockerFile())
-      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : config.isAutoBuildEnabled())
-      .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : config.isAutoPushEnabled())
-      .withAutoDeployEnabled(imageConfig.isAutoDeployEnabled() ? imageConfig.isAutoDeployEnabled() : config.isAutoDeployEnabled())
+      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
+      .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : "Dockerfile")
+      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
+      .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
       .build();
   }
 }

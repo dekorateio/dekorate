@@ -37,18 +37,11 @@ import io.dekorate.hook.ProjectHook;
 import io.dekorate.hook.ResourcesApplyHook;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
-import io.dekorate.openshift.config.OpenshiftConfigBuilder;
 import io.dekorate.project.Project;
 
 public class OpenshiftSessionListener implements SessionListener, WithProject, WithSession {
 
   private final String OPENSHIFT = "openshift";
-  private static final String DEFAULT_S2I_BUILDER_IMAGE = "fabric8/s2i-java:2.3";
-
- private static final OpenshiftConfig DEFAULT_SOURCE_TO_IMAGE_CONFIG = new OpenshiftConfigBuilder()
-    .withBuilderImage(DEFAULT_S2I_BUILDER_IMAGE)
-    .build();
-
 
   @Override
   public void onClosed() {
@@ -61,20 +54,28 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
 
     try {
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-      Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class,
+      Optional<OpenshiftConfig> optionalAppConfig = session.configurators().get(OpenshiftConfig.class);
+      Optional<ImageConfiguration> optionalImageConfig = session.configurators().get(ImageConfiguration.class,
           BuildServiceFactories.matches(project));
-      OpenshiftConfig config = session.configurators().get(OpenshiftConfig.class)
-          .orElse(DEFAULT_SOURCE_TO_IMAGE_CONFIG);
+
+      if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
+        return;
+      }
+
+      OpenshiftConfig openshiftConfig = optionalAppConfig.get();
+      ImageConfiguration imageConfig = optionalImageConfig.get();
+
       String name = session.configurators().get(OpenshiftConfig.class).map(c -> c.getName())
           .orElse(getProject().getBuildInfo().getName());
-      if (config.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {
+
+      if (imageConfig.isAutoBuildEnabled() || openshiftConfig.isAutoDeployEnabled()) {
 
         KubernetesList list = session.getGeneratedResources().get("openshift");
         List<HasMetadata> generated = list != null ? list.getItems() : Collections.emptyList();
 
         BuildService buildService = null;
         try {
-          buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated))
+          buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated))
               .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
         } catch (Exception e) {
           BuildServiceFactories.log(project, session.configurators().getAll(ImageConfiguration.class));
@@ -84,7 +85,7 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
         hooks.add(new ImageBuildHook(getProject(), buildService));
       }
 
-      if (config.isAutoDeployEnabled()) {
+      if (openshiftConfig.isAutoDeployEnabled()) {
         hooks.add(new ResourcesApplyHook(getProject(), OPENSHIFT, "oc"));
       }
 

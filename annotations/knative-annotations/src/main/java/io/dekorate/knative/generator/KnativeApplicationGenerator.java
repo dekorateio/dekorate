@@ -38,7 +38,6 @@ import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigCustomAdapter;
 import io.dekorate.knative.handler.KnativeHandler;
 import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
@@ -62,7 +61,6 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
 
     on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(element.getAnnotation(KnativeApplication.class))
                                    .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyDeployToImageConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));
   }
 
@@ -70,7 +68,6 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     KnativeConfig knativeConfig = KnativeConfigAdapter.newBuilder((Map) map.get(KnativeApplication.class.getName())).build();
     on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeApplication.class))
                                    .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyDeployToImageConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));
   }
 
@@ -92,7 +89,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
       Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
       imageConfiguration.ifPresent(i -> {
         String name = i.getName();
-        if (i.isAutoBuildEnabled() || i.isAutoDeployEnabled()) {
+        if (i.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {
           KubernetesList generated = session.getGeneratedResources().get("knative");
           BuildService buildService;
           try {

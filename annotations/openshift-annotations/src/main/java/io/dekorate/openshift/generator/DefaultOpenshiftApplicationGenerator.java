@@ -16,8 +16,7 @@
 package io.dekorate.openshift.generator;
 
 import io.dekorate.config.DefaultConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
 import io.dekorate.project.ApplyProjectInfo;
@@ -27,7 +26,6 @@ public class DefaultOpenshiftApplicationGenerator implements OpenshiftApplicatio
     public DefaultOpenshiftApplicationGenerator () {
       on(new DefaultConfiguration<OpenshiftConfig>(new OpenshiftConfigBuilder()
                                                    .accept(new ApplyProjectInfo(getProject()))
-                                                   .accept(new ApplyBuildToImageConfiguration())
-                                                   .accept(new ApplyDeployToImageConfiguration())));
+                                                   .accept(new ApplyDeployToApplicationConfiguration())));
     }
 }
