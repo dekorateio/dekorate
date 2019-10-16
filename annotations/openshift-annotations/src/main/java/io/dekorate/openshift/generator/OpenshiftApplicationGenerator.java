@@ -27,11 +27,11 @@ import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigCustomAdapter;
-import io.dekorate.openshift.configurator.ApplySourceToImageHook;
 import io.dekorate.openshift.handler.OpenshiftHandler;
 import io.dekorate.openshift.listener.OpenshiftSessionListener;
 import io.dekorate.project.ApplyProjectInfo;
@@ -51,19 +51,15 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
 
 
   default void add(Element element) {
-    OpenshiftApplication openshiftApplication = element.getAnnotation(OpenshiftApplication.class);
-    OpenshiftConfig openshiftConfig = OpenshiftConfigCustomAdapter.newBuilder(getProject(), openshiftApplication).build();
-
     on(new AnnotationConfiguration<>(OpenshiftConfigAdapter.newBuilder(element.getAnnotation(OpenshiftApplication.class))
-        .accept(new ApplyProjectInfo(getProject()))
-        .accept(new ApplySourceToImageHook(openshiftConfig))));
+                                     .accept(new ApplyDeployToApplicationConfiguration())
+                                     .accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void add(Map map) {
-    OpenshiftConfig openshiftConfig = OpenshiftConfigAdapter.newBuilder((Map) map.get(OpenshiftApplication.class.getName())).build();
     on(new PropertyConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftApplication.class))
-        .accept(new ApplyProjectInfo(getProject()))
-        .accept(new ApplySourceToImageHook(openshiftConfig))));
+                                   .accept(new ApplyDeployToApplicationConfiguration())
+                                   .accept(new ApplyProjectInfo(getProject()))));
   }
 
     default void on(ConfigurationSupplier<OpenshiftConfig> config) {

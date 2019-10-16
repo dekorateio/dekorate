@@ -34,7 +34,7 @@ import io.dekorate.knative.config.KnativeConfigBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 
@@ -78,7 +78,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
   @Override
   public ConfigurationSupplier<KnativeConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<KnativeConfig>(new KnativeConfigBuilder().accept(new ApplyDeployToImageConfiguration()).accept(new ApplyProjectInfo(p)));
+    return new ConfigurationSupplier<KnativeConfig>(new KnativeConfigBuilder().accept(new ApplyDeployToApplicationConfiguration()).accept(new ApplyProjectInfo(p)));
   }
 
 
@@ -131,11 +131,10 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : config.getGroup())
       .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
       .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
-      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : config.getRegistry())
+      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
       .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : null)
-      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : config.isAutoBuildEnabled())
+      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
       .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
-      .withAutoDeployEnabled(imageConfig.isAutoDeployEnabled() ? imageConfig.isAutoDeployEnabled() : config.isAutoDeployEnabled())
       .build();
   }
 }

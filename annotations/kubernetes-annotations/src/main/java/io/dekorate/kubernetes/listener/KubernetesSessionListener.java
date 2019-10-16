@@ -50,20 +50,21 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
 	public void onClosed() {
     Session session = getSession();
     Project project = getProject();
-    Optional<KubernetesConfig> config = session.configurators().get(KubernetesConfig.class);
-    Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
-    if (!config.isPresent()) {
+    Optional<KubernetesConfig> optionalAppConfig = session.configurators().get(KubernetesConfig.class);
+    Optional<ImageConfiguration> optionalImageConfig = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
+    if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
       return;
     }
 
-    KubernetesConfig kubernetesConfig = config.get();
+    KubernetesConfig kubernetesConfig = optionalAppConfig.get();
     Resources resources = session.resources();
     KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
 
     BuildService buildService = null;
-    if (kubernetesConfig.isAutoPushEnabled() || kubernetesConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+    ImageConfiguration imageConfig = optionalImageConfig.get();
+    if (imageConfig.isAutoPushEnabled() || imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
       try {
-          buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated.getItems())).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+          buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems())).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
       } catch (Exception e) {
         BuildServiceFactories.log(project, session.configurators().getAll(ImageConfiguration.class));
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
@@ -76,13 +77,13 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
       hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 0));
     }
 
-    if (kubernetesConfig.isAutoPushEnabled()) {
+    if (imageConfig.isAutoPushEnabled()) {
       // When deploy is enabled, we scale the Deployment down before push
       // then scale it back up once the image has been successfully pushed
       // This ensure that the pod runs the proper image
       hooks.add(new ImageBuildHook(getProject(), buildService));
       hooks.add(new ImagePushHook(getProject(), buildService));
-    } else if (kubernetesConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+    } else if (imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
       hooks.add(new ImageBuildHook(getProject(), buildService));
     }
 

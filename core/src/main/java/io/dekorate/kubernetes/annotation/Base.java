@@ -15,7 +15,6 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -25,174 +24,178 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
- * This annotation is not meant to be used and thus not public.
- * The purpose of this class is to generate the {@link io.dekorate.kubernetes.config.KubernetesConfig} class that is used
- * as a base for the rest of the config classes.
+ * This annotation is not meant to be used and thus not public. The purpose of
+ * this class is to generate the
+ * {@link io.dekorate.kubernetes.config.KubernetesConfig} class that is used as
+ * a base for the rest of the config classes.
  */
 @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
-@Pojo(name = "BaseConfig", relativePath = "../config",
-      mutable = true,
-      superClass = ApplicationConfiguration.class,
-      withStaticBuilderMethod = false,
-      withStaticAdapterMethod = false)
-      @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
-      @Retention(RetentionPolicy.SOURCE)
+@Pojo(name = "BaseConfig", relativePath = "../config", mutable = true, superClass = ApplicationConfiguration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false)
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
+@Retention(RetentionPolicy.SOURCE)
 @interface Base {
 
-        /**
-         * The group of the application.
-         * This value will be use as:
-         * - docker image repo
-         * - labeling resources
-         * @return The specified group name.
-         */
-        String group() default "";
+  /**
+   * The group of the application. This value will be use as: - docker image repo
+   * - labeling resources
+   * 
+   * @return The specified group name.
+   */
+  String group() default "";
 
-        /**
-         * The name of the application.
-         * This value will be used for naming Kubernetes resources like:
-         * - Deployment
-         * - Service
-         * and so on ...
-         * If no value is specified it will attempt to determine the name using the following rules:
-         * If its a maven/gradle project use the artifact id.
-         * Else if its a bazel project use the name.
-         * Else if the system property app.name is present it will be used.
-         * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until .git is found).
-         * @return The specified application name.
-         */
-        String name() default "";
+  /**
+   * The name of the application. This value will be used for naming Kubernetes
+   * resources like: - Deployment - Service and so on ... If no value is specified
+   * it will attempt to determine the name using the following rules: If its a
+   * maven/gradle project use the artifact id. Else if its a bazel project use the
+   * name. Else if the system property app.name is present it will be used. Else
+   * find the project root folder and use its name (root folder detection is done
+   * by moving to the parent folder until .git is found).
+   * 
+   * @return The specified application name.
+   */
+  String name() default "";
 
-        /**
-         * The version of the application.
-         * This value be used for things like:
-         * - The docker image tag.
-         * If no value specified it will attempt to determine the name using the following rules:
-         * @return The version.
-         */
-        String version() default "";
+  /**
+   * The version of the application. This value be used for things like: - The
+   * docker image tag. If no value specified it will attempt to determine the name
+   * using the following rules:
+   * 
+   * @return The version.
+   */
+  String version() default "";
 
-        /**
-         * Custom labels to add to all resources.
-         * @return The labels.
-         */
-        Label[] labels() default {};
+  /**
+   * Custom labels to add to all resources.
+   * 
+   * @return The labels.
+   */
+  Label[] labels() default {};
 
-        /**
-         * Custom annotations to add to all resources.
-         * @return The annotations.
-         */
-        Annotation[] annotations() default {};
+  /**
+   * Custom annotations to add to all resources.
+   * 
+   * @return The annotations.
+   */
+  Annotation[] annotations() default {};
 
-        /**
-         * Environment variables to add to all containers.
-         * @return The environment variables.
-         */
-        Env[] envVars() default {};
+  /**
+   * Environment variables to add to all containers.
+   * 
+   * @return The environment variables.
+   */
+  Env[] envVars() default {};
 
-       /**
-        * Working directory.
-        * @return The working directory if specified, else empty string.
-        */
-        String workingDir() default "";
+  /**
+   * Working directory.
+   * 
+   * @return The working directory if specified, else empty string.
+   */
+  String workingDir() default "";
 
-       /**
-        * The commands
-        * @return The commands.
-        */
-        String[] command() default {};
+  /**
+   * The commands
+   * 
+   * @return The commands.
+   */
+  String[] command() default {};
 
-       /**
-        * The arguments
-        * @return The arguments.
-        */
-       String[] arguments() default {};
+  /**
+   * The arguments
+   * 
+   * @return The arguments.
+   */
+  String[] arguments() default {};
 
-        /**
-         * The service account.
-         * @return The service account or empty string if not specified.
-         */
-        String serviceAccount() default "";
+  /**
+   * The service account.
+   * 
+   * @return The service account or empty string if not specified.
+   */
+  String serviceAccount() default "";
 
-       /**
-        * The host under which the application is going to be exposed.
-        * @return  The hostname.
-        */
-        String host() default "";
+  /**
+   * The host under which the application is going to be exposed.
+   * 
+   * @return The hostname.
+   */
+  String host() default "";
 
+  /**
+   * The application ports.
+   */
+  Port[] ports() default {};
 
+  /**
+   * The type of service that will be generated for the application.
+   */
+  ServiceType serviceType() default ServiceType.ClusterIP;
 
-        /**
-         * The application ports.
-         */
-        Port[] ports() default {};
+  PersistentVolumeClaimVolume[] pvcVolumes() default {};
 
-        /**
-         * The type of service that will be generated for the application.
-         */
-        ServiceType serviceType() default ServiceType.ClusterIP;
+  SecretVolume[] secretVolumes() default {};
 
-        PersistentVolumeClaimVolume[] pvcVolumes() default {};
+  ConfigMapVolume[] configMapVolumes() default {};
 
-        SecretVolume[] secretVolumes() default {};
+  GitRepoVolume[] gitRepoVolumes() default {};
 
-        ConfigMapVolume[] configMapVolumes() default {};
+  AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes() default {};
 
-        GitRepoVolume[] gitRepoVolumes() default {};
+  AzureDiskVolume[] azureDiskVolumes() default {};
 
-        AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes() default {};
+  AzureFileVolume[] azureFileVolumes() default {};
 
-        AzureDiskVolume[] azureDiskVolumes() default {};
+  /**
+   * Mounts to add to all containers.
+   * 
+   * @return The mounts.
+   */
+  Mount[] mounts() default {};
 
-        AzureFileVolume[] azureFileVolumes() default {};
+  /**
+   * Image pull policy.
+   * 
+   * @return The image pull policy.
+   */
+  ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
 
-        /**
-         * Mounts to add to all containers.
-         * @return  The mounts.
-         */
-        Mount[] mounts() default {};
+  /**
+   * The image pull secret
+   */
+  String[] imagePullSecrets() default {};
 
-        /**
-         * Image pull policy.
-         * @return The image pull policy.
-         */
-        ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
+  /**
+   * The liveness probe.
+   * 
+   * @return The probe.
+   */
+  Probe livenessProbe() default @Probe();
 
-        /**
-        * The image pull secret
-        */
-        String[] imagePullSecrets() default {};
+  /**
+   * The readiness probe.
+   * 
+   * @return The probe.
+   */
+  Probe readinessProbe() default @Probe();
 
-        /**
-         * The liveness probe.
-         * @return  The probe.
-         */
-        Probe livenessProbe() default @Probe();
+  /**
+   * The sidecars.
+   * 
+   * @return the sidecar containers.
+   */
+  Container[] sidecars() default {};
 
-        /**
-         * The readiness probe.
-         * @return  The probe.
-         */
-        Probe readinessProbe() default @Probe();
+  /**
+   * Controls whether the application should be exposed
+   */
+  boolean expose() default false;
 
-
-        /**
-         * The sidecars.
-         * @return the sidecar containers.
-         */
-        Container[] sidecars() default {};
-
-    /**
-     * Controls whether the application should be exposed
-     */
-    boolean expose() default false;
-
-      /**
-       * Flag to trigger the registration of the deploy hook.
-       * It's generally preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
-       * @return  True for automatic registration of the build hook.
-       */
-       boolean autoDeployEnabled() default false;
-      }
+  /**
+   * Flag to trigger the registration of the deploy hook. It's generally
+   * preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
+   * 
+   * @return True for automatic registration of the build hook.
+   */
+  boolean autoDeployEnabled() default false;
+}

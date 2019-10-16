@@ -15,7 +15,6 @@
  */
 package io.dekorate.example.sbonopenshift;
 
-import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.servicecatalog.annotation.ServiceCatalog;
 import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
@@ -23,7 +22,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication(buildEnvVars = @Env(name="foo", value = "bar"))
+@OpenshiftApplication
 @SpringBootApplication
 @EnableAutoConfiguration
 @ServiceCatalog(instances=@ServiceCatalogInstance(name="postgresql-instance",serviceClass="postgresql-persistent", servicePlan="default", bindingSecret="postgresql-binding"))

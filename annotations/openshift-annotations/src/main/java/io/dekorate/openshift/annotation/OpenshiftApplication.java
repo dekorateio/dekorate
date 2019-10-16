@@ -206,29 +206,6 @@ public @interface OpenshiftApplication {
   boolean expose() default false;
 
   /**
-   * Feature toggle for generating build related resources.
-   */
-  boolean buildResourceGenerationEnabled() default true;
-
-  /**
-   * The S2i builder image to use.
-   * @return The builder image.
-   */
-  String builderImage() default "fabric8/s2i-java:2.3";
-
-  /**
-   * Environment variables to use for the s2i build.
-   * @return The environment variables.
-   */
-  Env[] buildEnvVars() default {};
-
-  /**
-   * Flag to trigger the registration of the build hook.
-   * It's generally preferable to use `-Ddekorate.build=true` instead of hardcoding this here.
-   * @return  True for automatic registration of the build hook.
-   */
-  boolean autoBuildEnabled() default false;
-  /**
    * Flag to trigger the registration of the deploy hook.
    * It's generally preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
    * @return  True for automatic registration of the build hook.

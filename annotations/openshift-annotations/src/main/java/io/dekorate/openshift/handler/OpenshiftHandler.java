@@ -36,9 +36,9 @@ import io.dekorate.deps.openshift.api.model.DeploymentConfig;
 import io.dekorate.deps.openshift.api.model.DeploymentConfigBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
@@ -107,7 +107,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   @Override
   public ConfigurationSupplier<OpenshiftConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<OpenshiftConfig>(new OpenshiftConfigBuilder().accept(new ApplyDeployToImageConfiguration()).accept(new ApplyProjectInfo(p)));
+    return new ConfigurationSupplier<OpenshiftConfig>(new OpenshiftConfigBuilder().accept(new ApplyDeployToApplicationConfiguration()).accept(new ApplyProjectInfo(p)));
   }
 
 
@@ -209,9 +209,8 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : config.getGroup())
       .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
       .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
-      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : config.isAutoBuildEnabled())
+      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
       .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
-      .withAutoDeployEnabled(imageConfig.isAutoDeployEnabled() ? imageConfig.isAutoDeployEnabled() : config.isAutoDeployEnabled())
       .build();
   }
 }

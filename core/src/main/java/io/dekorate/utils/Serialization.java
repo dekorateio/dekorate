@@ -28,9 +28,12 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -164,6 +167,46 @@ public class Serialization {
           return type;
         }
       } );
+  }
+
+  /**
+   * Unmarshals a {@link File} optionally performing placeholder substitution to the stream.
+   * @param f              The {@link File}.
+   * @param type            The type.
+   * @param <T>
+   * @return
+   */
+  public static <T> T unmarshal(File f, final Class<T> type)  {
+    try (FileInputStream is = new FileInputStream(f)) {
+      return unmarshal(is, new TypeReference<T>() {
+        @Override
+        public Type getType() {
+          return type;
+        }
+      });
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable(e);
+    }
+  }
+
+  /**
+   * Unmarshals a {@link URL} optionally performing placeholder substitution to the stream.
+   * @param u              The {@link URL}.
+   * @param type           The type.
+   * @param <T>
+   * @return
+   */
+  public static <T> T unmarshal(URL u, final Class<T> type)  {
+    try (InputStream is =  u.openStream()) {
+      return unmarshal(is, new TypeReference<T>() {
+        @Override
+        public Type getType() {
+          return type;
+        }
+      });
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable(e);
+    }
   }
 
 

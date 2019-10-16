@@ -19,16 +19,17 @@ package io.dekorate.kubernetes.config;
 
 import java.util.Map;
 
+import io.dekorate.deps.jackson.annotation.JsonTypeInfo;
 import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
 
 @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public class ImageConfiguration extends ApplicationConfiguration {
 
   private String registry;
   private String dockerFile;
   private boolean autoBuildEnabled;
-  private boolean autoDeployEnabled;
   private boolean autoPushEnabled;
 
   public static ImageConfiguration from(ApplicationConfiguration applicationConfiguration) {
@@ -45,12 +46,11 @@ public class ImageConfiguration extends ApplicationConfiguration {
   }
 
   public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, String group, String name,
-                            String version, String registry, String dockerFile, boolean autoBuildEnabled, boolean autoDeployEnabled, boolean autoPushEnabled) {
+                            String version, String registry, String dockerFile, boolean autoBuildEnabled, boolean autoPushEnabled) {
     super(project, attributes, group, name, version);
     this.registry = registry;
     this.dockerFile = dockerFile;
     this.autoBuildEnabled = autoBuildEnabled;
-    this.autoDeployEnabled = autoDeployEnabled;
     this.autoPushEnabled = autoPushEnabled;
   }
 
@@ -76,14 +76,6 @@ public class ImageConfiguration extends ApplicationConfiguration {
 
   public void setAutoBuildEnabled(boolean autoBuildEnabled) {
     this.autoBuildEnabled = autoBuildEnabled;
-  }
-
-  public boolean isAutoDeployEnabled() {
-    return autoDeployEnabled;
-  }
-
-  public void setAutoDeployEnabled(boolean autoDeployEnabled) {
-    this.autoDeployEnabled = autoDeployEnabled;
   }
 
   public boolean isAutoPushEnabled() {

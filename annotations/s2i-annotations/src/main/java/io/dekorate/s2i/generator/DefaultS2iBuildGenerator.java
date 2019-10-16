@@ -22,7 +22,6 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.WithProject;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.s2i.config.S2iBuildConfigBuilder;
@@ -34,8 +33,7 @@ public class DefaultS2iBuildGenerator implements S2iBuildGenerator, WithProject 
     public DefaultS2iBuildGenerator () {
         LOGGER.info("Default s2i build generator....");
         on(new DefaultConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()
-                                                        .accept(new ApplyProjectInfo(getProject()))
-                                                        .accept(new ApplyBuildToImageConfiguration())
-                                                        .accept(new ApplyDeployToImageConfiguration())));
+                                                    .accept(new ApplyProjectInfo(getProject()))
+                                                    .accept(new ApplyBuildToImageConfiguration())));
    }
 }

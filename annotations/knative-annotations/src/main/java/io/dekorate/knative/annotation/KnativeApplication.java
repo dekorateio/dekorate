@@ -193,18 +193,6 @@ public @interface KnativeApplication {
   boolean expose() default false;
 
   /**
-   * The registry that holds the image.
-   * @return The registry or empty string if no registry has been specified.
-   */
-  String registry() default "";
- 
-  /**
-   * Flag to trigger the registration of the build hook.
-   * It's generally preferable to use `-Ddekorate.build=true` instead of hardcoding this here.
-   * @return  True for automatic registration of the build hook.
-   */
-  boolean autoBuildEnabled() default false;
-  /**
    * Flag to trigger the registration of the deploy hook.
    * It's generally preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
    * @return  True for automatic registration of the build hook.

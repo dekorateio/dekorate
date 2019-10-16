@@ -52,10 +52,11 @@ import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
 import io.dekorate.testing.WithProject;
+import io.dekorate.testing.WithImageConfig;
 import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
 
 public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
-                                             WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject, WithKubernetesConfig {
+                                             WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject, WithKubernetesConfig, WithImageConfig {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
    
@@ -79,18 +80,14 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
     KubernetesClient client = getKubernetesClient(context);
     KubernetesList list = getKubernetesResources(context);
 
-    if (hasKubernetesConfig()) {
+    if (hasKubernetesConfig() && hasImageConfig()) {
       KubernetesConfig kubernetesConfig = getKubernetesConfig();
-
-      ImageConfiguration imageConfiguration = new ImageConfigurationBuilder().withName(kubernetesConfig.getName())
-          .withGroup(kubernetesConfig.getGroup()).withVersion(kubernetesConfig.getVersion())
-          .withRegistry(kubernetesConfig.getRegistry()).build();
-
+      ImageConfiguration imageConfig = getImageConfig().get();
       BuildService buildService = null;
       try {
-        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
+        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfig)
           .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-        buildService = buildServiceFactory.create(getProject(), imageConfiguration, list.getItems());
+        buildService = buildServiceFactory.create(getProject(), imageConfig, list.getItems());
       } catch (Exception e) {
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
       }
@@ -99,12 +96,12 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       // We use the isAutoPushEnabled flag of the @KubernetesApplication annotation and not @KubernetesIntegrationTest.
       // The reason is that the @KubernetesApplication.isAutoPushEnabled() affects the generated manifests (adds the registry).
       // and thus the tests MUST follow.
-      if (kubernetesConfig.isAutoPushEnabled()) {
+      if (imageConfig.isAutoPushEnabled()) {
         buildService.prepare();
         buildService.build();
         buildService.push();
 
-      } else if (kubernetesConfig.isAutoBuildEnabled()) {
+      } else if (imageConfig.isAutoBuildEnabled()) {
         buildService.prepare();
         buildService.build();
       } else if (config.isBuildEnabled()) {
