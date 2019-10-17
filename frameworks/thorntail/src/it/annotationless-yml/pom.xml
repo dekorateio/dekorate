@@ -48,6 +48,13 @@
       <version>@project.version@</version>
       <scope>provided</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>openshift-annotations</artifactId>
+      <version>@project.version@</version>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>io.thorntail</groupId>
