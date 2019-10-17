@@ -24,11 +24,6 @@
       <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>io.dekorate</groupId>
-      <artifactId>openshift-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
@@ -72,6 +67,17 @@
       <artifactId>junit-platform-runner</artifactId>
       <version>${version.junit-platform}</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- This is dependency is only needed for integration test (so that kubernetes-annotations is built before this module) 
+         So we mark it as test and optional.
+      -->
+     <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>openshift-annotations</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <optional>true</optional> 
     </dependency>
   </dependencies>
 
