@@ -39,6 +39,7 @@ import io.dekorate.utils.Images;
 
 public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, WithProject {
 
+  private static final String OPENSHIFT = "openshift";
   private static final String IMAGESTREAMTAG = "ImageStreamTag";
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final Resources resources;
@@ -65,9 +66,10 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
   public void handle(S2iBuildConfig config) {
     if (config.isEnabled()) {
       LOGGER.info("Processing s2i configuration.");
-      resources.add(createBuilderImageStream(config));
-      resources.add(createProjectImageStream());
-      resources.add(createBuildConfig(config));
+      //TODO: We are temporarily limit S2i to openshift until we find a better way to handle this (#367).
+      resources.add(OPENSHIFT, createBuilderImageStream(config));
+      resources.add(OPENSHIFT, createProjectImageStream());
+      resources.add(OPENSHIFT, createBuildConfig(config));
 
       for (Env env : config.getBuildEnvVars()) {
         resources.decorate(new AddBuildEnvDecorator(env));
