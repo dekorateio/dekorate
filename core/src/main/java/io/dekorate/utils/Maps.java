@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 public class Maps {
   private static final String PROPERTY_PREFIX = "dekorate";
   private static final String MULTIPART_SEPARATOR_PATTERN = Pattern.quote(".");
-  private static final String ARRAY_PATTERN = "[a-zA-Z0-9_]+\\[\\d+\\]";
 
   /**
    * Read a Map representing a properties file and create a config map.
@@ -168,26 +167,35 @@ public class Maps {
   }
 
   private static void unrollArrays(Map<String, Object> result) {
-    Map<String, Object> copy = new HashMap<>(result);
+     Map<String, Object> copy = new HashMap<>(result);
     for (Map.Entry<String, Object> entry : copy.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
       if (value instanceof Map) {
         unrollArrays((Map<String, Object>) value);
       }
-      if (key.matches(ARRAY_PATTERN)) {
+      if (key.contains("[") && key.contains("]")) {
         String strippedKey = key.substring(0, key.indexOf("["));
         List<Object> list = new ArrayList<>();
+        List<Map> listOfMap = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
         for (int i=0;result.containsKey(strippedKey+"["+i+"]");i++) {
           String currentKey = strippedKey + "[" + i + "]";
           Object obj = result.get(currentKey);
-          list.add(obj);
+          if (obj instanceof Map) {
+            listOfMap.add((Map) obj);
+          } else {
+            list.add(obj);
+          }
           result.remove(currentKey);
         }
 
         if (!list.isEmpty()) {
           result.put(strippedKey , list);
+        }
+
+        if (!listOfMap.isEmpty()) {
+          result.put(strippedKey , listOfMap.toArray(new Map[listOfMap.size()]));
         }
       }
     }

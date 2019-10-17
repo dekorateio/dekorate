@@ -1,4 +1,16 @@
 dekorate:
   kubernetes:
+    env-vars:
+      - name: KEY1
+        value: VALUE1
+      - name: KEY2
+        value: VALUE2
     readines-probe:
       period-seconds: 10
+kubernetes:
+  env-vars:
+    - name: KEY1
+      value: VALUE1
+    - name: KEY2
+      value: VALUE2
+ 
