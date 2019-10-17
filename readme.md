@@ -215,7 +215,7 @@ The output file name may be used in certain cases, to set the value of `JAVA_APP
 
 To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
 ```java
-import io.dekorate.kubernetes.annotation.Env;
+import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication(ports = @Port(name = "web", containerPort = 8080))
@@ -246,7 +246,44 @@ public class Main {
 }
 ```
 
-Additional options are provided for adding environment variables from fields, config maps and secrets.    
+Additional options are provided for adding environment variables from fields, config maps and secrets. 
+
+#### Adding environment variables from ConfigMap
+
+To add an environment variable that points to a ConfigMap property, you need to specify the configmap using the `configmap` property in the @Env annotation.
+The configmap key will be specified by the `value` property. So, in this case `value` has the meaning of `value from key`.
+
+```java
+import io.dekorate.kubernetes.annotation.Env;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+
+@KubernetesApplication(envVars = @Env(name = "key1", configmap="my-config", value = "key1"))
+public class Main {
+
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
+#### Adding environment variables from Secrets
+
+To add an environment variable that points to a Secret property, you need to specify the configmap using the `secret` property in the @Env annotation.
+The secret key will be specified by the `value` property. So, in this case `value` has the meaning of `value from key`.
+
+```java
+import io.dekorate.kubernetes.annotation.Env;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+
+@KubernetesApplication(envVars = @Env(name = "key1", secret="my-secret", value = "key1"))
+public class Main {
+
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
+
+
 
 #### Working with volumes and mounts
 To define volumes and mounts for your application, you can use something like:
@@ -626,7 +663,7 @@ an `application` descriptor will override any existing annotation-specified conf
 
 It's important to repeat that the override that occurs by *fully* replacing any lower-priority configuration and not via any kind
 of merge between the existing and higher-priority values. This means that if you choose to override the annotation-specified
-configuration, you need to repeat all the configuration you want in the annotation-less configuration.
+configuration, you need to repeat all the configuration you want in the @Env annotation-less configuration.
 
 Here's the full list of supported [configuration options](config.md). Special attention should be paid to the path of these 
 properties. The properties' path match the annotation properties and not what would end up in the manifest, meaning that the 
