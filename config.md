@@ -121,7 +121,7 @@ The section below describes all the available subtypes.
 
 #### Container
 | Property          | Type            | Description | Default Value |
-|-------------------+-----------------+-------------+---------------|
+|-------------------|-----------------|-------------|---------------|
 | image             | String          |             |               |
 | name              | String          |             |               |
 | env-vars          | Env[]           |             |               |
@@ -136,7 +136,7 @@ The section below describes all the available subtypes.
 
 #### Probe
 | Property              | Type   | Description | Default Value |
-|-----------------------+--------+-------------+---------------|
+|-----------------------|--------|-------------|---------------|
 | http-action-path      | String |             |               |
 | exec-action           | String |             |               |
 | tcp-socket-action     | String |             |               |
@@ -149,7 +149,7 @@ The section below describes all the available subtypes.
 ### Mounts and Volumes
 #### Mount
 | Property  | Type    | Description | Default Value |
-|-----------+---------+-------------+---------------|
+|-----------|---------|-------------|---------------|
 | name      | String  |             |               |
 | path      | String  |             |               |
 | sub-path  | String  |             |               |
@@ -157,7 +157,7 @@ The section below describes all the available subtypes.
 
 #### ConfigMapVolume
 | Property        | Type    | Description | Default Value |
-|-----------------+---------+-------------+---------------|
+|-----------------|---------|-------------|---------------|
 | volume-name     | String  |             |               |
 | config-map-name | String  |             |               |
 | default-mode    | int     |             | 384           |
@@ -165,7 +165,7 @@ The section below describes all the available subtypes.
 
 #### SecretVolume
 | Property     | Type    | Description | Default Value |
-|--------------+---------+-------------+---------------|
+|--------------|---------|-------------|---------------|
 | volume-name  | String  |             |               |
 | secret-name  | String  |             |               |
 | default-mode | int     |             | 384           |
@@ -173,7 +173,7 @@ The section below describes all the available subtypes.
 
 #### PersistentVolumeClaimVolume
 | Property    | Type    | Description | Default Value |
-|-------------+---------+-------------+---------------|
+|-------------|---------|-------------|---------------|
 | volume-name | String  |             |               |
 | claim-name  | String  |             |               |
 | read-only   | boolean |             | false         |
@@ -181,7 +181,7 @@ The section below describes all the available subtypes.
 
 #### GitRepoVolume
 | Property    | Type   | Description | Default Value |
-|-------------+--------+-------------+---------------|
+|-------------|--------|-------------|---------------|
 | volume-name | String |             |               |
 | repository  | String |             |               |
 | directory   | String |             |               |
@@ -189,7 +189,7 @@ The section below describes all the available subtypes.
 
 #### AwsElasticBlockStoreVolume
 | Property    | Type    | Description | Default Value |
-|-------------+---------+-------------+---------------|
+|-------------|---------|-------------|---------------|
 | volume-name | String  |             |               |
 | volume-id   | String  |             |               |
 | partition   | int     |             |               |
@@ -198,7 +198,7 @@ The section below describes all the available subtypes.
 
 #### AzureDiskVolume
 | Property    | Type    | Description | Default Value |
-|-------------+---------+-------------+---------------|
+|-------------|---------|-------------|---------------|
 | volume-name | String  |             |               |
 | share-name  | String  |             |               |
 | secret-name | String  |             |               |
@@ -206,7 +206,7 @@ The section below describes all the available subtypes.
 
 #### AzureDiskVolume
 | Property     | Type    | Description | Default Value |
-|--------------+---------+-------------+---------------|
+|--------------|---------|-------------|---------------|
 | volume-name  | String  |             |               |
 | disk-name    | String  |             |               |
 | disk-u-r-i   | String  |             |               |
@@ -218,7 +218,7 @@ The section below describes all the available subtypes.
 
 ## Docker
 | Property                            | Type    | Description | Default Value |
-|-------------------------------------+---------+-------------+---------------|
+|-------------------------------------|---------|-------------|---------------|
 | dekorate.docker.docker-file         | String  |             | Dockerfile    |
 | dekorate.docker.registry            | String  |             |               |
 | dekorate.docker.auto-push-enabled   | boolean |             | false         |
@@ -227,7 +227,7 @@ The section below describes all the available subtypes.
 
 ## Openshift
 | Property                                           | Type                          | Description | Default Value |
-|----------------------------------------------------+-------------------------------+-------------+---------------|
+|----------------------------------------------------|-------------------------------|-------------|---------------|
 | dekorate.openshift.group                           | String                        |             |               |
 | dekorate.openshift.name                            | String                        |             |               |
 | dekorate.openshift.version                         | String                        |             |               |
@@ -261,7 +261,7 @@ The section below describes all the available subtypes.
 
 ### S2i
 | Property                     | Type    | Description | Default Value        |
-|------------------------------+---------+-------------+----------------------|
+|------------------------------|---------|-------------|----------------------|
 | dekorate.s2i.enabled         | boolean |             | true                 |
 | dekorate.docker-file         | String  |             | Dockerfile           |
 | dekorate.registry            | String  |             |                      |
@@ -273,7 +273,7 @@ The section below describes all the available subtypes.
 ## Knative
 
 | Property                                         | Type                          | Description | Default Value |
-|--------------------------------------------------+-------------------------------+-------------+---------------|
+|--------------------------------------------------|-------------------------------|-------------|---------------|
 | dekorate.knative.group                           | String                        |             |               |
 | dekorate.knative.name                            | String                        |             |               |
 | dekorate.knative.version                         | String                        |             |               |
@@ -309,7 +309,7 @@ This secrtion describes all halkyon related types.
 
 ### HalkyonComponent
 | Property                     | Type   | Description | Default Value |
-|------------------------------+--------+-------------+---------------|
+|------------------------------|--------|-------------|---------------|
 | dekorate.link.name           | String |             |               |
 | dekorate.link.component-name | String |             |               |
 | dekorate.link.type           | Type   |             | Env           |
@@ -319,7 +319,7 @@ This secrtion describes all halkyon related types.
 
 #### HalkyonLink
 | Property                     | Type   | Description | Default Value |
-|------------------------------+--------+-------------+---------------|
+|------------------------------|--------|-------------|---------------|
 | dekorate.link.name           | String |             |               |
 | dekorate.link.component-name | String |             |               |
 | dekorate.link.type           | Type   |             | Env           |
@@ -328,7 +328,7 @@ This secrtion describes all halkyon related types.
 
 #### HalkyonCapability
 | Property                       | Type        | Description | Default Value |
-|--------------------------------+-------------+-------------+---------------|
+|--------------------------------|-------------|-------------|---------------|
 | dekorate.capability.category   | String      |             |               |
 | dekorate.capability.type       | String      |             |               |
 | dekorate.capability.name       | String      |             |               |
