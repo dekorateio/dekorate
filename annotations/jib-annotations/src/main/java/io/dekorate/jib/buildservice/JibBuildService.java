@@ -17,7 +17,15 @@
 
 package io.dekorate.jib.buildservice;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import io.dekorate.BuildService;
+import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.jib.config.JibBuildConfig;
@@ -36,6 +44,10 @@ public class JibBuildService implements BuildService {
   private final String BUILD = "build";
   private final String DOCKER_BUILD = "dockerBuild";
   private final String MAVEN_GOAL = "com.google.cloud.tools:jib-maven-plugin:%s:%s";
+
+  private final String JIB = "jib";
+  private final String JIB_DOCKER_BUILD = "jibDockerBuild";
+  private final String GRADLE_INIT = "--";
 
   private final Project project;
   private final JibBuildConfig config;
@@ -57,11 +69,34 @@ public class JibBuildService implements BuildService {
 	public void build() {
     LOGGER.info("Performing jib build.");
     if (project.getBuildInfo().getBuildTool().equals(MavenInfoReader.MAVEN)) {
-      exec.commands("mvn", "compile", String.format(MAVEN_GOAL, JIB_VERSION, config.isDockerBuild() ? DOCKER_BUILD : BUILD), "-Djib.to.image=" + image);
+      mavenBuild();
     }
 	}
 
 	@Override
 	public void push() {
 	}
+
+  private void mavenBuild() {
+    exec.commands("mvn", "compile", String.format(MAVEN_GOAL, JIB_VERSION, config.isDockerBuild() ? DOCKER_BUILD : BUILD), "-Djib.to.image=" + image);
+  }
+
+  private void gradleBuild() {
+    Path outputPath = null;
+    String content = null;
+    URL url = getClass().getClassLoader().getResource("init.gralde");
+    try (InputStream is = url.openStream()) {
+      content = Strings.read(is);
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable("Error reading init.gradle from resources.", e);
+    }
+
+    try {
+      outputPath = Files.createTempFile("dekorate", "init-gradle");
+      Files.write(outputPath, content.getBytes("UTF-8"));
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable("Error writing init.gradle to tmp.", e);
+    }
+    exec.commands("gralde", config.isDockerBuild() ? JIB_DOCKER_BUILD : JIB, "--init-script", outputPath.toAbsolutePath().toString());
+  }
 }
