@@ -33,6 +33,8 @@ import static io.dekorate.project.BuildInfo.DEFAULT_PACKAGING;
 
 public class MavenInfoReader implements BuildInfoReader {
 
+  public static final String MAVEN = "maven";
+
   private static final String ARTIFACT_ID = "artifactId";
   private static final String PACKAGING = "packaging";
   private static final String PARENT = "parent";
@@ -58,7 +60,7 @@ public class MavenInfoReader implements BuildInfoReader {
     String name = getArtifactId(document);
     String version = getVersion(document);
     String packaging = getPackaging(document);
-    return new BuildInfo(name, version, packaging,
+    return new BuildInfo(name, version, packaging, MAVEN,
       root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)),
       root.resolve(TARGET).resolve(CLASSES)
     );

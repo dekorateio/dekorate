@@ -20,10 +20,12 @@ import java.nio.file.Path;
 public class BuildInfo {
 
   public static String DEFAULT_PACKAGING = "jar";
+  public static String DEFAULT_BUILD_TOOL = "generic";
 
   private String name;
   private String version;
   private String packaging;
+  private String buildTool;
   private Path outputFile;
   private Path classOutputDir;
   private Path resourceDir;
@@ -39,8 +41,8 @@ public class BuildInfo {
    * @param outputFile            The output file (the path to the actual jar, war etc).
    * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
    */
-  public BuildInfo(String name, String version, String packaging, Path outputFile, Path classOutputDir) {
-    this(name, version, packaging, outputFile, classOutputDir, classOutputDir);
+  public BuildInfo(String name, String version, String packaging, String buildTool, Path outputFile, Path classOutputDir) {
+    this(name, version, packaging, buildTool, outputFile, classOutputDir, classOutputDir);
   }
 
   /**
@@ -52,10 +54,11 @@ public class BuildInfo {
    * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
    * @param resourceDir           The directory from which application resources should be read. (e.g. target/classes for maven, src/main/resources from gralde and so on).
    */
-  public BuildInfo(String name, String version, String packaging, Path outputFile, Path classOutputDir, Path resourceDir) {
+  public BuildInfo(String name, String version, String packaging, String buildTool, Path outputFile, Path classOutputDir, Path resourceDir) {
     this.name = name;
     this.version = version;
     this.packaging = packaging;
+    this.buildTool = buildTool;
     this.outputFile = outputFile;
     this.classOutputDir = classOutputDir;
     this.resourceDir = resourceDir;
@@ -85,6 +88,22 @@ public class BuildInfo {
   public String getPackaging() {
     return packaging;
   }
+
+  /**
+   * Get the build tool name.
+   * @return the name of the build tool.
+   */
+  public String getBuildTool() {
+    return buildTool;
+  }
+
+  /**
+   * Set the build tool name.
+   */
+  public void setBuildTool(String buildTool) {
+    this.buildTool = buildTool;
+  }
+
   /**
    * Get the output file name.
    * @return  The output file name.
@@ -124,4 +143,5 @@ public class BuildInfo {
   public void setApplicationResourceOutputDir(Path resourceDir) {
     this.resourceDir = resourceDir;
   }
+
 }

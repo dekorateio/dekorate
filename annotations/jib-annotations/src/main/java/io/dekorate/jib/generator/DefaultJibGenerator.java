@@ -21,16 +21,14 @@ import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.jib.config.JibBuildConfig;
 import io.dekorate.jib.config.JibBuildConfigBuilder;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyDeployToImageConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultJibGenerator implements JibGenerator {
 
 	public DefaultJibGenerator() {
     on(new DefaultConfiguration<JibBuildConfig>(new JibBuildConfigBuilder()
-                                                        .accept(new ApplyProjectInfo(getProject()))
-                                                        .accept(new ApplyBuildToImageConfiguration())
-                                                        .accept(new ApplyDeployToImageConfiguration())));
+                                                .accept(new ApplyProjectInfo(getProject()))
+                                                .accept(new ApplyBuildToImageConfiguration())));
 	}
 
 }

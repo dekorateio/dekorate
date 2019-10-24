@@ -32,6 +32,7 @@ import io.dekorate.DekorateException;
 
 public class GradleInfoReader implements BuildInfoReader {
 
+  private static final String GRADLE = "gradle";
   private static final String BUILD_GRADLE = "build.gradle";
   private static final String SETTINGS_GRADLE = "settings.gradle";
   private static final String GRADLE_PROPERTIES = "gradle.properties";
@@ -100,7 +101,7 @@ public class GradleInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension,
+    return new BuildInfo(name, version, extension, GRADLE, 
       outputDir.resolve(sb.toString()),
                          //TODO: This need to be smarter and also cover groovy code.
                          root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN),
