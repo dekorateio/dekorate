@@ -27,6 +27,10 @@ limitations under the License.
   <artifactId>jib-annotations</artifactId>
   <name>Dekorate :: Annotations :: Jib</name>
 
+  <properties>
+    <version.jib>1.6.1</version.jib>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>
@@ -75,7 +79,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/jib/annotation/**</include>
-                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
+                    <include>META-INF/services/**</include>
                   </includes>
                 </filter>
               </filters>
@@ -102,8 +106,7 @@ limitations under the License.
                     <include>io/dekorate/jib/generator/**</include>
                     <include>io/dekorate/jib/handler/**</include>
                     <include>io/dekorate/jib/apt/**</include>
-                    <include>META-INF/services/javax.annotation.processing.Processor</include>
-                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
+                    <include>META-INF/services/**</include>
                   </includes>
                 </filter>
               </filters>
