@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 import io.dekorate.BuildService;
+import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.jib.config.JibBuildConfig;
@@ -32,15 +33,30 @@ import io.dekorate.project.Project;
 public class JibBuildServiceFactory implements BuildServiceFactory {
 
   private static final List<String> SUPPORTED_TOOLS = Arrays.asList(MavenInfoReader.MAVEN);
-    
+  private static final String JIB="jib";
+ 
+	@Override
+	public String name() {
+		return JIB;
+	}
+
 	@Override
 	public int order() {
 		return 15;
 	}
 
 	@Override
-	public boolean isApplicable(Project project, ImageConfiguration config) {
-    return config instanceof JibBuildConfig && SUPPORTED_TOOLS.contains(project.getBuildInfo().getBuildTool());
+	public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
+    boolean configAvailable = config instanceof JibBuildConfig;
+    boolean supportedTool = SUPPORTED_TOOLS.contains(project.getBuildInfo().getBuildTool());
+
+    if (!configAvailable) {
+      return new BuildServiceApplicablility(configAvailable, "No JibBuidConfig available!");
+    } else if (!supportedTool) {
+      return new BuildServiceApplicablility(configAvailable, "Project build tool no support by Jib");
+    } else {
+      return new BuildServiceApplicablility(true, "ok");
+    }
 	}
 
 	@Override

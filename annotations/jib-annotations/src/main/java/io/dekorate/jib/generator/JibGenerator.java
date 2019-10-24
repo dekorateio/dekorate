@@ -21,18 +21,35 @@ import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.jib.annotation.JibBuild;
 import io.dekorate.jib.config.JibBuildConfig;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.jib.adapter.JibBuildConfigAdapter;
 
 import javax.lang.model.element.Element;
+
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 public interface JibGenerator extends Generator, WithProject  {
+
+  String JIB = "jib";
+
+  default String getKey() {
+    return JIB;
+  }
+
+  @Override
+  default Class<? extends Annotation> getAnnotation() {
+    return JibBuild.class;
+  }
 
   @Override
   default void add(Element element) {
     JibBuild jib = element.getAnnotation(JibBuild.class);
     if (jib != null) {
-      ConfigurationSupplier<JibBuildConfig> config = new ConfigurationSupplier<>(JibBuildConfigAdapter.newBuilder(jib));
+      ConfigurationSupplier<JibBuildConfig> config = new ConfigurationSupplier<>(JibBuildConfigAdapter.newBuilder(jib)
+                                                                                 .accept(new ApplyProjectInfo(getProject()))
+                                                                                 .accept(new ApplyBuildToImageConfiguration()));
       on(config);
     }
   }
@@ -42,11 +59,14 @@ public interface JibGenerator extends Generator, WithProject  {
         on(new ConfigurationSupplier<>(
             JibBuildConfigAdapter
             .newBuilder(propertiesMap(map, JibBuild.class))
-        ));
+                                                .accept(new ApplyProjectInfo(getProject()))
+                                                .accept(new ApplyBuildToImageConfiguration())));
   }
 
   default void on(ConfigurationSupplier<JibBuildConfig> config) {
     Session session = getSession();
     session.configurators().add(config);
   }
+
+
 }
