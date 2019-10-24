@@ -29,6 +29,7 @@ import java.util.Arrays;
 public class SbtInfoReader implements BuildInfoReader {
 
   private static final String BUILD_SBT = "build.sbt";
+  private static final String SBT = "sbt";
 
   private static final String NAME = "name";
   private static final String VERSION = "version";
@@ -86,7 +87,7 @@ public class SbtInfoReader implements BuildInfoReader {
     String extension = JAR;
     Path outputFile = root.resolve(TARGET).resolve(name + UNDERSCORE + scalaVersion + DASH + version + DOT + extension);
     Path resourceOutputDir = root.resolve(TARGET).resolve(CLASSES);
-    return new BuildInfo(name, version, JAR, outputFile, resourceOutputDir);
+    return new BuildInfo(name, version, JAR, SBT, outputFile, resourceOutputDir);
   }
 
   /**

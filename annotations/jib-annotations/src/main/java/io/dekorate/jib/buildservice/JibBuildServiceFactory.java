@@ -17,16 +17,22 @@
 
 package io.dekorate.jib.buildservice;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.jib.config.JibBuildConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.project.MavenInfoReader;
 import io.dekorate.project.Project;
 
 public class JibBuildServiceFactory implements BuildServiceFactory {
 
+  private static final List<String> SUPPORTED_TOOLS = Arrays.asList(MavenInfoReader.MAVEN);
+    
 	@Override
 	public int order() {
 		return 15;
@@ -34,7 +40,7 @@ public class JibBuildServiceFactory implements BuildServiceFactory {
 
 	@Override
 	public boolean isApplicable(Project project, ImageConfiguration config) {
-    return true;
+    return config instanceof JibBuildConfig && SUPPORTED_TOOLS.contains(project.getBuildInfo().getBuildTool());
 	}
 
 	@Override

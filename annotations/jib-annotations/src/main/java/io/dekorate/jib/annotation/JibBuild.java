@@ -33,6 +33,12 @@ import java.lang.annotation.Target;
 public @interface JibBuild {
 
   /**
+   * Flag that indicates whether to perform a docker build (build using the docker daemon) or not.
+   * @return true, if docker build is desired, false otherwise.
+   */
+  boolean dockerBuild() default true;
+
+  /**
    * The base image to use.
    * @return The base image.
    */
@@ -65,6 +71,4 @@ public @interface JibBuild {
    * @return True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;
-
-
 }

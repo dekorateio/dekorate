@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 public class BazelInfoReader implements BuildInfoReader {
 
+  private static final String BAZEL = "bazel";
   private static final String BUILD = "BUILD";
 
   private static final String OPEN_BRACKET = "{";
@@ -87,7 +88,7 @@ public class BazelInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension, outputDir.resolve(sb.toString()),
+    return new BuildInfo(name, version, extension, BAZEL, outputDir.resolve(sb.toString()),
       root.resolve(BAZEL_OUT)
     );
   }
