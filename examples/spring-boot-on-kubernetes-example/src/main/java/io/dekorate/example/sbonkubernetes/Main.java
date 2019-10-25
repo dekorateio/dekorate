@@ -22,7 +22,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @KubernetesApplication(
-  livenessProbe = @Probe(httpActionPath = "/actuator/health"),
+  livenessProbe = @Probe(httpActionPath = "/actuator/info"),
   readinessProbe = @Probe(httpActionPath = "/actuator/health")
 )
 @SpringBootApplication

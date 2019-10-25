@@ -86,7 +86,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
     if (isActuatorAvailable()) {
       //Users configuration should take priority, so add but don't overwrite.
-      session.configurators().add(new AddLivenessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
+      session.configurators().add(new AddLivenessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/info").build(), false));
       session.configurators().add(new AddReadinessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
     }
 
