@@ -21,7 +21,7 @@ import io.dekorate.openshift.annotation.OpenshiftApplication
 import io.dekorate.kubernetes.annotation.Probe;
 
 @OpenshiftApplication(
-  livenessProbe = @Probe(httpActionPath = "/actuator/health"),
+  livenessProbe = @Probe(httpActionPath = "/actuator/info"),
   readinessProbe = @Probe(httpActionPath = "/actuator/health"))
 @SpringBootApplication
 class Main {
