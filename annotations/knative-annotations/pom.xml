@@ -133,7 +133,6 @@ limitations under the License.
                     <include>io/dekorate/knative/generator/**</include>
                     <include>io/dekorate/knative/handler/**</include>
                     <include>io/dekorate/knative/decorator/**</include>
-                    <include>io/dekorate/knative/hook/**</include>
                     <include>io/dekorate/knative/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
@@ -161,9 +160,9 @@ limitations under the License.
                     <include>io/dekorate/knative/generator/**</include>
                     <include>io/dekorate/knative/handler/**</include>
                     <include>io/dekorate/knative/decorator/**</include>
-                    <include>io/dekorate/knative/hook/**</include>
                     <include>io/dekorate/knative/util/**</include>
                     <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/services/io.dekorate.HandlerFactory</include>
                   </includes>
                 </filter>
               </filters>
