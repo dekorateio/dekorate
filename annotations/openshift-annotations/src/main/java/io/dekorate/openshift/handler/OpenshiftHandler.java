@@ -40,6 +40,7 @@ import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
+import io.dekorate.kubernetes.decorator.AddServiceDecorator;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
@@ -99,6 +100,10 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
 
     for (Container container : config.getInitContainers()) {
       resources.decorate(OPENSHIFT, new AddInitContainerDecorator(config.getName(), container));
+    }
+
+    if (config.getPorts().length > 0) {
+      resources.decorate(OPENSHIFT, new AddServiceDecorator(config, resources.getLabels()));
     }
 
     addDecorators(OPENSHIFT, config);

@@ -145,10 +145,6 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
       resources.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(volume));
     }
 
-    if (config.getPorts().length > 0) {
-      resources.decorate(group, new AddServiceDecorator(config, resources.getLabels()));
-    }
-
     if (config.getCommand().length > 0) {
       resources.decorate(group, new ApplyCommandDecorator(config.getName(), config.getName(), config.getCommand()));
     }

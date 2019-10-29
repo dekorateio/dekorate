@@ -47,6 +47,7 @@ import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
+import io.dekorate.kubernetes.decorator.AddServiceDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLabelSelectorDecorator;
@@ -123,6 +124,10 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
     for (Container container : config.getInitContainers()) {
       resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
+    }
+
+    if (config.getPorts().length > 0) {
+      resources.decorate(group, new AddServiceDecorator(config, resources.getLabels()));
     }
 
     resources.decorate(group, new AddIngressDecorator(config, resources.getLabels()));
