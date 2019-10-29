@@ -15,15 +15,7 @@
  */
 package io.dekorate.knative.generator;
 
-import io.dekorate.Session;
-import io.dekorate.SessionWriter;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.knative.serving.v1beta1.Service;
-import io.dekorate.knative.annotation.KnativeApplication;
-import io.dekorate.processor.SimpleFileWriter;
-import io.dekorate.project.FileProjectFactory;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +24,16 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.Session;
+import io.dekorate.SessionWriter;
+import io.dekorate.WithProject;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.knative.annotation.KnativeApplication;
+import io.dekorate.processor.SimpleFileWriter;
+import io.dekorate.project.FileProjectFactory;
 
 class KnativeApplicationGeneratorTest {
   static Path tempDir;
@@ -44,6 +45,9 @@ class KnativeApplicationGeneratorTest {
 
   @Test
   public void shouldGenerateKnativeAndWriteToTheFilesystem()  {
+    WithProject withProject = new WithProject() {};
+    withProject.setProject(FileProjectFactory.create(new File(".")));
+
     SessionWriter writer = new SimpleFileWriter(tempDir);
     Session session = Session.getSession();
     session.setWriter(writer);
