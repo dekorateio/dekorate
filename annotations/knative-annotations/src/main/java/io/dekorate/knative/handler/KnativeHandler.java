@@ -23,6 +23,7 @@ import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
+import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.knative.serving.v1alpha1.Service;
@@ -104,13 +105,17 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       .withLabels(resources.getLabels())
       .endMetadata()
       .withNewSpec()
-      .withNewTemplate()
+      .withNewRunLatest()
+      .withNewConfiguration()
+      .withNewRevisionTemplate()
       .withNewSpec()
-      .addNewContainer()
+      .withNewContainer()
       .withImage("dev.local/" + config.getGroup() + "/" + config.getName() + ":" + config.getVersion())
       .endContainer()
       .endSpec()
-      .endTemplate()
+      .endRevisionTemplate()
+      .endConfiguration()
+      .endRunLatest()
       .endSpec()
       .build();
   }
