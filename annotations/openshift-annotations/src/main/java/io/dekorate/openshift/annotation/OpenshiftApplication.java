@@ -206,6 +206,12 @@ public @interface OpenshiftApplication {
   boolean expose() default false;
 
   /**
+   * Controls whether the generated {@link Service} will be headless.
+   * @return true if headless.
+   */
+  boolean headless() default false;
+
+  /**
    * Flag to trigger the registration of the deploy hook.
    * It's generally preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
    * @return  True for automatic registration of the build hook.

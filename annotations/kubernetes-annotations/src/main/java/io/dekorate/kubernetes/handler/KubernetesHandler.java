@@ -49,6 +49,7 @@ import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
+import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLabelSelectorDecorator;
 import io.dekorate.kubernetes.decorator.ApplyReplicasDecorator;
@@ -100,11 +101,18 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       .filter(i -> i.getMetadata().getName().equals(config.getName()))
       .findAny();
 
+
     if (!existingDeployment.isPresent()) {
       resources.add(KUBERNETES, createDeployment(config, imageConfig));
     }
-    resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+
     addDecorators(KUBERNETES, config);
+
+    if (config.isHeadless()) {
+      resources.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
+    }
+
+    resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
 
     String image = Images.getImage(imageConfig.isAutoPushEnabled() ?
                                    (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
