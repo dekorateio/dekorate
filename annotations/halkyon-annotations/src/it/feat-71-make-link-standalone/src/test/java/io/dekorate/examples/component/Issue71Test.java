@@ -32,7 +32,7 @@ public class Issue71Test {
 
   @Test
   public void shouldContainLink() {
-    KubernetesList list = Serialization.unmarshal(Issue71Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(Issue71Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
     assertEquals(2, items.size());

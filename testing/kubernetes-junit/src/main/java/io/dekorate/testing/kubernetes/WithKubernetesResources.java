@@ -101,7 +101,7 @@ public interface WithKubernetesResources extends TestInstancePostProcessor, With
 
     System.out.println("Apply test resources from:" + manifestUrl);
     try (InputStream is = manifestUrl.openStream()) {
-        result = Serialization.unmarshal(is, KubernetesList.class);
+      result = Serialization.unmarshalAsList(is);
     } catch (IOException e) {
        throw DekorateException.launderThrowable(e);
     }

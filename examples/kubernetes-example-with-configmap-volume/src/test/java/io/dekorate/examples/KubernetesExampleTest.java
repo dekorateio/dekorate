@@ -28,7 +28,7 @@ class KubernetesExampleTest {
 
   @Test
   public void shouldContainConfigMap() {
-    KubernetesList list = Serialization.unmarshal(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     Deployment deployment = (Deployment) list.getItems().get(0);

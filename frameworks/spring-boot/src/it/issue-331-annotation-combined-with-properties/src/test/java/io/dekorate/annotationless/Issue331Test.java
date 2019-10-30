@@ -34,7 +34,7 @@ public class Issue331Test {
 
   @Test
   public void shouldContainCombinedDeployment() {
-    KubernetesList list = Serialization.unmarshal(Issue331Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(Issue331Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);

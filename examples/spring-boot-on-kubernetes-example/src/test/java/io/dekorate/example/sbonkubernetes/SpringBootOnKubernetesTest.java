@@ -29,7 +29,7 @@ class SpringBootOnKubernetesTest {
 
   @Test
   public void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshal(SpringBootOnKubernetesTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(SpringBootOnKubernetesTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);

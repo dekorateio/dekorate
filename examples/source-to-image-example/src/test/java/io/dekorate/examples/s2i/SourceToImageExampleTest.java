@@ -31,7 +31,7 @@ class SourceToImageExampleTest {
 
   @Test
   public void shouldContainDeploymentConfig() {
-    KubernetesList list = Serialization.unmarshal(SourceToImageExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(SourceToImageExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig dc = findFirst(list, DeploymentConfig.class).orElseThrow(()-> new IllegalStateException());
     assertNotNull(dc);
@@ -39,7 +39,7 @@ class SourceToImageExampleTest {
 
   @Test
   public void shouldContainBuildConfig() {
-    KubernetesList list = Serialization.unmarshal(SourceToImageExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(SourceToImageExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     BuildConfig bc = findFirst(list, BuildConfig.class).orElseThrow(()-> new IllegalStateException());
     assertNotNull(bc);
@@ -47,7 +47,7 @@ class SourceToImageExampleTest {
 
   @Test
   public void shouldContainImageStream() {
-    KubernetesList list = Serialization.unmarshal(SourceToImageExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(SourceToImageExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     ImageStream is = findFirst(list, ImageStream.class).orElseThrow(()-> new IllegalStateException());
     assertNotNull(is);

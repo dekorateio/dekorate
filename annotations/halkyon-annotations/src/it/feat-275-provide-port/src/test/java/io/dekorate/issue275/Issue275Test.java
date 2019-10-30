@@ -33,7 +33,7 @@ public class Issue275Test {
 
   @Test
   public void shouldExposeServiceAndHaveCorrectPort() {
-    KubernetesList list = Serialization.unmarshal(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     Optional<Component> component = findFirst(list, Component.class);
     assertTrue(component.isPresent());

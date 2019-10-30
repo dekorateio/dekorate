@@ -33,7 +33,7 @@ public class Issue52Test {
 
   @Test
   public void shouldContainBuildConfig() {
-    KubernetesList list = Serialization.unmarshal(Issue52Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(Issue52Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
     assertEquals(1, items.size());

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ThorntailOnKubernetesTest {
   @Test
   void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshal(ThorntailOnKubernetesTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(ThorntailOnKubernetesTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
 
     Optional<Deployment> deployment = findFirst(list, Deployment.class);

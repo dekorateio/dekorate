@@ -23,6 +23,9 @@ import io.dekorate.deps.jackson.databind.SerializationFeature;
 import io.dekorate.deps.jackson.dataformat.javaprop.JavaPropsMapper;
 import io.dekorate.deps.jackson.dataformat.yaml.YAMLFactory;
 import io.dekorate.DekorateException;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
 
 import java.io.BufferedInputStream;
@@ -36,11 +39,13 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Serialization {
 
@@ -72,6 +77,15 @@ public class Serialization {
 
   public static <T> String asJson(T object) {
     try {
+      if (object instanceof KubernetesList) {
+        KubernetesList list = (KubernetesList) object;
+        if (list.getItems().size() == 1) {
+          return JSON_MAPPER.writeValueAsString(list.getItems().get(0));
+        }
+        return list.getItems().stream()
+          .map(Serialization::writeValueAsJsonSafe)
+          .collect(Collectors.joining());
+      }
       return JSON_MAPPER.writeValueAsString(object);
     } catch (JsonProcessingException e) {
       throw DekorateException.launderThrowable(e);
@@ -80,11 +94,47 @@ public class Serialization {
 
   public static <T> String asYaml(T object) {
     try {
+      if (object instanceof KubernetesList) {
+        KubernetesList list = (KubernetesList) object;
+        if (list.getItems().size() == 1) {
+          return YAML_MAPPER.writeValueAsString(list.getItems().get(0));
+        }
+
+        return list.getItems().stream()
+          .map(Serialization::writeValueAsYamlSafe)
+          .collect(Collectors.joining());
+      }
       return YAML_MAPPER.writeValueAsString(object);
     } catch (JsonProcessingException e) {
       throw DekorateException.launderThrowable(e);
     }
   }
+
+  /**
+   * Unmarshals a stream.
+   * @param is    The {@link InputStream}.
+   * @return
+   */
+  public static KubernetesList unmarshalAsList(InputStream is)  {
+    String content = Strings.read(is);
+    String[] parts = splitDocument(content);
+    List<HasMetadata> items = new ArrayList<>();
+    for (String part : parts) {
+      if (part.trim().isEmpty()) {
+        continue;
+      }
+      Object resource = unmarshal(part);
+      if (resource instanceof KubernetesList) {
+        items.addAll(((KubernetesList) resource).getItems());
+      } else if (resource instanceof HasMetadata) {
+        items.add((HasMetadata) resource);
+      } else if (resource instanceof HasMetadata[]) {
+        Arrays.stream((HasMetadata[])resource).forEach(r -> items.add(r));
+      }
+    }
+    return new KubernetesListBuilder().withItems(items).build();
+  }
+
 
   /**
    * Unmarshals a stream.
@@ -128,10 +178,26 @@ public class Serialization {
         mapper = YAML_MAPPER;
       }
       return mapper.readerFor(KubernetesResource.class).readValue(bis);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw DekorateException.launderThrowable(e);
+    }
+  }
+
+  /**
+   * Unmarshals a {@link String} optionally performing placeholder substitution to the String.
+   * @param str   The {@link String}.
+   * @param <T>
+   * @return
+   */
+  public static <T> T unmarshal(String str)  {
+    try (InputStream is = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8))) {
+      return unmarshal(is);
     } catch (IOException e) {
       throw DekorateException.launderThrowable(e);
     }
   }
+
 
   /**
    * Unmarshals a {@link String} optionally performing placeholder substitution to the String.
@@ -238,32 +304,7 @@ public class Serialization {
     }
   }
 
-
-  private static List<KubernetesResource> getKubernetesResourceList(String specFile) {
-    List<KubernetesResource> documentList = new ArrayList<>();
-    String[] documents = splitSpecFile(specFile);
-    for (String document : documents) {
-      if (validate(document)) {
-        ByteArrayInputStream documentInputStream = new ByteArrayInputStream(document.getBytes());
-        Object resource = Serialization.unmarshal(documentInputStream);
-        documentList.add((KubernetesResource) resource);
-      }
-    }
-    return documentList;
-  }
-
-  private static boolean containsMultipleDocuments(String specFile) {
-    String[] documents = splitSpecFile(specFile);
-    int nValidDocuments = 0;
-    for(String document : documents) {
-      if(validate(document))
-        nValidDocuments++;
-    }
-
-    return nValidDocuments > 1;
-  }
-
-  private static String[] splitSpecFile(String aSpecFile) {
+  private static String[] splitDocument(String aSpecFile) {
     List<String> documents = new ArrayList<>();
     String[] lines = aSpecFile.split(System.lineSeparator());
     int nLine = 0;
@@ -286,23 +327,19 @@ public class Serialization {
     return documents.toArray(new String[documents.size()]);
   }
 
-  private static boolean validate(String document) {
-    Matcher keyValueMatcher = Pattern.compile("(\\S+):\\s(\\S*)(?:\\b(?!:)|$)").matcher(document);
-    return !document.isEmpty() && keyValueMatcher.find();
-  }
-
-  private static String readSpecFileFromInputStream(InputStream inputStream) {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    byte[] buffer = new byte[1024];
-    int length;
+  private static <T> String writeValueAsYamlSafe(T object) {
     try {
-      while ((length = inputStream.read(buffer)) != -1) {
-        outputStream.write(buffer, 0, length);
-      }
-      return outputStream.toString();
-    } catch (IOException e) {
-      throw new RuntimeException("Unable to read InputStream." , e);
+      return YAML_MAPPER.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw DekorateException.launderThrowable(e);
     }
   }
 
+  private static <T> String writeValueAsJsonSafe(T object) {
+    try {
+      return JSON_MAPPER.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw DekorateException.launderThrowable(e);
+    }
+  }
 }

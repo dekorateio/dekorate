@@ -32,7 +32,7 @@ public class CapabilityTest {
 
   @Test
   public void shouldContainCapability() {
-    KubernetesList list = Serialization.unmarshal(Capability.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(Capability.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     Optional<Capability> capability = findFirst(list, Capability.class);
     assertTrue(capability.isPresent());

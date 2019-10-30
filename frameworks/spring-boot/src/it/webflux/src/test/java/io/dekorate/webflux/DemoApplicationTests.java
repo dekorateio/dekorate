@@ -13,7 +13,7 @@ public class DemoApplicationTests {
 
   @Test
   public void shouldContainService() {
-    KubernetesList list = Serialization.unmarshal(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Service service = findFirst(list, Service.class).orElseThrow(IllegalStateException::new);
     assertNotNull(service);

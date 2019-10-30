@@ -33,7 +33,7 @@ public class Issue369Test {
 
   @Test
   public void shouldContainUserProvidedProbeConfiguration() {
-    KubernetesList list = Serialization.unmarshal(Issue369Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(Issue369Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);

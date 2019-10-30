@@ -31,7 +31,7 @@ public class Feat279Test {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshal(Feat279Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(Feat279Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment deployment = findFirst(list, Deployment.class).orElseThrow(IllegalStateException::new);
     assertNotNull(deployment.getSpec().getTemplate().getSpec().getImagePullSecrets());
