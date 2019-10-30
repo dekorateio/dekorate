@@ -27,7 +27,7 @@ public class OpenshiftExampleTest {
 
   @Test
   public void shouldContainDeploymentConfig() {
-    KubernetesList list = Serialization.unmarshal(OpenshiftExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(OpenshiftExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     assertEquals("DeploymentConfig", list.getItems().get(0).getKind());

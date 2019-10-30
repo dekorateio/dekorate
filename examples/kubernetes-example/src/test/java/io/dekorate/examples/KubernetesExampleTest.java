@@ -27,7 +27,7 @@ class KubernetesExampleTest {
 
   @Test
   public void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshal(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     assertEquals("Deployment", list.getItems().get(0).getKind());

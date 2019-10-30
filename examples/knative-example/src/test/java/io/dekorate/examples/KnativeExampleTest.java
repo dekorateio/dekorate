@@ -27,7 +27,7 @@ class KnativeExampleTest {
 
   @Test
   public void shouldContainService() {
-    KubernetesList list = Serialization.unmarshal(KnativeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(KnativeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     assertEquals("Service", list.getItems().get(0).getKind());

@@ -32,7 +32,7 @@ class KubernetesExampleTest {
 
   @Test
   public void shouldContainConfigMap() {
-    KubernetesList list = Serialization.unmarshal(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment deployment = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(deployment);

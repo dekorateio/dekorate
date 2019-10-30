@@ -26,7 +26,7 @@ import io.dekorate.utils.Serialization;
 public class KubernetesResources {
 
   public static KubernetesList loadGenerated(String group) {
-    return Serialization.unmarshal(Serialization.class.getClassLoader().getResourceAsStream("META-INF/dekorate/" + group + ".yml"));
+    return Serialization.unmarshalAsList(Serialization.class.getClassLoader().getResourceAsStream("META-INF/dekorate/" + group + ".yml"));
   }
   /**
    * Find the first resource of the specified type.

@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ThorntailOnOpenshiftTest {
   @Test
   void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshal(ThorntailOnOpenshiftTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(ThorntailOnOpenshiftTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
 
     Optional<DeploymentConfig> deploymentConfig = findFirst(list, DeploymentConfig.class);

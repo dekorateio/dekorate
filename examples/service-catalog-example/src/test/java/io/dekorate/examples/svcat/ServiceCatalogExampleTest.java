@@ -35,7 +35,7 @@ class ServiceCatalogExampleTest {
 
  @Test
   public void shouldContainServiceInstanceAndBinding() {
-   KubernetesList list = Serialization.unmarshal(ServiceCatalogExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+   KubernetesList list = Serialization.unmarshalAsList(ServiceCatalogExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
    assertNotNull(list);
    assertTrue(findFirst(list, ServiceInstance.class).isPresent());
    assertTrue(findFirst(list, ServiceBinding.class).isPresent());

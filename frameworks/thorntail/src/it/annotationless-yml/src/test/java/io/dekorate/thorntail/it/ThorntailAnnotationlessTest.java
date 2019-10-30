@@ -32,7 +32,7 @@ class ThorntailAnnotationlessTest {
 
   @Test
   void shouldContainKubernetesIngress() {
-    KubernetesList list = Serialization.unmarshal(ThorntailAnnotationlessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(ThorntailAnnotationlessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
 
     Optional<Ingress> ingress = findFirst(list, Ingress.class);
@@ -42,7 +42,7 @@ class ThorntailAnnotationlessTest {
 
   @Test
   void shouldContainOpenShiftRoute() {
-    KubernetesList list = Serialization.unmarshal(ThorntailAnnotationlessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(ThorntailAnnotationlessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
 
     Optional<Route> route = findFirst(list, Route.class);

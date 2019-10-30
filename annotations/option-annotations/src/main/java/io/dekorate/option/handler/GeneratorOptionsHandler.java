@@ -73,14 +73,8 @@ public class GeneratorOptionsHandler implements Handler<GeneratorConfig> {
           return Collections.emptyList();
         }
 
-        KubernetesResource resource = Serialization.unmarshal(is, KubernetesResource.class);
-        if (resource instanceof KubernetesList) {
-          return ((KubernetesList) resource).getItems();
-        } else if (resource instanceof HasMetadata) {
-          return Arrays.asList((HasMetadata)resource);
-        } else {
-          return Collections.emptyList();
-        }
+        KubernetesList list = Serialization.unmarshalAsList(is);
+        return list.getItems();
       }
     } catch (IOException e) {
       throw DekorateException.launderThrowable("Failed ot read resource with name:" + name, e);

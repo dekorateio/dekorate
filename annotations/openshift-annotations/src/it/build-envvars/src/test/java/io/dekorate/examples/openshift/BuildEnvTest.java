@@ -32,7 +32,7 @@ public class BuildEnvTest {
 
   @Test
   public void shouldContainEnvVars() {
-    KubernetesList list = Serialization.unmarshal(BuildEnvTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(BuildEnvTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     BuildConfig buildConfig = findFirst(list, BuildConfig.class).orElseThrow(IllegalStateException::new);
 

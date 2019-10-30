@@ -35,7 +35,7 @@ public class DemoApplicationTests {
 
   @Test
   public void shouldContainerServiceAccount() {
-    KubernetesList list = Serialization.unmarshal(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     ServiceAccount serviceAccount = findFirst(list, ServiceAccount.class).orElseThrow(IllegalStateException::new);
     assertNotNull(serviceAccount);

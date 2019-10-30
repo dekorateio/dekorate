@@ -38,7 +38,7 @@ public class ServiceCatalogMappingTest {
 
   @Test
   public void shouldUnmarshall() {
-    KubernetesList list = Serialization.unmarshal(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml"));
     assertNotNull(list);
   }
 

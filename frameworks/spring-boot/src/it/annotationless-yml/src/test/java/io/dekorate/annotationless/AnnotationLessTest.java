@@ -31,7 +31,7 @@ public class AnnotationLessTest {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshal(AnnotationLessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(AnnotationLessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
