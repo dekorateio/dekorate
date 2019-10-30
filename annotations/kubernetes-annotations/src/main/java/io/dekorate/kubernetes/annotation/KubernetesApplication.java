@@ -15,6 +15,7 @@
  */
 package io.dekorate.kubernetes.annotation;
 
+import io.dekorate.deps.kubernetes.api.model.Service;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
@@ -199,6 +200,12 @@ public @interface KubernetesApplication {
    * Controls whether the application should be exposed via Ingress
    */
   boolean expose() default false;
+
+  /**
+   * Controls whether the generated {@link Service} will be headless.
+   * @return true if headless.
+   */
+  boolean headless() default false;
 
   /**
    * Flag to trigger the registration of the deploy hook. It's generally

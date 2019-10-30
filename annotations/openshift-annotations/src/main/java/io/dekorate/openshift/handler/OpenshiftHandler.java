@@ -41,6 +41,7 @@ import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceDecorator;
+import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
@@ -96,6 +97,10 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
 
     if (!existingDeploymentConfig.isPresent()) {
       resources.add(OPENSHIFT, createDeploymentConfig(config, imageConfig));
+    }
+
+    if (config.isHeadless()) {
+      resources.decorate(OPENSHIFT, new ApplyHeadlessDecorator(config.getName()));
     }
 
     for (Container container : config.getInitContainers()) {
