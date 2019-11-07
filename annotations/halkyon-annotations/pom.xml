@@ -43,10 +43,14 @@ limitations under the License.
     <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>transform-annotations</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
     <!-- Integration Test
          These are used to force the order in the reactor. Thus test scoped and optional.
