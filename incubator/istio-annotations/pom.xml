@@ -37,6 +37,8 @@ limitations under the License.
     <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
 
     <!-- Testing -->

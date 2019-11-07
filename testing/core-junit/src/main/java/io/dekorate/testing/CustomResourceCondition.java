@@ -23,7 +23,7 @@ import io.dekorate.deps.okhttp3.Request;
 import io.dekorate.deps.okhttp3.Response;
 import io.dekorate.testing.annotation.OnCustomResourcePresentCondition;
 import io.dekorate.utils.Strings;
-import io.sundr.codegen.functions.Pluralize;
+import io.dekorate.utils.Pluralize;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
