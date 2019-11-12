@@ -81,6 +81,7 @@
     <module>testing</module>
     <module>starters</module>
     <module>doc</module>
+    <module>tests</module>
   </modules>
 
   <dependencyManagement>
