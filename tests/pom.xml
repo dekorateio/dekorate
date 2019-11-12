@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
 
     <modules>
+      <module>feat-105-build-env-vars</module>
       <module>feat-279-image-pull-secrets</module>
       <module>issue-130-empty-generic-java-project</module>
     </modules>
