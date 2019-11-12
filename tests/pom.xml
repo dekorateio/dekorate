@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>io.dekorate</groupId>
+        <artifactId>dekorate-project</artifactId>
+        <version>0.9-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>dekorate-tests</artifactId>
+    <name>Dekorate :: Tests :: Annotations :: POM</name>
+    <packaging>pom</packaging>
+
+    <modules>
+      <module>feat-279-image-pull-secrets</module>
+      <module>issue-130-empty-generic-java-project</module>
+    </modules>
+
+</project>
