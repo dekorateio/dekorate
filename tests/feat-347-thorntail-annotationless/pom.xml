@@ -2,22 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>dekorate-tests</artifactId>
+    <groupId>io.dekorate</groupId>
+    <version>0.9-SNAPSHOT</version>
+    <relativePath>../</relativePath>
+  </parent>
+
   <groupId>io.dekorate</groupId>
-  <artifactId>thorntail-it-annotationless</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-  <name>Dekorate :: Thorntail :: Integration Test :: Annotationless</name>
+  <artifactId>feat-347-thorntail-annotationless</artifactId>
+  <name>Dekorate :: Tests :: Annotations :: Thorntail :: Annotationless #347</name>
+  <description>Check that annotationless mode works with thorntail</description>
   <packaging>war</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-    <java.version>1.8</java.version>
-    <version.junit-jupiter>5.1.0</version.junit-jupiter>
-    <version.junit-platform>1.1.0</version.junit-platform>
-    <version.thorntail>2.5.0.Final</version.thorntail>
-    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
-    <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
 
@@ -38,21 +38,21 @@
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>dekorate-thorntail</artifactId>
-      <version>@project.version@</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-annotations</artifactId>
-      <version>@project.version@</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>openshift-annotations</artifactId>
-      <version>@project.version@</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
 
