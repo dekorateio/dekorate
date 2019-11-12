@@ -18,7 +18,10 @@
       <module>feat-52-add-build-spec</module>
       <module>feat-71-make-link-standalone</module>
       <module>feat-105-build-env-vars</module>
+      <module>feat-204-spring-boot-with-spring-cloud-kubernetes</module>
+      <module>feat-216-annotationless-yml</module>
       <module>feat-229-override-annotationbased-config</module>
+      <module>feat-243-spring-boot-with-webflux</module>
       <module>feat-248-capability</module>
       <module>feat-275-provide-port</module>
       <module>feat-279-image-pull-secrets</module>
@@ -26,8 +29,11 @@
       <module>issue-130-empty-generic-java-project</module>
       <module>issue-188-json-yml-generation</module>
       <module>issue-193-k8s-annotations-population</module>
+      <module>issue-222-manifest-not-generated-when-using-spring-starter</module>
       <module>issue-254-exposeService-not-overrided</module>
       <module>issue-276-componentName-not-overrided</module>
+      <module>issue-331-annotation-combined-with-properties</module>
+      <module>issue-369-probe-properties</module>
     </modules>
 
 </project>
