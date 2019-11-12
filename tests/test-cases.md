@@ -62,9 +62,9 @@ When adding `kubernetes-annotations` to a project and annotating with `Kubernete
 
 When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(readinessProbe=@Probe(httpActionPath="/foo"))` annotation, I expect the container to have a readiness probe that will perform an http call at `/foo` with period 30 seconds,  initial delay of 10 seconds and succss threshold 3 (defaults).
 
-When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(livenessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, failureThreshold=5))` annotation, I expect the container to have a liveness probe that will perform an http call at `/foo` with period and initial delay of 5 seconds and failure threshold 5.
+When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(livenessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, failureThreshold=5))` annotation, I expect the container to have a liveness probe that will perform an http call at `/foo` with period and initial delay of 10 seconds and failure threshold 5.
 
-When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(readinessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, successThreshold=5))` annotation, I expect the container to have a liveness probe that will perform an http call at `/foo` with period and initial delay of 5 seconds and success threshold 5.
+When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(readinessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, successThreshold=5))` annotation, I expect the container to have a liveness probe that will perform an http call at `/foo` with period and initial delay of 10 seconds and success threshold 5.
 
 #### Openshift
 
@@ -120,7 +120,7 @@ When adding `openshift-annotations` to a project and annotating with `OpenshiftA
 
 When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(readinessProbe=@Probe(httpActionPath="/foo"))` annotation, I expect the container to have a readiness probe that will perform an http call at `/foo` with period 30 seconds,  initial delay of 10 seconds and succss threshold 3 (defaults).
 
-When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(livenessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, failureThreshold=5))` annotation, I expect the container to have a liveness probe that will perform an http call at `/foo` with period and initial delay of 5 seconds and failure threshold 5.
+When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(livenessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, failureThreshold=5))` annotation, I expect the container to have a liveness probe that will perform an http call at `/foo` with period and initial delay of 10 seconds and failure threshold 5.
 
 When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(readinessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, successThreshold=5))` annotation, I expect the container to have a readiness probe that will perform an http call at `/foo` with period and initial delay of 5 seconds and success threshold 5.
 
@@ -479,4 +479,112 @@ When adding `openshift-annotations` to a project and
     dekorate.openshift.readiness-probe.success-threshold=5
 
 to application.properties, I expect the container to have a readiness probe that will perform an http call at `/foo` with period and initial delay of 5 seconds and success threshold 5.
+
+## Hybrid mode
+
+Hybrid mode is using both annotations and application configuration.
+
+When using hybrid mode it is expected that application configuration takes preceedence over annotation configuration on property level.
+This means that each property defined both using annotations and configuration, the configuration property takes preceedence.
+Note: `property level` means that when dealing with complex objects, overriding doesn't involve the whole object, but each of its properties individually.
+
+### Kubernetes
+
+When adding `kubernetes-annotations` to a project and annotating with the `KubernetesApplication(name="some-name")` annotation, but have:
+
+    dekorate.kubernetes.name=some-other-name
+
+in application.properties, I expect to find kubernetes manifests generated under `target/classes/META-INF/dekorate`. All resources are expected to contain the label `app=some-name`.  The manifests should contain at least `Deployment` named `some-other-name`. The deployment should contain a single container also called `some-other-name`. The container should use the docker image `<user name>/some-other-name:<app version>`. If the name option is ommitted the name is expected to be the artifactId.
+
+The same applies for all simple properties.
+
+
+###### Environment variables
+
+When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(envVars=@EnvVar(name="FOO", value="BAR")")` annotation,  but have:
+
+    dekorate.kubernetes.env-vars[0].name=FOO
+    dekorate.kubernetes.env-vars[0].value=BAR2
+
+I expect the generated container to have the environment variable `FOO=BAR2`.
+
+###### Ports
+
+When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(ports=@Port(name="my-port", containerPort=8181))` annotation, but have:
+
+
+    dekorate.kubernetes.ports[0].name=my-port
+    dekorate.kubernetes.ports[0].container-port=8282
+
+I expect the generated container to contain `my-port` container port with port 8282 and also expose it as a `Service` named after the deployment. 
+
+###### Volumes and mounts
+
+When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(configMapVolumes=@ConfigMapVolume(volumeName="my-vol", configMapName="my-config"))` annotation, but have:
+
+    dekorate.kubernetes.config-map-volumes[0].volume-name=my-vol
+    dekorate.kubernetes.config-map-volumes[0].config-map-name=my-other-config
+    
+I expect the pod to have a config map volume named `my-vol` that points to `my-other-config` config map.
+
+In a similar manner the following kind of volumes should work.
+
+###### Probes
+
+When adding `kubernetes-annotations` to a project and annotating with `KubernetesApplication(livenessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, failureThreshold=5))` annotation, but have:
+
+    dekorate.kubernetes.liveness-probe.http-action-path=/bar
+    
+I expect the container to have a liveness probe that will perform an http call at `/bar` with period and initial delay of 10 seconds and failure threshold 5.
+
+
+### Openshift
+
+When adding `openshift-annotations` to a project and annotating with the `OpenshiftApplication(name="some-name")` annotation, but have:
+
+    dekorate.openshift.name=some-other-name
+
+in application.properties, I expect to find openshift manifests generated under `target/classes/META-INF/dekorate`. All resources are expected to contain the label `app=some-name`.  The manifests should contain at least `Deployment` named `some-other-name`. The deployment should contain a single container also called `some-other-name`. The container should use the docker image `<user name>/some-other-name:<app version>`. If the name option is ommitted the name is expected to be the artifactId.
+
+The same applies for all simple properties.
+
+
+###### Environment variables
+
+When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(envVars=@EnvVar(name="FOO", value="BAR")")` annotation,  but have:
+
+    dekorate.openshift.env-vars[0].name=FOO
+    dekorate.openshift.env-vars[0].value=BAR2
+
+I expect the generated container to have the environment variable `FOO=BAR2`.
+
+###### Ports
+
+When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(ports=@Port(name="my-port", containerPort=8181))` annotation, but have:
+
+
+    dekorate.openshift.ports[0].name=my-port
+    dekorate.openshift.ports[0].container-port=8282
+
+I expect the generated container to contain `my-port` container port with port 8282 and also expose it as a `Service` named after the deployment. 
+
+###### Volumes and mounts
+
+When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(configMapVolumes=@ConfigMapVolume(volumeName="my-vol", configMapName="my-config"))` annotation, but have:
+
+    dekorate.openshift.config-map-volumes[0].volume-name=my-vol
+    dekorate.openshift.config-map-volumes[0].config-map-name=my-other-config
+    
+I expect the pod to have a config map volume named `my-vol` that points to `my-other-config` config map.
+
+In a similar manner the following kind of volumes should work.
+
+###### Probes
+
+When adding `openshift-annotations` to a project and annotating with `OpenshiftApplication(livenessProbe=@Probe(httpActionPath="/foo", initalDelaySeconds=10, periodSeconds=10, failureThreshold=5))` annotation, but have:
+
+    dekorate.openshift.liveness-probe.http-action-path=/bar
+    
+I expect the container to have a liveness probe that will perform an http call at `/bar` with period and initial delay of 10 seconds and failure threshold 5.
+
 
