@@ -33,8 +33,10 @@ import io.dekorate.DekorateException;
 public class GradleInfoReader implements BuildInfoReader {
 
   private static final String GRADLE = "gradle";
-  private static final String BUILD_GRADLE = "build.gradle";
-  private static final String SETTINGS_GRADLE = "settings.gradle";
+  private static final String BUILD_GRADLE_GROOVY = "build.gradle";
+  private static final String SETTINGS_GRADLE_GROOVY = "settings.gradle";
+  private static final String BUILD_GRADLE_KTS = "build.gradle.kts";
+  private static final String SETTINGS_GRADLE_KTS = "settings.gradle.kts";
   private static final String GRADLE_PROPERTIES = "gradle.properties";
   private static final String SRC = "src";
   private static final String MAIN = "main";
@@ -68,13 +70,19 @@ public class GradleInfoReader implements BuildInfoReader {
 
   @Override
   public boolean isApplicable(Path root) {
-    return root.resolve(BUILD_GRADLE).toFile().exists();
+    return root.resolve(BUILD_GRADLE_GROOVY).toFile().exists() || root.resolve(BUILD_GRADLE_KTS).toFile().exists();
   }
 
   @Override
   public BuildInfo getInfo(Path root) {
-    Path buildGradle = root.resolve(BUILD_GRADLE);
-    Path settingsGradle = root.resolve(SETTINGS_GRADLE);
+    Path buildGradle = root.resolve(BUILD_GRADLE_GROOVY);
+    Path settingsGradle = root.resolve(SETTINGS_GRADLE_GROOVY);
+    boolean kts = root.resolve(BUILD_GRADLE_KTS).toFile().exists();
+    if (kts) {
+       buildGradle = root.resolve(BUILD_GRADLE_KTS);
+       settingsGradle = root.resolve(SETTINGS_GRADLE_KTS);
+    }
+
     Path gradleProperties = root.resolve(GRADLE_PROPERTIES);
 
     Map<String, String> properties = new HashMap<>();
@@ -101,7 +109,7 @@ public class GradleInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension, GRADLE, 
+    return new BuildInfo(name, version, extension, GRADLE,
       outputDir.resolve(sb.toString()),
                          //TODO: This need to be smarter and also cover groovy code.
                          root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN),
