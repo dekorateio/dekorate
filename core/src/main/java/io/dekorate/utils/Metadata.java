@@ -62,7 +62,9 @@ public class Metadata {
       public Boolean apply(VisitableBuilder<? extends HasMetadata, ?> builder) {
         HasMetadata item = builder.build();
         ObjectMeta metadata = item.getMetadata();
-        return apiVersion.equals(item.getApiVersion()) && kind.equals(item.getKind()) && name.equals(metadata.getName());
+        return apiVersion.equals(item.getApiVersion()) &&
+          kind != null && kind.equals(item.getKind()) &&
+          name != null && name.equals(metadata.getName());
       }
     };
   }
