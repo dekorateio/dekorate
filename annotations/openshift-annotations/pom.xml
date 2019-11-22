@@ -138,7 +138,7 @@ limitations under the License.
                     <include>io/dekorate/openshift/handler/**</include>
                     <include>io/dekorate/openshift/listener/**</include>
                     <include>io/dekorate/openshift/util/**</include>
-                    <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/services/*</include>
                   </includes>
                 </filter>
               </filters>
