@@ -15,14 +15,12 @@
  */
 package io.dekorate.example.sbonkubernetes;
 
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.prometheus.annotation.EnableServiceMonitor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@KubernetesApplication
 @EnableServiceMonitor
 @RestController
 @SpringBootApplication

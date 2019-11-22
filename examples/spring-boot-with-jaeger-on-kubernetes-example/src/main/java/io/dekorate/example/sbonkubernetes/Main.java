@@ -16,13 +16,11 @@
 package io.dekorate.example.sbonkubernetes;
 
 import io.dekorate.jaeger.annotation.EnableJaegerAgent;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-@KubernetesApplication
 @SpringBootApplication
 @EnableJaegerAgent(operatorEnabled = true)
 public class Main {

@@ -15,18 +15,15 @@
  */
 package io.dekorate.example.sbonkubernetes;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Controller {
-    @Value("${message}")
-    String message;
 
     @GetMapping("/")
     public String getRoot() {
-        return message;
+        return "Hello world";
     }
 
 }
