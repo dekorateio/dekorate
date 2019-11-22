@@ -12,14 +12,11 @@
   <name>Dekorate :: Examples</name>
 
   <modules>
-    <module>kubernetes-example</module>
     <module>kubernetes-example-with-configmap-volume</module>
-    <module>openshift-example</module>
     <module>knative-example</module>
     <module>service-catalog-example</module>
     <module>halkyon-example</module>
     <module>halkyon-example-annotationless-properties</module>
-    <module>source-to-image-example</module>
     <module>spring-boot-on-kubernetes-without-annotations</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-openshift-example</module>
