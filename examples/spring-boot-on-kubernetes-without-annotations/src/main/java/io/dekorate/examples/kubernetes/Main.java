@@ -15,8 +15,6 @@
  */
 package io.dekorate.examples.kubernetes;
 
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.annotation.ConfigMapVolume;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

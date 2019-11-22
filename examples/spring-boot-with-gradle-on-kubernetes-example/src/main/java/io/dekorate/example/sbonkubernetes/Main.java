@@ -15,16 +15,9 @@
  */
 package io.dekorate.example.sbonkubernetes;
 
-import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.annotation.Probe;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KubernetesApplication(envVars = @Env(name = "MESSAGE", value = "Hello world"),
-livenessProbe = @Probe(httpActionPath = "/actuator/info"),
-  readinessProbe = @Probe(httpActionPath = "/actuator/health"))
 @SpringBootApplication
 public class Main {
 

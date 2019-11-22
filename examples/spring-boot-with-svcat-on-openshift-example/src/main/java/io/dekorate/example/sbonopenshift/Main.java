@@ -15,17 +15,15 @@
  */
 package io.dekorate.example.sbonopenshift;
 
-import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.servicecatalog.annotation.ServiceCatalog;
 import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenshiftApplication
 @SpringBootApplication
 @EnableAutoConfiguration
-@ServiceCatalog(instances=@ServiceCatalogInstance(name="postgresql-instance",serviceClass="postgresql-persistent", servicePlan="default", bindingSecret="postgresql-binding"))
+@ServiceCatalog(instances = @ServiceCatalogInstance(name="postgresql-instance", serviceClass="postgresql-persistent", servicePlan="default", bindingSecret="postgresql-binding"))
 public class Main {
 
   public static void main(String[] args) {
