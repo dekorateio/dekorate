@@ -27,6 +27,7 @@ import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
@@ -66,6 +67,7 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
       Session session = getSession();
       session.configurators().add(config);
       session.addListener(LISTENER);
+      session.resources().groups().putIfAbsent(OPENSHIFT, new KubernetesListBuilder());
       session.handlers().add(new OpenshiftHandler(session.resources(), session.configurators()));
   }
 

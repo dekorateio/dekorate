@@ -31,6 +31,7 @@ import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.hook.ImageBuildHook;
 import io.dekorate.knative.adapter.KnativeConfigAdapter;
 import io.dekorate.knative.annotation.KnativeApplication;
@@ -74,6 +75,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     default void on(ConfigurationSupplier<KnativeConfig> config) {
       Session session = getSession();
       session.configurators().add(config);
+      session.resources().groups().putIfAbsent(KNATIVE, new KubernetesListBuilder());
       session.handlers().add(new KnativeHandler(session.resources(), session.configurators()));
       session.addListener(this);
   }

@@ -15,7 +15,7 @@
  */
 package io.dekorate.example.sbonkubernetes;
 
-import io.dekorate.option.annotation.GeneratorOptions;
+//import io.dekorate.option.annotation.GeneratorOptions;
 import io.dekorate.kubernetes.annotation.Label;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 import org.springframework.boot.SpringApplication;
@@ -23,7 +23,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
+//@GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
 @OpenshiftApplication(labels = @Label(key = "decorated-by", value = "dekorate"))
 @RestController
 @SpringBootApplication

@@ -17,8 +17,11 @@ package io.dekorate.option.apt;
 
 import io.dekorate.Session;
 import io.dekorate.WithSession;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.doc.Description;
 import io.dekorate.option.annotation.GeneratorOptions;
+import io.dekorate.option.config.GeneratorConfig;
+import io.dekorate.option.config.GeneratorConfigBuilder;
 import io.dekorate.option.handler.GeneratorOptionsHandler;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.utils.Strings;
@@ -29,17 +32,26 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Function;
 
 @Description("Processing generator options, which are used for customizing the generation process")
-@SupportedAnnotationTypes("io.dekorate.option.annotation.GeneratorOptions")
+@SupportedAnnotationTypes({"io.dekorate.annotation.Dekorate",
+                           "io.dekorate.kubernetes.annotation.KubernetesApplication",
+                           "io.dekorate.openshift.annotation.OpenshiftApplication",
+                           "io.dekorate.knative.annotation.KnativeApplication",
+                           "io.dekorate.option.annotation.GeneratorOptions"})
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
   private static final String INPUT_DIR = "dekorate.input.dir";
   private static final String OUTPUT_DIR = "dekorate.output.dir";
+
+  private static final String FALLBACK_INPUT_DIR = "META-INF/fabric8";
+  private static final String FALLBACK_OUTPUT_DIR = "META-INF/fabric8";
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = getSession();
@@ -56,19 +68,34 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
         }
         String inputPath = System.getProperty(INPUT_DIR, options.inputPath());
         String outputPath = System.getProperty(OUTPUT_DIR, options.outputPath());
-
-        if (Strings.isNotNullOrEmpty(inputPath)) {
-
-          applyToProject(p -> p.withDekorateInputDir(inputPath));
-          session.handlers().add(new GeneratorOptionsHandler(session.resources(), new ResourceReader(inputPath)));
-        }
-        if (Strings.isNotNullOrEmpty(outputPath)) {
-          applyToProject(p -> p.withDekorateOutputDir(outputPath));
-        }
+        configurePaths(session, inputPath, outputPath);
         return false;
        }
     }
+    // Let's check if fabric8 is being used.
+    configurePaths(session, FALLBACK_INPUT_DIR, FALLBACK_OUTPUT_DIR);
     return false;
+  }
+
+
+  private void configurePaths(Session session, String inputPath, String outputPath) {
+    if (Strings.isNotNullOrEmpty(inputPath) && resolve(getProject().getBuildInfo().getClassOutputDir(), inputPath).toFile().exists()) {
+      applyToProject(p -> p.withDekorateInputDir(inputPath));
+      session.configurators().add(new ConfigurationSupplier<GeneratorConfig>(new GeneratorConfigBuilder()));
+      session.handlers().add(new GeneratorOptionsHandler(session.resources(), new ResourceReader(inputPath)));
+    }
+    if (Strings.isNotNullOrEmpty(inputPath) && resolve(getProject().getBuildInfo().getClassOutputDir(), outputPath).toFile().exists()) {
+      applyToProject(p -> p.withDekorateOutputDir(outputPath));
+    }
+  }
+
+  private Path resolve(Path path, String unixPath) {
+    String[] dirs = unixPath.split("/");
+    Path result = path;
+    for (String dir : dirs) {
+      result = result.resolve(dir);
+    }
+    return result;
   }
 
   /**
