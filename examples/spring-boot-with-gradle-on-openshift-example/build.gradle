@@ -52,6 +52,7 @@ dependencies {
   compile("io.dekorate:openshift-spring-starter:${dekorateVersion}")
   annotationProcessor("io.dekorate:openshift-annotations:${dekorateVersion}")
   annotationProcessor("io.dekorate:dekorate-spring-boot:${dekorateVersion}")
+  annotationProcessor('org.springframework.boot:spring-boot-starter-actuator') //We need `dekorate` to see the actuator classes
 
   testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
   testImplementation("io.dekorate:openshift-junit:${dekorateVersion}")

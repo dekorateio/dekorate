@@ -44,6 +44,7 @@ dependencies {
   implementation("io.dekorate:kubernetes-annotations:${dekorateVersion}")
   annotationProcessor("io.dekorate:kubernetes-annotations:${dekorateVersion}")
   annotationProcessor("io.dekorate:dekorate-spring-boot:${dekorateVersion}")
+  annotationProcessor('org.springframework.boot:spring-boot-starter-actuator') //We need `dekorate` to see the actuator classes
 
 	testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
