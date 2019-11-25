@@ -87,7 +87,6 @@
     <module>testing</module>
     <module>starters</module>
     <module>doc</module>
-    <module>tests</module>
   </modules>
 
   <dependencyManagement>
@@ -409,6 +408,12 @@
       <properties>
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
       </properties>
+    </profile>
+    <profile>
+      <id>with-tests</id>
+      <modules>
+        <module>tests</module>
+      </modules>
     </profile>
     <profile>
       <id>with-examples</id>

@@ -43,7 +43,7 @@ jobs:
           key: v8-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn clean integration-test -Pwith-examples
+      - run: mvn clean integration-test -Pwith-examples -Pwith-tests
   JDK11:
     docker:
       # specify the version you desire here
@@ -77,7 +77,7 @@ jobs:
           key: v11-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn clean integration-test -Pwith-examples
+      - run: mvn clean integration-test -Pwith-examples -Pwith-tests
 
   OPENSHIFT_3_11:
     machine: true
@@ -102,7 +102,7 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project itests
-            mvn -B clean install -Pbuild -Pwith-examples
+            mvn -B clean install -Pbuild -Pwith-examples -Pwith-tests
 
   CLI_OPTIONS:
     machine: true
