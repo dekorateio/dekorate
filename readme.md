@@ -16,20 +16,16 @@ Stop wasting time editing xml, json and yml and customize the kubernetes manifes
 This project was originally called `ap4k` which stood for `Annotation Processors for Kubernetes`.
 As the project now supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project has been renamed to `dekorate`.
 
-The new project page will be: http://dekorate.io and the new repository will be: https://github.com/dekorateio/dekorate.
-This repository will stay open until all remaining pull requests are processed and then  it will redirect to  https://github.com/dekorateio/dekorate.
-
-For new issues and pull requests please don't forget to use https://github.com/dekorateio/dekorate.
-
 ## Features
 
 - Generates manifest via annotation processing
-  - [Kubernetes](#kubernetes-annotations)
-  - [OpenShift](#openshift-annotations)
-  - [Prometheus](#prometheus-annotations)
-  - [Jaeger](#jaeger-annotations)
-  - [Service Catalog](#service-catalog-annotations)
-  - [Halkyon CRD](#halkyon-crd-support)
+  - [Kubernetes](#kubernetes)
+  - [OpenShift](#openshift)
+  - [Knative](#knative)
+  - [Prometheus](#prometheus)
+  - [Jaeger](#jaeger)
+  - [Service Catalog](#service-catalog)
+  - [Halkyon CRD](#halkyon-crd)
 - Customize manifests using annotations
   - Kubernetes
     - labels
@@ -59,6 +55,9 @@ For new issues and pull requests please don't forget to use https://github.com/d
 - Integration with external generators
 - [Rich set of examples](examples)
 - [Explicit configuration of annotation processors](#explicit-configuration-of-annotation-processors)
+- junit5 integration testing extension
+  - [Kubernetes](#kubernetes-extension-for-junit5)
+  - [OpenShift](#openshift-extension-for-juni5)
 
 ### Experimental features
 
@@ -66,9 +65,6 @@ For new issues and pull requests please don't forget to use https://github.com/d
   - Build hooks
     - [Docker build hook](#docker-build-hook)
     - Source to image build hook
-- junit5 integration testing extension
-  - [Kubernetes](#kubernetes-extension-for-junit5)
-  - [OpenShift](#openshift-extension-for-juni5)
 
 ## Rationale
 
@@ -84,13 +80,127 @@ Annotation processing has quite a few advantages over external tools or build to
 - Works with all build tools.
 - Can "react" to annotations provided by the framework.
 
+## Hello World
+
+This section provides examples on how to get started based on the framework you are using.
+
+### Hello Spring Boot
+
+Add the following dependency to your project:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>kubernetes-spring-starter</artifactId>
+  <version>0.10.0</version>
+</dependency>
+```
+
+That's all! Next time you perform a build, using something like:
+
+    mvn clean package
+    
+The generated manifests can be found under `target/classes/META-INF/dekorate`.
+
+#### related examples
+ - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
+ - [spring boot on openshift example](examples/spring-boot-on-openshift-example)
+
+## Hello Quarkus
+
+Add the following dependency to your project:
+
+```xml
+<dependency>
+  <groupId>io.quarkus</groupId>
+  <artifactId>quarkus-kubernetes</artifactId>
+  <version>1.0.0.Final</version>
+</dependency>
+```
+
+That's all! Next time you perform a build, using something like:
+
+    mvn clean package
+    
+The generated manifests can be found under `target/kubernetes`.
+Note: [Quarkus](https://quarkus.io) is using its own `dekorate` based Kubernetes extension (see more at  [Quarkus](#quarkus)).
+
+### Hello Thorntail
+
+Add the following dependency to your project:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>thorntail-spring-starter</artifactId>
+  <version>0.10.0</version>
+</dependency>
+```
+
+That's all! Next time you perform a build, using something like:
+
+    mvn clean package
+    
+The generated manifests can be found under `target/classes/META-INF/dekorate`.
+
+#### related examples
+ - [thorntail on kubernetes example](examples/thorntail-on-kubernetes-example)
+ - [thorntail on openshift example](examples/thorntail-on-openshift-example)
+
+### Hello Generic Java Application
+
+Add the following dependency to your project:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>kubernetes-annotations</artifactId>
+  <version>0.10.0</version>
+</dependency>
+```
+
+Then add the `@Dekorate` annotation to one of your Java source files. 
+
+```java
+package org.acme;
+
+import io.dekorate.annotation.Dekorate;
+
+@Dekorate
+public class Application {
+}
+```
+
+Note: It doesn't have to be the `Main` class.
+Next time you perform a build, using something like:
+
+    mvn clean package
+    
+The generated manifests can be found under `target/classes/META-INF/dekorate`.
+
+#### related examples
+ - [vertx on kubernetes example](examples/vertx-on-kubernetes-example)
+ - [vertx on openshift example](examples/vertx-on-openshift-example)
+
 ## Usage
 
-To start using this project you just need to add one of the provided annotations to your project.
+To start using this project you just need to add one of the provided dependencies to your project.
+For known frameworks like [spring boot](https://spring.io/projects/spring-boot), [quarkus](https://quarkus.io), or [thorntail](https://thorntail.io) that's enough.
+For generic java projects, we also need to add an annotation that expresses our intent to enable `dekorate`.
 
-### Kubernetes annotations
+This annoation can be either [@Dekorate](core/src/main/java/io/dekorate/annotation/Dekorate.java) or a more specialized one, which also gives us access to more specific configuration options.
+Past that point configuration is feasible using:
 
-[@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) can be added to your project like:
+- Java annotations
+- Configuration properties (application.properties)
+- Both 
+
+A complete reference of the supported properties can be found in the [configuration options guide](config.md).
+
+### Kubernetes
+
+[@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) is a more specialized form of [@Dekorate](core/src/main/java/io/dekorate/annotation/Dekorate.java).
+It can be added to your project like:
 
 ```java
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
@@ -110,6 +220,7 @@ will end up under 'target/classes/META-INF/dekorate'.
 The annotation comes with a lot of parameters, which can be used in order to customize the `Deployment` and/or trigger
 the generations of addition resources, like `Service` and `Ingress`.
 
+
 #### Adding the kubernetes annotation processor to the classpath
 
 This module can be added to the project using:
@@ -118,12 +229,9 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
 ```
-
-#### related examples
- - [kubernetes example](examples/kubernetes-example)
 
 
 #### Name and Version
@@ -151,7 +259,12 @@ Supported build tools:
 - sbt
 - bazel
 
-For all other build tools, the name and version need to be provided via the core annotations:
+For all other build tools, the name and version need to be provided via `application.properties`:
+
+    dekorate.kubernetes.name=my-app
+    dekorate.kubernetes.version=1.1.0.Final
+
+or the core annotations:
 
 ```java
 @KubernetesApplication(name = "my-app", version="1.1.0.Final")
@@ -209,11 +322,10 @@ spec:
 ```            
 The output file name may be used in certain cases, to set the value of `JAVA_APP_JAR` an environment variable that points to the build jar.
 
-
-
 #### Adding extra ports and exposing them as services
 
-To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
+To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java):
+
 ```java
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
@@ -229,7 +341,18 @@ public class Main {
 
 This will trigger the addition of a container port to the `Deployment` but also will trigger the generation of a `Service` resource.
 
-**Note:**  This doesn't need to be done explicitly, if the application framework is detected and support, ports can be extracted from there *(see below)*.
+Everything that can be defined using annotations, can also be defined using `application.properties`.
+To add an additional port using `application.properties`:
+
+    dekorate.kubernetes.ports[0].name=web
+    dekorate.kubernetes.ports[0].container-port=8080
+    
+**NOTE:**  This doesn't need to be done explicitly, if the application framework is detected and support, ports can be extracted from there *(see below)*.
+
+**IMPORTANT**: When mixing annotations and `application.properties` the latter will always take preceedence overriding values that defined using annotations.
+This allows users to define the configuration using annotations and externalize configuration to `application.properties`.
+
+**REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide](config.md).
 
 #### Adding container environment variables
 To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
@@ -248,6 +371,11 @@ public class Main {
 
 Additional options are provided for adding environment variables from fields, config maps and secrets. 
 
+To add an additional environment variables using `application.properties`:
+
+    dekorate.kuberetes.env-vars[0].name=key1
+    dekorate.kuberetes.env-vars[0].value=value1
+
 #### Adding environment variables from ConfigMap
 
 To add an environment variable that points to a ConfigMap property, you need to specify the configmap using the `configmap` property in the @Env annotation.
@@ -265,6 +393,14 @@ public class Main {
   }
 }
 ```
+
+To add an additional environment variable referencing a config map using `application.properties`:
+
+    dekorate.kuberetes.env-vars[0].name=key1
+    dekorate.kuberetes.env-vars[0].value=key1
+    dekorate.kuberetes.env-vars[0].config-map=my-config
+
+
 #### Adding environment variables from Secrets
 
 To add an environment variable that points to a Secret property, you need to specify the configmap using the `secret` property in the @Env annotation.
@@ -283,18 +419,21 @@ public class Main {
 }
 ```
 
+To add an additional environment variable referencing a secret using `application.properties`:
 
+    dekorate.kuberetes.env-vars[0].name=key1
+    dekorate.kuberetes.env-vars[0].value=key1
+    dekorate.kuberetes.env-vars[0].secret=my-config
 
 #### Working with volumes and mounts
+
 To define volumes and mounts for your application, you can use something like:
 ```java
-import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.annotation.Mount;
 import io.dekorate.kubernetes.annotation.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
-@KubernetesApplication(ports = @Port(name = "http", containerPort = 8080), 
-  pvcVolumes = @PersistentVolumeClaimVolume(volumeName = "mysql-volume", claimName = "mysql-pvc"),
+@KubernetesApplication(pvcVolumes = @PersistentVolumeClaimVolume(volumeName = "mysql-volume", claimName = "mysql-pvc"),
   mounts = @Mount(name = "mysql-volume", path = "/var/lib/mysql")
 )
 public class Main {
@@ -304,6 +443,13 @@ public class Main {
   }
 }
 ```    
+
+To define the same volume and mount via `application.properties`:
+
+    dekorate.kubernetes.pvc-volumes[0].volume-name=mysql-volume
+    dekorate.kubernetes.pvc-volumes[0].claim-name=mysql-pvc
+    dekorate.kubernetes.mounts[0].name=mysql-volume
+    dekorate.kubernetes.mounts[0].path=/var/lib/mysql
     
 Currently the supported annotations for specifying volumes are:
 
@@ -336,16 +482,24 @@ public class Main {
 }
 ```
 
+or via `application.properties`:
+
+    dekorate.jvm.server=true
+    dekorate.jvm.xmx=1024
+    dekorate.jvm.prefer-ipv4-stack=true
+    dekorate.jvm.gc=GarbageCollector.SerialGC
+
 This module can be added to the project using:
+
 ```xml
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>option-annotations</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
 ```
 
-Note: The module is included in all starters.    
+**Note**: The module is included in all starters.
     
 #### Init Containers
 
@@ -363,6 +517,12 @@ public class Main {
   }
 }
 ```
+
+or via `application.properties`:
+
+    dekorate.kubernetes.init-containers[0].image=foo/bar:latest
+    dekorate.kubernetes.init-containers[0].command=foo
+    
 
 The [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
 
@@ -391,6 +551,11 @@ public class Main {
 }
 ```
 
+or via `application.properties`:
+
+    dekorate.kubernetes.sidecars[0].image=jaegertracing/jaeger-agent
+    dekorate.kuberentes.args=--collector.host-port=jaeger-collector.jaeger-infra.svc:14267
+
 As in the case of [init containers](#init-containers) the [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
 
 - Image
@@ -408,14 +573,10 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
 ```
-### OpenShift annotations
-
-This module provides two new annotations: 
-
-- @OpenshiftApplication
+### OpenShift 
 
 [@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/dekorate/openshift/annotation/OpenshiftApplication.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `openshift.yml` / `openshift.json` instead.
 Also instead of creating a `Deployment` it will create a `DeploymentConfig`.
@@ -426,13 +587,14 @@ openshift annotation processors are present both kubernetes and openshift resour
 #### Adding the OpenShift annotation processor to the classpath
 
 This module can be added to the project using:
+
 ```xml
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-annotations</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
-```    
+``` 
 #### Integrating with S2i
 Out of the box resources for s2i will be generated.
 
@@ -453,6 +615,13 @@ public class Main {
     }
 }
 ```    
+
+The same can be expressed via `application.properties`:
+
+    dekorate.openshift.name=doc-example
+    
+**IMPORTANT:** All examples of `application.properties` demostrated in the [Kubernetes](#kubernetes) section can be applied here, by replacing the prefix `dekorate.kubernetes` with `dekorate.openshift`.
+
 The generated `BuildConfig` will be a binary config. The actual build can be triggered from the command line with something like:
 
     oc start-build doc-example --from-dir=./target --follow
@@ -463,148 +632,26 @@ done either by `oc get bc` or by knowing the conventions used to read names from
 
 #### related examples
 
-- [openshift example](examples/openshift-example)
-- [source to image example](examples/source-to-image-example)
 - [spring boot on openshift example](examples/spring-boot-on-openshift-example)
 - [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-on-openshift-example)
 - [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-on-openshift-example) 
 
-### Prometheus annotations
+### Knative
 
-The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.
-In particular it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/model/ServiceMonitor.java) which are used by the
-[Prometheus Operator](https://github.com/coreos/prometheus-operator) in order to configure [prometheus](https://prometheus.io/) to collect metrics from the target application.
-
-This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/annotation/EnableServiceMonitor.java) annotation.
-
-Here's an example:
-```java
-import io.dekorate.kubernetes.annotation.KubernentesApplication;
-import io.dekorate.prometheus.annotation.EnableServiceMonitor;
-
-@KubernetesApplication
-@EnableServiceMonitor(port = "http", path="/prometheus", interval=20)
-public class Main {
-    public static void main(String[] args) {
-      //Your code goes here
-    }
-}
-```
-The annotation processor, will automatically configure the required selector and generate the ServiceMonitor.
-Note: Some of the framework integration modules, may further decorate the ServiceMonitor with framework specific configuration.
-For example, the Spring Boot module will decorate the monitor with the Spring Boot specific path, which is `/actuator/prometheus`.
-
-#### related examples
-- [spring boot with prometheus on kubernetes example](examples/spring-boot-with-prometheus-on-kubernetes-example)
-
-### Jaeger annotations
-
-The [jaeger](https://www.jaegertracing.io) annotation processor provides annotations for injecting the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent) into the application pod.
-
-Most of the work is done with the use of the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) annotation.
-
-#### Using the Jaeger Operator
-
-When the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) is available, you set the `operatorEnabled` property to `true`.
-The annotation processor will automicatlly set the required annotations to the generated deployment, so that the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) can inject the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent).
-
-Here's an example:
-```java
-import io.dekorate.kubernetes.annotation.KubernentesApplication;
-import io.dekorate.jaeger.annotation.EnableJaegerAgent;
-
-@KubernetesApplication
-@EnableJaegerAgent(operatorEnabled="true")
-public class Main {
-    public static void main(String[] args) {
-      //Your code goes here
-    }
-}
-```    
-##### Manually injection the agent sidecar
-
-For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
-
-```java
-import io.dekorate.kubernetes.annotation.KubernentesApplication;
-import io.dekorate.jaeger.annotation.EnableJaegerAgent;
-
-@KubernetesApplication
-@EnableJaegerAgent
-public class Main {
-    public static void main(String[] args) {
-      //Your code goes here
-    }
-}
-```
-#### related examples
-- [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
-
-### Service Catalog annotations
-The [service catalog](https://svc-cat.io) annotation processor is can be used in order to create [service catalog](https://svc-cat.io) resources for:
-
-- creating service instances
-- binding to services
-- injecting binding info into the container 
-
-Here's an example:
-```java
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
-import io.dekorate.servicecatalog.annotation.ServiceCatalog;
-
-@KubernetesApplication
-@ServiceCatalog(instances =
-    @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default")
-)
-public class Main {
-    public static void main(String[] args) {
-      //Your code goes here
-    }
-}
-```
-The `@ServiceCatalogInstance` annotation will trigger the generation of a `ServiceInstance` and a `ServiceBinding`resource.
-It will also decorate any `Pod`, `Deployment`, `DeploymentConfig` and so on with additional environment variables containing the binding information.
-
-#### Adding the service catalog annotation processor to the classpath
-
-This module can be added to the project using:
-```xml
-<dependency>
-  <groupId>io.dekorate</groupId>
-  <artifactId>servicecatalog-annotations</artifactId>
-  <version>${project.version}</version>
-</dependency>
-```
-
-#### related examples
- - [service catalog example](examples/service-catalog-example)  
- 
-### Halkyon CRD support
-[Halkyon](http://halkyon.io) provides 
-[Custom Resource Definitions (CRD)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) 
-and associated operator to abstract kubernetes/OpenShift resources and simplify the configuration and design of cloud-native applications.
-See the following [project](https://github.com/halkyonio/operator) to get more information. Specifically, you can take a look at the 
-[demo project](https://github.com/halkyonio/operator/tree/master/demo).
-This module provides support for generating halkyon CRDs from a combination of user-provided and automatically extracted metadata.
-
-The generation of halkyon CRDs is triggered by adding the `halkyon-annotations` dependency to the project and
-annotate one of your classes with `@HalkyonComponent`. Note that in the case of Spring Boot applications, as explained 
-[here](#annotation-less-configuration), only adding the dependency is needed:
+Dekorate also supports generating manifests for `knative`. To make use of this feature you need to add
 
 ```xml
 <dependency>
   <groupId>io.dekorate</groupId>
-  <artifactId>halkyon-annotations</artifactId>
-  <version>${project.version}</version>
+  <artifactId>knative</artifactId>
+  <version>0.10.0</version>
 </dependency>
 ```
 
-If everything went well, building your project will also generate `halkyon.yml` and `halkyon.json` files in the 
-`target/classes/META-INF/dekorate` is triggered.
+This module provides the 
+[@KnativeApplication](annotations/knative-annotations/src/main/java/io/dekorate/knative/annotation/Knative.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `knative.yml` / `knative.json` instead.
+Also instead of creating a `Deployment` it will create a knative serving `Service`.
 
-The content of the halkyon descriptor will be determined by the existing config provided by other annotations such as 
-`@KubernetesApplication` and can be also controlled using application properties.
 
 ###  Framework integration
 
@@ -624,7 +671,7 @@ With spring boot its suggested to start with one of the provided starters:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
 ```
 
@@ -634,7 +681,7 @@ Or if you are on [openshift](https://openshift.com):
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshfit-spring-starter</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
 ```
 #### Annotation less configuration
@@ -672,124 +719,6 @@ properties is the same model than what is configured using annotations. While th
 are configured and the resulting manifest, the properties (or YAML file) still need to provide values for the annotation fields,
 hence why they need to match how the annotations are configured. Always refer to the [configuration options guide](config.md) 
 if in doubt.
-
-###### Examples
-Here a simple example of how to use the annotation-less mode. We have a simple `@SpringBootApplication` annotated class:
-
-```java
-package io.dekorate.examples.component;  
-  
-import org.springframework.boot.SpringApplication;  
-import org.springframework.boot.autoconfigure.SpringBootApplication;  
-  
-@SpringBootApplication  
-public class Main {  
-  
-  public static void main(String[] args) {  
-    SpringApplication.run(Main.class, args);  
-  }  
-  
-}
-```
-
-along with an `application.properties` to override the default values:
-```properties
-dekorate.component.name=hello-annotationless-world
-dekorate.component.envs[0].name=key_from_properties\
-dekorate.component.envs[0].value=value_from_properties
-dekorate.component.deploymentMode=build
-``` 
-
-The combination of both, when processed, should result in the following halkyon CRD manifest:
-```yaml
----
-apiVersion: "v1"  
-kind: "List"  
-items:  
-- apiVersion: "halkyon.io/v1beta1"  
-  kind: "Component"  
-  metadata:  
-    labels:  
-      app: "hello-annotationless-world"  
-  name: "hello-annotationless-world"  
-  spec:  
-    deploymentMode: "build"  
-  runtime: "spring-boot"  
-  version: "2.1.6.RELEASE"  
-  exposeService: false  
-  envs:  
-    - name: "key_from_properties"  
-    value: "value_from_properties"  
-  buildConfig:  
-      type: "s2i"  
-      url: "https://github.com/dekorateio/dekorate.git"  
-      ref: "master"  
-      contextPath: "examples/"  
-      moduleDirName: "halkyon-example-annotationless-properties"
-```
-
-As explained before, you can note, for example, that `deploymentMode` does not appear at the same hierarchical level as 
-configured in the properties: an additional level `spec` has been introduced.
-
-You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) the code of this example.
-
-Let's now consider the following Spring Boot application class that is annotated with `@HalkyonComponent` as well:
-
-```java
-package io.dekorate.examples.component;  
-  
-import io.dekorate.halkyon.annotation.HalkyonComponent;  
-import io.dekorate.kubernetes.annotation.Env;  
-import org.springframework.boot.SpringApplication;  
-import org.springframework.boot.autoconfigure.SpringBootApplication;  
-  
-@HalkyonComponent(name = "halkyon", exposeService = true, envs = @Env(name = "key1", value = "val1"))  
-@SpringBootApplication  
-public class Application {  
-  
-  public static void main(String[] args) {  
-    SpringApplication.run(Application.class, args);  
-  }  
-}  
-```
-
-If we provide an `application.yml` file as follows:
-```yaml
-dekorate:  
-  component:  
-    name: "hello-world"  
-    buildType: "docker"  
-    deploymentMode : build
-```
-
-You can notice that the resulting manifest will match what is configured in `application.yml`, completly overriding the values
-provided via annotations:
-```yaml
-apiVersion: "v1"  
-kind: "List"  
-items:  
-- apiVersion: "halkyon.io/v1beta1"  
-  kind: "Component"  
-  metadata:  
-    labels:  
-      app: "hello-world"  
-  version: "0.0.1-SNAPSHOT"  
-  name: "hello-world"  
-  spec:  
-    deploymentMode: "build"  
-  runtime: "spring-boot"  
-  version: "2.1.6.RELEASE"  
-  exposeService: false  
-  buildConfig:  
-    type: "docker"  
-    url: "https://github.com/dekorateio/dekorate.git"  
-    ref: "master"  
-    contextPath: "annotations/halkyon-annotations/target/it/"  
-    moduleDirName: "feat-229-override-annotationbased-config"
-
-```
- 
-You can file this code [here](https://github.com/dekorateio/dekorate/blob/master/annotations/halkyon-annotations/src/it/feat-229-override-annotationbased-config/src/main/resources/application.yml) 
 
 ###### Generated resources when not using annotations
 
@@ -829,7 +758,7 @@ With Thorntail, it is recommended to add a dependency on one of the provided sta
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-thorntail-starter</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -840,7 +769,7 @@ Or, if you use [OpenShift](https://openshift.com):
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshfit-thorntail-starter</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -940,7 +869,7 @@ The kubernetes extension can be used by adding the following dependency:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-junit</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
 ```    
 This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
@@ -1012,7 +941,7 @@ To use that you need to add:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-junit</artifactId>
-  <version>${project.version}</version>
+  <version>0.10.0</version>
 </dependency>
 ```    
 By adding the annotation to your test class the following things will happen:
@@ -1155,6 +1084,266 @@ or using yaml:
  - [Vert.x on kubernetes example](examples/vertx-on-kubernetes-example)
  - [Vert.x on openshift example](examples/vertx-on-openshift-example)
 
+### Prometheus annotations
+
+The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.
+In particular it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/model/ServiceMonitor.java) which are used by the
+[Prometheus Operator](https://github.com/coreos/prometheus-operator) in order to configure [prometheus](https://prometheus.io/) to collect metrics from the target application.
+
+This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/annotation/EnableServiceMonitor.java) annotation.
+
+Here's an example:
+```java
+import io.dekorate.kubernetes.annotation.KubernentesApplication;
+import io.dekorate.prometheus.annotation.EnableServiceMonitor;
+
+@KubernetesApplication
+@EnableServiceMonitor(port = "http", path="/prometheus", interval=20)
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
+    }
+}
+```
+The annotation processor, will automatically configure the required selector and generate the ServiceMonitor.
+Note: Some of the framework integration modules, may further decorate the ServiceMonitor with framework specific configuration.
+For example, the Spring Boot module will decorate the monitor with the Spring Boot specific path, which is `/actuator/prometheus`.
+
+#### related examples
+- [spring boot with prometheus on kubernetes example](examples/spring-boot-with-prometheus-on-kubernetes-example)
+
+### Jaeger annotations
+
+The [jaeger](https://www.jaegertracing.io) annotation processor provides annotations for injecting the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent) into the application pod.
+
+Most of the work is done with the use of the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) annotation.
+
+#### Using the Jaeger Operator
+
+When the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) is available, you set the `operatorEnabled` property to `true`.
+The annotation processor will automicatlly set the required annotations to the generated deployment, so that the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) can inject the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent).
+
+Here's an example:
+```java
+import io.dekorate.kubernetes.annotation.KubernentesApplication;
+import io.dekorate.jaeger.annotation.EnableJaegerAgent;
+
+@KubernetesApplication
+@EnableJaegerAgent(operatorEnabled="true")
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
+    }
+}
+```    
+##### Manually injection the agent sidecar
+
+For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
+
+```java
+import io.dekorate.kubernetes.annotation.KubernentesApplication;
+import io.dekorate.jaeger.annotation.EnableJaegerAgent;
+
+@KubernetesApplication
+@EnableJaegerAgent
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
+    }
+}
+```
+#### related examples
+- [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
+
+### Service Catalog
+The [service catalog](https://svc-cat.io) annotation processor is can be used in order to create [service catalog](https://svc-cat.io) resources for:
+
+- creating service instances
+- binding to services
+- injecting binding info into the container 
+
+Here's an example:
+```java
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
+import io.dekorate.servicecatalog.annotation.ServiceCatalog;
+
+@KubernetesApplication
+@ServiceCatalog(instances =
+    @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default")
+)
+public class Main {
+    public static void main(String[] args) {
+      //Your code goes here
+    }
+}
+```
+
+The same via `application.properties`:
+
+     dekorate.svcat.instances[0].name=mysql-instance
+     dekorate.svcat.instances[0].service-class=apb-mysql
+     dekorate.svcat.instances[0].service-plan=default
+
+The `@ServiceCatalogInstance` annotation will trigger the generation of a `ServiceInstance` and a `ServiceBinding`resource.
+It will also decorate any `Pod`, `Deployment`, `DeploymentConfig` and so on with additional environment variables containing the binding information.
+
+#### Adding the service catalog annotation processor to the classpath
+
+This module can be added to the project using:
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>servicecatalog-annotations</artifactId>
+  <version>0.10.0</version>
+</dependency>
+```
+
+#### related examples
+ - [service catalog example](examples/service-catalog-example)  
+ 
+### Halkyon CRD 
+[Halkyon](http://halkyon.io) provides 
+[Custom Resource Definitions (CRD)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/) 
+and associated operator to abstract kubernetes/OpenShift resources and simplify the configuration and design of cloud-native applications.
+See the following [project](https://github.com/halkyonio/operator) to get more information. Specifically, you can take a look at the 
+[demo project](https://github.com/halkyonio/operator/tree/master/demo).
+This module provides support for generating halkyon CRDs from a combination of user-provided and automatically extracted metadata.
+
+The generation of halkyon CRDs is triggered by adding the `halkyon-annotations` dependency to the project and
+annotate one of your classes with `@HalkyonComponent`. Note that in the case of Spring Boot applications, as explained 
+[here](#annotation-less-configuration), only adding the dependency is needed:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>halkyon-annotations</artifactId>
+  <version>0.10.0</version>
+</dependency>
+```
+
+If everything went well, building your project will also generate `halkyon.yml` and `halkyon.json` files in the 
+`target/classes/META-INF/dekorate` is triggered.
+
+The content of the halkyon descriptor will be determined by the existing config provided by other annotations such as 
+`@KubernetesApplication` and can be also controlled using application properties.
+
+###### Examples
+Here a simple example of how to use the annotation-less mode. We have a simple `@SpringBootApplication` annotated class:
+
+```java
+package io.dekorate.examples.component;  
+  
+import org.springframework.boot.SpringApplication;  
+import org.springframework.boot.autoconfigure.SpringBootApplication;  
+  
+@SpringBootApplication  
+public class Main {  
+  
+  public static void main(String[] args) {  
+    SpringApplication.run(Main.class, args);  
+  }  
+  
+}
+```
+
+along with an `application.properties` to override the default values:
+```properties
+dekorate.component.name=hello-annotationless-world
+dekorate.component.envs[0].name=key_from_properties\
+dekorate.component.envs[0].value=value_from_properties
+dekorate.component.deploymentMode=build
+``` 
+
+The combination of both, when processed, should result in the following halkyon CRD manifest:
+```yaml
+---
+apiVersion: "v1"
+kind: "List"
+items:
+- apiVersion: "halkyon.io/v1beta1"
+  kind: "Component"
+  metadata:
+    labels:
+      app: "hello-annotationless-world"
+  name: "hello-annotationless-world"
+  spec:
+    deploymentMode: "build"
+  runtime: "spring-boot"
+  version: "2.1.6.RELEASE"
+  exposeService: false
+  envs:
+    - name: "key_from_properties"  
+    value: "value_from_properties"
+  buildConfig:
+      type: "s2i"
+      url: "https://github.com/dekorateio/dekorate.git"
+      ref: "master"
+      contextPath: "examples/"
+      moduleDirName: "halkyon-example-annotationless-properties"
+```
+
+As explained before, you can note, for example, that `deploymentMode` does not appear at the same hierarchical level as 
+configured in the properties: an additional level `spec` has been introduced.
+
+You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) the code of this example.
+
+Let's now consider the following Spring Boot application class that is annotated with `@HalkyonComponent` as well:
+
+```java
+package io.dekorate.examples.component;
+  
+import io.dekorate.halkyon.annotation.HalkyonComponent;
+import io.dekorate.kubernetes.annotation.Env;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+  
+@HalkyonComponent(name = "halkyon", exposeService = true, envs = @Env(name = "key1", value = "val1"))
+@SpringBootApplication
+public class Application {
+  
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+```
+
+If we provide an `application.yml` file as follows:
+```yaml
+dekorate:
+  component:
+    name: "hello-world"
+    buildType: "docker"
+    deploymentMode : build
+```
+
+You can notice that the resulting manifest will match what is configured in `application.yml`, completly overriding the values
+provided via annotations:
+```yaml
+apiVersion: "v1"
+kind: "List"
+items:
+- apiVersion: "halkyon.io/v1beta1"
+  kind: "Component"
+  metadata:
+    labels:
+      app: "hello-world"
+  version: "0.0.1-SNAPSHOT"
+  name: "hello-world"
+  spec:
+    deploymentMode: "build"
+  runtime: "spring-boot"
+  version: "2.1.6.RELEASE"
+  exposeService: false
+  buildConfig:
+    type: "docker"
+    url: "https://github.com/dekorateio/dekorate.git"
+    ref: "master"
+    contextPath: "annotations/halkyon-annotations/target/it/"
+    moduleDirName: "feat-229-override-annotationbased-config"
+
+```
+
 #### External generator integration
 
 No matter how good a generator/scaffolding tool is, its often desirable to handcraft part of it.
@@ -1210,7 +1399,7 @@ The example below configures the Mapstruct, Lombok and Dekorate annotation proce
                         <path>
                             <groupId>io.dekorate</groupId>
                             <artifactId>kubernetes-annotations</artifactId>
-                            <version>${project.version}</version>
+                            <version>0.10.0</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
