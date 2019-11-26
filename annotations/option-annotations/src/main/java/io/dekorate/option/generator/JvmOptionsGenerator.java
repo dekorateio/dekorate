@@ -15,21 +15,29 @@
  */
 package io.dekorate.option.generator;
 
+import java.util.Map;
+
+import javax.lang.model.element.Element;
+
 import io.dekorate.Generator;
 import io.dekorate.Session;
-import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.option.adapter.JvmConfigAdapter;
 import io.dekorate.option.annotation.JvmOptions;
 import io.dekorate.option.config.JvmConfig;
 import io.dekorate.option.configurator.ApplyJvmOptsConfigurator;
 
-import javax.lang.model.element.Element;
-import java.util.Map;
-
 public interface JvmOptionsGenerator extends Generator  {
 
+  String JVM = "jvm";
+   
+  @Override
+  default String getKey() {
+    return JVM;
+  }
+    
   @Override
   default void add(Element element) {
     JvmOptions jvmOptions = element.getAnnotation(JvmOptions.class);
