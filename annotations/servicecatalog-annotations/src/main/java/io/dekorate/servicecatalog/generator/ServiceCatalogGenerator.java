@@ -35,7 +35,7 @@ import java.util.Map;
 public interface ServiceCatalogGenerator extends Generator, WithSession {
 
   default String getKey() {
-    return "servicecatalog";
+    return "svcat";
   }
 
   default Class<? extends Annotation> getAnnotation() {
