@@ -101,7 +101,7 @@ That's all! Next time you perform a build, using something like:
     mvn clean package
     
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
-
+![asciicast](img/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast") 
 #### related examples
  - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
  - [spring boot on openshift example](examples/spring-boot-on-openshift-example)
