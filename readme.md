@@ -101,6 +101,7 @@ That's all! Next time you perform a build, using something like:
     mvn clean package
     
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
+[![asciicast](https://asciinema.org/a/ZWkxvg6LUzedQ2IPzmFTUeCP2.png)](https://asciinema.org/a/ZWkxvg6LUzedQ2IPzmFTUeCP2)
 
 #### related examples
  - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
