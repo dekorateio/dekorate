@@ -1,5 +1,5 @@
 
-![dekorate logo](logo.png "Dekorate") 
+![dekorate logo](assets/img/logo.png "Dekorate") 
 
 # Dekorate
 
@@ -101,7 +101,9 @@ That's all! Next time you perform a build, using something like:
     mvn clean package
     
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
-![asciicast](img/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast") 
+
+![asciicast](assets/img/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast") 
+
 #### related examples
  - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
  - [spring boot on openshift example](examples/spring-boot-on-openshift-example)
@@ -124,6 +126,8 @@ That's all! Next time you perform a build, using something like:
     
 The generated manifests can be found under `target/kubernetes`.
 Note: [Quarkus](https://quarkus.io) is using its own `dekorate` based Kubernetes extension (see more at  [Quarkus](#quarkus)).
+
+![asciicast](assets/img/dekorate-quarkus-hello-world.gif "Dekorate Quarkus Hello World Asciicast") 
 
 ### Hello Thorntail
 
@@ -195,7 +199,7 @@ Past that point configuration is feasible using:
 - Configuration properties (application.properties)
 - Both 
 
-A complete reference of the supported properties can be found in the [configuration options guide](config.md).
+A complete reference of the supported properties can be found in the [configuration options guide](assets/config.md).
 
 ### Kubernetes
 
@@ -352,7 +356,7 @@ To add an additional port using `application.properties`:
 **IMPORTANT**: When mixing annotations and `application.properties` the latter will always take preceedence overriding values that defined using annotations.
 This allows users to define the configuration using annotations and externalize configuration to `application.properties`.
 
-**REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide](config.md).
+**REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide](assets/config.md).
 
 #### Adding container environment variables
 To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
@@ -712,12 +716,12 @@ It's important to repeat that the override that occurs by *fully* replacing any 
 of merge between the existing and higher-priority values. This means that if you choose to override the annotation-specified
 configuration, you need to repeat all the configuration you want in the @Env annotation-less configuration.
 
-Here's the full list of supported [configuration options](config.md). Special attention should be paid to the path of these 
+Here's the full list of supported [configuration options](assets/config.md). Special attention should be paid to the path of these 
 properties. The properties' path match the annotation properties and not what would end up in the manifest, meaning that the 
 annotation-less configuration matches the model defined by the annotations. More precisely, what is being configured using 
 properties is the same model than what is configured using annotations. While there is some overlap between how the annotations 
 are configured and the resulting manifest, the properties (or YAML file) still need to provide values for the annotation fields,
-hence why they need to match how the annotations are configured. Always refer to the [configuration options guide](config.md) 
+hence why they need to match how the annotations are configured. Always refer to the [configuration options guide](assets/config.md) 
 if in doubt.
 
 ###### Generated resources when not using annotations
@@ -1436,6 +1440,6 @@ In case, that dekorate bom is imported by a downstream project (e.g. snowdrop) a
 By all means please do! We love contributions! 
 Docs, Bug fixes, New features ... everything is important!
 
-Make sure you take a look at contributor [guidelines](contributor-guideliness.md).
-Also, it can be useful to have a look at the dekorate [design](design.md).
+Make sure you take a look at contributor [guidelines](assets/contributor-guideliness.md).
+Also, it can be useful to have a look at the dekorate [design](assets/design.md).
 
