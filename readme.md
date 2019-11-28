@@ -147,6 +147,9 @@ That's all! Next time you perform a build, using something like:
     
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
+
+![asciicast](assets/img/dekorate-thorntail-hello-world.gif "Dekorate Thorntail Hello World Asciicast") 
+
 #### related examples
  - [thorntail on kubernetes example](examples/thorntail-on-kubernetes-example)
  - [thorntail on openshift example](examples/thorntail-on-openshift-example)
@@ -181,6 +184,9 @@ Next time you perform a build, using something like:
     mvn clean package
     
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
+
+
+![asciicast](assets/img/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast") 
 
 #### related examples
  - [vertx on kubernetes example](examples/vertx-on-kubernetes-example)
