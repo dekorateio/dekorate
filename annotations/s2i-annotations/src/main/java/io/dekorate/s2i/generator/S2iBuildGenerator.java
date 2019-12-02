@@ -26,16 +26,18 @@ import io.dekorate.Generator;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
+import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.s2i.adapter.*;
 import io.dekorate.s2i.annotation.S2iBuild;
 import io.dekorate.s2i.config.*;
 import io.dekorate.s2i.handler.S2iHanlder;
 
-public interface S2iBuildGenerator extends Generator, WithSession {
+public interface S2iBuildGenerator extends Generator, WithSession, WithProject {
 
   String S2I = "s2i";
 
@@ -49,15 +51,16 @@ public interface S2iBuildGenerator extends Generator, WithSession {
 
   @Override
   default void add(Map map) {
-    on(new PropertyConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(propertiesMap(map, S2iBuild.class))));
+    on(new PropertyConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(propertiesMap(map, S2iBuild.class))
+                                                 .accept(new ApplyProjectInfo(getProject()))));
   }
 
   @Override
   default void add(Element element) {
     S2iBuild enableS2iBuild = element.getAnnotation(S2iBuild.class);
     on(enableS2iBuild != null
-      ? new AnnotationConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(enableS2iBuild))
-      : new AnnotationConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()));
+       ? new AnnotationConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(enableS2iBuild).accept(new ApplyProjectInfo(getProject())))
+       : new AnnotationConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder().accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void on(ConfigurationSupplier<S2iBuildConfig> config) {
