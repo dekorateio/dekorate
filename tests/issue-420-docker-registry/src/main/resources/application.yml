@@ -1,0 +1,3 @@
+dekorate:
+  docker:
+    registry: localhost:3000

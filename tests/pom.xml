@@ -35,6 +35,7 @@
       <module>issue-276-componentName-not-overrided</module>
       <module>issue-331-annotation-combined-with-properties</module>
       <module>issue-369-probe-properties</module>
+      <module>issue-420-docker-registry</module>
     </modules>
 
 </project>
