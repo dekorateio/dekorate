@@ -26,8 +26,8 @@ import io.dekorate.deps.jackson.databind.ObjectMapper;
 import io.dekorate.utils.Serialization;
 
 public class Project {
-  
-  private static String DEFAULT_DEKORATE_OUTPUT_DIR = "META-INF/dekorate";
+
+  public static String DEFAULT_DEKORATE_OUTPUT_DIR = "META-INF/dekorate";
 
   private Path root;
   private String dekorateInputDir;

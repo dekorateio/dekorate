@@ -38,9 +38,6 @@ import java.util.function.Function;
 @SupportedAnnotationTypes("io.dekorate.option.annotation.GeneratorOptions")
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
-  private static final String INPUT_DIR = "dekorate.input.dir";
-  private static final String OUTPUT_DIR = "dekorate.output.dir";
-
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = getSession();
     if (roundEnv.processingOver()) {
@@ -54,8 +51,8 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
         if (options == null) {
           continue;
         }
-        String inputPath = System.getProperty(INPUT_DIR, options.inputPath());
-        String outputPath = System.getProperty(OUTPUT_DIR, options.outputPath());
+        String inputPath = options.inputPath();
+        String outputPath = options.outputPath();
 
         if (Strings.isNotNullOrEmpty(inputPath)) {
 
