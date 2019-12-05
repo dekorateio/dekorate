@@ -101,7 +101,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
           Map<String, Object> newProps = fromProperties(is);
           merge(result, newProps);
         } else if (resourceName.endsWith(".yml") || resourceName.endsWith(".yaml")) {
-          Map<String, Object> newProps = fromYaml(is);
+          Map<String, Object> newProps = Maps.kebabToCamelCase(fromYaml(is));
           merge(result, newProps);
         } else {
           throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
