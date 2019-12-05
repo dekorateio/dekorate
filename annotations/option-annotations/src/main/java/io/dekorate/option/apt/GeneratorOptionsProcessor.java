@@ -15,28 +15,39 @@
  */
 package io.dekorate.option.apt;
 
-import io.dekorate.Session;
-import io.dekorate.WithSession;
-import io.dekorate.doc.Description;
-import io.dekorate.option.annotation.GeneratorOptions;
-import io.dekorate.option.handler.GeneratorOptionsHandler;
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.utils.Strings;
-
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+
+import io.dekorate.Session;
+import io.dekorate.WithSession;
+import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.doc.Description;
+import io.dekorate.option.annotation.GeneratorOptions;
+import io.dekorate.option.config.GeneratorConfigBuilder;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.utils.Strings;
 
 @Description("Processing generator options, which are used for customizing the generation process")
-@SupportedAnnotationTypes("io.dekorate.option.annotation.GeneratorOptions")
+@SupportedAnnotationTypes({
+  "io.dekorate.annotation.Dekorate",
+  "io.dekorate.kubernetes.annotation.KubernetesApplication",
+  "io.dekorate.openshift.annotation.OpenshiftApplication",
+  "io.dekorate.knative.annotation.KnativeApplication",
+  "io.dekorate.option.annotation.GeneratorOptions"
+})
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
+
+  private static final String INPUT_DIR = "dekorate.input.dir";
+  private static final String OUTPUT_DIR = "dekorate.output.dir";
+
+  private static final String FALLBACK_INPUT_DIR = "META-INF/fabric8";
+  private static final String FALLBACK_OUTPUT_DIR = "META-INF/fabric8";
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = getSession();
@@ -51,43 +62,38 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
         if (options == null) {
           continue;
         }
-        String inputPath = options.inputPath();
-        String outputPath = options.outputPath();
 
-        if (Strings.isNotNullOrEmpty(inputPath)) {
-
-          applyToProject(p -> p.withDekorateInputDir(inputPath));
-          session.handlers().add(new GeneratorOptionsHandler(session.resources(), new ResourceReader(inputPath)));
-        }
-        if (Strings.isNotNullOrEmpty(outputPath)) {
-          applyToProject(p -> p.withDekorateOutputDir(outputPath));
-        }
+        configurePaths(options.inputPath(), options.outputPath());
         return false;
        }
+      configurePaths(FALLBACK_INPUT_DIR, FALLBACK_OUTPUT_DIR);
     }
     return false;
   }
 
-  /**
-   * A Simple function for reading resources from class output.
-   */
-  private class ResourceReader implements Function<String, InputStream>  {
-    private final String path;
-    private ResourceReader(String path) {
-      this.path = path;
+  private void configurePaths(String defaultInputPath, String defaultOutputPath) {
+    final Session session = getSession();
+    final String inputPath = System.getProperty(INPUT_DIR, defaultInputPath);
+    final String outputPath =  Optional.ofNullable(System.getProperty(OUTPUT_DIR))
+      .map(path -> {
+        resolve(path).mkdirs();
+        return path;
+      }).orElse(defaultOutputPath);
+    if (isPathValid(inputPath)) {
+      applyToProject(p -> p.withDekorateInputDir(inputPath));
+      session.configurators().add(new ConfigurationSupplier<>(new GeneratorConfigBuilder()));
     }
-
-    @Override
-    public InputStream apply(String resource) {
-      try {
-        FileObject fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path + "/" + resource + DOT + YML);
-        if (fileObject == null) {
-          fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", path + "/" + resource + DOT + JSON);
-        }
-        return fileObject != null ? fileObject.openInputStream() : null;
-      } catch (IOException e) {
-        return null;
-      }
+    if (isPathValid(outputPath)) {
+      applyToProject(p -> p.withDekorateOutputDir(outputPath));
     }
   }
+
+  private boolean isPathValid(String path) {
+    return Strings.isNotNullOrEmpty(path) && resolve(path).exists();
+  }
+
+  private File resolve(String unixPath) {
+    return new File(getProject().getBuildInfo().getClassOutputDir().toFile(), unixPath.replace('/', File.separatorChar));
+  }
+
 }

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: "Example Job"
+    spec:
+      template:
+        metadata:
+          name: "Example Job"
+        spec:
+          containers:
+            - name: "countdown"
+              image: "alpine:3.10"
+              command:
+                - "bin/bash"
+                - "-c"
+                - "for i in 9 8 7 6 5 4 3 2 1 ; do echo $i; done"
+              restartPolicy: Never

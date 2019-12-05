@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.example.sbonkubernetes;
+package io.dekorate.examples.sbexistingmanifests;
 
-import io.dekorate.kubernetes.annotation.Label;
-import io.dekorate.openshift.annotation.OpenshiftApplication;
+import io.dekorate.option.annotation.GeneratorOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@OpenshiftApplication(labels = @Label(key = "decorated-by", value = "dekorate"))
+@GeneratorOptions(inputPath = "existing-manifests")
 @RestController
 @SpringBootApplication
 public class Main {
@@ -31,7 +30,7 @@ public class Main {
     SpringApplication.run(Main.class, args);
   }
 
-  @RequestMapping("/")
+  @GetMapping("/")
   public String hello() {
     return "Hello world";
   }

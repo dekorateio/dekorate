@@ -26,6 +26,7 @@ import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.config.KubernetesConfig;
@@ -71,6 +72,7 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
   default void add(ConfigurationSupplier<KubernetesConfig> config)  {
     Session session = getSession();
     session.configurators().add(config);
+    session.resources().groups().putIfAbsent(KUBERNETES, new KubernetesListBuilder());
     session.handlers().add(new KubernetesHandler(session.resources(), session.configurators()));
     session.addListener(LISTENER);
   }
