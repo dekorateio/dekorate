@@ -27,7 +27,7 @@ import io.dekorate.utils.Serialization;
 
 public class Project {
 
-  public static String DEFAULT_DEKORATE_OUTPUT_DIR = "META-INF/dekorate";
+  private static String DEFAULT_DEKORATE_OUTPUT_DIR = "META-INF/dekorate";
 
   private Path root;
   private String dekorateInputDir;

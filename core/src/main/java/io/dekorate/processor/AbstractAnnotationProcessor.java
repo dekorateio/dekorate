@@ -17,21 +17,14 @@ package io.dekorate.processor;
 
 import io.dekorate.DekorateException;
 import io.dekorate.Logger;
-import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
 import io.dekorate.project.AptProjectFactory;
 import io.dekorate.utils.Maps;
-import io.dekorate.utils.Serialization;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Urls;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
@@ -42,10 +35,7 @@ import java.io.InputStream;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static io.dekorate.utils.Maps.*;
@@ -69,26 +59,14 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
     }
 
     Session session = Session.getSession();
+    if (!session.hasReader()) {
+      session.setReader(new AptReader(processingEnv));
+    }
     if (!session.hasWriter()) {
       session.setWriter(new AptWriter(processingEnv));
     }
   }
 
-  protected List<HasMetadata> read(String path) {
-    try (InputStream is = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve(path).toFile())) {
-        KubernetesResource resource = Serialization.unmarshal(is, KubernetesResource.class);
-        if (resource instanceof KubernetesList) {
-          return ((KubernetesList) resource).getItems();
-        } else if (resource instanceof HasMetadata) {
-          return Arrays.asList((HasMetadata)resource);
-        } else {
-          return Collections.<HasMetadata>emptyList();
-        }
-    } catch (IOException e) {
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, path + " JSON not found.");
-    }
-    return null;
-  }
 
   /**
    * @return the application properties
@@ -110,7 +88,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
         continue;
       } catch (Exception e) {
         throw DekorateException.launderThrowable(e);
-      } 
+      }
     }
     return result;
   }

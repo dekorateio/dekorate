@@ -24,12 +24,7 @@ import java.util.stream.StreamSupport;
 
 import io.dekorate.utils.Git;
 
-import static io.dekorate.project.Project.DEFAULT_DEKORATE_OUTPUT_DIR;
-
 public class FileProjectFactory {
-
-  private static final String INPUT_DIR = "dekorate.input.dir";
-  private static final String OUTPUT_DIR = "dekorate.output.dir";
 
   private static Project PROJECT = null;
 
@@ -64,7 +59,7 @@ public class FileProjectFactory {
       scmPath = scmPath.getParent();
     }
     Optional<ScmInfo> scmInfo = getScmInfo(scmPath);
-    return new Project(infoPath, System.getProperty(INPUT_DIR), System.getProperty(OUTPUT_DIR, DEFAULT_DEKORATE_OUTPUT_DIR), info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.orElse(null));
+    return new Project(infoPath, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.orElse(null));
   }
 
   /**

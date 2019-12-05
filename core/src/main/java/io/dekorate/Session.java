@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
@@ -59,6 +60,7 @@ public class Session {
   private final Resources resources = new Resources();
 
   private final Map<String, KubernetesList> generatedResources= new HashMap<>();
+  private final AtomicReference<SessionReader> reader = new AtomicReference<>();
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
   private final Map<Class<? extends SessionListener>, SessionListener> listeners = new HashMap<>();
 
@@ -162,6 +164,14 @@ public class Session {
     return generatedResources;
   }
 
+  public boolean hasReader() {
+    return reader.get() != null;
+  }
+
+  public void setReader(SessionReader sessionReader) {
+    reader.set(sessionReader);
+  }
+
   public void setWriter(SessionWriter resourceWriter) {
     this.writer.set(resourceWriter);
   }
@@ -201,11 +211,16 @@ public class Session {
     if (generated.compareAndSet(false, true)) {
       LOGGER.info("Generating manifests.");
       closed.set(true);
+      readExistingResources();
       populateFallbackConfig();
       handlers.forEach(h -> handle(h, configurators));
       this.generatedResources.putAll(resources.generate());
     }
     return Collections.unmodifiableMap(generatedResources);
+  }
+
+  private void readExistingResources() {
+    Optional.ofNullable(reader.get()).ifPresent(sr -> sr.read(this));
   }
 
   private void populateFallbackConfig() {
