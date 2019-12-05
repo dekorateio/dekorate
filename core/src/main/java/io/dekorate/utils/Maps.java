@@ -161,7 +161,21 @@ public class Maps {
       String key = entry.getKey();
       Object value = entry.getValue();
       String newKey = Strings.kebabToCamelCase(key);
-      result.put(newKey, value instanceof Map ? kebabToCamelCase((Map<String, Object>) value) : value);
+      Object newValue = value;
+      if (newValue instanceof Map) {
+        newValue = kebabToCamelCase((Map<String, Object>) newValue);
+      } else if (newValue instanceof List) {
+        List newList = new ArrayList<>();
+        for (Object item : (List) newValue) {
+          if (item instanceof Map) {
+            newList.add(kebabToCamelCase((Map<String, Object>) item));
+          } else {
+            newList.add(item);
+          }
+        }
+        newValue = newList;
+      }
+      result.put(newKey, newValue);
     }
     return result;
   }

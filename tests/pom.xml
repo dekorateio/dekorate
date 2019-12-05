@@ -36,6 +36,7 @@
       <module>issue-331-annotation-combined-with-properties</module>
       <module>issue-369-probe-properties</module>
       <module>issue-420-docker-registry</module>
+      <module>issue-421-kebabcase-in-yml</module>
     </modules>
 
 </project>

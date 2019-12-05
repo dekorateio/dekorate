@@ -1,0 +1,6 @@
+dekorate:
+  kubernetes:
+    serviceType: LoadBalancer
+    ports:
+      - name: HTTP
+        container-port: 8080
