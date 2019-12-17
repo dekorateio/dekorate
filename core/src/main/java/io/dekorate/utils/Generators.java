@@ -28,12 +28,16 @@ public class Generators {
    */
   public static void populateArrays(Class annotationClass, Map<String, Object> map) {
     for (Map.Entry<String,Object> entry : map.entrySet()) {
-      String key = entry.getKey();
+      String key =  Strings.kebabToCamelCase(entry.getKey());
       Object value = entry.getValue();
       try {
         Method method = annotationClass.getDeclaredMethod(key);
         Class methodClass = method.getReturnType();
-        if (value instanceof Map) {
+        System.err.println("Key: "+key+". Value: "+value + ". Type:" + methodClass);
+        if (value instanceof String && methodClass.isArray()) {
+          String[] newValue = ((String)value).split("\\s*,\\s*");
+          map.put(key, newValue);
+        } if (value instanceof Map) {
           populateArrays(methodClass, (Map<String, Object>) value);
           if (methodClass.isArray()) {
             Map[] newValue = new Map[1];
