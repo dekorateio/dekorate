@@ -32,6 +32,38 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface JibBuild {
 
+  boolean enabled() default true;
+  /**
+   * The registry that holds the image.
+   * 
+   * @return The registry or empty string if no registry has been specified.
+   */
+  String registry() default "";
+
+  /**
+   * The group of the application. This value will be use as image user. 
+   * @return The specified group name.
+   */
+  String group() default "";
+
+  /**
+   * The name of the application. This value will be used as name.
+   * @return The specified application name.
+   */
+  String name() default "";
+
+  /**
+   * The version of the application. This value be used as image tag.
+   * @return The version.
+   */
+  String version() default "";
+
+ /*
+   * The name of the image to be generated.
+   * @return the image name.
+   */
+  String image() default "";
+
   /**
    * Flag that indicates whether to perform a docker build (build using the docker daemon) or not.
    * @return true, if docker build is desired, false otherwise.
@@ -44,11 +76,6 @@ public @interface JibBuild {
    */
   String from() default  "openjdk:8-jdk";
 
-  /**
-   * The registry that holds the image.
-   * @return The registry or empty string if no registry has been specified.
-   */
-  String registry() default "";
 
   /**
    * Flag to automatically push the image, to the specified registry.

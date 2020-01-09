@@ -28,6 +28,11 @@ import io.sundr.builder.annotations.Buildable;
 public class ImageConfiguration extends ApplicationConfiguration {
 
   private String registry;
+  private String group;
+  private String name;
+  private String version;
+
+  private String image;
   private String dockerFile;
   private boolean autoBuildEnabled;
   private boolean autoPushEnabled;
@@ -45,10 +50,13 @@ public class ImageConfiguration extends ApplicationConfiguration {
   public ImageConfiguration() {
   }
 
-  public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, String group, String name,
-                            String version, String registry, String dockerFile, boolean autoBuildEnabled, boolean autoPushEnabled) {
+  public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, String registry, String group, String name,
+                            String version, String image, String dockerFile, boolean autoBuildEnabled, boolean autoPushEnabled) {
     super(project, attributes, group, name, version);
     this.registry = registry;
+    this.group = group;
+    this.name = name;
+    this.version = version;
     this.dockerFile = dockerFile;
     this.autoBuildEnabled = autoBuildEnabled;
     this.autoPushEnabled = autoPushEnabled;
@@ -60,6 +68,38 @@ public class ImageConfiguration extends ApplicationConfiguration {
 
   public void setRegistry(String registry) {
     this.registry = registry;
+  }
+
+  public String getGroup() {
+    return group;
+  }
+
+  public void setGroup(String group) {
+    this.group = group;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
   }
 
   public String getDockerFile() {

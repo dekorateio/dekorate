@@ -38,18 +38,42 @@ public @interface S2iBuild {
   boolean enabled() default true;
 
   /**
-   * The relative path of the Dockerfile, from the module root.
-   * 
-   * @return The relative path.
-   */
-  String dockerFile() default "Dockerfile";
-
-  /**
    * The registry that holds the image.
    * 
    * @return The registry or empty string if no registry has been specified.
    */
   String registry() default "";
+
+  /**
+   * The group of the application. This value will be use as image user. 
+   * @return The specified group name.
+   */
+  String group() default "";
+
+  /**
+   * The name of the application. This value will be used as name.
+   * @return The specified application name.
+   */
+  String name() default "";
+
+  /**
+   * The version of the application. This value be used as image tag.
+   * @return The version.
+   */
+  String version() default "";
+
+  /*
+   * The name of the image to be generated.
+   * @return the image name.
+   */
+  String image() default "";
+
+  /**
+   * The relative path of the Dockerfile, from the module root.
+   * 
+   * @return The relative path.
+   */
+  String dockerFile() default "Dockerfile";
 
   /**
    * The S2i builder image to use.
@@ -84,6 +108,5 @@ public @interface S2iBuild {
    * @return True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;
-
 
 }
