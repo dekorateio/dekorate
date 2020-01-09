@@ -38,10 +38,14 @@ import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Images;
+import io.dekorate.utils.Strings;
 
 public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> implements HandlerFactory, WithProject {
 
   private static final String KNATIVE = "knative";
+  private static final String DEFAULT_REGISTRY = "dev.local/";
+
   private final Configurators configurators;
 
   public KnativeHandler() {
@@ -99,6 +103,14 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
    * @return          The deployment config.
    */
   public Service createService(KnativeConfig config)  {
+    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
+
+    String image = Strings.isNotNullOrEmpty(imageConfig.getImage())
+      ? imageConfig.getImage()
+      : Images.getImage(imageConfig.isAutoPushEnabled()
+                        ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
+                        : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion()); 
+
     return new ServiceBuilder()
       .withNewMetadata()
       .withName(config.getName())
@@ -110,7 +122,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       .withNewRevisionTemplate()
       .withNewSpec()
       .withNewContainer()
-      .withImage("dev.local/" + config.getGroup() + "/" + config.getName() + ":" + config.getVersion())
+      .withImage(image)
       .endContainer()
       .endSpec()
       .endRevisionTemplate()
