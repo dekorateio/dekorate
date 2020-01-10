@@ -21,11 +21,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class Issue130Test {
+public class Issue427Test {
 
   @Test
   public void shouldContainComponent() {
-    URL url =Issue130Test.class.getClassLoader().getResource("META-INF/dekorate/kuberentes.yml");
+    URL url = Issue427Test.class.getClassLoader().getResource("META-INF/dekorate/kuberentes.yml");
     assertNull(url);
   }
 }
