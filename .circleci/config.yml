@@ -156,6 +156,7 @@ jobs:
             oc new-project dekorate-os-build
             mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-one
             docker images 
+            oc get istag
             IMAGES=`oc get istag | grep sbo-one | wc -l`
             if [ $IMAGES -lt 1 ]; then echo "Docker image sbo-one"; exit 1; fi
       - run:
