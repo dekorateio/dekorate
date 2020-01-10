@@ -1,0 +1,5 @@
+dekorate:
+  docker:
+    name: my-name
+    group: my-group
+    version: my-version
