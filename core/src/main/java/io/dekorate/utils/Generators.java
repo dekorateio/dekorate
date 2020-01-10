@@ -16,6 +16,7 @@
 package io.dekorate.utils;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,13 +28,12 @@ public class Generators {
    * @param map The actual map.
    */
   public static void populateArrays(Class annotationClass, Map<String, Object> map) {
-    for (Map.Entry<String,Object> entry : map.entrySet()) {
+    for (Map.Entry<String,Object> entry : new HashMap<String, Object>(map).entrySet()) {
       String key =  Strings.kebabToCamelCase(entry.getKey());
       Object value = entry.getValue();
       try {
         Method method = annotationClass.getDeclaredMethod(key);
         Class methodClass = method.getReturnType();
-        System.err.println("Key: "+key+". Value: "+value + ". Type:" + methodClass);
         if (value instanceof String && methodClass.isArray()) {
           String[] newValue = ((String)value).split("\\s*,\\s*");
           map.put(key, newValue);

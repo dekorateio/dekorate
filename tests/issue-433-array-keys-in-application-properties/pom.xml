@@ -28,10 +28,10 @@ limitations under the License.
   </parent>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>issue-427-arrays-in-application-properties</artifactId>
+  <artifactId>issue-433-array-keys-in-application-properties</artifactId>
   <packaging>jar</packaging>
-  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Integration Test for #427</name>
-  <description>Kubernetes yaml/json is generated without @KubernetesApplication</description>
+  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Integration Test for #433</name>
+  <description>Test for keys that contain array indexes e.g. dekorate.kubernetes.labels[0].key</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
