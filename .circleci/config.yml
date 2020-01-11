@@ -102,6 +102,7 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project itests
+            oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             mvn -B clean install -Pbuild -Pwith-examples -Pwith-tests
 
   CLI_OPTIONS:
@@ -154,9 +155,9 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project dekorate-os-build
+            oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-one
             docker images 
-            oc get istag
             IMAGES=`oc get istag | grep sbo-one | wc -l`
             if [ $IMAGES -lt 1 ]; then echo "Docker image sbo-one"; exit 1; fi
       - run:
@@ -164,6 +165,7 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project dekorate-os-deploy
+            oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-two
             docker images | grep sbo-two
             IMAGES=`docker images | grep sbo-two | wc -l`
