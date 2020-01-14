@@ -86,7 +86,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
       Project project = getProject();
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       KnativeConfig config = session.configurators().get(KnativeConfig.class).get();
-      Optional<ImageConfiguration> imageConfiguration = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
+      Optional<ImageConfiguration> imageConfiguration = session.configurators().getImageConfig(BuildServiceFactories.supplierMatches(project));
       imageConfiguration.ifPresent(i -> {
         String name = i.getName();
         if (i.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {

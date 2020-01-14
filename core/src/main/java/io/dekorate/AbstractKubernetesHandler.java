@@ -42,7 +42,6 @@ import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
-import io.dekorate.kubernetes.decorator.AddServiceDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;

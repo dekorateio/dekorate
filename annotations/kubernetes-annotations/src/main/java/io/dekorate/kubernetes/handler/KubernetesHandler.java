@@ -221,9 +221,9 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   }
   
   private static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig appConfig, Configurators configurators) {
-    Optional<ImageConfiguration> origin = configurators.get(ImageConfiguration.class,
-                                                            BuildServiceFactories.matches(project));
-    return configurators.get(ImageConfiguration.class, BuildServiceFactories.matches(project)).map(i -> merge(appConfig, i)).orElse(ImageConfiguration.from(appConfig));
+    Optional<ImageConfiguration> origin = configurators.getImageConfig(BuildServiceFactories.supplierMatches(project));
+
+    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i)).orElse(ImageConfiguration.from(appConfig));
   }
 
   private static ImageConfiguration merge(KubernetesConfig appConfig, ImageConfiguration imageConfig) {

@@ -51,7 +51,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
     Session session = getSession();
     Project project = getProject();
     Optional<KubernetesConfig> optionalAppConfig = session.configurators().get(KubernetesConfig.class);
-    Optional<ImageConfiguration> optionalImageConfig = session.configurators().get(ImageConfiguration.class, BuildServiceFactories.matches(project));
+    Optional<ImageConfiguration> optionalImageConfig = session.configurators().getImageConfig(BuildServiceFactories.supplierMatches(project));
     if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
       return;
     }

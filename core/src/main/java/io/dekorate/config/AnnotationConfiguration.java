@@ -22,11 +22,11 @@ public class AnnotationConfiguration<C> extends ConfigurationSupplier<C> {
 
 
 	public AnnotationConfiguration() {
-    super(null);
+    super(null, true);
 	}
 
   public AnnotationConfiguration(VisitableBuilder<C, ?> builder) {
-    super(builder);
+    super(builder, true);
   }
 
 	@Override

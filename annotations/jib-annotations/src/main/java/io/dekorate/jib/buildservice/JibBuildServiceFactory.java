@@ -24,6 +24,7 @@ import java.util.List;
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.jib.config.JibBuildConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -67,5 +68,13 @@ public class JibBuildServiceFactory implements BuildServiceFactory {
 	@Override
 	public BuildService create(Project project, ImageConfiguration config, Collection<HasMetadata> resources) {
 		return new JibBuildService(project, config);
+	}
+
+	@Override
+	public BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier) {
+    if (supplier.isExplicit()) {
+      return new BuildServiceApplicablility(true, "Jib has been explicitly configured!");
+    }
+    return checkApplicablility(project, supplier.get());
 	}
 }

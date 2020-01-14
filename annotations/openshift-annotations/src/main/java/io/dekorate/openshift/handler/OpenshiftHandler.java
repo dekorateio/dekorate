@@ -204,7 +204,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   }
  
   private static ImageConfiguration getImageConfiguration(Project project, OpenshiftConfig config, Configurators configurators) {
-    return configurators.get(ImageConfiguration.class, BuildServiceFactories.matches(project)).map(i -> merge(config, i)).orElse(ImageConfiguration.from(config));
+    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(config, i)).orElse(ImageConfiguration.from(config));
   }
 
   private static ImageConfiguration merge(OpenshiftConfig config, ImageConfiguration imageConfig) {

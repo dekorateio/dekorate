@@ -25,11 +25,11 @@ import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
 public class PropertyConfiguration<C> extends ConfigurationSupplier<C> {
 
 	public PropertyConfiguration() {
-    super(null);
+    super(null, true);
 	}
 
   public PropertyConfiguration(VisitableBuilder<C, ?> builder) {
-    super(builder);
+    super(builder, true);
   }
 
   @Override

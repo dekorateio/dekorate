@@ -31,17 +31,27 @@ import java.util.function.Supplier;
 public class ConfigurationSupplier<C> implements Supplier<C>, Comparable<ConfigurationSupplier<C>> {
 
   private final VisitableBuilder<C, ?> builder;
+  private final boolean explicit;
 
   public static ConfigurationSupplier<?> empty() {
     return new ConfigurationSupplier<>(null);
   }
 
   public ConfigurationSupplier (VisitableBuilder<C, ?> builder) {
+    this(builder, false);
+  }
+
+  public ConfigurationSupplier (VisitableBuilder<C, ?> builder, boolean explicit) {
     this.builder = builder; 
+    this.explicit = explicit;
   }
 
   public boolean hasConfiguration() {
     return builder != null;
+  }
+
+  public boolean isExplicit() {
+    return explicit;
   }
 
   private void checkBuilder() {
@@ -79,4 +89,5 @@ public class ConfigurationSupplier<C> implements Supplier<C>, Comparable<Configu
   public int compareTo(ConfigurationSupplier<C> o) {
     return 0;
   }
+
 }
