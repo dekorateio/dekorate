@@ -19,6 +19,7 @@ package io.dekorate;
 
 import java.util.Collection;
 
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
@@ -30,6 +31,8 @@ public interface BuildServiceFactory extends Comparable<BuildServiceFactory> {
   String name();
   
   BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config);
+
+  BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier);
 
   BuildService create(Project project, ImageConfiguration config);
   

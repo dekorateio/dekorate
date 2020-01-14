@@ -133,7 +133,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
   }
 
   private static ImageConfiguration getImageConfiguration(Project project, KnativeConfig config, Configurators configurators) {
-    return configurators.get(ImageConfiguration.class, BuildServiceFactories.matches(project)).map(i -> merge(config, i)).orElse(ImageConfiguration.from(config));
+    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(config, i)).orElse(ImageConfiguration.from(config));
   }
 
   private static ImageConfiguration merge(KnativeConfig config, ImageConfiguration imageConfig) {

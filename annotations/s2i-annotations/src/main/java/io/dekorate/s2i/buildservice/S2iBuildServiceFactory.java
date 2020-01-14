@@ -23,6 +23,7 @@ import java.util.Collections;
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
@@ -55,6 +56,14 @@ public class S2iBuildServiceFactory implements BuildServiceFactory {
 	@Override
 	public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
 		return new BuildServiceApplicablility(true, MESSAGE_OK);
+	}
+
+	@Override
+	public BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier) {
+    if (supplier.isExplicit()) {
+      return new BuildServiceApplicablility(true, MESSAGE_OK);
+    }
+    return checkApplicablility(project, supplier.get());
 	}
 
 }

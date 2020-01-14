@@ -37,7 +37,7 @@ public interface WithImageConfig extends WithProject {
       .map(r -> WithImageConfig.class.getClassLoader().getResource(r))
       .filter(u -> u != null)
       .map(u -> Serialization.unmarshal(u, ImageConfiguration.class))
-      .filter(BuildServiceFactories.matches(getProject()))
+      .filter(BuildServiceFactories.configMatches(getProject()))
       .filter(i -> type.isInstance(i))
       .map(i -> (C) i);
   }

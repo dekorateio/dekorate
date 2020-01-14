@@ -55,8 +55,7 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
     try {
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       Optional<OpenshiftConfig> optionalAppConfig = session.configurators().get(OpenshiftConfig.class);
-      Optional<ImageConfiguration> optionalImageConfig = session.configurators().get(ImageConfiguration.class,
-          BuildServiceFactories.matches(project));
+      Optional<ImageConfiguration> optionalImageConfig = session.configurators().getImageConfig(BuildServiceFactories.supplierMatches(project));
 
       if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
         return;

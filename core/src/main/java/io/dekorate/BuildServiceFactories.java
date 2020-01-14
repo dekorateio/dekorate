@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
@@ -40,11 +41,20 @@ public class BuildServiceFactories {
         .findFirst();
   }
 
+  public static Optional<BuildServiceFactory> find(Project project, ConfigurationSupplier<ImageConfiguration> supplier) {
+    return stream().filter(f -> f.checkApplicablility(project, supplier).isApplicable()).sorted()
+        .findFirst();
+  }
+
   public static Function<ImageConfiguration, BuildService> create(Project project, Collection<HasMetadata> items) {
     return c -> find(project, c).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found.")).create(project, c, items);
   }
 
-  public static Predicate<ImageConfiguration> matches(Project project) {
+  public static Predicate<ImageConfiguration> configMatches(Project project) {
+    return c -> find(project, c).isPresent();
+  }
+
+  public static Predicate<ConfigurationSupplier<ImageConfiguration>> supplierMatches(Project project) {
     return c -> find(project, c).isPresent();
   }
 
