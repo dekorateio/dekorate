@@ -306,7 +306,7 @@ public class Serialization {
 
   private static String[] splitDocument(String aSpecFile) {
     List<String> documents = new ArrayList<>();
-    String[] lines = aSpecFile.split(System.lineSeparator());
+    String[] lines = aSpecFile.split("\\r?\\n");
     int nLine = 0;
     StringBuilder builder = new StringBuilder();
 
