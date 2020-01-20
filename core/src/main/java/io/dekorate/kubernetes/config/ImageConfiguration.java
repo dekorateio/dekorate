@@ -57,6 +57,7 @@ public class ImageConfiguration extends ApplicationConfiguration {
     this.group = group;
     this.name = name;
     this.version = version;
+    this.image = image;
     this.dockerFile = dockerFile;
     this.autoBuildEnabled = autoBuildEnabled;
     this.autoPushEnabled = autoPushEnabled;
