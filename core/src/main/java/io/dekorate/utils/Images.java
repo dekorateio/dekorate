@@ -103,11 +103,23 @@ public class Images {
   /**
    * Return the tag of the image.
    * @param image The docker image.
-   * @return The tag if present or null otherwise.
+   * @return The tag if present, {@code latest} otherwise.
    */
   public static String getTag(String image) {
     if (image.contains(COLN)) {
       return image.substring(image.indexOf(COLN) + 1);
+    }
+    return "latest";
+  }
+
+  /**
+   * Removes the tag of the image, if present.
+   * @param image The docker image.
+   * @return The docker image without the tag.
+   */
+  public static String removeTag(String image) {
+    if (image.contains(COLN)) {
+      return image.substring(0, image.indexOf(COLN));
     }
     return image;
   }

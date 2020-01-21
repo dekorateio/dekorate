@@ -89,9 +89,7 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
       ? repository
       : repository.substring(repository.lastIndexOf("/") + 1);
 
-    String dockerImageRepo = config.getBuilderImage().contains(":")
-        ? config.getBuilderImage().substring(0, config.getBuilderImage().indexOf(":"))
-        : config.getBuilderImage();
+    String dockerImageRepo = Images.removeTag(config.getBuilderImage());
 
     return new ImageStreamBuilder()
       .withNewMetadata()
