@@ -422,12 +422,6 @@
       </modules>
     </profile>
     <profile>
-      <id>with-incubator</id>
-      <modules>
-        <module>incubator</module>
-      </modules>
-    </profile>
-    <profile>
       <id>with-javadoc-and-sources</id>
       <build>
         <plugins>

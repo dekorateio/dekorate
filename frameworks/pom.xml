@@ -15,6 +15,5 @@
   <modules>
     <module>spring-boot</module>
     <module>thorntail</module>
-    <module>micronaut</module>
   </modules>
 </project>
