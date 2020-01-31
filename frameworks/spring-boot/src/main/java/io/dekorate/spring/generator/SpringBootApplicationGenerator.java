@@ -29,9 +29,9 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ProbeBuilder;
 import io.dekorate.kubernetes.configurator.AddLivenessProbeConfigurator;
 import io.dekorate.kubernetes.configurator.AddReadinessProbeConfigurator;
-import io.dekorate.kubernetes.decorator.AddRoleBindingDecorator;
-import io.dekorate.kubernetes.decorator.AddServiceAccountDecorator;
-import io.dekorate.kubernetes.decorator.ApplyServiceAccountDecorator;
+import io.dekorate.kubernetes.decorator.AddRoleBindingResourceDecorator;
+import io.dekorate.kubernetes.decorator.AddServiceAccountResourceDecorator;
+import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.prometheus.config.EditableServiceMonitorConfig;
 import io.dekorate.prometheus.decorator.EndpointPathDecorator;
 import io.dekorate.spring.config.SpringApplicationConfig;
@@ -75,7 +75,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
        @Override
        public void handle(Configuration config) {
          LOGGER.info("Processing service monitor config.");
-         session.resources().decorate(new EndpointPathDecorator(session.resources().getName(), "http", "/actuator/prometheus"));
+         session.resources().decorate(new EndpointPathDecorator("http", "/actuator/prometheus"));
        }
 
        @Override
@@ -100,9 +100,9 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
           @Override
           public void handle(Configuration config) {
             LOGGER.info("Detected spring cloud kubernetes.");
-            session.resources().decorate(new ApplyServiceAccountDecorator(session.resources().getName(), session.resources().getName()));
-            session.resources().decorate(new AddServiceAccountDecorator(session.resources()));
-            session.resources().decorate(new AddRoleBindingDecorator(session.resources(), "view"));
+            session.resources().decorate(new ApplyServiceAccountNamedDecorator());
+            session.resources().decorate(new AddServiceAccountResourceDecorator());
+            session.resources().decorate(new AddRoleBindingResourceDecorator("view"));
           }
 
           @Override

@@ -35,12 +35,14 @@ import io.dekorate.s2i.annotation.S2iBuild;
 import io.dekorate.s2i.config.EditableS2iBuildConfig;
 import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.s2i.decorator.AddBuildEnvDecorator;
+import io.dekorate.s2i.decorator.AddBuildConfigResourceDecorator;
+import io.dekorate.s2i.decorator.AddOutputImageStreamResourceDecorator;
+import io.dekorate.s2i.decorator.AddBuilderImageStreamResourceDecorator;
 import io.dekorate.utils.Images;
 
 public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, WithProject {
 
   private static final String OPENSHIFT = "openshift";
-  private static final String IMAGESTREAMTAG = "ImageStreamTag";
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final Resources resources;
 
@@ -67,95 +69,13 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
     if (config.isEnabled()) {
       LOGGER.info("Processing s2i configuration.");
       //TODO: We are temporarily limit S2i to openshift until we find a better way to handle this (#367).
-      resources.add(OPENSHIFT, createBuilderImageStream(config));
-      resources.add(OPENSHIFT, createProjectImageStream());
-      resources.add(OPENSHIFT, createBuildConfig(config));
+      resources.decorate(OPENSHIFT, new AddBuilderImageStreamResourceDecorator(config));
+      resources.decorate(OPENSHIFT, new AddOutputImageStreamResourceDecorator());
+      resources.decorate(OPENSHIFT, new AddBuildConfigResourceDecorator(config));
 
       for (Env env : config.getBuildEnvVars()) {
         resources.decorate(new AddBuildEnvDecorator(env));
       }
     }
-  }
-
-  /**
-   * Create an {@link ImageStream} for the {@link S2iBuildConfig}.
-   * @param config   The config.
-   * @return         The build config.
-   */
-  public ImageStream createBuilderImageStream(S2iBuildConfig config) {
-    String repository = Images.getRepository(config.getBuilderImage());
-
-    String name = !repository.contains("/")
-      ? repository
-      : repository.substring(repository.lastIndexOf("/") + 1);
-
-    String dockerImageRepo = Images.removeTag(config.getBuilderImage());
-
-    return new ImageStreamBuilder()
-      .withNewMetadata()
-      .withName(name)
-      .withLabels(resources.getLabels())
-      .endMetadata()
-      .withNewSpec()
-      .withDockerImageRepository(dockerImageRepo)
-      .endSpec()
-      .build();
-  }
-
-
-  /**
-   * Create an {@link ImageStream} for the {@link S2iBuildConfig}.
-   * @return         The build config.
-   */
-  public ImageStream createProjectImageStream() {
-    return new ImageStreamBuilder()
-      .withNewMetadata()
-      .withName(resources.getName())
-      .withLabels(resources.getLabels())
-      .endMetadata()
-      .build();
-  }
-
-  /**
-   * Create a {@link BuildConfig} for the {@link S2iBuildConfig}.
-   * @param config   The config.
-   * @return          The build config.
-  */
-  public BuildConfig createBuildConfig(S2iBuildConfig config) {
-    String builderRepository = Images.getRepository(config.getBuilderImage());
-    String builderTag = Images.getTag(config.getBuilderImage());
-
-    String builderName = !builderRepository.contains("/")
-      ? builderRepository
-      : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
-
-
-    return new BuildConfigBuilder()
-      .withNewMetadata()
-      .withName(resources.getName())
-      .withLabels(resources.getLabels())
-      .endMetadata()
-      .withNewSpec()
-      .withNewOutput()
-      .withNewTo()
-      .withKind(IMAGESTREAMTAG)
-      .withName(resources.getName() + ":" + resources.getVersion())
-      .endTo()
-      .endOutput()
-      .withNewSource()
-      .withNewBinary()
-      .endBinary()
-      .endSource()
-      .withNewStrategy()
-      .withNewSourceStrategy()
-      .withEnv()
-      .withNewFrom()
-      .withKind(IMAGESTREAMTAG)
-      .withName(builderName + ":" + builderTag)
-      .endFrom()
-      .endSourceStrategy()
-      .endStrategy()
-      .endSpec()
-      .build();
   }
 }

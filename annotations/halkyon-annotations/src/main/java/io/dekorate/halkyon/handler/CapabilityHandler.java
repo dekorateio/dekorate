@@ -61,9 +61,6 @@ public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConf
   @Override
   public void handle(CapabilityConfig config) {
     LOGGER.info("Processing capability config.");
-    if (Strings.isNullOrEmpty(resources.getName())) {
-      resources.setName(config.getName());
-    }
     if (!Strings.isNullOrEmpty(config.getCategory()) && !Strings.isNullOrEmpty(config.getType())) {
       resources.addCustom(ResourceGroup.NAME, createCapability(config));
     }

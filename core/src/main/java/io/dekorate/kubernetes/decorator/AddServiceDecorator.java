@@ -35,18 +35,16 @@ import io.dekorate.doc.Description;
 public class AddServiceDecorator extends Decorator<KubernetesListBuilder> {
 
   private final BaseConfig config;
-  private final Map<String, String> allLabels; //A combination of config and project labels.
 
-  public AddServiceDecorator(BaseConfig config, Map<String, String> allLabels) {
+  public AddServiceDecorator(BaseConfig config) {
     this.config = config;
-    this.allLabels = allLabels;
   }
 
   public void visit(KubernetesListBuilder list) {
     list.addNewServiceItem()
       .withNewMetadata()
       .withName(config.getName())
-      .withLabels(allLabels)
+      .withLabels(Labels.createLabels(config))
       .endMetadata()
       .withNewSpec()
       .withType(config.getServiceType().name())

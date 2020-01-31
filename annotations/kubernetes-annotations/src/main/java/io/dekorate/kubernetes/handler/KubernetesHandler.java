@@ -27,6 +27,7 @@ import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Images;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.LabelSelector;
@@ -92,7 +93,6 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
   public void handle(KubernetesConfig config) {
     LOGGER.info("Processing kubernetes configuration.");
-    setApplicationInfo(config);
     ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
 
     Optional<Deployment> existingDeployment = resources.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder()).buildItems().stream()
@@ -120,7 +120,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
                         ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
                         : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion()); 
 
-    resources.decorate(KUBERNETES, new ApplyImageDecorator(resources.getName(), image));
+    resources.decorate(KUBERNETES, new ApplyImageDecorator(config.getName(), image));
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
@@ -137,11 +137,11 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(group, new AddServiceDecorator(config, resources.getLabels()));
+      resources.decorate(group, new AddServiceDecorator(config));
     }
 
-    resources.decorate(group, new AddIngressDecorator(config, resources.getLabels()));
-    resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector()));
+    resources.decorate(group, new AddIngressDecorator(config, Labels.createLabels(config)));
+    resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector(config)));
   }
 
   /**
@@ -153,12 +153,12 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     return new DeploymentBuilder()
       .withNewMetadata()
       .withName(appConfig.getName())
-      .withLabels(resources.getLabels())
+      .withLabels(Labels.createLabels(appConfig))
       .endMetadata()
       .withNewSpec()
       .withReplicas(1)
       .withTemplate(createPodTemplateSpec(appConfig, imageConfig))
-      .withSelector(createSelector())
+      .withSelector(createSelector(appConfig))
       .endSpec()
       .build();
   }
@@ -168,9 +168,9 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
    * Creates a {@link LabelSelector} that matches the labels for the {@link KubernetesConfig}.
    * @return          A labels selector.
    */
-  public LabelSelector createSelector() {
+  public LabelSelector createSelector(KubernetesConfig config) {
     return new LabelSelectorBuilder()
-      .withMatchLabels(resources.getLabels())
+      .withMatchLabels(Labels.createLabels(config))
       .build();
   }
 

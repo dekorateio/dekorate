@@ -21,6 +21,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
 
 import java.util.Map;
@@ -32,11 +33,9 @@ import static io.dekorate.utils.Ports.getHttpPort;
 public class AddRouteDecorator extends Decorator<KubernetesListBuilder> {
 
   private final OpenshiftConfig config;
-  private final Map<String, String> allLabels; //A combination of config and project labels.
 
-  public AddRouteDecorator(OpenshiftConfig config, Map<String, String> allLabels) {
+  public AddRouteDecorator(OpenshiftConfig config) {
     this.config = config;
-    this.allLabels = allLabels;
   }
 
   public void visit(KubernetesListBuilder list) {
@@ -50,7 +49,7 @@ public class AddRouteDecorator extends Decorator<KubernetesListBuilder> {
     list.addNewRouteItem()
       .withNewMetadata()
       .withName(config.getName())
-      .withLabels(allLabels)
+      .withLabels(Labels.createLabels(config))
       .endMetadata()
       .withNewSpec()
       .withHost(config.getHost())

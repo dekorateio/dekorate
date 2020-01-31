@@ -15,27 +15,24 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.kubernetes.api.model.PodSpecBuilder;
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.adapter.ContainerAdapter;
-import io.dekorate.kubernetes.config.Container;
 
-/**
- * A decorator that adds an init container to a pod template.
- */
-@Description("Add an init container to a pod template.")
-public class AddInitContainerDecorator extends NamedResourceDecorator<PodSpecBuilder> {
-
-  private final Container container;
-
-  public AddInitContainerDecorator(String deployment, Container container) {
-    super(deployment);
-    this.container = container;
+@Description("Add a ServiceAccount resource to the list of generated resources.")
+public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
+    
+  public AddServiceAccountResourceDecorator() {
   }
 
-  @Override
-  public void andThenVisit(PodSpecBuilder podSpec, ObjectMeta resourceMeta) {
-    podSpec.addToInitContainers(ContainerAdapter.adapt(container));
+  public void visit(KubernetesListBuilder list) {
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    list.addNewServiceAccountItem()
+      .withNewMetadata()
+      .withName(meta.getName())
+      .withLabels(meta.getLabels())
+      .endMetadata()
+      .endServiceAccountItem();
   }
 }
+

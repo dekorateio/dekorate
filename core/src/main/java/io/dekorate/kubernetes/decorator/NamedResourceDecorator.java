@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import static io.dekorate.utils.Metadata.getMetadata;
 
-public abstract class ApplicationResourceDecorator<T> extends Decorator<VisitableBuilder> {
+public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuilder> {
   /**
    * For resource name null acts as a wildcards.
    * Let's use a constant instead, for clarity's shake
@@ -34,9 +34,13 @@ public abstract class ApplicationResourceDecorator<T> extends Decorator<Visitabl
 
   protected final String name;
 
-  private final ResourceVisitor visitor = new ResourceVisitor();
+  private final ResourceVisitor visitor = new ResourceVisitor(null);
 
-  public ApplicationResourceDecorator(String name) {
+  public NamedResourceDecorator() {
+    this(ANY);
+  }
+
+  public NamedResourceDecorator(String name) {
     this.name = name;
   }
 
@@ -46,22 +50,39 @@ public abstract class ApplicationResourceDecorator<T> extends Decorator<Visitabl
     if (!objectMeta.isPresent()) {
       return;
     }
-    if (Strings.isNullOrEmpty(name) || objectMeta.map(m -> m.getName()).filter(s -> s.equals(name)).isPresent()) {
-      builder.accept(visitor);
+    if (Strings.isNullOrEmpty(name)) {
+      builder.accept(visitor.withMetadata(objectMeta.get()));
+    } else if (objectMeta.map(m -> m.getName()).filter(s -> s.equals(name)).isPresent()) {
+      builder.accept(visitor.withMetadata(objectMeta.get()));
     }
   }
 
-  public abstract void andThenVisit(T item);
+  /**
+   * Visit a part of a Resource.
+   * @param item the visited item
+   * @param the {@link ObjectMeta} of the current resource.
+   */
+  public abstract void andThenVisit(T item, ObjectMeta resourceMeta);
 
   private class ResourceVisitor extends TypedVisitor<T> {
 
+    private final ObjectMeta metadata;
+
+    public ResourceVisitor(ObjectMeta metadata) {
+      this.metadata = metadata;
+    }
+    
     @Override
     public void visit(T item) {
-     andThenVisit(item);
+      andThenVisit(item, metadata);
+    }
+
+    public ResourceVisitor withMetadata(ObjectMeta metadata) {
+      return new ResourceVisitor(metadata);
     }
 
     public Class<T> getType() {
-      return (Class)Generics.getTypeArguments(ApplicationResourceDecorator.class, ApplicationResourceDecorator.this.getClass()).get(0);
+      return (Class)Generics.getTypeArguments(NamedResourceDecorator.class, NamedResourceDecorator.this.getClass()).get(0);
     }
   }
 }

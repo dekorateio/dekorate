@@ -20,6 +20,7 @@ import io.dekorate.Resources;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.prometheus.config.EditableServiceMonitorConfig;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
+import io.dekorate.prometheus.decorator.AddServiceMonitorResourceDecorator;
 import io.dekorate.prometheus.model.ServiceMonitorBuilder;
 
 public class ServiceMonitorHandler implements Handler<ServiceMonitorConfig> {
@@ -37,23 +38,7 @@ public class ServiceMonitorHandler implements Handler<ServiceMonitorConfig> {
 
   @Override
   public void handle(ServiceMonitorConfig config) {
-    resources.add(new ServiceMonitorBuilder()
-      .withNewMetadata()
-      .withName(resources.getName())
-      .withLabels(resources.getLabels())
-      .endMetadata()
-      .withNewSpec()
-      .withNewSelector()
-      .addToMatchLabels(resources.getLabels())
-      .endSelector()
-      .addNewEndpoint()
-      .withPort(config.getPort())
-      .withNewPath(config.getPath())
-      .withInterval(config.getInterval() + "s")
-      .withHonorLabels(config.isHonorLabels())
-      .endEndpoint()
-      .endSpec()
-      .build());
+    resources.decorate(new AddServiceMonitorResourceDecorator(config));
   }
 
   @Override

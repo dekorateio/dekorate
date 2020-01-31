@@ -16,6 +16,7 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.Label;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
 
@@ -25,7 +26,7 @@ import java.util.Objects;
  * A decorator that adds a label to resources.
  */
 @Description("Add a label to the all metadata.")
-public class AddLabelDecorator extends ApplicationResourceDecorator<ObjectMetaBuilder> {
+public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
 
   private final Label label;
 
@@ -39,7 +40,7 @@ public class AddLabelDecorator extends ApplicationResourceDecorator<ObjectMetaBu
   }
 
   @Override
-  public void andThenVisit(ObjectMetaBuilder builder) {
+  public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
     builder.addToLabels(label.getKey(), label.getValue());
   }
 

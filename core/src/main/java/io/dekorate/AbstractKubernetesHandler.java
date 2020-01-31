@@ -46,7 +46,7 @@ import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
-import io.dekorate.kubernetes.decorator.ApplyServiceAccountDecorator;
+import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
@@ -72,13 +72,6 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
    */
   public abstract void handle(C config);
 
-  protected void setApplicationInfo(C config) {
-    resources.setGroup(config.getGroup());
-    resources.setName(config.getName());
-    resources.setVersion(config.getVersion());
-    resources.setLabels(Labels.createLabels(config));
-    Arrays.asList(config.getLabels()).forEach(l -> resources.addLabel(l));
-  }
 
   /**
    * Add all decorator to the resources.
@@ -89,7 +82,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
    */
   protected void addDecorators(String group, C config) {
     if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
-      resources.decorate(new ApplyServiceAccountDecorator(config.getName(), config.getServiceAccount()));
+      resources.decorate(new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
     }
     resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
 

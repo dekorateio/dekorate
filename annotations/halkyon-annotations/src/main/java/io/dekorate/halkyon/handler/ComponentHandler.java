@@ -16,6 +16,7 @@
 package io.dekorate.halkyon.handler;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,6 +45,7 @@ import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.EditableBaseConfig;
 import io.dekorate.kubernetes.config.Env;
+import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
@@ -84,10 +86,6 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   @Override
   public void handle(ComponentConfig config) {
     LOGGER.info("Processing component config.");
-    if (Strings.isNullOrEmpty(resources.getName()) && !Strings.isNullOrEmpty(config.getName())) {
-      resources.setName(config.getName());
-    }
-    
     if (!Strings.isNullOrEmpty(config.getName())) {
       resources.addCustom(ResourceGroup.NAME, createComponent(config));
     }
@@ -169,7 +167,8 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
    * @return The component.
    */
   private Component createComponent(ComponentConfig config) {
-    Map<String, String> labels = resources.getLabels();
+    Map<String, String> labels = createLabels(config);
+
     labels.put(Labels.APP, config.getName());
     return new ComponentBuilder()
       .withNewMetadata()
@@ -178,7 +177,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       .endMetadata()
       .withNewSpec()
       .withDeploymentMode(config.getDeploymentMode())
-      .withVersion(resources.getVersion())
+      .withVersion(config.getVersion())
       .endSpec()
       .build();
   }
@@ -191,4 +190,16 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       .accept(new ApplyDeployToApplicationConfiguration())
       .accept(new ApplyProjectInfo(p)));
   }
+
+  private static Map<String, String> createLabels(ComponentConfig config) {
+    Map<String,String> result =  new HashMap<String, String >() {{
+        put(Labels.APP, config.getName());
+      }};
+
+    for (Label label : config.getLabels()) {
+      result.put(label.getKey(), label.getValue());
+    }
+    return result; 
+  }
+
 }

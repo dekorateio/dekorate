@@ -15,14 +15,15 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Annotation;
 
 import java.util.Objects;
 
- @Description("A decorator that adds an annotation to all resources.")
- public class AddAnnotationDecorator extends ApplicationResourceDecorator<ObjectMetaBuilder> {
+@Description("A decorator that adds an annotation to all resources.")
+public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
 
   private final Annotation annotation;
 
@@ -30,12 +31,13 @@ import java.util.Objects;
     this(ANY, annotation);
   }
 
-   public AddAnnotationDecorator(String name, Annotation annotation) {
+  public AddAnnotationDecorator(String name, Annotation annotation) {
     super(name);
     this.annotation = annotation;
-   }
+  }
+
   @Override
-  public void andThenVisit(ObjectMetaBuilder builder) {
+  public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
     builder.addToAnnotations(annotation.getKey(), annotation.getValue());
   }
 
