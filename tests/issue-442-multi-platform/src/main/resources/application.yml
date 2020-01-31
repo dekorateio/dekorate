@@ -1,0 +1,13 @@
+# We have the triplet group, name version and 3 platforms kubernetes,openshift and knative
+# Let's have each platform have a conflicting property with at least one other and one inhertied property from pom.
+dekorate:
+  openshift:
+    name: o-name
+  kubernetes:
+    name: k-name
+    version: 1.0-kube
+  knative:
+    group: kn-group
+    version: 1.0-knative
+
+    
