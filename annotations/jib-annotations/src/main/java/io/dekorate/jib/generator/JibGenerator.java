@@ -18,7 +18,9 @@ package io.dekorate.jib.generator;
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.jib.annotation.JibBuild;
 import io.dekorate.jib.config.JibBuildConfig;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
@@ -47,7 +49,7 @@ public interface JibGenerator extends Generator, WithProject  {
   default void add(Element element) {
     JibBuild jib = element.getAnnotation(JibBuild.class);
     if (jib != null) {
-      ConfigurationSupplier<JibBuildConfig> config = new ConfigurationSupplier<>(JibBuildConfigAdapter.newBuilder(jib)
+      ConfigurationSupplier<JibBuildConfig> config = new AnnotationConfiguration<>(JibBuildConfigAdapter.newBuilder(jib)
                                                                                  .accept(new ApplyProjectInfo(getProject()))
                                                                                  .accept(new ApplyBuildToImageConfiguration()));
       on(config);
@@ -56,7 +58,7 @@ public interface JibGenerator extends Generator, WithProject  {
 
   @Override
   default void add(Map map) {
-        on(new ConfigurationSupplier<>(
+        on(new PropertyConfiguration<>(
             JibBuildConfigAdapter
             .newBuilder(propertiesMap(map, JibBuild.class))
                                                 .accept(new ApplyProjectInfo(getProject()))
