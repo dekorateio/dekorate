@@ -15,11 +15,12 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.apps.DeploymentSpecFluent;
 import io.dekorate.doc.Description;
 
 @Description("Apply the number of replicas to the DeploymentSpec.")
-public class ApplyReplicasDecorator extends ApplicationResourceDecorator<DeploymentSpecFluent> {
+public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpecFluent> {
 
   private final int replicas;
 
@@ -33,7 +34,7 @@ public class ApplyReplicasDecorator extends ApplicationResourceDecorator<Deploym
   }
 
   @Override
-  public void andThenVisit(DeploymentSpecFluent deploymentSpec) {
+  public void andThenVisit(DeploymentSpecFluent deploymentSpec, ObjectMeta resourceMeta) {
     if (replicas > 0) {
       deploymentSpec.withReplicas(replicas);
     }

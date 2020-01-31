@@ -74,7 +74,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
     List<ProjectHook> hooks = new ArrayList<>() ;
     if (kubernetesConfig.isAutoDeployEnabled()) {
       hooks.add(new ResourcesApplyHook(getProject(), KUBERNETES, "kubectl"));
-      hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 0));
+      hooks.add(new ScaleDeploymentHook(getProject(), kubernetesConfig.getName(), 0));
     }
 
     if (imageConfig.isAutoPushEnabled()) {
@@ -88,7 +88,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
     }
 
     if (kubernetesConfig.isAutoDeployEnabled()) {
-      hooks.add(new ScaleDeploymentHook(getProject(), session.resources().getName(), 1));
+      hooks.add(new ScaleDeploymentHook(getProject(), kubernetesConfig.getName(), 1));
     }
     OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
     hook.register();

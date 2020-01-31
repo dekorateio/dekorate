@@ -48,7 +48,7 @@ public class JaegerAgentHandler implements Handler<JaegerAgentConfig> {
   @Override
   public void handle(JaegerAgentConfig config) {
     if (config.isOperatorEnabled()) {
-      resources.decorate(new AddAnnotationDecorator(resources.getName(), new AnnotationBuilder()
+      resources.decorate(new AddAnnotationDecorator(new AnnotationBuilder()
         .withKey("sidecar.jaegertracing.io/inject")
         .withValue("true")
         .build()));
@@ -67,7 +67,7 @@ public class JaegerAgentHandler implements Handler<JaegerAgentConfig> {
             .withProtocol(port.getProtocol() != null ? port.getProtocol() : Protocol.TCP)
           .endPort();
        }
-      resources.decorate(new AddSidecarDecorator(resources.getName(), builder.build()));
+      resources.decorate(new AddSidecarDecorator(builder.build()));
     }
   }
 

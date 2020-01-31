@@ -32,7 +32,7 @@ import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
-import io.dekorate.kubernetes.decorator.ApplyServiceAccountDecorator;
+import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.kubernetes.decorator.ApplyWorkingDirDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 
@@ -80,7 +80,7 @@ public class ApplyDeploymentTriggerDecorator extends Decorator<DeploymentConfigS
       AddMountDecorator.class, AddPvcVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class, AddAzureDiskVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
       ApplyImageDecorator.class, ApplyImagePullPolicyDecorator.class,
       ApplyWorkingDirDecorator.class, ApplyCommandDecorator.class, ApplyArgsDecorator.class,
-      ApplyServiceAccountDecorator.class,
+      ApplyServiceAccountNamedDecorator.class,
       AddReadinessProbeDecorator.class,
       AddLivenessProbeDecorator.class,
       AddSidecarDecorator.class,

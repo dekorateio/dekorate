@@ -15,7 +15,6 @@
  */
 package io.dekorate;
 
-import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Metadata;
 import io.dekorate.deps.kubernetes.api.model.Doneable;
@@ -28,9 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class Resources implements Coordinates {
+public class Resources  {
 
   private static final String DEFAULT_GROUP = "kubernetes";
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
@@ -40,14 +38,6 @@ public class Resources implements Coordinates {
   private final Map<String, Set<Decorator>> groupDecorators = new HashMap<>();
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
-
-  // The fields below represents info that is meant to be shared across generators.
-  // These are provided by annotations like: KubernetesApplication, OpenshiftApplication etc, but are used by many others.
-  private final AtomicReference<String> group = new AtomicReference<>();
-  private final AtomicReference<String> name = new AtomicReference<>();
-  private final AtomicReference<String> version = new AtomicReference<>();
-  private final Map<String, String> labels = new HashMap<String, String>();
-
 
   /**
    * Get all registered groups.
@@ -188,39 +178,4 @@ public class Resources implements Coordinates {
     return resources;
   }
 
-  public String getGroup() {
-    return group.get();
-  }
-
-  public void setGroup(String group) {
-    this.group.compareAndSet(null, group);
-  }
-
-  public String getName() {
-    return name.get();
-  }
-
-  public void setName(String name) {
-    this.name.compareAndSet(null, name);
-  }
-
-  public String getVersion() {
-    return version.get();
-  }
-
-  public void setVersion(String version) {
-    this.version.compareAndSet(null, version);
-  }
-
-  public void addLabel(Label label) {
-    this.labels.put(label.getKey(), label.getValue());
-  }
-
-  public void setLabels(Map<String, String> labels) {
-    labels.entrySet().stream().map(e -> new Label(e.getKey(), e.getValue())).forEach(l -> addLabel(l));
-  }
-
-  public Map<String, String> getLabels() {
-    return labels;
-  }
 }

@@ -21,6 +21,7 @@ import io.dekorate.application.config.ApplicationConfig;
 import io.dekorate.application.config.Contact;
 import io.dekorate.application.config.EditableApplicationConfig;
 import io.dekorate.application.config.Icon;
+import io.dekorate.application.decorator.AddApplicationResourceDecorator;
 import io.dekorate.application.decorator.GroupKindsDecorator;
 import io.dekorate.deps.applicationcrd.api.model.ApplicationBuilder;
 import io.dekorate.deps.applicationcrd.api.model.ContactData;
@@ -49,27 +50,7 @@ public class ApplicationHandler implements Handler<ApplicationConfig> {
 
   @Override
   public void handle(ApplicationConfig config) {
-    resources.add(new ApplicationBuilder()
-      .withNewMetadata()
-        .withName(resources.getName())
-        .withLabels(resources.getLabels())
-      .endMetadata()
-      .withNewSpec()
-      .withNewSelector()
-        .withMatchLabels(resources.getLabels())
-      .endSelector()
-      .withNewDescriptor()
-        .withVersion(resources.getVersion())
-        .withOwners(Arrays.stream(config.getOwners()).map(ApplicationHandler::adapt).collect(Collectors.toList()))
-        .withMaintainers(Arrays.stream(config.getMaintainers()).map(ApplicationHandler::adapt).collect(Collectors.toList()))
-        .withIcons(Arrays.stream(config.getIcons()).map(ApplicationHandler::adapt).collect(Collectors.toList()))
-        .withLinks(Arrays.stream(config.getLinks()).map(ApplicationHandler::adapt).collect(Collectors.toList()))
-        .withKeywords(config.getKeywords())
-        .withNotes(config.getNotes())
-      .endDescriptor()
-      .endSpec()
-    .build());
-
+    resources.decorate(new AddApplicationResourceDecorator(config));
     resources.decorate(new GroupKindsDecorator());
   }
 
@@ -78,26 +59,5 @@ public class ApplicationHandler implements Handler<ApplicationConfig> {
     return ApplicationConfig.class.equals(config) || EditableApplicationConfig.class.equals(config);
   }
 
-  private static ContactData adapt(Contact contact) {
-    return new ContactDataBuilder()
-      .withName(contact.getName())
-      .withEmail(contact.getEmail())
-      .withUrl(contact.getUrl())
-      .build();
-  }
-
-  private static Link adapt(io.dekorate.application.config.Link link) {
-    return new LinkBuilder()
-      .withUrl(link.getUrl())
-      .withDescription(link.getDescription())
-      .build();
-  }
-
-  private static ImageSpec adapt(Icon icon) {
-    return new ImageSpecBuilder()
-      .withSize(icon.getSize())
-      .withSrc(icon.getSrc())
-      .withType(icon.getType())
-      .build();
-  }
+  
 }

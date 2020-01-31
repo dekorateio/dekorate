@@ -47,6 +47,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KnativeApplication {
+
   /**
    * The group of the application.
    * This value will be use as:

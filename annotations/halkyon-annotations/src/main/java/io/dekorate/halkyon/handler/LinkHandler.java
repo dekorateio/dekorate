@@ -57,9 +57,6 @@ public class LinkHandler implements HandlerFactory, Handler<LinkConfig> {
   @Override
   public void handle(LinkConfig config) {
     LOGGER.info("Processing link config.");
-    if (Strings.isNullOrEmpty(resources.getName())) {
-      resources.setName(config.getName());
-    }
     if (!Strings.isNullOrEmpty(config.getComponentName())) {
       resources.addCustom(ResourceGroup.NAME, createLink(config));
     }

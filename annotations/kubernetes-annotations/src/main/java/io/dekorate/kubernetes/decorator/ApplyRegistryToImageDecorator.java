@@ -20,36 +20,38 @@ import io.dekorate.deps.kubernetes.api.model.apps.DeploymentBuilder;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Images;
-import io.dekorate.Resources;
 
 public class ApplyRegistryToImageDecorator extends Decorator<DeploymentBuilder> {
 
   private final String registry;
-  private final Resources resources;
+  private final String group;
+  private final String name;
+  private final String version;
 
-  public ApplyRegistryToImageDecorator(Resources resources, String registry) {
-    this.registry=registry;
-    this.resources=resources;
+  public ApplyRegistryToImageDecorator(String registry, String group, String name, String version) {
+    this.registry = registry;
+    this.group = group;
+    this.name = name;
+    this.version = version;
   }
 
   @Override
   public void visit(DeploymentBuilder deployment) {
-    String name = resources.getName();
     if (name.equals(deployment.getMetadata().getName())) {
       deployment.accept(new Decorator<ContainerFluent>() {
-        @Override
-        public void visit(ContainerFluent container) {
-          if (container.getName().equals(name)) {
-            String image = Images.getImage(registry, resources.getGroup(), resources.getName(), resources.getVersion());
-            container.withImage(image);
+          @Override
+          public void visit(ContainerFluent container) {
+            if (container.getName().equals(name)) {
+              String image = Images.getImage(registry, group, name, version);
+              container.withImage(image);
+            }
           }
-        }
-      });
+        });
     }
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
     return new Class[]{ApplyImageDecorator.class};
-    }
+  }
 }

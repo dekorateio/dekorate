@@ -16,7 +16,9 @@
 package io.dekorate.prometheus.decorator;
 
 import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.dekorate.prometheus.model.EndpointBuilder;
 import io.dekorate.prometheus.model.ServiceMonitorBuilder;
 
@@ -24,21 +26,24 @@ import io.dekorate.prometheus.model.ServiceMonitorBuilder;
  * A {@link Decorator} that will set the endpoint path on the {@link io.dekorate.prometheus.model.Endpoint} that matches the port,
  * inside the {@link io.dekorate.prometheus.model.ServiceMonitor} that matches the name.
  */
-public class EndpointPathDecorator extends Decorator<ServiceMonitorBuilder> {
+public class EndpointPathDecorator extends NamedResourceDecorator<ServiceMonitorBuilder> {
 
-  private final String name;
   private final String port;
   private final String path;
 
+  public EndpointPathDecorator( String port, String path) {
+    this(ANY, port, path);
+  }
+
+
   public EndpointPathDecorator(String name, String port, String path) {
-    this.name = name;
+    super(name);
     this.port = port;
     this.path = path;
   }
 
   @Override
-  public void visit(ServiceMonitorBuilder serviceMonitor) {
-    if (name.equals(serviceMonitor.getMetadata().getName())) {
+  public void andThenVisit(ServiceMonitorBuilder serviceMonitor, ObjectMeta resourceMeta) {
       serviceMonitor.accept(new TypedVisitor<EndpointBuilder>() {
         @Override
         public void visit(EndpointBuilder endpoint) {
@@ -47,6 +52,5 @@ public class EndpointPathDecorator extends Decorator<ServiceMonitorBuilder> {
          }
         }
       });
-    }
   }
 }

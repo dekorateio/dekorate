@@ -15,6 +15,7 @@
  */
 package io.dekorate.openshift.handler;
 
+import java.util.Map;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesHandler;
@@ -50,6 +51,7 @@ import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Labels;
 
 public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> implements HandlerFactory, WithProject {
 
@@ -87,7 +89,6 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
 
   public void handle(OpenshiftConfig config) {
     LOGGER.info("Processing openshift configuration.");
-    setApplicationInfo(config);
     ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
     Optional<DeploymentConfig> existingDeploymentConfig = resources.groups().getOrDefault(OPENSHIFT, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof DeploymentConfig)
@@ -108,7 +109,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(OPENSHIFT, new AddServiceDecorator(config, resources.getLabels()));
+      resources.decorate(OPENSHIFT, new AddServiceDecorator(config));
     }
 
     addDecorators(OPENSHIFT, config);
@@ -126,7 +127,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     super.addDecorators(group, config);
     resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
     resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), config.getName() + ":" + config.getVersion()));
-    resources.decorate(group, new AddRouteDecorator(config, resources.getLabels()));
+    resources.decorate(group, new AddRouteDecorator(config));
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
@@ -140,15 +141,16 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @return          The deployment config.
    */
   public DeploymentConfig createDeploymentConfig(OpenshiftConfig config, ImageConfiguration imageConfig)  {
+    Map<String, String> labels = Labels.createLabels(config);
     return new DeploymentConfigBuilder()
       .withNewMetadata()
       .withName(config.getName())
-      .withLabels(resources.getLabels())
+      .withLabels(labels)
       .endMetadata()
       .withNewSpec()
       .withReplicas(1)
-      .withTemplate(createPodTemplateSpec(config))
-      .withSelector(resources.getLabels())
+      .withTemplate(createPodTemplateSpec(config, labels))
+      .withSelector(labels)
       .addNewTrigger()
       .withType(IMAGECHANGE)
       .withNewImageChangeParams()
@@ -169,11 +171,11 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @param config   The sesssion.
    * @return          The pod template specification.
    */
-  public PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config) {
+  public PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config, Map<String, String> labels) {
     return new PodTemplateSpecBuilder()
       .withSpec(createPodSpec(config))
       .withNewMetadata()
-      .withLabels(resources.getLabels())
+      .withLabels(labels)
       .endMetadata()
       .build();
   }

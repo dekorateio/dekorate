@@ -15,32 +15,32 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.Resources;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.kubernetes.api.model.rbac.ClusterRole;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.rbac.RoleBindingBuilder;
+import io.dekorate.doc.Description;
 
 /**
  * AddRoleBindingDecorator
  */
-public class AddRoleBindingDecorator extends Decorator<KubernetesListBuilder> {
+@Description("Add a Rolebinding resource to the list of generated resources.")
+public class AddRoleBindingResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
 private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io";
 
-  private final Resources resources;
   private final String role;
    
-  public AddRoleBindingDecorator(Resources resources, String role) {
-    this.resources = resources;
+  public AddRoleBindingResourceDecorator(String role) {
     this.role = role;
   }
 
-
   public void visit(KubernetesListBuilder list) {
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+
     list.addToItems(new RoleBindingBuilder()
       .withNewMetadata()
-      .withName(resources.getName()+":view")
-      .withLabels(resources.getLabels())
+      .withName(meta.getName()+":view")
+      .withLabels(meta.getLabels())
       .endMetadata()
       .withNewRoleRef()
       .withKind("ClusterRole")
@@ -49,7 +49,7 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
       .endRoleRef()
       .addNewSubject()
       .withKind("ServiceAccount")
-      .withName(resources.getName())
+      .withName(meta.getName())
       .endSubject());
   }
 }

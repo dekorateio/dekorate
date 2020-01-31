@@ -15,6 +15,7 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.PodSpecBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.adapter.ContainerAdapter;
@@ -24,9 +25,13 @@ import io.dekorate.kubernetes.config.Container;
  * A decorator that adds an init container to a pod template.
  */
 @Description("Add an init container to a pod template.")
-public class AddSidecarDecorator extends ApplicationResourceDecorator<PodSpecBuilder> {
+public class AddSidecarDecorator extends NamedResourceDecorator<PodSpecBuilder> {
 
   private final Container container;
+
+  public AddSidecarDecorator(Container container) {
+    this(ANY, container);
+  }
 
   public AddSidecarDecorator(String deployment, Container container) {
     super(deployment);
@@ -34,7 +39,7 @@ public class AddSidecarDecorator extends ApplicationResourceDecorator<PodSpecBui
   }
 
   @Override
-  public void andThenVisit(PodSpecBuilder podSpec) {
+  public void andThenVisit(PodSpecBuilder podSpec, ObjectMeta resourceMeta) {
     podSpec.addToContainers(ContainerAdapter.adapt(container));
   }
 }

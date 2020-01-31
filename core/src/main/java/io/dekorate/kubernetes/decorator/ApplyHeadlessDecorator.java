@@ -17,18 +17,19 @@
 
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.ServiceSpecFluent;
 import io.dekorate.doc.Description;
 
 @Description("Make the service headless.")
-public class ApplyHeadlessDecorator extends ApplicationResourceDecorator<ServiceSpecFluent> {
+public class ApplyHeadlessDecorator extends NamedResourceDecorator<ServiceSpecFluent> {
 
   public ApplyHeadlessDecorator(String resourceName) {
     super(resourceName);
   }
 
   @Override
-  public void andThenVisit(ServiceSpecFluent spec) {
+  public void andThenVisit(ServiceSpecFluent spec, ObjectMeta resourceMeta) {
     spec.withClusterIP("None");
   }
 }

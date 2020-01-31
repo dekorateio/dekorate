@@ -39,6 +39,7 @@ import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Images;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
 
 public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> implements HandlerFactory, WithProject {
@@ -67,7 +68,6 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
   }
 
   public void handle(KnativeConfig config) {
-    setApplicationInfo(config);
     Optional<Service> existingService = resources.groups().getOrDefault(KNATIVE, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof Service)
       .map(i -> (Service)i)
@@ -114,7 +114,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
     return new ServiceBuilder()
       .withNewMetadata()
       .withName(config.getName())
-      .withLabels(resources.getLabels())
+      .withLabels(Labels.createLabels(config))
       .endMetadata()
       .withNewSpec()
       .withNewRunLatest()
