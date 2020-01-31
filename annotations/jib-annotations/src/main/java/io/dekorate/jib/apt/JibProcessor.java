@@ -25,13 +25,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import io.dekorate.Session;
-import io.dekorate.WithSession;
 import io.dekorate.jib.annotation.JibBuild;
+import io.dekorate.jib.generator.JibGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @SupportedAnnotationTypes("io.dekorate.jib.annotation.JibBuild")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class JibProcessor extends AbstractAnnotationProcessor implements WithSession {
+public class JibProcessor extends AbstractAnnotationProcessor implements JibGenerator {
 
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -47,6 +47,7 @@ public class JibProcessor extends AbstractAnnotationProcessor implements WithSes
         if (jib == null) {
           continue;
         }
+        add(mainClass);
       }
     }
     return false;
