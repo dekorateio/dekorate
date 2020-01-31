@@ -40,6 +40,8 @@
       <module>issue-421-kebabcase-in-yml</module>
       <module>issue-427-array-values-in-application-properties</module>
       <module>issue-433-array-keys-in-application-properties</module>
+      <module>issue-442-build-config-name</module>
+      <module>issue-442-multi-platform</module>
     </modules>
 
 </project>
