@@ -45,7 +45,7 @@ For the purpose of integration testing it includes:
       <scope>test</scope>
     </dependency>
 
-This annotation will bring in the junit5 extension that dekorate provides, that allows you to run integration tests via the '@KubernetesIntegrationTest' annotation.
+This annotation will bring in the junit5 extension that Dekorate provides, which allows you to run integration tests via the `@KubernetesIntegrationTest` annotation.
 The integration test is [SpringBootOnKubernetesIT.java](src/test/java/io/dekorate/example/sbonkubernetes/SpringBootOnKubernetesIT.java) and it demonstrates:
 
 - how you can deploy the application for end to end testing
