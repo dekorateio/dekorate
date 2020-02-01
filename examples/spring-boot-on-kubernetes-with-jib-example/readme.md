@@ -51,7 +51,7 @@ The integration test is [SpringBootOnKubernetesIT.java](src/test/java/io/dekorat
 - how you can deploy the application for end to end testing
 - how use can use the kubernetes client from within the test to connect to the application.
 
-The test are going to be automatically run when building the application. For example:
+The tests are going to be automatically run when building the application. For example:
 
     mvn clean install
     
