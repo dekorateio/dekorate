@@ -884,7 +884,7 @@ At the moment Jib allows you to create and push images in two different ways:
 - using the docker daemon
 - dockerless
 
-At the moment performing build through the docker daemon is slightly safer, and thus is used as a default option.
+At the moment performing a build through the docker daemon is slightly safer, and thus is used as a default option.
 You can easily switch to dockerless mode, by setting the `@JibBuild(dockerBuild=false)` or if using properties configuration `dekorate.jib.docker-build=false`.
 
 In case of the dockerless mode, an `openjdk-8` image is going to be used as a base image. The image can be changed through the `from` property on the @JibBuild annotation or `dekorate.jib.from` when using property configuration.
@@ -1487,4 +1487,3 @@ Docs, Bug fixes, New features ... everything is important!
 
 Make sure you take a look at contributor [guidelines](assets/contributor-guideliness.md).
 Also, it can be useful to have a look at the dekorate [design](assets/design.md).
-
