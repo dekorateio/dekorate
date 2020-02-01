@@ -16,7 +16,7 @@ The application is using:
       <version>${project.version}</version>
     </dependency>
     
-Which contains all the required modules, including the annotation processors that detect spring web applications.
+Which contains all the required modules, including the annotation processors that detects spring web applications.
 
 The [Main.class](src/main/java/io/dekorate/example/sbonkubernetes/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
 It's also annotated with `@EnableDockerBuild`. This annotation allows the user to trigger a docker build after the compilation, by passing the system property 
