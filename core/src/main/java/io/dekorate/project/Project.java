@@ -25,23 +25,31 @@ import io.dekorate.deps.jackson.core.type.TypeReference;
 import io.dekorate.deps.jackson.databind.ObjectMapper;
 import io.dekorate.utils.Serialization;
 
+import io.sundr.builder.annotations.Buildable;
+
 public class Project {
 
   private static String DEFAULT_DEKORATE_OUTPUT_DIR = "META-INF/dekorate";
 
-  private Path root;
-  private String dekorateInputDir;
-  private String dekorateOutputDir;
-  private BuildInfo buildInfo;
-  private ScmInfo scmInfo;
+  private final Path root;
+  private final String dekorateInputDir;
+  private final String dekorateOutputDir;
+  private final BuildInfo buildInfo;
+  private final ScmInfo scmInfo;
 
   public Project() {
+    this(null, null, null);
   }
 
   public Project(Path root, BuildInfo buildInfo, ScmInfo scmInfo) {
     this(root, null, DEFAULT_DEKORATE_OUTPUT_DIR, buildInfo, scmInfo);
   }
 
+  public Project(Path root, String dekorateInputDir, String dekorateOutputDir, BuildInfo buildInfo) {
+    this(root, dekorateInputDir, dekorateOutputDir, buildInfo, null);
+  }
+
+  @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
   public Project(Path root, String dekorateInputDir, String dekorateOutputDir, BuildInfo buildInfo, ScmInfo scmInfo) {
     this.root = root;
     this.dekorateInputDir = dekorateInputDir;
@@ -50,8 +58,8 @@ public class Project {
     this.scmInfo = scmInfo;
   }
 
-  public Project(Path root, String dekorateInputDir, String dekorateOutputDir, BuildInfo buildInfo) {
-    this(root, dekorateInputDir, dekorateOutputDir, buildInfo, null);
+  public ProjectBuilder edit() {
+    return new ProjectBuilder(this);
   }
 
   public Path getRoot() {
@@ -105,7 +113,4 @@ public class Project {
     return scmInfo;
   }
 
-  public void setScmInfo(ScmInfo scmInfo) {
-    this.scmInfo = scmInfo;
-  }
 }

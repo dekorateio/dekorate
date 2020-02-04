@@ -16,6 +16,7 @@
 package io.dekorate.thorntail.project;
 
 import io.dekorate.project.BuildInfo;
+import io.dekorate.project.BuildInfoBuilder;
 import io.dekorate.project.MavenInfoReader;
 
 import java.nio.file.Path;
@@ -37,7 +38,6 @@ public class ThorntailMavenBuildInfoReader extends MavenInfoReader {
     BuildInfo result = super.getInfo(root);
     String fileName = result.getOutputFile().getFileName().toString();
     String uberjar = fileName.replace("." + result.getPackaging(), THORNTAIL_JAR);
-    result.setOutputFile(result.getOutputFile().getParent().resolve(uberjar));
-    return result;
+    return result.edit().withOutputFile(result.getOutputFile().getParent().resolve(uberjar)).build();
   }
 }
