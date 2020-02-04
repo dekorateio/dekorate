@@ -155,12 +155,24 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
   }
 
   private static void validateVolume(SecretVolume volume) {
+    if (Strings.isNullOrEmpty(volume.getVolumeName())) {
+      throw new IllegalArgumentException("Secret volume requires volumeName().");
+    }
+    if (Strings.isNullOrEmpty(volume.getSecretName())) {
+      throw new IllegalArgumentException("Secret volume: "+ volume.getVolumeName()+". Missing secret name!");
+    }
     if (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777) {
       throw new IllegalArgumentException("Secret volume: "+ volume.getVolumeName()+". Illegal defaultMode: "+volume.getDefaultMode()+". Should be between: 0000 and 0777!");
     }
   }
 
   private static void validateVolume(ConfigMapVolume volume) {
+    if (Strings.isNullOrEmpty(volume.getVolumeName())) {
+      throw new IllegalArgumentException("ConfigMap volume requires volumeName().");
+    }
+    if (Strings.isNullOrEmpty(volume.getConfigMapName())) {
+      throw new IllegalArgumentException("ConfigMap volume: "+ volume.getVolumeName()+". Missing configmap name!");
+    }
     if (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777) {
       throw new IllegalArgumentException("ConfigMap volume: "+ volume.getVolumeName()+". Illegal defaultMode: "+volume.getDefaultMode()+". Should be between: 0000 and 0777!");
     }
