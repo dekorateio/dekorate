@@ -20,7 +20,9 @@ import io.dekorate.deps.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,15 +157,15 @@ public class Maps {
    * @param The input string.
    * @return The camel cased string.
    */
-  public static Map<String, Object> kebabToCamelCase(Map<String, Object> map) {
-    Map<String, Object> result = new HashMap<>();
-    for (Map.Entry<String, Object> entry : map.entrySet()) {
+  public static <T> Map<String, T> kebabToCamelCase(Map<String, T> map) {
+    Map<String, T> result = new HashMap<>();
+    for (Map.Entry<String, T> entry : map.entrySet()) {
       String key = entry.getKey();
-      Object value = entry.getValue();
+      T value = entry.getValue();
       String newKey = Strings.kebabToCamelCase(key);
-      Object newValue = value;
+      T newValue = value;
       if (newValue instanceof Map) {
-        newValue = kebabToCamelCase((Map<String, Object>) newValue);
+        newValue = (T) kebabToCamelCase((Map) newValue);
       } else if (newValue instanceof List) {
         List newList = new ArrayList<>();
         for (Object item : (List) newValue) {
@@ -173,7 +175,17 @@ public class Maps {
             newList.add(item);
           }
         }
-        newValue = newList;
+        newValue = (T) newList;
+      } else if (newValue.getClass().isArray()) {
+        List<T> newList = new ArrayList<>();
+        Arrays.stream((T[]) newValue).forEach(item -> {
+           if (item instanceof Map) {
+            newList.add((T)kebabToCamelCase((Map) item));
+          } else {
+            newList.add(item);
+          }
+        });
+        newValue = (T) newList.toArray((T[]) Arrays.copyOf((T[]) newValue, 0));
       }
       result.put(newKey, newValue);
     }
