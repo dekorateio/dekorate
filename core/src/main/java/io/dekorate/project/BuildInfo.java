@@ -17,20 +17,23 @@ package io.dekorate.project;
 
 import java.nio.file.Path;
 
+import io.sundr.builder.annotations.Buildable;
+
 public class BuildInfo {
 
   public static String DEFAULT_PACKAGING = "jar";
   public static String DEFAULT_BUILD_TOOL = "generic";
 
-  private String name;
-  private String version;
-  private String packaging;
-  private String buildTool;
-  private Path outputFile;
-  private Path classOutputDir;
-  private Path resourceDir;
+  private final String name;
+  private final String version;
+  private final String packaging;
+  private final String buildTool;
+  private final Path outputFile;
+  private final Path classOutputDir;
+  private final Path resourceDir;
 
   public BuildInfo() {
+    this(null, null, DEFAULT_PACKAGING, DEFAULT_BUILD_TOOL, null, null, null);
   }
 
   /**
@@ -54,6 +57,7 @@ public class BuildInfo {
    * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
    * @param resourceDir           The directory from which application resources should be read. (e.g. target/classes for maven, src/main/resources from gralde and so on).
    */
+  @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
   public BuildInfo(String name, String version, String packaging, String buildTool, Path outputFile, Path classOutputDir, Path resourceDir) {
     this.name = name;
     this.version = version;
@@ -62,6 +66,10 @@ public class BuildInfo {
     this.outputFile = outputFile;
     this.classOutputDir = classOutputDir;
     this.resourceDir = resourceDir;
+  }
+
+  public BuildInfoBuilder edit() {
+    return new BuildInfoBuilder(this);
   }
 
   /**
@@ -98,13 +106,6 @@ public class BuildInfo {
   }
 
   /**
-   * Set the build tool name.
-   */
-  public void setBuildTool(String buildTool) {
-    this.buildTool = buildTool;
-  }
-
-  /**
    * Get the output file name.
    * @return  The output file name.
    */
@@ -118,30 +119,6 @@ public class BuildInfo {
 
   public Path getResourceDir() {
     return resourceDir;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public void setVersion(String version) {
-    this.version = version;
-  }
-
-  public void setPackaging(String packaging) {
-    this.packaging = packaging;
-  }
-
-  public void setOutputFile(Path outputFile) {
-    this.outputFile = outputFile;
-  }
-
-  public void setResourceOutputDir(Path classOutputDir) {
-    this.classOutputDir = classOutputDir;
-  }
-
-  public void setApplicationResourceOutputDir(Path resourceDir) {
-    this.resourceDir = resourceDir;
   }
 
 }

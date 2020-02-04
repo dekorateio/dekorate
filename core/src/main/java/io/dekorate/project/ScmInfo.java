@@ -18,21 +18,29 @@ package io.dekorate.project;
 
 import java.nio.file.Path;
 
+import io.sundr.builder.annotations.Buildable;
+
 public class ScmInfo {
 
-  private Path root;
-  private String url;
-  private String branch;
-  private String commit;
+  private final Path root;
+  private final String url;
+  private final String branch;
+  private final String commit;
 
   public ScmInfo() {
+    this(null, null, null, null);
   }
 
+  @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
   public ScmInfo(Path root, String url, String branch, String commit) {
     this.root=root;
     this.url = url;
     this.branch = branch;
     this.commit = commit;
+  }
+
+  public ScmInfoBuilder edit() {
+    return new ScmInfoBuilder(this);
   }
 
   /**
@@ -42,34 +50,16 @@ public class ScmInfo {
     return root;
   }
 
-  /**
-   * @param root the root to set
-   */
-  public void setRoot(Path root) {
-    this.root = root;
-  }
-
   public String getUrl() {
     return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
   }
 
   public String getBranch() {
     return branch;
   }
 
-  public void setBranch(String branch) {
-    this.branch = branch;
-  }
-
   public String getCommit() {
     return commit;
   }
 
-  public void setCommit(String commit) {
-    this.commit = commit;
-  }
 }

@@ -22,7 +22,6 @@ public class ThorntailGradleBuildInfoReader extends GradleInfoReader {
     BuildInfo result = super.getInfo(root);
     String fileName = result.getOutputFile().getFileName().toString();
     String uberjar = fileName.replace("." + result.getPackaging(), THORNTAIL_JAR);
-    result.setOutputFile(result.getOutputFile().getParent().resolve(uberjar));
-    return result;
+    return result.edit().withOutputFile(result.getOutputFile().getParent().resolve(uberjar)).build();
   }
 }
