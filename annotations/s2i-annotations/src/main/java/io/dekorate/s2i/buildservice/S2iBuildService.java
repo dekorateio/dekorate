@@ -58,16 +58,18 @@ public class S2iBuildService implements BuildService {
       BuildList builds = client.builds().withLabel("openshift.io/build-config.name", buildConfigName(resources)).list();
       builds.getItems().stream().forEach(b -> { LOGGER.info("Deleting stale build:"+b.getMetadata().getName()); client.resource(b).cascading(true).delete(); });
       resources.stream().filter(i -> i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret).forEach(i -> {
-              client.resource(i).cascading(true).delete();
-              try {
-                client.resource(i).waitUntilCondition(d -> d == null, 10, TimeUnit.SECONDS);
-              } catch (IllegalArgumentException e) {
-                LOGGER.warning(e.getMessage());
-                //We can should ignore that, as its expected to be thrown when item is actually deleted.
-              } catch (InterruptedException e) {
-                LOGGER.warning(e.getMessage());
-                throw DekorateException.launderThrowable(e);
-              }
+              if (i instanceof BuildConfig) {
+                client.resource(i).cascading(true).delete();
+                try {
+                  client.resource(i).waitUntilCondition(d -> d == null, 10, TimeUnit.SECONDS);
+                } catch (IllegalArgumentException e) {
+                  LOGGER.warning(e.getMessage());
+                  //We can should ignore that, as its expected to be thrown when item is actually deleted.
+                } catch (InterruptedException e) {
+                  LOGGER.warning(e.getMessage());
+                  throw DekorateException.launderThrowable(e);
+                }
+             }
              client.resource(i).createOrReplace();
              LOGGER.info("Applied: " + i.getKind() + " " + i.getMetadata().getName());
           });
