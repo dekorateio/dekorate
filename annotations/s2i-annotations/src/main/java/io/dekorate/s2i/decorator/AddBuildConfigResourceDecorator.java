@@ -53,14 +53,14 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
     String version = meta.getLabels().getOrDefault(Labels.VERSION, LATEST);
     list.addToItems(new BuildConfigBuilder()
       .withNewMetadata()
-      .withName(meta.getName())
+      .withName(config.getName())
       .withLabels(meta.getLabels())
       .endMetadata()
       .withNewSpec()
       .withNewOutput()
       .withNewTo()
       .withKind(IMAGESTREAMTAG)
-      .withName(meta.getName() + ":" + version)
+      .withName(config.getName() + ":" + version)
       .endTo()
       .endOutput()
       .withNewSource()
@@ -78,6 +78,4 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
       .endStrategy()
       .endSpec());
   }
-
-
 }

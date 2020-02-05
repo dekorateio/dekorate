@@ -55,7 +55,7 @@ public class S2iBuildService implements BuildService {
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try (OpenShiftClient client = new DefaultOpenShiftClient()) {
       Thread.currentThread().setContextClassLoader(S2iBuildService.class.getClassLoader());
-      BuildList builds = client.builds().withLabel("openshift.io/build-config.name", config.getName()).list();
+      BuildList builds = client.builds().withLabel("openshift.io/build-config.name", buildConfigName(resources)).list();
       builds.getItems().stream().forEach(b -> { LOGGER.info("Deleting stale build:"+b.getMetadata().getName()); client.resource(b).cascading(true).delete(); });
       resources.stream().filter(i -> i instanceof BuildConfig || i instanceof ImageStream || i instanceof Secret).forEach(i -> {
               client.resource(i).cascading(true).delete();
@@ -80,12 +80,16 @@ public class S2iBuildService implements BuildService {
   public void build() {
     if (project.getBuildInfo().getOutputFile().getParent().toFile().exists()) {
       LOGGER.info("Performing s2i build.");
-      exec.commands("oc", "start-build", config.getName(), "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");
+      exec.commands("oc", "start-build", buildConfigName(resources), "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");
     } else {
      throw new IllegalStateException("Can't trigger binary build. " + project.getBuildInfo().getOutputFile().toAbsolutePath().toString() + " does not exist!");
     }
   }
 
   public void push() {
+  }
+
+  private static String buildConfigName(Collection<HasMetadata> resources) {
+    return resources.stream().filter(h -> "BuildConfig".equals(h.getKind())).map(h -> h.getMetadata().getName()).findFirst().orElseThrow(() -> new IllegalStateException("No build config found."));
   }
 }
