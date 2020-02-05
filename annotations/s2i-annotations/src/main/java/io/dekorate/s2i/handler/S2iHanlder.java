@@ -70,7 +70,7 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
       LOGGER.info("Processing s2i configuration.");
       //TODO: We are temporarily limit S2i to openshift until we find a better way to handle this (#367).
       resources.decorate(OPENSHIFT, new AddBuilderImageStreamResourceDecorator(config));
-      resources.decorate(OPENSHIFT, new AddOutputImageStreamResourceDecorator());
+      resources.decorate(OPENSHIFT, new AddOutputImageStreamResourceDecorator(config));
       resources.decorate(OPENSHIFT, new AddBuildConfigResourceDecorator(config));
 
       for (Env env : config.getBuildEnvVars()) {

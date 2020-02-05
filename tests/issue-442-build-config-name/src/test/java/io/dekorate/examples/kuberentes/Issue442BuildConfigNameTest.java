@@ -30,12 +30,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Issue442BuildConfigNameTest {
 
   @Test
-  public void shouldHaveCustomBuildConfigNameYaml() {
+  public void shouldHaveModuleBuildConfigNameYaml() {
     KubernetesList list = Serialization.unmarshalAsList(Issue442BuildConfigNameTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     BuildConfig b = findFirst(list, BuildConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(b);
-    assertEquals("o-name", b.getMetadata().getName());
+    assertEquals("issue-442-build-config-name", b.getMetadata().getName());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
