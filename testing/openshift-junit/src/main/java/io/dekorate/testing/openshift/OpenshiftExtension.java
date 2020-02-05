@@ -176,10 +176,9 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       if (failed) {
         displayDiagnostics(context);
       }
-      getOpenshiftResources(context).getItems().stream().forEach(r -> {
+      getOpenshiftResources(context).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
         try {
-          LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
-              + client.resource(r).delete());
+          LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:" + client.resource(r).delete());
         } catch (Exception e) {
         }
       });
