@@ -6,7 +6,7 @@ import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
 
 @OpenshiftIntegrationTest
-public class Issue442BuildConfigNameIntegrationTest {
+public class Issue442BuildConfigNameIT {
 
   @Test
   void shouldBeUpAndRunning() {
