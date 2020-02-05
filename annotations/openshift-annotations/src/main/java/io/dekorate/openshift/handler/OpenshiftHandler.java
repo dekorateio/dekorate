@@ -112,7 +112,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       resources.decorate(OPENSHIFT, new AddServiceDecorator(config));
     }
 
-    addDecorators(OPENSHIFT, config);
+    addDecorators(OPENSHIFT, config, imageConfig);
   }
 
   @Override
@@ -122,11 +122,10 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   }
 
 
-  @Override
-  protected void addDecorators(String group, OpenshiftConfig config) {
+  protected void addDecorators(String group, OpenshiftConfig config, ImageConfiguration imageConfig) {
     super.addDecorators(group, config);
     resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
-    resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), config.getName() + ":" + config.getVersion()));
+    resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), imageConfig.getName() + ":" + imageConfig.getVersion()));
     resources.decorate(group, new AddRouteDecorator(config));
   }
 
