@@ -31,6 +31,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Packaging {
 
@@ -77,6 +80,45 @@ public class Packaging {
     }
   }
 
+  public static File packageFile(Path root, Path... additional) {
+    try {
+      final Set<String> includes = Arrays
+        .stream(additional)
+        .map(p -> p.toAbsolutePath().toString())
+        .collect(Collectors.toSet());
+
+      File tempFile = Files.createTempFile(Paths.get(DEFAULT_TEMP_DIR), DOCKER_PREFIX, BZIP2_SUFFIX).toFile();
+      try (final TarArchiveOutputStream tout = Packaging.buildTarStream(tempFile)) {
+        Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+              return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+              String absolutePath = file.toAbsolutePath().toString();
+              if (!shouldInclude(absolutePath, includes)) {
+                return FileVisitResult.CONTINUE;
+              }
+              final Path relativePath = root.relativize(file);
+              final TarArchiveEntry entry = new TarArchiveEntry(file.toFile());
+              entry.setName(relativePath.toString());
+              entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
+              entry.setSize(attrs.size());
+              Packaging.putTarEntry(tout, entry, file);
+              return FileVisitResult.CONTINUE;
+            }
+          });
+        tout.flush();
+      }
+      return tempFile;
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static void putTarEntry(TarArchiveOutputStream tarArchiveOutputStream, TarArchiveEntry tarArchiveEntry,
                                  Path inputPath) throws IOException {
     tarArchiveEntry.setSize(Files.size(inputPath));
@@ -110,6 +152,19 @@ public class Packaging {
       }
       tarArchiveOutputStream.flush();
     }
+  }
+
+  private static boolean shouldInclude(String candidate, String path) {
+    return candidate.equals(path) || candidate.startsWith(path);
+  }
+
+  private static boolean shouldInclude(String candidate, Set<String> paths) {
+    for (String path : paths) {
+      if (shouldInclude(candidate, path)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static class TarDirWalker extends SimpleFileVisitor<Path> {
