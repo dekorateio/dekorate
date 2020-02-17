@@ -36,11 +36,15 @@
 
   <profiles>
     <profile>
+      <id>with-gradle-examples</id>
       <activation>
-        <jdk>[1,1.9)</jdk>
+        <jdk>[1,1.8)</jdk>
       </activation>
       <!-- We need to skip all modules using gradle with jdk11+ as the
            org.fortasoft:gradle-maven-plugin doesn't support it. So we only enable them on jdk9. -->
+
+      <!-- Update: we will also disable on jdk8 as its causing issues with the
+           CI -->
       <modules>
         <module>spring-boot-with-gradle-on-kubernetes-example</module>
         <module>spring-boot-with-gradle-on-openshift-example</module>
