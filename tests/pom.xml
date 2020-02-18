@@ -16,7 +16,6 @@
 
     <modules>
       <module>feat-52-add-build-spec</module>
-      <module>feat-71-make-link-standalone</module>
       <module>feat-105-build-env-vars</module>
       <module>feat-204-spring-boot-with-spring-cloud-kubernetes</module>
       <module>feat-216-annotationless-yml</module>

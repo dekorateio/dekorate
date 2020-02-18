@@ -1,6 +1,6 @@
 dekorate:
   component:
-    name: "hello-word"
+    name: "hello-world"
     labels:
       - key: key1-from-properties
         value: val1-from-properties
