@@ -16,8 +16,7 @@
 package io.dekorate.examples;
 
 import io.dekorate.halkyon.model.Component;
-import io.dekorate.halkyon.model.Link;
-import io.dekorate.halkyon.model.Env;
+import io.dekorate.kubernetes.annotation.Label;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;
@@ -25,6 +24,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import io.dekorate.halkyon.model.DeploymentMode;
 
+import java.util.Map;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,7 +37,7 @@ public class ComponentSpringBootExampleTest {
     KubernetesList list = Serialization.unmarshalAsList(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
-    Assertions.assertEquals(2, items.size());
+    Assertions.assertEquals(1, items.size());
     Component component = (Component) items.get(0);
     Assertions.assertEquals("Component", component.getKind());
     // This doesn't work during release.
@@ -47,10 +47,9 @@ public class ComponentSpringBootExampleTest {
     // This may be null during the release process where HEAD point to a commit instead of a branch.
     //assertNotNull("", component.getSpec().getBuildConfig().getRef());
     assertEquals(DeploymentMode.build, component.getSpec().getDeploymentMode());
-    Label[] labels = component.getSpec().getLabels();
-    Assertions.assertEquals(1, envs.length);
-    Assertions.assertEquals("key1-from-properties", labels[0].getName());
-    Assertions.assertEquals("val1-from-properties", labels[0].getValue());
+    Map<String, String> labels = component.getMetadata().getLabels();
+    Assertions.assertNotNull(labels.get("key1-from-properties"));
+    Assertions.assertEquals("val1-from-properties", labels.get("key1-from-properties"));
     Assertions.assertEquals("hello-world", component.getMetadata().getName());
   }
 

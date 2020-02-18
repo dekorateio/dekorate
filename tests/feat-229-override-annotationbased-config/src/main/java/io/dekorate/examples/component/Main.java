@@ -18,7 +18,6 @@ package io.dekorate.examples.component;
 
 import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.halkyon.annotation.HalkyonLink;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
