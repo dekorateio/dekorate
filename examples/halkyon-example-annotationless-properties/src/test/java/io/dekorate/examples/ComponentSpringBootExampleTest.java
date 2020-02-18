@@ -37,7 +37,7 @@ public class ComponentSpringBootExampleTest {
     KubernetesList list = Serialization.unmarshalAsList(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
-    Assertions.assertEquals(2, items.size());
+    Assertions.assertEquals(1, items.size());
     Component component = (Component) items.get(0);
     Assertions.assertEquals("Component", component.getKind());
     assertEquals("https://github.com/dekorateio/dekorate.git", component.getSpec().getBuildConfig().getUrl());
@@ -45,11 +45,6 @@ public class ComponentSpringBootExampleTest {
     assertEquals("halkyon-example-annotationless-properties", component.getSpec().getBuildConfig().getModuleDirName());
     assertEquals(DeploymentMode.build, component.getSpec().getDeploymentMode());
     assertNotNull("", component.getSpec().getBuildConfig().getRef());
-    Link link = (Link) items.get(1);
-    Assertions.assertEquals("Link", link.getKind());
-    Assertions.assertEquals(1, link.getSpec().getEnvs().length);
-    Assertions.assertEquals("hello-world", link.getMetadata().getName());
-    Assertions.assertEquals("target", link.getSpec().getComponentName());
   }
 
 }
