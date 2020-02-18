@@ -23,7 +23,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @HalkyonComponent(name = "hello-spring-boot", exposeService = true, envs = @Env(name = "key1", value = "val1"))
-@HalkyonLink(name = "should-be-overridden-by-properties", componentName = "should-be-overridden-by-properties")
 @SpringBootApplication
 public class Main {
 

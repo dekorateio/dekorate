@@ -47,14 +47,11 @@ public class ComponentSpringBootExampleTest {
     // This may be null during the release process where HEAD point to a commit instead of a branch.
     //assertNotNull("", component.getSpec().getBuildConfig().getRef());
     assertEquals(DeploymentMode.build, component.getSpec().getDeploymentMode());
-    Link link = (Link) items.get(1);
-    Assertions.assertEquals("Link", link.getKind());
-    Env[] envs = link.getSpec().getEnvs();
+    Label[] labels = component.getSpec().getLabels();
     Assertions.assertEquals(1, envs.length);
-    Assertions.assertEquals("key1-from-properties", envs[0].getName());
-    Assertions.assertEquals("val1-from-properties", envs[0].getValue());
-    Assertions.assertEquals("hello-world", link.getMetadata().getName());
-    Assertions.assertEquals("target", link.getSpec().getComponentName());
+    Assertions.assertEquals("key1-from-properties", labels[0].getName());
+    Assertions.assertEquals("val1-from-properties", labels[0].getValue());
+    Assertions.assertEquals("hello-world", component.getMetadata().getName());
   }
 
 }
