@@ -317,15 +317,6 @@ This secrtion describes all halkyon related types.
 | dekorate.link.envs           | Env[]  |             |               |
 |                              |        |             |               |
 
-#### HalkyonLink
-| Property                     | Type   | Description | Default Value |
-|------------------------------|--------|-------------|---------------|
-| dekorate.link.name           | String |             |               |
-| dekorate.link.component-name | String |             |               |
-| dekorate.link.type           | Type   |             | Env           |
-| dekorate.link.ref            | String |             |               |
-| dekorate.link.envs           | Env[]  |             |               |
-
 #### HalkyonCapability
 | Property                       | Type        | Description | Default Value |
 |--------------------------------|-------------|-------------|---------------|
