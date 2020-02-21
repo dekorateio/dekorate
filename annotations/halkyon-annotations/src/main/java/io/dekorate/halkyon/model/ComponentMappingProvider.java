@@ -27,7 +27,6 @@ public class ComponentMappingProvider implements KubernetesResourceMappingProvid
   
   private Map<String, Class<? extends KubernetesResource>> mappings = new HashMap<String, Class<? extends KubernetesResource>>() {{
     put("halkyon.io/v1beta1#Component", Component.class);
-    put("halkyon.io/v1beta1#Link", Link.class);
     put("halkyon.io/v1beta1#Capability", Capability.class);
   }};
   
