@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ComponentSpringBootExampleTest {
 
   @Test
-  public void shouldContainComponentAndLink() {
+  public void shouldContainComponent() {
     KubernetesList list = Serialization.unmarshalAsList(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();

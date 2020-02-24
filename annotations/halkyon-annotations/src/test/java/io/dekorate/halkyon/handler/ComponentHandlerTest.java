@@ -22,9 +22,4 @@ public class ComponentHandlerTest {
     assertTrue(generator.canHandle(EditableComponentConfig.class));
   }
   
-//  @Test
-//  public void shouldNotAcceptBaseConfig() {
-//    LinkHandler generator = new LinkHandler();
-//    assertFalse(generator.canHandle(BaseConfig.class));
-//  }
 }
