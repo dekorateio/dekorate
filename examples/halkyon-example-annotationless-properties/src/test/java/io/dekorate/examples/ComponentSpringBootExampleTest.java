@@ -22,7 +22,6 @@ import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.halkyon.model.Component;
 import io.dekorate.halkyon.model.DeploymentMode;
-import io.dekorate.halkyon.model.Link;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ComponentSpringBootExampleTest {
 
   @Test
-  public void shouldContainComponentAndLink() {
+  public void shouldContainComponent() {
     KubernetesList list = Serialization.unmarshalAsList(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
