@@ -12,22 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package io.dekorate.kubernetes.decorator;
+ *
+**/
+package io.dekorate.openshift;
 
-import org.junit.jupiter.api.Test;
+public class OpenshiftLabels {
 
-import static org.junit.jupiter.api.Assertions.*;
-
-public class ApplyRegistryToImageDecoratorTest {
-
-  @Test
-  public void shouldRespectAfter() {
-    ApplyRegistryToImageDecorator r = new ApplyRegistryToImageDecorator("docker.io", "test", "image", "latest");
-    ApplyImageDecorator a = new ApplyImageDecorator("cnt", "image");
-
-    assertEquals(1, r.compareTo(a));
-    assertEquals(-1, a.compareTo(r));
-  }
-
+  public static final String RUNTIME = "app.opesnhift.io/runtime";
 }

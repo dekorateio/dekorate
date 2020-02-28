@@ -20,6 +20,7 @@ package io.dekorate.issue276;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.halkyon.model.Component;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Serialization;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class Issue276Test {
     assertTrue(component.isPresent());
     assertTrue(component.get().getSpec().isExposeService());
     assertEquals("customName", component.get().getMetadata().getName());
-    assertEquals("customName", component.get().getMetadata().getLabels().get("app"));
+    assertEquals("customName", component.get().getMetadata().getLabels().get(Labels.APP));
     assertEquals(9090, (long)component.get().getSpec().getPort());
   }
 
@@ -49,4 +50,3 @@ public class Issue276Test {
       .findFirst();
   }
 }
-

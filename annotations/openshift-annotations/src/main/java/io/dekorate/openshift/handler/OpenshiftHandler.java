@@ -35,14 +35,22 @@ import io.dekorate.deps.kubernetes.api.model.PodTemplateSpec;
 import io.dekorate.deps.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.dekorate.deps.openshift.api.model.DeploymentConfig;
 import io.dekorate.deps.openshift.api.model.DeploymentConfigBuilder;
+import io.dekorate.kubernetes.config.Annotation;
+import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
+import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.decorator.AddAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
-import io.dekorate.kubernetes.decorator.AddServiceDecorator;
+import io.dekorate.kubernetes.decorator.AddLabelDecorator;
+import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
+import io.dekorate.kubernetes.decorator.RemoveAnnotationDecorator;
+import io.dekorate.openshift.OpenshiftAnnotations;
+import io.dekorate.openshift.OpenshiftLabels;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
@@ -51,7 +59,9 @@ import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Annotations;
 import io.dekorate.utils.Labels;
+import io.dekorate.utils.Strings;
 
 public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> implements HandlerFactory, WithProject {
 
@@ -65,6 +75,8 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   private static final String IMAGECHANGE = "ImageChange";
 
   private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
+
+  public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
 
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final Configurators configurators;
@@ -109,7 +121,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(OPENSHIFT, new AddServiceDecorator(config));
+      resources.decorate(OPENSHIFT, new AddServiceResourceDecorator(config));
     }
 
     addDecorators(OPENSHIFT, config, imageConfig);
@@ -127,6 +139,16 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
     resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), imageConfig.getName() + ":" + imageConfig.getVersion()));
     resources.decorate(group, new AddRouteDecorator(config));
+
+    if (config.hasAttribute(RUNTIME_TYPE)) {
+      resources.decorate(group, new AddLabelDecorator(new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE))));
+    }
+    resources.decorate(group, new RemoveAnnotationDecorator(Annotations.VCS_URL));
+    Project p = getProject();
+    String vcsUrl = p.getScmInfo() != null && Strings.isNotNullOrEmpty( p.getScmInfo().getUrl())
+      ? p.getScmInfo().getUrl()
+      : Labels.UNKNOWN;
+    resources.decorate(group, new AddAnnotationDecorator(new Annotation(OpenshiftAnnotations.VCS_URL, vcsUrl)));
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {

@@ -21,12 +21,17 @@ import io.dekorate.deps.kubernetes.api.model.Doneable;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class Resources  {
 
@@ -38,6 +43,8 @@ public class Resources  {
   private final Map<String, Set<Decorator>> groupDecorators = new HashMap<>();
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
+
+  private static final Comparator<Decorator> DECORATOR_COMPARATOR = (a,b) -> a.compareTo(b) == 0 ? b.compareTo(a) : a.equals(b) ? 0 : 1;
 
   /**
    * Get all registered groups.
@@ -151,10 +158,10 @@ public class Resources  {
     }
     groupDecorators.forEach((group, decorators) -> {
       if (groups.containsKey(group)) {
-        Set<Decorator> union = new TreeSet<>();
+        Set<Decorator> union = new TreeSet<>(DECORATOR_COMPARATOR);
         union.addAll(decorators);
         union.addAll(globalDecorators);
-        for (Decorator d : union) {
+        for (Decorator d : applyConstraints(union)) {
           groups.get(group).accept(d);
         }
       }});
@@ -166,10 +173,10 @@ public class Resources  {
 
     customDecorators.forEach((group, decorators) -> {
       if (customGroups.containsKey(group)) {
-        Set<Decorator> union = new TreeSet<>();
+        Set<Decorator> union = new TreeSet<>(DECORATOR_COMPARATOR);
         union.addAll(decorators);
         union.addAll(globalDecorators);
-        for (Decorator d : union) {
+        for (Decorator d : applyConstraints(union)) {
           customGroups.get(group).accept(d);
         }
       }});
@@ -178,4 +185,35 @@ public class Resources  {
     return resources;
   }
 
+  public List<Decorator> applyConstraints(Set<Decorator> decorators) {
+    List<Decorator> result = new ArrayList<>();
+    Decorator[] array = decorators.toArray(new Decorator[decorators.size()]);
+    // We can't guarantee that `when `decorator a < b and b < c then a < c``.
+    // Why?
+    // Because our comparators express constraints on particular pairs and can't express the global order.
+    // So, in order to be accurate we need to compare each decorator, with ALL OTHER decorators.
+    // In other words we don't ANY sorting algorithm, we need bubble sort.
+    bubbleSort(array);
+    for (Decorator d : array) {
+      result.add(d);
+    }
+    return result;
+  }
+
+  /**
+   * Bubble sort for decorators.
+   */
+  public void bubbleSort(Decorator[] decorators) {
+    int n = decorators.length;
+    Decorator temp = null;
+    for(int i=0; i < n; i++){
+      for(int j=1; j < (n-i); j++){
+        if(decorators[j].compareTo(decorators[j-1]) < 0) {
+          temp = decorators[j-1];
+          decorators[j-1] = decorators[j];
+          decorators[j] = temp;
+        }
+      }
+    }
+  }
 }

@@ -32,11 +32,11 @@ import io.dekorate.utils.Labels;
 import io.dekorate.doc.Description;
 
 @Description("Add a service to the list.")
-public class AddServiceDecorator extends Decorator<KubernetesListBuilder> {
+public class AddServiceResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final BaseConfig config;
 
-  public AddServiceDecorator(BaseConfig config) {
+  public AddServiceResourceDecorator(BaseConfig config) {
     this.config = config;
   }
 

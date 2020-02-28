@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.kubernetes.decorator;
 
-import org.junit.jupiter.api.Test;
+package io.dekorate.examples.kuberentes;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import static org.junit.jupiter.api.Assertions.*;
+@SpringBootApplication
+public class Main {
 
-public class ApplyRegistryToImageDecoratorTest {
-
-  @Test
-  public void shouldRespectAfter() {
-    ApplyRegistryToImageDecorator r = new ApplyRegistryToImageDecorator("docker.io", "test", "image", "latest");
-    ApplyImageDecorator a = new ApplyImageDecorator("cnt", "image");
-
-    assertEquals(1, r.compareTo(a));
-    assertEquals(-1, a.compareTo(r));
+  public static void main(String[] args) {
+    SpringApplication.run(Main.class, args);
   }
-
 }

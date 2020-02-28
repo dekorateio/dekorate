@@ -42,6 +42,7 @@
       <module>issue-442-build-config-name</module>
       <module>issue-442-multi-platform</module>
       <module>issue-446-secret-volumes</module>
+      <module>feat-458-kubernetes-and-openshift-labels</module>
     </modules>
 
 </project>

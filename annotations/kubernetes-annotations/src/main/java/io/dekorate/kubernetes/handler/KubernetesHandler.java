@@ -48,7 +48,7 @@ import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
-import io.dekorate.kubernetes.decorator.AddServiceDecorator;
+import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
@@ -71,7 +71,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final Configurators configurators;
-  
+
   public KubernetesHandler() {
     this(new Resources(), new Configurators());
   }
@@ -118,7 +118,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       ? imageConfig.getImage()
       : Images.getImage(imageConfig.isAutoPushEnabled()
                         ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
-                        : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion()); 
+                        : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     resources.decorate(KUBERNETES, new ApplyImageDecorator(config.getName(), image));
   }
@@ -137,7 +137,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(group, new AddServiceDecorator(config));
+      resources.decorate(group, new AddServiceResourceDecorator(config));
     }
 
     resources.decorate(group, new AddIngressDecorator(config, Labels.createLabels(config)));

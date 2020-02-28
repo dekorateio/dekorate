@@ -16,6 +16,7 @@
 
 package io.dekorate.examples;
 
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
@@ -39,7 +40,7 @@ class KubernetesExampleTest {
     assertEquals("Deployment", deployment.getKind());
     final Map<String, String> labels = deployment.getMetadata().getLabels();
     assertEquals("bar", labels.get("foo"));
-    assertEquals("annotationless", labels.get("group"));
+    assertEquals("annotationless", labels.get(Labels.GROUP));
     assertEquals("bar-volume", deployment.getSpec().getTemplate().getSpec().getVolumes().get(0).getName());
     assertEquals("foo-map", deployment.getSpec().getTemplate().getSpec().getVolumes().get(0).getConfigMap().getName());
   }

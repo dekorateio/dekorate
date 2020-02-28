@@ -28,30 +28,28 @@ public abstract class Decorator<T> extends TypedVisitor<T> implements Comparable
     return new Class[0];
   }
 
-
-
   @Override
   public int compareTo(Decorator o) {
     Class c = o.getClass();
     //1st pass: ours
     for (Class b : before()) {
-      if (b.equals(c)) {
+      if (b.isAssignableFrom(c)) {
         return -1;
       }
     }
-    for (Class b : after()) {
-      if (b.equals(c)) {
+    for (Class a : after()) {
+      if (a.isAssignableFrom(c)) {
         return 1;
       }
     }
     //2nd pass: their
     for (Class b : o.before()) {
-      if (b.equals(getClass())) {
+      if (b.isAssignableFrom(getClass())) {
         return 1;
       }
     }
-    for (Class b : o.after()) {
-      if (b.equals(getClass())) {
+    for (Class a : o.after()) {
+      if (a.isAssignableFrom(getClass())) {
         return -1;
       }
     }
@@ -60,6 +58,6 @@ public abstract class Decorator<T> extends TypedVisitor<T> implements Comparable
     if (this.equals(o)) {
       return 0;
     }
-    return 1;
+    return -1;
   }
 }

@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.kubernetes.decorator;
+package io.dekorate.utils;
 
-import org.junit.jupiter.api.Test;
+public class Annotations {
 
-import static org.junit.jupiter.api.Assertions.*;
-
-public class ApplyRegistryToImageDecoratorTest {
-
-  @Test
-  public void shouldRespectAfter() {
-    ApplyRegistryToImageDecorator r = new ApplyRegistryToImageDecorator("docker.io", "test", "image", "latest");
-    ApplyImageDecorator a = new ApplyImageDecorator("cnt", "image");
-
-    assertEquals(1, r.compareTo(a));
-    assertEquals(-1, a.compareTo(r));
-  }
-
+  public static final String VCS_URL = "app.dekorate.io/vcs-url";
+  public static final String COMMIT_ID = "app.dekorate.io/commit-id";
+  public static final String UNKNOWN = "<<unknown>>";
 }
