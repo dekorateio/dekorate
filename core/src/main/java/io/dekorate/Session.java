@@ -243,6 +243,7 @@ public class Session {
     }
    });
   }
+
   private static boolean hasApplicationConfiguration(Configurators configurators) {
     return configurators.stream().anyMatch(c->ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
   }

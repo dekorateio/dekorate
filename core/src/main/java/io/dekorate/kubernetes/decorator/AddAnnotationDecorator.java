@@ -42,6 +42,17 @@ public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBui
   }
 
   @Override
+  public Class<? extends Decorator>[] before() {
+    return new Class[]{RemoveAnnotationDecorator.class};
+  }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class};
+  }
+
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;

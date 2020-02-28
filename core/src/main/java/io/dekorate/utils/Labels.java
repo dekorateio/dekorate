@@ -25,9 +25,10 @@ import io.dekorate.kubernetes.config.Label;
 
 public class Labels {
 
-  public static final String APP = "app";
-  public static final String VERSION = "version";
-  public static final String GROUP = "group";
+  public static final String APP = "app.kubernetes.io/name";
+  public static final String VERSION = "app.kubernetes.io/version";
+  public static final String GROUP = "app.kubernetes.io/part-of";
+  public static final String UNKNOWN = "<<unknown>>";
 
   /**
    * Creates a {@link Map} with the labels for the {@link BaseConfig}.

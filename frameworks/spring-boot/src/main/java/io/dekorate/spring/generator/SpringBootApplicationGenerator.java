@@ -48,23 +48,8 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
   default void add(Map map) {
     Session session = getSession();
     session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
-    session.handlers().add(new Handler() {
-      @Override
-      public int order() {
-        return 600;
-      }
-
-      @Override
-      public void handle(Configuration config) {
-        session.configurators().add(new SetSpringBootRuntime());
-        session.configurators().add(new SetSpringBootVersion());
-      }
-
-      @Override
-      public boolean canHandle(Class config) {
-        return Configuration.class.isAssignableFrom(config);
-      }
-    });
+    session.configurators().add(new SetSpringBootRuntime());
+    session.configurators().add(new SetSpringBootVersion());
 
     session.handlers().add(new Handler() {
        @Override

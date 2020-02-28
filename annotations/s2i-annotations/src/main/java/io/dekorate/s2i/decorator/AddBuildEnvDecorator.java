@@ -36,4 +36,9 @@ public class AddBuildEnvDecorator extends Decorator<SourceBuildStrategyFluent<?>
     .withValue(env.getValue())
    .endEnv();
   }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{AddBuildConfigResourceDecorator.class};
+  }
 }

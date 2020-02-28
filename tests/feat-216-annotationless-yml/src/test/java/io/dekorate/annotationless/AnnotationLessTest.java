@@ -19,6 +19,7 @@ package io.dekorate.annotationless;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ public class AnnotationLessTest {
     assertEquals(2, d.getSpec().getReplicas().intValue());
     assertEquals("bar", labels.get("foo"));
     assertEquals("baz", labels.get("zoo"));
-    assertEquals("annotationless", labels.get("group"));
+    assertEquals("annotationless", labels.get(Labels.GROUP));
   }
 
 

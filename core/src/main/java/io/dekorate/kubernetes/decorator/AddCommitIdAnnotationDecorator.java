@@ -15,56 +15,58 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.utils.Annotations;
+import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.Label;
+import io.dekorate.project.Project;
 
 /**
  * A decorator that adds a label to resources.
  */
-@Description("Add a label to the all metadata.")
-public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
+@Description("Add a vcs uri label to the all metadata.")
+public class AddCommitIdAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> implements WithProject {
 
-  private final Label label;
+  private final String annotationKey;
 
-  public AddLabelDecorator(Label label) {
-    this(ANY, label);
+  public AddCommitIdAnnotationDecorator() {
+    this(ANY);
   }
 
-  public AddLabelDecorator(String name, Label label) {
+  public AddCommitIdAnnotationDecorator(String name) {
+    this(name, Annotations.COMMIT_ID);
+  }
+
+  public AddCommitIdAnnotationDecorator(String name, String annotationKey) {
     super(name);
-    this.label = label;
+    this.annotationKey = annotationKey;
   }
 
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
-    builder.addToLabels(label.getKey(), label.getValue());
+    Project p = getProject();
+    String commitId = p.getScmInfo() != null && p.getScmInfo().getCommit() != null
+        ? getProject().getScmInfo().getCommit()
+        : Annotations.UNKNOWN;
+
+    builder.addToAnnotations(annotationKey, commitId);
   }
 
-  public Label getLabel() {
-    return label;
-  }
-
-  public String getLabelKey() {
-    return label.getKey();
+  public String getAnnotationKey() {
+    return annotationKey;
   }
 
   @Override
   public Class<? extends Decorator>[] before() {
-    return new Class[] { RemoveLabelDecorator.class };
-  }
-
-  @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
+    return new Class[]{ RemoveAnnotationDecorator.class };
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1 + getClass().hashCode();
-    result = prime * result + ((label == null) ? 0 : label.hashCode());
+    result = prime * result + ((annotationKey == null) ? 0 : annotationKey.hashCode());
     return result;
   }
 
@@ -76,14 +78,12 @@ public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder>
       return false;
     if (getClass() != obj.getClass())
       return false;
-    AddLabelDecorator other = (AddLabelDecorator) obj;
-    if (label == null) {
-      if (other.label != null)
+    AddCommitIdAnnotationDecorator other = (AddCommitIdAnnotationDecorator) obj;
+    if (annotationKey == null) {
+      if (other.annotationKey != null)
         return false;
-    } else if (!label.equals(other.label))
+    } else if (!annotationKey.equals(other.annotationKey))
       return false;
     return true;
   }
-
-
 }

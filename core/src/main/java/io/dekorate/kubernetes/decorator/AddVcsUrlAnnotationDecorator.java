@@ -1,7 +1,7 @@
 /**
  * Copyright 2018 The original authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,56 +15,56 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.utils.Annotations;
+import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.Label;
+import io.dekorate.project.Project;
 
 /**
  * A decorator that adds a label to resources.
  */
-@Description("Add a label to the all metadata.")
-public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
+@Description("Add a vcs url label to the all metadata.")
+public class AddVcsUrlAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> implements WithProject {
 
-  private final Label label;
+  private final String annotationKey;
 
-  public AddLabelDecorator(Label label) {
-    this(ANY, label);
+  public AddVcsUrlAnnotationDecorator() {
+    this(ANY);
   }
 
-  public AddLabelDecorator(String name, Label label) {
+  public AddVcsUrlAnnotationDecorator(String name) {
+    this(name, Annotations.VCS_URL);
+  }
+
+  public AddVcsUrlAnnotationDecorator(String name, String annotationKey) {
     super(name);
-    this.label = label;
+    this.annotationKey = annotationKey;
   }
 
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
-    builder.addToLabels(label.getKey(), label.getValue());
+    Project p = getProject();
+    String vcsUri = p.getScmInfo() != null && p.getScmInfo().getUrl() != null ? getProject().getScmInfo().getUrl()
+        : Annotations.UNKNOWN;
+
+    builder.addToAnnotations(annotationKey, vcsUri);
   }
 
-  public Label getLabel() {
-    return label;
-  }
-
-  public String getLabelKey() {
-    return label.getKey();
+  public String getAnnotationKey() {
+    return annotationKey;
   }
 
   @Override
   public Class<? extends Decorator>[] before() {
-    return new Class[] { RemoveLabelDecorator.class };
+    return new Class[]{ RemoveLabelDecorator.class };
   }
 
-  @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
-  }
-
-  @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1 + getClass().hashCode();
-    result = prime * result + ((label == null) ? 0 : label.hashCode());
+    result = prime * result + ((annotationKey == null) ? 0 : annotationKey.hashCode());
     return result;
   }
 
@@ -76,11 +76,11 @@ public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder>
       return false;
     if (getClass() != obj.getClass())
       return false;
-    AddLabelDecorator other = (AddLabelDecorator) obj;
-    if (label == null) {
-      if (other.label != null)
+    AddVcsUrlAnnotationDecorator other = (AddVcsUrlAnnotationDecorator) obj;
+    if (annotationKey == null) {
+      if (other.annotationKey != null)
         return false;
-    } else if (!label.equals(other.label))
+    } else if (!annotationKey.equals(other.annotationKey))
       return false;
     return true;
   }
