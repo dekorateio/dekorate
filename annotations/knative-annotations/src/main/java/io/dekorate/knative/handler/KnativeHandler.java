@@ -145,7 +145,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
     }
     return new ImageConfigurationBuilder()
       .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
-      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : config.getGroup())
+      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
       .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
       .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
       .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)

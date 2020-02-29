@@ -45,7 +45,7 @@ public class Feat458Test {
     assertNotNull(d);
     Map<String, String> labels = d.getMetadata().getLabels();
     assertNotNull(labels);
-    assertTrue(labels.containsKey(Labels.APP));
+    assertTrue(labels.containsKey(Labels.NAME));
     assertTrue(labels.containsKey(Labels.VERSION));
     assertTrue(labels.containsKey(OpenshiftLabels.RUNTIME));
 
@@ -64,7 +64,7 @@ public class Feat458Test {
     assertNotNull(d);
     Map<String, String> labels = d.getMetadata().getLabels();
     assertNotNull(labels);
-    assertTrue(labels.containsKey(Labels.APP));
+    assertTrue(labels.containsKey(Labels.NAME));
     assertTrue(labels.containsKey(Labels.VERSION));
     assertFalse(labels.containsKey(OpenshiftLabels.RUNTIME));
     Map<String, String> annotations = d.getMetadata().getAnnotations();
@@ -82,7 +82,7 @@ public class Feat458Test {
     assertNotNull(s);
     Map<String, String> labels = s.getMetadata().getLabels();
     assertNotNull(labels);
-    assertTrue(labels.containsKey(Labels.APP));
+    assertTrue(labels.containsKey(Labels.NAME));
     assertTrue(labels.containsKey(Labels.VERSION));
     assertFalse(labels.containsKey(OpenshiftLabels.RUNTIME));
     Map<String, String> annotations = s.getMetadata().getAnnotations();

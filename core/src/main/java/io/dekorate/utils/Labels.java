@@ -25,9 +25,9 @@ import io.dekorate.kubernetes.config.Label;
 
 public class Labels {
 
-  public static final String APP = "app.kubernetes.io/name";
+  public static final String NAME = "app.kubernetes.io/name";
   public static final String VERSION = "app.kubernetes.io/version";
-  public static final String GROUP = "app.kubernetes.io/part-of";
+  public static final String PART_OF = "app.kubernetes.io/part-of";
   public static final String UNKNOWN = "<<unknown>>";
 
   /**
@@ -37,9 +37,11 @@ public class Labels {
    */
   public static Map<String, String> createLabels(BaseConfig config) {
     Map<String,String> result =  new HashMap<String, String >() {{
-        put(GROUP, config.getGroup());
-        put(APP, config.getName());
+        put(NAME, config.getName());
         put(VERSION, config.getVersion());
+        if (Strings.isNotNullOrEmpty(config.getPartOf())) {
+          put(PART_OF, config.getPartOf());
+        }
       }};
 
     for (Label label : config.getLabels()) {

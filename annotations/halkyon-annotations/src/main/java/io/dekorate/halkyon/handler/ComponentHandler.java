@@ -169,7 +169,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   private Component createComponent(ComponentConfig config) {
     Map<String, String> labels = createLabels(config);
 
-    labels.put(Labels.APP, config.getName());
+    labels.put(Labels.NAME, config.getName());
     return new ComponentBuilder()
       .withNewMetadata()
       .withName(config.getName())
@@ -181,7 +181,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       .endSpec()
       .build();
   }
-  
+
   @Override
   public ConfigurationSupplier<ComponentConfig> getFallbackConfig() {
     Project p = getProject();
@@ -193,7 +193,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
 
   private static Map<String, String> createLabels(ComponentConfig config) {
     Map<String,String> result =  new HashMap<String, String >() {{
-        put(Labels.APP, config.getName());
+        put(Labels.NAME, config.getName());
       }};
 
     for (Label label : config.getLabels()) {

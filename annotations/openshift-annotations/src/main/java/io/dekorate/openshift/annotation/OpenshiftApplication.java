@@ -48,14 +48,14 @@ import java.lang.annotation.Target;
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OpenshiftApplication {
+
   /**
-   * The group of the application.
+   * The name of the collection of componnet this component belongs to.
    * This value will be use as:
-   * - docker image repo
    * - labeling resources
    * @return The specified group name.
    */
-  String group() default "";
+  String partOf() default "";
 
   /**
    * The name of the application.

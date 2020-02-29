@@ -33,12 +33,13 @@ import java.lang.annotation.Target;
 public @interface KubernetesApplication {
 
   /**
-   * The group of the application. This value will be use as: - docker image repo
+   * The name of the collection of componnet this component belongs to.
+   * This value will be use as:
+   * - docker image repo
    * - labeling resources
-   * 
    * @return The specified group name.
    */
-  String group() default "";
+  String partOf() default "";
 
   /**
    * The name of the application. This value will be used for naming Kubernetes

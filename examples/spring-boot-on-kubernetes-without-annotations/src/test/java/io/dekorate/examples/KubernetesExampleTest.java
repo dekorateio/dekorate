@@ -40,7 +40,7 @@ class KubernetesExampleTest {
     assertEquals("Deployment", deployment.getKind());
     final Map<String, String> labels = deployment.getMetadata().getLabels();
     assertEquals("bar", labels.get("foo"));
-    assertEquals("annotationless", labels.get(Labels.GROUP));
+    assertEquals("annotationless", labels.get(Labels.PART_OF));
     assertEquals("bar-volume", deployment.getSpec().getTemplate().getSpec().getVolumes().get(0).getName());
     assertEquals("foo-map", deployment.getSpec().getTemplate().getSpec().getVolumes().get(0).getConfigMap().getName());
   }

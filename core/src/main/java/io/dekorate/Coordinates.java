@@ -20,7 +20,7 @@ package io.dekorate;
  */
 public interface Coordinates {
 
-  String getGroup();
+  String getPartOf();
   String getName();
   String getVersion();
 }

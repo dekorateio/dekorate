@@ -118,7 +118,8 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       ? imageConfig.getImage()
       : Images.getImage(imageConfig.isAutoPushEnabled()
                         ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
-                        : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
+                        : imageConfig.getRegistry(),
+                        imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     resources.decorate(KUBERNETES, new ApplyImageDecorator(config.getName(), image));
   }
@@ -235,7 +236,7 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     }
     return new ImageConfigurationBuilder()
       .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : appConfig.getProject())
-      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : appConfig.getGroup())
+      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
       .withName(imageConfig.getName() != null ? imageConfig.getName() : appConfig.getName())
       .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : appConfig.getVersion())
       .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
