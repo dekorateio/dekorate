@@ -36,15 +36,14 @@ import io.sundr.builder.annotations.Pojo;
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface HalkyonComponent {
-  
+
   /**
-   * The group of the application.
+   * The name of the collection of componnet this component belongs to.
    * This value will be use as:
-   * - docker image repo
    * - labeling resources
    * @return The specified group name.
    */
-  String group() default "";
+  String partOf() default "";
 
   /**
    * The name of the application.

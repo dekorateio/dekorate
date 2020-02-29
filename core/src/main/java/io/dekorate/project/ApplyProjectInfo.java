@@ -23,14 +23,8 @@ import io.dekorate.utils.Strings;
 
 public class ApplyProjectInfo extends Configurator<ConfigurationFluent> {
  
-  private static final String APP_GROUP = "app.group";
   private static final String APP_NAME = "app.name";
   private static final String APP_VERSION = "app.version";
-
-  private static final String USER_NAME_KEY = "user.name";
-  private static final String FALLBACK_USER_NAME = "default";
-
-  private static final String DEFAULT_GROUP = System.getProperty(USER_NAME_KEY, FALLBACK_USER_NAME).replaceAll(" *", "");
 
   private final Project project;
 
@@ -43,15 +37,12 @@ public class ApplyProjectInfo extends Configurator<ConfigurationFluent> {
     fluent.withProject(project);
     if (fluent instanceof BaseConfigFluent) {
       BaseConfigFluent baseConfigFluent = (BaseConfigFluent) fluent;
-      baseConfigFluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(baseConfigFluent.getGroup()) ? baseConfigFluent.getGroup() : DEFAULT_GROUP))
-            .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(baseConfigFluent.getName()) ? baseConfigFluent.getName() : project.getBuildInfo().getName()))
+      baseConfigFluent.withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(baseConfigFluent.getName()) ? baseConfigFluent.getName() : project.getBuildInfo().getName()))
             .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(baseConfigFluent.getVersion()) ? baseConfigFluent.getVersion() : project.getBuildInfo().getVersion()));
     } else if (fluent instanceof ImageConfigurationFluent) {
       ImageConfigurationFluent imageConfigurationFluent = (ImageConfigurationFluent) fluent;
-      imageConfigurationFluent.withGroup(System.getProperty(APP_GROUP, Strings.isNotNullOrEmpty(imageConfigurationFluent.getGroup()) ? imageConfigurationFluent.getGroup() : DEFAULT_GROUP))
-            .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(imageConfigurationFluent.getName()) ? imageConfigurationFluent.getName() : project.getBuildInfo().getName()))
+      imageConfigurationFluent.withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(imageConfigurationFluent.getName()) ? imageConfigurationFluent.getName() : project.getBuildInfo().getName()))
             .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(imageConfigurationFluent.getVersion()) ? imageConfigurationFluent.getVersion() : project.getBuildInfo().getVersion()));
- 
     }
   }
 }

@@ -24,27 +24,27 @@ import java.util.Map;
 @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
 public class ApplicationConfiguration extends Configuration implements Coordinates {
 
-  private String group;
+  private String partOf;
   private String name;
   private String version;
 
   public ApplicationConfiguration() {
   }
 
-  public ApplicationConfiguration(Project project, Map<ConfigKey, Object> attributes, String group, String name, String version) {
+  public ApplicationConfiguration(Project project, Map<ConfigKey, Object> attributes, String partOf, String name, String version) {
     super(project, attributes);
-    this.group = group;
+    this.partOf = partOf;
     this.name = name;
     this.version = version;
   }
 
   @Override
-  public String getGroup() {
-    return group;
+  public String getPartOf() {
+    return partOf;
   }
 
-  public void setGroup(String group) {
-    this.group = group;
+  public void setPartOf(String partOf) {
+    this.partOf = partOf;
   }
 
   @Override

@@ -40,7 +40,7 @@ public class Issue276Test {
     assertTrue(component.isPresent());
     assertTrue(component.get().getSpec().isExposeService());
     assertEquals("customName", component.get().getMetadata().getName());
-    assertEquals("customName", component.get().getMetadata().getLabels().get(Labels.APP));
+    assertEquals("customName", component.get().getMetadata().getLabels().get(Labels.NAME));
     assertEquals(9090, (long)component.get().getSpec().getPort());
   }
 

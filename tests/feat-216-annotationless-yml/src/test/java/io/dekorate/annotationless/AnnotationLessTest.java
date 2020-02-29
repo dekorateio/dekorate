@@ -40,7 +40,6 @@ public class AnnotationLessTest {
     assertEquals(2, d.getSpec().getReplicas().intValue());
     assertEquals("bar", labels.get("foo"));
     assertEquals("baz", labels.get("zoo"));
-    assertEquals("annotationless", labels.get(Labels.GROUP));
   }
 
 

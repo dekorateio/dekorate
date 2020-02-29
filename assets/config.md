@@ -54,7 +54,7 @@ The document is structured as follows.
 ## Kubernetes
 | Property                                            | Type                          | Description | Default Value |
 |-----------------------------------------------------|-------------------------------|-------------|---------------|
-| dekorate.kubernetes.group                           | String                        |             |               |
+| dekorate.kubernetes.part-of                         | String                        |             |               |
 | dekorate.kubernetes.name                            | String                        |             |               |
 | dekorate.kubernetes.version                         | String                        |             |               |
 | dekorate.kubernetes.init-containers                 | Container[]                   |             |               |
@@ -228,7 +228,7 @@ The section below describes all the available subtypes.
 ## Openshift
 | Property                                           | Type                          | Description | Default Value |
 |----------------------------------------------------|-------------------------------|-------------|---------------|
-| dekorate.openshift.group                           | String                        |             |               |
+| dekorate.openshift.part-of                         | String                        |             |               |
 | dekorate.openshift.name                            | String                        |             |               |
 | dekorate.openshift.version                         | String                        |             |               |
 | dekorate.openshift.init-containers                 | Container[]                   |             |               |
@@ -274,7 +274,7 @@ The section below describes all the available subtypes.
 
 | Property                                         | Type                          | Description | Default Value |
 |--------------------------------------------------|-------------------------------|-------------|---------------|
-| dekorate.knative.group                           | String                        |             |               |
+| dekorate.knative.part-o                          | String                        |             |               |
 | dekorate.knative.name                            | String                        |             |               |
 | dekorate.knative.version                         | String                        |             |               |
 | dekorate.knative.labels                          | Label[]                       |             |               |

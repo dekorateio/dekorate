@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class Issue442MultiPlatformTest {
 
@@ -41,7 +42,7 @@ public class Issue442MultiPlatformTest {
     assertEquals("o-name", d.getMetadata().getName());
     Map<String, String> labels = d.getMetadata().getLabels();
     assertNotNull(labels);
-    assertEquals(System.getProperty("user.name"), labels.get(Labels.GROUP));
+    assertFalse(labels.containsKey(Labels.PART_OF));
   }
 
   @Test
@@ -53,7 +54,7 @@ public class Issue442MultiPlatformTest {
     assertEquals("k-name", d.getMetadata().getName());
     Map<String, String> labels = d.getMetadata().getLabels();
     assertNotNull(labels);
-    assertEquals(System.getProperty("user.name"), labels.get(Labels.GROUP));
+    assertFalse(labels.containsKey(Labels.PART_OF));
     assertEquals("1.0-kube", labels.get(Labels.VERSION));
   }
 
@@ -65,7 +66,7 @@ public class Issue442MultiPlatformTest {
     assertNotNull(s);
     Map<String, String> labels = s.getMetadata().getLabels();
     assertNotNull(labels);
-    assertEquals("kn-group", labels.get(Labels.GROUP));
+    assertEquals("kn-group", labels.get(Labels.PART_OF));
     assertEquals("1.0-knative", labels.get(Labels.VERSION));
   }
 

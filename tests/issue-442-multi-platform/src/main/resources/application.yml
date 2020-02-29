@@ -7,7 +7,5 @@ dekorate:
     name: k-name
     version: 1.0-kube
   knative:
-    group: kn-group
+    part-of: kn-group
     version: 1.0-knative
-
-    

@@ -99,12 +99,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     KubernetesList list = getOpenshiftResources(context);
 
     OpenshiftConfig openshiftConfig = getOpenshiftConfig();
-    ImageConfiguration imageConfiguration = new ImageConfigurationBuilder()
-            .withName(openshiftConfig.getName())
-            .withGroup(openshiftConfig.getGroup())
-            .withVersion(openshiftConfig.getVersion())
-          .build();
-
+    ImageConfiguration imageConfiguration = ImageConfiguration.from(openshiftConfig);
 
     BuildService buildService = null;
     try {

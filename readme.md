@@ -311,15 +311,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "my-gradle-app"
-      version: "1.0-SNAPSHOT"
-      group: "default"
+      app.kubernetes.io/name: "my-gradle-app"
+      app.kubernetes.io/version: "1.0-SNAPSHOT"
   template:
     metadata:
       labels:
-        app: "my-gradle-app"
-        version: "1.0-SNAPSHOT"
-        group: "default"
+        app.kubernetes.io/name: "my-gradle-app"
+        app.kubernetes.io/version: "1.0-SNAPSHOT"
     spec:
       containers:
       - env:
@@ -1376,8 +1374,8 @@ items:
   kind: "Component"
   metadata:
     labels:
-      app: "hello-world"
-  version: "0.0.1-SNAPSHOT"
+      app.kubernetes.io/name: "hello-world"
+      app.kubernetes.io/version: "0.0.1-SNAPSHOT"
   name: "hello-world"
   spec:
     deploymentMode: "build"
