@@ -86,7 +86,8 @@ public class FileProjectFactory {
     }
     String url = Git.getSafeRemoteUrl(path, Git.ORIGIN).orElse(null);
     String branch = Git.getBranch(path).orElse(null);
-    scmInfo = Optional.of(new ScmInfo(path, url, branch, ""));
+    String sha = Git.getCommitSHA(path).orElse(null);
+    scmInfo = Optional.of(new ScmInfo(path, url, branch, sha));
     return scmInfo;
   }
 
