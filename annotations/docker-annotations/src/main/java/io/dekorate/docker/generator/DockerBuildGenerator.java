@@ -1,18 +1,18 @@
 /**
  * Copyright 2018 The original authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
 **/
 
 package io.dekorate.docker.generator;
@@ -29,9 +29,12 @@ import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
-import io.dekorate.docker.adapter.*;
+import io.dekorate.docker.adapter.DockerBuildConfigAdapter;
 import io.dekorate.docker.annotation.DockerBuild;
-import io.dekorate.docker.config.*;
+import io.dekorate.docker.config.DockerBuildConfig;
+import io.dekorate.docker.config.DockerBuildConfigBuilder;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.project.ApplyProjectInfo;
 
 public interface DockerBuildGenerator extends Generator, WithSession, WithProject {
 
@@ -46,15 +49,21 @@ public interface DockerBuildGenerator extends Generator, WithSession, WithProjec
 
   @Override
   default void add(Map map) {
-    on(new PropertyConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuild.class))));
+    on(new PropertyConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuild.class))
+                                                                                 .accept(new ApplyProjectInfo(getProject()))
+                                                                                 .accept(new ApplyBuildToImageConfiguration())));
   }
 
   @Override
   default void add(Element element) {
     DockerBuild enableDockerBuild = element.getAnnotation(DockerBuild.class);
     on(enableDockerBuild != null
-      ? new AnnotationConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(enableDockerBuild))
-      : new AnnotationConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()));
+      ? new AnnotationConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(enableDockerBuild)
+                                                                                 .accept(new ApplyProjectInfo(getProject()))
+                                                                                 .accept(new ApplyBuildToImageConfiguration()))
+      : new AnnotationConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
+                                                                                 .accept(new ApplyProjectInfo(getProject()))
+                                                                                 .accept(new ApplyBuildToImageConfiguration())));
   }
 
   default void on(ConfigurationSupplier<DockerBuildConfig> config) {
