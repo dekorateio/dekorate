@@ -84,11 +84,14 @@ public class FileProjectFactory {
     if (path == null) {
       return scmInfo;
     }
-    String url = Git.getSafeRemoteUrl(path, Git.ORIGIN).orElse(null);
-    String branch = Git.getBranch(path).orElse(null);
-    String sha = Git.getCommitSHA(path).orElse(null);
-    scmInfo = Optional.of(new ScmInfo(path, url, branch, sha));
-    return scmInfo;
+    try {
+      String url = Git.getSafeRemoteUrl(path, Git.ORIGIN).orElse(null);
+      String branch = Git.getBranch(path).orElse(null);
+      String sha = Git.getCommitSHA(path).orElse(null);
+      scmInfo = Optional.of(new ScmInfo(path, url, branch, sha));
+      return scmInfo;
+    } catch (Exception e) {
+      return Optional.empty();
+    }
   }
-
 }

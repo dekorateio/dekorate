@@ -20,7 +20,6 @@
 
 package io.dekorate.utils;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -80,7 +79,7 @@ public class Git {
         .filter(l->l.startsWith(URL) && l.contains(EQUALS))
         .map(s->s.split(EQUALS)[1].trim())
         .findAny();
-    } catch (IOException e) {
+    } catch (Exception e) {
       return Optional.empty();
     }
   }
@@ -114,7 +113,7 @@ public class Git {
         .filter(l -> l.startsWith(REF) &&  l.contains(SLASH))
         .map(s -> s.substring(s.lastIndexOf(SLASH) + 1).trim())
         .findAny();
-    } catch (IOException e) {
+    } catch (Exception e) {
       return Optional.empty();
     }
   }
@@ -130,10 +129,11 @@ public class Git {
         .filter(l -> l.startsWith(REF) &&  l.contains(COLN))
          .map(s -> s.substring(s.lastIndexOf(COLN) + 1).trim())
          .map(ref -> path.resolve(DOT_GIT).resolve(ref))
+         .filter(ref -> ref.toFile().exists())
          .map(Strings::read)
          .map(String::trim)
          .findAny();
-    } catch (IOException e) {
+    } catch (Exception e) {
       return Optional.empty();
     }
   }
