@@ -71,14 +71,16 @@ public @interface HalkyonComponent {
 
 
   DeploymentMode deploymentMode() default DeploymentMode.dev;
-  
+
   boolean exposeService() default false;
-  
+
   Env[] envs() default {};
 
   Label[] labels() default {};
-  
+
   String buildType() default "s2i";
-  
+
   String remote() default Git.ORIGIN;
+
+  HalkyonCapabilities[] capabilities() default {};
 }

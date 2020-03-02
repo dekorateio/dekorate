@@ -30,8 +30,10 @@ import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.halkyon.config.ComponentConfig;
 import io.dekorate.halkyon.config.ComponentConfigBuilder;
+import io.dekorate.halkyon.config.CapabilitiesConfig;
 import io.dekorate.halkyon.config.EditableComponentConfig;
 import io.dekorate.halkyon.decorator.AddBuildConfigToComponentDecorator;
+import io.dekorate.halkyon.decorator.AddCapabilityToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddEnvToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddExposedPortToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddRuntimeTypeToComponentDecorator;
@@ -101,12 +103,12 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   private void addVisitors(ComponentConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
-  
+
     generateBuildConfigIfNeeded(config);
-    
+
     if (config.isExposeService()) {
       resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
-      
+
       BaseConfig kubernetesConfig = getKubernetesConfig();
       Port[] ports = kubernetesConfig.getPorts();
       if (ports.length == 0) {
@@ -114,17 +116,24 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       }
       resources.decorateCustom(ResourceGroup.NAME, new AddExposedPortToComponentDecorator(ports[0].getContainerPort()));
     }
-    
+
     if (type != null) {
       resources.decorateCustom(ResourceGroup.NAME, new AddRuntimeTypeToComponentDecorator(type)); //
     }
-    
+
     if (version != null) {
       resources.decorateCustom(ResourceGroup.NAME, new AddRuntimeVersionToComponentDecorator(version));
     }
     resources.decorateCustom(ResourceGroup.NAME, new DeploymentModeDecorator(config.getDeploymentMode()));
     for (Env env : config.getEnvs()) {
       resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
+    }
+    if (config.getCapabilities().length > 0) {
+      CapabilitiesConfig[] capabilities = config.getCapabilities();
+      for (int i = 0; i < capabilities.length; i++) {
+        resources.decorateCustom(ResourceGroup.NAME, new AddCapabilityToComponentDecorator(capabilities[i]));
+
+      }
     }
   }
   
