@@ -25,6 +25,7 @@
       <module>feat-275-provide-port</module>
       <module>feat-279-image-pull-secrets</module>
       <module>feat-347-thorntail-annotationless</module>
+      <module>feat-452-new-capabilities-contract</module>
       <module>issue-65-avoid-Env-duplication</module>
       <module>issue-130-empty-generic-java-project</module>
       <module>issue-188-json-yml-generation</module>

@@ -35,6 +35,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
   "exposeService",
   "storage",
   "envs",
+  "capabilities",
   "buildConfig"
 })
 @Buildable(editableEnabled = false, builderPackage = "io.dekorate.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
@@ -54,11 +55,12 @@ public class ComponentSpec {
   private Storage storage;
   private Env[] envs;
   private BuildConfig buildConfig;
+  private Capabilities capabilities;
   
   public ComponentSpec() {
   }
   
-  public ComponentSpec(DeploymentMode deploymentMode, String runtime, String version, boolean exposeService, Integer port, Storage storage, Env[] envs, BuildConfig buildConfig) {
+  public ComponentSpec(DeploymentMode deploymentMode, String runtime, String version, boolean exposeService, Integer port, Storage storage, Env[] envs, BuildConfig buildConfig, Capabilities capabilities) {
     this.deploymentMode = deploymentMode;
     this.runtime = runtime;
     this.version = version;
@@ -66,6 +68,7 @@ public class ComponentSpec {
     this.port = port;
     this.storage = storage;
     this.envs = envs;
+    this.capabilities = capabilities;
     this.buildConfig = buildConfig;
   }
   
@@ -131,5 +134,13 @@ public class ComponentSpec {
   
   public void setBuildConfig(BuildConfig buildConfig) {
     this.buildConfig = buildConfig;
+  }
+
+  public Capabilities getCapabilities() {
+    return capabilities;
+  }
+
+  public void setCapabilities(Capabilities capabilities) {
+    this.capabilities = capabilities;
   }
 }
