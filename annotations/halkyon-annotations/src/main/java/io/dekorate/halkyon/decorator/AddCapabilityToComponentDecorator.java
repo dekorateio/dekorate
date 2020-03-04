@@ -2,9 +2,7 @@ package io.dekorate.halkyon.decorator;
 
 import io.dekorate.halkyon.config.CapabilitiesConfig;
 import io.dekorate.halkyon.config.CapabilityConfig;
-import io.dekorate.halkyon.config.ComponentCapabilityConfig;
 import io.dekorate.halkyon.config.RequiredCapabilityConfig;
-import io.dekorate.halkyon.model.Capability;
 import io.dekorate.halkyon.model.ComponentCapability;
 import io.dekorate.halkyon.model.ComponentCapabilityBuilder;
 import io.dekorate.halkyon.model.ComponentSpecBuilder;
@@ -38,12 +36,12 @@ public class AddCapabilityToComponentDecorator extends Decorator<ComponentSpecBu
   }
 
   /**
-   * Create a {@link ComponentCapability} from a {@link ComponentCapabilityConfig}.
+   * Create a {@link ComponentCapability} from a {@link CapabilityConfig}.
    *
    * @param config The config.
    * @return The ComponentCapability.
    */
-  private ComponentCapability createComponentCapability(ComponentCapabilityConfig config) {
+  private ComponentCapability createComponentCapability(CapabilityConfig config) {
     return new ComponentCapabilityBuilder().withName(config.getName())
       .withNewSpec()
       .withCategory(config.getCategory())
@@ -67,6 +65,7 @@ public class AddCapabilityToComponentDecorator extends Decorator<ComponentSpecBu
     return new RequiredComponentCapabilityBuilder()
       .withBoundTo(config.getBoundTo())
       .withName(config.getName())
+      .withAutoBindable(config.isAutoBindable())
       .withNewSpec()
       .withCategory(config.getCategory())
       .withType(config.getType())

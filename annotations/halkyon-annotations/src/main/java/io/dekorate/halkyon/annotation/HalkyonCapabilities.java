@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface HalkyonCapabilities {
 
-  HalkyonComponentCapability[] provides() default {};
+  HalkyonCapability[] provides() default {};
 
   HalkyonRequiredCapability[] requires() default {};
 }

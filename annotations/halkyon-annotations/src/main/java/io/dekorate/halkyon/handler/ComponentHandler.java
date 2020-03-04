@@ -128,7 +128,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     for (Env env : config.getEnvs()) {
       resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
     }
-    if (config.getCapabilities().length > 0) {
+    if (config.getCapabilities() != null) {
       CapabilitiesConfig[] capabilities = config.getCapabilities();
       for (int i = 0; i < capabilities.length; i++) {
         resources.decorateCustom(ResourceGroup.NAME, new AddCapabilityToComponentDecorator(capabilities[i]));

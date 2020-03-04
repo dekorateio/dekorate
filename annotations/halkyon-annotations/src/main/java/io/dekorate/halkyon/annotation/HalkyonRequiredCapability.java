@@ -24,4 +24,10 @@ public @interface HalkyonRequiredCapability {
   String type() default "";
 
   String boundTo() default "";
+
+  boolean autoBindable() default false;
+
+  Parameter[] parameters() default {};
+
+
 }

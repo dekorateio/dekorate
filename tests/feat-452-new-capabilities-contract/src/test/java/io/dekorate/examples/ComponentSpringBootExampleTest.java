@@ -32,11 +32,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ComponentSpringBootExampleTest {
 
   @Test
-  public void shouldContainComponentAndLink() {
+  public void shouldContainComponent() {
     KubernetesList list = Serialization.unmarshalAsList(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
@@ -51,6 +52,7 @@ public class ComponentSpringBootExampleTest {
     assertEquals("postgres-db",requires[0].getBoundTo());
     assertEquals("database",requires[0].getSpec().getCategory());
     assertEquals("postgres",requires[0].getSpec().getType());
+    assertTrue(requires[0].isAutoBindable());
 
     ComponentCapability[] provides = capabilities.getProvides();
     assertEquals("hello-world-endpoint",provides[0].getName());
