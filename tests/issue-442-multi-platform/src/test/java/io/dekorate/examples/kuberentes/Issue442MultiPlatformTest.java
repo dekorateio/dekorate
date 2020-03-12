@@ -19,7 +19,7 @@ package io.dekorate.examples.kubernetes;
 import io.dekorate.deps.kubernetes.api.model.*;
 import io.dekorate.deps.openshift.api.model.*;
 import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
-import io.dekorate.deps.knative.serving.v1alpha1.Service;
+import io.dekorate.deps.knative.serving.v1.Service;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Labels;
 import java.net.URL;

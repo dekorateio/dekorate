@@ -26,8 +26,8 @@ import io.dekorate.Resources;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.deps.knative.serving.v1alpha1.Service;
-import io.dekorate.deps.knative.serving.v1alpha1.ServiceBuilder;
+import io.dekorate.deps.knative.serving.v1.Service;
+import io.dekorate.deps.knative.serving.v1.ServiceBuilder;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.knative.config.EditableKnativeConfig;
 import io.dekorate.knative.config.KnativeConfig;
@@ -109,7 +109,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       ? imageConfig.getImage()
       : Images.getImage(imageConfig.isAutoPushEnabled()
                         ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
-                        : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion()); 
+                        : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     return new ServiceBuilder()
       .withNewMetadata()
@@ -117,18 +117,14 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       .withLabels(Labels.createLabels(config))
       .endMetadata()
       .withNewSpec()
-      .withNewRunLatest()
-      .withNewConfiguration()
-      .withNewRevisionTemplate()
+      .withNewTemplate()
       .withNewSpec()
-      .withNewContainer()
+      .addNewContainer()
       .withName(config.getName())
       .withImage(image)
       .endContainer()
       .endSpec()
-      .endRevisionTemplate()
-      .endConfiguration()
-      .endRunLatest()
+      .endTemplate()
       .endSpec()
       .build();
   }
