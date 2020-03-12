@@ -21,7 +21,7 @@ import io.dekorate.deps.kubernetes.api.model.Container;
 import io.dekorate.deps.kubernetes.api.model.Probe;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
-import io.dekorate.deps.knative.serving.v1alpha1.Service;
+import io.dekorate.deps.knative.serving.v1.Service;
 import io.dekorate.utils.Serialization;
 import java.net.URL;
 import java.util.Optional;
@@ -48,7 +48,7 @@ public class Issue409Test {
   public void shouldHaveCustomImageInKnativeYaml() {
     Service s = Serialization.unmarshal(Service.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(s);
-    Container c = s.getSpec().getRunLatest().getConfiguration().getRevisionTemplate().getSpec().getContainer();
+    Container c = s.getSpec().getTemplate().getSpec().getContainers().get(0);
     assertNotNull(c);
     String image = c.getImage();
     assertEquals("my-group/my-name:my-version", image);
