@@ -90,8 +90,10 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
 
     } finally {
       Thread.currentThread().setContextClassLoader(tccl);
-      OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
-      hook.register();
+      if (!hooks.isEmpty()) {
+        OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
+        hook.register();
+      }
     }
   }
 }

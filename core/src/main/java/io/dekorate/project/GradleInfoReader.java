@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.io.FileInputStream;
 import java.util.Collections;
 
+import io.dekorate.utils.Gradle;
 import io.dekorate.utils.Strings;
 import io.dekorate.DekorateException;
 
@@ -109,12 +110,16 @@ public class GradleInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension, GRADLE,
-      outputDir.resolve(sb.toString()),
-                         //TODO: This need to be smarter and also cover groovy code.
-                         root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN),
-                         root.resolve(SRC).resolve(MAIN).resolve(RESOURCES)
-    );
+    return new BuildInfoBuilder()
+      .withName(name)
+      .withVersion(version)
+      .withPackaging(extension)
+      .withBuildTool(GRADLE)
+      .withBuildToolVersion(Gradle.getVersion(root))
+      .withOutputFile(outputDir.resolve(sb.toString()))
+      .withClassOutputDir(root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN))
+      .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
+      .build();
   }
 
   /**

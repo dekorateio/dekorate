@@ -84,6 +84,17 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
    * @param config    The config.
    */
   protected void addDecorators(String group, C config) {
+    if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
+      resources.decorate(new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
+    }
+
+    if (config.getImagePullPolicy() != ImagePullPolicy.IfNotPresent) {
+      resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
+    }
+
+    for (String imagePullSecret: config.getImagePullSecrets()) {
+      resources.decorate(new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
+    }
 
     //Metadata handling
     resources.decorate(new AddVcsUrlAnnotationDecorator());

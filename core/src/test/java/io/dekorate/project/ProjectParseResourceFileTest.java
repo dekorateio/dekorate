@@ -38,7 +38,7 @@ class ProjectParseResourceFileTest {
 
     @Test
     void missingFile() {
-        Project project = new Project(null, new BuildInfo(null, null, null, null, null, tempPath),null);
+      Project project = new Project(null, new BuildInfoBuilder().withClassOutputDir(tempPath).build() , null);
 
         Map<String, Object> result = project.parseResourceFile(NON_EXISTENT_PROPERTIES);
         assertThat(result).isEmpty();
@@ -49,7 +49,7 @@ class ProjectParseResourceFileTest {
         URI applicationPropertiesURI = ProjectParseResourceFileTest.class.getClassLoader().getResource(APPLICATION_PROPERTIES).toURI();
         Files.move(Paths.get(applicationPropertiesURI), tempPath.resolve(APPLICATION_PROPERTIES));
 
-        Project project = new Project(null, new BuildInfo(null, null, null, null, null, tempPath), null );
+        Project project = new Project(null, new BuildInfoBuilder().withClassOutputDir(tempPath).build() , null);
 
         Map<String, Object> result = project.parseResourceFile(APPLICATION_PROPERTIES);
         assertThat(result).containsOnlyKeys("key1", "key2", "k1")
@@ -62,7 +62,7 @@ class ProjectParseResourceFileTest {
         URI applicationYamlURI = ProjectParseResourceFileTest.class.getClassLoader().getResource(APPLICATION_YAML).toURI();
         Files.move(Paths.get(applicationYamlURI), tempPath.resolve(APPLICATION_YAML));
 
-        Project project = new Project(null, new BuildInfo(null, null, null, null, null, tempPath),null);
+        Project project = new Project(null, new BuildInfoBuilder().withClassOutputDir(tempPath).build() , null);
 
         Map<String, Object> result = project.parseResourceFile(APPLICATION_YAML);
         assertThat(result).containsOnlyKeys("key1", "key2", "k1")

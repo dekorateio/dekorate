@@ -15,31 +15,57 @@
  */
 package io.dekorate.utils;
 
-import io.dekorate.project.Project;
-
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.Path;
+
+import io.dekorate.project.Project;
 
 public class Exec {
 
   public static ProjectExec inProject(Project project) {
-    return new ProjectExec(project);
+    return new ProjectExec(project.getRoot());
   }
+
+  public static ProjectExec inPath(Path path) {
+    return new ProjectExec(path);
+  }
+
 
    public static class ProjectExec {
 
-     private  final Project project;
+     private final Path path;
+     private final OutputStream out;
 
-     private ProjectExec(Project project) {
-       this.project = project;
+     private ProjectExec(Path path) {
+       this(path, null);
+     }
+
+     private ProjectExec(Path path, OutputStream out) {
+       this.path = path;
+       this.out = out;
+     }
+
+     public ProjectExec redirectingOutput(OutputStream out) {
+       return new ProjectExec(path, out);
+     }
+
+     public ProjectExec redirectingOutput() {
+       return new ProjectExec(path, new ByteArrayOutputStream());
+     }
+
+     public OutputStream getOutput() {
+       return out;
      }
 
      public boolean commands(String... commands) {
        Process process = null;
        try {
          process = new ProcessBuilder()
-           .directory(project.getRoot().toFile())
+           .directory(path.toFile())
            .command(commands)
            .redirectErrorStream(true)
            .start();
@@ -48,7 +74,12 @@ public class Exec {
               BufferedReader reader = new BufferedReader(isr)) {
 
            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-             System.out.println(line);
+             if (out != null) {
+               out.write(line.getBytes());
+               out.write(System.lineSeparator().getBytes());
+             } else {
+               System.out.println(line);
+             }
            }
            process.waitFor();
          }

@@ -87,7 +87,16 @@ public class SbtInfoReader implements BuildInfoReader {
     String extension = JAR;
     Path outputFile = root.resolve(TARGET).resolve(name + UNDERSCORE + scalaVersion + DASH + version + DOT + extension);
     Path resourceOutputDir = root.resolve(TARGET).resolve(CLASSES);
-    return new BuildInfo(name, version, JAR, SBT, outputFile, resourceOutputDir);
+
+    return new BuildInfoBuilder()
+      .withName(name)
+      .withVersion(version)
+      .withPackaging(JAR)
+      .withBuildTool(SBT)
+      .withBuildToolVersion(null) //TODO: Implement at some point
+      .withOutputFile(outputFile)
+      .withResourceDir(resourceOutputDir)
+      .build();
   }
 
   /**
