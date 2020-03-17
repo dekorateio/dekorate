@@ -94,7 +94,15 @@
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
-    
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>tekton-client</artifactId>
+      <version>${version.kubernetes-client}</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+   
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>servicecatalog-model</artifactId>
@@ -197,6 +205,8 @@
                   <include>io.fabric8:openshift-client</include>
                   <include>io.fabric8:knative-model</include>
                   <include>io.fabric8:knative-client</include>
+                  <include>io.fabric8:tekton-model</include>
+                  <include>io.fabric8:tekton-client</include>
                   <include>io.fabric8:servicecatalog-model</include>
                   <include>io.fabric8:servicecatalog-client</include>
                   <include>me.snowdrop:application-crd-model</include>
@@ -232,6 +242,10 @@
                 <relocation>
                   <pattern>io.fabric8.knative</pattern>
                   <shadedPattern>io.dekorate.deps.knative</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>io.fabric8.tekton</pattern>
+                  <shadedPattern>io.dekorate.deps.tekton</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>io.fabric8.servicecatalog</pattern>

@@ -16,6 +16,7 @@
 
 package io.dekorate.utils;
 
+
 public class Images {
 
   private static final String SLASH = "/";

@@ -15,6 +15,7 @@
  */
 package io.dekorate.project;
 
+import io.dekorate.utils.Maven;
 import io.dekorate.utils.Strings;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,6 +41,9 @@ public class MavenInfoReader implements BuildInfoReader {
   private static final String PARENT = "parent";
   private static final String POM_XML = "pom.xml";
 
+  private static final String SRC = "src";
+  private static final String MAIN = "main";
+  private static final String RESOURCES = "resources";
   private static final String TARGET = "target";
   private static final String CLASSES = "classes";
   public static String OUTPUTFILE_FORMAT = "%s-%s.%s";
@@ -60,10 +64,17 @@ public class MavenInfoReader implements BuildInfoReader {
     String name = getArtifactId(document);
     String version = getVersion(document);
     String packaging = getPackaging(document);
-    return new BuildInfo(name, version, packaging, MAVEN,
-      root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)),
-      root.resolve(TARGET).resolve(CLASSES)
-    );
+
+    return new BuildInfoBuilder()
+      .withName(name)
+      .withVersion(version)
+      .withPackaging(packaging)
+      .withBuildTool(MAVEN)
+      .withBuildToolVersion(Maven.getVersion(root))
+      .withOutputFile(root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)))
+      .withClassOutputDir(root.resolve(TARGET).resolve(CLASSES))
+      .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
+      .build();
   }
 
 

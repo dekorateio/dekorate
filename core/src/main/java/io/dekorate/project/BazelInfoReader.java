@@ -88,11 +88,16 @@ public class BazelInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension, BAZEL, outputDir.resolve(sb.toString()),
-      root.resolve(BAZEL_OUT)
-    );
+    return new BuildInfoBuilder()
+      .withName(name)
+      .withVersion(version)
+      .withPackaging(extension)
+      .withBuildTool(BAZEL)
+      .withBuildToolVersion(null) //TODO: Implement at some point.
+      .withOutputFile(outputDir.resolve(sb.toString()))
+      .withClassOutputDir(root.resolve(BAZEL_OUT))
+      .build();
   }
-
 
   /**
    * Parse BUILD and read the jar configuration as a {@link Map}.

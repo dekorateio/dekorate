@@ -49,7 +49,7 @@ public class Git {
   public static Path getRoot(Path path) {
     Path root = path;
     while (root != null && !root.resolve(Git.DOT_GIT).toFile().exists()) {
-      root = root.getParent();
+      root = root.toAbsolutePath().getParent();
     }
     return root;
   }

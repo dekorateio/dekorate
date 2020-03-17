@@ -53,7 +53,6 @@ class OpenshiftApplicationGeneratorTest {
     session.setWriter(writer);
 
     OpenshiftApplicationGenerator generator = new OpenshiftApplicationGenerator() {};
-    System.out.println("Project root:" + generator.getProject());
 
     Map<String, Object> map = new HashMap<String, Object>() {{
       put(OpenshiftApplication.class.getName(), new HashMap<String, Object>() {{
