@@ -131,7 +131,9 @@ public class Packaging {
     FileOutputStream fout = new FileOutputStream(outputPath);
     BufferedOutputStream bout = new BufferedOutputStream(fout);
     //BZip2CompressorOutputStream bzout = new BZip2CompressorOutputStream(bout);
-    return new TarArchiveOutputStream(bout);
+    TarArchiveOutputStream stream = new TarArchiveOutputStream(bout);
+    stream.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+    return stream;
   }
 
   public static void tar(Path inputPath, Path outputPath) throws IOException {
