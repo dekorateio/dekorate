@@ -17,5 +17,5 @@
 package io.dekorate.openshift;
 
 public class OpenshiftAnnotations {
-  public static final String VCS_URL = "app.opesnhift.io/vcs-url";
+  public static final String VCS_URL = "app.openshift.io/vcs-url";
 }
