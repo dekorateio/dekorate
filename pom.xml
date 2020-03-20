@@ -60,7 +60,7 @@
     <version.assertj>3.11.1</version.assertj>
     <!-- Other Testing Dependencies (frameworks, tools, etc) -->
     <!-- Note: Dekorate DOES NOT depend on these, just some integration tests -->
-    <version.spring-boot>2.1.6.RELEASE</version.spring-boot>
+    <version.spring-boot>2.1.13.RELEASE</version.spring-boot>
     <version.thorntail>2.5.0.Final</version.thorntail>
     
     <!-- Plugins -->
