@@ -44,7 +44,7 @@ public class ComponentSpringBootExampleTest {
     Assertions.assertEquals(1, items.size());
     Component component = (Component) items.get(0);
     Assertions.assertEquals("Component", component.getKind());
-    assertEquals("feat-452-new-capabilities-contract", component.getSpec().getBuildConfig().getModuleDirName());
+    assertEquals("feat-452-halkyon-requirements-with-annotations", component.getSpec().getBuildConfig().getModuleDirName());
     Capabilities capabilities = component.getSpec().getCapabilities();
 
     RequiredComponentCapability[] requires = capabilities.getRequires();

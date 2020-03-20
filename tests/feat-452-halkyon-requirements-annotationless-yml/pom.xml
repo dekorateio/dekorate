@@ -11,7 +11,7 @@
   </parent>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>feat-452-new-capabilities-contract</artifactId>
+  <artifactId>feat-452-halkyon-requirements-annotationless-yml</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Halkyon :: Integration Test for Issue #452</name>
   <description>Ensure that new Components contracts are supported</description>
 
