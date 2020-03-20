@@ -28,12 +28,13 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.halkyon.config.CapabilityConfig;
 import io.dekorate.halkyon.config.ComponentConfig;
 import io.dekorate.halkyon.config.ComponentConfigBuilder;
-import io.dekorate.halkyon.config.CapabilitiesConfig;
 import io.dekorate.halkyon.config.EditableComponentConfig;
+import io.dekorate.halkyon.config.RequiredCapabilityConfig;
 import io.dekorate.halkyon.decorator.AddBuildConfigToComponentDecorator;
-import io.dekorate.halkyon.decorator.AddCapabilityToComponentDecorator;
+import io.dekorate.halkyon.decorator.AddCapabilitiesToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddEnvToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddExposedPortToComponentDecorator;
 import io.dekorate.halkyon.decorator.AddRuntimeTypeToComponentDecorator;
@@ -60,31 +61,31 @@ import io.dekorate.utils.Strings;
 public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig>, WithProject {
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
-  
-  
+
+
   private final Resources resources;
   private final Configurators configurators;
   private final Logger LOGGER = LoggerFactory.getLogger();
-  
+
   public Handler create(Resources resources, Configurators configurators) {
     return new ComponentHandler(resources, configurators);
   }
-  
+
   // only used for testing
   public ComponentHandler() {
     this(new Resources(), new Configurators());
   }
-  
+
   public ComponentHandler(Resources resources, Configurators configurators) {
     this.resources = resources;
     this.configurators = configurators;
   }
-  
+
   @Override
   public int order() {
     return 1100;
   }
-  
+
   @Override
   public void handle(ComponentConfig config) {
     LOGGER.info("Processing component config.");
@@ -93,13 +94,13 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     }
     addVisitors(config);
   }
-  
+
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(ComponentConfig.class) ||
       type.equals(EditableComponentConfig.class);
   }
-  
+
   private void addVisitors(ComponentConfig config) {
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
@@ -128,15 +129,12 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     for (Env env : config.getEnvs()) {
       resources.decorateCustom(ResourceGroup.NAME, new AddEnvToComponentDecorator(env));
     }
-    if (config.getCapabilities() != null) {
-      CapabilitiesConfig[] capabilities = config.getCapabilities();
-      for (int i = 0; i < capabilities.length; i++) {
-        resources.decorateCustom(ResourceGroup.NAME, new AddCapabilityToComponentDecorator(capabilities[i]));
+    RequiredCapabilityConfig[] requires = config.getRequires();
+    CapabilityConfig[] provides = config.getProvides();
+    resources.decorateCustom(ResourceGroup.NAME, new AddCapabilitiesToComponentDecorator(requires, provides));
 
-      }
-    }
   }
-  
+
   private void generateBuildConfigIfNeeded(ComponentConfig config) {
     final ScmInfo scmInfo = config.getProject().getScmInfo();
     if (scmInfo != null) {
@@ -146,7 +144,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
         String branch = scmInfo.getBranch();
         String buildType = config.getBuildType();
         Path modulePath = scmInfo.getRoot().relativize(config.getProject().getRoot());
-        
+
         final String remote = config.getRemote();
         if (!remote.equals(Git.ORIGIN)) {
           url = Git.getSafeRemoteUrl(scmInfo.getRoot(), remote).orElse(url);
@@ -155,24 +153,25 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       }
     }
   }
-  
+
   private BaseConfig getKubernetesConfig() {
     Optional<BaseConfig> optionalKubernetesConfig = configurators.get(BaseConfig.class);
     if (optionalKubernetesConfig.isPresent()) {
       return optionalKubernetesConfig.get();
     }
-    
+
     Optional<EditableBaseConfig> editableKubernetesConfig = configurators.get(EditableBaseConfig.class);
     if (editableKubernetesConfig.isPresent()) {
       return editableKubernetesConfig.get();
     }
-    
+
     throw new IllegalStateException("BaseConfig needs to be present when using exposeService=true");
   }
-  
+
   /**
    * Create a {@link Component} from a {@link ComponentConfig}.
-   * @param config  The config.
+   *
+   * @param config The config.
    * @return The component.
    */
   private Component createComponent(ComponentConfig config) {
@@ -201,14 +200,14 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   }
 
   private static Map<String, String> createLabels(ComponentConfig config) {
-    Map<String,String> result =  new HashMap<String, String >() {{
-        put(Labels.NAME, config.getName());
-      }};
+    Map<String, String> result = new HashMap<String, String>() {{
+      put(Labels.NAME, config.getName());
+    }};
 
     for (Label label : config.getLabels()) {
       result.put(label.getKey(), label.getValue());
     }
-    return result; 
+    return result;
   }
 
 }

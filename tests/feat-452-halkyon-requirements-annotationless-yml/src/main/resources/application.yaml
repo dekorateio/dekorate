@@ -1,0 +1,23 @@
+dekorate:
+  component:
+    buildType: docker
+    provides:
+      - category: api
+        name: hello-world-endpoint
+        type: rest-component
+        version: "1"
+      - category: api
+        name: goodbye-world-endpoint
+        type: rest-component
+        version: "2"
+    requires:
+      - autoBindable: true
+        boundTo: postgres-db
+        category: database
+        name: db
+        type: postgres
+    deploymentMode: build
+    envs:
+      - name: key1-from-properties
+        value: val1-from-properties
+    name: hello-world

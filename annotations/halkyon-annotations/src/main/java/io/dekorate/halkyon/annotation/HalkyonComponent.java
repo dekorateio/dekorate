@@ -82,5 +82,7 @@ public @interface HalkyonComponent {
 
   String remote() default Git.ORIGIN;
 
-  HalkyonCapabilities[] capabilities() default {};
+  HalkyonCapability[] provides() default {};
+
+  HalkyonRequiredCapability[] requires() default {};
 }

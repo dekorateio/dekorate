@@ -1,6 +1,5 @@
 package io.dekorate.halkyon.decorator;
 
-import io.dekorate.halkyon.config.CapabilitiesConfig;
 import io.dekorate.halkyon.config.CapabilityConfig;
 import io.dekorate.halkyon.config.RequiredCapabilityConfig;
 import io.dekorate.halkyon.model.ComponentCapability;
@@ -14,21 +13,23 @@ import io.dekorate.kubernetes.decorator.Decorator;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class AddCapabilityToComponentDecorator extends Decorator<ComponentSpecBuilder> {
+public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpecBuilder> {
 
-  private final CapabilitiesConfig capabilities;
+  private final RequiredCapabilityConfig[] requires;
+  private final CapabilityConfig[] provides;
 
-  public AddCapabilityToComponentDecorator(CapabilitiesConfig capabilities) {
-    this.capabilities = capabilities;
+  public AddCapabilitiesToComponentDecorator(RequiredCapabilityConfig[] requires, CapabilityConfig[] provides) {
+    this.requires = requires;
+    this.provides = provides;
   }
 
   @Override
   public void visit(ComponentSpecBuilder component) {
 
-    component.withNewCapabilities().addAllToProvides(Arrays.stream(capabilities.getProvides())
+    component.withNewCapabilities().addAllToProvides(Arrays.stream(provides)
       .map(p -> createComponentCapability(p) )
       .collect(Collectors.toList()))
-      .addAllToRequires(Arrays.stream(capabilities.getRequires())
+      .addAllToRequires(Arrays.stream(requires)
         .map(p -> createRequiredComponentCapability(p) )
         .collect(Collectors.toList()))
     .endCapabilities();
