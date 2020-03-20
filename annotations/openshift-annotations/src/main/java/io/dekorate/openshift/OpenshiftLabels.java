@@ -18,5 +18,5 @@ package io.dekorate.openshift;
 
 public class OpenshiftLabels {
 
-  public static final String RUNTIME = "app.opesnhift.io/runtime";
+  public static final String RUNTIME = "app.openshift.io/runtime";
 }
