@@ -43,6 +43,7 @@
       <module>issue-442-multi-platform</module>
       <module>issue-446-secret-volumes</module>
       <module>feat-458-kubernetes-and-openshift-labels</module>
+      <module>issue-473-env-from-field</module>
     </modules>
 
 </project>

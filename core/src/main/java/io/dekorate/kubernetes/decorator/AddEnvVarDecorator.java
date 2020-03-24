@@ -17,7 +17,10 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.utils.Strings;
+import io.dekorate.deps.kubernetes.api.builder.Predicate;
 import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
+import io.dekorate.deps.kubernetes.api.model.EnvFromSourceBuilder;
+import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
 import io.dekorate.doc.Description;
 
 import java.util.Objects;
@@ -41,68 +44,86 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
   @Override
   public void andThenVisit(ContainerBuilder builder) {
+    Predicate<EnvVarBuilder> matchingEnv = new Predicate<EnvVarBuilder>() {
+      public Boolean apply(EnvVarBuilder e) {
+        if (e.getName() != null) {
+          return e.getName().equals(env.getName());
+        }
+        return false;
+      }
+    };
+
+    Predicate<EnvFromSourceBuilder> matchingEnvFrom = new Predicate<EnvFromSourceBuilder>() {
+      public Boolean apply(EnvFromSourceBuilder e) {
+        if (e.getSecretRef() != null && e.getSecretRef().getName() != null) {
+          return e.getSecretRef().getName().equals(env.getSecret());
+        } else if (e.getConfigMapRef() != null && e.editConfigMapRef().getName() != null) {
+          return e.editConfigMapRef().getName().equals(env.getConfigmap());
+        }
+        return false;
+      }
+    };
+
+    builder.removeMatchingFromEnv(matchingEnv);
+    builder.removeMatchingFromEnvFrom(matchingEnvFrom);
+
     if (Strings.isNotNullOrEmpty(env.getSecret())) {
       populateFromSecret(builder);
     } else if (Strings.isNotNullOrEmpty(env.getConfigmap())) {
       populateFromConfigMap(builder);
     } else if (Strings.isNotNullOrEmpty(env.getField())) {
-      builder.addNewEnv().withName(env.getName()).withNewValueFrom().withNewFieldRef(null, env.getField()).endValueFrom();
+      populateFromField(builder);
     } else if (Strings.isNotNullOrEmpty(env.getName())) {
       builder.addNewEnv().withName(env.getName()).withValue(env.getValue()).endEnv();
     }
   }
 
-
   /**
-   * Add an environment variable for the specified envVars.getSecret().
-   * If along with the envVars.getSecret() a envVars.getName()/envVars.getValue() has been specified they will be used to create an environment variable
-   * name after the envVars.getName(), that will point to the envVars.getSecret() entry named after the envVars.getValue().
-   * For example: (envVars.getName()=envVars.getName()1 envVars.getValue()=val1 and envVars.getSecret()=myenv.getSecret()). The added environment variable will be named envVars.getName()1 one
-   * and its envVars.getValue() will be read from envVars.getSecret() myenv.getSecret() by getting the envVars.getValue() of the entry named val1.
+   * Add an environment variable for the specified envVars.getSecret(). If along
+   * with the envVars.getSecret() a envVars.getName()/envVars.getValue() has been
+   * specified they will be used to create an environment variable name after the
+   * envVars.getName(), that will point to the envVars.getSecret() entry named
+   * after the envVars.getValue().
    *
    * @param builder The builder where the environment variable will be added.
    */
   private void populateFromSecret(ContainerBuilder builder) {
     if (Strings.isNotNullOrEmpty(env.getName()) && Strings.isNotNullOrEmpty(env.getValue())) {
-      builder.addNewEnv()
-        .withName(env.getName())
-        .withNewValueFrom()
-        .withNewSecretKeyRef(env.getValue(), env.getSecret(), false)
-        .endValueFrom()
-        .endEnv();
+      builder.addNewEnv().withName(env.getName()).withNewValueFrom()
+          .withNewSecretKeyRef(env.getValue(), env.getSecret(), false).endValueFrom().endEnv();
     } else {
       builder.addNewEnvFrom().withNewSecretRef(env.getSecret(), false).endEnvFrom();
     }
   }
 
-
-
   /**
-   * Add an environment variable for the specified config map.
-   * If along with the config map a envVars.getName()/envVars.getValue() has been specified they will be used to create an environment variable
-   * name after the envVars.getName(), that will point to the envVars.getSecret() entry named after the envVars.getValue().
-   * For example: (envVars.getName()=envVars.getName()1 envVars.getValue()=val1 and envVars.getConfigMap()=mymap). The added environment variable will be named envVars.getName()1 one
-   * and its envVars.getValue() will be read from configmap mymap by getting the envVars.getValue() of the entry named val1.
+   * Add an environment variable for the specified config map. If along with the
+   * config map a envVars.getName()/envVars.getValue() has been specified they
+   * will be used to create an environment variable name after the
+   * envVars.getName(), that will point to the envVars.getSecret() entry named
+   * after the envVars.getValue().
    *
    * @param builder The builder where the environment variable will be added.
    */
   private void populateFromConfigMap(ContainerBuilder builder) {
     if (Strings.isNotNullOrEmpty(env.getName()) && Strings.isNotNullOrEmpty(env.getValue())) {
-      builder.addNewEnv()
-        .withName(env.getName())
-        .withNewValueFrom()
-        .withNewConfigMapKeyRef(env.getValue(), env.getConfigmap(), false)
-        .endValueFrom()
-        .endEnv();
+      builder.addNewEnv().withName(env.getName()).withNewValueFrom()
+          .withNewConfigMapKeyRef(env.getValue(), env.getConfigmap(), false).endValueFrom().endEnv();
     } else {
       builder.addNewEnvFrom().withNewConfigMapRef(env.getConfigmap(), false).endEnvFrom();
     }
   }
 
+  private void populateFromField(ContainerBuilder builder) {
+    builder.addNewEnv().withName(this.env.getName()).withNewValueFrom().withNewFieldRef().withFieldPath(this.env.getField()).endFieldRef().endValueFrom().endEnv();
+  }
+
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     AddEnvVarDecorator addEnvVarDecorator = (AddEnvVarDecorator) o;
     return Objects.equals(env, addEnvVarDecorator.env);
   }
