@@ -49,4 +49,9 @@ public class ApplyServiceAccountNamedDecorator extends NamedResourceDecorator<Po
       podSpec.withServiceAccount(resourceMeta.getName());
     }
   }
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class};
+  }
+
 }

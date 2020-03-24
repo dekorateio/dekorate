@@ -57,7 +57,7 @@ public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder>
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
+    return new Class[]{ResourceProvidingDecorator.class, ContainerDecorator.class, AddSidecarDecorator.class};
   }
 
   @Override

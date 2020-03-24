@@ -15,6 +15,10 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import static io.dekorate.utils.Metadata.getMetadata;
+
+import java.util.Optional;
+
 import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
 import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
 import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
@@ -22,10 +26,6 @@ import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.utils.Generics;
 import io.dekorate.utils.Strings;
-
-import java.util.Optional;
-
-import static io.dekorate.utils.Metadata.getMetadata;
 
 /**
  * An abstract class for decorating the application container.
@@ -75,6 +75,10 @@ public abstract class ApplicationContainerDecorator<T> extends Decorator<Visitab
   }
 
   public abstract void andThenVisit(T item);
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class};
+  }
 
   private class DeploymentVisitor extends TypedVisitor<ContainerBuilder> {
 

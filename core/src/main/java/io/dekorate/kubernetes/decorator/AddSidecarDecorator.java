@@ -42,4 +42,9 @@ public class AddSidecarDecorator extends NamedResourceDecorator<PodSpecBuilder> 
   public void andThenVisit(PodSpecBuilder podSpec, ObjectMeta resourceMeta) {
     podSpec.addToContainers(ContainerAdapter.adapt(container));
   }
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class};
+  }
+
 }

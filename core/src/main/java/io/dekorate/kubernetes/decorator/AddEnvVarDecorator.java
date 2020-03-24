@@ -133,4 +133,9 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
     return Objects.hash(env);
   }
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class, ContainerDecorator.class, AddSidecarDecorator.class};
+  }
+
 }
