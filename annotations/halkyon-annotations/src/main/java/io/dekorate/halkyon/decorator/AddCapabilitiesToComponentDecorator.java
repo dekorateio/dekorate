@@ -1,5 +1,8 @@
 package io.dekorate.halkyon.decorator;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import io.dekorate.halkyon.config.CapabilityConfig;
 import io.dekorate.halkyon.config.RequiredCapabilityConfig;
 import io.dekorate.halkyon.model.ComponentCapability;
@@ -9,9 +12,6 @@ import io.dekorate.halkyon.model.Parameter;
 import io.dekorate.halkyon.model.RequiredComponentCapability;
 import io.dekorate.halkyon.model.RequiredComponentCapabilityBuilder;
 import io.dekorate.kubernetes.decorator.Decorator;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpecBuilder> {
 
@@ -26,13 +26,14 @@ public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpec
   @Override
   public void visit(ComponentSpecBuilder component) {
 
-    component.withNewCapabilities().addAllToProvides(Arrays.stream(provides)
-      .map(p -> createComponentCapability(p) )
-      .collect(Collectors.toList()))
-      .addAllToRequires(Arrays.stream(requires)
-        .map(p -> createRequiredComponentCapability(p) )
+    component.withNewCapabilities()
+      .addAllToProvides(Arrays.stream(provides)
+        .map(this::createComponentCapability)
         .collect(Collectors.toList()))
-    .endCapabilities();
+      .addAllToRequires(Arrays.stream(requires)
+        .map(this::createRequiredComponentCapability)
+        .collect(Collectors.toList()))
+      .endCapabilities();
 
   }
 
@@ -43,7 +44,8 @@ public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpec
    * @return The ComponentCapability.
    */
   private ComponentCapability createComponentCapability(CapabilityConfig config) {
-    return new ComponentCapabilityBuilder().withName(config.getName())
+    return new ComponentCapabilityBuilder()
+      .withName(config.getName())
       .withNewSpec()
       .withCategory(config.getCategory())
       .withType(config.getType())
@@ -70,6 +72,9 @@ public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpec
       .withNewSpec()
       .withCategory(config.getCategory())
       .withType(config.getType())
+      .addAllToParameters(Arrays.stream(config.getParameters())
+        .map(p -> new Parameter(p.getName(), p.getValue()))
+        .collect(Collectors.toList()))
       .endSpec()
       .build();
   }
