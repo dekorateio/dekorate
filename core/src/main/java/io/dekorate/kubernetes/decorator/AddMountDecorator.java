@@ -36,7 +36,10 @@ public class AddMountDecorator extends Decorator<ContainerBuilder> {
       .withSubPath(mount.getSubPath())
       .withReadOnly(mount.isReadOnly())
       .endVolumeMount();
-
-
   }
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class, ContainerDecorator.class, AddSidecarDecorator.class};
+  }
+
 }

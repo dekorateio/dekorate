@@ -38,4 +38,8 @@ public class ApplyArgsDecorator extends ApplicationContainerDecorator<ContainerF
       container.withArgs(argument);
     }
   }
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class, ContainerDecorator.class, AddSidecarDecorator.class};
+  }
 }

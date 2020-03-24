@@ -40,4 +40,8 @@ public class ContainerDecorator implements FluentDecorator<Container, PodSpecBui
         }
       });
   }
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class};
+  }
 }

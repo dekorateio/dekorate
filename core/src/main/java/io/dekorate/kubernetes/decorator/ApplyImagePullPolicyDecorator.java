@@ -30,4 +30,9 @@ public class ApplyImagePullPolicyDecorator extends Decorator<ContainerFluent>  {
   public void visit(ContainerFluent container) {
     container.withImagePullPolicy(imagePullPolicy.name());
   }
+
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ResourceProvidingDecorator.class, ContainerDecorator.class, AddSidecarDecorator.class};
+  }
+
 }

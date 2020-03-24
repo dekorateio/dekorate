@@ -153,9 +153,12 @@ public class Resources  {
 
     Map<String, KubernetesList> resources = new HashMap<>();
 
-    if (groupDecorators.isEmpty()) {
-      groups.forEach((group, l) -> groupDecorators.put(group, globalDecorators));
-    }
+    groups.forEach((group, l) -> {
+        if (!groupDecorators.containsKey(group) || groupDecorators.get(group).isEmpty()) {
+          groupDecorators.put(group, globalDecorators);
+        }
+    });
+
     groupDecorators.forEach((group, decorators) -> {
       if (groups.containsKey(group)) {
         Set<Decorator> union = new TreeSet<>(DECORATOR_COMPARATOR);

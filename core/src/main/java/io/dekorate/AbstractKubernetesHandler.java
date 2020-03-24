@@ -15,6 +15,7 @@
  */
 package io.dekorate;
 
+import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.config.Annotation;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
 import io.dekorate.kubernetes.config.AzureDiskVolume;
@@ -83,14 +84,6 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
    * @param config    The config.
    */
   protected void addDecorators(String group, C config) {
-    if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
-      resources.decorate(new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
-    }
-    resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
-
-    for (String imagePullSecret: config.getImagePullSecrets()) {
-      resources.decorate(new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
-    }
 
     //Metadata handling
     resources.decorate(new AddVcsUrlAnnotationDecorator());
@@ -101,6 +94,18 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     }
     for (Annotation annotation : config.getAnnotations()) {
       resources.decorate(new AddAnnotationDecorator(annotation));
+    }
+
+    if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
+      resources.decorate(group, new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
+    }
+
+    if (config.getImagePullPolicy() != ImagePullPolicy.IfNotPresent) {
+      resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
+    }
+
+    for (String imagePullSecret: config.getImagePullSecrets()) {
+      resources.decorate(group, new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
     }
 
     for (Container container : config.getSidecars()) {
@@ -153,7 +158,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     if (Probes.isConfigured(config.getLivenessProbe())) {
       resources.decorate(group, new AddLivenessProbeDecorator(config.getName(), config.getName(), config.getLivenessProbe()));
     }
-    
+
     if (Probes.isConfigured(config.getReadinessProbe())) {
       resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
     }
