@@ -15,23 +15,21 @@
  */
 package io.dekorate.examples;
 
-import io.dekorate.halkyon.model.Component;
-import io.dekorate.halkyon.model.RequiredComponentCapability;
-import io.dekorate.halkyon.model.ComponentCapability;
-import io.dekorate.halkyon.model.Capabilities;
-import io.dekorate.kubernetes.annotation.Label;
+import java.util.List;
+
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.halkyon.model.Capabilities;
+import io.dekorate.halkyon.model.Component;
+import io.dekorate.halkyon.model.ComponentCapability;
+import io.dekorate.halkyon.model.Parameter;
+import io.dekorate.halkyon.model.RequiredComponentCapability;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.dekorate.halkyon.model.DeploymentMode;
 
-import java.util.Map;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ComponentSpringBootExampleTest {
@@ -48,17 +46,22 @@ public class ComponentSpringBootExampleTest {
     Capabilities capabilities = component.getSpec().getCapabilities();
 
     RequiredComponentCapability[] requires = capabilities.getRequires();
-    assertEquals("db",requires[0].getName());
-    assertEquals("postgres-db",requires[0].getBoundTo());
-    assertEquals("database",requires[0].getSpec().getCategory());
-    assertEquals("postgres",requires[0].getSpec().getType());
+    assertEquals("db", requires[0].getName());
+    assertEquals("postgres-db", requires[0].getBoundTo());
+    assertEquals("database", requires[0].getSpec().getCategory());
+    assertEquals("postgres", requires[0].getSpec().getType());
     assertTrue(requires[0].isAutoBindable());
+    Parameter[] parameters = requires[0].getSpec().getParameters();
+    assertEquals(1, parameters.length);
+    Parameter parameter = parameters[0];
+    assertEquals("postgres-name", parameter.getName());
+    assertEquals("postgres-value", parameter.getValue());
 
     ComponentCapability[] provides = capabilities.getProvides();
-    assertEquals("hello-world-endpoint",provides[0].getName());
-    assertEquals("api",provides[0].getSpec().getCategory());
-    assertEquals("rest-component",provides[0].getSpec().getType());
-    assertEquals("1",provides[0].getSpec().getVersion());
+    assertEquals("hello-world-endpoint", provides[0].getName());
+    assertEquals("api", provides[0].getSpec().getCategory());
+    assertEquals("rest-component", provides[0].getSpec().getType());
+    assertEquals("1", provides[0].getSpec().getVersion());
   }
 
 }
