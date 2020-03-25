@@ -89,7 +89,7 @@ public class ComponentConfigAdapter {
       (String) map.getOrDefault("name", ""),
       (String) map.getOrDefault("version", ""),
       DeploymentMode.valueOf((String) map.getOrDefault("deploymentMode", "dev")),
-      (Boolean) map.getOrDefault("exposeService", false),
+      getBooleanFromStringOrBool("exposeService", map),
       Arrays.stream((Map[]) map.getOrDefault("envs", new Map[0])).map(ComponentConfigAdapter::getEnv).toArray(Env[]::new),
       Arrays.stream((Map[]) map.getOrDefault("labels", new Map[0])).map(ComponentConfigAdapter::getLabel).toArray(Label[]::new),
       (String) map.getOrDefault("buildType", "s2i"),
@@ -135,8 +135,12 @@ public class ComponentConfigAdapter {
       config.getCategory(),
       config.getType(),
       (String) i.getOrDefault("boundTo", ""),
-      (Boolean) i.getOrDefault("autoBindable", false),
+      getBooleanFromStringOrBool("autoBindable", i),
       config.getParameters());
+  }
+
+  private static boolean getBooleanFromStringOrBool(String key, Map i) {
+    return Boolean.parseBoolean(String.valueOf(i.getOrDefault(key, null)));
   }
 
   private static CapabilityConfig getProvidedCapability(Map i) {
