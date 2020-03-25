@@ -12,7 +12,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>feat-452-halkyon-requirements-with-annotations</artifactId>
-  <name>Dekorate :: Tests :: Annotations :: Halkyon :: Integration Test for Issue #452</name>
+  <name>Dekorate :: Tests :: Annotations :: Halkyon :: Integration Test for Issue #452 :: Annotations</name>
   <description>Ensure that new Components contracts are supported</description>
 
   <dependencies>
