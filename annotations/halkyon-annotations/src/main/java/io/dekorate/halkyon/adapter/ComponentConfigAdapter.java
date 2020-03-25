@@ -17,7 +17,6 @@
 package io.dekorate.halkyon.adapter;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -99,8 +98,13 @@ public class ComponentConfigAdapter {
   }
 
   private static Parameter[] getParameters(Map i) {
-    final List<Map> parameters = (List<Map>) i.getOrDefault("parameters", Collections.emptyList());
-    return parameters.stream().map(ComponentConfigAdapter::getParameter).toArray(Parameter[]::new);
+    final Object params = i.get("parameters");
+    if (params instanceof List) {
+      return ((List<Map>) params).stream().map(ComponentConfigAdapter::getParameter).toArray(Parameter[]::new);
+    } else if (params instanceof Map[]) {
+      return Arrays.stream((Map[]) params).map(ComponentConfigAdapter::getParameter).toArray(Parameter[]::new);
+    }
+    return new Parameter[0];
   }
 
   private static Parameter getParameter(Map j) {
