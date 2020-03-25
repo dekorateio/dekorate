@@ -22,6 +22,7 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.halkyon.model.Capabilities;
 import io.dekorate.halkyon.model.Component;
 import io.dekorate.halkyon.model.ComponentCapability;
+import io.dekorate.halkyon.model.Parameter;
 import io.dekorate.halkyon.model.RequiredComponentCapability;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,11 @@ public class ComponentSpringBootExampleTest {
     assertEquals("database", require.getSpec().getCategory());
     assertEquals("postgres", require.getSpec().getType());
     assertTrue(require.isAutoBindable());
+    Parameter[] parameters = require.getSpec().getParameters();
+    assertEquals(1, parameters.length);
+    Parameter parameter = parameters[0];
+    assertEquals("postgres-name", parameter.getName());
+    assertEquals("postgres-value", parameter.getValue());
 
     ComponentCapability[] provides = capabilities.getProvides();
     assertEquals(2, provides.length);
@@ -63,6 +69,11 @@ public class ComponentSpringBootExampleTest {
     assertEquals("api", provides[1].getSpec().getCategory());
     assertEquals("rest-component", provides[1].getSpec().getType());
     assertEquals("2", provides[1].getSpec().getVersion());
+    parameters = provides[1].getSpec().getParameters();
+    assertEquals(1, parameters.length);
+    parameter = parameters[0];
+    assertEquals("goodbye-name", parameter.getName());
+    assertEquals("goodbye-value", parameter.getValue());
   }
 
 }

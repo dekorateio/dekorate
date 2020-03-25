@@ -10,12 +10,18 @@ dekorate:
         name: goodbye-world-endpoint
         type: rest-component
         version: "2"
+        parameters:
+          - name: goodbye-name
+            value: goodbye-value
     requires:
       - autoBindable: true
         boundTo: postgres-db
         category: database
         name: db
         type: postgres
+        parameters:
+          - name: postgres-name
+            value: postgres-value
     deploymentMode: build
     envs:
       - name: key1-from-properties
