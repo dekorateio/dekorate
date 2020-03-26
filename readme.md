@@ -69,7 +69,8 @@ As the project now supports `decorating` of kubernetes manifests without the use
 
 ## Rationale
 
-The are tons of tools out there for scaffolding / generating kubernetes manifests. Sooner or later these manifests will require customization.
+There are tons of tools out there for scaffolding / generating kubernetes
+ manifests. Sooner or later these manifests will require customization.
 Handcrafting is not an appealing option.
 Using external tools, is often too generic.
 Using build tool extensions and adding configuration via xml, groovy etc is a step forward, but still not optimal.
@@ -199,8 +200,8 @@ To start using this project you just need to add one of the provided dependencie
 For known frameworks like [spring boot](https://spring.io/projects/spring-boot), [quarkus](https://quarkus.io), or [thorntail](https://thorntail.io) that's enough.
 For generic java projects, we also need to add an annotation that expresses our intent to enable `dekorate`.
 
-This annoation can be either [@Dekorate](core/src/main/java/io/dekorate/annotation/Dekorate.java) or a more specialized one, which also gives us access to more specific configuration options.
-Past that point configuration is feasible using:
+This annotation can be either [@Dekorate](core/src/main/java/io/dekorate/annotation/Dekorate.java) or a more specialized one, which also gives us access to more specific configuration options.
+Further configuration is feasible using:
 
 - Java annotations
 - Configuration properties (application.properties)
@@ -250,7 +251,8 @@ This module can be added to the project using:
 So where did the generated `Deployment` gets its name, docker image etc from?
 
 Everything can be customized via annotation parameters and system properties.
-On top of that lightweight integration with build tools is provided in order to reduce duplication.
+On top of that, lightweight integration with build tools is provided in order
+ to reduce duplication.
 
 ##### Lightweight build tool integration
 
@@ -351,14 +353,14 @@ public class Main {
 This will trigger the addition of a container port to the `Deployment` but also will trigger the generation of a `Service` resource.
 
 Everything that can be defined using annotations, can also be defined using `application.properties`.
-To add an additional port using `application.properties`:
+To add a port using `application.properties`:
 
     dekorate.kubernetes.ports[0].name=web
     dekorate.kubernetes.ports[0].container-port=8080
     
 **NOTE:**  This doesn't need to be done explicitly, if the application framework is detected and support, ports can be extracted from there *(see below)*.
 
-**IMPORTANT**: When mixing annotations and `application.properties` the latter will always take preceedence overriding values that defined using annotations.
+**IMPORTANT**: When mixing annotations and `application.properties` the latter will always take precedence overriding values that defined using annotations.
 This allows users to define the configuration using annotations and externalize configuration to `application.properties`.
 
 **REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide](assets/config.md).
@@ -380,7 +382,7 @@ public class Main {
 
 Additional options are provided for adding environment variables from fields, config maps and secrets. 
 
-To add an additional environment variables using `application.properties`:
+To add environment variables using `application.properties`:
 
     dekorate.kuberetes.env-vars[0].name=key1
     dekorate.kuberetes.env-vars[0].value=value1
@@ -403,7 +405,7 @@ public class Main {
 }
 ```
 
-To add an additional environment variable referencing a config map using `application.properties`:
+To add an environment variable referencing a config map using `application.properties`:
 
     dekorate.kuberetes.env-vars[0].name=key1
     dekorate.kuberetes.env-vars[0].value=key1
@@ -428,7 +430,7 @@ public class Main {
 }
 ```
 
-To add an additional environment variable referencing a secret using `application.properties`:
+To add an environment variable referencing a secret using `application.properties`:
 
     dekorate.kuberetes.env-vars[0].name=key1
     dekorate.kuberetes.env-vars[0].value=key1
@@ -460,7 +462,7 @@ To define the same volume and mount via `application.properties`:
     dekorate.kubernetes.mounts[0].name=mysql-volume
     dekorate.kubernetes.mounts[0].path=/var/lib/mysql
     
-Currently the supported annotations for specifying volumes are:
+Currently, the supported annotations for specifying volumes are:
 
 - @PersistentVolumeClaimVolume
 - @SecretVolume
@@ -472,12 +474,13 @@ Currently the supported annotations for specifying volumes are:
 #### Jvm Options
 It's common to pass the JVM options in the manifests using the `JAVA_OPTS` or `JAVA_OPTIONS` environment variable of the application container.
 This is something complex as it usually difficult to remember all options by heart and thus its error prone.
-The worst part is that you don't realize the mistake until its TOO late.
+The worst part is that you usually don't realize the mistake until it's TOO
+ late.
 
 Dekorate provides a way to manage those options using the `@JvmOptions` annotation, which is included in the `options-annotations` module.
 
 ```java
-import io.dekorate.options.annotation.JvmOptions
+import io.dekorate.options.annotation.JvmOptions;
 import io.dekorate.options.annotation.GarbageCollector;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
@@ -545,7 +548,8 @@ The [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.
 
 #### Sidecars
 
-Similarly to [init containers](#init-containers) support for sidecars is also provided using the `sidecars` property. For example:
+Similarly, to [init containers](#init-containers) support for sidecars is
+ also provided using the `sidecars` property. For example:
 ```java
 import io.dekorate.kubernetes.annotation.Container;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
@@ -591,7 +595,8 @@ This module can be added to the project using:
 Also instead of creating a `Deployment` it will create a `DeploymentConfig`.
 
 **NOTE:** A project can use both [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) and [@OpenshiftApplication](annotations/openshift-annotations/src/main/java/io/dekorate/openshift/annotation/OpenshiftApplication.java). If both the kubernetes and
-openshift annotation processors are present both kubernetes and openshift resources will be generated. 
+OpenShift annotation processors are present both kubernetes and OpenShift
+ resources will be generated. 
 
 #### Adding the OpenShift annotation processor to the classpath
 
@@ -629,13 +634,13 @@ The same can be expressed via `application.properties`:
 
     dekorate.openshift.name=doc-example
     
-**IMPORTANT:** All examples of `application.properties` demostrated in the [Kubernetes](#kubernetes) section can be applied here, by replacing the prefix `dekorate.kubernetes` with `dekorate.openshift`.
+**IMPORTANT:** All examples of `application.properties` demonstrated in the [Kubernetes](#kubernetes) section can be applied here, by replacing the prefix `dekorate.kubernetes` with `dekorate.openshift`.
 
 The generated `BuildConfig` will be a binary config. The actual build can be triggered from the command line with something like:
 
     oc start-build doc-example --from-dir=./target --follow
 
-**NOTE:** In the example above we explicitly set a name for our application, and we refernced that name from the cli. 
+**NOTE:** In the example above we explicitly set a name for our application, and we referenced that name from the cli. 
 If the name was implicitly created the user would have to figure the name out before triggering the build. This could be
 done either by `oc get bc` or by knowing the conventions used to read names from build tool config (e.g. if maven then name the artifactId).
 
@@ -647,7 +652,8 @@ done either by `oc get bc` or by knowing the conventions used to read names from
 
 ### Knative
 
-Dekorate also supports generating manifests for `knative`. To make use of this feature you need to add
+Dekorate also supports generating manifests for `knative`. To make use of
+ this feature you need to add:
 
 ```xml
 <dependency>
@@ -674,7 +680,7 @@ The frameworks supported so far:
 
 #### Spring Boot
 
-With spring boot its suggested to start with one of the provided starters:
+With spring boot, we suggest you start with one of the provided starters:
 
 ```xml
 <dependency>
@@ -684,7 +690,7 @@ With spring boot its suggested to start with one of the provided starters:
 </dependency>
 ```
 
-Or if you are on [openshift](https://openshift.com):
+Or if you are on [OpenShift](https://openshift.com):
 
 ```xml
 <dependency>
@@ -706,7 +712,7 @@ To customize the generated manifests you can add `dekorate` properties to your `
 descriptors, or even use annotations along with `application.yml` / `application.properties` though if you define `dekorate`
 properties then the annotation configuration will be replaced by the one specified using properties.
 
-Dekorate looks for supported configuration as follows in increasing order of priority, meaning that any configuration found in 
+Dekorate looks for supported configuration as follows in increasing order of priority, meaning any configuration found in 
 an `application` descriptor will override any existing annotation-specified configuration:
 
 1. Annotations
@@ -722,9 +728,10 @@ of merge between the existing and higher-priority values. This means that if you
 configuration, you need to repeat all the configuration you want in the @Env annotation-less configuration.
 
 Here's the full list of supported [configuration options](assets/config.md). Special attention should be paid to the path of these 
-properties. The properties' path match the annotation properties and not what would end up in the manifest, meaning that the 
+properties. The properties' path match the annotation properties and not what would end up in the manifest, meaning the 
 annotation-less configuration matches the model defined by the annotations. More precisely, what is being configured using 
-properties is the same model than what is configured using annotations. While there is some overlap between how the annotations 
+properties is the same model as what is configured using annotations. While
+ there is some overlap between how the annotations 
 are configured and the resulting manifest, the properties (or YAML file) still need to provide values for the annotation fields,
 hence why they need to match how the annotations are configured. Always refer to the [configuration options guide](assets/config.md) 
 if in doubt.
@@ -757,7 +764,7 @@ At the moment this extension will handle ports, health checks etc, with zero con
 
 It's important to note, that by design this extension will NOT use the [dekorate](https://github.com/dekorateio/dekorate) annotations for customizing the generated manifests.
 
-For more information plese check: the extension [docs](https://quarkus.io/guides/ap4k).
+For more information please check: the extension [docs](https://quarkus.io/guides/ap4k).
 
 #### Thorntail
 
@@ -795,18 +802,19 @@ Apart from the core feature, which is resource generation, there are a couple of
 These features have to do with things like building, deploying and testing.
 
 ### Building and Deploying?
-Dekorate does not generate Dockerfiles, neither it provides internal support for performing docker or s2i builds.
+Dekorate does not generate Docker files, neither it provides internal support
+ for performing docker or s2i builds.
 It does however allow the user to hook external tools (e.g. the `docker` or `oc`) to trigger container image builds after the end of compilation.
 
 So, at the moment as an experimental feature the following hooks are provided:
 
 - docker build hook (requires docker binary, triggered with `-Ddekorate.build=true`)
 - docker push hook (requires docker binary, triggered with `-Ddekorate.push=true`)
-- openshift s2i build hook (requires oc binary, triggered with `-Ddekorate.deploy=true`)
+- OpenShift s2i build hook (requires oc binary, triggered with `-Ddekorate.deploy=true`)
 
 #### Docker build hook
 This hook will just trigger a docker build, using an existing Dockerfile at the root of the project.
-It will not generate or customize the docker build in anyway.
+It will not generate or customize the docker build in any way.
 
 To enable the docker build hook you need:
 
@@ -828,20 +836,21 @@ Here's an example via annotation configuration:
 public class Main {
 }
 ```    
-And here's how it can be done via build properties (system properties):
+Here's how it can be done via build properties (system properties):
 ```bash
 mvn clean install -Ddekorate.docker.registry=quay.io -Ddekorate.push=true    
 ```
 
 Note: Dekorate will **NOT** push images on its own. It will delegate to the `docker` binary. So the user needs to make sure
-beforehand that is logged in and has taken all necessary actions for a `docker push` to work.
+beforehand they are logged in and have taken all necessary actions for a
+ `docker push` to work.
     
 #### S2i build hook
 This hook will just trigger an s2i binary build, that will pass the output folder as an input to the build
 
 To enable the docker build hook you need:
 
-- the `openshift-annotations` module (already included in all openshift starter modules)
+- the `openshift-annotations` module (already included in all OpenShift starter modules)
 - the `oc` binary configured to point the docker daemon of your kubernetes environment.
 
 Finally, to trigger the hook, you need to pass `-Ddekorate.build=true`  as an argument to the build, for example:
@@ -854,9 +863,9 @@ gradle build -Ddekorate.build=true
 ```    
 
 #### Jib build hook
-This hook will just trigger a jib build in order to perfrom a container build.
+This hook will just trigger a jib build in order to perform a container build.
 
-In order to use it one needs to add the `jib-annotations` dependency.
+In order to use it, one needs to add the `jib-annotations` dependency.
 
 ```xml
 <dependencies>
@@ -865,7 +874,7 @@ In order to use it one needs to add the `jib-annotations` dependency.
 </dependencies>
 ```
 
-Without the need of any additonal configuration, one trigger the hook by passing `-Ddekorate.build=true`  as an argument to the build, for example:
+Without the need of any additional configuration, one trigger the hook by passing `-Ddekorate.build=true`  as an argument to the build, for example:
 
 ```bash
 mvn clean install -Ddekorate.build=true
@@ -946,7 +955,7 @@ For example:
 @Inject
 KubernetesClient client;
 ```    
-When injecting a Pod, its likely that we need to specify the pod name. Since the pod name is not known in advance, we can use the deployment name instead.
+When injecting a Pod, it's likely we need to specify the pod name. Since the pod name is not known in advance, we can use the deployment name instead.
 If the deployment is named `hello-world` then you can do something like:
 ```java
 @Inject
@@ -982,7 +991,7 @@ This is important since in the `test` phase the application is not packaged. Her
  
 #### OpenShift extension for JUnit5 
 
-Similarly to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/dekorate/testing/annotation/OpenshiftIntegrationTest.java).
+Similarly, to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/dekorate/testing/annotation/OpenshiftIntegrationTest.java).
 To use that you need to add:
 ```xml
 <dependency>
@@ -1009,7 +1018,7 @@ By adding the annotation to your test class the following things will happen:
 #### Configuration externalization
 It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.
 
-Dekorate provides the ability to externalize configuration to configuration files (properites or yml).
+Dekorate provides the ability to externalize configuration to configuration files (properties or yml).
 This can be done to either override the configuration values provided by annotations, or to use dekorate without annotations.
 
 For supported frameworks, this is done out of the box, as long as the corresponding framework jar is present.
@@ -1084,7 +1093,7 @@ For spring boot, dekorate will look for configuration under:
 - application.yml
 - application.yaml
 
-Also it will look for the same files under the kubernetes profile:
+Also, it will look for the same files under the kubernetes profile:
 
 - application-kubernetes.properties
 - application-kubernetes.yml
@@ -1092,12 +1101,13 @@ Also it will look for the same files under the kubernetes profile:
 
 ##### Vert.x & generic Java
 
-For generic java, if the @Dekorate annotion is present, then dekorate will look for confiugration uder:
+For generic java, if the @Dekorate annotation is present, then dekorate will
+ look for confiugration under:
 
 - application.properties
 - application.yml
 
-These files can be overriden using the `configFiles` property on the `@Dekorate` annotation.
+These files can be overridden using the `configFiles` property on the `@Dekorate` annotation.
 
 For example:
 
@@ -1105,15 +1115,15 @@ A generic java application annotated with `@Dekorate`:
 
 ```java
 
-    import io.dekorate.annotation.Dekorate
+    import io.dekorate.annotation.Dekorate;
     
     @Dekorate
-    public Main {
+    public class Main {
         //do stuff
     }
 ```
 
-During compilation kubernetes, openshift or both resources will be generated (depending on what dekorate jars are present in the classpath).
+During compilation kubernetes, OpenShift or both resources will be generated (depending on what dekorate jars are present in the classpath).
 These resources can be customized using properties:
 
     dekorate.openshift.labels[0].key=foo
@@ -1134,7 +1144,7 @@ or using yaml:
 ### Prometheus annotations
 
 The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.
-In particular it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/model/ServiceMonitor.java) which are used by the
+In particular, it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/model/ServiceMonitor.java) which are used by the
 [Prometheus Operator](https://github.com/coreos/prometheus-operator) in order to configure [prometheus](https://prometheus.io/) to collect metrics from the target application.
 
 This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/annotation/EnableServiceMonitor.java) annotation.
@@ -1153,7 +1163,7 @@ public class Main {
 }
 ```
 The annotation processor, will automatically configure the required selector and generate the ServiceMonitor.
-Note: Some of the framework integration modules, may further decorate the ServiceMonitor with framework specific configuration.
+Note: Some framework integration modules may further decorate the ServiceMonitor with framework specific configuration.
 For example, the Spring Boot module will decorate the monitor with the Spring Boot specific path, which is `/actuator/prometheus`.
 
 #### related examples
@@ -1168,7 +1178,7 @@ Most of the work is done with the use of the [@EnableJaegerAgent](annotations/ja
 #### Using the Jaeger Operator
 
 When the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) is available, you set the `operatorEnabled` property to `true`.
-The annotation processor will automicatlly set the required annotations to the generated deployment, so that the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) can inject the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent).
+The annotation processor will automatically set the required annotations to the generated deployment, so that the [jaeger operator](https://github.com/jaegertracing/jaeger-operator) can inject the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent).
 
 Here's an example:
 ```java
@@ -1259,7 +1269,8 @@ This module provides support for generating halkyon CRDs from a combination of u
 
 The generation of halkyon CRDs is triggered by adding the `halkyon-annotations` dependency to the project and
 annotate one of your classes with `@HalkyonComponent`. Note that in the case of Spring Boot applications, as explained 
-[here](#annotation-less-configuration), only adding the dependency is needed:
+[here](#annotation-less-configuration), one only needs to add the
+ following dependency:
 
 ```xml
 <dependency>
@@ -1335,7 +1346,7 @@ configured in the properties: an additional level `spec` has been introduced.
 
 You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) the code of this example.
 
-Let's now consider the following Spring Boot application class that is annotated with `@HalkyonComponent` as well:
+Let's now consider the following Spring Boot application class annotated with `@HalkyonComponent` as well:
 
 ```java
 package io.dekorate.examples.component;
@@ -1364,7 +1375,7 @@ dekorate:
     deploymentMode : build
 ```
 
-You can notice that the resulting manifest will match what is configured in `application.yml`, completly overriding the values
+You can notice that the resulting manifest will match what is configured in `application.yml`, completely overriding the values
 provided via annotations:
 ```yaml
 apiVersion: "v1"
@@ -1401,12 +1412,14 @@ This is as simple as letting dekorate know where to read the existing manifests 
 
 ##### Integration with Fabric8 Maven Plugin.
 
-The fabric8-maven-plugin can be used to package applications for kubernetes and openshift. It also supports generating manifests.
+The fabric8-maven-plugin can be used to package applications for kubernetes and OpenShift. It also supports generating manifests.
 A user might choose to build images using fmp, but customize them using `dekorate` annotations instead of xml.
 
 An example could be to expose an additional port:
 
-This can by done by configuring dekorate to read the fmp generated manifests from `META-INF/fabric8` which is where fmp stores them and save them back there once decoration is done.
+This can be done by configuring dekorate to read the fmp generated manifests
+ from `META-INF/fabric8` which is where fmp stores them and save them back
+  there once decoration is finished.
 ```java
 @GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
 @KubernetesApplication(port = @Port(name="srv", containerPort=8181)
@@ -1419,8 +1432,9 @@ public class Main {
 
 #### Explicit configuration of annotation processors
 
-By default Dekorate doesn't require any specific configuration of its annotation processors. 
-However it is possible to manually define the annotation processors if required.
+By default, Dekorate doesn't require any specific configuration of its annotation processors. 
+However, it is possible to manually define the annotation processors if
+ required.
 
 In the maven pom.xml configure the annotation processor path in the maven compiler plugin settings. 
 
@@ -1473,7 +1487,7 @@ The bom can be imported like:
     </dependencyManagement>
 ```
 
-#### Using with downstream boms
+#### Using with downstream BOMs
 
 In case, that dekorate bom is imported by a downstream project (e.g. snowdrop) and its required to override the bom version, all you need to do is to import the dekorate bom with the version of your choice first.
 
