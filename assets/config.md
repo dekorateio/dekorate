@@ -305,17 +305,22 @@ The section below describes all the available subtypes.
 
 ## Halkyon types
 
-This secrtion describes all halkyon related types.
+This section describes all halkyon related types.
 
 ### HalkyonComponent
-| Property                     | Type   | Description | Default Value |
-|------------------------------|--------|-------------|---------------|
-| dekorate.link.name           | String |             |               |
-| dekorate.link.component-name | String |             |               |
-| dekorate.link.type           | Type   |             | Env           |
-| dekorate.link.ref            | String |             |               |
-| dekorate.link.envs           | Env[]  |             |               |
-|                              |        |             |               |
+| Property                           | Type                        | Description   | Default Value   |
+|-- ---------------------------------| ----------------------------| ------------- | ------------- --|
+| dekorate.component.part-of         | String                      |               |                 |
+| dekorate.component.name            | String                      |               |                 |
+| dekorate.component.version         | String                      |               |                 |
+| dekorate.component.deployment-mode | DeploymentMode              |               | dev             |
+| dekorate.component.expose-service  | boolean                     |               | false           |
+| dekorate.component.envs            | Env[]                       |               |                 |
+| dekorate.component.labels          | Label[]                     |               |                 |
+| dekorate.component.build-type      | String                      |               | s2i             |
+| dekorate.component.remote          | String                      |               | origin          |
+| dekorate.component.provides        | HalkyonCapability[]         |               |                 |
+| dekorate.component.requires        | HalkyonRequiredCapability[] |               |                 |
 
 #### HalkyonCapability
 | Property                       | Type        | Description | Default Value |
@@ -325,4 +330,14 @@ This secrtion describes all halkyon related types.
 | dekorate.capability.name       | String      |             |               |
 | dekorate.capability.version    | String      |             |               |
 | dekorate.capability.parameters | Parameter[] |             |               |
+
+#### HalkyonRequiredCapability 
+| Property                                  | Type          | Description   | Default Value   |
+|-- ----------------------------------------| ------------- | ------------- | ------------- --|
+| dekorate.requiredcapability.name          | String        |               |                 |
+| dekorate.requiredcapability.category      | String        |               |                 |
+| dekorate.requiredcapability.type          | String        |               |                 |
+| dekorate.requiredcapability.bound-to      | String        |               |                 |
+| dekorate.requiredcapability.auto-bindable | boolean       |               | false           |
+| dekorate.requiredcapability.parameters    | Parameter[]   |               |                 |
 
