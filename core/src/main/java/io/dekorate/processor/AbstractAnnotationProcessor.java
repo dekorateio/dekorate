@@ -19,6 +19,7 @@ import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
+import io.dekorate.WithSession;
 import io.dekorate.project.AptProjectFactory;
 import io.dekorate.utils.Maps;
 import io.dekorate.utils.Urls;
@@ -37,10 +38,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static io.dekorate.utils.Maps.*;
 
-public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject  {
+public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject, WithSession  {
 
   protected static final String PACKAGE = "";
   protected static final String PROJECT = "META-INF/dekorate/.project.%s";
@@ -50,12 +52,23 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   protected static final String DOT = ".";
 
   protected Logger LOGGER;
+  private final AtomicReference<ProcessingEnvironment> processingEnvRef = new AtomicReference<>();
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
+    this.processingEnvRef.set(processingEnv);
+
     if (!projectExists()) {
       setProject(AptProjectFactory.create(processingEnv));
+    }
+  }
+
+  @Override
+  public Session getSession() {
+    ProcessingEnvironment processingEnv = processingEnvRef.get();
+    if (processingEnv == null) {
+      throw new IllegalStateException("No processing environment available.");
     }
 
     Session session = Session.getSession();
@@ -65,8 +78,8 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
     if (!session.hasWriter()) {
       session.setWriter(new AptWriter(processingEnv));
     }
+    return session;
   }
-
 
   /**
    * @return the application properties

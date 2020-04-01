@@ -35,9 +35,8 @@ import java.util.Set;
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor implements OpenshiftApplicationGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = getSession();
     if  (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
     Set<Element> mainClasses = new HashSet<>();

@@ -26,7 +26,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.Session;
 import io.dekorate.s2i.generator.S2iBuildGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
@@ -36,9 +35,8 @@ public class S2iAnnotationProcessor extends AbstractAnnotationProcessor implemen
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = getSession();
-    if  (roundEnv.processingOver()) {
-      session.close();
+    if (roundEnv.processingOver()) {
+      getSession().close();
       return true;
     }
     for (TypeElement typeElement : annotations) {
@@ -47,5 +45,5 @@ public class S2iAnnotationProcessor extends AbstractAnnotationProcessor implemen
       }
     }
     return false;
-	}
+  }
 }
