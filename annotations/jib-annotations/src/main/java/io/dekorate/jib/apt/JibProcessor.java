@@ -24,7 +24,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.Session;
 import io.dekorate.jib.annotation.JibBuild;
 import io.dekorate.jib.generator.JibGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
@@ -35,9 +34,8 @@ public class JibProcessor extends AbstractAnnotationProcessor implements JibGene
 
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = getSession();
     if (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
 

@@ -32,7 +32,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
-import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.BeanListener;
@@ -46,9 +45,8 @@ public class SpringBootBeanProcessor extends AbstractAnnotationProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
 
@@ -72,7 +70,6 @@ public class SpringBootBeanProcessor extends AbstractAnnotationProcessor {
     }
     return false;
   }
-
 
   private void registerListeners() {
     if (listeners.isEmpty()) {

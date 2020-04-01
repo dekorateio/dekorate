@@ -29,7 +29,6 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.annotation.Dekorate;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
-import io.dekorate.Session;
 import io.dekorate.adapter.DekorateConifgAdapter;
 import io.dekorate.config.DekorateConifg;
 import io.dekorate.doc.Description;
@@ -45,10 +44,9 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.close();
-    return true;
+      getSession().close();
+      return true;
     }
 
     for (TypeElement typeElement : annotations) {
@@ -57,10 +55,9 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
         Dekorate dekorate = mainClass.getAnnotation(Dekorate.class);
         DekorateConifg dekorateConfig = DekorateConifgAdapter.adapt(dekorate);
         String[] configFiles = dekorateConfig.getResources().length > 0 ? dekorateConfig.getResources() : DEFAULT_CONFIG_FILES;
-        session.feed(readApplicationConfig(configFiles));
+        getSession().feed(readApplicationConfig(configFiles));
       }
     }
-
     return false;
   }
 }

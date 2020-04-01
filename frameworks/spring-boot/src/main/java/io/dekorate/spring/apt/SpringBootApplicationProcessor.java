@@ -15,30 +15,19 @@
  */
 package io.dekorate.spring.apt;
 
-import io.dekorate.DekorateException;
-import io.dekorate.Generator;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
-import io.dekorate.Session;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.doc.Description;
 import io.dekorate.spring.generator.SpringBootApplicationGenerator;
-import io.dekorate.utils.Maps;
 
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
 
-import java.io.FileNotFoundException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
@@ -50,10 +39,9 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
-    if  (roundEnv.processingOver()) {
-      session.close();
-    return true;
+    if (roundEnv.processingOver()) {
+      getSession().close();
+      return true;
     }
 
     for (TypeElement typeElement : annotations) {
@@ -61,7 +49,7 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
         LOGGER.info("Found @SpringBootApplication on: " + mainClass.toString());
       }
     }
-    session.feed(readApplicationConfig("application.properties",
+    getSession().feed(readApplicationConfig("application.properties",
                                          "application.yaml",
                                          "application.yml", 
                                          "application-kubernetes.properties",

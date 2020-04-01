@@ -15,7 +15,6 @@
  */
 package io.dekorate.option.apt;
 
-import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.doc.Description;
 import io.dekorate.option.annotation.JvmOptions;
@@ -33,9 +32,8 @@ import java.util.Set;
 public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements JvmOptionsGenerator, WithSession {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = getSession();
     if (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
 

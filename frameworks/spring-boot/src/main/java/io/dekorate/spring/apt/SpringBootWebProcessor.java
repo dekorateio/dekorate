@@ -23,7 +23,6 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
@@ -35,9 +34,8 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
     if  (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
     add(WEB_ANNOTATIONS);

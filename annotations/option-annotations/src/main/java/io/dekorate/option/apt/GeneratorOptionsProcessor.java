@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Set;
 
-import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.doc.Description;
@@ -50,9 +49,8 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
   private static final String FALLBACK_OUTPUT_DIR = "META-INF/fabric8";
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = getSession();
     if (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
 
@@ -72,7 +70,6 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
   }
 
   private void configurePaths(String defaultInputPath, String defaultOutputPath) {
-    final Session session = getSession();
     final String inputPath = System.getProperty(INPUT_DIR, defaultInputPath);
     final String outputPath =  Optional.ofNullable(System.getProperty(OUTPUT_DIR))
       .map(path -> {
@@ -81,7 +78,7 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
       }).orElse(defaultOutputPath);
     if (isPathValid(inputPath)) {
       applyToProject(p -> p.withDekorateInputDir(inputPath));
-      session.configurators().add(new ConfigurationSupplier<>(new GeneratorConfigBuilder()));
+      getSession().configurators().add(new ConfigurationSupplier<>(new GeneratorConfigBuilder()));
     }
     if (isPathValid(outputPath)) {
       applyToProject(p -> p.withDekorateOutputDir(outputPath));

@@ -24,7 +24,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.halkyon.generator.ComponentConfigGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
@@ -35,9 +34,8 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 public class ComponentAnnotationProcessor extends AbstractAnnotationProcessor implements ComponentConfigGenerator {
   
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = getSession();
     if (roundEnv.processingOver()) {
-      session.close();
+      getSession().close();
       return true;
     }
     for (TypeElement typeElement : annotations) {
