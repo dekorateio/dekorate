@@ -72,7 +72,6 @@ public interface S2iBuildGenerator extends Generator, WithSession, WithProject {
   default void on(ConfigurationSupplier<S2iBuildConfig> config) {
     Logger log = LoggerFactory.getLogger();
 
-    log.info("Registering s2i handler!");
     Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new S2iHanlder(session.resources()));
