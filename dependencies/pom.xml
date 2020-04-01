@@ -56,8 +56,8 @@
     <version.commons-codec>1.10</version.commons-codec>
     <version.commons-compress>1.18</version.commons-compress>
     <version.jansi>1.18</version.jansi>
-    <version.jackson>2.9.7</version.jackson>
-    <version.kubernetes-client>4.7.0</version.kubernetes-client>
+    <version.jackson>2.10.3</version.jackson>
+    <version.kubernetes-client>4.9.1</version.kubernetes-client>
     <version.application-crd-client>1.1.1</version.application-crd-client>
     <version.slf4j>1.7.13</version.slf4j>
   </properties>
@@ -156,17 +156,25 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.9.7</version>
+      <version>${version.jackson}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-properties</artifactId>
-      <version>2.9.7</version>
+      <version>${version.jackson}</version>
       <scope>compile</scope>
       <optional>true</optional>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>${version.jackson}</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
     <!-- Misc -->
    <dependency>
       <groupId>org.fusesource.jansi</groupId>
@@ -226,6 +234,7 @@
                   <include>com.fasterxml.jackson.core:jackson-databind</include>
                   <include>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</include>
                   <include>com.fasterxml.jackson.dataformat:jackson-dataformat-properties</include>
+                  <include>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</include>
                   <include>org.yaml:snakeyaml</include>
                   <include>org.fusesource.jansi:jansi</include>
                 </includes>
