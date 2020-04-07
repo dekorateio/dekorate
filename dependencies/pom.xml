@@ -181,6 +181,14 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/jandex.idx</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <artifactSet>
                 <includes>
                   <include>io.fabric8:zjsonpatch</include>
@@ -210,7 +218,6 @@
                   <include>com.fasterxml.jackson.dataformat:jackson-dataformat-properties</include>
                   <include>org.yaml:snakeyaml</include>
                   <include>org.fusesource.jansi:jansi</include>
-
                 </includes>
               </artifactSet>
               <relocations>
