@@ -15,21 +15,30 @@
  */
 package io.dekorate.openshift.decorator;
 
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.openshift.api.model.DeploymentConfigSpecFluent;
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 
 @Description("Apply the number of replicas to the DeploymentConfigSpec.")
-public class ApplyReplicasDecorator extends Decorator<DeploymentConfigSpecFluent> {
+public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentConfigSpecFluent> {
 
   private final int replicas;
 
   public ApplyReplicasDecorator(int replicas) {
+    super(ANY);
+    this.replicas = replicas;
+  }
+
+  public ApplyReplicasDecorator(String deploymentName, int replicas) {
+    super(deploymentName);
     this.replicas = replicas;
   }
 
   @Override
-  public void visit(DeploymentConfigSpecFluent deploymentSpec) {
-   deploymentSpec.withReplicas(replicas);
+  public void andThenVisit(DeploymentConfigSpecFluent deploymentSpec, ObjectMeta resourceMeta) {
+    if (replicas > 0) {
+      deploymentSpec.withReplicas(replicas);
+    }
   }
 }
