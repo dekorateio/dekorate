@@ -112,7 +112,9 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       resources.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
     }
 
-    resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+    if (config.getReplicas() != 1) {
+      resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+    }
 
     String image = Strings.isNotNullOrEmpty(imageConfig.getImage())
       ? imageConfig.getImage()

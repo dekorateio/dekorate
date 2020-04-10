@@ -136,7 +136,9 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
 
   protected void addDecorators(String group, OpenshiftConfig config, ImageConfiguration imageConfig) {
     super.addDecorators(group, config);
-    resources.decorate(group, new ApplyReplicasDecorator(config.getReplicas()));
+    if (config.getReplicas() != 1) {
+      resources.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+    }
     resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), imageConfig.getName() + ":" + imageConfig.getVersion()));
     resources.decorate(group, new AddRouteDecorator(config));
 
