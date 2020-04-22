@@ -75,6 +75,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/option/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -101,6 +102,7 @@ limitations under the License.
                     <include>io/dekorate/option/handler/**</include>
                     <include>io/dekorate/option/apt/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>

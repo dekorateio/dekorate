@@ -111,6 +111,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/kubernetes/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -141,6 +142,7 @@ limitations under the License.
                     <include>io/dekorate/project/**</include>
                     <include>io/dekorate/utils/**</include>
                     <include>META-INF/services/*</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -170,6 +172,7 @@ limitations under the License.
                     <include>io/dekorate/project/**</include>
                     <include>io/dekorate/utils/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>

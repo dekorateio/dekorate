@@ -80,6 +80,7 @@ limitations under the License.
                   <includes>
                     <include>io/dekorate/jib/annotation/**</include>
                     <include>META-INF/services/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -107,6 +108,7 @@ limitations under the License.
                     <include>io/dekorate/jib/handler/**</include>
                     <include>io/dekorate/jib/apt/**</include>
                     <include>META-INF/services/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
