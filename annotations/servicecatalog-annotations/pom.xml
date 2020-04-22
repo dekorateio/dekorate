@@ -99,6 +99,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/servicecatalog/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -123,6 +124,7 @@ limitations under the License.
                     <include>io/dekorate/servicecatalog/generator/**</include>
                     <include>io/dekorate/servicecatalog/handler/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -147,6 +149,7 @@ limitations under the License.
                     <include>io/dekorate/servicecatalog/generator/**</include>
                     <include>io/dekorate/servicecatalog/handler/**</include>
                     <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>

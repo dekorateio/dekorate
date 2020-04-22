@@ -82,6 +82,7 @@
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/application/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -108,6 +109,7 @@
                     <include>io/dekorate/application/handler/**</include>
                     <include>io/dekorate/application/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>

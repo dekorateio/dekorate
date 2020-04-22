@@ -111,6 +111,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/openshift/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -140,6 +141,7 @@ limitations under the License.
                     <include>io/dekorate/openshift/util/**</include>
                     <include>io/dekorate/openshift/*</include>
                     <include>META-INF/services/*</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -169,6 +171,7 @@ limitations under the License.
                     <include>io/dekorate/openshift/util/**</include>
                     <include>io/dekorate/openshift/*</include>
                     <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>

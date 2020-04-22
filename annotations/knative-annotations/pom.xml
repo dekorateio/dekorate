@@ -108,6 +108,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/knative/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -135,6 +136,7 @@ limitations under the License.
                     <include>io/dekorate/knative/decorator/**</include>
                     <include>io/dekorate/knative/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -163,6 +165,7 @@ limitations under the License.
                     <include>io/dekorate/knative/util/**</include>
                     <include>META-INF/services/io.dekorate.Generator</include>
                     <include>META-INF/services/io.dekorate.HandlerFactory</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
