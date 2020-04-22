@@ -46,12 +46,12 @@ public class Git {
    * @param path Any path under the target git repo.
    * @return The {@link Path} to the git root.
    */
-  public static Path getRoot(Path path) {
+  public static Optional<Path> getRoot(Path path) {
     Path root = path;
     while (root != null && !root.resolve(Git.DOT_GIT).toFile().exists()) {
       root = root.toAbsolutePath().getParent();
     }
-    return root;
+    return Optional.ofNullable(root);
   }
 
   /**

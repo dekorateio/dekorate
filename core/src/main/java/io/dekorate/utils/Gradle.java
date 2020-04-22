@@ -37,7 +37,7 @@ public class Gradle {
 
   public static String getVersion(Path modulePath) {
     Path moduleGraldew = modulePath.resolve(GRADLEW);
-    Path rootGraldew = Git.getRoot(modulePath).resolve(GRADLEW);
+    Path rootGraldew = Git.getRoot(modulePath).orElse(modulePath).resolve(GRADLEW);
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     ProjectExec exec = Exec.inPath(modulePath).redirectingOutput(out);
