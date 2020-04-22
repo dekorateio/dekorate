@@ -37,6 +37,8 @@ import io.dekorate.tekton.decorator.AddToArgsDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToTaskDecorator;
 import io.dekorate.deps.tekton.pipeline.v1beta1.Pipeline;
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineBuilder;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineRun;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineRunBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.Task;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskBuilder;
 import io.dekorate.deps.tekton.resource.v1alpha1.PipelineResource;
@@ -75,30 +77,33 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
   private static final String MAVEN_LOCAL_REPO_SYS_PROPERTY = "-Dmaven.repo.local=%s";
 
+  private static final String PARAMS_FORMAT = "${params.%s}";
+  private static final String RESOURCES_INPUTS_FORMAT = "$(resources.inputs.%s.path)";
+  private static final String PATH_TO_FILE_FORMAT = "$(resources.inputs.source.path)/%s/$(inputs.params.pathToContext)/%s";
+
   private static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
   private static final String PATH_TO_YML_DESCRIPTION = "Path to yml";
   private static final String PATH_TO_YML_DEFAULT = "target/classes/META-INF/dekorate/kubernetes.yml";
-  private static final String PATH_TO_YML_FORMAT = "/workspace/%s/${inputs.params.pathToContext}/${inputs.params.%s}";
 
   private static final String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
   private static final String PATH_TO_CONTEXT_DESCRIPTION = "Path to context. Usually refers to module directory";
 
   private static final String PATH_TO_DOCKERFILE_PARAM_NAME = "pathToDockerfile";
   private static final String PATH_TO_DOCKERFILE_DESCRIPTION = "Path to Dockerfile";
-  private static final String PATH_TO_DOCKERFILE_DEFAULT = "/workspace/%s/${inputs.params.pathToContext}/Dockerfile";
+  private static final String PATH_TO_DOCKERFILE_DEFAULT = "Dockerfile";
 
   private static final String BUILDER_IMAGE_PARAM_NAME = "builderImage";
   private static final String BUILDER_IMAGE_DESCRIPTION = "The image to use for performing image build";
   private static final String BUILDER_IMAGE_DEFAULT = "gcr.io/kaniko-project/executor:latest";
-  private static final String BUILDER_IMAGE_REF = "${inputs.params.builderImage}";
+  private static final String BUILDER_IMAGE_REF = "$(inputs.params.builderImage)";
 
   private static final String DOCKER_CONFIG = "DOCKER_CONFIG";
   private static final String DOCKER_CONFIG_DEFAULT = "/tekton/home/.docker";
 
   private static final String KANIKO_CMD = "/kaniko/executor";
-  private static final String DOCKERFILE_ARG = "--dockerfile=${inputs.params.pathToDockerfile}";
-  private static final String CONTEXT_ARG = "--context=/workspace/%s/${inputs.params.pathToContext}";
-  private static final String IMAGE_DESTINATION_ARG = "--destination=${outputs.resources.image.url}";
+  private static final String DOCKERFILE_ARG = "--dockerfile=$(inputs.params.pathToDockerfile)";
+  private static final String CONTEXT_ARG = "--context=$(inputs.params.pathToContext)";
+  private static final String IMAGE_DESTINATION_ARG = "--destination=$(outputs.resources.image.url)";
 
 
   private static final String DEPLOY_CMD = "kubectl";
@@ -134,10 +139,6 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     Optional<Task> buildTask = createJavaBuildTask(config);
     Optional<PipelineResource> gitResource = createGitResource(config);
     ImageConfiguration imageConfiguration = getImageConfiguration(getProject(), config, configurators);
-
-    System.out.println("Image config registry: " + imageConfiguration.getRegistry());
-    System.out.println("Image config name: " + imageConfiguration.getName());
-    System.out.println("Image config version: " + imageConfiguration.getVersion());
 
     resources.add(TEKTON, createOutputImageResource(config, imageConfiguration));
 
@@ -203,6 +204,12 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .withName(javaBuildTaskName(config))
       .endMetadata()
       .withNewSpec()
+        .withNewResources()
+          .addNewInput()
+            .withName(SOURCE)
+             .withType(GIT)
+          .endInput()
+        .endResources()
         .addNewParam()
           .withName(PATH_TO_CONTEXT_PARAM_NAME)
           .withDescription(PATH_TO_CONTEXT_DESCRIPTION)
@@ -214,6 +221,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .withName(JAVA + DASH + BUILD)
         .withImage(i.getImage())
         .withCommand(i.getCommand())
+        .withWorkingDir(String.format(RESOURCES_INPUTS_FORMAT, SOURCE))
       .endStep()
       .endSpec()
       .build());
@@ -227,11 +235,11 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .withNewSpec()
           .withNewResources()
             .addNewInput()
-              .withName(gitResourceName(config))
+              .withName(SOURCE)
                .withType(GIT)
             .endInput()
             .addNewOutput()
-              .withName(outputImageResourceName(config))
+              .withName(IMAGE)
               .withType(IMAGE)
             .endOutput()
           .endResources()
@@ -264,6 +272,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
           .addToArgs(DOCKERFILE_ARG)
           .addToArgs(CONTEXT_ARG)
           .addToArgs(IMAGE_DESTINATION_ARG)
+          .withWorkingDir(String.format(RESOURCES_INPUTS_FORMAT, SOURCE))
          .endStep()
         .endSpec()
       .build();
@@ -277,7 +286,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .withNewSpec()
           .withNewResources()
             .addNewInput()
-              .withName(gitResourceName(config))
+              .withName(SOURCE)
                .withType(GIT)
             .endInput()
           .endResources()
@@ -292,7 +301,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
             .withName(PATH_TO_YML_PARAM_NAME)
             .withDescription(PATH_TO_YML_DESCRIPTION)
             .withNewDefault()
-              .withStringVal(PATH_TO_YML_DEFAULT)
+             .withStringVal(String.format(PATH_TO_FILE_FORMAT, SOURCE, PATH_TO_YML_DEFAULT))
             .endDefault()
           .endParam()
           .addNewStep()
@@ -300,6 +309,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
             .withImage(config.getDeployerImage())
             .withCommand(DEPLOY_CMD)
             .withArgs(deployArgs(config))
+            .withWorkingDir(String.format(RESOURCES_INPUTS_FORMAT, SOURCE))
           .endStep()
         .endSpec()
       .build();
@@ -315,6 +325,10 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
           .withType(GIT)
           .withName(gitResourceName(config))
         .endResource()
+        .addNewResource()
+          .withType(IMAGE)
+         .withName(outputImageResourceName(config))
+        .endResource()
           .addNewParam()
             .withName(PATH_TO_CONTEXT_PARAM_NAME)
             .withDescription(PATH_TO_CONTEXT_DESCRIPTION)
@@ -326,29 +340,35 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
             .withName(PATH_TO_DOCKERFILE_PARAM_NAME)
             .withDescription(PATH_TO_DOCKERFILE_DESCRIPTION)
             .withNewDefault()
-              .withStringVal(PATH_TO_DOCKERFILE_DEFAULT)
+              .withStringVal(String.format(PATH_TO_FILE_FORMAT, SOURCE, PATH_TO_DOCKERFILE_DEFAULT))
             .endDefault()
           .endParam()
           .addNewParam()
             .withName(PATH_TO_YML_PARAM_NAME)
             .withDescription(PATH_TO_YML_DESCRIPTION)
             .withNewDefault()
-              .withStringVal(PATH_TO_YML_DEFAULT)
+             .withStringVal(String.format(PATH_TO_FILE_FORMAT, SOURCE, PATH_TO_YML_DEFAULT))
             .endDefault()
           .endParam()
         .addNewTask()
           .withName(BUILD)
             .withNewTaskRef()
-              .withName(javaBuildStepName(config))
+              .withName(javaBuildTaskName(config))
             .endTaskRef()
         .withNewResources().addNewInput().withName(SOURCE).withResource(gitResourceName(config)).endInput().endResources()
+        .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(String.format(PARAMS_FORMAT, PATH_TO_CONTEXT_PARAM_NAME)).endParam()
         .endTask()
         .addNewTask()
           .withName(IMAGE)
             .withNewTaskRef()
               .withName(imageBuildTaskName(config))
             .endTaskRef()
-        .withNewResources().addNewInput().withName(SOURCE).withResource(gitResourceName(config)).endInput().endResources()
+          .withNewResources()
+            .addNewInput().withName(SOURCE).withResource(gitResourceName(config)).endInput()
+            .addNewOutput().withName(IMAGE).withResource(outputImageResourceName(config)).endOutput()
+          .endResources()
+        .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(String.format(PARAMS_FORMAT, PATH_TO_CONTEXT_PARAM_NAME)).endParam()
+        .withRunAfter(BUILD)
         .endTask()
         .addNewTask()
           .withName(DEPLOY)
@@ -356,10 +376,24 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
               .withName(deployTaskName(config))
             .endTaskRef()
         .withNewResources().addNewInput().withName(SOURCE).withResource(gitResourceName(config)).endInput().endResources()
+        .addNewParam().withName(PATH_TO_YML_PARAM_NAME).withNewValue(String.format(PARAMS_FORMAT, PATH_TO_YML_PARAM_NAME)).endParam()
+        .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(String.format(PARAMS_FORMAT, PATH_TO_CONTEXT_PARAM_NAME)).endParam()
+        .withRunAfter(BUILD, IMAGE)
         .endTask()
       .endSpec()
       .build();
   }
+
+  public PipelineRun createPipelineRun(TektonConfig config) {
+    return new PipelineRunBuilder()
+      .withNewMetadata()
+        .withName(config.getName())
+      .endMetadata()
+      .withNewSpec()
+      .endSpec()
+      .build();
+  }
+
 
   @Override
   public ConfigurationSupplier<TektonConfig> getFallbackConfig() {
@@ -403,7 +437,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   }
 
   public static final String[] deployArgs(TektonConfig config ) {
-    return new String[] {"apply", "-f", String.format(PATH_TO_YML_FORMAT, gitResourceName(config), PATH_TO_YML_PARAM_NAME)};
+    return new String[] {"apply", "-f", String.format(PARAMS_FORMAT, PATH_TO_YML_PARAM_NAME)};
   }
 
   public static final String gitResourceName(TektonConfig config) {
