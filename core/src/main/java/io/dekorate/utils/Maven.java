@@ -37,7 +37,7 @@ public class Maven {
 
   public static String getVersion(Path modulePath) {
     Path moduleMvnw = modulePath.resolve(MVNW);
-    Path rootMvnw = Git.getRoot(modulePath).resolve(MVNW);
+    Path rootMvnw = Git.getRoot(modulePath).orElse(modulePath).resolve(MVNW);
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     ProjectExec exec = Exec.inPath(modulePath).redirectingOutput(out);
