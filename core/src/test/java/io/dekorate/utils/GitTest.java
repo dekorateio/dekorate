@@ -68,7 +68,7 @@ class GitTest {
   @ValueSource(strings = {GIT_SIMPLE, GIT_SSH})
   void shouldDetectRoot(String configFile) {
     final Path root = getRootFor(configFile);
-    final Path detected = Git.getRoot(root);
+    final Path detected = Git.getRoot(root).orElse(null);
     assertEquals(root, detected);
   }
   
