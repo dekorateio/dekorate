@@ -28,7 +28,7 @@ import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
 public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
 
-  private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service");
+  private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service", "Pipeline");
 
   public Optional<ObjectMeta> getDeploymentMetadata(KubernetesListBuilder list) {
     return list.getItems()
