@@ -28,10 +28,21 @@ public class AddRoleBindingResourceDecorator extends ResourceProvidingDecorator<
 
 private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io";
 
-  private final String role;
-   
-  public AddRoleBindingResourceDecorator(String role) {
-    this.role = role;
+  public static enum RoleKind {
+    Role,
+    ClusterRole
+  }
+
+  private final String roleName;
+  private final RoleKind roleKind;
+
+  public AddRoleBindingResourceDecorator(RoleKind roleKind, String roleName) {
+    this.roleKind = roleKind;
+    this.roleName = roleName;
+  }
+
+  public AddRoleBindingResourceDecorator(String roleName) {
+    this(RoleKind.ClusterRole, roleName);
   }
 
   public void visit(KubernetesListBuilder list) {
@@ -43,8 +54,8 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
       .withLabels(meta.getLabels())
       .endMetadata()
       .withNewRoleRef()
-      .withKind("ClusterRole")
-      .withName(role)
+      .withKind(roleKind.name())
+      .withName(roleName)
       .withApiGroup(DEFAULT_RBAC_API_GROUP)
       .endRoleRef()
       .addNewSubject()
