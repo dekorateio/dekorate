@@ -115,4 +115,46 @@ public @interface TektonApplication {
    * @return The image, if specified or fallback to the default otherwise.
    */
   String deployerImage() default DEFAULT_DEPLOYER_IMAGE;
+
+
+  /*
+   * The service account to use for the image building tasks.
+   * An existing or a generated service account can be used.
+   * If no existing service account is provided one will be generated based on the context.
+   * @return An existing service account, or empty if we just need to generate one.
+   */
+  String imageBuilderServiceAccount() default "";
+
+  /**
+   * The secret to use when generating an image builder service account.
+   * When no existing service account is provided, one will be generated.
+   * The generated service account may or may not use an existing secret.
+   * @return The existing secret, or empty string if the secret needs to be generated.
+   */
+  String imageBuilderSecret() default "";
+
+  /*
+   * Wether to upload the local `.docker/config.json` to automatically create the secret.
+   * @return
+   */
+  boolean useLocalDockerConfigJson() default false;
+
+  /*
+   * The username to use for generating image builder secrets.
+   * @return The username.
+   */
+  String registry() default "docker.io";
+
+  /*
+   * The username to use for generating image builder secrets.
+   * @return The username.
+   */
+  String registryUsername() default "";
+
+  /*
+   * The password to use for generating image builder secrets.
+   * @return The password.
+   */
+  String registryPassword() default "";
+
 }
