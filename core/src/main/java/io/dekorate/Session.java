@@ -64,19 +64,27 @@ public class Session {
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
   private final Map<Class<? extends SessionListener>, SessionListener> listeners = new HashMap<>();
 
-  private final Logger LOGGER = LoggerFactory.getLogger();
+  private final Logger LOGGER;
 
   /**
    * Creates or reuses a single instance of Session.
    * @return  The Session.
    */
   public static Session getSession() {
+    return getSession(LoggerFactory.getLogger());
+  }
+
+  /**
+   * Creates or reuses a single instance of Session.
+   * @return  The Session.
+   */
+  public static Session getSession(Logger logger) {
     if (INSTANCE != null) {
       return INSTANCE;
     }
     synchronized (Session.class) {
       if (INSTANCE == null) {
-        INSTANCE = new Session();
+        INSTANCE = new Session(logger);
         INSTANCE.loadHandlers();
         INSTANCE.loadGenerators();
       }
@@ -84,7 +92,8 @@ public class Session {
     return INSTANCE;
   }
 
-  protected Session() {
+  protected Session(Logger logger) {
+    LOGGER = logger;
     LOGGER.info("Initializing dekorate session.");
   }
 
