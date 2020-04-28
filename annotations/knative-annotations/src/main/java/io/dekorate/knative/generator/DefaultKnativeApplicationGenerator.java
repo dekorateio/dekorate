@@ -19,12 +19,14 @@ import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultKnativeApplicationGenerator implements KnativeApplicationGenerator {
 
     public DefaultKnativeApplicationGenerator () {
       on(new DefaultConfiguration<KnativeConfig>(new KnativeConfigBuilder()
+                                                   .accept(new ApplyImagePullSecretConfiguration())
                                                    .accept(new ApplyProjectInfo(getProject()))
                                                    .accept(new ApplyDeployToApplicationConfiguration())));
     }

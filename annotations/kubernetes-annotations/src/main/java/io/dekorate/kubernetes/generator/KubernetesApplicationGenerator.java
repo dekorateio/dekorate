@@ -31,6 +31,7 @@ import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.listener.KubernetesSessionListener;
@@ -55,6 +56,7 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
             KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesApplication.class))
             .accept(new ApplyBuildToImageConfiguration())
+            .accept(new ApplyImagePullSecretConfiguration())
             .accept(new ApplyDeployToApplicationConfiguration())
             .accept(new ApplyProjectInfo(getProject()))));
   }
@@ -65,6 +67,7 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
             KubernetesConfigAdapter
             .newBuilder(application)
             .accept(new ApplyBuildToImageConfiguration())
+            .accept(new ApplyImagePullSecretConfiguration())
             .accept(new ApplyDeployToApplicationConfiguration())
             .accept(new ApplyProjectInfo(getProject()))));
   }
