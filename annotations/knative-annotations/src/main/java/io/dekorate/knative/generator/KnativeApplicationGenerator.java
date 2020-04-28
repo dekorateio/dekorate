@@ -39,6 +39,7 @@ import io.dekorate.knative.config.KnativeConfigCustomAdapter;
 import io.dekorate.knative.handler.KnativeHandler;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 
@@ -60,6 +61,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     KnativeConfig knativeConfig = KnativeConfigCustomAdapter.newBuilder(getProject(), knativeApplication).build();
 
     on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(element.getAnnotation(KnativeApplication.class))
+                                   .accept(new ApplyImagePullSecretConfiguration())
                                    .accept(new ApplyBuildToImageConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));
   }
@@ -67,6 +69,7 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
   default void add(Map map) {
     KnativeConfig knativeConfig = KnativeConfigAdapter.newBuilder((Map) map.get(KnativeApplication.class.getName())).build();
     on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeApplication.class))
+                                   .accept(new ApplyImagePullSecretConfiguration())
                                    .accept(new ApplyBuildToImageConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));
   }

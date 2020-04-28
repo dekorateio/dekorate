@@ -19,6 +19,7 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.PodSpecFluent;
+import io.dekorate.utils.Strings;
 
 public class AddImagePullSecretDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
@@ -30,8 +31,10 @@ public class AddImagePullSecretDecorator extends NamedResourceDecorator<PodSpecF
   }
 
   public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
-    podSpec.addNewImagePullSecret()
-      .withName(imagePullSecret)
-      .endImagePullSecret();
+    if (Strings.isNotNullOrEmpty(imagePullSecret) && !podSpec.hasMatchingImagePullSecret(r -> imagePullSecret.equals(r.getName()))) {
+       podSpec.addNewImagePullSecret()
+         .withName(imagePullSecret)
+       .endImagePullSecret();
+    }
   }
 }
