@@ -35,6 +35,10 @@ public abstract class LoggerFactory<C> {
   }
 
   protected abstract Logger create(C context);
+
+  public static synchronized void setLogger(Logger logger) {
+    LOGGER = logger;
+  }
   
   public static Logger getLogger() {
     if (LOGGER != null) {

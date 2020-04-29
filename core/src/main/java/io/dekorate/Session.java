@@ -93,6 +93,7 @@ public class Session {
   }
 
   protected Session(Logger logger) {
+    LoggerFactory.setLogger(logger);
     LOGGER = logger;
     LOGGER.info("Initializing dekorate session.");
   }
