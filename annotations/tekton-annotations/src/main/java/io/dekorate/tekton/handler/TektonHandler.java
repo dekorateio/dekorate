@@ -44,6 +44,8 @@ import io.dekorate.deps.tekton.pipeline.v1beta1.Pipeline;
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineRun;
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineRunBuilder;
+import io.dekorate.deps.tekton.pipeline.v1beta1.Step;
+import io.dekorate.deps.tekton.pipeline.v1beta1.StepBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.Task;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskBuilder;
 import io.dekorate.deps.tekton.resource.v1alpha1.PipelineResource;
@@ -286,14 +288,19 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .addNewWorkspace()
           .withName(SOURCE)
         .endWorkspace()
-      .addNewStep()
-        .withName(INIT)
-        .withImage(BUSYBOX)
-        .withCommand("cp")
-        .withArgs("-r", "$(resources.inputs.git-source.path)", "$(workspaces.source.path)/" + config.getName())
-        .withWorkingDir(String.format(RESOURCES_INPUTS_FORMAT, GIT_SOURCE))
-      .endStep()
+      .addToSteps(createWorkspaceInitStep(config))
       .endSpec()
+      .build();
+  }
+
+
+  public Step createWorkspaceInitStep(TektonConfig config) {
+    return new StepBuilder()
+      .withName(INIT)
+      .withImage(BUSYBOX)
+      .withCommand("cp")
+      .withArgs("-r", "$(resources.inputs.git-source.path)", "$(workspaces.source.path)/" + config.getName())
+      .withWorkingDir(String.format(RESOURCES_INPUTS_FORMAT, GIT_SOURCE))
       .build();
   }
 
@@ -313,14 +320,18 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
             .withStringVal(getContextPath(config.getProject()))
           .endDefault()
         .endParam()
-        .addNewStep()
-          .withName(JAVA + DASH + BUILD)
-          .withImage(i.getImage())
-          .withCommand(i.getCommand())
-          .withWorkingDir("$(workspaces.source.path)/" + config.getName())
-        .endStep()
+        .addToSteps(createJavaBuildStep(config, i))
       .endSpec()
       .build());
+  }
+
+  public Step createJavaBuildStep(TektonConfig config, BuildImage builderImage) {
+    return new StepBuilder()
+      .withName(JAVA + DASH + BUILD)
+      .withImage(builderImage.getImage())
+      .withCommand(builderImage.getCommand())
+      .withWorkingDir("$(workspaces.source.path)/" + config.getName())
+      .build();
   }
 
   public Task createImageBuildTask(TektonConfig config) {
@@ -357,7 +368,13 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
               .withStringVal(BUILDER_IMAGE_DEFAULT)
             .endDefault()
          .endParam()
-         .addNewStep()
+         .addToSteps(createImageBuildStep(config))
+        .endSpec()
+      .build();
+  }
+
+  public Step createImageBuildStep(TektonConfig config) {
+    return new StepBuilder()
           .withName(BUILD_AND_PUSH)
           .withImage(BUILDER_IMAGE_REF)
           .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
@@ -367,8 +384,6 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
           .addToArgs(IMAGE_DESTINATION_ARG)
           .addToArgs(VERBOSITY_DEBUG)
           .withWorkingDir("$(workspaces.source.path)/" + config.getName())
-         .endStep()
-        .endSpec()
       .build();
   }
 
@@ -393,14 +408,18 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
              .withStringVal(String.format(PATH_TO_FILE_FORMAT, SOURCE, PATH_TO_YML_DEFAULT))
             .endDefault()
           .endParam()
-          .addNewStep()
-            .withName(DEPLOY)
-            .withImage(config.getDeployerImage())
-            .withCommand(DEPLOY_CMD)
-            .withArgs(deployArgs(config))
-            .withWorkingDir("$(workspaces.source.path)/" + config.getName())
-          .endStep()
+          .addToSteps(createDeployStep(config))
         .endSpec()
+      .build();
+  }
+
+  public Step createDeployStep(TektonConfig config) {
+    return new StepBuilder()
+      .withName(DEPLOY)
+      .withImage(config.getDeployerImage())
+      .withCommand(DEPLOY_CMD)
+      .withArgs(deployArgs(config))
+      .withWorkingDir("$(workspaces.source.path)/" + config.getName())
       .build();
   }
 
