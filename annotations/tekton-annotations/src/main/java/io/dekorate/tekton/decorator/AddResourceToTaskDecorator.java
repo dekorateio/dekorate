@@ -19,30 +19,34 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-public class AddWorkspaceToTaskDecorator extends NamedTaskDecorator {
+public class AddResourceToTaskDecorator extends NamedTaskDecorator {
 
-  private final String id;
-  private final String description;
-  private final boolean readOnly;
-  private final String path;
+  private final String resourceType;
+  private final String resourceName;
 
-  public AddWorkspaceToTaskDecorator(String taskName, String id, String description, boolean readOnly, String path) {
+  public AddResourceToTaskDecorator(String taskName, String resourceType, String resourceName) {
     super(taskName);
-    this.id = id;
-    this.description = description;
-    this.readOnly = readOnly;
-    this.path = path;
+    this.resourceType = resourceType;
+    this.resourceName = resourceName;
   }
 
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
-    taskSpec.removeMatchingFromWorkspaces(w -> id.equals(w.getName()));
-
-    taskSpec.addNewWorkspace()
-      .withName(id)
-      .withDescription(description)
-      .withReadOnly(readOnly)
-      .withMountPath(path)
-      .endWorkspace();
+    if (!taskSpec.hasResources()) {
+      taskSpec.withNewResources()
+        .addNewInput()
+        .withName(resourceName)
+        .withType(resourceType)
+        .endInput()
+        .endResources();
+    } else {
+      taskSpec.editResources().removeMatchingFromInputs(r -> r.getName().equals(resourceName)).endResources();
+      taskSpec.editResources()
+        .addNewInput()
+        .withName(resourceName)
+        .withType(resourceType)
+        .endInput()
+        .endResources();
+    }
   }
 }

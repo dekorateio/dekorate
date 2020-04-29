@@ -19,30 +19,25 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-public class AddWorkspaceToTaskDecorator extends NamedTaskDecorator {
+public class AddParamToTaskDecorator extends NamedTaskDecorator {
 
-  private final String id;
+  private final String name;
   private final String description;
-  private final boolean readOnly;
-  private final String path;
+  private final String defaultValue;
 
-  public AddWorkspaceToTaskDecorator(String taskName, String id, String description, boolean readOnly, String path) {
+  public AddParamToTaskDecorator(String taskName, String name, String description, String defaultValue) {
     super(taskName);
-    this.id = id;
+    this.name = name;
     this.description = description;
-    this.readOnly = readOnly;
-    this.path = path;
+    this.defaultValue = defaultValue;
   }
 
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
-    taskSpec.removeMatchingFromWorkspaces(w -> id.equals(w.getName()));
-
-    taskSpec.addNewWorkspace()
-      .withName(id)
+    taskSpec.addNewParam()
+      .withName(name)
       .withDescription(description)
-      .withReadOnly(readOnly)
-      .withMountPath(path)
-      .endWorkspace();
+      .withNewDefault().withStringVal(defaultValue).endDefault()
+      .endParam();
   }
 }
