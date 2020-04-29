@@ -24,6 +24,7 @@ import java.util.Optional;
 import io.dekorate.BuildImage;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.Configurators;
+import io.dekorate.DekorateException;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Logger;
@@ -67,6 +68,13 @@ import io.dekorate.project.ScmInfo;
 import io.dekorate.tekton.config.EditableTektonConfig;
 import io.dekorate.tekton.config.TektonConfig;
 import io.dekorate.tekton.config.TektonConfigBuilder;
+import io.dekorate.tekton.decorator.AddContextParamToTaskDecorator;
+import io.dekorate.tekton.decorator.AddDeployStepDecorator;
+import io.dekorate.tekton.decorator.AddImageBuildStepDecorator;
+import io.dekorate.tekton.decorator.AddInitStepDecorator;
+import io.dekorate.tekton.decorator.AddJavaBuildStepDecorator;
+import io.dekorate.tekton.decorator.AddParamToTaskDecorator;
+import io.dekorate.tekton.decorator.AddResourceToTaskDecorator;
 import io.dekorate.tekton.decorator.AddServiceAccountToTaskDecorator;
 import io.dekorate.tekton.decorator.AddToArgsDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToTaskDecorator;
@@ -86,7 +94,6 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String URL = "url";
   private static final String IMAGE = "image";
   private static final String BUILD = "build";
-  private static final String BUILD_AND_PUSH = "build-and-push";
   private static final String DEPLOY = "deploy";
   private static final String SOURCE = "source";
   private static final String WORKSPACE = "workspace";
@@ -100,14 +107,12 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String PIPELINE_SOURCE_WS = "pipeline-source-ws";
 
   private static final String JAVA = "java";
-
   private static final String DASH = "-";
 
   private static final String MAVEN_LOCAL_REPO_SYS_PROPERTY = "-Dmaven.repo.local=%s";
   private static final String IMAGE_PULL_SECRETS_SYS_PROPERTY = "-Ddekorate.image-pull-secrets=";
   private static final String USER_NAME_SYS_PROP = "-Duser.name=";
 
-  private static final String PARAMS_FORMAT = "$(params.%s)";
   private static final String RESOURCES_INPUTS_FORMAT = "$(resources.inputs.%s.path)";
   private static final String PATH_TO_FILE_FORMAT = "$(resources.inputs.source.path)/%s/$(inputs.params.pathToContext)/%s";
 
@@ -125,21 +130,8 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String BUILDER_IMAGE_PARAM_NAME = "builderImage";
   private static final String BUILDER_IMAGE_DESCRIPTION = "The image to use for performing image build";
   private static final String BUILDER_IMAGE_DEFAULT = "gcr.io/kaniko-project/executor:v0.18.0";
-  private static final String BUILDER_IMAGE_REF = "$(inputs.params.builderImage)";
-
-  private static final String DOCKER_CONFIG = "DOCKER_CONFIG";
-  private static final String DOCKER_CONFIG_DEFAULT = "/tekton/home/.docker";
-
-  private static final String KANIKO_CMD = "/kaniko/executor";
-  private static final String DOCKERFILE_ARG = "--dockerfile=$(inputs.params.pathToDockerfile)";
-  private static final String CONTEXT_ARG = "--context=$(params.pathToContext)";
-  private static final String IMAGE_DESTINATION_ARG = "--destination=$(resources.outputs.image.url)";
-  private static final String VERBOSITY_DEBUG = "--verbosity=debug";
-
 
   private static final String BUSYBOX = "busybox";
-  private static final String DEPLOY_CMD = "kubectl";
-
   private static final String DEFAULT_TIMEOUT = "1h0m0s";
 
   private final Resources resources;
@@ -170,39 +162,65 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   }
 
   public void handle(TektonConfig config) {
-    Optional<Task> buildTask = createJavaBuildTask(config);
-    Optional<PipelineResource> gitResource = createGitResource(config);
+    PipelineResource gitResource = createGitResource(config).orElse(null);
+
+    if (gitResource == null) {
+      LOGGER.warning("Project is not under version control, or unsupported version control system. Aborting generation of tekton resources!");
+      return;
+    }
+
     ImageConfiguration imageConfiguration = getImageConfiguration(getProject(), config, configurators);
     Map<String, String> annotations = new HashMap<String, String>() {{
         put("tekton.dev/docker-0", "https://" + imageConfiguration.getRegistry());
     }};
 
-    resources.add(TEKTON_RUN, createPipelineRun(config));
+    resources.add(TEKTON, gitResource);
     resources.add(TEKTON, createOutputImageResource(config, imageConfiguration));
     resources.add(TEKTON, createPvc(config));
     resources.add(TEKTON, createRole(config));
 
-   // resources.add(TEKTON, createHostPathPv(config));
-    buildTask.ifPresent(t -> resources.add(TEKTON, t));
-    gitResource.ifPresent(t -> {
-        resources.add(TEKTON, t);
-        resources.add(TEKTON, createWorkspaceInitTask(config));
-        resources.add(TEKTON, createImageBuildTask(config));
-        resources.add(TEKTON, createDeployTask(config));
-        resources.add(TEKTON, createPipeline(config));
-        resources.decorate(TEKTON, new AddServiceAccountResourceDecorator());
-        resources.decorate(TEKTON, new AddRoleBindingResourceDecorator(AddRoleBindingResourceDecorator.RoleKind.Role, "pipeline-deployer"));
-    });
+    //All Tasks
+    resources.decorate(TEKTON, new AddWorkspaceToTaskDecorator(null, SOURCE, "The workspace to hold all project sources", false, null));
+    resources.decorate(TEKTON, new AddParamToTaskDecorator(null, PATH_TO_CONTEXT_PARAM_NAME, PATH_TO_CONTEXT_DESCRIPTION, getContextPath(getProject())));
 
-    String taskName = javaBuildTaskName(config);
-    String stepName = javaBuildStepName(config);
+    //Workspace Init
+    String initTaskName = workspaceInitTaskName(config);
+    resources.add(TEKTON, createWorkspaceInitTask(config));
+    resources.decorate(TEKTON, new AddInitStepDecorator(initTaskName, GIT_SOURCE, config.getName()));
+    resources.decorate(TEKTON, new AddResourceToTaskDecorator(initTaskName, GIT, GIT_SOURCE));
 
-    resources.decorate(TEKTON, new AddToArgsDecorator(taskName, stepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, config.getArtifactRepositoryPath())));
-    resources.decorate(TEKTON, new AddToArgsDecorator(taskName, stepName, USER_NAME_SYS_PROP + imageConfiguration.getGroup()));
+    //Java Build
+    BuildInfo build = config.getProject().getBuildInfo();
+    BuildImage image = BuildImage.find(build.getBuildTool(), build.getBuildToolVersion(), Jvm.getVersion(), null).orElseThrow(() -> new IllegalStateException("No java builder image was found!"));
+
+    String javaBuildTaskName = javaBuildTaskName(config);
+    String javaBuildStepName = javaBuildStepName(config);
+    resources.add(TEKTON, createJavaBuildTask(config));
+    resources.decorate(TEKTON, new AddJavaBuildStepDecorator(javaBuildTaskName(config), config.getName(), image));
+
+    //Image Build
+    String imageBuildTaskName = imageBuildTaskName(config);
+    resources.add(TEKTON, createImageBuildTask(config));
+    resources.decorate(TEKTON, new AddImageBuildStepDecorator(imageBuildTaskName, config.getName()));
+    resources.decorate(TEKTON, new AddParamToTaskDecorator(imageBuildTaskName, PATH_TO_DOCKERFILE_PARAM_NAME, PATH_TO_DOCKERFILE_DESCRIPTION, PATH_TO_DOCKERFILE_DEFAULT));
+    resources.decorate(TEKTON, new AddParamToTaskDecorator(imageBuildTaskName, BUILDER_IMAGE_PARAM_NAME, BUILDER_IMAGE_DESCRIPTION, BUILDER_IMAGE_DEFAULT));
+
+    //Deploy Task
+    String deployTaskName = deployTaskName(config);
+    resources.add(TEKTON, createDeployTask(config));
+    resources.decorate(TEKTON, new AddDeployStepDecorator(deployTaskName, config.getName(), config.getDeployerImage()));
+    resources.decorate(TEKTON, new AddParamToTaskDecorator(deployTaskName, PATH_TO_YML_PARAM_NAME, PATH_TO_YML_DESCRIPTION, PATH_TO_YML_DEFAULT));
+
+    resources.add(TEKTON, createPipeline(config));
+    resources.decorate(TEKTON, new AddServiceAccountResourceDecorator());
+    resources.decorate(TEKTON, new AddRoleBindingResourceDecorator(AddRoleBindingResourceDecorator.RoleKind.Role, "pipeline-deployer"));
+
+    resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, config.getArtifactRepositoryPath())));
+    resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, USER_NAME_SYS_PROP + imageConfiguration.getGroup()));
 
     if (Strings.isNotNullOrEmpty(config.getArtifactRepositoryWorkspace())) {
-      resources.decorate(TEKTON, new AddWorkspaceToTaskDecorator(taskName, config.getArtifactRepositoryWorkspace(), "Local maven repository workspace", false, config.getArtifactRepositoryPath()));
-      resources.decorate(TEKTON, new AddToArgsDecorator(taskName, stepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, config.getArtifactRepositoryPath())));
+      resources.decorate(TEKTON, new AddWorkspaceToTaskDecorator(javaBuildTaskName, config.getArtifactRepositoryWorkspace(), "Local maven repository workspace", false, config.getArtifactRepositoryPath()));
+      resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, config.getArtifactRepositoryPath())));
     }
 
     if (Strings.isNotNullOrEmpty(config.getImageBuilderServiceAccount())) {
@@ -212,7 +230,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       resources.decorate(TEKTON_RUN, new AddServiceAccountToTaskDecorator(imageBuildTaskName(config), generatedServiceAccount));
       if (Strings.isNotNullOrEmpty(config.getImageBuilderSecret())) {
         resources.decorate(TEKTON, new AddSecretToServiceAccountDecorator(generatedServiceAccount, config.getImageBuilderSecret()));
-        resources.decorate(TEKTON, new AddToArgsDecorator(taskName, stepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + config.getImageBuilderSecret()));
+        resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + config.getImageBuilderSecret()));
       } else if (config.isUseLocalDockerConfigJson()) {
         String generatedSecret = config.getName() + "-registry-credentials" ;
         Path dockerConfigJson = Paths.get(System.getProperty("user.home"), ".docker", "config.json");
@@ -221,18 +239,19 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         } else {
           LOGGER.warning(dockerConfigJson.toAbsolutePath().toString() + " is going to be added as part of Secret: "+ generatedSecret);
         }
-        resources.decorate(TEKTON, new AddToArgsDecorator(taskName, stepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
+        resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
         resources.decorate(TEKTON, new AddDockerConfigJsonSecretDecorator(generatedSecret, dockerConfigJson, annotations));
         resources.decorate(TEKTON, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
       } else if (Strings.isNotNullOrEmpty(config.getRegistryUsername()) && Strings.isNotNullOrEmpty(config.getRegistryPassword())) {
         String generatedSecret = config.getName() + "-registry-credentials" ;
-        resources.decorate(TEKTON, new AddToArgsDecorator(taskName, stepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
+        resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
         resources.decorate(TEKTON, new AddDockerConfigJsonSecretDecorator(generatedSecret, config.getRegistry(), config.getRegistryUsername(), config.getRegistryPassword(), annotations));
         resources.decorate(TEKTON, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
       } else {
         LOGGER.error("An existing builder image service account or secret is required! Alternatively, you can specify a registry username and password!");
       }
     }
+    resources.add(TEKTON_RUN, createPipelineRun(config));
   }
 
   public Optional<PipelineResource> createGitResource(TektonConfig config) {
@@ -279,58 +298,17 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .withName(workspaceInitTaskName(config))
       .endMetadata()
       .withNewSpec()
-        .withNewResources()
-          .addNewInput()
-             .withName(GIT_SOURCE)
-             .withType(GIT)
-          .endInput()
-        .endResources()
-        .addNewWorkspace()
-          .withName(SOURCE)
-        .endWorkspace()
-      .addToSteps(createWorkspaceInitStep(config))
       .endSpec()
       .build();
   }
 
-
-  public Step createWorkspaceInitStep(TektonConfig config) {
-    return new StepBuilder()
-      .withName(INIT)
-      .withImage(BUSYBOX)
-      .withCommand("cp")
-      .withArgs("-r", "$(resources.inputs.git-source.path)", "$(workspaces.source.path)/" + config.getName())
-      .withWorkingDir(String.format(RESOURCES_INPUTS_FORMAT, GIT_SOURCE))
-      .build();
-  }
-
-  public Optional<Task> createJavaBuildTask(TektonConfig config) {
-    BuildInfo build = config.getProject().getBuildInfo();
-    Optional<BuildImage> image = BuildImage.find(build.getBuildTool(), build.getBuildToolVersion(), Jvm.getVersion(), null);
-    return image.map(i -> new TaskBuilder()
+  public Task createJavaBuildTask(TektonConfig config) {
+    return new TaskBuilder()
       .withNewMetadata()
       .withName(javaBuildTaskName(config))
       .endMetadata()
       .withNewSpec()
-        .addNewWorkspace().withName(SOURCE).endWorkspace()
-        .addNewParam()
-          .withName(PATH_TO_CONTEXT_PARAM_NAME)
-          .withDescription(PATH_TO_CONTEXT_DESCRIPTION)
-          .withNewDefault()
-            .withStringVal(getContextPath(config.getProject()))
-          .endDefault()
-        .endParam()
-        .addToSteps(createJavaBuildStep(config, i))
       .endSpec()
-      .build());
-  }
-
-  public Step createJavaBuildStep(TektonConfig config, BuildImage builderImage) {
-    return new StepBuilder()
-      .withName(JAVA + DASH + BUILD)
-      .withImage(builderImage.getImage())
-      .withCommand(builderImage.getCommand())
-      .withWorkingDir("$(workspaces.source.path)/" + config.getName())
       .build();
   }
 
@@ -340,50 +318,13 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .withName(imageBuildTaskName(config))
       .endMetadata()
         .withNewSpec()
-          .addNewWorkspace().withName(SOURCE).endWorkspace()
           .withNewResources()
             .addNewOutput()
               .withName(IMAGE)
               .withType(IMAGE)
             .endOutput()
           .endResources()
-          .addNewParam()
-            .withName(PATH_TO_CONTEXT_PARAM_NAME)
-            .withDescription(PATH_TO_CONTEXT_DESCRIPTION)
-            .withNewDefault()
-              .withStringVal(getContextPath(config.getProject()))
-            .endDefault()
-          .endParam()
-          .addNewParam()
-            .withName(PATH_TO_DOCKERFILE_PARAM_NAME)
-            .withDescription(PATH_TO_DOCKERFILE_DESCRIPTION)
-            .withNewDefault()
-              .withStringVal(PATH_TO_DOCKERFILE_DEFAULT)
-            .endDefault()
-          .endParam()
-         .addNewParam()
-           .withName(BUILDER_IMAGE_PARAM_NAME)
-           .withDescription(BUILDER_IMAGE_DESCRIPTION)
-            .withNewDefault()
-              .withStringVal(BUILDER_IMAGE_DEFAULT)
-            .endDefault()
-         .endParam()
-         .addToSteps(createImageBuildStep(config))
         .endSpec()
-      .build();
-  }
-
-  public Step createImageBuildStep(TektonConfig config) {
-    return new StepBuilder()
-          .withName(BUILD_AND_PUSH)
-          .withImage(BUILDER_IMAGE_REF)
-          .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
-          .withCommand(KANIKO_CMD)
-          .addToArgs(DOCKERFILE_ARG)
-          .addToArgs(CONTEXT_ARG)
-          .addToArgs(IMAGE_DESTINATION_ARG)
-          .addToArgs(VERBOSITY_DEBUG)
-          .withWorkingDir("$(workspaces.source.path)/" + config.getName())
       .build();
   }
 
@@ -393,33 +334,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .withName(deployTaskName(config))
       .endMetadata()
         .withNewSpec()
-          .addNewWorkspace().withName(SOURCE).endWorkspace()
-          .addNewParam()
-            .withName(PATH_TO_CONTEXT_PARAM_NAME)
-            .withDescription(PATH_TO_CONTEXT_DESCRIPTION)
-            .withNewDefault()
-              .withStringVal(getContextPath(config.getProject()))
-            .endDefault()
-          .endParam()
-          .addNewParam()
-            .withName(PATH_TO_YML_PARAM_NAME)
-            .withDescription(PATH_TO_YML_DESCRIPTION)
-            .withNewDefault()
-             .withStringVal(String.format(PATH_TO_FILE_FORMAT, SOURCE, PATH_TO_YML_DEFAULT))
-            .endDefault()
-          .endParam()
-          .addToSteps(createDeployStep(config))
         .endSpec()
-      .build();
-  }
-
-  public Step createDeployStep(TektonConfig config) {
-    return new StepBuilder()
-      .withName(DEPLOY)
-      .withImage(config.getDeployerImage())
-      .withCommand(DEPLOY_CMD)
-      .withArgs(deployArgs(config))
-      .withWorkingDir("$(workspaces.source.path)/" + config.getName())
       .build();
   }
 
@@ -601,9 +516,6 @@ public PersistentVolume createHostPathPv(TektonConfig config) {
     }
   }
 
-  public static final String[] deployArgs(TektonConfig config ) {
-    return new String[] {"apply", "-f", String.format(PARAMS_FORMAT, PATH_TO_YML_PARAM_NAME)};
-  }
 
   public static final String gitResourceName(TektonConfig config) {
     return config.getName() + DASH + GIT;
