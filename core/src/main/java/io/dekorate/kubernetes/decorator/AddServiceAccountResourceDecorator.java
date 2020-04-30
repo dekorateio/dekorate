@@ -18,21 +18,30 @@ package io.dekorate.kubernetes.decorator;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.doc.Description;
+import io.dekorate.utils.Strings;
 
 @Description("Add a ServiceAccount resource to the list of generated resources.")
 public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
-    
+
+  private final String name;
+
   public AddServiceAccountResourceDecorator() {
+   this(null);
+  }
+
+  public AddServiceAccountResourceDecorator(String name) {
+    this.name = name;
   }
 
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName();
+
     list.addNewServiceAccountItem()
       .withNewMetadata()
-      .withName(meta.getName())
+      .withName(name)
       .withLabels(meta.getLabels())
       .endMetadata()
       .endServiceAccountItem();
   }
 }
-

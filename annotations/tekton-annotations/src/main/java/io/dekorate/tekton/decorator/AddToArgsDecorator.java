@@ -40,6 +40,6 @@ public class AddToArgsDecorator extends TektonStepDecorator<StepFluent> {
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, ApplyArgsDecorator.class};
+    return new Class[]{ResourceProvidingDecorator.class, NamedTaskDecorator.class, ApplyArgsDecorator.class};
   }
 }

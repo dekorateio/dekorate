@@ -19,6 +19,7 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.rbac.RoleBindingBuilder;
 import io.dekorate.doc.Description;
+import io.dekorate.utils.Strings;
 
 /**
  * AddRoleBindingDecorator
@@ -33,34 +34,45 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
     ClusterRole
   }
 
-  private final String roleName;
-  private final RoleKind roleKind;
+  private final String serviceAccount;
+  private final String name;
+  private final String role;
+  private final RoleKind kind;
 
-  public AddRoleBindingResourceDecorator(RoleKind roleKind, String roleName) {
-    this.roleKind = roleKind;
-    this.roleName = roleName;
+
+  public AddRoleBindingResourceDecorator(String role) {
+    this(null, null, role, RoleKind.ClusterRole);
   }
 
-  public AddRoleBindingResourceDecorator(String roleName) {
-    this(RoleKind.ClusterRole, roleName);
+  public AddRoleBindingResourceDecorator(String role, RoleKind kind) {
+    this(null, null, role, kind);
+  }
+
+  public AddRoleBindingResourceDecorator(String name, String serviceAccount, String role, RoleKind kind) {
+    this.name = name;
+    this.serviceAccount = serviceAccount;
+    this.role = role;
+    this.kind = kind;
   }
 
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    String name = Strings.isNotNullOrEmpty(this.name) ? this.name :  meta.getName() + ":view";
+    String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount :  meta.getName();
 
     list.addToItems(new RoleBindingBuilder()
       .withNewMetadata()
-      .withName(meta.getName()+":view")
+      .withName(name)
       .withLabels(meta.getLabels())
       .endMetadata()
       .withNewRoleRef()
-      .withKind(roleKind.name())
-      .withName(roleName)
+      .withKind(kind.name())
+      .withName(role)
       .withApiGroup(DEFAULT_RBAC_API_GROUP)
       .endRoleRef()
       .addNewSubject()
       .withKind("ServiceAccount")
-      .withName(meta.getName())
+      .withName(serviceAccount)
       .endSubject());
   }
 }

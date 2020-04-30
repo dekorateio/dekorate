@@ -21,13 +21,19 @@ import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 public class AddResourceInputToTaskDecorator extends NamedTaskDecorator {
 
-  private final String resourceType;
-  private final String resourceName;
+  private final String type;
+  private final String name;
+  private final String targetPath;
 
-  public AddResourceInputToTaskDecorator(String taskName, String resourceType, String resourceName) {
+  public AddResourceInputToTaskDecorator(String taskName, String type, String name) {
+    this(taskName, type, name, null);
+  }
+
+  public AddResourceInputToTaskDecorator(String taskName, String type, String name, String targetPath) {
     super(taskName);
-    this.resourceType = resourceType;
-    this.resourceName = resourceName;
+    this.type = type;
+    this.name = name;
+    this.targetPath = targetPath;
   }
 
   @Override
@@ -35,16 +41,18 @@ public class AddResourceInputToTaskDecorator extends NamedTaskDecorator {
     if (!taskSpec.hasResources()) {
       taskSpec.withNewResources()
         .addNewInput()
-        .withName(resourceName)
-        .withType(resourceType)
+        .withName(name)
+        .withType(type)
+        .withTargetPath(targetPath)
         .endInput()
         .endResources();
     } else {
-      taskSpec.editResources().removeMatchingFromInputs(r -> r.getName().equals(resourceName)).endResources();
+      taskSpec.editResources().removeMatchingFromInputs(r -> r.getName().equals(name)).endResources();
       taskSpec.editResources()
         .addNewInput()
-        .withName(resourceName)
-        .withType(resourceType)
+        .withName(name)
+        .withType(type)
+        .withTargetPath(targetPath)
         .endInput()
         .endResources();
     }

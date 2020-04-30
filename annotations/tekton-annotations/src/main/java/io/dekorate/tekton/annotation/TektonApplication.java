@@ -95,6 +95,31 @@ public @interface TektonApplication {
    */
   Annotation[] annotations() default {};
 
+  /*
+   * The name of the source workspace.
+   * @return the name, or 'source' if no name specified.
+   */
+  String sourceWorkspace() default "source";
+
+  /*
+   * The name of an existing pvc.
+   * @return The existing PVC or empty string if none is specified.
+   */
+  String sourceWorkspaceClaim() default "";
+
+  /*
+   * The size requirement of the generated PVC
+   * This only makes sense for generated PVCs.
+   * @return the size, or 1Gi (default).
+   */
+  String sourceWorkspaceSize() default "1Gi";
+
+  /*
+   * The storage class requirement of the generated PVC
+   * This only makes sense for generated PVCs.
+   * @return the storage class or standard (default).
+   */
+  String sourceWorkspaceStorageClass() default "standard";
 
   /**
    * The name of workspace to use as a maven artifact repository.

@@ -68,4 +68,10 @@ public abstract class NamedTaskDecorator extends Decorator<VisitableBuilder> {
     return new Class[] { ResourceProvidingDecorator.class, TaskProvidingDecorator.class };
   }
 
+  @Override
+  public Class<? extends Decorator>[] before() {
+    return new Class[] { TektonStepDecorator.class };
+  }
+
+
 }
