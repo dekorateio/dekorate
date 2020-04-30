@@ -45,6 +45,8 @@ import io.dekorate.deps.tekton.pipeline.v1beta1.Pipeline;
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineRun;
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineRunBuilder;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineTask;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineTaskBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.Step;
 import io.dekorate.deps.tekton.pipeline.v1beta1.StepBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.Task;
@@ -74,12 +76,16 @@ import io.dekorate.tekton.decorator.AddImageBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddInitStepDecorator;
 import io.dekorate.tekton.decorator.AddJavaBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddParamToTaskDecorator;
-import io.dekorate.tekton.decorator.AddResourceToTaskDecorator;
+import io.dekorate.tekton.decorator.AddResourceInputToTaskDecorator;
+import io.dekorate.tekton.decorator.AddResourceOutputToTaskDecorator;
+import io.dekorate.tekton.decorator.AddResourceToPipelineDecorator;
 import io.dekorate.tekton.decorator.AddServiceAccountToTaskDecorator;
+import io.dekorate.tekton.decorator.AddTaskToPipelineDecorator;
 import io.dekorate.tekton.decorator.AddToArgsDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToTaskDecorator;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Jvm;
+import io.dekorate.utils.Maps;
 import io.dekorate.utils.Strings;
 
 public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, WithProject {
@@ -105,6 +111,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String OUTPUT_IMAGE = "out-image";
 
   private static final String PIPELINE_SOURCE_WS = "pipeline-source-ws";
+  private static final String PIPELINE_SOURCE_WS_DECSCRIPTION = "The workspace to share between pipeline steps";
 
   private static final String JAVA = "java";
   private static final String DASH = "-";
@@ -178,6 +185,8 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.add(TEKTON, createOutputImageResource(config, imageConfiguration));
     resources.add(TEKTON, createPvc(config));
     resources.add(TEKTON, createRole(config));
+    resources.decorate(TEKTON, new AddServiceAccountResourceDecorator());
+    resources.decorate(TEKTON, new AddRoleBindingResourceDecorator(AddRoleBindingResourceDecorator.RoleKind.Role, "pipeline-deployer"));
 
     //All Tasks
     resources.decorate(TEKTON, new AddWorkspaceToTaskDecorator(null, SOURCE, "The workspace to hold all project sources", false, null));
@@ -187,7 +196,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     String initTaskName = workspaceInitTaskName(config);
     resources.add(TEKTON, createWorkspaceInitTask(config));
     resources.decorate(TEKTON, new AddInitStepDecorator(initTaskName, GIT_SOURCE, config.getName()));
-    resources.decorate(TEKTON, new AddResourceToTaskDecorator(initTaskName, GIT, GIT_SOURCE));
+    resources.decorate(TEKTON, new AddResourceInputToTaskDecorator(initTaskName, GIT, GIT_SOURCE));
 
     //Java Build
     BuildInfo build = config.getProject().getBuildInfo();
@@ -204,6 +213,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.decorate(TEKTON, new AddImageBuildStepDecorator(imageBuildTaskName, config.getName()));
     resources.decorate(TEKTON, new AddParamToTaskDecorator(imageBuildTaskName, PATH_TO_DOCKERFILE_PARAM_NAME, PATH_TO_DOCKERFILE_DESCRIPTION, PATH_TO_DOCKERFILE_DEFAULT));
     resources.decorate(TEKTON, new AddParamToTaskDecorator(imageBuildTaskName, BUILDER_IMAGE_PARAM_NAME, BUILDER_IMAGE_DESCRIPTION, BUILDER_IMAGE_DEFAULT));
+    resources.decorate(TEKTON, new AddResourceOutputToTaskDecorator(imageBuildTaskName, IMAGE, IMAGE));
 
     //Deploy Task
     String deployTaskName = deployTaskName(config);
@@ -211,9 +221,6 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.decorate(TEKTON, new AddDeployStepDecorator(deployTaskName, config.getName(), config.getDeployerImage()));
     resources.decorate(TEKTON, new AddParamToTaskDecorator(deployTaskName, PATH_TO_YML_PARAM_NAME, PATH_TO_YML_DESCRIPTION, PATH_TO_YML_DEFAULT));
 
-    resources.add(TEKTON, createPipeline(config));
-    resources.decorate(TEKTON, new AddServiceAccountResourceDecorator());
-    resources.decorate(TEKTON, new AddRoleBindingResourceDecorator(AddRoleBindingResourceDecorator.RoleKind.Role, "pipeline-deployer"));
 
     resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, config.getArtifactRepositoryPath())));
     resources.decorate(TEKTON, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, USER_NAME_SYS_PROP + imageConfiguration.getGroup()));
@@ -251,6 +258,13 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         LOGGER.error("An existing builder image service account or secret is required! Alternatively, you can specify a registry username and password!");
       }
     }
+
+    String pipelineName = config.getName();
+    resources.add(TEKTON, createPipeline(config));
+    resources.decorate(TEKTON, new AddResourceToPipelineDecorator(pipelineName, GIT, GIT_SOURCE, false));
+    resources.decorate(TEKTON, new AddResourceToPipelineDecorator(pipelineName, IMAGE, OUTPUT_IMAGE, false));
+
+
     resources.add(TEKTON_RUN, createPipelineRun(config));
   }
 
@@ -338,6 +352,57 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .build();
   }
 
+  public PipelineTask createInitPipelineTask(TektonConfig config) {
+    return new PipelineTaskBuilder()
+      .withName(INIT)
+      .withNewTaskRef()
+      .withName(workspaceInitTaskName(config))
+      .endTaskRef()
+      .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+      .withNewResources().addNewInput().withName(GIT_SOURCE).withResource(GIT_SOURCE).endInput().endResources()
+      .build();
+  }
+
+  public PipelineTask createJavaBuildPipelineTask(TektonConfig config) {
+    return new PipelineTaskBuilder()
+      .withName(BUILD)
+      .withNewTaskRef()
+      .withName(javaBuildTaskName(config))
+      .endTaskRef()
+      .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+      .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
+      .withRunAfter(INIT)
+      .build();
+  }
+
+  public PipelineTask createImageBuildPipelineTask(TektonConfig config) {
+    return new PipelineTaskBuilder()
+      .withName(IMAGE)
+      .withNewTaskRef()
+      .withName(imageBuildTaskName(config))
+      .endTaskRef()
+      .withNewResources()
+      .addNewOutput().withName(IMAGE).withResource(OUTPUT_IMAGE).endOutput()
+      .endResources()
+      .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+      .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
+      .withRunAfter(INIT, BUILD)
+      .build();
+  }
+
+  public PipelineTask createDeployPipelineTask(TektonConfig config) {
+    return new PipelineTaskBuilder()
+      .withName(DEPLOY)
+      .withNewTaskRef()
+      .withName(deployTaskName(config))
+      .endTaskRef()
+      .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+      .addNewParam().withName(PATH_TO_YML_PARAM_NAME).withNewValue(getYamlPath(getProject())).endParam()
+      .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
+      .withRunAfter(INIT, BUILD, IMAGE)
+      .build();
+  }
+
   public Pipeline createPipeline(TektonConfig config) {
     return new PipelineBuilder()
       .withNewMetadata()
@@ -353,45 +418,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
           .withType(IMAGE)
          .withName(OUTPUT_IMAGE)
         .endResource()
-        .addNewTask()
-          .withName(INIT)
-          .withNewTaskRef()
-            .withName(workspaceInitTaskName(config))
-          .endTaskRef()
-          .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
-          .withNewResources().addNewInput().withName(GIT_SOURCE).withResource(GIT_SOURCE).endInput().endResources()
-        .endTask()
-        .addNewTask()
-          .withName(BUILD)
-          .withNewTaskRef()
-            .withName(javaBuildTaskName(config))
-          .endTaskRef()
-          .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
-          .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
-          .withRunAfter(INIT)
-        .endTask()
-        .addNewTask()
-          .withName(IMAGE)
-            .withNewTaskRef()
-              .withName(imageBuildTaskName(config))
-            .endTaskRef()
-          .withNewResources()
-            .addNewOutput().withName(IMAGE).withResource(OUTPUT_IMAGE).endOutput()
-          .endResources()
-        .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
-        .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
-        .withRunAfter(INIT, BUILD)
-        .endTask()
-        .addNewTask()
-          .withName(DEPLOY)
-            .withNewTaskRef()
-              .withName(deployTaskName(config))
-            .endTaskRef()
-        .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
-        .addNewParam().withName(PATH_TO_YML_PARAM_NAME).withNewValue(getYamlPath(getProject())).endParam()
-        .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
-        .withRunAfter(INIT, BUILD, IMAGE)
-        .endTask()
+      .addToTasks(createInitPipelineTask(config), createJavaBuildPipelineTask(config), createImageBuildPipelineTask(config), createDeployPipelineTask(config))
       .endSpec()
       .build();
   }

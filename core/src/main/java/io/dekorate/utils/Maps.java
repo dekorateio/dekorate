@@ -20,9 +20,9 @@ import io.dekorate.deps.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +33,20 @@ import java.util.stream.Collectors;
 public class Maps {
   private static final String PROPERTY_PREFIX = "dekorate";
   private static final String MULTIPART_SEPARATOR_PATTERN = Pattern.quote(".");
+
+  public static Map<String, String> from(String... values) {
+    if (values.length == 0) {
+      return Collections.emptyMap();
+    } else if (values.length % 2 != 0) {
+      throw new IllegalArgumentException("Expected an even number of arguments");
+    }
+
+    Map<String, String> result = new HashMap<>();
+    for (int i = 0; i < values.length; i += 2) {
+      result.put(values[i], values[i + 1]);
+    }
+    return result;
+  }
 
   /**
    * Read a Map representing a properties file and create a config map.

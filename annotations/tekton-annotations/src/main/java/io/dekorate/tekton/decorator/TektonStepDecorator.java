@@ -29,10 +29,6 @@ import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.utils.Generics;
 import io.dekorate.utils.Strings;
 
-/**
- * An abstract class for decorating the application container.
- * This is meant to be used by decorators that are intended to be applied only to the application container (e.g. skip sidecars).
- */
 public abstract class TektonStepDecorator<T> extends Decorator<VisitableBuilder>  {
 
   /**
