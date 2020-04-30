@@ -17,29 +17,29 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineSpecFluent;
 
-public class AddParamToTaskDecorator extends NamedTaskDecorator {
+public class AddResourceToPipelineDecorator extends NamedPipelineDecorator {
 
+  private final String type;
   private final String name;
-  private final String description;
-  private final String defaultValue;
+  private final Boolean optional;
 
-  public AddParamToTaskDecorator(String taskName, String name, String description, String defaultValue) {
-    super(taskName);
+  public AddResourceToPipelineDecorator(String pipelineName, String type, String name, Boolean optional) {
+    super(pipelineName);
+    this.type = type;
     this.name = name;
-    this.description = description;
-    this.defaultValue = defaultValue;
+    this.optional = optional;
   }
 
   @Override
-  public void andThenVisit(TaskSpecFluent<?> taskSpec) {
-    taskSpec.removeMatchingFromParams(p -> name.equals(p.getName()));
+  public void andThenVisit(PipelineSpecFluent<?> pipelineSpec) {
+    pipelineSpec.removeMatchingFromResources(r -> name.equals(r.getName()));
 
-    taskSpec.addNewParam()
+    pipelineSpec.addNewResource()
+      .withType(type)
       .withName(name)
-      .withDescription(description)
-      .withNewDefault().withStringVal(defaultValue).endDefault()
-      .endParam();
+      .withOptional(optional)
+      .endResource();
   }
 }

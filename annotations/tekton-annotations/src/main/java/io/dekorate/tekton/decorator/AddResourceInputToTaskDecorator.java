@@ -19,12 +19,12 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-public class AddResourceToTaskDecorator extends NamedTaskDecorator {
+public class AddResourceInputToTaskDecorator extends NamedTaskDecorator {
 
   private final String resourceType;
   private final String resourceName;
 
-  public AddResourceToTaskDecorator(String taskName, String resourceType, String resourceName) {
+  public AddResourceInputToTaskDecorator(String taskName, String resourceType, String resourceName) {
     super(taskName);
     this.resourceType = resourceType;
     this.resourceName = resourceName;
