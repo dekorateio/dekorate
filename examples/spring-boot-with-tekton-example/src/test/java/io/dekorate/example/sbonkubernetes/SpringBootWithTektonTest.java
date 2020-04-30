@@ -18,6 +18,9 @@ package io.dekorate.example.sbonkubernetes;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.tekton.pipeline.v1beta1.Pipeline;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineRun;
+import io.dekorate.deps.tekton.pipeline.v1beta1.Task;
+import io.dekorate.deps.tekton.pipeline.v1beta1.TaskRun;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
@@ -28,10 +31,34 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class SpringBootWithTektonTest {
 
   @Test
-  public void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton.yml"));
+  public void shouldContainPipeline() {
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline.yml"));
     assertNotNull(list);
     Pipeline p = findFirst(list, Pipeline.class).orElseThrow(() -> new IllegalStateException());
+    assertNotNull(p);
+  }
+
+  @Test
+  public void shouldContainPipelineRun() {
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline-run.yml"));
+    assertNotNull(list);
+    PipelineRun p = findFirst(list, PipelineRun.class).orElseThrow(() -> new IllegalStateException());
+    assertNotNull(p);
+  }
+
+  @Test
+  public void shouldContainTask() {
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task.yml"));
+    assertNotNull(list);
+    Task p = findFirst(list, Task.class).orElseThrow(() -> new IllegalStateException());
+    assertNotNull(p);
+  }
+
+  @Test
+  public void shouldContainTaskRun() {
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task-run.yml"));
+    assertNotNull(list);
+    TaskRun p = findFirst(list, TaskRun.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(p);
   }
 
