@@ -79,7 +79,7 @@ public interface TektonApplicationGenerator extends Generator, WithSession, With
   }
 
   default void onClosed() {
-    //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
+    //We need to set the TCCL, becuase the KubernetesClient used in this part of code, needs TCCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {
       Session session = getSession();
