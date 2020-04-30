@@ -19,6 +19,7 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.BuildImage;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.dekorate.kubernetes.decorator.Decorator;
 
 public class AddJavaBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
@@ -51,4 +52,8 @@ public class AddJavaBuildStepDecorator extends NamedTaskDecorator implements Ste
       .endStep();
   }
 
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { AddInitStepDecorator.class };
+  }
 }

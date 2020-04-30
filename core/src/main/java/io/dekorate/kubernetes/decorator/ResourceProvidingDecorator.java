@@ -28,7 +28,7 @@ import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
 public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
 
-  private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service", "Pipeline");
+  private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service", "Pipeline", "Task");
 
   public Optional<ObjectMeta> getDeploymentMetadata(KubernetesListBuilder list) {
     return list.getItems()
@@ -39,6 +39,6 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
   }
 
   public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list) {
-    return getDeploymentMetadata(list).orElseThrow(() -> new IllegalStateException("Expected at least one of: "+DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))+" to be present."));
+    return getDeploymentMetadata(list).orElseThrow(() -> new IllegalStateException("Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))+" to be present."));
   }
 }
