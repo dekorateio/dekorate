@@ -48,6 +48,7 @@ public class AddJavaBuildStepDecorator extends NamedTaskDecorator implements Ste
       .withName(stepName)
       .withImage(builder.getImage())
       .withCommand(builder.getCommand())
+      .withArgs(builder.getArguments())
       .withWorkingDir(sourcePath(projectName))
       .endStep();
   }

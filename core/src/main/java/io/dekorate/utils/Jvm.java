@@ -22,6 +22,11 @@ public class Jvm {
   private static final String JAVA_VERSION_KEY = "java.version";
   private static final String DOT = "[\\._\\-]+";
 
+  /*
+   * Get the current Jvm version.
+   * As this is an int, it trims "1.x" prefix of older version.
+   * @return The Jvm version.
+   */
   public static int getVersion() {
     String version = System.getProperty(JAVA_VERSION_KEY);
     if (Strings.isNullOrEmpty(version)) {

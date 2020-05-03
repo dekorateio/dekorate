@@ -33,7 +33,8 @@ public class BuildImage {
   private static final String NON_DIGIT = "\\D+";
 
   private final String image;
-  private final String[] command;
+  private final String command;
+  private final String[] arguments;
 
   private final String tool;
   private final String toolVersion;
@@ -41,29 +42,46 @@ public class BuildImage {
   private final String jdkFlavor;
 
   private static final List<BuildImage> IMAGES = Arrays.asList(
-                                                                   new BuildImage("docker.io/maven:3.6.3-jdk-8", "maven", "3.6.3", 8, "openjdk", "mvn", "clean", "install"),
-                                                                   new BuildImage("docker.io/maven:3.6.3-jdk-11", "maven", "3.6.3", 11, "openjdk", "mvn", "clean", "install" ),
-                                                                   new BuildImage("docker.io/maven:3.6.3-jdk-13", "maven", "3.6.3", 14, "openjdk", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-jdk-8", "maven", "3.6.3", 8, "openjdk", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-jdk-11", "maven", "3.6.3", 11, "openjdk", "mvn", "clean", "install" ),
+    new BuildImage("docker.io/maven:3.6.3-jdk-13", "maven", "3.6.3", 14, "openjdk", "mvn", "clean", "install"),
 
-                                                                   new BuildImage("docker.io/maven:3.6.3-amazoncorretto-8", "maven", "3.6.3", 8, "amazoncorretto", "mvn", "clean", "install"),
-                                                                   new BuildImage("docker.io/maven:3.6.3-amazoncorretto-11", "maven", "3.6.3", 11, "amazoncorreto", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-8", "maven", "3.6.3", 8, "amazoncorretto", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-11", "maven", "3.6.3", 11, "amazoncorreto", "mvn", "clean", "install"),
 
-                                                                   new BuildImage("docker.io/maven:3.6.3-openj9-11", "maven", "3.6.3", 11, "openj9", "mvn", "clean", "install"),
-                                                                   new BuildImage("docker.io/maven:3.6.3-ibmjava-8", "maven", "3.6.3", 8, "ibmjava", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-openj9-11", "maven", "3.6.3", 11, "openj9", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-ibmjava-8", "maven", "3.6.3", 8, "ibmjava", "mvn", "clean", "install"),
 
-                                                                   new BuildImage("docker.io/gradle:6.3.0-jdk8", "gradle", "6.3.0", 8, "openjdk", "gradle", "clean", "build"),
-                                                                   new BuildImage("docker.io/gradle:6.3.0-jdk11", "gradle", "6.3.0", 11, "openjdk", "gradle", "clean", "build"),
-                                                                   new BuildImage("docker.io/gradle:6.3.0-jdk13", "gradle", "6.3.0", 13, "openjdk", "gradle", "clean", "build")
+    new BuildImage("docker.io/gradle:6.3.0-jdk8", "gradle", "6.3.0", 8, "openjdk", "gradle", "clean", "build"),
+    new BuildImage("docker.io/gradle:6.3.0-jdk11", "gradle", "6.3.0", 11, "openjdk", "gradle", "clean", "build"),
+    new BuildImage("docker.io/gradle:6.3.0-jdk13", "gradle", "6.3.0", 13, "openjdk", "gradle", "clean", "build")
   );
 
+  /**
+   * Finds an image that best matches the specified parameters.
+   * The method will only return an image if there is a match in the build tool.
+   * If there is a match, the remaining parameters will be used to find the best match.
+   * The order in which the parameters are used are: JDK Version, JDK Flavor and Tool version.
+   *
+   * @param tool The build tool (e.g. maven, gradle etc)
+   * @param toolVersion The version of the build too.
+   * @param jdkVersion The version of JDK.
+   * @param jdkFlavor The flavor of the JDK.
+   * @return
+   */
   public static Optional<BuildImage> find(String tool, String toolVersion, int jdkVersion, String jdkFlavor) {
     ToIntFunction<BuildImage> dist = i -> i.distance(tool, toolVersion, jdkVersion, jdkFlavor);
     return IMAGES.stream().filter(i -> dist.applyAsInt(i) >= 0).sorted(Comparator.comparingInt(dist)).findFirst();
   }
 
-  public BuildImage(String image, String tool, String toolVersion, int jdkVersion, String jdkFlavor, String... command) {
+  public BuildImage(String image, String command, String... arguments) {
+    this(image, null, null, 0, null, command, arguments);
+  }
+
+  public BuildImage(String image, String tool, String toolVersion, int jdkVersion, String jdkFlavor, String command, String... arguments) {
     this.image = image;
     this.command = command;
+    this.arguments = arguments;
     this.tool = tool;
     this.toolVersion = toolVersion;
     this.jdkVersion = jdkVersion;
@@ -74,8 +92,12 @@ public class BuildImage {
     return this.image;
   }
 
-  public String[] getCommand() {
+  public String getCommand() {
     return this.command;
+  }
+
+  public String[] getArguments() {
+    return this.arguments;
   }
 
   public String getJdkFlavor() {
@@ -128,6 +150,7 @@ public class BuildImage {
     if (Strings.isNullOrEmpty(version)) {
       return 0;
     }
+
     String[] parts = version.split(Pattern.quote(DOT));
     if (parts.length < 2) {
       return 0;

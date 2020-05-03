@@ -79,7 +79,6 @@ public class OrderedHook extends ProjectHook {
    */
   private static Project projectOf(ProjectHook... hooks)  {
     for (ProjectHook h : hooks) {
-      System.out.println("Hook:" + h + " project: "+ h.project);
       if (h.project != null) {
         return h.project;
       }

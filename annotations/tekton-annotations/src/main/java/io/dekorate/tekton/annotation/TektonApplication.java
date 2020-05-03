@@ -133,6 +133,24 @@ public @interface TektonApplication {
    */
   String artifactRepositoryPath() default DEFAULT_ARTIFACT_REPOSITORY_PATH;
 
+  /**
+   * The builder image to use.
+   * @return The builder image, or empty if the image should be inferred.
+   */
+  String builderImage() default "";
+
+
+  /*
+   * The builder command to use.
+   * @return The builder command or empty if the command is to be inferred
+   */
+  String builderCommand() default "";
+
+  /*
+   * The builder command arguments to use.
+   * @return The builder command arguments or empty if the command is to be inferred
+   */
+  String[] builderArguments() default {};
 
   /**
    * The docker image to be used for the deployment task.
@@ -141,22 +159,21 @@ public @interface TektonApplication {
    */
   String deployerImage() default DEFAULT_DEPLOYER_IMAGE;
 
-
   /*
-   * The service account to use for the image building tasks.
+   * The service account to use for the image pushing tasks.
    * An existing or a generated service account can be used.
    * If no existing service account is provided one will be generated based on the context.
    * @return An existing service account, or empty if we just need to generate one.
    */
-  String imageBuilderServiceAccount() default "";
+  String imagePushServiceAccount() default "";
 
   /**
-   * The secret to use when generating an image builder service account.
+   * The secret to use when generating an image push service account.
    * When no existing service account is provided, one will be generated.
    * The generated service account may or may not use an existing secret.
    * @return The existing secret, or empty string if the secret needs to be generated.
    */
-  String imageBuilderSecret() default "";
+  String imagePushSecret() default "";
 
   /*
    * Wether to upload the local `.docker/config.json` to automatically create the secret.
