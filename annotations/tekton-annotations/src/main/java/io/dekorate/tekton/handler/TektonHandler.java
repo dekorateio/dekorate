@@ -210,7 +210,10 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
     //Java Build
     BuildInfo build = config.getProject().getBuildInfo();
-    BuildImage image = BuildImage.find(build.getBuildTool(), build.getBuildToolVersion(), Jvm.getVersion(), null).orElseThrow(() -> new IllegalStateException("No java builder image was found!"));
+    BuildImage image = Strings.isNotNullOrEmpty(config.getBuilderImage()) && Strings.isNotNullOrEmpty(config.getBuilderCommand()) ?
+      new BuildImage(config.getBuilderImage(), config.getBuilderCommand(), config.getBuilderArguments()) :
+      BuildImage.find(build.getBuildTool(), build.getBuildToolVersion(), Jvm.getVersion(), null).orElseThrow(() -> new IllegalStateException("No java builder image was found!"));
+
     resources.decorate(group, new AddResourceInputToTaskDecorator(javaBuildTaskName, GIT, GIT_SOURCE, "/source/" + config.getName()));
     resources.decorate(group, new AddJavaBuildStepDecorator(javaBuildTaskName, config.getName(), image));
 
@@ -235,14 +238,14 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, config.getArtifactRepositoryPath())));
     }
 
-    if (Strings.isNotNullOrEmpty(config.getImageBuilderServiceAccount())) {
-      resources.decorate(group + DASH + RUN, new AddServiceAccountToTaskDecorator(imageBuildTaskName(config), config.getImageBuilderServiceAccount()));
+    if (Strings.isNotNullOrEmpty(config.getImagePushServiceAccount())) {
+      resources.decorate(group + DASH + RUN, new AddServiceAccountToTaskDecorator(imageBuildTaskName(config), config.getImagePushServiceAccount()));
     } else {
       String generatedServiceAccount = config.getName();
       resources.decorate(group + DASH + RUN, new AddServiceAccountToTaskDecorator(imageBuildTaskName(config), generatedServiceAccount));
-      if (Strings.isNotNullOrEmpty(config.getImageBuilderSecret())) {
-        resources.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, config.getImageBuilderSecret()));
-        resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + config.getImageBuilderSecret()));
+      if (Strings.isNotNullOrEmpty(config.getImagePushSecret())) {
+        resources.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, config.getImagePushSecret()));
+        resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + config.getImagePushSecret()));
       } else if (config.isUseLocalDockerConfigJson()) {
         String generatedSecret = config.getName() + "-registry-credentials" ;
         Path dockerConfigJson = Paths.get(System.getProperty("user.home"), ".docker", "config.json");

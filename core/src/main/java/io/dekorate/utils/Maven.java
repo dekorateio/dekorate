@@ -65,7 +65,6 @@ public class Maven {
     }
 
     Optional<String> versionLine = Arrays.stream(output.split(NEW_LINE))
-//      .map(l ->  {System.out.println(l); return l;})
       .filter(l -> l.startsWith("Apache Maven"))
       .findFirst();
 

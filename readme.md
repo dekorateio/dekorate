@@ -714,6 +714,19 @@ to make using `tekton` as easy as it gets.
 
 #### Tekton Configuration
 
+##### Builder Image
+
+Both the pipeline and the task based resources include steps that perform a
+build of the project. Dekorate, tries to identify a suitable builder image for
+the project. Selection is based on the build tool, jdk version, jdk flavor and
+build tool version (in that order). At the moment only maven and gradle are supported.
+
+You can customize the build task by specifying:
+
+- custom builder image: `dekorate.tekton.builder-image`
+- custom build command: `dekorate.tekton.builder-command`
+- custom build arguments: `dekorate.tekton.builder-arguments`
+
 ##### Configuring a Workspace PVC
 
 One of the main differences between the two styles of configuration, is that
