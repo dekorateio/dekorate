@@ -29,6 +29,7 @@ import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.knative.serving.v1.Service;
 import io.dekorate.deps.knative.serving.v1.ServiceBuilder;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
+import io.dekorate.knative.annotation.HttpTransportVersion;
 import io.dekorate.knative.config.EditableKnativeConfig;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigBuilder;
@@ -36,10 +37,12 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Labels;
+import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 
 public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> implements HandlerFactory, WithProject {
@@ -77,6 +80,11 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
     if (!existingService.isPresent()) {
       resources.add(KNATIVE, createService(config));
     }
+
+    if (config.getHttpTransportVersion() != HttpTransportVersion.ANY) {
+      resources.decorate(KNATIVE, new ApplyPortNameDecorator(config.getName(), config.getName(), config.getHttpTransportVersion().name().toLowerCase(), Ports.HTTP_PORT_NAMES.toArray(new String[Ports.HTTP_PORT_NAMES.size()])));
+    }
+
     addDecorators(KNATIVE, config);
   }
 

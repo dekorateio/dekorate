@@ -27,7 +27,7 @@ import io.dekorate.kubernetes.config.Port;
 
 public class Ports {
 
-  private static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[]{"http", "https", "web"});
+  public static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[]{"http", "https", "web", "http1", "h2c"});
   private static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[]{80, 443, 8080, 8443});
 
   public static Optional<ContainerPort> getHttpPort(ContainerFluent<?> container) {
