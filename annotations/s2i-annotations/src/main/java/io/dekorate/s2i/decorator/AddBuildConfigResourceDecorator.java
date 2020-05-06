@@ -21,10 +21,14 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.openshift.api.model.BuildConfigBuilder;
 import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.decorator.AddLabelDecorator;
+import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.RemoveLabelDecorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Labels;
+import io.dekorate.utils.Strings;
 
 @Description("Add a BuildConfig resource to the list of generated resources.")
 public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
@@ -42,7 +46,6 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
 
     String repository = Images.getRepository(config.getBuilderImage());
-
     String builderRepository = Images.getRepository(config.getBuilderImage());
     String builderTag = Images.getTag(config.getBuilderImage());
 
@@ -50,7 +53,10 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
       ? builderRepository
       : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
 
-    String version = meta.getLabels().getOrDefault(Labels.VERSION, LATEST);
+    //First we need to consult the labels
+    String fallbackVersion = Strings.isNotNullOrEmpty(config.getVersion()) ? config.getVersion() : LATEST;
+    String version = meta.getLabels().getOrDefault(Labels.VERSION, fallbackVersion);
+
     list.addToItems(new BuildConfigBuilder()
       .withNewMetadata()
       .withName(config.getName())
@@ -77,5 +83,10 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
       .endSourceStrategy()
       .endStrategy()
       .endSpec());
+  }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, AddLabelDecorator.class, RemoveLabelDecorator.class };
   }
 }
