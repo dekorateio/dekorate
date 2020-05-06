@@ -133,6 +133,9 @@ public @interface KnativeApplication {
    */
   Port[] ports() default {};
 
+
+  HttpTransportVersion httpTransportVersion() default HttpTransportVersion.ANY;
+
   /**
    * The type of service that will be generated for the application.
    */
