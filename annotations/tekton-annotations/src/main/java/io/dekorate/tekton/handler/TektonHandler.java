@@ -419,8 +419,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .endMetadata()
       .withNewSpec()
       .withServiceAccountName(config.getName())
-        .addNewWorkspace().withName(PIPELINE_SOURCE_WS)
-          .withNewPersistentVolumeClaim(pvcName, false)
+        .addNewWorkspace().withName(PIPELINE_SOURCE_WS).withNewPersistentVolumeClaim(pvcName, false)
         .endWorkspace()
         .withNewPipelineRef().withName(config.getName()).endPipelineRef()
         .addNewResource().withName(GIT_SOURCE).withNewResourceRef().withName(gitResourceName(config)).endResourceRef().endResource()
@@ -450,7 +449,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
   public PersistentVolumeClaim createPvc(TektonConfig config) {
     Map<String, Quantity> requests = new HashMap<String, Quantity>() {{
-        put("storage", new QuantityBuilder().withAmount(config.getSourceWorkspaceSize()).build());
+        put("storage", new QuantityBuilder().withAmount(String.valueOf(config.getSourceWorkspaceSize())).withFormat("Gi").build());
     }};
     return new PersistentVolumeClaimBuilder()
       .withNewMetadata()
