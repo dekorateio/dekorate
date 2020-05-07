@@ -108,11 +108,11 @@ public @interface TektonApplication {
   String sourceWorkspaceClaim() default "";
 
   /*
-   * The size requirement of the generated PVC
+   * The size requirement of the generated PVC in gigs.
    * This only makes sense for generated PVCs.
    * @return the size, or 1Gi (default).
    */
-  String sourceWorkspaceSize() default "1Gi";
+  int sourceWorkspaceSize() default 1;
 
   /*
    * The storage class requirement of the generated PVC
