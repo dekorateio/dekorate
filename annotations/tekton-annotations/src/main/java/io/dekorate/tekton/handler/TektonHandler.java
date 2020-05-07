@@ -32,6 +32,7 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.deps.kubernetes.api.model.EmptyDirVolumeSourceBuilder;
 import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
 import io.dekorate.deps.kubernetes.api.model.PersistentVolume;
 import io.dekorate.deps.kubernetes.api.model.PersistentVolumeBuilder;
@@ -436,9 +437,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .endMetadata()
       .withNewSpec()
       .withServiceAccountName(config.getName())
-        .addNewWorkspace().withName(SOURCE)
-          .withNewPersistentVolumeClaim(config.getName(), false)
-        .endWorkspace()
+      .addNewWorkspace().withName(SOURCE).withEmptyDir(new EmptyDirVolumeSourceBuilder().withMedium("Memory").build()).endWorkspace()
         .withNewTaskRef().withName(monolithTaskName(config)).endTaskRef()
         .withNewResources()
         .addNewInput().withName(GIT_SOURCE).withNewResourceRef().withName(gitResourceName(config)).endResourceRef().endInput()
