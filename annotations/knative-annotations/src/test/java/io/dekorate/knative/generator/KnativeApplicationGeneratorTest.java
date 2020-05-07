@@ -46,15 +46,14 @@ class KnativeApplicationGeneratorTest {
   @Test
   public void shouldGenerateKnativeAndWriteToTheFilesystem()  {
     WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")));
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    SessionWriter writer = new SimpleFileWriter(withProject.getProject());
 
-    SessionWriter writer = new SimpleFileWriter(tempDir);
     Session session = Session.getSession();
     session.setWriter(writer);
 
     KnativeApplicationGenerator generator = new KnativeApplicationGenerator() {};
     generator.setProject(FileProjectFactory.create(new File(".")));
-    System.out.println("Project root:" + generator.getProject());
 
     Map<String, Object> map = new HashMap<String, Object>() {{
       put(KnativeApplication.class.getName(), new HashMap<String, Object>() {{

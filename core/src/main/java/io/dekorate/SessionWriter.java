@@ -27,7 +27,7 @@ public interface SessionWriter extends WithProject {
 
   String PACKAGE = "";
   String FILENAME = "%s.%s";
-  String CONFIG = ".config/%s.%s";
+  String CONFIG = "config/%s.%s";
   String PROJECT_ONLY = ".project.%s";
   String PROJECT = "META-INF/dekorate/" + PROJECT_ONLY;
   String[] STRIP = {"^Editable", "BuildConfig$", "Config$"};
