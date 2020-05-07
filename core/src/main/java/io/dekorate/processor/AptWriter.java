@@ -30,12 +30,13 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class AptWriter implements SessionWriter, WithProject {
+public class AptWriter extends SimpleFileWriter implements SessionWriter, WithProject {
 
   protected static final String PACKAGE = "";
   protected static final String FILENAME = "%s.%s";
@@ -50,7 +51,8 @@ public class AptWriter implements SessionWriter, WithProject {
   private final ProcessingEnvironment processingEnv;
   private final Logger LOGGER = LoggerFactory.getLogger();
 
-  public AptWriter(ProcessingEnvironment processingEnv) {
+  public AptWriter(Project project, ProcessingEnvironment processingEnv) {
+    super(project);
     this.processingEnv = processingEnv;
   }
 
@@ -67,47 +69,6 @@ public class AptWriter implements SessionWriter, WithProject {
     configurations.forEach(c -> write(c));
     write(getProject());
     return null;
-  }
-
-  /**
-   * Writes a {@link Configuration}.
-   * @param config  The target session configurations.
-   * @return Map Entry containing the file system path of the written configuration and the actual content as the value
-   */
-  public Map.Entry<String, String> write(Configuration config) {
-    try {
-      String name = config.getClass().getSimpleName();
-      for (String s : STRIP) {
-        name = name.replaceAll(s, "");
-      }
-      name = name.toLowerCase();
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getDekorateOutputDir() + "/" + String.format(CONFIG, name, YML));
-      try (Writer writer = yml.openWriter()) {
-        final String value = Serialization.asYaml(config);
-        writer.write(value);
-        return new AbstractMap.SimpleEntry<>(yml.toString(), value);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("Error writing resources", e);
-    }
-  }
-
-  /**
-   * Writes a {@link Project}.
-   * @param project  The project.
-   * @return Map Entry containing the file system path of the written project and the actual content as the value
-   */
-  public Map.Entry<String, String> write(Project project) {
-    try {
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(PROJECT, YML));
-      try (Writer writer = yml.openWriter()) {
-        final String value = Serialization.asYaml(project);
-        writer.write(value);
-        return new AbstractMap.SimpleEntry<>(yml.toString(), value);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("Error writing resources", e);
-    }
   }
 
   /**

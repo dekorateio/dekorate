@@ -30,10 +30,12 @@ import io.sundr.builder.annotations.Buildable;
 public class Project {
 
   private static String DEFAULT_DEKORATE_OUTPUT_DIR = "META-INF/dekorate";
+  private static String DEFAULT_DEKORATE_META_DIR = "../.dekorate";
 
   private final Path root;
   private final String dekorateInputDir;
   private final String dekorateOutputDir;
+  private final String dekorateMetaDir;
   private final BuildInfo buildInfo;
   private final ScmInfo scmInfo;
 
@@ -42,17 +44,18 @@ public class Project {
   }
 
   public Project(Path root, BuildInfo buildInfo, ScmInfo scmInfo) {
-    this(root, null, DEFAULT_DEKORATE_OUTPUT_DIR, buildInfo, scmInfo);
+    this(root, null, DEFAULT_DEKORATE_META_DIR, DEFAULT_DEKORATE_OUTPUT_DIR, buildInfo, scmInfo);
   }
 
-  public Project(Path root, String dekorateInputDir, String dekorateOutputDir, BuildInfo buildInfo) {
-    this(root, dekorateInputDir, dekorateOutputDir, buildInfo, null);
+  public Project(Path root, String dekorateInputDir, String dekorateMetaDir, String dekorateOutputDir, BuildInfo buildInfo) {
+    this(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo, null);
   }
 
   @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
-  public Project(Path root, String dekorateInputDir, String dekorateOutputDir, BuildInfo buildInfo, ScmInfo scmInfo) {
+  public Project(Path root, String dekorateInputDir, String dekorateMetaDir, String dekorateOutputDir, BuildInfo buildInfo, ScmInfo scmInfo) {
     this.root = root;
     this.dekorateInputDir = dekorateInputDir;
+    this.dekorateMetaDir = dekorateMetaDir;
     this.dekorateOutputDir = dekorateOutputDir;
     this.buildInfo = buildInfo;
     this.scmInfo = scmInfo;
@@ -74,16 +77,24 @@ public class Project {
     return dekorateInputDir;
   }
 
+  public String getDekorateMetaDir() {
+    return this.dekorateMetaDir;
+  }
+
   public String getDekorateOutputDir() {
     return dekorateOutputDir;
   }
 
   public Project withDekorateInputDir(String dekorateInputDir) {
-   return new Project(root, dekorateInputDir, dekorateOutputDir, buildInfo);
+      return new Project(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo);
+  }
+
+  public Project withDekorateMetaDir(String dekorateMetaDir) {
+    return new Project(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo);
   }
 
   public Project withDekorateOutputDir(String dekorateOutputDir) {
-    return new Project(root, dekorateInputDir, dekorateOutputDir, buildInfo);
+    return new Project(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo);
   }
 
   public Map<String, Object> parseResourceFile(String resourceName) {
