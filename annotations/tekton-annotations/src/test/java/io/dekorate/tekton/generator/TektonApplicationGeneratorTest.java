@@ -44,9 +44,8 @@ class TektonApplicationGeneratorTest {
   @Test
   public void shouldGenerateTektonAndWriteToTheFilesystem()  {
     WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")));
-
-    SessionWriter writer = new SimpleFileWriter(tempDir);
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    SessionWriter writer = new SimpleFileWriter(withProject.getProject(), false);
     Session session = Session.getSession();
     session.setWriter(writer);
 

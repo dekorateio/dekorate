@@ -9,42 +9,53 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
 package io.dekorate.testing.kubernetes;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.nio.file.Path;
 
 import io.dekorate.DekorateException;
 import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.project.FileProjectFactory;
+import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 
 public interface WithKubernetesConfig {
 
-  String KUBERNETES_CONFIG_PATH = "META-INF/dekorate/.config/kubernetes.yml";
+  String CONFIG_DIR = "config";
+  String KUBERNETES_YML = "kubernetes.yml";
 
   default boolean hasKubernetesConfig()  {
-    return WithKubernetesConfig.class.getClassLoader().getResource(KUBERNETES_CONFIG_PATH) != null;
+    return getKubernetesConfigPath().toFile().exists();
   }
 
   default KubernetesConfig getKubernetesConfig() {
-    return getKubernetesConfig(KUBERNETES_CONFIG_PATH);
+    return getKubernetesConfig(getKubernetesConfigPath());
   }
 
-  default KubernetesConfig getKubernetesConfig (String path) {
-    URL url = WithKubernetesConfig.class.getClassLoader().getResource(path);
-    if (url != null) {
-      try (InputStream is = url.openStream())  {
+  default Path getKubernetesConfigPath() {
+    Project p =  new FileProjectFactory().create(new File("."));
+    return p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(CONFIG_DIR).resolve(KUBERNETES_YML);
+  }
+
+  default KubernetesConfig getKubernetesConfig(Path path) {
+    File f = path.toFile();
+    if (f.exists()) {
+      try (InputStream is = new FileInputStream(f))  {
         return Serialization.unmarshal(is, KubernetesConfig.class);
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);
       }
     }
-    throw new IllegalStateException("Expected to find kubernetes config at: "+path+"!");
+
+    throw new IllegalStateException("Expected to find kubernetes config at: " + path + "!");
   }
 }

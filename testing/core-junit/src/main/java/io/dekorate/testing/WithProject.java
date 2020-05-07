@@ -16,25 +16,28 @@
 package io.dekorate.testing;
 
 import io.dekorate.DekorateException;
+import io.dekorate.project.FileProjectFactory;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 public interface WithProject {
 
-  String PROJECT_DESCRIPTOR_PATH = "META-INF/dekorate/.project.yml";
+  String PROJECT_YML = ".project.yml";
 
   default Project getProject() {
-    return getProject(PROJECT_DESCRIPTOR_PATH);
+    Project p =  new FileProjectFactory().create(new File("."));
+    return getProject(p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(PROJECT_YML).toAbsolutePath().toString());
   }
 
   default Project getProject(String projectDescriptorPath) {
-    URL url = WithProject.class.getClassLoader().getResource(projectDescriptorPath);
-    if (url != null) {
-      try (InputStream is = url.openStream())  {
+    System.err.println("Getting project from:" + projectDescriptorPath);
+    if (projectDescriptorPath != null) {
+      try (InputStream is = new FileInputStream(new File(projectDescriptorPath)))  {
         return Serialization.unmarshal(is, Project.class);
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);
