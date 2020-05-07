@@ -31,15 +31,25 @@ import java.util.Map;
 
 public class SimpleFileWriter implements SessionWriter, WithProject {
 
-  private final Path outputdir;
+  private final Path metaDir;
+  private final Path outputDir;
   private final boolean doWrite;
 
-  public SimpleFileWriter(Path outputdir) {
-    this(outputdir, true);
+  public SimpleFileWriter(Project project) {
+    this(project, true);
   }
 
-  public SimpleFileWriter(Path outputdir, boolean doWrite) {
-    this.outputdir = outputdir;
+  public SimpleFileWriter(Project project, boolean doWrite) {
+    this(project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir()), project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir()), doWrite);
+  }
+
+  public SimpleFileWriter(Path metaDir, Path outputDir) {
+    this(metaDir, outputDir, true);
+  }
+
+  public SimpleFileWriter(Path metaDir, Path outputDir, boolean doWrite) {
+    this.metaDir = metaDir;
+    this.outputDir = outputDir;
     this.doWrite = doWrite;
   }
 
@@ -55,7 +65,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
         name = name.replaceAll(s, "");
       }
       name = name.toLowerCase();
-      final Path yml = outputdir.resolve(String.format(CONFIG, name, YML));
+      final Path yml = metaDir.resolve(String.format(CONFIG, name, YML));
       final String value = Serialization.asYaml(config);
       if (doWrite) {
         yml.toFile().getParentFile().mkdirs();
@@ -78,7 +88,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
    */
   public Map.Entry<String, String> write(Project project) {
     try {
-      final Path yml = outputdir.resolve(String.format(PROJECT_ONLY, YML));
+      final Path yml = metaDir.resolve(String.format(PROJECT_ONLY, YML));
       final String value = Serialization.asYaml(project);
       if (doWrite) {
         yml.toFile().getParentFile().mkdirs();
@@ -102,10 +112,11 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
    * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
   public Map<String, String> write(String group, KubernetesList list) {
+
     try {
       //write json representation
       final Map<String, String> result = new HashMap<>();
-      final Path json = outputdir.resolve(String.format(FILENAME, group, JSON));
+      final Path json = outputDir.resolve(String.format(FILENAME, group, JSON));
       final String jsonValue = Serialization.asJson(list);
       if (doWrite) {
         json.toFile().getParentFile().mkdirs();
@@ -118,7 +129,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
       }
 
       //write yml representation
-      final Path yml = outputdir.resolve(String.format(FILENAME, group, YML));
+      final Path yml = outputDir.resolve(String.format(FILENAME, group, YML));
       final String yamlValue = Serialization.asYaml(list);
       if (doWrite) {
         yml.toFile().getParentFile().mkdirs();
