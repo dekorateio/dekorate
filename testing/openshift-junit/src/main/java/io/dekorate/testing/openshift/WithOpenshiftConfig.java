@@ -15,31 +15,41 @@
  */
 package io.dekorate.testing.openshift;
 
-import io.dekorate.DekorateException;
-import io.dekorate.openshift.config.OpenshiftConfig;
-import io.dekorate.utils.Serialization;
-
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.nio.file.Path;
+
+import io.dekorate.DekorateException;
+import io.dekorate.openshift.config.OpenshiftConfig;
+import io.dekorate.project.FileProjectFactory;
+import io.dekorate.project.Project;
+import io.dekorate.utils.Serialization;
 
 public interface WithOpenshiftConfig {
 
-  String OPENSHIFT_CONFIG_PATH = "META-INF/dekorate/.config/openshift.yml";
+  String CONFIG_DIR = "config";
+  String OPENSHIFT_YML = "openshift.yml";
 
   default OpenshiftConfig getOpenshiftConfig() {
-    return getOpenshiftConfig(OPENSHIFT_CONFIG_PATH);
+    return getOpenshiftConfig(getOpenshiftConfigPath());
   }
 
-  default OpenshiftConfig getOpenshiftConfig(String path) {
-    URL url = WithOpenshiftConfig.class.getClassLoader().getResource(path);
-    if (url != null) {
-      try (InputStream is = url.openStream())  {
+  default Path getOpenshiftConfigPath() {
+    Project p =  new FileProjectFactory().create(new File("."));
+    return p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(CONFIG_DIR).resolve(OPENSHIFT_YML);
+  }
+
+  default OpenshiftConfig getOpenshiftConfig(Path path) {
+    File f = path.toFile();
+    if (f.exists()) {
+      try (InputStream is = new FileInputStream(f))  {
         return Serialization.unmarshal(is, OpenshiftConfig.class);
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);
       }
     }
-    throw new IllegalStateException("Expected to find openshift config at: "+path+"!");
+    throw new IllegalStateException("Expected to find openshift config at: " + path + "!");
   }
 }
