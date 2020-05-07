@@ -42,9 +42,9 @@ class KubernetesApplicationGeneratorTest {
     Path tempDir = Files.createTempDirectory("dekorate");
 
     WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")));
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
 
-    SessionWriter writer = new SimpleFileWriter(tempDir, false);
+    SessionWriter writer = new SimpleFileWriter(withProject.getProject(), false);
     Session session = Session.getSession();
     session.setWriter(writer);
 

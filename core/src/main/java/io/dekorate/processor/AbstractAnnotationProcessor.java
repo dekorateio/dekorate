@@ -76,7 +76,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
       session.setReader(new AptReader(processingEnv));
     }
     if (!session.hasWriter()) {
-      session.setWriter(new AptWriter(processingEnv));
+      session.setWriter(new AptWriter(getProject(), processingEnv));
     }
     return session;
   }
