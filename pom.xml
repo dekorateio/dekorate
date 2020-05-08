@@ -304,6 +304,12 @@
   <profiles>
     <profile>
       <id>release</id>
+      <properties>
+        <skipITs>true</skipITs>
+      </properties>
+      <modules>
+        <module>examples</module>
+      </modules>
       <build>
         <plugins>
           <plugin>
