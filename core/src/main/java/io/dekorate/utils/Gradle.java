@@ -30,10 +30,10 @@ public class Gradle {
   public static String GRADLEW = "graldew";
   public static String DASH_VERSION = "-version";
 
-  public static String DOT_GRADLEW = "./" + GRADLEW;
-
   public static String NEW_LINE = "[\\n\\r]+";
   public static String SPACE = " ";
+
+  public static String FALLBACK_GRADLE_VERSION = "6.4";
 
   public static String getVersion(Path modulePath) {
     Path moduleGraldew = modulePath.resolve(GRADLEW);
@@ -52,7 +52,7 @@ public class Gradle {
     }
 
     if (!success) {
-      throw new IllegalStateException("Gradle version check failed!");
+      return FALLBACK_GRADLE_VERSION;
     }
 
     return getVersionFromOutput(new String(out.toByteArray()));
