@@ -30,10 +30,10 @@ public class Maven {
   public static String MVNW = "mvnw";
   public static String DASH_VERSION = "-version";
 
-  public static String DOT_MVNW = "./" + MVNW;
-
   public static String NEW_LINE = "[\\n\\r]+";
   public static String SPACE = " ";
+
+  public static String FALLBACK_MAVEN_VERSION = "3.6.3";
 
   public static String getVersion(Path modulePath) {
     Path moduleMvnw = modulePath.resolve(MVNW);
@@ -52,7 +52,7 @@ public class Maven {
     }
 
     if (!success) {
-      throw new IllegalStateException("Maven version check failed!");
+      return FALLBACK_MAVEN_VERSION;
     }
 
     return getVersionFromOutput(new String(out.toByteArray()));
