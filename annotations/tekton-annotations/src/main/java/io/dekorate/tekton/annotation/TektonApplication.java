@@ -96,6 +96,12 @@ public @interface TektonApplication {
   Annotation[] annotations() default {};
 
   /*
+   * The name of an external git pipeline resource.
+   * @return The name of the resource, or empty if none is specified.
+   */
+  String externalGitPipelineResource() default "";
+
+  /*
    * The name of the source workspace.
    * @return the name, or 'source' if no name specified.
    */

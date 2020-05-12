@@ -712,6 +712,17 @@ to make using `tekton` as easy as it gets.
 
 #### Tekton Configuration
 
+##### Git Resource
+
+The generated tasks and pipelines, assume the project is under version control and more specifically git.
+So, in order to `run` the pipeline or the `task` a `PiepelineResource` of type `git` is required.
+If the project is added to git, the resource will be generated for you. If for any reason the use of an external resource is 
+preferred then it needs to be configured, like:
+
+```
+dekorate.tekton.external-git-pipeline-resource=<<the name of the resource goes here>>
+```
+
 ##### Builder Image
 
 Both the pipeline and the task based resources include steps that perform a
