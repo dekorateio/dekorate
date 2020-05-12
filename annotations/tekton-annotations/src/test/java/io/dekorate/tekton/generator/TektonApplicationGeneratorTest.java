@@ -15,7 +15,6 @@
  */
 package io.dekorate.tekton.generator;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.tekton.annotation.TektonApplication;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
@@ -60,6 +58,7 @@ class TektonApplicationGeneratorTest {
       put(TektonApplication.class.getName(), new HashMap<String, Object>() {{
         put("name", "generator-test");
         put("version", "latest");
+        put("externalGitPipelineResource", "yagpr");
       }});
     }};
 

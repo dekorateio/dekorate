@@ -169,10 +169,6 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   }
 
   public void handle(TektonConfig config) {
-    if (config.getProject().getScmInfo() == null) {
-      LOGGER.warning("Project is not under version control, or unsupported version control system. Aborting generation of tekton resources!");
-      return;
-    }
 
     ImageConfiguration imageConfiguration = getImageConfiguration(getProject(), config, configurators);
 
@@ -185,7 +181,16 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
 
   public void generateCommon(String group, TektonConfig config, ImageConfiguration imageConfiguration) {
-    resources.add(group, createGitResource(config));
+    if (Strings.isNotNullOrEmpty(config.getExternalGitPipelineResource())) {
+      //Do nothing
+      LOGGER.info("Tekton " + group.split("-")[1] + " expects existing git pipeline resource named: " + config.getExternalGitPipelineResource() + "!");
+    } else  if (config.getProject().getScmInfo() != null) {
+      resources.add(group, createGitResource(config));
+      return;
+    } else {
+      throw new IllegalStateException("Project is not under version control, or unsupported version control system. Aborting generation of tekton resources!");
+    }
+
     resources.add(group, createOutputImageResource(config, imageConfiguration));
     resources.add(group, createRole(config));
 
@@ -519,7 +524,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
 
   public static final String gitResourceName(TektonConfig config) {
-    return config.getName() + DASH + GIT;
+    return Strings.isNotNullOrEmpty(config.getExternalGitPipelineResource()) ? config.getExternalGitPipelineResource() : config.getName() + DASH + GIT;
   }
 
   public static final String outputImageResourceName(TektonConfig config) {
