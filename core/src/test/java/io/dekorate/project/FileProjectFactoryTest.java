@@ -39,6 +39,6 @@ class FileProjectFactoryTest {
     assertNotNull(info);
     assertEquals("gradle", info.getName());
     assertEquals("jar", info.getPackaging());
-    assertNull(info.getVersion());
+    assertEquals("latest", info.getVersion()); //build.gradle has no version so we should fallback.
   }
 }

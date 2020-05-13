@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,8 +31,12 @@ import java.util.Collections;
 import io.dekorate.utils.Gradle;
 import io.dekorate.utils.Strings;
 import io.dekorate.DekorateException;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 
 public class GradleInfoReader implements BuildInfoReader {
+
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   private static final String GRADLE = "gradle";
   private static final String BUILD_GRADLE_GROOVY = "build.gradle";
@@ -109,6 +114,11 @@ public class GradleInfoReader implements BuildInfoReader {
       sb.append(DASH).append(classifier);
     }
     sb.append(DOT).append(extension);
+
+    if (version == null) {
+      LOGGER.warning("Could not detect project version. Using 'latest'.");
+      version = "latest";
+    }
 
     return new BuildInfoBuilder()
       .withName(name)

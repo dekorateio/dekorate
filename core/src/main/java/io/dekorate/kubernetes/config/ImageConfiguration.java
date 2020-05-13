@@ -56,7 +56,7 @@ public class ImageConfiguration extends ApplicationConfiguration {
     this.registry = registry;
     this.group = Strings.isNotNullOrEmpty(group) ? group : System.getProperty("user.name");
     this.name = name;
-    this.version = Strings.isNotNullOrEmpty(version) ? version : "latest";
+    this.version = version;
     this.image = image;
     this.dockerFile = dockerFile;
     this.autoBuildEnabled = autoBuildEnabled;
