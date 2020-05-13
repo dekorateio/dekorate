@@ -124,7 +124,6 @@ public class GradleInfoReader implements BuildInfoReader {
       .withVersion(version)
       .withPackaging(extension)
       .withBuildTool(GRADLE)
-      .withBuildToolVersion(Gradle.getVersion(root))
       .withOutputFile(outputDir.resolve(sb.toString()))
       .withClassOutputDir(root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN))
       .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
