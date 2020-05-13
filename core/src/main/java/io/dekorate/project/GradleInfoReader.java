@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,8 +30,12 @@ import java.util.Collections;
 
 import io.dekorate.utils.Strings;
 import io.dekorate.DekorateException;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 
 public class GradleInfoReader implements BuildInfoReader {
+
+  private final Logger LOGGER = LoggerFactory.getLogger();
 
   private static final String GRADLE = "gradle";
   private static final String BUILD_GRADLE_GROOVY = "build.gradle";
@@ -109,12 +114,21 @@ public class GradleInfoReader implements BuildInfoReader {
     }
     sb.append(DOT).append(extension);
 
-    return new BuildInfo(name, version, extension, GRADLE,
-      outputDir.resolve(sb.toString()),
-                         //TODO: This need to be smarter and also cover groovy code.
-                         root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN),
-                         root.resolve(SRC).resolve(MAIN).resolve(RESOURCES)
-    );
+    if (version == null) {
+      LOGGER.warning("Could not detect project version. Using 'latest'.");
+      version = "latest";
+    }
+
+    return new BuildInfoBuilder()
+      .withName(name)
+      .withVersion(version)
+      .withPackaging(extension)
+      .withBuildTool(GRADLE)
+      .withBuildToolVersion(Gradle.getVersion(root))
+      .withOutputFile(outputDir.resolve(sb.toString()))
+      .withClassOutputDir(root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN))
+      .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
+      .build();
   }
 
   /**

@@ -38,7 +38,7 @@ class GradleInfoReaderTest {
     assertNotNull(info);
     assertEquals("gradle-initial", info.getName());
     assertEquals("jar", info.getPackaging());
-    assertNull(info.getVersion());
+    assertEquals("latest", info.getVersion());
   }
 
   @Test
@@ -50,6 +50,7 @@ class GradleInfoReaderTest {
     assertNotNull(info);
     assertEquals("myartifact", info.getName());
     assertEquals("jar", info.getPackaging());
+    assertEquals("1.0.0", info.getVersion());
   }
 
   @Test
