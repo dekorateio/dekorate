@@ -47,6 +47,7 @@
       <module>issue-446-secret-volumes</module>
       <module>feat-458-kubernetes-and-openshift-labels</module>
       <module>issue-473-env-from-field</module>
+      <module>issue-503-partial-s2i-config</module>
     </modules>
 
 </project>
