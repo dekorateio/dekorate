@@ -46,10 +46,10 @@ public class AddVcsUrlAnnotationDecorator extends NamedResourceDecorator<ObjectM
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
     Project p = getProject();
-    String vcsUri = p.getScmInfo() != null && p.getScmInfo().getUrl() != null ? getProject().getScmInfo().getUrl()
-        : Annotations.UNKNOWN;
-
-    builder.addToAnnotations(annotationKey, vcsUri);
+    boolean hasVcsUrl = p.getScmInfo() != null && p.getScmInfo().getUrl() != null;
+    if (hasVcsUrl) {
+      builder.addToAnnotations(annotationKey, getProject().getScmInfo().getUrl());
+    }
   }
 
   public String getAnnotationKey() {
