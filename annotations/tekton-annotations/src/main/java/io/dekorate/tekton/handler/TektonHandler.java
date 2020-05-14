@@ -17,9 +17,11 @@ package io.dekorate.tekton.handler;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.dekorate.BuildImage;
 import io.dekorate.BuildServiceFactories;
@@ -34,6 +36,8 @@ import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.EmptyDirVolumeSourceBuilder;
 import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
+import io.dekorate.deps.kubernetes.api.model.LabelSelector;
+import io.dekorate.deps.kubernetes.api.model.LabelSelectorBuilder;
 import io.dekorate.deps.kubernetes.api.model.PersistentVolume;
 import io.dekorate.deps.kubernetes.api.model.PersistentVolumeBuilder;
 import io.dekorate.deps.kubernetes.api.model.PersistentVolumeClaim;
@@ -77,11 +81,15 @@ import io.dekorate.tekton.decorator.AddDeployStepDecorator;
 import io.dekorate.tekton.decorator.AddImageBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddJavaBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddParamToTaskDecorator;
+import io.dekorate.tekton.decorator.AddPvcToPipelineRunDecorator;
+import io.dekorate.tekton.decorator.AddPvcToTaskRunDecorator;
 import io.dekorate.tekton.decorator.AddResourceInputToTaskDecorator;
 import io.dekorate.tekton.decorator.AddResourceOutputToTaskDecorator;
 import io.dekorate.tekton.decorator.AddResourceToPipelineDecorator;
 import io.dekorate.tekton.decorator.AddServiceAccountToTaskDecorator;
 import io.dekorate.tekton.decorator.AddToArgsDecorator;
+import io.dekorate.tekton.decorator.AddWorkspaceToPipelineDecorator;
+import io.dekorate.tekton.decorator.AddWorkspaceToPipelineTaskDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToTaskDecorator;
 import io.dekorate.tekton.decorator.TaskProvidingDecorator;
 import io.dekorate.utils.Images;
@@ -106,7 +114,6 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String IMAGE = "image";
   private static final String BUILD = "build";
   private static final String DEPLOY = "deploy";
-  private static final String SOURCE = "source";
   private static final String WORKSPACE = "workspace";
   private static final String RUN = "run";
   private static final String NOW = "now";
@@ -116,6 +123,9 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
   private static final String PIPELINE_SOURCE_WS = "pipeline-source-ws";
   private static final String PIPELINE_SOURCE_WS_DECSCRIPTION = "The workspace to share between pipeline steps";
+
+  private static final String PIPELINE_M2_WS = "pipeline-m2-ws";
+  private static final String PIPELINE_M2_WS_DECSCRIPTION = "The workspace to store m2 artifacts";
 
   private static final String JAVA = "java";
   private static final String DASH = "-";
@@ -186,7 +196,6 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       LOGGER.info("Tekton " + group.split("-")[1] + " expects existing git pipeline resource named: " + config.getExternalGitPipelineResource() + "!");
     } else  if (config.getProject().getScmInfo() != null) {
       resources.add(group, createGitResource(config));
-      return;
     } else {
       throw new IllegalStateException("Project is not under version control, or unsupported version control system. Aborting generation of tekton resources!");
     }
@@ -198,7 +207,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.decorate(group, new AddRoleBindingResourceDecorator(config.getName() + ":deployer", config.getName(),  "pipeline-deployer", AddRoleBindingResourceDecorator.RoleKind.Role));
 
     //All Tasks
-    resources.decorate(group, new AddWorkspaceToTaskDecorator(null, SOURCE, "The workspace to hold all project sources", false, null));
+    resources.decorate(group, new AddWorkspaceToTaskDecorator(null, config.getSourceWorkspace(), "The workspace to hold all project sources", false, null));
     resources.decorate(group, new AddParamToTaskDecorator(null, PATH_TO_CONTEXT_PARAM_NAME, PATH_TO_CONTEXT_DESCRIPTION, getContextPath(getProject())));
 
     String monolithTaskName = monolithTaskName(config);
@@ -239,9 +248,12 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         put("tekton.dev/docker-0", "https://" + imageConfiguration.getRegistry());
     }};
 
-    if (Strings.isNotNullOrEmpty(config.getArtifactRepositoryWorkspace())) {
-      resources.decorate(group, new AddWorkspaceToTaskDecorator(javaBuildTaskName, config.getArtifactRepositoryWorkspace(), "Local maven repository workspace", false, config.getArtifactRepositoryPath()));
-      resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, config.getArtifactRepositoryPath())));
+    String m2WorkspaceClaimName = m2WorkspaceClaimName(config);
+    if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
+      String m2Path = "/workspaces/" + config.getM2Workspace();
+      resources.add(group, createM2WorkspacePvc(config));
+      resources.decorate(group, new AddWorkspaceToTaskDecorator(javaBuildTaskName, config.getM2Workspace(), "Local maven repository workspace", false, m2Path));
+      resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, String.format(MAVEN_LOCAL_REPO_SYS_PROPERTY, m2Path)));
     }
 
     if (Strings.isNotNullOrEmpty(config.getImagePushServiceAccount())) {
@@ -279,6 +291,8 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     String imageBuildTaskName = imageBuildTaskName(config);
     String deployTaskName = deployTaskName(config);
 
+    String m2WorkspaceClaimName = m2WorkspaceClaimName(config);
+
     resources.add(TEKTON_PIPELINE, createTask(javaBuildTaskName));
     resources.add(TEKTON_PIPELINE, createTask(imageBuildTaskName));
     resources.add(TEKTON_PIPELINE, createTask(deployTaskName));
@@ -288,16 +302,28 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.decorate(TEKTON_PIPELINE, new AddResourceToPipelineDecorator(pipelineName, GIT, GIT_SOURCE, false));
     resources.decorate(TEKTON_PIPELINE, new AddResourceToPipelineDecorator(pipelineName, IMAGE, OUTPUT_IMAGE, false));
 
-    if (Strings.isNullOrEmpty(config.getSourceWorkspaceClaim())) {
-      resources.add(TEKTON_PIPELINE, createPvc(config));
+    if (Strings.isNullOrEmpty(config.getExternalSourceWorkspaceClaim())) {
+      resources.add(TEKTON_PIPELINE, createSourceWorkspacePvc(config));
     }
+
     resources.add(TEKTON_PIPELINE_RUN, createPipelineRun(config));
+
+    if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
+      resources.decorate(TEKTON_PIPELINE, new AddWorkspaceToPipelineTaskDecorator(null, BUILD, config.getM2Workspace(), PIPELINE_M2_WS));
+      resources.decorate(TEKTON_PIPELINE, new AddWorkspaceToPipelineDecorator(null, PIPELINE_M2_WS, "Local maven repository workspace"));
+      resources.decorate(TEKTON_PIPELINE_RUN, new AddPvcToPipelineRunDecorator(null, PIPELINE_M2_WS, m2WorkspaceClaimName ,false));
+    }
   }
 
   public void generateTaskResources(TektonConfig config) {
     String monolithTaskName = monolithTaskName(config);
+    String m2WorkspaceClaimName = m2WorkspaceClaimName(config);
     resources.add(TEKTON_TASK, createTask(monolithTaskName));
     resources.add(TEKTON_TASK_RUN, createTaskRun(config));
+
+    if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
+      resources.decorate(TEKTON_TASK_RUN, new AddPvcToTaskRunDecorator(null, config.getM2Workspace(), m2WorkspaceClaimName ,false));
+    }
   }
 
   public PipelineResource createGitResource(TektonConfig config) {
@@ -348,7 +374,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .withNewTaskRef()
       .withName(javaBuildTaskName(config))
       .endTaskRef()
-      .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+      .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
       .withNewResources().addNewInput().withName(GIT_SOURCE).withResource(GIT_SOURCE).endInput().endResources()
       .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
       .build();
@@ -363,7 +389,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .withNewResources()
       .addNewOutput().withName(IMAGE).withResource(OUTPUT_IMAGE).endOutput()
       .endResources()
-      .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+      .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
       .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
       .withRunAfter(BUILD)
       .build();
@@ -375,7 +401,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .withNewTaskRef()
       .withName(deployTaskName(config))
       .endTaskRef()
-      .addNewWorkspace().withName(SOURCE).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+      .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
       .addNewParam().withName(PATH_TO_YML_PARAM_NAME).withNewValue(getYamlPath(getProject())).endParam()
       .addNewParam().withName(PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
       .withRunAfter(BUILD, IMAGE)
@@ -416,15 +442,13 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   }
 
   public PipelineRun createPipelineRun(TektonConfig config) {
-    String pvcName = Strings.isNotNullOrEmpty(config.getSourceWorkspaceClaim()) ? config.getSourceWorkspaceClaim() : config.getName();
-
     return new PipelineRunBuilder()
       .withNewMetadata()
         .withName(config.getName() + DASH + RUN + DASH + NOW)
       .endMetadata()
       .withNewSpec()
       .withServiceAccountName(config.getName())
-        .addNewWorkspace().withName(PIPELINE_SOURCE_WS).withNewPersistentVolumeClaim(pvcName, false)
+        .addNewWorkspace().withName(PIPELINE_SOURCE_WS).withNewPersistentVolumeClaim(sourceWorkspaceClaimName(config), false)
         .endWorkspace()
         .withNewPipelineRef().withName(config.getName()).endPipelineRef()
         .addNewResource().withName(GIT_SOURCE).withNewResourceRef().withName(gitResourceName(config)).endResourceRef().endResource()
@@ -441,7 +465,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .endMetadata()
       .withNewSpec()
       .withServiceAccountName(config.getName())
-      .addNewWorkspace().withName(SOURCE).withEmptyDir(new EmptyDirVolumeSourceBuilder().withMedium("Memory").build()).endWorkspace()
+      .addNewWorkspace().withName(config.getSourceWorkspace()).withEmptyDir(new EmptyDirVolumeSourceBuilder().withMedium("Memory").build()).endWorkspace()
         .withNewTaskRef().withName(monolithTaskName(config)).endTaskRef()
         .withNewResources()
         .addNewInput().withName(GIT_SOURCE).withNewResourceRef().withName(gitResourceName(config)).endResourceRef().endInput()
@@ -452,18 +476,51 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .build();
   }
 
-  public PersistentVolumeClaim createPvc(TektonConfig config) {
+  public PersistentVolumeClaim createSourceWorkspacePvc(TektonConfig config) {
     Map<String, Quantity> requests = new HashMap<String, Quantity>() {{
-        put("storage", new QuantityBuilder().withAmount(String.valueOf(config.getSourceWorkspaceSize())).withFormat("Gi").build());
+        put("storage", new QuantityBuilder().withAmount(String.valueOf(config.getSourceWorkspaceClaim().getSize())).withFormat(config.getSourceWorkspaceClaim().getUnit()).build());
     }};
+    LabelSelector selector = null;
+
+
+    if (config.getSourceWorkspaceClaim().getMatchLabels().length != 0) {
+      selector = new LabelSelectorBuilder()
+        .withMatchLabels(Arrays.stream(config.getSourceWorkspaceClaim().getMatchLabels()).collect(Collectors.toMap(l -> l.getKey(), l -> l.getValue())))
+        .build();
+    }
     return new PersistentVolumeClaimBuilder()
       .withNewMetadata()
-        .withName(config.getName())
+      .withName(sourceWorkspaceClaimName(config))
       .endMetadata()
       .withNewSpec()
-      .withAccessModes("ReadWriteOnce")
-      .withStorageClassName(config.getSourceWorkspaceStorageClass())
+      .withAccessModes(config.getSourceWorkspaceClaim().getAccessMode().name())
+      .withStorageClassName(config.getSourceWorkspaceClaim().getStorageClass())
       .withNewResources().withRequests(requests).endResources()
+      .withSelector(selector)
+      .endSpec()
+      .build();
+  }
+
+  public PersistentVolumeClaim createM2WorkspacePvc(TektonConfig config) {
+    Map<String, Quantity> requests = new HashMap<String, Quantity>() {{
+        put("storage", new QuantityBuilder().withAmount(String.valueOf(config.getM2WorkspaceClaim().getSize())).withFormat(config.getM2WorkspaceClaim().getUnit()).build());
+    }};
+    LabelSelector selector = null;
+    if (config.getM2WorkspaceClaim().getMatchLabels().length != 0) {
+      selector = new LabelSelectorBuilder()
+        .withMatchLabels(Arrays.stream(config.getM2WorkspaceClaim().getMatchLabels()).collect(Collectors.toMap(l -> l.getKey(), l -> l.getValue())))
+        .build();
+    }
+
+    return new PersistentVolumeClaimBuilder()
+      .withNewMetadata()
+      .withName(m2WorkspaceClaimName(config))
+      .endMetadata()
+      .withNewSpec()
+      .withAccessModes(config.getM2WorkspaceClaim().getAccessMode().name())
+      .withStorageClassName(config.getM2WorkspaceClaim().getStorageClass())
+      .withNewResources().withRequests(requests).endResources()
+      .withSelector(selector)
       .endSpec()
       .build();
   }
@@ -522,9 +579,20 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     }
   }
 
-
   public static final String gitResourceName(TektonConfig config) {
     return Strings.isNotNullOrEmpty(config.getExternalGitPipelineResource()) ? config.getExternalGitPipelineResource() : config.getName() + DASH + GIT;
+  }
+
+  public static final String sourceWorkspaceClaimName(TektonConfig config) {
+    return Strings.isNotNullOrEmpty(config.getExternalSourceWorkspaceClaim())
+      ? config.getExternalSourceWorkspaceClaim()
+      : ( Strings.isNotNullOrEmpty(config.getSourceWorkspaceClaim().getName()) ? config.getSourceWorkspaceClaim().getName() : config.getName() );
+  }
+
+  public static final String m2WorkspaceClaimName(TektonConfig config) {
+    return Strings.isNotNullOrEmpty(config.getExternalM2WorkspaceClaim())
+      ? config.getExternalM2WorkspaceClaim()
+      : ( Strings.isNotNullOrEmpty(config.getM2WorkspaceClaim().getName()) ? config.getM2WorkspaceClaim().getName() : null );
   }
 
   public static final String outputImageResourceName(TektonConfig config) {

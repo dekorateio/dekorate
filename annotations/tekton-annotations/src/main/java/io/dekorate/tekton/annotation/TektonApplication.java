@@ -15,31 +15,18 @@
  */
 package io.dekorate.tekton.annotation;
 
-import io.dekorate.kubernetes.annotation.Annotation;
-import io.dekorate.kubernetes.annotation.AwsElasticBlockStoreVolume;
-import io.dekorate.kubernetes.annotation.AzureDiskVolume;
-import io.dekorate.kubernetes.annotation.AzureFileVolume;
-import io.dekorate.kubernetes.annotation.Container;
-import io.dekorate.kubernetes.annotation.GitRepoVolume;
-import io.dekorate.kubernetes.annotation.ImagePullPolicy;
-import io.dekorate.kubernetes.annotation.Label;
-import io.dekorate.kubernetes.annotation.Mount;
-import io.dekorate.kubernetes.annotation.PersistentVolumeClaimVolume;
-import io.dekorate.kubernetes.annotation.Port;
-import io.dekorate.kubernetes.annotation.Probe;
-import io.dekorate.kubernetes.annotation.SecretVolume;
-import io.dekorate.kubernetes.annotation.ServiceType;
-import io.dekorate.kubernetes.annotation.ConfigMapVolume;
-import io.dekorate.kubernetes.annotation.Env;
-import io.dekorate.kubernetes.config.ApplicationConfiguration;
-import io.sundr.builder.annotations.Adapter;
-import io.sundr.builder.annotations.Buildable;
-import io.sundr.builder.annotations.Pojo;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import io.dekorate.kubernetes.annotation.Annotation;
+import io.dekorate.kubernetes.annotation.Label;
+import io.dekorate.kubernetes.annotation.PersistentVolumeClaim;
+import io.dekorate.kubernetes.config.ApplicationConfiguration;
+import io.sundr.builder.annotations.Adapter;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
 
 
 @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
@@ -48,7 +35,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TektonApplication {
 
-  String DEFAULT_ARTIFACT_REPOSITORY_PATH = "/workspaces/maven";
   String DEFAULT_DEPLOYER_IMAGE = "lachlanevenson/k8s-kubectl:v1.18.0";
 
   /**
@@ -107,44 +93,43 @@ public @interface TektonApplication {
    */
   String sourceWorkspace() default "source";
 
-  /*
-   * The name of an existing pvc.
-   * @return The existing PVC or empty string if none is specified.
+  /**
+   * The name of an external PVC to be used for the source workspace.
+   * @return the name or empty String if the PVC is meant to be generated.
    */
-  String sourceWorkspaceClaim() default "";
+  String externalSourceWorkspaceClaim() default "";
 
   /*
-   * The size requirement of the generated PVC in gigs.
-   * This only makes sense for generated PVCs.
-   * @return the size, or 1Gi (default).
-   */
-  int sourceWorkspaceSize() default 1;
-
-  /*
-   * The storage class requirement of the generated PVC
-   * This only makes sense for generated PVCs.
-   * @return the storage class or standard (default).
-   */
-  String sourceWorkspaceStorageClass() default "standard";
+   * The persistent volume claim configuration for the source workspace.
+   * The option only makes sense when the PVC is going to be generated (no external pvc specified).
+   * @return The PVC configuration.
+  */
+  PersistentVolumeClaim sourceWorkspaceClaim() default @PersistentVolumeClaim();
 
   /**
    * The name of workspace to use as a maven artifact repository.
    * @return the workspace name.
    */
-  String artifactRepositoryWorkspace() default "";
+  String m2Workspace() default "m2";
 
   /**
-   * The path where the artifact repository workspace will be mounted.
-   * @return the mounting path.
+   * The name of an external PVC to be used for the m2 artifact repository.
+   * @return the name or empty String if the PVC is meant to be generated.
    */
-  String artifactRepositoryPath() default DEFAULT_ARTIFACT_REPOSITORY_PATH;
+  String externalM2WorkspaceClaim() default "";
+
+  /*
+   * The persistent volume claim configuration for the artifact repository.
+   * The option only makes sense when the PVC is going to be generated (no external pvc specified).
+   * @return The PVC configuration.
+  */
+  PersistentVolumeClaim m2WorkspaceClaim() default @PersistentVolumeClaim();
 
   /**
    * The builder image to use.
    * @return The builder image, or empty if the image should be inferred.
    */
   String builderImage() default "";
-
 
   /*
    * The builder command to use.
