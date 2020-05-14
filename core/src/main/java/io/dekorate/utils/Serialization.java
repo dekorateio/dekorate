@@ -22,6 +22,7 @@ import io.dekorate.deps.jackson.databind.ObjectMapper;
 import io.dekorate.deps.jackson.databind.SerializationFeature;
 import io.dekorate.deps.jackson.dataformat.javaprop.JavaPropsMapper;
 import io.dekorate.deps.jackson.dataformat.yaml.YAMLFactory;
+import io.dekorate.deps.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import io.dekorate.DekorateException;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
@@ -54,7 +55,7 @@ public class Serialization {
     configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
     configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
   }};
-  private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory())  {{
+  private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory().enable(Feature.MINIMIZE_QUOTES))  {{
     configure(SerializationFeature.INDENT_OUTPUT, true);
     configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
     configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
