@@ -19,5 +19,4 @@ public class Annotations {
 
   public static final String VCS_URL = "app.dekorate.io/vcs-url";
   public static final String COMMIT_ID = "app.dekorate.io/commit-id";
-  public static final String UNKNOWN = "<<unknown>>";
 }
