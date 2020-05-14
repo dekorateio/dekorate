@@ -46,11 +46,10 @@ public class AddCommitIdAnnotationDecorator extends NamedResourceDecorator<Objec
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
     Project p = getProject();
-    String commitId = p.getScmInfo() != null && p.getScmInfo().getCommit() != null
-        ? getProject().getScmInfo().getCommit()
-        : Annotations.UNKNOWN;
-
-    builder.addToAnnotations(annotationKey, commitId);
+    boolean hasCommit = p.getScmInfo() != null && p.getScmInfo().getCommit() != null;
+    if (hasCommit) {
+      builder.addToAnnotations(annotationKey, getProject().getScmInfo().getCommit());
+    }
   }
 
   public String getAnnotationKey() {
