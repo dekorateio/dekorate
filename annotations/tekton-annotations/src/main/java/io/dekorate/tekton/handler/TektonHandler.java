@@ -229,7 +229,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       new BuildImage(config.getBuilderImage(), config.getBuilderCommand(), config.getBuilderArguments()) :
       BuildImage.find(build.getBuildTool(), build.getBuildToolVersion(), Jvm.getVersion(), null).orElseThrow(() -> new IllegalStateException("No java builder image was found!"));
 
-    resources.decorate(group, new AddResourceInputToTaskDecorator(javaBuildTaskName, GIT, GIT_SOURCE, "/source/" + config.getName()));
+    resources.decorate(group, new AddResourceInputToTaskDecorator(javaBuildTaskName, GIT, GIT_SOURCE, "/source/"));
     resources.decorate(group, new AddJavaBuildStepDecorator(javaBuildTaskName, config.getName(), image));
 
     //Image Build

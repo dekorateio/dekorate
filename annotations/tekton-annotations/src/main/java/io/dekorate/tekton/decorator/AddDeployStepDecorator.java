@@ -50,12 +50,12 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   public Step createDeployStep() {
     return new StepBuilder().withName(stepName).withImage(deployerImage).withCommand(DEPLOY_CMD)
-        .withArgs(new String[] { "apply", "-f", param(PATH_TO_YML_PARAM_NAME) }).withWorkingDir(sourcePath(projectName))
+        .withArgs(new String[] { "apply", "-f", param(PATH_TO_YML_PARAM_NAME) }).withWorkingDir(WORKING_DIR)
         .build();
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class, AddJavaBuildStepDecorator.class, AddImageBuildStepDecorator.class };
+    return new Class[] { AddInitStepDecorator.class, AddJavaBuildStepDecorator.class, AddKaninkoBuildStepDecorator.class };
   }
 }
