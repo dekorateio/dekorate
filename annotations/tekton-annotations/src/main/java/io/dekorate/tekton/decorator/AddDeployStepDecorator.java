@@ -26,7 +26,7 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   private static final String DEPLOY = "deploy";
   private static final String DEPLOY_CMD = "kubectl";
-  private static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
+  private static final String PATH_TO_YML_PARAM_NAME = "DEPLOYMENT_YML";
 
   private final String stepName;
   private final String projectName;

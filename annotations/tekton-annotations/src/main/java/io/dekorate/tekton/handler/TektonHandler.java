@@ -78,7 +78,7 @@ import io.dekorate.tekton.config.EditableTektonConfig;
 import io.dekorate.tekton.config.TektonConfig;
 import io.dekorate.tekton.config.TektonConfigBuilder;
 import io.dekorate.tekton.decorator.AddDeployStepDecorator;
-import io.dekorate.tekton.decorator.AddImageBuildStepDecorator;
+import io.dekorate.tekton.decorator.AddKaninkoBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddJavaBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddParamToTaskDecorator;
 import io.dekorate.tekton.decorator.AddPvcToPipelineRunDecorator;
@@ -134,18 +134,18 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String IMAGE_PULL_SECRETS_SYS_PROPERTY = "-Ddekorate.image-pull-secrets=";
   private static final String USER_NAME_SYS_PROP = "-Duser.name=";
 
-  private static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
+  private static final String PATH_TO_YML_PARAM_NAME = "DEPLOYMENT_YML";
   private static final String PATH_TO_YML_DESCRIPTION = "Path to yml";
   private static final String PATH_TO_YML_DEFAULT = "target/classes/META-INF/dekorate/kubernetes.yml";
 
-  private static final String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
+  private static final String PATH_TO_CONTEXT_PARAM_NAME = "CONTEXT";
   private static final String PATH_TO_CONTEXT_DESCRIPTION = "Path to context. Usually refers to module directory";
 
-  private static final String PATH_TO_DOCKERFILE_PARAM_NAME = "pathToDockerfile";
+  private static final String PATH_TO_DOCKERFILE_PARAM_NAME = "DOCKERFILE";
   private static final String PATH_TO_DOCKERFILE_DESCRIPTION = "Path to Dockerfile";
   private static final String PATH_TO_DOCKERFILE_DEFAULT = "Dockerfile";
 
-  private static final String BUILDER_IMAGE_PARAM_NAME = "builderImage";
+  private static final String BUILDER_IMAGE_PARAM_NAME = "BUILDER_IMAGE";
   private static final String BUILDER_IMAGE_DESCRIPTION = "The image to use for performing image build";
   private static final String BUILDER_IMAGE_DEFAULT = "gcr.io/kaniko-project/executor:v0.18.0";
 

@@ -19,13 +19,12 @@ package io.dekorate.tekton.decorator;
 
 import java.nio.file.Path;
 
-import io.dekorate.WithProject;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 
 public class AddContextParamToTaskDecorator extends AddParamToTaskDecorator {
 
-  private static final String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
+  private static final String PATH_TO_CONTEXT_PARAM_NAME = "CONTEXT";
   private static final String PATH_TO_CONTEXT_DESCRIPTION = "Path to context. Usually refers to module directory";
 
   public AddContextParamToTaskDecorator(String taskName, Project project) {
@@ -45,6 +44,5 @@ public class AddContextParamToTaskDecorator extends AddParamToTaskDecorator {
     }
     return result;
   }
-
-
 }
+
