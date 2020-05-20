@@ -32,6 +32,9 @@ public class BuildImage {
   private static final String EMPTY = "";
   private static final String NON_DIGIT = "\\D+";
 
+  private static final String MAVEN = MAVEN;
+  private static final String GRADLE = GRADLE;
+
   private final String image;
   private final String command;
   private final String[] arguments;
@@ -42,19 +45,19 @@ public class BuildImage {
   private final String jdkFlavor;
 
   private static final List<BuildImage> IMAGES = Arrays.asList(
-    new BuildImage("docker.io/maven:3.6.3-jdk-8", "maven", "3.6.3", 8, "openjdk", "mvn", "clean", "install"),
-    new BuildImage("docker.io/maven:3.6.3-jdk-11", "maven", "3.6.3", 11, "openjdk", "mvn", "clean", "install" ),
-    new BuildImage("docker.io/maven:3.6.3-jdk-13", "maven", "3.6.3", 14, "openjdk", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-jdk-8", MAVEN, "3.6.3", 8, "openjdk", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-jdk-11", MAVEN, "3.6.3", 11, "openjdk", "mvn", "clean", "install" ),
+    new BuildImage("docker.io/maven:3.6.3-jdk-13", MAVEN, "3.6.3", 14, "openjdk", "mvn", "clean", "install"),
 
-    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-8", "maven", "3.6.3", 8, "amazoncorretto", "mvn", "clean", "install"),
-    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-11", "maven", "3.6.3", 11, "amazoncorreto", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-8", MAVEN, "3.6.3", 8, "amazoncorretto", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-11", MAVEN, "3.6.3", 11, "amazoncorreto", "mvn", "clean", "install"),
 
-    new BuildImage("docker.io/maven:3.6.3-openj9-11", "maven", "3.6.3", 11, "openj9", "mvn", "clean", "install"),
-    new BuildImage("docker.io/maven:3.6.3-ibmjava-8", "maven", "3.6.3", 8, "ibmjava", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-openj9-11", MAVEN, "3.6.3", 11, "openj9", "mvn", "clean", "install"),
+    new BuildImage("docker.io/maven:3.6.3-ibmjava-8", MAVEN, "3.6.3", 8, "ibmjava", "mvn", "clean", "install"),
 
-    new BuildImage("docker.io/gradle:6.3.0-jdk8", "gradle", "6.3.0", 8, "openjdk", "gradle", "clean", "build"),
-    new BuildImage("docker.io/gradle:6.3.0-jdk11", "gradle", "6.3.0", 11, "openjdk", "gradle", "clean", "build"),
-    new BuildImage("docker.io/gradle:6.3.0-jdk13", "gradle", "6.3.0", 13, "openjdk", "gradle", "clean", "build")
+    new BuildImage("docker.io/gradle:6.3.0-jdk8", GRADLE, "6.3.0", 8, "openjdk", GRADLE, "clean", "build"),
+    new BuildImage("docker.io/gradle:6.3.0-jdk11", GRADLE, "6.3.0", 11, "openjdk", GRADLE, "clean", "build"),
+    new BuildImage("docker.io/gradle:6.3.0-jdk13", GRADLE, "6.3.0", 13, "openjdk", GRADLE, "clean", "build")
   );
 
   /**
@@ -116,6 +119,18 @@ public class BuildImage {
     return tool;
   }
 
+  public void ifMaven(Runnable r) {
+    if (MAVEN.equals(this.getTool())) {
+        r.run();
+      }
+  }
+
+  public void ifGradle(Runnable r) {
+    if (GRADLE.equals(this.getTool())) {
+        r.run();
+      }
+  }
+
   public int distance(BuildImage other) {
     return distance(other.tool, other.toolVersion, other.jdkVersion, other.jdkFlavor);
   }
@@ -168,5 +183,4 @@ public class BuildImage {
     }
     return Integer.parseInt(parts[2].trim().replaceAll(NON_DIGIT, EMPTY));
   }
-
 }

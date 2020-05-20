@@ -79,7 +79,9 @@ import io.dekorate.tekton.config.TektonConfig;
 import io.dekorate.tekton.config.TektonConfigBuilder;
 import io.dekorate.tekton.decorator.AddDeployStepDecorator;
 import io.dekorate.tekton.decorator.AddKaninkoBuildStepDecorator;
+import io.dekorate.tekton.decorator.AddJibMavenBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddJavaBuildStepDecorator;
+import io.dekorate.tekton.decorator.AddJibGradleBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddParamToTaskDecorator;
 import io.dekorate.tekton.decorator.AddPvcToPipelineRunDecorator;
 import io.dekorate.tekton.decorator.AddPvcToTaskRunDecorator;
@@ -233,9 +235,16 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.decorate(group, new AddJavaBuildStepDecorator(javaBuildTaskName, config.getName(), image));
 
     //Image Build
-    resources.decorate(group, new AddImageBuildStepDecorator(imageBuildTaskName, config.getName()));
-    resources.decorate(group, new AddParamToTaskDecorator(imageBuildTaskName, PATH_TO_DOCKERFILE_PARAM_NAME, PATH_TO_DOCKERFILE_DESCRIPTION, PATH_TO_DOCKERFILE_DEFAULT));
-    resources.decorate(group, new AddParamToTaskDecorator(imageBuildTaskName, BUILDER_IMAGE_PARAM_NAME, BUILDER_IMAGE_DESCRIPTION, BUILDER_IMAGE_DEFAULT));
+    if (Strings.isNotNullOrEmpty(imageConfiguration.getDockerFile()) && getProject().getRoot().resolve(imageConfiguration.getDockerFile()).toFile().exists()) {
+      resources.decorate(group, new AddKaninkoBuildStepDecorator(imageBuildTaskName, config.getName()));
+      resources.decorate(group, new AddParamToTaskDecorator(imageBuildTaskName, PATH_TO_DOCKERFILE_PARAM_NAME, PATH_TO_DOCKERFILE_DESCRIPTION, PATH_TO_DOCKERFILE_DEFAULT));
+      resources.decorate(group, new AddParamToTaskDecorator(imageBuildTaskName, BUILDER_IMAGE_PARAM_NAME, BUILDER_IMAGE_DESCRIPTION, BUILDER_IMAGE_DEFAULT));
+    } else {
+      image.ifMaven(() -> resources.decorate(group, new AddJibMavenBuildStepDecorator(imageBuildTaskName, config.getName())));
+      image.ifGradle(() -> resources.decorate(group, new AddJibGradleBuildStepDecorator(imageBuildTaskName, config.getName())));
+      resources.decorate(group, new AddParamToTaskDecorator(imageBuildTaskName, BUILDER_IMAGE_PARAM_NAME, BUILDER_IMAGE_DESCRIPTION, image.getImage()));
+    }
+
     resources.decorate(group, new AddResourceOutputToTaskDecorator(imageBuildTaskName, IMAGE, IMAGE));
 
     //Deploy Task

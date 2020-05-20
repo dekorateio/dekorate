@@ -21,14 +21,13 @@ import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 import io.dekorate.kubernetes.decorator.Decorator;
 
-public class AddImageBuildStepDecorator extends NamedTaskDecorator implements StepDecorator{
-
+public class AddKaninkoBuildStepDecorator extends NamedTaskDecorator implements StepDecorator{
 
   private static final String BUILD_AND_PUSH = "build-and-push";
-  private static final String BUILDER_IMAGE_REF = "$(inputs.params.builderImage)";
+  private static final String BUILDER_IMAGE_REF = "$(inputs.params.BUILDER_IMAGE)";
   private static final String KANIKO_CMD = "/kaniko/executor";
-  private static final String DOCKERFILE_ARG = "--dockerfile=$(inputs.params.pathToDockerfile)";
-  private static final String CONTEXT_ARG = "--context=$(params.pathToContext)";
+  private static final String DOCKERFILE_ARG = "--dockerfile=$(inputs.params.DOCKERFILE)";
+  private static final String CONTEXT_ARG = "--context=$(params.CONTEXT)";
   private static final String IMAGE_DESTINATION_ARG = "--destination=$(resources.outputs.image.url)";
   private static final String VERBOSITY_DEBUG = "--verbosity=debug";
 
@@ -38,11 +37,11 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
   private final String stepName;
   private final String projectName;
 
-  public AddImageBuildStepDecorator(String taskName, String projectName) {
+  public AddKaninkoBuildStepDecorator(String taskName, String projectName) {
     this(taskName, BUILD_AND_PUSH, projectName);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, String projectName) {
+  public AddKaninkoBuildStepDecorator(String taskName, String stepName, String projectName) {
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;
@@ -59,7 +58,7 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
           .addToArgs(CONTEXT_ARG)
           .addToArgs(IMAGE_DESTINATION_ARG)
           .addToArgs(VERBOSITY_DEBUG)
-          .withWorkingDir(sourcePath(projectName))
+          .withWorkingDir(WORKING_DIR)
       .endStep();
   }
 
