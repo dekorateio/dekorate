@@ -29,13 +29,11 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
   private static final String PATH_TO_YML_PARAM_NAME = "DEPLOYMENT_YML";
 
   private final String stepName;
-  private final String projectName;
   private final String deployerImage;
 
   public AddDeployStepDecorator(String taskName, String stepName, String projectName, String deployerImage) {
     super(taskName);
     this.stepName = stepName;
-    this.projectName = projectName;
     this.deployerImage = deployerImage;
   }
 
@@ -56,6 +54,6 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class, AddJavaBuildStepDecorator.class, AddKaninkoBuildStepDecorator.class };
+    return new Class[] { AddInitStepDecorator.class, AddJavaBuildStepDecorator.class, AddKanikoBuildStepDecorator.class, AddJibMavenBuildStepDecorator.class, AddJibGradleBuildStepDecorator.class };
   }
 }

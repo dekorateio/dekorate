@@ -22,7 +22,6 @@ import java.io.InputStream;
 
 import io.dekorate.DekorateException;
 import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
-import io.dekorate.deps.tekton.pipeline.v1beta1.ArrayOrString;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 import io.dekorate.utils.Strings;
 
@@ -39,10 +38,6 @@ public class AddJibGradleBuildStepDecorator extends NamedTaskDecorator implement
   private static final String INSECUREREGISTRY = "INSECUREREGISTRY";
   private static final String INSECUREREGISTRY_DESCRIPTION = "Whether to allow insecure registry";
   private static final String INSECUREREGISTRY_DEFAULT = "true";
-
-  private static final String HTTP_TIMEOUT = "HTTP_TIMEOUT";
-  private static final String HTTP_TIMEOUT_DESCRIPTION = "The http timeout";
-  private static final String HTTP_TIMEOUT_DEFAULT = "60000";
 
   private static final String JIB_GRADLE_SH = "jib-gradle.sh";
 
@@ -65,12 +60,6 @@ public class AddJibGradleBuildStepDecorator extends NamedTaskDecorator implement
         .withName(INSECUREREGISTRY)
         .withDescription(INSECUREREGISTRY_DESCRIPTION)
         .withNewDefault().withStringVal(INSECUREREGISTRY_DEFAULT).endDefault()
-      .endParam()
-      .addNewParam()
-        .withName(HTTP_TIMEOUT)
-        .withType("string")
-        .withDescription(HTTP_TIMEOUT_DESCRIPTION)
-        .withDefault(new ArrayOrString(HTTP_TIMEOUT_DEFAULT))
       .endParam()
       .addNewStep()
          .withName("jib-setup")

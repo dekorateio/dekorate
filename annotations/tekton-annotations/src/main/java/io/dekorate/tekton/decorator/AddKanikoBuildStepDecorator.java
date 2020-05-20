@@ -21,7 +21,7 @@ import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 import io.dekorate.kubernetes.decorator.Decorator;
 
-public class AddKaninkoBuildStepDecorator extends NamedTaskDecorator implements StepDecorator{
+public class AddKanikoBuildStepDecorator extends NamedTaskDecorator implements StepDecorator{
 
   private static final String BUILD_AND_PUSH = "build-and-push";
   private static final String BUILDER_IMAGE_REF = "$(inputs.params.BUILDER_IMAGE)";
@@ -35,16 +35,14 @@ public class AddKaninkoBuildStepDecorator extends NamedTaskDecorator implements 
   private static final String DOCKER_CONFIG_DEFAULT = "/tekton/home/.docker";
 
   private final String stepName;
-  private final String projectName;
 
-  public AddKaninkoBuildStepDecorator(String taskName, String projectName) {
-    this(taskName, BUILD_AND_PUSH, projectName);
+  public AddKanikoBuildStepDecorator(String taskName) {
+    this(taskName, BUILD_AND_PUSH);
   }
 
-  public AddKaninkoBuildStepDecorator(String taskName, String stepName, String projectName) {
+  public AddKanikoBuildStepDecorator(String taskName, String stepName) {
     super(taskName);
     this.stepName = stepName;
-    this.projectName = projectName;
   }
 
   @Override

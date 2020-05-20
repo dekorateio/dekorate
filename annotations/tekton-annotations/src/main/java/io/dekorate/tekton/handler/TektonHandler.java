@@ -78,7 +78,7 @@ import io.dekorate.tekton.config.EditableTektonConfig;
 import io.dekorate.tekton.config.TektonConfig;
 import io.dekorate.tekton.config.TektonConfigBuilder;
 import io.dekorate.tekton.decorator.AddDeployStepDecorator;
-import io.dekorate.tekton.decorator.AddKaninkoBuildStepDecorator;
+import io.dekorate.tekton.decorator.AddKanikoBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddJibMavenBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddJavaBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddJibGradleBuildStepDecorator;
@@ -212,18 +212,14 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.decorate(group, new AddWorkspaceToTaskDecorator(null, config.getSourceWorkspace(), "The workspace to hold all project sources", false, null));
     resources.decorate(group, new AddParamToTaskDecorator(null, PATH_TO_CONTEXT_PARAM_NAME, PATH_TO_CONTEXT_DESCRIPTION, getContextPath(getProject())));
 
-    String monolithTaskName = monolithTaskName(config);
+    boolean isTask = group.equals(TEKTON_TASK);
 
-    String javaBuildTaskName = javaBuildTaskName(config);
-    String javaBuildStepName = javaBuildStepName(config);
-    String imageBuildTaskName = imageBuildTaskName(config);
-    String deployTaskName = deployTaskName(config);
+    final String monolithicTaskName = monolithicTaskName(config);
 
-    if (group.equals(TEKTON_TASK)) { //We just a single task
-      javaBuildTaskName = monolithTaskName;
-      imageBuildTaskName = monolithTaskName;
-      deployTaskName = monolithTaskName;
-    }
+    final String javaBuildStepName = javaBuildStepName(config);
+    final String javaBuildTaskName =  isTask ? monolithicTaskName : javaBuildTaskName(config);
+    final String imageBuildTaskName = isTask ? monolithicTaskName : imageBuildTaskName(config);
+    final String deployTaskName = isTask ? monolithicTaskName : deployTaskName(config);
 
     //Java Build
     BuildInfo build = config.getProject().getBuildInfo();
@@ -236,7 +232,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
     //Image Build
     if (Strings.isNotNullOrEmpty(imageConfiguration.getDockerFile()) && getProject().getRoot().resolve(imageConfiguration.getDockerFile()).toFile().exists()) {
-      resources.decorate(group, new AddKaninkoBuildStepDecorator(imageBuildTaskName, config.getName()));
+      resources.decorate(group, new AddKanikoBuildStepDecorator(imageBuildTaskName));
       resources.decorate(group, new AddParamToTaskDecorator(imageBuildTaskName, PATH_TO_DOCKERFILE_PARAM_NAME, PATH_TO_DOCKERFILE_DESCRIPTION, PATH_TO_DOCKERFILE_DEFAULT));
       resources.decorate(group, new AddParamToTaskDecorator(imageBuildTaskName, BUILDER_IMAGE_PARAM_NAME, BUILDER_IMAGE_DESCRIPTION, BUILDER_IMAGE_DEFAULT));
     } else {
@@ -269,26 +265,25 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       resources.decorate(group + DASH + RUN, new AddServiceAccountToTaskDecorator(imageBuildTaskName(config), config.getImagePushServiceAccount()));
     } else {
       String generatedServiceAccount = config.getName();
+      String imagePushSecret = imagePushSecret(config);
       resources.decorate(group + DASH + RUN, new AddServiceAccountToTaskDecorator(imageBuildTaskName(config), generatedServiceAccount));
       if (Strings.isNotNullOrEmpty(config.getImagePushSecret())) {
         resources.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, config.getImagePushSecret()));
         resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + config.getImagePushSecret()));
       } else if (config.isUseLocalDockerConfigJson()) {
-        String generatedSecret = config.getName() + "-registry-credentials" ;
         Path dockerConfigJson = Paths.get(System.getProperty("user.home"), ".docker", "config.json");
         if (!dockerConfigJson.toFile().exists()) {
           throw new IllegalStateException("User requested to use the local `.docker/config.json` file, but it doesn't exist!");
         } else {
-          LOGGER.warning(dockerConfigJson.toAbsolutePath().toString() + " is going to be added as part of Secret: "+ generatedSecret);
+          LOGGER.warning(dockerConfigJson.toAbsolutePath().toString() + " is going to be added as part of Secret: "+ imagePushSecret);
         }
-        resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
-        resources.decorate(group, new AddDockerConfigJsonSecretDecorator(generatedSecret, dockerConfigJson, annotations));
-        resources.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
+        resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + imagePushSecret));
+        resources.decorate(group, new AddDockerConfigJsonSecretDecorator(imagePushSecret, dockerConfigJson, annotations));
+        resources.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, imagePushSecret));
       } else if (Strings.isNotNullOrEmpty(config.getRegistryUsername()) && Strings.isNotNullOrEmpty(config.getRegistryPassword())) {
-        String generatedSecret = config.getName() + "-registry-credentials" ;
-        resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
-        resources.decorate(group, new AddDockerConfigJsonSecretDecorator(generatedSecret, config.getRegistry(), config.getRegistryUsername(), config.getRegistryPassword(), annotations));
-        resources.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
+        resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + imagePushSecret));
+        resources.decorate(group, new AddDockerConfigJsonSecretDecorator(imagePushSecret, config.getRegistry(), config.getRegistryUsername(), config.getRegistryPassword(), annotations));
+        resources.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, imagePushSecret));
       } else {
         LOGGER.error("An existing builder image service account or secret is required! Alternatively, you can specify a registry username and password!");
       }
@@ -325,9 +320,9 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   }
 
   public void generateTaskResources(TektonConfig config) {
-    String monolithTaskName = monolithTaskName(config);
+    String monolithicTaskName = monolithicTaskName(config);
     String m2WorkspaceClaimName = m2WorkspaceClaimName(config);
-    resources.add(TEKTON_TASK, createTask(monolithTaskName));
+    resources.add(TEKTON_TASK, createTask(monolithicTaskName));
     resources.add(TEKTON_TASK_RUN, createTaskRun(config));
 
     if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
@@ -475,7 +470,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
       .withNewSpec()
       .withServiceAccountName(config.getName())
       .addNewWorkspace().withName(config.getSourceWorkspace()).withEmptyDir(new EmptyDirVolumeSourceBuilder().withMedium("Memory").build()).endWorkspace()
-        .withNewTaskRef().withName(monolithTaskName(config)).endTaskRef()
+        .withNewTaskRef().withName(monolithicTaskName(config)).endTaskRef()
         .withNewResources()
         .addNewInput().withName(GIT_SOURCE).withNewResourceRef().withName(gitResourceName(config)).endResourceRef().endInput()
         .addNewOutput().withName(IMAGE).withNewResourceRef().withName(outputImageResourceName(config)).endResourceRef().endOutput()
@@ -588,6 +583,11 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     }
   }
 
+  public static final String imagePushSecret(TektonConfig config) {
+    return Strings.isNotNullOrEmpty(config.getImagePushSecret())  ? config.getImagePushSecret() : config.getName() + "-registry-credentials";
+  }
+
+
   public static final String gitResourceName(TektonConfig config) {
     return Strings.isNotNullOrEmpty(config.getExternalGitPipelineResource()) ? config.getExternalGitPipelineResource() : config.getName() + DASH + GIT;
   }
@@ -624,7 +624,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     return config.getName() + DASH + DEPLOY;
   }
 
-  public static final String monolithTaskName(TektonConfig config) {
+  public static final String monolithicTaskName(TektonConfig config) {
     return config.getName() + DASH + BUILD + DASH + AND + DASH + DEPLOY;
   }
 }

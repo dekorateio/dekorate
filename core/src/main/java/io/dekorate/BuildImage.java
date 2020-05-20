@@ -32,8 +32,8 @@ public class BuildImage {
   private static final String EMPTY = "";
   private static final String NON_DIGIT = "\\D+";
 
-  private static final String MAVEN = MAVEN;
-  private static final String GRADLE = GRADLE;
+  private static final String MAVEN = "maven";
+  private static final String GRADLE = "gradle";
 
   private final String image;
   private final String command;
