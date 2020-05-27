@@ -21,6 +21,8 @@ import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.deps.kubernetes.api.model.ServicePort;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.deps.kubernetes.api.model.ServicePortBuilder;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.deps.kubernetes.api.model.IntOrString;
 import java.util.Arrays;
 import java.util.Map;
@@ -33,6 +35,8 @@ import io.dekorate.doc.Description;
 
 @Description("Add a service to the list.")
 public class AddServiceResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger();
 
   private final BaseConfig config;
 
@@ -49,7 +53,8 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
       .withNewSpec()
       .withType(config.getServiceType().name())
       .withSelector(Labels.createLabels(config))
-      .withPorts(Arrays.asList(config.getPorts()).stream().filter(distinct(p->p.getName())).map(this::toServicePort).collect(Collectors.toList()))
+      .withPorts(Arrays.asList(config.getPorts()).stream()
+                 .filter(distinct(p->p.getName())).map(this::toServicePort).collect(Collectors.toList()))
       .endSpec()
       .endServiceItem();
   }
@@ -64,6 +69,14 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
 
   public static <T> Predicate<T> distinct(Function<? super T, Object> keyExtractor) {
     Map<Object, Boolean> map = new ConcurrentHashMap<>();
-    return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    return t -> {
+      Object key = keyExtractor.apply(t);
+      if (key == null) {
+        LOGGER.warning("Found incomplete port definition (name is missing). The port will be ignored.");
+        return false;
+      } else {
+        return map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+      }
+    };
   }
 }
