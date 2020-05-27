@@ -48,6 +48,8 @@
       <module>feat-458-kubernetes-and-openshift-labels</module>
       <module>issue-473-env-from-field</module>
       <module>issue-503-partial-s2i-config</module>
+      <module>issue-507-spring-boot-server-port</module>
+      <module>issue-507-unamed-port</module>
     </modules>
 
 </project>
