@@ -19,6 +19,7 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.project.Project;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +37,10 @@ public interface SessionWriter extends WithProject {
   String TMP = "tmp";
   String DOT = ".";
 
+  default Set<String> getWhitelistedGroups() {
+    return Collections.EMPTY_SET;
+  }
+
   /**
    * Writes all {@link Session} resources.
    * @param session The target session.
@@ -46,8 +51,9 @@ public interface SessionWriter extends WithProject {
     session.close();
     Map<String, KubernetesList> resources = session.getGeneratedResources();
     Set<? extends Configuration> configurations = session.configurators().toSet();
-    resources.forEach((g, l) -> {
-      result.putAll(write(g, l));
+    Set<String> whitelist = getWhitelistedGroups();
+    resources.entrySet().stream().filter(e -> whitelist.isEmpty() || whitelist.contains(e.getKey())).forEach(e -> {
+          result.putAll(write(e.getKey(), e.getValue()));
     });
     configurations.forEach(c -> {
       final Map.Entry<String, String> entry = write(c);
