@@ -15,6 +15,16 @@
  */
 package io.dekorate.processor;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
@@ -22,18 +32,12 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
-
 public class SimpleFileWriter implements SessionWriter, WithProject {
 
   private final Path metaDir;
   private final Path outputDir;
   private final boolean doWrite;
+  private final Set<String> whitelistedGroups;
 
   public SimpleFileWriter(Project project) {
     this(project, true);
@@ -47,10 +51,15 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
     this(metaDir, outputDir, true);
   }
 
-  public SimpleFileWriter(Path metaDir, Path outputDir, boolean doWrite) {
+  public SimpleFileWriter(Path metaDir, Path outputDir, boolean doWrite, String... whitelistedGroups) {
+    this(metaDir, outputDir, doWrite, new HashSet(Arrays.asList(whitelistedGroups)));
+  }
+
+  public SimpleFileWriter(Path metaDir, Path outputDir, boolean doWrite, Set<String> whitelistedGroups) {
     this.metaDir = metaDir;
     this.outputDir = outputDir;
     this.doWrite = doWrite;
+    this.whitelistedGroups = whitelistedGroups;
   }
 
   /**
@@ -146,5 +155,9 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
     } catch (IOException e) {
       throw new RuntimeException("Error writing resources", e);
     }
+  }
+
+  public Set<String> getWhitelistedGroups() {
+    return whitelistedGroups;
   }
 }
