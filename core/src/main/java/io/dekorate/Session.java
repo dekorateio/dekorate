@@ -99,23 +99,12 @@ public class Session {
   }
 
   public void loadHandlers() {
-    Iterator<HandlerFactory> iterator = ServiceLoader.load(HandlerFactory.class, Session.class.getClassLoader()).iterator();
-    while(iterator.hasNext())  {
-      this.handlers.add(iterator.next().create(this.resources, this.configurators));
-    }
+    HandlerFactoryRegistry.getHandlerfaFactories().stream().forEach(h -> this.handlers.add(h.create(this.resources, this.configurators)));
   }
 
   public void loadGenerators() {
-    Iterator<Generator> iterator = ServiceLoader.load(Generator.class, Session.class.getClassLoader()).iterator();
-    while (iterator.hasNext()) {
-      Generator g = iterator.next();
-      if (g.getKey() != null) {
-        this.generators.put(g.getKey(), g);
-        if (g.getAnnotation() != null) {
-          this.annotations.put(g.getKey(), g.getAnnotation());
-        }
-      }
-    }
+    GeneratorRegistry.getGenerators().stream().filter(g -> g.getKey() != null).forEach(g -> this.generators.put(g.getKey(), g));
+    GeneratorRegistry.getGenerators().stream().filter(g -> g.getKey() != null && g.getAnnotation() != null).forEach(g -> this.annotations.put(g.getKey(), g.getAnnotation()));
   }
 
   public void feed(Map<String, Object> map) {

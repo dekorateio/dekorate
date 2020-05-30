@@ -19,8 +19,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Optional;
-import java.util.ServiceLoader;
-import java.util.stream.StreamSupport;
 
 import io.dekorate.utils.Git;
 
@@ -67,12 +65,13 @@ public class FileProjectFactory {
    * @param path  The path.
    * @return      An {@link Optional} {@link BuildInfo}.
    */
-  private static Optional<BuildInfo> getProjectInfo(Path path) {
+ private static Optional<BuildInfo> getProjectInfo(Path path) {
     if (path == null) {
       return Optional.empty();
     }
 
-    return StreamSupport.stream(ServiceLoader.load(BuildInfoReader.class, FileProjectFactory.class.getClassLoader()).spliterator(), false)
+    return BuildInfoReaderRegistry.getReaders()
+      .stream()
       .filter(r -> r.isApplicable(path))
       .sorted(Comparator.comparingInt(BuildInfoReader::order))
       .findFirst()
