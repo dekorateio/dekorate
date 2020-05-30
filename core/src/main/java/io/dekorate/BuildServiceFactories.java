@@ -20,12 +20,10 @@ package io.dekorate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
@@ -67,8 +65,7 @@ public class BuildServiceFactories {
   }
 
   private static Stream<BuildServiceFactory> stream() {
-     ServiceLoader<BuildServiceFactory> loader = ServiceLoader.load(BuildServiceFactory.class, BuildServiceFactory.class.getClassLoader());
-     return StreamSupport.stream(loader.spliterator(), false);
+    return BuildServiceFactoryRegistry.getBuildServiceFacotries().stream();
   }
 
 }
