@@ -90,9 +90,9 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
   private void populateFromSecret(ContainerBuilder builder) {
     if (Strings.isNotNullOrEmpty(env.getName()) && Strings.isNotNullOrEmpty(env.getValue())) {
       builder.addNewEnv().withName(env.getName()).withNewValueFrom()
-          .withNewSecretKeyRef(env.getValue(), env.getSecret(), false).endValueFrom().endEnv();
+          .withNewSecretKeyRef(env.getValue(), env.getSecret(), null).endValueFrom().endEnv();
     } else {
-      builder.addNewEnvFrom().withNewSecretRef(env.getSecret(), false).endEnvFrom();
+      builder.addNewEnvFrom().withNewSecretRef(env.getSecret(), null).endEnvFrom();
     }
   }
 
@@ -108,9 +108,9 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
   private void populateFromConfigMap(ContainerBuilder builder) {
     if (Strings.isNotNullOrEmpty(env.getName()) && Strings.isNotNullOrEmpty(env.getValue())) {
       builder.addNewEnv().withName(env.getName()).withNewValueFrom()
-          .withNewConfigMapKeyRef(env.getValue(), env.getConfigmap(), false).endValueFrom().endEnv();
+          .withNewConfigMapKeyRef(env.getValue(), env.getConfigmap(), null).endValueFrom().endEnv();
     } else {
-      builder.addNewEnvFrom().withNewConfigMapRef(env.getConfigmap(), false).endEnvFrom();
+      builder.addNewEnvFrom().withNewConfigMapRef(env.getConfigmap(), null).endEnvFrom();
     }
   }
 
