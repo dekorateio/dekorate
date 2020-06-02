@@ -26,7 +26,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import io.dekorate.Session;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.doc.Description;
+import io.dekorate.halkyon.adapter.CapabilityConfigAdapter;
+import io.dekorate.halkyon.annotation.HalkyonCapability;
+import io.dekorate.halkyon.config.CapabilityConfig;
 import io.dekorate.halkyon.generator.CapabilityConfigGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
@@ -47,5 +51,13 @@ public class CapabilityAnnotationProcessor extends AbstractAnnotationProcessor i
       }
     }
     return false;
+  }
+
+  @Override
+  public void add(Element element) {
+    HalkyonCapability capability = element.getAnnotation(HalkyonCapability.class);
+    add(capability != null
+      ? new AnnotationConfiguration<>(CapabilityConfigAdapter.newBuilder(capability))
+      : new AnnotationConfiguration<>(CapabilityConfig.newCapabilityConfigBuilder()));
   }
 }

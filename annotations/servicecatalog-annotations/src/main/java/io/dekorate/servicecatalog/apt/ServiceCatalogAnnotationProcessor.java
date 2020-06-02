@@ -16,17 +16,21 @@
 package io.dekorate.servicecatalog.apt;
 
 
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.servicecatalog.generator.ServiceCatalogGenerator;
-
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.Set;
+
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.servicecatalog.adapter.ServiceCatalogConfigAdapter;
+import io.dekorate.servicecatalog.annotation.ServiceCatalog;
+import io.dekorate.servicecatalog.config.ServiceCatalogConfigBuilder;
+import io.dekorate.servicecatalog.generator.ServiceCatalogGenerator;
 
 @SupportedAnnotationTypes({"io.dekorate.servicecatalog.annotation.ServiceCatalog", "io.dekorate.servicecatalog.annotation.ServiceCatalogInstance"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -43,5 +47,13 @@ public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcess
       }
     }
     return false;
+  }
+
+  @Override
+  public void add(Element element) {
+    ServiceCatalog serviceCatalog = element.getAnnotation(ServiceCatalog.class);
+    on(serviceCatalog != null
+      ? new AnnotationConfiguration<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
+      : new AnnotationConfiguration<>(new ServiceCatalogConfigBuilder()));
   }
 }

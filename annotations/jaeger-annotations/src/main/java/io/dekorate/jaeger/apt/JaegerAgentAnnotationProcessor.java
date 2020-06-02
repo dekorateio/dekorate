@@ -16,8 +16,7 @@
 package io.dekorate.jaeger.apt;
 
 
-import io.dekorate.jaeger.generator.JaegerAgentGenerator;
-import io.dekorate.processor.AbstractAnnotationProcessor;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -25,7 +24,14 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.Set;
+
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.jaeger.adapter.JaegerAgentConfigAdapter;
+import io.dekorate.jaeger.annotation.EnableJaegerAgent;
+import io.dekorate.jaeger.config.JaegerAgentConfig;
+import io.dekorate.jaeger.config.JaegerAgentConfigBuilder;
+import io.dekorate.jaeger.generator.JaegerAgentGenerator;
+import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @SupportedAnnotationTypes({"io.dekorate.jaeger.annotation.EnableJaegerAgent"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -42,5 +48,13 @@ public class JaegerAgentAnnotationProcessor extends AbstractAnnotationProcessor 
       }
     }
     return false;
+  }
+
+  @Override
+  public void add(Element element) {
+    EnableJaegerAgent serviceMonitor = element.getAnnotation(EnableJaegerAgent.class);
+    on(serviceMonitor != null
+      ? new AnnotationConfiguration<JaegerAgentConfig>(JaegerAgentConfigAdapter.newBuilder(serviceMonitor))
+      : new AnnotationConfiguration<JaegerAgentConfig>(new JaegerAgentConfigBuilder()));
   }
 }

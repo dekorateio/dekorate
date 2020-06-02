@@ -62,10 +62,13 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
     //TODO add support for detecting microprofile-health and setting the liveness/readiness probes
 
     if (map.containsKey(ApplicationPath.class.getName())) {
-      Map<String, Object> applicationPath = propertiesMap(map, ApplicationPath.class);
-      if (applicationPath != null && applicationPath.containsKey("value")) {
-        String path = String.valueOf(applicationPath.get("value"));
-        session.configurators().add(new SetPortPath(port.getName(), path));
+      Object o  = map.get(ApplicationPath.class.getName());
+      if (o instanceof Map) {
+        Map<String, Object> applicationPath = (Map) o; 
+          if (applicationPath != null && applicationPath.containsKey("value")) {
+            String path = String.valueOf(applicationPath.get("value"));
+            session.configurators().add(new SetPortPath(port.getName(), path));
+          }
       }
     }
   }

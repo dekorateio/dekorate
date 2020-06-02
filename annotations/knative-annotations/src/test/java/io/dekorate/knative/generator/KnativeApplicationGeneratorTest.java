@@ -16,6 +16,7 @@
 package io.dekorate.knative.generator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.knative.annotation.KnativeApplication;
+import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
 
@@ -56,7 +57,7 @@ class KnativeApplicationGeneratorTest {
     generator.setProject(FileProjectFactory.create(new File(".")));
 
     Map<String, Object> map = new HashMap<String, Object>() {{
-      put(KnativeApplication.class.getName(), new HashMap<String, Object>() {{
+      put(KnativeConfig.class.getName(), new HashMap<String, Object>() {{
         put("name", "generator-test");
         put("version", "latest");
       }});

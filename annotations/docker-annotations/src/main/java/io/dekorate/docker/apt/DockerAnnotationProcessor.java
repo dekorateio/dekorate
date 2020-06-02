@@ -27,8 +27,15 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import io.dekorate.Session;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.docker.adapter.DockerBuildConfigAdapter;
+import io.dekorate.docker.annotation.DockerBuild;
+import io.dekorate.docker.config.DockerBuildConfig;
+import io.dekorate.docker.config.DockerBuildConfigBuilder;
 import io.dekorate.docker.generator.DockerBuildGenerator;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.project.ApplyProjectInfo;
 
 @SupportedAnnotationTypes({"io.dekorate.docker.annotation.DockerBuild"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -48,4 +55,16 @@ public class DockerAnnotationProcessor extends AbstractAnnotationProcessor imple
     }
     return false;
 	}
+
+  @Override
+  public void add(Element element) {
+    DockerBuild enableDockerBuild = element.getAnnotation(DockerBuild.class);
+    on(enableDockerBuild != null
+      ? new AnnotationConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(enableDockerBuild)
+                                                                                 .accept(new ApplyProjectInfo(getProject()))
+                                                                                 .accept(new ApplyBuildToImageConfiguration()))
+      : new AnnotationConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
+                                                                                 .accept(new ApplyProjectInfo(getProject()))
+                                                                                 .accept(new ApplyBuildToImageConfiguration())));
+  }
 }

@@ -15,18 +15,26 @@
  */
 package io.dekorate.tekton.apt;
 
-import io.dekorate.tekton.generator.TektonApplicationGenerator;
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.doc.Description;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.HashSet;
-import java.util.Set;
+
+import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.tekton.adapter.TektonConfigAdapter;
+import io.dekorate.tekton.annotation.TektonApplication;
+import io.dekorate.tekton.config.TektonConfig;
+import io.dekorate.tekton.config.TektonConfigCustomAdapter;
+import io.dekorate.tekton.generator.TektonApplicationGenerator;
 
 @Description("Generates tekton manifests.")
 @SupportedAnnotationTypes("io.dekorate.tekton.annotation.TektonApplication")
@@ -49,5 +57,14 @@ public class TektonAnnotationProcessor extends AbstractAnnotationProcessor imple
       add(mainClass);
     }
     return false;
+  }
+
+  public void add(Element element) {
+    TektonApplication tektonApplication = element.getAnnotation(TektonApplication.class);
+    TektonConfig tektonConfig = TektonConfigCustomAdapter.newBuilder(getProject(), tektonApplication).build();
+
+    on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(element.getAnnotation(TektonApplication.class))
+                                   .accept(new ApplyBuildToImageConfiguration())
+                                   .accept(new ApplyProjectInfo(getProject()))));
   }
 }

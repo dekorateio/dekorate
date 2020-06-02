@@ -27,6 +27,7 @@ import io.dekorate.jaeger.config.AddDefaultPortsToAgentConfigurator;
 import io.dekorate.jaeger.config.JaegerAgentConfig;
 import io.dekorate.jaeger.config.JaegerAgentConfigBuilder;
 import io.dekorate.jaeger.handler.JaegerAgentHandler;
+import io.dekorate.kubernetes.config.Configuration;
 
 import javax.lang.model.element.Element;
 
@@ -39,22 +40,14 @@ public interface JaegerAgentGenerator extends Generator, WithSession {
     return "jaeger";
   }
 
-  default Class<? extends Annotation> getAnnotation() {
-    return EnableJaegerAgent.class;
+  default Class<? extends Configuration> getConfigType() {
+    return JaegerAgentConfig.class;
   }
 
 
   @Override
   default void add(Map map) {
-    on(new PropertyConfiguration<>(JaegerAgentConfigAdapter.newBuilder(propertiesMap(map, EnableJaegerAgent.class))));
-  }
-
-  @Override
-  default void add(Element element) {
-    EnableJaegerAgent serviceMonitor = element.getAnnotation(EnableJaegerAgent.class);
-    on(serviceMonitor != null
-      ? new AnnotationConfiguration<>(JaegerAgentConfigAdapter.newBuilder(serviceMonitor))
-      : new AnnotationConfiguration<>(new JaegerAgentConfigBuilder()));
+    on(new PropertyConfiguration<>(JaegerAgentConfigAdapter.newBuilder(propertiesMap(map, JaegerAgentConfig.class))));
   }
 
   default void on(ConfigurationSupplier<JaegerAgentConfig> config) {

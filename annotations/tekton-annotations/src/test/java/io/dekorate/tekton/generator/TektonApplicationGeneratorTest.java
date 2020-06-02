@@ -29,9 +29,9 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.dekorate.tekton.annotation.TektonApplication;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
+import io.dekorate.tekton.config.TektonConfig;
 
 class TektonApplicationGeneratorTest {
   static Path tempDir;
@@ -54,7 +54,7 @@ class TektonApplicationGeneratorTest {
     System.out.println("Project root:" + generator.getProject());
 
     Map<String, Object> map = new HashMap<String, Object>() {{
-      put(TektonApplication.class.getName(), new HashMap<String, Object>() {{
+      put(TektonConfig.class.getName(), new HashMap<String, Object>() {{
         put("name", "generator-test");
         put("version", "latest");
         put("externalGitPipelineResource", "yagpr");

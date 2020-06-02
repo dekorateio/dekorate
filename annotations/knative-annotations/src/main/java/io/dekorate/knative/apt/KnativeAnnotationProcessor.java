@@ -15,18 +15,25 @@
  */
 package io.dekorate.knative.apt;
 
-import io.dekorate.knative.generator.KnativeApplicationGenerator;
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.doc.Description;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.HashSet;
-import java.util.Set;
+
+import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.doc.Description;
+import io.dekorate.knative.adapter.KnativeConfigAdapter;
+import io.dekorate.knative.annotation.KnativeApplication;
+import io.dekorate.knative.generator.KnativeApplicationGenerator;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.project.ApplyProjectInfo;
 
 @Description("Generates knative manifests.")
 @SupportedAnnotationTypes("io.dekorate.knative.annotation.KnativeApplication")
@@ -49,5 +56,12 @@ public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor impl
       add(mainClass);
     }
     return false;
+  }
+
+  public void add(Element element) {
+    on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(element.getAnnotation(KnativeApplication.class))
+                                   .accept(new ApplyImagePullSecretConfiguration())
+                                   .accept(new ApplyBuildToImageConfiguration())
+                                   .accept(new ApplyProjectInfo(getProject()))));
   }
 }
