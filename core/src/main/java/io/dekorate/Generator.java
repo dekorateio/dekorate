@@ -15,9 +15,8 @@
  */
 package io.dekorate;
 
-import io.dekorate.utils.Generators;
+import io.dekorate.kubernetes.config.Configuration;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
@@ -26,10 +25,10 @@ import java.util.*;
 public interface Generator extends SessionHandler {
 
   /**
-   * Get the {@link Annotation} that is associated with the {@link Generator}.
-   * @return The {@link Annotation}.
+   * Get the {@link Configuration} class that is associated with the {@link Generator}.
+   * @return The {@link Configuration} class.
    */  
-  default Class<? extends Annotation> getAnnotation() {
+  default Class<? extends Configuration> getConfigType() {
     return null;
   }
   

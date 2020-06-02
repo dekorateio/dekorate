@@ -15,7 +15,6 @@
  */
 package io.dekorate.knative.generator;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +36,7 @@ import io.dekorate.knative.annotation.KnativeApplication;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigCustomAdapter;
 import io.dekorate.knative.handler.KnativeHandler;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
@@ -51,24 +51,13 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     return KNATIVE;
   }
 
-  default Class<? extends Annotation> getAnnotation() {
-    return KnativeApplication.class;
-  }
-
-
-  default void add(Element element) {
-    KnativeApplication knativeApplication = element.getAnnotation(KnativeApplication.class);
-    KnativeConfig knativeConfig = KnativeConfigCustomAdapter.newBuilder(getProject(), knativeApplication).build();
-
-    on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(element.getAnnotation(KnativeApplication.class))
-                                   .accept(new ApplyImagePullSecretConfiguration())
-                                   .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyProjectInfo(getProject()))));
+  default Class<? extends Configuration> getConfigType() {
+    return KnativeConfig.class;
   }
 
   default void add(Map map) {
     KnativeConfig knativeConfig = KnativeConfigAdapter.newBuilder((Map) map.get(KnativeApplication.class.getName())).build();
-    on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeApplication.class))
+    on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))
                                    .accept(new ApplyImagePullSecretConfiguration())
                                    .accept(new ApplyBuildToImageConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));

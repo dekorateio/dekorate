@@ -15,32 +15,25 @@
  */
 package io.dekorate.tekton.generator;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.lang.model.element.Element;
 
-import io.dekorate.BuildService;
-import io.dekorate.BuildServiceFactories;
-import io.dekorate.DekorateException;
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.project.Project;
 import io.dekorate.tekton.adapter.TektonConfigAdapter;
 import io.dekorate.tekton.annotation.TektonApplication;
 import io.dekorate.tekton.config.TektonConfig;
 import io.dekorate.tekton.config.TektonConfigCustomAdapter;
 import io.dekorate.tekton.handler.TektonHandler;
-import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.project.ApplyProjectInfo;
-import io.dekorate.project.Project;
 
 public interface TektonApplicationGenerator extends Generator, WithSession, WithProject, SessionListener {
 
@@ -50,23 +43,12 @@ public interface TektonApplicationGenerator extends Generator, WithSession, With
     return TEKTON;
   }
 
-  default Class<? extends Annotation> getAnnotation() {
-    return TektonApplication.class;
-  }
-
-
-  default void add(Element element) {
-    TektonApplication tektonApplication = element.getAnnotation(TektonApplication.class);
-    TektonConfig tektonConfig = TektonConfigCustomAdapter.newBuilder(getProject(), tektonApplication).build();
-
-    on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(element.getAnnotation(TektonApplication.class))
-                                   .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyProjectInfo(getProject()))));
+  default Class<? extends Configuration> getConfigType() {
+    return TektonConfig.class;
   }
 
   default void add(Map map) {
-    TektonConfig tektonConfig = TektonConfigAdapter.newBuilder((Map) map.get(TektonApplication.class.getName())).build();
-    on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonApplication.class))
+    on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonConfig.class))
                                    .accept(new ApplyBuildToImageConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));
   }

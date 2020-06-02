@@ -26,8 +26,15 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.s2i.generator.S2iBuildGenerator;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.s2i.adapter.S2iBuildConfigAdapter;
+import io.dekorate.s2i.annotation.S2iBuild;
+import io.dekorate.s2i.config.S2iBuildConfig;
+import io.dekorate.s2i.config.S2iBuildConfigBuilder;
+import io.dekorate.s2i.generator.S2iBuildGenerator;
 
 @SupportedAnnotationTypes({"io.dekorate.s2i.annotation.S2iBuild"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -45,5 +52,16 @@ public class S2iAnnotationProcessor extends AbstractAnnotationProcessor implemen
       }
     }
     return false;
+  }
+  @Override
+  public void add(Element element) {
+    S2iBuild enableS2iBuild = element.getAnnotation(S2iBuild.class);
+    on(enableS2iBuild != null
+       ? new AnnotationConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(enableS2iBuild)
+                                                     .accept(new ApplyBuildToImageConfiguration())
+                                                     .accept(new ApplyProjectInfo(getProject())))
+       : new AnnotationConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()
+                                                     .accept(new ApplyBuildToImageConfiguration())
+                                                     .accept(new ApplyProjectInfo(getProject()))));
   }
 }

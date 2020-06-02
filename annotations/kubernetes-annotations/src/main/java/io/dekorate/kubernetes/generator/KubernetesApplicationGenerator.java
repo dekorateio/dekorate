@@ -15,7 +15,6 @@
  */
 package io.dekorate.kubernetes.generator;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -29,10 +28,11 @@ import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.listener.KubernetesSessionListener;
 import io.dekorate.project.ApplyProjectInfo;
@@ -46,26 +46,15 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
     return KUBERNETES;
   }
 
-  default Class<? extends Annotation> getAnnotation() {
-    return KubernetesApplication.class;
+  default Class<? extends Configuration> getConfigType() {
+    return KubernetesConfig.class;
   }
 
   @Override
   default void add(Map map) {
         add(new PropertyConfiguration<>(
             KubernetesConfigAdapter
-            .newBuilder(propertiesMap(map, KubernetesApplication.class))
-            .accept(new ApplyBuildToImageConfiguration())
-            .accept(new ApplyImagePullSecretConfiguration())
-            .accept(new ApplyDeployToApplicationConfiguration())
-            .accept(new ApplyProjectInfo(getProject()))));
-  }
-
-  default void add(Element element) {
-    KubernetesApplication application = element.getAnnotation(KubernetesApplication.class);
-     add(new AnnotationConfiguration<>(
-            KubernetesConfigAdapter
-            .newBuilder(application)
+            .newBuilder(propertiesMap(map, KubernetesConfig.class))
             .accept(new ApplyBuildToImageConfiguration())
             .accept(new ApplyImagePullSecretConfiguration())
             .accept(new ApplyDeployToApplicationConfiguration())

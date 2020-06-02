@@ -15,23 +15,19 @@
  */
 package io.dekorate.openshift.generator;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
-
-import javax.lang.model.element.Element;
 
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
-import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
-import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.handler.OpenshiftHandler;
 import io.dekorate.openshift.listener.OpenshiftSessionListener;
@@ -46,20 +42,13 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
     return OPENSHIFT;
   }
 
-  default Class<? extends Annotation> getAnnotation() {
-    return OpenshiftApplication.class;
+  default Class<? extends Configuration> getConfigType() {
+    return OpenshiftConfig.class;
   }
 
-
-  default void add(Element element) {
-    on(new AnnotationConfiguration<>(OpenshiftConfigAdapter.newBuilder(element.getAnnotation(OpenshiftApplication.class))
-                                     .accept(new ApplyImagePullSecretConfiguration())
-                                     .accept(new ApplyDeployToApplicationConfiguration())
-                                     .accept(new ApplyProjectInfo(getProject()))));
-  }
 
   default void add(Map map) {
-    on(new PropertyConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftApplication.class))
+    on(new PropertyConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftConfig.class))
                                    .accept(new ApplyImagePullSecretConfiguration())
                                    .accept(new ApplyDeployToApplicationConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));
