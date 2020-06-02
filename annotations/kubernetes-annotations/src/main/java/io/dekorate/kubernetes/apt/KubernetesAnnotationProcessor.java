@@ -15,20 +15,27 @@
  */
 package io.dekorate.kubernetes.apt;
 
-import io.dekorate.kubernetes.generator.KubernetesApplicationGenerator;
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.Logger;
-import io.dekorate.LoggerFactory;
-import io.dekorate.doc.Description;
-
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.Set;
+
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
+import io.dekorate.kubernetes.generator.KubernetesApplicationGenerator;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.project.ApplyProjectInfo;
 
 @Description("Generates kubernetes manifests.")
 @SupportedAnnotationTypes("io.dekorate.kubernetes.annotation.KubernetesApplication")
@@ -49,5 +56,16 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor i
       }
     }
     return false;
+  }
+
+  public void add(Element element) {
+    KubernetesApplication application = element.getAnnotation(KubernetesApplication.class);
+     add(new AnnotationConfiguration<>(
+            KubernetesConfigAdapter
+            .newBuilder(application)
+            .accept(new ApplyBuildToImageConfiguration())
+            .accept(new ApplyImagePullSecretConfiguration())
+            .accept(new ApplyDeployToApplicationConfiguration())
+            .accept(new ApplyProjectInfo(getProject()))));
   }
 }

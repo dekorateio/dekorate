@@ -21,6 +21,7 @@ import io.dekorate.WithProject;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
 
@@ -51,7 +52,7 @@ class KubernetesApplicationGeneratorTest {
     KubernetesApplicationGenerator generator = new KubernetesApplicationGenerator() {};
 
     Map<String, Object> map = new HashMap<String, Object>() {{
-      put(KubernetesApplication.class.getName(), new HashMap<String, Object>() {{
+      put(KubernetesConfig.class.getName(), new HashMap<String, Object>() {{
         put("name", "generator-test");
         put("group", "generator-test-group");
         put("version", "latest");

@@ -15,9 +15,12 @@
  */
 package io.dekorate;
 
-import javax.lang.model.element.Element;
 import java.lang.annotation.Annotation;
 import java.util.Map;
+
+import javax.lang.model.element.Element;
+
+import io.dekorate.kubernetes.config.Configuration;
 
 public interface SessionHandler extends WithSession {
 
@@ -36,12 +39,12 @@ public interface SessionHandler extends WithSession {
   }
 
   /**
-   * Get the annotation properties {@link Map} that matches, to the specified {@link Annotation} type.
+   * Get the annotation properties {@link Map} that matches, to the specified {@link Configuration} type.
    * @param map     The source map.
    * @param type    The annotation type.
    * @return        The the properties map.
    */
-  default Map propertiesMap(Map map, Class<? extends Annotation> type)  {
+  default Map propertiesMap(Map map, Class<? extends Configuration> type)  {
     if (map == null) {
       throw new NullPointerException("Map cannot be null.");
     }

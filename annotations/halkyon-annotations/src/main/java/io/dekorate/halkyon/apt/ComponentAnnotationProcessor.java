@@ -24,7 +24,12 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.doc.Description;
+import io.dekorate.halkyon.adapter.ComponentConfigAdapter;
+import io.dekorate.halkyon.annotation.HalkyonComponent;
+import io.dekorate.halkyon.config.ComponentConfig;
+import io.dekorate.halkyon.configurator.ApplyProject;
 import io.dekorate.halkyon.generator.ComponentConfigGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
@@ -45,4 +50,13 @@ public class ComponentAnnotationProcessor extends AbstractAnnotationProcessor im
     }
     return false;
   }
+ 
+  @Override
+  public void add(Element element) {
+    HalkyonComponent component = element.getAnnotation(HalkyonComponent.class);
+    add(component != null
+      ? new AnnotationConfiguration<>(ComponentConfigAdapter.newBuilder(component).accept(new ApplyProject(getProject())))
+      : new AnnotationConfiguration<>(ComponentConfig.newComponentConfigBuilder().accept(new ApplyProject(getProject()))));
+  }
+  
 }

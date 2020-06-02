@@ -15,7 +15,6 @@
  */
 package io.dekorate;
 
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -54,7 +53,7 @@ public class Session {
   private final Set<Handler> handlers = new TreeSet<>(Comparator.comparing(Handler::order));
 
   private final Map<String, Generator> generators = new HashMap<>();
-  private final Map<String, Class<? extends Annotation>> annotations = new HashMap<>();
+  private final Map<String, Class<? extends Configuration>> configtypes = new HashMap<>();
 
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
@@ -111,8 +110,8 @@ public class Session {
       Generator g = iterator.next();
       if (g.getKey() != null) {
         this.generators.put(g.getKey(), g);
-        if (g.getAnnotation() != null) {
-          this.annotations.put(g.getKey(), g.getAnnotation());
+        if (g.getConfigType() != null) {
+          this.configtypes.put(g.getKey(), g.getConfigType());
         }
       }
     }
@@ -129,9 +128,9 @@ public class Session {
 
       if (value instanceof Map) {
         Map<String, Object> generatorMap = new HashMap<>();
-        Class annotationClass = annotations.get(key);
-        String newKey = annotationClass.getName();
-        Generators.populateArrays(annotationClass, (Map<String, Object>) value);
+        Class configClass = configtypes.get(key);
+        String newKey = configClass.getName();
+        Generators.populateArrays(configClass, (Map<String, Object>) value);
         generatorMap.put(newKey, value);
         generator.add(Maps.kebabToCamelCase(generatorMap));
       }
@@ -143,8 +142,8 @@ public class Session {
     for (Map.Entry<String, Object> entry : properties.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
-      if (annotations.containsKey(key)) {
-        result.put(annotations.get(key).getName(), value);
+      if (configtypes.containsKey(key)) {
+        result.put(configtypes.get(key).getName(), value);
       } else {
         result.put(key, value);
       }

@@ -17,7 +17,6 @@
 
 package io.dekorate.docker.generator;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -33,6 +32,7 @@ import io.dekorate.docker.adapter.DockerBuildConfigAdapter;
 import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.docker.config.DockerBuildConfig;
 import io.dekorate.docker.config.DockerBuildConfigBuilder;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 
@@ -42,26 +42,14 @@ public interface DockerBuildGenerator extends Generator, WithSession, WithProjec
     return "docker";
   }
 
-  default Class<? extends Annotation> getAnnotation() {
-    return DockerBuild.class;
+  default Class<? extends Configuration> getConfigType() {
+    return DockerBuildConfig.class;
   }
 
 
   @Override
   default void add(Map map) {
-    on(new PropertyConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuild.class))
-                                                                                 .accept(new ApplyProjectInfo(getProject()))
-                                                                                 .accept(new ApplyBuildToImageConfiguration())));
-  }
-
-  @Override
-  default void add(Element element) {
-    DockerBuild enableDockerBuild = element.getAnnotation(DockerBuild.class);
-    on(enableDockerBuild != null
-      ? new AnnotationConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(enableDockerBuild)
-                                                                                 .accept(new ApplyProjectInfo(getProject()))
-                                                                                 .accept(new ApplyBuildToImageConfiguration()))
-      : new AnnotationConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
+    on(new PropertyConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))
                                                                                  .accept(new ApplyProjectInfo(getProject()))
                                                                                  .accept(new ApplyBuildToImageConfiguration())));
   }
