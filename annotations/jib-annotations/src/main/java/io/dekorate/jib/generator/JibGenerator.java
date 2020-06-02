@@ -15,22 +15,22 @@
  */
 package io.dekorate.jib.generator;
 
+import java.util.Map;
+
+import javax.lang.model.element.Element;
+
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.jib.adapter.JibBuildConfigAdapter;
 import io.dekorate.jib.annotation.JibBuild;
 import io.dekorate.jib.config.JibBuildConfig;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
-import io.dekorate.jib.adapter.JibBuildConfigAdapter;
-
-import javax.lang.model.element.Element;
-
-import java.lang.annotation.Annotation;
-import java.util.Map;
 
 public interface JibGenerator extends Generator, WithProject  {
 
@@ -41,26 +41,15 @@ public interface JibGenerator extends Generator, WithProject  {
   }
 
   @Override
-  default Class<? extends Annotation> getAnnotation() {
-    return JibBuild.class;
-  }
-
-  @Override
-  default void add(Element element) {
-    JibBuild jib = element.getAnnotation(JibBuild.class);
-    if (jib != null) {
-      ConfigurationSupplier<JibBuildConfig> config = new AnnotationConfiguration<>(JibBuildConfigAdapter.newBuilder(jib)
-                                                                                 .accept(new ApplyProjectInfo(getProject()))
-                                                                                 .accept(new ApplyBuildToImageConfiguration()));
-      on(config);
-    }
+  default Class<? extends Configuration> getConfigType() {
+    return JibBuildConfig.class;
   }
 
   @Override
   default void add(Map map) {
         on(new PropertyConfiguration<>(
             JibBuildConfigAdapter
-            .newBuilder(propertiesMap(map, JibBuild.class))
+            .newBuilder(propertiesMap(map, JibBuildConfig.class))
                                                 .accept(new ApplyProjectInfo(getProject()))
                                                 .accept(new ApplyBuildToImageConfiguration())));
   }

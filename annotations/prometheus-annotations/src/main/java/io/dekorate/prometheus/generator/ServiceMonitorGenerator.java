@@ -15,23 +15,22 @@
  */
 package io.dekorate.prometheus.generator;
 
+import java.util.Map;
+
+import javax.lang.model.element.Element;
+
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
-import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.prometheus.adapter.ServiceMonitorConfigAdapter;
 import io.dekorate.prometheus.annotation.EnableServiceMonitor;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
 import io.dekorate.prometheus.config.ServiceMonitorConfigBuilder;
 import io.dekorate.prometheus.handler.ServiceMonitorHandler;
-import io.dekorate.prometheus.model.ServiceMonitor;
-
-import javax.lang.model.element.Element;
-
-import java.lang.annotation.Annotation;
-import java.util.Map;
 
 public interface ServiceMonitorGenerator extends Generator, WithSession {
 
@@ -39,21 +38,13 @@ public interface ServiceMonitorGenerator extends Generator, WithSession {
     return "servicemonitor";
   }
 
-  default Class<? extends Annotation> getAnnotation() {
-    return EnableServiceMonitor.class;
+  default Class<? extends Configuration> getConfigType() {
+    return ServiceMonitorConfig.class;
   }
 
   @Override
   default void add(Map map) {
-    on(new PropertyConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, EnableServiceMonitor.class))));
-  }
-
-  @Override
-  default void add(Element element) {
-    EnableServiceMonitor serviceMonitor = element.getAnnotation(EnableServiceMonitor.class);
-    on(serviceMonitor != null
-      ? new AnnotationConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(serviceMonitor))
-      : new AnnotationConfiguration<>(new ServiceMonitorConfigBuilder()));
+    on(new PropertyConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, ServiceMonitorConfig.class))));
   }
 
   default void on(ConfigurationSupplier<ServiceMonitorConfig> config) {

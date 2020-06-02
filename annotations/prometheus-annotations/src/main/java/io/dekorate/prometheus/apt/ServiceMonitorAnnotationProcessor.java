@@ -15,8 +15,7 @@
  */
 package io.dekorate.prometheus.apt;
 
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.prometheus.generator.ServiceMonitorGenerator;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -24,7 +23,13 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.Set;
+
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.prometheus.adapter.ServiceMonitorConfigAdapter;
+import io.dekorate.prometheus.annotation.EnableServiceMonitor;
+import io.dekorate.prometheus.config.ServiceMonitorConfigBuilder;
+import io.dekorate.prometheus.generator.ServiceMonitorGenerator;
 
 @SupportedAnnotationTypes({"io.dekorate.prometheus.annotation.EnableServiceMonitor"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -41,5 +46,12 @@ public class ServiceMonitorAnnotationProcessor extends AbstractAnnotationProcess
       }
     }
     return false;
+  }
+
+  public void add(Element element) {
+    EnableServiceMonitor serviceMonitor = element.getAnnotation(EnableServiceMonitor.class);
+    on(serviceMonitor != null
+      ? new AnnotationConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(serviceMonitor))
+      : new AnnotationConfiguration<>(new ServiceMonitorConfigBuilder()));
   }
 }

@@ -15,16 +15,7 @@
  */
 package io.dekorate.openshift.generator;
 
-import io.dekorate.Session;
-import io.dekorate.SessionWriter;
-import io.dekorate.WithProject;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.openshift.api.model.DeploymentConfig;
-import io.dekorate.openshift.annotation.OpenshiftApplication;
-import io.dekorate.processor.SimpleFileWriter;
-import io.dekorate.project.FileProjectFactory;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +24,17 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.Session;
+import io.dekorate.SessionWriter;
+import io.dekorate.WithProject;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.openshift.api.model.DeploymentConfig;
+import io.dekorate.openshift.config.OpenshiftConfig;
+import io.dekorate.processor.SimpleFileWriter;
+import io.dekorate.project.FileProjectFactory;
 
 class OpenshiftApplicationGeneratorTest {
   static Path tempDir;
@@ -55,7 +56,7 @@ class OpenshiftApplicationGeneratorTest {
     OpenshiftApplicationGenerator generator = new OpenshiftApplicationGenerator() {};
 
     Map<String, Object> map = new HashMap<String, Object>() {{
-      put(OpenshiftApplication.class.getName(), new HashMap<String, Object>() {{
+      put(OpenshiftConfig.class.getName(), new HashMap<String, Object>() {{
         put("name", "generator-test");
         put("version", "latest");
         put("replicas", 2);
