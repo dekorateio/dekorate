@@ -15,17 +15,21 @@
  */
 package io.dekorate.option.apt;
 
-import io.dekorate.WithSession;
-import io.dekorate.doc.Description;
-import io.dekorate.option.annotation.JvmOptions;
-import io.dekorate.option.generator.JvmOptionsGenerator;
-import io.dekorate.processor.AbstractAnnotationProcessor;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.Set;
+
+import io.dekorate.WithSession;
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.doc.Description;
+import io.dekorate.option.adapter.JvmConfigAdapter;
+import io.dekorate.option.annotation.JvmOptions;
+import io.dekorate.option.config.JvmConfig;
+import io.dekorate.option.generator.JvmOptionsGenerator;
+import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Jvm options, which are used for the target deployment.")
 @SupportedAnnotationTypes("io.dekorate.option.annotation.JvmOptions")
@@ -46,5 +50,14 @@ public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements 
       }
     }
     return false;
+  }
+
+  @Override
+  public void add(Element element) {
+    JvmOptions jvmOptions = element.getAnnotation(JvmOptions.class);
+    if (jvmOptions != null) {
+      AnnotationConfiguration<JvmConfig> config = new AnnotationConfiguration<JvmConfig>(JvmConfigAdapter.newBuilder(jvmOptions));
+      on(config);
+    }
   }
 }

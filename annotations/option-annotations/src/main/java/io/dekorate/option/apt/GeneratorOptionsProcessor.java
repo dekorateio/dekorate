@@ -15,22 +15,21 @@
  */
 package io.dekorate.option.apt;
 
+import java.util.Set;
+
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.Set;
 
 import io.dekorate.WithSession;
-import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.doc.Description;
+import io.dekorate.option.adapter.GeneratorConfigAdapter;
 import io.dekorate.option.annotation.GeneratorOptions;
-import io.dekorate.option.config.GeneratorConfigBuilder;
+import io.dekorate.option.config.GeneratorConfig;
+import io.dekorate.option.generator.OptionsGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.utils.Strings;
 
 @Description("Processing generator options, which are used for customizing the generation process")
 @SupportedAnnotationTypes({
@@ -40,7 +39,7 @@ import io.dekorate.utils.Strings;
   "io.dekorate.knative.annotation.KnativeApplication",
   "io.dekorate.option.annotation.GeneratorOptions"
 })
-public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
+public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements OptionsGenerator, WithSession {
 
   private static final String INPUT_DIR = "dekorate.input.dir";
   private static final String OUTPUT_DIR = "dekorate.output.dir";
@@ -64,33 +63,16 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
         configurePaths(options.inputPath(), options.outputPath());
         return false;
        }
-      configurePaths(FALLBACK_INPUT_DIR, FALLBACK_OUTPUT_DIR);
     }
     return false;
   }
 
-  private void configurePaths(String defaultInputPath, String defaultOutputPath) {
-    final String inputPath = System.getProperty(INPUT_DIR, defaultInputPath);
-    final String outputPath =  Optional.ofNullable(System.getProperty(OUTPUT_DIR))
-      .map(path -> {
-        resolve(path).mkdirs();
-        return path;
-      }).orElse(defaultOutputPath);
-    if (isPathValid(inputPath)) {
-      applyToProject(p -> p.withDekorateInputDir(inputPath));
-      getSession().configurators().add(new ConfigurationSupplier<>(new GeneratorConfigBuilder()));
+ 
+    public void add(Element element) {
+        GeneratorOptions options = element.getAnnotation(GeneratorOptions.class);
+        if (options != null) {
+            AnnotationConfiguration<GeneratorConfig> config = new AnnotationConfiguration<>(GeneratorConfigAdapter.newBuilder(options));
+            on(config);
+        }
     }
-    if (isPathValid(outputPath)) {
-      applyToProject(p -> p.withDekorateOutputDir(outputPath));
-    }
-  }
-
-  private boolean isPathValid(String path) {
-    return Strings.isNotNullOrEmpty(path) && resolve(path).exists();
-  }
-
-  private File resolve(String unixPath) {
-    return new File(getProject().getBuildInfo().getClassOutputDir().toFile(), unixPath.replace('/', File.separatorChar));
-  }
-
 }

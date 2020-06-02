@@ -18,18 +18,14 @@
 package io.dekorate.option.generator;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.lang.model.element.Element;
-
 import io.dekorate.Generator;
 import io.dekorate.WithProject;
-import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.option.adapter.GeneratorConfigAdapter;
 import io.dekorate.option.annotation.GeneratorOptions;
 import io.dekorate.option.config.GeneratorConfig;
@@ -49,25 +45,16 @@ public interface OptionsGenerator extends Generator, WithProject {
     }
 
     @Override
-    default Class<? extends Annotation> getAnnotation() {
-        return GeneratorOptions.class;
+    default Class<? extends Configuration> getConfigType() {
+        return GeneratorConfig.class;
     }
-
-    @Override
-    default void add(Element element) {
-        GeneratorOptions options = element.getAnnotation(GeneratorOptions.class);
-        if (options != null) {
-            AnnotationConfiguration<GeneratorConfig> config = new AnnotationConfiguration<>(GeneratorConfigAdapter.newBuilder(options));
-            on(config);
-        }
-    }
-
+ 
     @Override
     default void add(Map map) {
-        on(new PropertyConfiguration<>(GeneratorConfigAdapter.newBuilder(propertiesMap(map, GeneratorOptions.class))));
+        on(new PropertyConfiguration<>(GeneratorConfigAdapter.newBuilder(propertiesMap(map, GeneratorConfig.class))));
     }
 
-    default void on(ConfigurationSupplier<GeneratorConfig> config) {
+   default void on(ConfigurationSupplier<GeneratorConfig> config) {
         GeneratorConfig c = config.get();
         configurePaths(c.getInputPath(), c.getOutputPath());
     }
