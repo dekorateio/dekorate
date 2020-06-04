@@ -15,10 +15,15 @@
  */
 package io.dekorate.utils;
 
+import io.dekorate.DekorateException;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,7 +62,7 @@ public class Maps {
    * 1. Unrolls nested entries (keys separated with dots) into nested maps.
    * 2. Unrolls arrays.
    * The configuration map follows all the required conventions in order to be usable by a Generator.
-   * 
+   *
    * @return a {@link Map} with in the Generator format.
    */
   public static Map<String, Object> fromProperties(Map<String, Object> properties) {
@@ -84,6 +89,28 @@ public class Maps {
     unrollArrays(result);
     return result;
 
+  }
+  public static Map<String, Object> parseResourceFile(InputStream is, String resourceName) {
+    if (resourceName.endsWith(".properties")) {
+      return parse(is, Serialization.propertiesMapper());
+    } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
+      return parse(is, Serialization.yamlMapper());
+    } else {
+      throw new IllegalArgumentException("resource type is not supported");
+    }
+  }
+
+  private static Map<String, Object> parse(InputStream is, ObjectMapper javaPropsMapper) {
+    try {
+      return javaPropsMapper.readValue(is, new TypeReference<Map<String, Object>>() {});
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (IllegalArgumentException e){
+      if(e.getMessage().equals("argument \"src\" is null")){ //file does not exist
+        return new HashMap<>();
+      }
+    }
+    return null;
   }
 
   /**
@@ -166,6 +193,7 @@ public class Maps {
     return result;
   }
 
+
   /**
    * Convert a multipart-key value pair to a Map.
    */
@@ -213,7 +241,7 @@ public class Maps {
   /**
    * Recursively convert all {@link Map} keys from kebab case to camel case.
    * Recursively here means that if a value is a {@link Map} it will also be converted.
-   * 
+   *
    * @param The input string.
    * @return The camel cased string.
    */
@@ -286,4 +314,6 @@ public class Maps {
       }
     }
   }
+
+
 }
