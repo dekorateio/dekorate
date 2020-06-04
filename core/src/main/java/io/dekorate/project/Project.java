@@ -98,30 +98,6 @@ public class Project {
     return new Project(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo);
   }
 
-  public Map<String, Object> parseResourceFile(String resourceName) {
-    final Path path = getBuildInfo().getResourceDir().resolve(resourceName);
-    if (!path.toFile().exists()) {
-      return new HashMap<>();
-    }
-
-    if (resourceName.endsWith(".properties")) {
-      return parse(path, Serialization.propertiesMapper());
-    } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
-      return parse(path, Serialization.yamlMapper());
-    } else {
-      throw new IllegalArgumentException("resource type is not supported");
-    }
-  }
-
-  private Map<String, Object> parse(Path path, ObjectMapper javaPropsMapper) {
-    try {
-      return javaPropsMapper.readValue(new FileInputStream(path.toFile().getAbsoluteFile()),
-          new TypeReference<Map<String, Object>>() {
-          });
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
 
   public ScmInfo getScmInfo() {
     return scmInfo;
