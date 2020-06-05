@@ -105,12 +105,7 @@ public class Maps {
       return javaPropsMapper.readValue(is, new TypeReference<Map<String, Object>>() {});
     } catch (IOException e) {
       throw new RuntimeException(e);
-    } catch (IllegalArgumentException e){
-      if(e.getMessage().equals("argument \"src\" is null")){ //file does not exist
-        return new HashMap<>();
-      }
     }
-    return null;
   }
 
   /**
