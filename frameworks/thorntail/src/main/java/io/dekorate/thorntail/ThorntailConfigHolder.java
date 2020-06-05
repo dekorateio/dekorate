@@ -35,12 +35,12 @@ public interface ThorntailConfigHolder extends WithProject {
 
   default Map<String, Object> getThorntailConfig() {
     if (thorntailConfig.get() == null) {
+      final Map<String, Object> properties = new HashMap<>();
       try (InputStream is = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve(PROJECT_DEFAULTS_YML).toFile())) {
-        final Map<String, Object> properties = new HashMap<>();
         properties.putAll(Maps.parseResourceFile(is,PROJECT_DEFAULTS_YML));
         thorntailConfig.set(properties);
       }catch (FileNotFoundException e){
-        throw new RuntimeException(e);
+        return properties;
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

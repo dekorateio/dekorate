@@ -38,8 +38,12 @@ class MapsTest {
   @Test
   void missingFile() throws IOException {
     try (InputStream is = MapsTest.class.getClassLoader().getResourceAsStream("nonExistent.properties")) {
-      Map<String, Object> result = Maps.parseResourceFile(is,"nonExistent.properties");
-      assertThat(result).isEmpty();
+      try {
+        Maps.parseResourceFile(is,"nonExistent.properties");
+        fail();
+      } catch (IllegalArgumentException expected) {
+      }
+
     }
   }
 

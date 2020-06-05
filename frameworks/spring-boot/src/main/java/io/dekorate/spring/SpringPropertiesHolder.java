@@ -44,7 +44,7 @@ public interface SpringPropertiesHolder extends WithProject {
           properties.putAll(Maps.parseResourceFile(appYmlIs, "application.yml"));
           springProperties.set(properties);
         } catch (FileNotFoundException e) {
-          e.printStackTrace();
+          return properties;
         } catch (IOException e) {
           e.printStackTrace();
         }
