@@ -31,7 +31,7 @@ import io.sundr.builder.annotations.Pojo;
  */
 
 @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
-@Pojo(name = "DekorateConifg", relativePath = "../config",
+@Pojo(name = "DekorateConfig", relativePath = "../config",
       mutable = true,
       withStaticBuilderMethod = false,
       withStaticAdapterMethod = false,
