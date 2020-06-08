@@ -383,8 +383,8 @@ Additional options are provided for adding environment variables from fields, co
 
 To add environment variables using `application.properties`:
 
-    dekorate.kuberetes.env-vars[0].name=key1
-    dekorate.kuberetes.env-vars[0].value=value1
+    dekorate.kubernetes.env-vars[0].name=key1
+    dekorate.kubernetes.env-vars[0].value=value1
 
 #### Adding environment variables from ConfigMap
 
@@ -406,9 +406,10 @@ public class Main {
 
 To add an environment variable referencing a config map using `application.properties`:
 
-    dekorate.kuberetes.env-vars[0].name=key1
-    dekorate.kuberetes.env-vars[0].value=key1
-    dekorate.kuberetes.env-vars[0].config-map=my-config
+    dekorate.
+    .env-vars[0].name=key1
+    dekorate.kubernetes.env-vars[0].value=key1
+    dekorate.kubernetes.env-vars[0].config-map=my-config
 
 
 #### Adding environment variables from Secrets
@@ -431,9 +432,9 @@ public class Main {
 
 To add an environment variable referencing a secret using `application.properties`:
 
-    dekorate.kuberetes.env-vars[0].name=key1
-    dekorate.kuberetes.env-vars[0].value=key1
-    dekorate.kuberetes.env-vars[0].secret=my-config
+    dekorate.kubernetes.env-vars[0].name=key1
+    dekorate.kubernetes.env-vars[0].value=key1
+    dekorate.kubernetes.env-vars[0].secret=my-config
 
 #### Working with volumes and mounts
 
