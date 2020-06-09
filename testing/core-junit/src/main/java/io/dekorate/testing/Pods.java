@@ -20,21 +20,21 @@ package io.dekorate.testing;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import io.dekorate.deps.kubernetes.api.model.Endpoints;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.LabelSelectorRequirement;
-import io.dekorate.deps.kubernetes.api.model.Pod;
-import io.dekorate.deps.kubernetes.api.model.PodList;
-import io.dekorate.deps.kubernetes.api.model.PodListBuilder;
-import io.dekorate.deps.kubernetes.api.model.ReplicationController;
-import io.dekorate.deps.kubernetes.api.model.Service;
-import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
-import io.dekorate.deps.kubernetes.api.model.apps.ReplicaSet;
-import io.dekorate.deps.kubernetes.client.KubernetesClient;
-import io.dekorate.deps.kubernetes.client.Watch;
-import io.dekorate.deps.kubernetes.client.Watcher;
-import io.dekorate.deps.kubernetes.client.dsl.FilterWatchListDeletable;
+import io.fabric8.kubernetes.api.model.Endpoints;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.LabelSelectorRequirement;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.api.model.PodListBuilder;
+import io.fabric8.kubernetes.api.model.ReplicationController;
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.Watch;
+import io.fabric8.kubernetes.client.Watcher;
+import io.fabric8.kubernetes.client.dsl.FilterWatchListDeletable;
 
 public class Pods {
 

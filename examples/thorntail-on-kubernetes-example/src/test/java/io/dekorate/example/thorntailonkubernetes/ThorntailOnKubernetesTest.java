@@ -15,13 +15,13 @@
  */
 package io.dekorate.example.thorntailonkubernetes;
 
-import io.dekorate.deps.kubernetes.api.model.Container;
-import io.dekorate.deps.kubernetes.api.model.HTTPGetAction;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.Service;
-import io.dekorate.deps.kubernetes.api.model.ServiceSpec;
-import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.HTTPGetAction;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServiceSpec;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 

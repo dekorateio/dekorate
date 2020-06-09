@@ -16,8 +16,8 @@
 package io.dekorate.utils;
 
 import io.dekorate.DekorateException;
-import io.dekorate.deps.commons.compress.archivers.tar.TarArchiveEntry;
-import io.dekorate.deps.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

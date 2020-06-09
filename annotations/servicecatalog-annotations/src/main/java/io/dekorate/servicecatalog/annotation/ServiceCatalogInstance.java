@@ -25,7 +25,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo( relativePath = "../config",
        mutable = true,
        withStaticBuilderMethod = false,

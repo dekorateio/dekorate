@@ -15,14 +15,14 @@
  */
 package io.dekorate.prometheus.client.dsl.internal;
 
-import io.dekorate.deps.kubernetes.client.Config;
-import io.dekorate.deps.kubernetes.client.dsl.Resource;
-import io.dekorate.deps.kubernetes.client.dsl.base.HasMetadataOperation;
-import io.dekorate.deps.kubernetes.client.dsl.NonNamespaceOperation;
-import io.dekorate.deps.kubernetes.client.utils.ApiVersionUtil;
-import io.dekorate.deps.kubernetes.client.dsl.base.OperationContext;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.dsl.Resource;
+import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation;
+import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
+import io.fabric8.kubernetes.client.utils.ApiVersionUtil;
+import io.fabric8.kubernetes.client.dsl.base.OperationContext;
 
-import io.dekorate.deps.okhttp3.OkHttpClient;
+import okhttp3.OkHttpClient;
 
 import io.dekorate.prometheus.model.DoneableServiceMonitor;
 import io.dekorate.prometheus.model.ServiceMonitor;

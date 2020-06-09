@@ -15,14 +15,14 @@
  */
 package io.dekorate.examples.svcat;
 
-import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
-import io.dekorate.deps.kubernetes.api.model.EnvFromSourceFluent;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
-import io.dekorate.deps.kubernetes.api.model.apps.DeploymentBuilder;
-import io.dekorate.deps.servicecatalog.api.model.ServiceBinding;
-import io.dekorate.deps.servicecatalog.api.model.ServiceInstance;
+import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.fabric8.kubernetes.api.model.EnvFromSourceFluent;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
+import io.fabric8.servicecatalog.api.model.ServiceBinding;
+import io.fabric8.servicecatalog.api.model.ServiceInstance;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 

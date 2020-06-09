@@ -31,7 +31,7 @@ public class ScmInfo {
     this(null, null, null, null);
   }
 
-  @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+  @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
   public ScmInfo(Path root, String url, String branch, String commit) {
     this.root=root;
     this.url = url;

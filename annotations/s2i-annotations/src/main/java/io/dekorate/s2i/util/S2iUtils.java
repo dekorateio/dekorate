@@ -16,13 +16,13 @@
 package io.dekorate.s2i.util;
 
 import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.kubernetes.api.model.ObjectReference;
-import io.dekorate.deps.openshift.api.model.ImageStreamTag;
-import io.dekorate.deps.openshift.api.model.SourceBuildStrategyFluent;
-import io.dekorate.deps.openshift.client.DefaultOpenShiftClient;
-import io.dekorate.deps.openshift.client.OpenShiftClient;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectReference;
+import io.fabric8.openshift.api.model.ImageStreamTag;
+import io.fabric8.openshift.api.model.SourceBuildStrategyFluent;
+import io.fabric8.openshift.client.DefaultOpenShiftClient;
+import io.fabric8.openshift.client.OpenShiftClient;
 
 import java.util.ArrayList;
 import java.util.List;

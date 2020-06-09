@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-import io.dekorate.deps.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.Service;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
@@ -26,7 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "KubernetesConfig", relativePath = "../config", mutable = true, superClass = BaseConfig.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

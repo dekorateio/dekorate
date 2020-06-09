@@ -16,7 +16,7 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
-import io.dekorate.deps.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.PodSpecBuilder;
 import io.dekorate.doc.Description;
 
 @Description("Add a persistent volume claim volume to all pod specs.")

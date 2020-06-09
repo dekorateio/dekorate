@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;

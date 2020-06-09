@@ -17,7 +17,7 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineSpecFluent;
+import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
 import io.dekorate.utils.Strings;
 
 public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator {

@@ -16,7 +16,7 @@
 package io.dekorate.utils;
 
 import io.dekorate.DekorateException;
-import io.dekorate.deps.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;

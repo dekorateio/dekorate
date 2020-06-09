@@ -15,8 +15,8 @@
  */
 package io.dekorate.openshift.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.openshift.api.model.DeploymentConfigSpecFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.openshift.api.model.DeploymentConfigSpecFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 

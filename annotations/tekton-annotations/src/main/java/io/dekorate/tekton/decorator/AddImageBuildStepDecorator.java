@@ -17,8 +17,8 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
-import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.fabric8.kubernetes.api.model.EnvVarBuilder;
+import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 import io.dekorate.kubernetes.decorator.Decorator;
 
 public class AddImageBuildStepDecorator extends NamedTaskDecorator implements StepDecorator{

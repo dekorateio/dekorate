@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.config;
 
-import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
+import io.fabric8.kubernetes.api.builder.TypedVisitor;
 
 public abstract class Configurator<T extends ConfigurationFluent> extends TypedVisitor<T> {
 }

@@ -15,12 +15,12 @@
  */
 package io.dekorate.utils;
 
-import io.dekorate.deps.kubernetes.api.builder.Builder;
-import io.dekorate.deps.kubernetes.api.builder.Predicate;
+import io.fabric8.kubernetes.api.builder.Builder;
+import io.fabric8.kubernetes.api.builder.Predicate;
 
-import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

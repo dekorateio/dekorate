@@ -17,8 +17,8 @@ package io.dekorate.examples;
 
 import java.util.List;
 
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.halkyon.model.Capabilities;
 import io.dekorate.halkyon.model.Component;
 import io.dekorate.halkyon.model.ComponentCapability;

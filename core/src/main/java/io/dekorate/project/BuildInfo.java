@@ -62,7 +62,7 @@ public class BuildInfo {
    * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
    * @param resourceDir           The directory from which application resources should be read. (e.g. target/classes for maven, src/main/resources from gralde and so on).
    */
-  @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+  @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
   public BuildInfo(String name, String version, String packaging, String buildTool, String buildToolVersion, Path outputFile, Path classOutputDir, Path resourceDir) {
     this.name = name;
     this.version = version;

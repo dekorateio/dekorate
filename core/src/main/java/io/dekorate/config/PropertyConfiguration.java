@@ -16,7 +16,7 @@
 
 package io.dekorate.config;
 
-import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
 /**
  * This is a {@link ConfigurationSupplier} that is used to wrap property files config.

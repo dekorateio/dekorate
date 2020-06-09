@@ -16,7 +16,7 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.Mount;
-import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.dekorate.doc.Description;
 
 @Description("Add mount to all containers.")

@@ -17,14 +17,14 @@ package io.dekorate.prometheus.client.handlers;
 
 import java.util.function.Predicate;
 
-import io.dekorate.deps.kubernetes.client.Config;
-import io.dekorate.deps.kubernetes.client.ResourceHandler;
-import io.dekorate.deps.kubernetes.client.Watch;
-import io.dekorate.deps.kubernetes.client.Watcher;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ResourceHandler;
+import io.fabric8.kubernetes.client.Watch;
+import io.fabric8.kubernetes.client.Watcher;
 import io.dekorate.prometheus.client.dsl.internal.ServiceMonitorOperationsImpl;
 
-import io.dekorate.deps.kubernetes.client.dsl.base.OperationContext;
-import io.dekorate.deps.okhttp3.OkHttpClient;
+import io.fabric8.kubernetes.client.dsl.base.OperationContext;
+import okhttp3.OkHttpClient;
 
 import io.dekorate.prometheus.model.ServiceMonitor;
 import io.dekorate.prometheus.model.ServiceMonitorBuilder;

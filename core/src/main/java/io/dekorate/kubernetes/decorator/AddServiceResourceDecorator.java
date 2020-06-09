@@ -16,14 +16,14 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.deps.kubernetes.api.model.ServicePort;
+import io.fabric8.kubernetes.api.model.ServicePort;
 import io.dekorate.kubernetes.config.Port;
-import io.dekorate.deps.kubernetes.api.model.ServicePortBuilder;
+import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
-import io.dekorate.deps.kubernetes.api.model.IntOrString;
+import io.fabric8.kubernetes.api.model.IntOrString;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

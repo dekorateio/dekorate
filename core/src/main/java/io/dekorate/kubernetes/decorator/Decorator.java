@@ -16,7 +16,7 @@
 package io.dekorate.kubernetes.decorator;
 
 
-import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
+import io.fabric8.kubernetes.api.builder.TypedVisitor;
 
 public abstract class Decorator<T> extends TypedVisitor<T> implements Comparable<Decorator> {
 

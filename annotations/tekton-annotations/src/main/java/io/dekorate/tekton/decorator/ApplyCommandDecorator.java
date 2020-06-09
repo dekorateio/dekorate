@@ -20,7 +20,7 @@ import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ContainerDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
-import io.dekorate.deps.tekton.pipeline.v1beta1.StepFluent;
+import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
 
 @Description("A decorator that applies the command to the application container.")
 public class ApplyCommandDecorator extends TektonStepDecorator<StepFluent> {

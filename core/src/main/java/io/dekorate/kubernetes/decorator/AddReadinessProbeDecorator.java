@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Probe;
 

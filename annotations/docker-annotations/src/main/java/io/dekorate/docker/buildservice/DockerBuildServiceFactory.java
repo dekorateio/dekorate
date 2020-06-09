@@ -23,7 +23,7 @@ import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;

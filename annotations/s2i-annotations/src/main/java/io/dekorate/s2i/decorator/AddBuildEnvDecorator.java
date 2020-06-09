@@ -15,7 +15,7 @@
  */
 package io.dekorate.s2i.decorator;
 
-import io.dekorate.deps.openshift.api.model.SourceBuildStrategyFluent;
+import io.fabric8.openshift.api.model.SourceBuildStrategyFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.decorator.Decorator;

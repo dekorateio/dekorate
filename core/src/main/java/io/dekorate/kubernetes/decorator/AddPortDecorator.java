@@ -17,7 +17,7 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.annotation.Protocol;
-import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.dekorate.doc.Description;
 
 import java.util.Objects;

@@ -17,9 +17,9 @@ package io.dekorate.examples.sbexistingmanifests;
 
 import java.util.Optional;
 
-import io.dekorate.deps.kubernetes.api.model.Container;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.batch.Job;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.batch.Job;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 

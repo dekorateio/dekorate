@@ -29,7 +29,7 @@ import io.dekorate.utils.Git;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "ComponentConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false)
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)

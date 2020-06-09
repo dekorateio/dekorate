@@ -21,8 +21,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.dekorate.deps.jackson.core.type.TypeReference;
-import io.dekorate.deps.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dekorate.utils.Serialization;
 
 import io.sundr.builder.annotations.Buildable;
@@ -51,7 +51,7 @@ public class Project {
     this(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo, null);
   }
 
-  @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+  @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
   public Project(Path root, String dekorateInputDir, String dekorateMetaDir, String dekorateOutputDir, BuildInfo buildInfo, ScmInfo scmInfo) {
     this.root = root;
     this.dekorateInputDir = dekorateInputDir;

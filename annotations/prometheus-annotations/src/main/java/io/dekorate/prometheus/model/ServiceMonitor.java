@@ -15,15 +15,15 @@
  */
 package io.dekorate.prometheus.model;
 
-import io.dekorate.deps.jackson.annotation.JsonInclude;
-import io.dekorate.deps.jackson.annotation.JsonProperty;
-import io.dekorate.deps.jackson.annotation.JsonPropertyOrder;
-import io.dekorate.deps.jackson.databind.annotation.JsonDeserialize;
-import io.dekorate.deps.javax.validation.constraints.NotNull;
-import io.dekorate.deps.kubernetes.api.model.Doneable;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.LabelSelector;
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.validation.constraints.NotNull;
+import io.fabric8.kubernetes.api.model.Doneable;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.LabelSelector;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Inline;
@@ -38,8 +38,8 @@ import java.util.Map;
       "metadata",
       "spec",
       })
-      @JsonDeserialize(using = io.dekorate.deps.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.dekorate.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"), refs = {@BuildableReference(ObjectMeta.class), @BuildableReference(LabelSelector.class)})
+      @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
+@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"), refs = {@BuildableReference(ObjectMeta.class), @BuildableReference(LabelSelector.class)})
 public class ServiceMonitor implements HasMetadata {
 
   /**

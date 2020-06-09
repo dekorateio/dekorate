@@ -16,9 +16,9 @@
 package io.dekorate.utils;
 
 import io.dekorate.DekorateException;
-import io.dekorate.deps.kubernetes.client.Config;
-import io.dekorate.deps.kubernetes.client.DefaultKubernetesClient;
-import io.dekorate.deps.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 
 import static io.dekorate.utils.Serialization.*;
 

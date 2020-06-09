@@ -29,12 +29,12 @@ import java.util.stream.StreamSupport;
 import io.dekorate.Session;
 import io.dekorate.SessionReader;
 import io.dekorate.WithProject;
-import io.dekorate.deps.kubernetes.api.KubernetesResourceMappingProvider;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
-import io.dekorate.deps.kubernetes.internal.KubernetesDeserializer;
+import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.internal.KubernetesDeserializer;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
 

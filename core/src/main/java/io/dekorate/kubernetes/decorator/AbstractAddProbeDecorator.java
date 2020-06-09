@@ -18,12 +18,12 @@ package io.dekorate.kubernetes.decorator;
 import java.util.Arrays;
 import java.util.Collections;
 
-import io.dekorate.deps.kubernetes.api.model.Container;
-import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
-import io.dekorate.deps.kubernetes.api.model.ExecAction;
-import io.dekorate.deps.kubernetes.api.model.HTTPGetAction;
-import io.dekorate.deps.kubernetes.api.model.IntOrString;
-import io.dekorate.deps.kubernetes.api.model.TCPSocketAction;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.ExecAction;
+import io.fabric8.kubernetes.api.model.HTTPGetAction;
+import io.fabric8.kubernetes.api.model.IntOrString;
+import io.fabric8.kubernetes.api.model.TCPSocketAction;
 import io.dekorate.kubernetes.config.Probe;
 import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;

@@ -15,8 +15,8 @@
  */
 package io.dekorate.knative.util;
 
-import io.dekorate.deps.knative.client.DefaultKnativeClient;
-import io.dekorate.deps.knative.client.KnativeClient;
+import io.fabric8.knative.client.DefaultKnativeClient;
+import io.fabric8.knative.client.KnativeClient;
 
 public class KnativeUtils {
 

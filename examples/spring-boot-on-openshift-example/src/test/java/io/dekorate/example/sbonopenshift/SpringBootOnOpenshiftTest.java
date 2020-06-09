@@ -24,10 +24,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.openshift.api.model.BuildConfig;
-import io.dekorate.deps.openshift.api.model.DeploymentConfig;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.openshift.api.model.BuildConfig;
+import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.dekorate.utils.Serialization;
 
 class SpringBootOnOpenshiftTest {

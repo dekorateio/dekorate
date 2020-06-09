@@ -20,9 +20,9 @@ package io.dekorate.example;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.Service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.dekorate.testing.KubernetesResources.*;

@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
-import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.dekorate.utils.Generics;
 import io.dekorate.utils.Strings;
 

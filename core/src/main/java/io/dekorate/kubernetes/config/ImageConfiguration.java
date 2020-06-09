@@ -19,12 +19,12 @@ package io.dekorate.kubernetes.config;
 
 import java.util.Map;
 
-import io.dekorate.deps.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 import io.sundr.builder.annotations.Buildable;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public class ImageConfiguration extends ApplicationConfiguration {
 

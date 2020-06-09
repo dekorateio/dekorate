@@ -16,9 +16,9 @@
 package io.dekorate.testing;
 
 import io.dekorate.DekorateException;
-import io.dekorate.deps.kubernetes.api.model.Endpoints;
-import io.dekorate.deps.kubernetes.api.model.Pod;
-import io.dekorate.deps.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.api.model.Endpoints;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.dekorate.testing.annotation.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;

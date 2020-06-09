@@ -20,8 +20,8 @@ import java.net.URL;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-import io.dekorate.deps.kubernetes.api.model.*;
-import io.dekorate.deps.kubernetes.api.model.apps.*;
+import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.apps.*;
 import io.dekorate.utils.Serialization;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

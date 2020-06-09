@@ -15,12 +15,6 @@
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>dekorate-dependencies</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.dekorate</groupId>
       <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>

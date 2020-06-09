@@ -17,9 +17,9 @@
 
 package io.dekorate.s2i.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.openshift.api.model.ImageStreamBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.openshift.api.model.ImageStreamBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.s2i.config.S2iBuildConfig;
