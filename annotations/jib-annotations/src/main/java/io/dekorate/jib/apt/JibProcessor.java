@@ -36,7 +36,7 @@ import io.dekorate.project.ApplyProjectInfo;
 
 @SupportedAnnotationTypes("io.dekorate.jib.annotation.JibBuild")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class JibProcessor extends AbstractAnnotationProcessor implements JibGenerator {
+public class JibProcessor extends AbstractAnnotationProcessor {
 
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -51,21 +51,10 @@ public class JibProcessor extends AbstractAnnotationProcessor implements JibGene
         if (jib == null) {
           continue;
         }
-        add(mainClass);
+        process("jib", mainClass, JibBuild.class);
       }
     }
     return false;
-  }
-
-  @Override
-  public void add(Element element) {
-    JibBuild jib = element.getAnnotation(JibBuild.class);
-    if (jib != null) {
-      ConfigurationSupplier<JibBuildConfig> config = new AnnotationConfiguration<>(JibBuildConfigAdapter.newBuilder(jib)
-                                                                                 .accept(new ApplyProjectInfo(getProject()))
-                                                                                 .accept(new ApplyBuildToImageConfiguration()));
-      on(config);
-    }
   }
 }
 

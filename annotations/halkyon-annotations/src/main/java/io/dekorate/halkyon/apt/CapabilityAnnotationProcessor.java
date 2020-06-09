@@ -26,18 +26,14 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import io.dekorate.Session;
-import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.doc.Description;
-import io.dekorate.halkyon.adapter.CapabilityConfigAdapter;
 import io.dekorate.halkyon.annotation.HalkyonCapability;
-import io.dekorate.halkyon.config.CapabilityConfig;
-import io.dekorate.halkyon.generator.CapabilityConfigGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generate halkyon capability custom resources.")
 @SupportedAnnotationTypes("io.dekorate.halkyon.annotation.HalkyonCapability")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class CapabilityAnnotationProcessor extends AbstractAnnotationProcessor implements CapabilityConfigGenerator {
+public class CapabilityAnnotationProcessor extends AbstractAnnotationProcessor {
   
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = getSession();
@@ -47,17 +43,9 @@ public class CapabilityAnnotationProcessor extends AbstractAnnotationProcessor i
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        add(mainClass);
+        process("capability", mainClass, HalkyonCapability.class);
       }
     }
     return false;
-  }
-
-  @Override
-  public void add(Element element) {
-    HalkyonCapability capability = element.getAnnotation(HalkyonCapability.class);
-    add(capability != null
-      ? new AnnotationConfiguration<>(CapabilityConfigAdapter.newBuilder(capability))
-      : new AnnotationConfiguration<>(CapabilityConfig.newCapabilityConfigBuilder()));
   }
 }

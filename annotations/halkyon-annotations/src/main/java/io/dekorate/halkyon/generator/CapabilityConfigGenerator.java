@@ -18,8 +18,6 @@ package io.dekorate.halkyon.generator;
 
 import java.util.Map;
 
-import javax.lang.model.element.Element;
-
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
@@ -27,7 +25,6 @@ import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.halkyon.adapter.CapabilityConfigAdapter;
-import io.dekorate.halkyon.annotation.HalkyonCapability;
 import io.dekorate.halkyon.config.CapabilityConfig;
 import io.dekorate.halkyon.handler.CapabilityHandler;
 import io.dekorate.kubernetes.config.Configuration;
@@ -44,9 +41,15 @@ public interface CapabilityConfigGenerator extends Generator, WithProject {
     return CapabilityConfig.class;
   }
 
+  @Override
+  default void addAnnotationConfiguration(Map map) {
+    add(new AnnotationConfiguration<>(
+      CapabilityConfigAdapter
+        .newBuilder(propertiesMap(map, CapabilityConfig.class))));
+  }
 
   @Override
-  default void add(Map map) {
+  default void addPropertyConfiguration(Map map) {
     add(new PropertyConfiguration<>(
       CapabilityConfigAdapter
         .newBuilder(propertiesMap(map, CapabilityConfig.class))));

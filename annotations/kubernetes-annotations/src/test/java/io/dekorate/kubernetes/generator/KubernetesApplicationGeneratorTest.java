@@ -67,7 +67,7 @@ class KubernetesApplicationGeneratorTest {
       }});
     }};
 
-    generator.add(map);
+    generator.addPropertyConfiguration(map);
     final Map<String, String> result = session.close();
     KubernetesList list=session.getGeneratedResources().get("kubernetes");
     assertThat(list).isNotNull();

@@ -24,6 +24,7 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
@@ -46,7 +47,14 @@ public interface S2iBuildGenerator extends Generator, WithProject {
   }
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+    on(new AnnotationConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(propertiesMap(map, S2iBuildConfig.class))
+                                                 .accept(new ApplyBuildToImageConfiguration())
+                                                 .accept(new ApplyProjectInfo(getProject()))));
+  }
+
+  @Override
+  default void addPropertyConfiguration(Map map) {
     on(new PropertyConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(propertiesMap(map, S2iBuildConfig.class))
                                                  .accept(new ApplyBuildToImageConfiguration())
                                                  .accept(new ApplyProjectInfo(getProject()))));

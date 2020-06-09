@@ -25,21 +25,14 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.project.ApplyProjectInfo;
-import io.dekorate.tekton.adapter.TektonConfigAdapter;
 import io.dekorate.tekton.annotation.TektonApplication;
-import io.dekorate.tekton.config.TektonConfig;
-import io.dekorate.tekton.config.TektonConfigCustomAdapter;
-import io.dekorate.tekton.generator.TektonApplicationGenerator;
 
 @Description("Generates tekton manifests.")
 @SupportedAnnotationTypes("io.dekorate.tekton.annotation.TektonApplication")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class TektonAnnotationProcessor extends AbstractAnnotationProcessor implements TektonApplicationGenerator {
+public class TektonAnnotationProcessor extends AbstractAnnotationProcessor  {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
@@ -54,17 +47,8 @@ public class TektonAnnotationProcessor extends AbstractAnnotationProcessor imple
     }
 
     for (Element mainClass : mainClasses) {
-      add(mainClass);
+      process("tekton", mainClass, TektonApplication.class);
     }
     return false;
-  }
-
-  public void add(Element element) {
-    TektonApplication tektonApplication = element.getAnnotation(TektonApplication.class);
-    TektonConfig tektonConfig = TektonConfigCustomAdapter.newBuilder(getProject(), tektonApplication).build();
-
-    on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(element.getAnnotation(TektonApplication.class))
-                                   .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyProjectInfo(getProject()))));
   }
 }

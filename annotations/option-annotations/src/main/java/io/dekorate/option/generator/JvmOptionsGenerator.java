@@ -45,7 +45,14 @@ public interface JvmOptionsGenerator extends Generator  {
   }
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+        on(new AnnotationConfiguration<>(
+            JvmConfigAdapter
+            .newBuilder(propertiesMap(map, JvmConfig.class))
+        ));
+  }
+  @Override
+  default void addPropertyConfiguration(Map map) {
         on(new PropertyConfiguration<>(
             JvmConfigAdapter
             .newBuilder(propertiesMap(map, JvmConfig.class))
@@ -57,5 +64,4 @@ public interface JvmOptionsGenerator extends Generator  {
     session.configurators().add(config);
     session.configurators().add(new ApplyJvmOptsConfigurator(config));
   }
-
 }

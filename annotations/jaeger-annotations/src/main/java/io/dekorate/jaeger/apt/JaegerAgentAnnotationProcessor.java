@@ -25,17 +25,12 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.config.AnnotationConfiguration;
-import io.dekorate.jaeger.adapter.JaegerAgentConfigAdapter;
 import io.dekorate.jaeger.annotation.EnableJaegerAgent;
-import io.dekorate.jaeger.config.JaegerAgentConfig;
-import io.dekorate.jaeger.config.JaegerAgentConfigBuilder;
-import io.dekorate.jaeger.generator.JaegerAgentGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @SupportedAnnotationTypes({"io.dekorate.jaeger.annotation.EnableJaegerAgent"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class JaegerAgentAnnotationProcessor extends AbstractAnnotationProcessor implements JaegerAgentGenerator {
+public class JaegerAgentAnnotationProcessor extends AbstractAnnotationProcessor  {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
@@ -44,17 +39,9 @@ public class JaegerAgentAnnotationProcessor extends AbstractAnnotationProcessor 
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        add(mainClass);
+        process("jaeger", mainClass, EnableJaegerAgent.class);
       }
     }
     return false;
-  }
-
-  @Override
-  public void add(Element element) {
-    EnableJaegerAgent serviceMonitor = element.getAnnotation(EnableJaegerAgent.class);
-    on(serviceMonitor != null
-      ? new AnnotationConfiguration<JaegerAgentConfig>(JaegerAgentConfigAdapter.newBuilder(serviceMonitor))
-      : new AnnotationConfiguration<JaegerAgentConfig>(new JaegerAgentConfigBuilder()));
   }
 }

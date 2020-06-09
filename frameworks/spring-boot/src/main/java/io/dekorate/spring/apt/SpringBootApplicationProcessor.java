@@ -49,13 +49,13 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
         LOGGER.info("Found @SpringBootApplication on: " + mainClass.toString());
       }
     }
-    getSession().feed(readApplicationConfig("application.properties",
+    getSession().addPropertyConfiguration(readApplicationConfig("application.properties",
                                          "application.yaml",
                                          "application.yml", 
                                          "application-kubernetes.properties",
                                          "application-kubernetes.yaml",
                                          "application-kubernetes.yml"));
-    add(SPRING_BOOT_APPLICATION);
+    addPropertyConfiguration(SPRING_BOOT_APPLICATION);
     return false;
   }
 }

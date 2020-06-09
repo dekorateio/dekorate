@@ -35,10 +35,8 @@ public class Generators {
     } catch (NoSuchFieldError | SecurityException | NoSuchFieldException e) {
       Class s = c.getSuperclass();
       if (s == null) {
-        System.out.println("Could not find field:" + field + " in class: " + origin);
         throw e;
       }
-      System.out.println("Could not find field:" + field + " in class: " + c + " trying superclass: " + s);
       return findField(s, origin, field);
     }
   }
@@ -80,7 +78,6 @@ public class Generators {
         }
       } catch (NoSuchFieldError | SecurityException | NoSuchFieldException e) {
         //ignore an move to next entry.
-        System.out.println("Failed to find field:"+key+" in class:"+configClass);
         continue;
       }
     }

@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import io.dekorate.Generator;
 import io.dekorate.WithProject;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
@@ -48,9 +49,14 @@ public interface OptionsGenerator extends Generator, WithProject {
     default Class<? extends Configuration> getConfigType() {
         return GeneratorConfig.class;
     }
- 
+
     @Override
-    default void add(Map map) {
+    default void addAnnotationConfiguration(Map map) {
+        on(new AnnotationConfiguration<>(GeneratorConfigAdapter.newBuilder(propertiesMap(map, GeneratorConfig.class))));
+    }
+
+    @Override
+    default void addPropertyConfiguration(Map map) {
         on(new PropertyConfiguration<>(GeneratorConfigAdapter.newBuilder(propertiesMap(map, GeneratorConfig.class))));
     }
 

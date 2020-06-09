@@ -17,22 +17,18 @@ package io.dekorate.prometheus.generator;
 
 import java.util.Map;
 
-import javax.lang.model.element.Element;
 
 import io.dekorate.Generator;
 import io.dekorate.Session;
-import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.prometheus.adapter.ServiceMonitorConfigAdapter;
-import io.dekorate.prometheus.annotation.EnableServiceMonitor;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
-import io.dekorate.prometheus.config.ServiceMonitorConfigBuilder;
 import io.dekorate.prometheus.handler.ServiceMonitorHandler;
 
-public interface ServiceMonitorGenerator extends Generator, WithSession {
+public interface ServiceMonitorGenerator extends Generator  {
 
   default String getKey() {
     return "servicemonitor";
@@ -43,7 +39,12 @@ public interface ServiceMonitorGenerator extends Generator, WithSession {
   }
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+    on(new AnnotationConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, ServiceMonitorConfig.class))));
+  }
+
+  @Override
+  default void addPropertyConfiguration(Map map) {
     on(new PropertyConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, ServiceMonitorConfig.class))));
   }
 

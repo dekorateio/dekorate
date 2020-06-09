@@ -23,25 +23,32 @@ import io.dekorate.application.annotation.EnableApplicationResource;
 import io.dekorate.application.config.ApplicationConfigBuilder;
 import io.dekorate.application.handler.ApplicationHandler;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.config.AnnotationConfiguration;
 
 import javax.lang.model.element.Element;
 import java.util.Map;
 
-public interface ApplicationResourceGenerator extends Generator, WithSession {
+public interface ApplicationResourceGenerator extends Generator  {
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+    on(new AnnotationConfiguration<>(ApplicationConfigAdapter.newBuilder(propertiesMap(map, getConfigType()))));
+  }
+
+  @Override
+  default void addPropertyConfiguration(Map map) {
+    on(new PropertyConfiguration<>(ApplicationConfigAdapter.newBuilder(propertiesMap(map, getConfigType()))));
   }
 
   @Override
   default void add(Element element) {
     EnableApplicationResource info = element.getAnnotation(EnableApplicationResource.class);
     ApplicationConfigBuilder builder = ApplicationConfigAdapter.newBuilder(info);
-    add(new AnnotationConfiguration<>(builder));
+    on(new AnnotationConfiguration<>(builder));
   }
 
-  default void add(ConfigurationSupplier<?> config) {
+  default void on(ConfigurationSupplier<?> config) {
     Session session = getSession();
     session.configurators().add(config);
     session.handlers().add(new ApplicationHandler(session.resources()));

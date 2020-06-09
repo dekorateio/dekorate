@@ -15,6 +15,28 @@
  */
 package io.dekorate.processor;
 
+import static io.dekorate.utils.Maps.fromProperties;
+import static io.dekorate.utils.Maps.fromYaml;
+import static io.dekorate.utils.Maps.merge;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
+
 import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.Session;
@@ -23,24 +45,6 @@ import io.dekorate.WithSession;
 import io.dekorate.project.AptProjectFactory;
 import io.dekorate.utils.Maps;
 import io.dekorate.utils.Urls;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static io.dekorate.utils.Maps.*;
 
 public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject, WithSession  {
 
@@ -79,6 +83,10 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
       session.setWriter(new AptWriter(getProject(), processingEnv));
     }
     return session;
+  }
+
+  public <A extends Annotation> void process(String key, Element element, Class<A> annotationClass) {
+    getSession().addAnnotationConfiguration(Maps.fromAnnotation(key, element.getAnnotation(annotationClass), annotationClass));
   }
 
   /**

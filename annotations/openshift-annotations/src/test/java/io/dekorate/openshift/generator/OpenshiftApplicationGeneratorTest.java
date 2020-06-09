@@ -63,7 +63,7 @@ class OpenshiftApplicationGeneratorTest {
       }});
     }};
 
-    generator.add(map);
+    generator.addPropertyConfiguration(map);
     final Map<String, String> result = session.close();
     KubernetesList list=session.getGeneratedResources().get("openshift");
     assertThat(list).isNotNull();

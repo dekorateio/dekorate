@@ -61,7 +61,7 @@ class TektonApplicationGeneratorTest {
       }});
     }};
 
-    generator.add(map);
+    generator.addPropertyConfiguration(map);
     final Map<String, String> result = session.close();
   }
 }

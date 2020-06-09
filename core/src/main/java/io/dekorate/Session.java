@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
@@ -117,7 +118,14 @@ public class Session {
     }
   }
 
-  public void feed(Map<String, Object> map) {
+  public void addAnnotationConfiguration(Map<String, Object> map) {
+    addConfiguration(map, (g,m) -> g.addAnnotationConfiguration(m) );
+  }
+  public void addPropertyConfiguration(Map<String, Object> map) {
+    addConfiguration(map, (g,m) -> g.addPropertyConfiguration(m) );
+  }
+  
+  public void addConfiguration(Map<String, Object> map, BiConsumer<Generator, Map<String, Object>> consumer) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
@@ -132,7 +140,7 @@ public class Session {
         String newKey = configClass.getName();
         Generators.populateArrays(configClass, (Map<String, Object>) value);
         generatorMap.put(newKey, value);
-        generator.add(Maps.kebabToCamelCase(generatorMap));
+        consumer.accept(generator, Maps.kebabToCamelCase(generatorMap));
       }
     }
   }
