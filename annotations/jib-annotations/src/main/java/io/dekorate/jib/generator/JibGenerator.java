@@ -46,7 +46,16 @@ public interface JibGenerator extends Generator, WithProject  {
   }
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+        on(new AnnotationConfiguration<>(
+            JibBuildConfigAdapter
+            .newBuilder(propertiesMap(map, JibBuildConfig.class))
+                                                .accept(new ApplyProjectInfo(getProject()))
+                                                .accept(new ApplyBuildToImageConfiguration())));
+  }
+
+  @Override
+  default void addPropertyConfiguration(Map map) {
         on(new PropertyConfiguration<>(
             JibBuildConfigAdapter
             .newBuilder(propertiesMap(map, JibBuildConfig.class))

@@ -44,9 +44,13 @@ public interface JaegerAgentGenerator extends Generator, WithSession {
     return JaegerAgentConfig.class;
   }
 
+  @Override
+  default void addAnnotationConfiguration(Map map) {
+    on(new AnnotationConfiguration<>(JaegerAgentConfigAdapter.newBuilder(propertiesMap(map, JaegerAgentConfig.class))));
+  }
 
   @Override
-  default void add(Map map) {
+  default void addPropertyConfiguration(Map map) {
     on(new PropertyConfiguration<>(JaegerAgentConfigAdapter.newBuilder(propertiesMap(map, JaegerAgentConfig.class))));
   }
 

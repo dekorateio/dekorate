@@ -45,7 +45,16 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
   Logger LOGGER = LoggerFactory.getLogger();
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+    addConfiguration(map);
+  }
+  
+  @Override
+  default void addPropertyConfiguration(Map map) {
+    addConfiguration(map);
+  }
+  
+  default void addConfiguration(Map map) {
     Session session = getSession();
     session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
     session.configurators().add(new SetSpringBootRuntime());

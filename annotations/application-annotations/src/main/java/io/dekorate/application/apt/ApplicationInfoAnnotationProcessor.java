@@ -15,9 +15,7 @@
  */
 package io.dekorate.application.apt;
 
-import io.dekorate.application.generator.ApplicationResourceGenerator;
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.sundr.codegen.CodegenContext;
+import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -25,11 +23,14 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.Set;
 
-@SupportedAnnotationTypes({"io.dekorate.application.annotation.ApplicationInfo"})
+import io.dekorate.application.annotation.EnableApplicationResource;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.sundr.codegen.CodegenContext;
+
+@SupportedAnnotationTypes({"io.dekorate.application.annotation.EnableApplicationResource"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class ApplicationInfoAnnotationProcessor extends AbstractAnnotationProcessor implements ApplicationResourceGenerator {
+public class ApplicationInfoAnnotationProcessor extends AbstractAnnotationProcessor {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
@@ -39,7 +40,7 @@ public class ApplicationInfoAnnotationProcessor extends AbstractAnnotationProces
     CodegenContext.create(processingEnv.getElementUtils(), processingEnv.getTypeUtils());
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        add(mainClass);
+        process("application", mainClass, EnableApplicationResource.class);
       }
     }
     return false;

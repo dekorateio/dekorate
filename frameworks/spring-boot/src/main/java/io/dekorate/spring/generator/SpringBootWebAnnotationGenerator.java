@@ -31,7 +31,16 @@ public interface SpringBootWebAnnotationGenerator extends Generator, WithSession
   Map WEB_ANNOTATIONS = Collections.emptyMap();
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+    addConfiguration(map);
+  }
+
+  @Override
+  default void addPropertyConfiguration(Map map) {
+    addConfiguration(map);
+  }
+
+  default void addConfiguration(Map map) {
     Session session = getSession();
     Port port = detectHttpPort();
     session.configurators().add(new AddPort(port));

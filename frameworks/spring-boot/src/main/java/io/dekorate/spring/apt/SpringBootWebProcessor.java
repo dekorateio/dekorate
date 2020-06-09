@@ -23,6 +23,8 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
@@ -32,13 +34,16 @@ import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SpringBootWebProcessor extends AbstractAnnotationProcessor implements SpringBootWebAnnotationGenerator {
 
+  private final Logger LOGGER = LoggerFactory.getLogger();
+
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }
-    add(WEB_ANNOTATIONS);
+    LOGGER.info("Found Spring web annotation!");
+    addPropertyConfiguration(WEB_ANNOTATIONS);
     return false;
   }
 

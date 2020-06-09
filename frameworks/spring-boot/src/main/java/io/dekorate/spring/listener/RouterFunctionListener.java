@@ -29,6 +29,6 @@ public class RouterFunctionListener implements BeanListener, SpringBootWebAnnota
 
 	@Override
 	public void onBean() {
-		add(WEB_ANNOTATIONS);
+		addPropertyConfiguration(WEB_ANNOTATIONS);
 	}
 }

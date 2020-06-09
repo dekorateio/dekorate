@@ -52,20 +52,9 @@ public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor i
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         LOGGER.info("Found @KubernetesApplication on: " + mainClass.toString());
-        add(mainClass);
+        process("kubernetes", mainClass, KubernetesApplication.class);
       }
     }
     return false;
-  }
-
-  public void add(Element element) {
-    KubernetesApplication application = element.getAnnotation(KubernetesApplication.class);
-     add(new AnnotationConfiguration<>(
-            KubernetesConfigAdapter
-            .newBuilder(application)
-            .accept(new ApplyBuildToImageConfiguration())
-            .accept(new ApplyImagePullSecretConfiguration())
-            .accept(new ApplyDeployToApplicationConfiguration())
-            .accept(new ApplyProjectInfo(getProject()))));
   }
 }

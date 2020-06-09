@@ -41,21 +41,25 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
       map.put(ApplicationPath.class.getName(), new HashMap<String, String>() {{
         put("value", applicationPath.value());
       }});
-      add(map);
+      addAnnotationConfiguration(map);
     }
 
     if (element.getAnnotation(Path.class) != null) {
-      add(Collections.emptyMap());
+      addAnnotationConfiguration(Collections.emptyMap());
     }
 
     // servlet
     if (element.getAnnotation(WebServlet.class) != null) {
-      add(Collections.emptyMap());
+      addAnnotationConfiguration(Collections.emptyMap());
     }
   }
 
+  default void addAnnotationConfiguration(Map map) {
+    addPropertyConfiguration(map);
+  }
+
   @Override
-  default void add(Map map) {
+  default void addPropertyConfiguration(Map map) {
     Session session = getSession();
     Port port = detectHttpPort();
     session.configurators().add(new AddPort(port));
@@ -64,7 +68,7 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
     if (map.containsKey(ApplicationPath.class.getName())) {
       Object o  = map.get(ApplicationPath.class.getName());
       if (o instanceof Map) {
-        Map<String, Object> applicationPath = (Map) o; 
+        Map<String, Object> applicationPath = (Map) o;   
           if (applicationPath != null && applicationPath.containsKey("value")) {
             String path = String.valueOf(applicationPath.get("value"));
             session.configurators().add(new SetPortPath(port.getName(), path));

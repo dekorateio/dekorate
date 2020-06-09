@@ -21,6 +21,7 @@ import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
@@ -46,8 +47,14 @@ public interface OpenshiftApplicationGenerator extends Generator, WithSession, W
     return OpenshiftConfig.class;
   }
 
+  default void addAnnotationConfiguration(Map map) {
+    on(new AnnotationConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftConfig.class))
+                                   .accept(new ApplyImagePullSecretConfiguration())
+                                   .accept(new ApplyDeployToApplicationConfiguration())
+                                   .accept(new ApplyProjectInfo(getProject()))));
+  }
 
-  default void add(Map map) {
+  default void addPropertyConfiguration(Map map) {
     on(new PropertyConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftConfig.class))
                                    .accept(new ApplyImagePullSecretConfiguration())
                                    .accept(new ApplyDeployToApplicationConfiguration())

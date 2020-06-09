@@ -55,7 +55,7 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
         Dekorate dekorate = mainClass.getAnnotation(Dekorate.class);
         DekorateConfig dekorateConfig = DekorateConfigAdapter.adapt(dekorate);
         String[] configFiles = dekorateConfig.getResources().length > 0 ? dekorateConfig.getResources() : DEFAULT_CONFIG_FILES;
-        getSession().feed(readApplicationConfig(configFiles));
+        getSession().addPropertyConfiguration(readApplicationConfig(configFiles));
       }
     }
     return false;

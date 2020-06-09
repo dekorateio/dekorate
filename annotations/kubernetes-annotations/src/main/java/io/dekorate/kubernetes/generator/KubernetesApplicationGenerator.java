@@ -36,6 +36,7 @@ import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.listener.KubernetesSessionListener;
 import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.utils.Strings;
 
 public interface KubernetesApplicationGenerator extends Generator, WithProject {
 
@@ -51,7 +52,19 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
   }
 
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+        add(new AnnotationConfiguration<>(
+            KubernetesConfigAdapter
+            .newBuilder(propertiesMap(map, KubernetesConfig.class))
+            .accept(new ApplyBuildToImageConfiguration())
+            .accept(new ApplyImagePullSecretConfiguration())
+            .accept(new ApplyDeployToApplicationConfiguration())
+            .accept(new ApplyProjectInfo(getProject()))));
+  }
+
+
+  @Override
+  default void addPropertyConfiguration(Map map) {
         add(new PropertyConfiguration<>(
             KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesConfig.class))

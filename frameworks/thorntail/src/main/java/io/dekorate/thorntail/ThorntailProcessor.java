@@ -36,7 +36,7 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Session session = Session.getSession();
+    Session session = getSession();
     session.configurators().add(new ThorntailPrometheusAgentConfigurator());
 
     if (roundEnv.processingOver()) {
@@ -44,7 +44,7 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
       return true;
     }
 
-    session.feed(readApplicationConfig("project-defaults.yml"));
+    session.addPropertyConfiguration(readApplicationConfig("project-defaults.yml"));
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         add(mainClass);

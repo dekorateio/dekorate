@@ -20,6 +20,8 @@ import io.dekorate.deps.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -121,6 +123,43 @@ public class Maps {
     return result;
   }
 
+ public static <A extends Annotation> Map<String, Object> fromAnnotation(String root, A annotation, Class<? extends A> type) {
+    Map<String, Object> result = new HashMap<>();
+    result.put(root, fromAnnotation(annotation, type));
+    return result;
+  }
+
+  public static <A extends Annotation> Map<String, Object> fromAnnotation(A annotation, Class<? extends A> type) {
+    Map<String, Object> result = new HashMap<>();
+    try {
+      for (Method m : type.getDeclaredMethods()) {
+        Object value = m.invoke(annotation);
+        Class<?> clazz = m.getReturnType();
+        if (clazz.isArray()) {
+          Class componentType = clazz.getComponentType();
+          if (componentType.isAnnotation()) {
+            List<Map<String, Object>> maps = new ArrayList<>();
+            for (Object o : (Object[])value) {
+              Map<String, Object> nested = fromAnnotation((Annotation)o, componentType);
+              maps.add(nested);
+            }
+            result.put(m.getName(), maps.toArray(new Map[maps.size()]));
+          } else {
+            result.put(m.getName(), Arrays.stream((Object[])value).map(String::valueOf).collect(Collectors.joining(",")));
+          }
+        } else if (clazz.isAnnotation()) {
+            result.put(m.getName(), fromAnnotation((Annotation) value, (Class) clazz));
+        } else {
+          result.put(m.getName(), String.valueOf(value));
+        }
+      }
+    } catch (Exception e)  {
+      throw DekorateException.launderThrowable(e);
+    }
+    return result;
+  }
+
+  
   /**
    * Convert a multipart-key value pair to a Map.
    */

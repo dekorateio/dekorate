@@ -43,9 +43,17 @@ public interface ComponentConfigGenerator extends Generator, WithProject {
   default Class<? extends Configuration> getConfigType() {
     return ComponentConfig.class;
   }
-  
+
   @Override
-  default void add(Map map) {
+  default void addAnnotationConfiguration(Map map) {
+    add(new AnnotationConfiguration<>(
+      ComponentConfigAdapter
+        .newBuilder(propertiesMap(map, ComponentConfig.class))
+        .accept(new ApplyProject(getProject()))));
+  }
+
+  @Override
+  default void addPropertyConfiguration(Map map) {
     add(new PropertyConfiguration<>(
       ComponentConfigAdapter
         .newBuilder(propertiesMap(map, ComponentConfig.class))

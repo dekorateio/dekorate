@@ -15,6 +15,7 @@
  */
 package io.dekorate.knative.apt;
 
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,11 +35,12 @@ import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.utils.Maps;
 
 @Description("Generates knative manifests.")
 @SupportedAnnotationTypes("io.dekorate.knative.annotation.KnativeApplication")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor implements KnativeApplicationGenerator {
+public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if  (roundEnv.processingOver()) {
@@ -53,15 +55,10 @@ public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor impl
     }
 
     for (Element mainClass : mainClasses) {
-      add(mainClass);
+      process("knative", mainClass, KnativeApplication.class);
     }
     return false;
   }
 
-  public void add(Element element) {
-    on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(element.getAnnotation(KnativeApplication.class))
-                                   .accept(new ApplyImagePullSecretConfiguration())
-                                   .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyProjectInfo(getProject()))));
-  }
 }
+

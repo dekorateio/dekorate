@@ -18,8 +18,6 @@ package io.dekorate.knative.generator;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.lang.model.element.Element;
-
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.DekorateException;
@@ -28,13 +26,13 @@ import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.hook.ImageBuildHook;
 import io.dekorate.knative.adapter.KnativeConfigAdapter;
-import io.dekorate.knative.annotation.KnativeApplication;
 import io.dekorate.knative.config.KnativeConfig;
-import io.dekorate.knative.config.KnativeConfigCustomAdapter;
 import io.dekorate.knative.handler.KnativeHandler;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -55,9 +53,15 @@ public interface KnativeApplicationGenerator extends Generator, WithSession, Wit
     return KnativeConfig.class;
   }
 
-  default void add(Map map) {
-    KnativeConfig knativeConfig = KnativeConfigAdapter.newBuilder((Map) map.get(KnativeApplication.class.getName())).build();
-    on(new ConfigurationSupplier<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))
+  default void addAnnotationConfiguration(Map map) {
+    on(new AnnotationConfiguration<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))
+                                   .accept(new ApplyImagePullSecretConfiguration())
+                                   .accept(new ApplyBuildToImageConfiguration())
+                                   .accept(new ApplyProjectInfo(getProject()))));
+  }
+
+  default void addPropertyConfiguration(Map map) {
+    on(new PropertyConfiguration<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))
                                    .accept(new ApplyImagePullSecretConfiguration())
                                    .accept(new ApplyBuildToImageConfiguration())
                                    .accept(new ApplyProjectInfo(getProject()))));
