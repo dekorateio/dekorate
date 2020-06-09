@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
-import io.dekorate.deps.kubernetes.api.model.ContainerPort;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Port;

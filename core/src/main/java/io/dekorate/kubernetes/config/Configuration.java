@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.config;
 
-import io.dekorate.deps.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
 
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 public class Configuration {
 
   private Project project;

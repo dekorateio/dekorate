@@ -30,7 +30,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "KubernetesIntegrationTestConfig", relativePath = "../config",
       mutable = true,
       withStaticBuilderMethod = false,

@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 
 public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> {
 

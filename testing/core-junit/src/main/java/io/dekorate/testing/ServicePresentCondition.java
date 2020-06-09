@@ -15,8 +15,8 @@
  */
 package io.dekorate.testing;
 
-import io.dekorate.deps.kubernetes.api.model.Service;
-import io.dekorate.deps.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.dekorate.testing.annotation.OnServicePresentCondition;
 import io.dekorate.utils.Strings;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;

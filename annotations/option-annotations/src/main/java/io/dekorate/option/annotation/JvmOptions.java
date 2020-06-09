@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * References:
  * - https://www.baeldung.com/jvm-parameters (awesome resource).
  */
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "JvmConfig", relativePath = "../config",
       mutable = true,
       superClass = Configuration.class,

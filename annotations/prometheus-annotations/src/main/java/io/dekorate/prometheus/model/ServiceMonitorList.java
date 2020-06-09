@@ -15,18 +15,18 @@
  */
 package io.dekorate.prometheus.model;
 
-import io.dekorate.deps.jackson.annotation.JsonIgnore;
-import io.dekorate.deps.jackson.annotation.JsonInclude;
-import io.dekorate.deps.jackson.annotation.JsonProperty;
-import io.dekorate.deps.jackson.annotation.JsonPropertyOrder;
-import io.dekorate.deps.jackson.annotation.ObjectIdGenerators;
-import io.dekorate.deps.jackson.databind.JsonDeserializer;
-import io.dekorate.deps.jackson.databind.annotation.JsonDeserialize;
-import io.dekorate.deps.javax.validation.Valid;
-import io.dekorate.deps.javax.validation.constraints.NotNull;
-import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
-import io.dekorate.deps.kubernetes.api.model.KubernetesResourceList;
-import io.dekorate.deps.kubernetes.api.model.ListMeta;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.ListMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;

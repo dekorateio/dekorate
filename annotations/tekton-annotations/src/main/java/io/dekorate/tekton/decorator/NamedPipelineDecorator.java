@@ -19,10 +19,10 @@ package io.dekorate.tekton.decorator;
 
 import java.util.Optional;
 
-import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
-import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineSpecFluent;
+import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.utils.Strings;

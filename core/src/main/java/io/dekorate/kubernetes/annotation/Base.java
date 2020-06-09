@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * {@link io.dekorate.kubernetes.config.KubernetesConfig} class that is used as
  * a base for the rest of the config classes.
  */
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "BaseConfig", relativePath = "../config", mutable = true, superClass = ApplicationConfiguration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false)
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)

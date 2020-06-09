@@ -15,23 +15,21 @@
  */
 package io.dekorate.utils;
 
-import io.dekorate.deps.jackson.core.JsonProcessingException;
-import io.dekorate.deps.jackson.core.type.TypeReference;
-import io.dekorate.deps.jackson.databind.DeserializationFeature;
-import io.dekorate.deps.jackson.databind.ObjectMapper;
-import io.dekorate.deps.jackson.databind.SerializationFeature;
-import io.dekorate.deps.jackson.dataformat.javaprop.JavaPropsMapper;
-import io.dekorate.deps.jackson.dataformat.yaml.YAMLFactory;
-import io.dekorate.deps.jackson.dataformat.yaml.YAMLGenerator.Feature;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import io.dekorate.DekorateException;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,8 +42,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Serialization {

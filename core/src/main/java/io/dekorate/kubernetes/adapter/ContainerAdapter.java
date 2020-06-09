@@ -15,8 +15,8 @@
  */
 package io.dekorate.kubernetes.adapter;
 
-import io.dekorate.deps.kubernetes.api.model.Container;
-import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.Mount;
 import io.dekorate.kubernetes.config.Port;

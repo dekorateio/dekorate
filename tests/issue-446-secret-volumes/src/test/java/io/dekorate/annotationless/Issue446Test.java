@@ -16,8 +16,8 @@
 
 package io.dekorate.annotationless;
 
-import io.dekorate.deps.kubernetes.api.model.*;
-import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 

@@ -22,13 +22,13 @@ import java.util.Map;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
-import io.dekorate.deps.kubernetes.api.model.Container;
-import io.dekorate.deps.kubernetes.api.model.Event;
-import io.dekorate.deps.kubernetes.api.model.EventList;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.Pod;
-import io.dekorate.deps.kubernetes.api.model.PodList;
-import io.dekorate.deps.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.Event;
+import io.fabric8.kubernetes.api.model.EventList;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.KubernetesClient;
 
 /*
  * Originally implemented by iocanel in https://github.com/arquillian/arquillian-cube/blob/master/kubernetes/kubernetes/src/main/java/org/arquillian/cube/kubernetes/impl/feedback/DefaultFeedbackProvider.java

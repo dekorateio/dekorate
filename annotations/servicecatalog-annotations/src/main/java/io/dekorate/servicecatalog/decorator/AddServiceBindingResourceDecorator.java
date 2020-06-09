@@ -17,9 +17,9 @@
 
 package io.dekorate.servicecatalog.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.servicecatalog.api.model.ServiceBindingBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.servicecatalog.api.model.ServiceBindingBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.servicecatalog.config.ServiceCatalogInstance;

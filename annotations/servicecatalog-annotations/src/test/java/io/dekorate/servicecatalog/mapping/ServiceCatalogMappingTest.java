@@ -15,11 +15,11 @@
  */
 package io.dekorate.servicecatalog.mapping;
 
-import io.dekorate.deps.kubernetes.api.KubernetesResourceMappingProvider;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.client.DefaultKubernetesClient;
-import io.dekorate.deps.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 

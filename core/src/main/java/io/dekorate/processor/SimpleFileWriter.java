@@ -27,7 +27,7 @@ import java.util.Set;
 
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;

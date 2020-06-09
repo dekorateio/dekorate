@@ -15,8 +15,8 @@
  */
 package io.dekorate.tekton.util;
 
-import io.dekorate.deps.tekton.client.DefaultTektonClient;
-import io.dekorate.deps.tekton.client.TektonClient;
+import io.fabric8.tekton.client.DefaultTektonClient;
+import io.fabric8.tekton.client.TektonClient;
 
 public class TektonUtils {
 

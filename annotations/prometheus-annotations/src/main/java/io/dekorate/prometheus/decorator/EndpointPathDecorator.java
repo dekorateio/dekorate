@@ -15,8 +15,8 @@
  */
 package io.dekorate.prometheus.decorator;
 
-import io.dekorate.deps.kubernetes.api.builder.TypedVisitor;
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.dekorate.prometheus.model.EndpointBuilder;

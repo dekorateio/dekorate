@@ -29,7 +29,7 @@ import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.hook.ImageBuildHook;
 import io.dekorate.knative.adapter.KnativeConfigAdapter;
 import io.dekorate.knative.config.KnativeConfig;

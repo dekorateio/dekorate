@@ -15,8 +15,8 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
-import io.dekorate.deps.kubernetes.api.model.apps.DeploymentBuilder;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Images;

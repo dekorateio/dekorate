@@ -17,9 +17,9 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.dekorate.deps.tekton.pipeline.v1beta1.Step;
-import io.dekorate.deps.tekton.pipeline.v1beta1.StepBuilder;
-import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.fabric8.tekton.pipeline.v1beta1.Step;
+import io.fabric8.tekton.pipeline.v1beta1.StepBuilder;
+import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 public class AddInitStepDecorator extends NamedTaskDecorator implements StepDecorator {
 

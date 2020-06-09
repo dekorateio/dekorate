@@ -18,7 +18,7 @@ package io.dekorate.examples;
 
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -15,17 +15,17 @@
  */
 package io.dekorate.example.thorntailonopenshift;
 
-import io.dekorate.deps.kubernetes.api.model.Container;
-import io.dekorate.deps.kubernetes.api.model.HTTPGetAction;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
-import io.dekorate.deps.kubernetes.api.model.Service;
-import io.dekorate.deps.kubernetes.api.model.ServiceSpec;
-import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
-import io.dekorate.deps.openshift.api.model.BuildConfig;
-import io.dekorate.deps.openshift.api.model.DeploymentConfig;
-import io.dekorate.deps.openshift.api.model.Route;
-import io.dekorate.deps.openshift.api.model.RouteSpec;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.HTTPGetAction;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServiceSpec;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.openshift.api.model.BuildConfig;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.Route;
+import io.fabric8.openshift.api.model.RouteSpec;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 

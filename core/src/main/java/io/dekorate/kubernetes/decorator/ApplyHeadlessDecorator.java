@@ -17,8 +17,8 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.kubernetes.api.model.ServiceSpecFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ServiceSpecFluent;
 import io.dekorate.doc.Description;
 
 @Description("Make the service headless.")

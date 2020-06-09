@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import io.dekorate.deps.kubernetes.api.model.EventList;
-import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.EventList;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 
 public interface WithEvents extends WithKubernetesClient {
 

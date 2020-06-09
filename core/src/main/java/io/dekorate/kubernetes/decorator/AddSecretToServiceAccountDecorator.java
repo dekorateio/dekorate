@@ -17,8 +17,8 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
-import io.dekorate.deps.kubernetes.api.model.ServiceAccountFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ServiceAccountFluent;
 
 public class AddSecretToServiceAccountDecorator extends NamedResourceDecorator<ServiceAccountFluent<?>> {
 

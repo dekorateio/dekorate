@@ -15,9 +15,9 @@
  */
 package io.dekorate.openshift.decorator;
 
-import io.dekorate.deps.kubernetes.api.builder.Predicate;
-import io.dekorate.deps.openshift.api.model.DeploymentConfigSpecFluent;
-import io.dekorate.deps.openshift.api.model.DeploymentTriggerPolicyBuilder;
+import io.fabric8.kubernetes.api.builder.Predicate;
+import io.fabric8.openshift.api.model.DeploymentConfigSpecFluent;
+import io.fabric8.openshift.api.model.DeploymentTriggerPolicyBuilder;
 import io.dekorate.kubernetes.decorator.AddAwsElasticBlockStoreVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureDiskVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;

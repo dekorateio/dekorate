@@ -16,7 +16,7 @@
 
 package io.dekorate.examples.component;
 
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.halkyon.model.Component;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;

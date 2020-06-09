@@ -21,7 +21,7 @@ import io.sundr.builder.annotations.Buildable;
 
 import java.util.Map;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 public class ApplicationConfiguration extends Configuration implements Coordinates {
 
   private String partOf;

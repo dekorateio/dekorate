@@ -19,8 +19,8 @@ package io.dekorate.halkyon.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.dekorate.deps.kubernetes.api.KubernetesResourceMappingProvider;
-import io.dekorate.deps.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 
 public class ComponentMappingProvider implements KubernetesResourceMappingProvider {

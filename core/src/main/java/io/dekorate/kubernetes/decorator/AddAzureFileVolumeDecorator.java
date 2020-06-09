@@ -16,7 +16,7 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.AzureFileVolume;
-import io.dekorate.deps.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.PodSpecBuilder;
 import io.dekorate.doc.Description;
 
 @Description("Add an Azure File volume to the Pod spec.")

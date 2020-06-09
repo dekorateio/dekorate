@@ -16,9 +16,9 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.VolumeMount;
+import io.fabric8.kubernetes.api.model.VolumeMount;
 import io.sundr.transform.annotations.VelocityTransformation;
-import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 
 @VelocityTransformation("/templates/fluent-visitor.vm")
 public class VolumeMountDecorator implements FluentDecorator<VolumeMount, ContainerBuilder> {

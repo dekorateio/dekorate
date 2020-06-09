@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.configurator;
 
-import io.dekorate.deps.kubernetes.api.builder.Predicate;
+import io.fabric8.kubernetes.api.builder.Predicate;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.BaseConfigFluent;

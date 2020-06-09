@@ -16,7 +16,7 @@
 
 package io.dekorate.openshift.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.kubernetes.config.Port;

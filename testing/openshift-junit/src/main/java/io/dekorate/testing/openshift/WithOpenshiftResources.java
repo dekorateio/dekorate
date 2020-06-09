@@ -16,7 +16,7 @@
 package io.dekorate.testing.openshift;
 
 import io.dekorate.DekorateException;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.testing.WithProject;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.extension.ExtensionContext;

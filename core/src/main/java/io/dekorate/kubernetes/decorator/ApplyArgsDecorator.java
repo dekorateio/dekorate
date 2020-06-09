@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.dekorate.doc.Description;
 
 @Description("A decorator that applies the command args to the application container.")

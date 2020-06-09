@@ -17,7 +17,7 @@ package io.dekorate.thorntail.config;
 
 import io.sundr.builder.annotations.Buildable;
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 public class ApplicationPathConfig {
   private final String path;
 

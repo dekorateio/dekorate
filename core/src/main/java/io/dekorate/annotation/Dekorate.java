@@ -30,7 +30,7 @@ import io.sundr.builder.annotations.Pojo;
  * This annotations is meant to be used as a trigger of the dekorate process.
  */
 
-@Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "DekorateConfig", relativePath = "../config",
       mutable = true,
       withStaticBuilderMethod = false,

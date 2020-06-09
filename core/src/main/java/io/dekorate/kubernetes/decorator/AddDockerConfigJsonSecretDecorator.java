@@ -23,9 +23,9 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
 
-import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.deps.kubernetes.api.model.Secret;
-import io.dekorate.deps.kubernetes.api.model.SecretBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.dekorate.utils.Strings;
 
 public class AddDockerConfigJsonSecretDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {

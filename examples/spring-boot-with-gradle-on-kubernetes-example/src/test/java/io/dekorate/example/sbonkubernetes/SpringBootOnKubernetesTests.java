@@ -15,12 +15,12 @@
  */
 package io.dekorate.example.sbonkubernetes;
 
-import io.dekorate.deps.kubernetes.api.model.Pod;
-import io.dekorate.deps.kubernetes.client.KubernetesClient;
-import io.dekorate.deps.kubernetes.client.LocalPortForward;
-import io.dekorate.deps.okhttp3.OkHttpClient;
-import io.dekorate.deps.okhttp3.Request;
-import io.dekorate.deps.okhttp3.Response;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.LocalPortForward;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.annotation.KubernetesIntegrationTest;
 import org.junit.jupiter.api.Assertions;

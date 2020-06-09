@@ -21,9 +21,9 @@ import java.io.PrintStream;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
-import io.dekorate.deps.jansi.*;
-import static io.dekorate.deps.jansi.Ansi.*;
-import static io.dekorate.deps.jansi.Ansi.Color.*;
+import org.fusesource.jansi.*;
+import static org.fusesource.jansi.Ansi.*;
+import static org.fusesource.jansi.Ansi.Color.*;
 
 public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
 

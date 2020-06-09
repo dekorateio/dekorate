@@ -2,18 +2,18 @@ package io.dekorate.halkyon.model;
 
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Inline;
-import io.dekorate.deps.kubernetes.api.model.Doneable;
-import io.dekorate.deps.jackson.annotation.JsonInclude;
-import io.dekorate.deps.jackson.annotation.JsonPropertyOrder;
-import io.dekorate.deps.jackson.databind.annotation.JsonDeserialize;
+import io.fabric8.kubernetes.api.model.Doneable;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
   "requires",
   "provides"
 })
-@JsonDeserialize(using = io.dekorate.deps.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, builderPackage = "io.dekorate.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+@JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
+@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 public class Capabilities {
   private RequiredComponentCapability[] requires;
   private ComponentCapability[] provides;

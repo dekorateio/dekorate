@@ -17,10 +17,10 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.utils.Strings;
-import io.dekorate.deps.kubernetes.api.builder.Predicate;
-import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
-import io.dekorate.deps.kubernetes.api.model.EnvFromSourceBuilder;
-import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
+import io.fabric8.kubernetes.api.builder.Predicate;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.EnvFromSourceBuilder;
+import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.dekorate.doc.Description;
 
 import java.util.Objects;
