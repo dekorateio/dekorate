@@ -29,8 +29,8 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.annotation.Dekorate;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
-import io.dekorate.adapter.DekorateConifgAdapter;
-import io.dekorate.config.DekorateConifg;
+import io.dekorate.adapter.DekorateConfigAdapter;
+import io.dekorate.config.DekorateConfig;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
