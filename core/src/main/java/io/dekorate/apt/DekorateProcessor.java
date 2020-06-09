@@ -53,7 +53,7 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         LOGGER.info("Found @Dekorate on: " + mainClass.toString());
         Dekorate dekorate = mainClass.getAnnotation(Dekorate.class);
-        DekorateConifg dekorateConfig = DekorateConifgAdapter.adapt(dekorate);
+        DekorateConfig dekorateConfig = DekorateConfigAdapter.adapt(dekorate);
         String[] configFiles = dekorateConfig.getResources().length > 0 ? dekorateConfig.getResources() : DEFAULT_CONFIG_FILES;
         getSession().feed(readApplicationConfig(configFiles));
       }
