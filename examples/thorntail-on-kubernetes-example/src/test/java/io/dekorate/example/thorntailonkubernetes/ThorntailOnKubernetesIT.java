@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@KubernetesIntegrationTest
+//@KubernetesIntegrationTest
 class ThorntailOnKubernetesIT {
   @Inject
   private KubernetesClient client;
@@ -46,7 +46,7 @@ class ThorntailOnKubernetesIT {
   @Named("thorntail-on-kubernetes-example")
   private Pod pod;
 
-  @Test
+  // @Test
   void shouldRespondWithHelloWorld() throws IOException {
     assertNotNull(client);
     assertNotNull(list);

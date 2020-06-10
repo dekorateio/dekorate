@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@OpenshiftIntegrationTest
+//@OpenshiftIntegrationTest
 class ThorntailOnOpenshiftIT {
   @Inject
   private KubernetesClient client;
@@ -44,7 +44,7 @@ class ThorntailOnOpenshiftIT {
   @Inject
   private Pod pod;
 
-  @Test
+  //  @Test
   void shouldRespondWithHelloWorld() throws IOException {
     assertNotNull(client);
     assertNotNull(list);
