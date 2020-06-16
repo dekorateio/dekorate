@@ -31,7 +31,6 @@ public class DefaultS2iBuildGenerator implements S2iBuildGenerator, WithProject 
     public Logger LOGGER = LoggerFactory.getLogger();
   
     public DefaultS2iBuildGenerator () {
-        LOGGER.info("Default s2i build generator....");
         on(new DefaultConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()
                                                     .accept(new ApplyProjectInfo(getProject()))
                                                     .accept(new ApplyBuildToImageConfiguration())));
