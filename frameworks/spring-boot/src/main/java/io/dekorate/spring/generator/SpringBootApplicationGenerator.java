@@ -61,9 +61,15 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
     session.configurators().add(new SetSpringBootVersion());
 
     session.handlers().add(new Handler() {
+
        @Override
        public int order() {
          return 410;
+       }
+
+       @Override
+       public String getKey() {
+         return "spring";
        }
 
        @Override
@@ -90,6 +96,11 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
            public int order() {
             return 310; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
            }
+
+          @Override
+          public String getKey() {
+            return "spring";
+          }
 
           @Override
           public void handle(Configuration config) {

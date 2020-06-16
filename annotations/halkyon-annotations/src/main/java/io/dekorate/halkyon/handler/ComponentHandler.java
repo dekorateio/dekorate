@@ -87,6 +87,11 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   }
 
   @Override
+  public String getKey() {
+    return ResourceGroup.NAME;
+  }
+
+  @Override
   public void handle(ComponentConfig config) {
     LOGGER.info("Processing component config.");
     if (!Strings.isNullOrEmpty(config.getName())) {

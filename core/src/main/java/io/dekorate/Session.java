@@ -18,6 +18,7 @@ package io.dekorate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +28,8 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import io.dekorate.config.ConfigurationSupplier;
 import io.fabric8.kubernetes.api.model.KubernetesList;
@@ -50,6 +53,9 @@ public class Session {
 
   private final AtomicBoolean closed = new AtomicBoolean();
   private final AtomicBoolean generated = new AtomicBoolean();
+
+  private Set<String> enabledGroups = new HashSet<>();
+  private Set<String> disabledGroups = new HashSet<>();
 
   private final Set<Handler> handlers = new TreeSet<>(Comparator.comparing(Handler::order));
 
@@ -118,6 +124,18 @@ public class Session {
     }
   }
 
+  public void enable(String... groups) {
+    for (String group : groups) {
+      this.enabledGroups.add(group);
+    }
+  }
+
+  public void disalbe(String... groups) {
+    for (String group : groups) {
+      this.disabledGroups.add(group);
+    }
+  }
+
   public void addAnnotationConfiguration(Map<String, Object> map) {
     addConfiguration(map, (g,m) -> g.addAnnotationConfiguration(m) );
   }
@@ -159,6 +177,9 @@ public class Session {
     return result;
   }
 
+  public void disable(String group) {
+    generators.remove(group);
+  }
 
   //should be used only for testing
   public static void clearSession() {
@@ -225,6 +246,12 @@ public class Session {
    * @return A map of {@link KubernetesList} by group name.
    */
   private Map<String, KubernetesList> generate() {
+    Set<Handler> handlersToRemove = handlers.stream().filter(h -> disabledGroups.contains(h.getKey()) || (!enabledGroups.isEmpty() && !enabledGroups.contains(h.getKey()))).collect(Collectors.toSet());
+    this.handlers.removeAll(handlersToRemove);
+
+    Set<String> generatorsToRemove = generators.keySet().stream().filter(g -> disabledGroups.contains(g) || (!enabledGroups.isEmpty() && !enabledGroups.contains(g))).collect(Collectors.toSet());
+    generatorsToRemove.forEach(g -> generators.remove(g));
+                                           
     if (generated.compareAndSet(false, true)) {
       LOGGER.info("Generating manifests.");
       closed.set(true);

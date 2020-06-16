@@ -28,6 +28,15 @@ public interface Handler<C extends Configuration> {
   int order();
 
   /**
+   * Get the string key associated with the handler.
+   * This key is used to correlate configuration properties, with the handler.
+   * So a handler with key X will be associated configuration property prefix dekorate.X.  
+   * Example: The `KubernetesHandler` is using the key `kubernetes`.
+   * The string key.
+   */
+  String getKey();
+ 
+  /**
    * Generate / populate the resources.
    * @param config The config to handle.
    */

@@ -55,6 +55,11 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
     return 1301;
   }
 
+  @Override
+  public String getKey() {
+    return OPENSHIFT;
+  }
+
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(S2iBuildConfig.class) ||
       type.equals(EditableS2iBuildConfig.class);

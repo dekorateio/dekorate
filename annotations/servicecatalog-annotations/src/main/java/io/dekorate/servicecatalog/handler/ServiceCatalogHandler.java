@@ -48,6 +48,11 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
   }
 
   @Override
+  public String getKey() {
+    return "svcat";
+  }
+
+  @Override
   public void handle(ServiceCatalogConfig config) {
     Arrays.stream(config.getInstances()).forEach(i -> { 
         resources.decorate(new AddServiceInstanceResourceDecorator(i));
