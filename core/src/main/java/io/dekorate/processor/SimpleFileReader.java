@@ -48,7 +48,7 @@ public class SimpleFileReader implements SessionReader {
 
   @Override
   public void read(Session session) {
-    LOGGER.info("Checking for existing resources in: " + path.toAbsolutePath().toString() + ".");
+    LOGGER.info("Checking for existing resources in: " + path.toAbsolutePath().normalize().toString() + ".");
     findApplicableResources().forEach((k, v) -> {
         v.getItems().forEach(i -> {
             LOGGER.info("Adding existing " + i.getKind() + " with name: " + i.getMetadata().getName() + ".");
@@ -77,7 +77,7 @@ public class SimpleFileReader implements SessionReader {
     try (InputStream is = new FileInputStream(pathToYml(target).toFile())) {
       return Serialization.unmarshalAsList(is);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read kubernetes resources from: " + path.toAbsolutePath().toString(), e);
+      throw new RuntimeException("Failed to read kubernetes resources from: " + path.toAbsolutePath().normalize().toString(), e);
     }
   }
 
@@ -85,7 +85,7 @@ public class SimpleFileReader implements SessionReader {
     try (InputStream is = new FileInputStream(pathToJson(target).toFile())) {
       return Serialization.unmarshalAsList(is);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read kubernetes resources from: " + path.toAbsolutePath().toString(), e);
+      throw new RuntimeException("Failed to read kubernetes resources from: " + path.toAbsolutePath().normalize().toString(), e);
     }
   }
 
