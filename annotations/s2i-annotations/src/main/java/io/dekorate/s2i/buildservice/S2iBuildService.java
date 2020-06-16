@@ -82,9 +82,9 @@ public class S2iBuildService implements BuildService {
   public void build() {
     if (project.getBuildInfo().getOutputFile().getParent().toFile().exists()) {
       LOGGER.info("Performing s2i build.");
-      exec.commands("oc", "start-build", buildConfigName(resources), "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().toString(), "--follow");
+      exec.commands("oc", "start-build", buildConfigName(resources), "--from-dir=" + project.getBuildInfo().getOutputFile().getParent().toAbsolutePath().normalize().toString(), "--follow");
     } else {
-     throw new IllegalStateException("Can't trigger binary build. " + project.getBuildInfo().getOutputFile().toAbsolutePath().toString() + " does not exist!");
+     throw new IllegalStateException("Can't trigger binary build. " + project.getBuildInfo().getOutputFile().toAbsolutePath().normalize().toString() + " does not exist!");
     }
   }
 

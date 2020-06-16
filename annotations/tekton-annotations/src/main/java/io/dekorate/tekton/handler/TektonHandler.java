@@ -277,7 +277,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         if (!dockerConfigJson.toFile().exists()) {
           throw new IllegalStateException("User requested to use the local `.docker/config.json` file, but it doesn't exist!");
         } else {
-          LOGGER.warning(dockerConfigJson.toAbsolutePath().toString() + " is going to be added as part of Secret: "+ generatedSecret);
+          LOGGER.warning(dockerConfigJson.toAbsolutePath().normalize().toString() + " is going to be added as part of Secret: "+ generatedSecret);
         }
         resources.decorate(group, new AddToArgsDecorator(javaBuildTaskName, javaBuildStepName, IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
         resources.decorate(group, new AddDockerConfigJsonSecretDecorator(generatedSecret, dockerConfigJson, annotations));
