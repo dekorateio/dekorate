@@ -20,7 +20,12 @@ public class ComponentBaseConfigHandler implements Handler<BaseConfig>, HandlerF
   public int order() {
     return 200;
   }
-  
+
+  @Override
+  public String getKey() {
+    return ResourceGroup.NAME;
+  } 
+
   @Override
   public Handler create(Resources resources, Configurators configurators) {
     return new ComponentBaseConfigHandler();

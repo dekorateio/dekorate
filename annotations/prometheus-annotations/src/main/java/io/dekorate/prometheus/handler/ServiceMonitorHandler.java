@@ -37,6 +37,11 @@ public class ServiceMonitorHandler implements Handler<ServiceMonitorConfig> {
   }
 
   @Override
+  public String getKey() {
+    return "servicemonitor";
+  }
+
+  @Override
   public void handle(ServiceMonitorConfig config) {
     resources.decorate(new AddServiceMonitorResourceDecorator(config));
   }

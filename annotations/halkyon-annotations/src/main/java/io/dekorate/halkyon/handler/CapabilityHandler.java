@@ -59,6 +59,11 @@ public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConf
   }
   
   @Override
+  public String getKey() {
+    return ResourceGroup.NAME;
+  }
+  
+  @Override
   public void handle(CapabilityConfig config) {
     LOGGER.info("Processing capability config.");
     if (!Strings.isNullOrEmpty(config.getCategory()) && !Strings.isNullOrEmpty(config.getType())) {
