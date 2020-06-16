@@ -15,5 +15,6 @@
   <modules>
     <module>spring-boot</module>
     <module>thorntail</module>
+    <module>nodejs</module>
   </modules>
 </project>
