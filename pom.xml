@@ -55,7 +55,7 @@
     <!-- Dependencies -->
     <version.application-crd-client>1.1.1</version.application-crd-client>
     <version.commons-codec>1.10</version.commons-codec>
-    <version.commons-compress>1.18</version.commons-compress>
+    <version.commons-compress>1.19</version.commons-compress>
     <version.jansi>1.18</version.jansi>
     <version.jackson>2.10.3</version.jackson>
     <version.kubernetes-client>4.9.1</version.kubernetes-client>
