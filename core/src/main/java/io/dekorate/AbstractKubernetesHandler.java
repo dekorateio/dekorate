@@ -50,11 +50,9 @@ import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
-import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
 
-import java.util.Arrays;
 
 /**
  * An abstract generator.

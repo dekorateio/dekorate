@@ -70,6 +70,11 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
     return 400;
   }
 
+ @Override
+  public String getKey() {
+    return KNATIVE;
+  }
+
   public void handle(KnativeConfig config) {
     Optional<Service> existingService = resources.groups().getOrDefault(KNATIVE, new KubernetesListBuilder()).buildItems().stream()
       .filter(i -> i instanceof Service)

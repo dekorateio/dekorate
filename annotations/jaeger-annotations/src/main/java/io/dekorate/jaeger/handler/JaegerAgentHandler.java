@@ -46,6 +46,11 @@ public class JaegerAgentHandler implements Handler<JaegerAgentConfig> {
   }
 
   @Override
+  public String getKey() {
+    return "jaeger";
+  }
+
+  @Override
   public void handle(JaegerAgentConfig config) {
     if (config.isOperatorEnabled()) {
       resources.decorate(new AddAnnotationDecorator(new AnnotationBuilder()
@@ -97,4 +102,5 @@ public class JaegerAgentHandler implements Handler<JaegerAgentConfig> {
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(JaegerAgentConfig.class) || type.equals(EditableJaegerAgentConfig.class);
   }
+
 }

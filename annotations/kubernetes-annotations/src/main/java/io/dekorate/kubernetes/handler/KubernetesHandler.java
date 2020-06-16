@@ -49,7 +49,6 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
-import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLabelSelectorDecorator;
@@ -84,6 +83,11 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   @Override
   public Handler create(Resources resources, Configurators configurators) {
     return new KubernetesHandler(resources, configurators);
+  }
+
+  @Override
+  public String getKey() {
+    return KUBERNETES;
   }
 
   @Override
@@ -247,4 +251,5 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
       .build();
   }
+
 }

@@ -18,22 +18,10 @@ package io.dekorate.application.handler;
 import io.dekorate.Handler;
 import io.dekorate.Resources;
 import io.dekorate.application.config.ApplicationConfig;
-import io.dekorate.application.config.Contact;
 import io.dekorate.application.config.EditableApplicationConfig;
-import io.dekorate.application.config.Icon;
 import io.dekorate.application.decorator.AddApplicationResourceDecorator;
 import io.dekorate.application.decorator.GroupKindsDecorator;
-import me.snowdrop.applicationcrd.api.model.ApplicationBuilder;
-import me.snowdrop.applicationcrd.api.model.ContactData;
-import me.snowdrop.applicationcrd.api.model.ContactDataBuilder;
-import me.snowdrop.applicationcrd.api.model.ImageSpec;
-import me.snowdrop.applicationcrd.api.model.ImageSpecBuilder;
-import me.snowdrop.applicationcrd.api.model.Link;
-import me.snowdrop.applicationcrd.api.model.LinkBuilder;
 import io.dekorate.kubernetes.config.Configuration;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class ApplicationHandler implements Handler<ApplicationConfig> {
 
@@ -46,6 +34,11 @@ public class ApplicationHandler implements Handler<ApplicationConfig> {
   @Override
   public int order() {
     return 10000; //It is esential that this will run last.
+  }
+
+  @Override
+  public String getKey() {
+    return "application";
   }
 
   @Override

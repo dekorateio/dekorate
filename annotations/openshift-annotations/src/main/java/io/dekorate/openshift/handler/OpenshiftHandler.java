@@ -99,6 +99,11 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     return 300;
   }
 
+  @Override
+  public String getKey() {
+    return OPENSHIFT;
+  }
+
   public void handle(OpenshiftConfig config) {
     LOGGER.info("Processing openshift configuration.");
     ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);

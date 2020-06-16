@@ -145,6 +145,8 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String PATH_TO_DOCKERFILE_DESCRIPTION = "Path to Dockerfile";
   private static final String PATH_TO_DOCKERFILE_DEFAULT = "Dockerfile";
 
+  private static final String TEKTON = "tekton";
+
   private static final String BUILDER_IMAGE_PARAM_NAME = "builderImage";
   private static final String BUILDER_IMAGE_DESCRIPTION = "The image to use for performing image build";
   private static final String BUILDER_IMAGE_DEFAULT = "gcr.io/kaniko-project/executor:v0.18.0";
@@ -171,6 +173,11 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   @Override
   public int order() {
     return 500;
+  }
+
+  @Override
+  public String getKey() {
+    return TEKTON;
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
