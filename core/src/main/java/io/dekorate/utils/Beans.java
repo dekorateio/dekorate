@@ -25,12 +25,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import io.dekorate.DekorateException;
 
@@ -167,8 +166,9 @@ public class Beans {
     try {
       Class originClass = origin.getClass().getComponentType();
       List result = new ArrayList<>();
-      List originList = Arrays.asList((Object[])origin);
-      List overrideList = Arrays.asList((Object[])override);
+      //We wrap the Arrays.asList() in an ArrayList so that we can mutate it.
+      List originList = new ArrayList(Arrays.asList((Object[])origin));
+      List overrideList = new ArrayList(Arrays.asList((Object[])override));
       for (Object o : (Object[]) origin) {
         Object matching = findMatching(o, overrideList);
         if (matching != null) {
@@ -252,19 +252,23 @@ public class Beans {
   }
 
   private static <C> boolean matches(C obj, C other) {
-    return (obj != null && obj.equals(other)) && fieldEquals("id", obj, other) || fieldEquals("name", obj, other);
+    return (obj != null && obj.equals(other))
+      || fieldEquals("id", obj, other)
+      || fieldEquals("name", obj, other);
   }
 
   private static <C> boolean fieldEquals(String name, C obj, C other) {
     Class type = obj.getClass();
     try {
-      Field f = type.getDeclaredField(name);
+      Optional<Field> field = getAllFields(type).stream().filter(i -> i.getName().equals(name)).findFirst();
+      if (!field.isPresent()) {
+        return false;
+      }
+      Field f = field.get();
       f.setAccessible(true);
       Object objField = f.get(obj);
       Object otherFiled = f.get(other);
       return objField != null && objField.equals(otherFiled);
-    } catch (NoSuchFieldException e) {
-      return false;
     } catch (SecurityException e) {
       return false;
     } catch (IllegalArgumentException e) {
