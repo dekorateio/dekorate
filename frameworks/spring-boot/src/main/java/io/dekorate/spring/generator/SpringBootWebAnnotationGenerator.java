@@ -23,8 +23,9 @@ import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
-import io.dekorate.kubernetes.configurator.AddPort;
+import io.dekorate.kubernetes.configurator.ApplyContainerPort;
 import io.dekorate.spring.SpringPropertiesHolder;
+import io.dekorate.utils.Ports;
 
 public interface SpringBootWebAnnotationGenerator extends Generator, WithSession, SpringPropertiesHolder {
 
@@ -34,7 +35,7 @@ public interface SpringBootWebAnnotationGenerator extends Generator, WithSession
   default void add(Map map) {
     Session session = getSession();
     Port port = detectHttpPort();
-    session.configurators().add(new AddPort(port));
+    session.configurators().add(new ApplyContainerPort(port.getContainerPort(), Ports.HTTP_PORT_NAMES));
     //TODO add support for detecting actuator and setting the liveness/readiness probes path from the configured path
   }
 

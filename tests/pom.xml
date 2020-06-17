@@ -51,6 +51,7 @@
       <module>issue-507-spring-boot-server-port</module>
       <module>issue-507-unamed-port</module>
       <module>issue-517-exclude-optional</module>
+      <module>issue-545-spring-boot-web-with-port-path</module>
     </modules>
 
 </project>
