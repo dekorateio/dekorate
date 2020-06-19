@@ -11,9 +11,9 @@
   </parent>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>issue-545-spring-boot-web-with-port-path</artifactId>
-  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Spring Boot web application with custom path #545</name>
-  <description>Spring Boot application with custom path</description>
+  <artifactId>feat-547-spring-boot-request-mapping</artifactId>
+  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Spring Boot with RequestMapping #547</name>
+  <description>Spring Boot application with path from Request Mapping</description>
 
   <dependencies>
     <dependency>

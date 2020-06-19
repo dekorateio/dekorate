@@ -22,34 +22,51 @@ import java.util.List;
 
 import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
+import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.builder.Predicate;
 
-public class ApplyContainerPort extends Configurator<BaseConfigFluent<?>> {
+public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
 
   private static final String FALLBACK_PORT_NAME = "http";
+  private static final String DEFAULT_PATH = "/";
 
-  private final int containerPort;
+  private final Port port;
   private final List<String> names;
 
-  public ApplyContainerPort(int containerPort, List<String> names) {
-    this.containerPort=containerPort;
-    this.names=names;
+  public ApplyPort(Port port, List<String> names) {
+    this.port = port;
+    this.names = names;
   }
-  public ApplyContainerPort(int containerPort, String... names) {
-    this(containerPort, Arrays.asList(names));
+  public ApplyPort(Port port, String... names) {
+    this(port, Arrays.asList(names));
   }
 
   @Override
   public void visit(BaseConfigFluent<?> config) {
     Predicate<PortBuilder> predicate = p -> names.contains(p.getName());
     if (config.hasMatchingPort(predicate)) {
-      config.editMatchingPort(predicate).withContainerPort(containerPort).endPort();
+      if (Strings.isNotNullOrEmpty(port.getPath()) && !DEFAULT_PATH.equals(port.getPath())) {
+        config.editMatchingPort(predicate)
+          .withPath(port.getPath())
+          .endPort();
+      }
+      if (port.getContainerPort() != 0) {
+        config.editMatchingPort(predicate)
+          .withContainerPort(port.getContainerPort())
+          .endPort();
+      }
+      if (port.getHostPort() != 0) {
+        config.editMatchingPort(predicate)
+          .withHostPort(port.getHostPort())
+          .endPort();
+      }
     } else {
       String name = names.size() > 0 ? names.get(0) : FALLBACK_PORT_NAME;
-      config.addNewPort()
+      config.addNewPortLike(port)
         .withName(name)
-        .withContainerPort(containerPort)
+        .withContainerPort(port.getContainerPort())
         .endPort();
     }
   }

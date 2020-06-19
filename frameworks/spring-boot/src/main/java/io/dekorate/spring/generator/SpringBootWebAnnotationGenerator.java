@@ -20,15 +20,16 @@ import java.util.Map;
 
 import io.dekorate.Generator;
 import io.dekorate.Session;
-import io.dekorate.WithSession;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
-import io.dekorate.kubernetes.configurator.ApplyContainerPort;
+import io.dekorate.kubernetes.configurator.ApplyPort;
 import io.dekorate.spring.SpringPropertiesHolder;
 import io.dekorate.utils.Ports;
 
-public interface SpringBootWebAnnotationGenerator extends Generator, WithSession, SpringPropertiesHolder {
-
+public interface SpringBootWebAnnotationGenerator extends Generator, SpringPropertiesHolder {
+ 
+  String DEKORATE_SPRING_WEB_PATH = "dekorate.spring.web.path";
+    
   Map WEB_ANNOTATIONS = Collections.emptyMap();
 
   @Override
@@ -43,13 +44,16 @@ public interface SpringBootWebAnnotationGenerator extends Generator, WithSession
 
   default void addConfiguration(Map map) {
     Session session = getSession();
-    Port port = detectHttpPort();
-    session.configurators().add(new ApplyContainerPort(port.getContainerPort(), Ports.HTTP_PORT_NAMES));
-    //TODO add support for detecting actuator and setting the liveness/readiness probes path from the configured path
+    Port port = detectHttpPort(map);
+    session.configurators().add(new ApplyPort(port, Ports.HTTP_PORT_NAMES));
   }
 
-  default Port detectHttpPort() {
-    return new PortBuilder().withContainerPort(extractPortFromProperties()).withName("http").build();
+  default Port detectHttpPort(Map map) {
+    return new PortBuilder()
+      .withName("http")
+      .withContainerPort(extractPortFromProperties())
+      .withPath(String.valueOf(map.getOrDefault(DEKORATE_SPRING_WEB_PATH, Ports.DEFAULT_HTTP_PORT_PATH)))
+      .build();
   }
 
   default Integer extractPortFromProperties() {
