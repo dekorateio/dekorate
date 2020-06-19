@@ -1633,6 +1633,26 @@ The bom can be imported like:
 
 In case, that dekorate bom is imported by a downstream project (e.g. snowdrop) and its required to override the bom version, all you need to do is to import the dekorate bom with the version of your choice first.
 
+## Versions and Branches
+
+At the moment dekorate is using 3 branches in parallel and two major versions are developed at the same time.
+
+Branches:
+
+- master (active development)
+- 1.0.x  (important bug fixes)
+- 0.12.x (new features + bug fixes)
+
+From those branches we release:
+
+- 1.0.x  (stable)
+- 0.12.x (volatile)
+
+The idea is that 1.0.x is the stable branch that doesn't change that often, while 0.12.x is the volatile one that changes more often.
+
+### Which version should you use?
+
+Depends on what your goal is. If you need all the latest features use the volatile branch. If you need something that more slower paced that is in bug fixing mode, then use the stable branch.
 
 ## Want to get involved?
 
