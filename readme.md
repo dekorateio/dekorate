@@ -841,6 +841,48 @@ Or if you are on [OpenShift](https://openshift.com):
   <version>0.12.0</version>
 </dependency>
 ```
+
+#### Automatic configuration
+
+For Spring Boot application, dekorate will automatically detect known annotation and will align generated manifests accordingly.
+
+##### Web annotations
+
+Dekorate tunes the generated manifest based on the presence of web annotations in the project:
+
+- Automatic service expose
+- Application path detection
+
+When known web annotations are available in the project, dekorate will automatically detect and expose the http port as a Service.
+That service will also be expose as an `Ingress` or `Route` (in case of Openshift) if the `expose` option is set to true.
+
+###### Kubernetes 
+```java
+@KubernetesApplication(expose=true)
+```
+
+An alternative way of configuration is via `application properties`:
+
+```
+dekorate.kubernetes.expose=true
+```
+
+###### Openshift 
+```java
+@OpenshiftApplication(expose=true)
+```
+
+An alternative way of configuration is via `application properties`:
+
+```
+dekorate.kubernetes.expose=true
+```
+
+###### RequestMapping
+
+When one `RequestMapping` annotation is added on a `Controller` or multiple `RequestMapping` that share a common path are added on multiple `Controller` classes,
+dekorate will detect the shortest common path and configure it so that its available on the expose `Ingress` or `Route`.
+
 #### Annotation less configuration
 
 It is possible to completely bypass annotations by utilizing already-existing, framework-specific metadata. This mode is 
