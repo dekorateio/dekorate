@@ -10,7 +10,7 @@ The fast way to get started is to add the following dependency to your spring-bo
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-spring-starter</artifactId>
-      <version>0.6.1</version>
+      <version>1.0.1</version>
     </dependency>
     
 This should be enough to get `dekorate` to generate kubernets manifests under `target/classes/META-INF/dekorate/`.
@@ -29,7 +29,7 @@ This assume that an image for your application is already availalbe if not check
 
 The generated manifests, will try to adapt to your application. If for instance your application contains:
 
-- A rest controller
+- A REST controller
 - A router function
 
 The generated manifests will be `dekorated` by exposing the http service.
@@ -60,7 +60,7 @@ You will need to add dependency below as a supplement or replacement of `kuberne
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>openshift-spring-starter</artifactId>
-      <version>0.6.1</version>
+      <version>1.0.1</version>
     </dependency>
  
 When `-Ddekoreate.deploy=true` is detected and `openshift-spring-starter` is available, an binary build will take place.
@@ -73,5 +73,4 @@ To rebuild the image, without reapllying the manifests, you can simply use:
     mvn clean package -Ddekorate.build=true
 
 Note: Both of these options `-Ddekorate.build=true` and `-Ddekorate.deploy=true` will use the corresponding binaries `docker`, `oc` and `kubectl` using a java shutdown hook.
-
 
