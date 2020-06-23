@@ -942,7 +942,7 @@ The extension can be added to any [quarkus](https://quarkus.io) project:
 
     mvn quarkus:add-extension -Dextensions="io.quarkus:quarkus-kubernetes"
     
-After the project compilation the generated manifests will be available under: `target/wiring-classes/META-INF/kubernetes/`.
+After the project compilation the generated manifests will be available under: `target/kubernetes/`.
 
 At the moment this extension will handle ports, health checks etc, with zero configuration from the user side.
 
