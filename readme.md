@@ -1,5 +1,5 @@
 
-![dekorate logo](assets/img/logo.png "Dekorate") 
+![dekorate logo](assets/images/logo.png "Dekorate") 
 
 [![CircleCI](https://circleci.com/gh/dekorateio/dekorate.svg?style=svg)](https://circleci.com/gh/dekorateio/dekorate) [![Maven Central](https://img.shields.io/maven-central/v/io.dekorate/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.dekorate%22%20AND%20a:%22kubernetes-annotations%22)
 
@@ -103,7 +103,7 @@ That's all! Next time you perform a build, using something like:
     
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
-![asciicast](assets/img/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast") 
+![asciicast](assets/images/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast") 
 
 #### related examples
  - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
@@ -128,7 +128,7 @@ That's all! Next time you perform a build, using something like:
 The generated manifests can be found under `target/kubernetes`.
 Note: [Quarkus](https://quarkus.io) is using its own `dekorate` based Kubernetes extension (see more at  [Quarkus](#quarkus)).
 
-![asciicast](assets/img/dekorate-quarkus-hello-world.gif "Dekorate Quarkus Hello World Asciicast") 
+![asciicast](assets/images/dekorate-quarkus-hello-world.gif "Dekorate Quarkus Hello World Asciicast") 
 
 ### Hello Thorntail
 
@@ -149,7 +149,7 @@ That's all! Next time you perform a build, using something like:
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
 
-![asciicast](assets/img/dekorate-thorntail-hello-world.gif "Dekorate Thorntail Hello World Asciicast") 
+![asciicast](assets/images/dekorate-thorntail-hello-world.gif "Dekorate Thorntail Hello World Asciicast") 
 
 #### related examples
  - [thorntail on kubernetes example](examples/thorntail-on-kubernetes-example)
@@ -187,7 +187,7 @@ Next time you perform a build, using something like:
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
 
-![asciicast](assets/img/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast") 
+![asciicast](assets/images/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast") 
 
 #### related examples
  - [vertx on kubernetes example](examples/vertx-on-kubernetes-example)

@@ -39,7 +39,7 @@ The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
 ## Screencast
 
-![asciicast](assets/img/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast") 
+![asciicast](/assets/img/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast") 
 
 ## Configuration styles
 
@@ -68,4 +68,4 @@ The same can be achieved using plain old configuration (e.g.`application.propert
 dekorate.kubernetes.replicas=2
 ```
 
-**A complete reference on all the supported properties can be found in the [configuration options guide](assets/config.md).
+**A complete reference on all the supported properties can be found in the [configuration options guide](/assets/config.md).
