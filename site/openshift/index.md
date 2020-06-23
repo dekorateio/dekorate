@@ -64,4 +64,4 @@ The same can be achieved using plain old configuration (e.g.`application.propert
 dekorate.openshift.replicas=2
 ```
 
-**A complete reference on all the supported properties can be found in the [configuration options guide](assets/config.md).
+**A complete reference on all the supported properties can be found in the [configuration options guide](/assets/config.md).
