@@ -14,9 +14,18 @@ if [ -z $release_version ]; then
   exit 1
 fi
 
-# Update the docs with the releae version
-./scripts/ChangeVersion.java readme.md io.dekorate $release_version > readme.md.versionChanged
-mv readme.md.versionChanged readme.md
-git add readme.md
+function set_version() {
+  local file=$1
+  ./scripts/ChangeVersion.java ${file} io.dekorate $release_version > ${file}.versionChanged
+  mv ${file}.versionChanged ${file} 
+  git add ${file}
+}
+
+# Update the docs with the release version
+set_version readme.md io.dekorate $release_version
+set_version site/getting-started/index.md io.dekorate $release_version
+set_version site/kubernetes/index.md io.dekorate $release_version
+set_version site/openshift/index.md io.dekorate $release_version
+
 git commit -m "doc: Update dekorate version in docs to $release_version"
 maven::release $*
