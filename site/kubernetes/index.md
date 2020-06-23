@@ -39,7 +39,7 @@ The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
 ## Screencast
 
-![asciicast](/assets/img/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast") 
+![asciicast](/assets/images/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast") 
 
 ## Configuration styles
 
