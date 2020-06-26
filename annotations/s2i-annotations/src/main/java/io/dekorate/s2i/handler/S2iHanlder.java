@@ -17,7 +17,7 @@
 
 package io.dekorate.s2i.handler;
 
-import io.dekorate.AbstractKubernetesHandler;
+import io.dekorate.BuildServiceFactories;
 import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
@@ -31,23 +31,28 @@ import io.dekorate.deps.openshift.api.model.ImageStream;
 import io.dekorate.deps.openshift.api.model.ImageStreamBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Env;
+import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.s2i.annotation.S2iBuild;
 import io.dekorate.s2i.config.EditableS2iBuildConfig;
 import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.s2i.decorator.AddBuildEnvDecorator;
 import io.dekorate.s2i.decorator.AddBuildConfigResourceDecorator;
 import io.dekorate.s2i.decorator.AddOutputImageStreamResourceDecorator;
+import io.dekorate.s2i.decorator.AddDockerImageStreamResourceDecorator;
 import io.dekorate.s2i.decorator.AddBuilderImageStreamResourceDecorator;
 import io.dekorate.utils.Images;
+import io.dekorate.utils.Strings;
 
 public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, WithProject {
 
   private static final String OPENSHIFT = "openshift";
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final Resources resources;
+  private final Configurators configurators;
 
-  public S2iHanlder(Resources resources) {
+  public S2iHanlder(Resources resources, Configurators configurators) {
     this.resources = resources;
+    this.configurators = configurators;
   }
 
   @Override
@@ -62,7 +67,7 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
 
   @Override
   public Handler create(Resources resources, Configurators configurators) {
-    return new S2iHanlder(resources);
+    return new S2iHanlder(resources, configurators);
   }
 
   public void handle(S2iBuildConfig config) {
@@ -72,9 +77,19 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
       resources.decorate(OPENSHIFT, new AddBuilderImageStreamResourceDecorator(config));
       resources.decorate(OPENSHIFT, new AddOutputImageStreamResourceDecorator(config));
       resources.decorate(OPENSHIFT, new AddBuildConfigResourceDecorator(config));
-
       for (Env env : config.getBuildEnvVars()) {
         resources.decorate(new AddBuildEnvDecorator(env));
+      }
+    } else {
+      //If S2i is disabled, check if other build configs are available and check it makes sense to create an ImageStream
+      ImageConfiguration imageConfig = configurators
+        .getImageConfig(BuildServiceFactories.supplierMatches(getProject())
+                        .and(i -> Strings.isNotNullOrEmpty(i.get().getRegistry()))).orElse(null);
+
+      if (imageConfig != null) {
+        String image = Images.getImage(imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
+        String repository = imageConfig.getRegistry() + "/" + Images.getRepository(image);
+        resources.decorate(OPENSHIFT, new AddDockerImageStreamResourceDecorator(imageConfig, repository));
       }
     }
   }

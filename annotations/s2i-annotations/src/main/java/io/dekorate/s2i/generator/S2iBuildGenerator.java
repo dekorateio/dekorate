@@ -74,6 +74,6 @@ public interface S2iBuildGenerator extends Generator, WithSession, WithProject {
 
     Session session = getSession();
     session.configurators().add(config);
-    session.handlers().add(new S2iHanlder(session.resources()));
+    session.handlers().add(new S2iHanlder(session.resources(), session.configurators()));
   }
 }

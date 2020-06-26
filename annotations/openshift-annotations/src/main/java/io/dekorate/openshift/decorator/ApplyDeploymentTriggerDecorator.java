@@ -18,6 +18,7 @@ package io.dekorate.openshift.decorator;
 import io.dekorate.deps.kubernetes.api.builder.Predicate;
 import io.dekorate.deps.openshift.api.model.DeploymentConfigSpecFluent;
 import io.dekorate.deps.openshift.api.model.DeploymentTriggerPolicyBuilder;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.kubernetes.decorator.AddAwsElasticBlockStoreVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureDiskVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
@@ -35,8 +36,9 @@ import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.kubernetes.decorator.ApplyWorkingDirDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 
-public class ApplyDeploymentTriggerDecorator extends Decorator<DeploymentConfigSpecFluent<?>> {
+public class ApplyDeploymentTriggerDecorator extends NamedResourceDecorator<DeploymentConfigSpecFluent<?>> {
 
   private static final String IMAGESTREAMTAG = "ImageStreamTag";
   private static final String IMAGECHANGE = "ImageChange";
@@ -52,7 +54,7 @@ public class ApplyDeploymentTriggerDecorator extends Decorator<DeploymentConfigS
   }
 
   @Override
-  public void visit(DeploymentConfigSpecFluent<?> deploymentConfigSpec) {
+  public void andThenVisit(DeploymentConfigSpecFluent<?> deploymentConfigSpec, ObjectMeta resourceMeta) {
     DeploymentConfigSpecFluent.TriggersNested<?> target;
 
     if (deploymentConfigSpec.buildMatchingTrigger(predicate) != null)  {

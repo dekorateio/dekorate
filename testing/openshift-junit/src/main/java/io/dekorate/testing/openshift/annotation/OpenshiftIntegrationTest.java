@@ -54,6 +54,12 @@ public @interface OpenshiftIntegrationTest {
   boolean buildEnabled() default true;
 
   /**
+   * Flag to define whether the extension should automatically push image.
+   * @return True, if extension should automatically push the image.
+   */
+  boolean pushEnabled() default false;
+
+  /**
    * The amount of time in seconds to wait for the image stream tags to be available.
    * @return The max amount in milliseconds.
    */

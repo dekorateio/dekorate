@@ -109,8 +109,11 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     } catch (Exception e) {
       throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
     }
-
-    if (config.isBuildEnabled()) {
+    if (config.isPushEnabled()) {
+      buildService.prepare();
+      buildService.build();
+      buildService.push();
+    } else if (config.isBuildEnabled()) {
       buildService.prepare();
       buildService.build();
     }
@@ -118,11 +121,15 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     if (config.isDeployEnabled()) {
       //Create the remaining resources.
       list.getItems().stream()
-        .filter(i -> !(i instanceof BuildConfig || i instanceof ImageStream))
+        .filter(i -> !(i instanceof BuildConfig))
         .forEach(i -> {
             try {
               HasMetadata r = client.resource(i).fromServer().get();
-              if (r == null || deleteAndWait(context, i, 1, TimeUnit.MINUTES)) {
+              if (r == null) {
+                client.resource(i).apply();
+              } else if (r instanceof ImageStream) {
+                //let's not delete image streams at this point
+              } else if (deleteAndWait(context, i, 1, TimeUnit.MINUTES)) {
                 client.resource(i).apply();
               }
             } catch (Exception e) {
