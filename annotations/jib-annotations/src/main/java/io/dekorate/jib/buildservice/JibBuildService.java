@@ -50,20 +50,16 @@ public class JibBuildService implements BuildService {
   private final String GRADLE_INIT = "--";
 
   private final Project project;
-  private final JibBuildConfig config;
+  private final ImageConfiguration config;
   private final String image;
   private final Exec.ProjectExec exec;
 
 	public JibBuildService(Project project, ImageConfiguration config) {
-    if (!(config instanceof JibBuildConfig)) {
-      throw new IllegalArgumentException("JibBuildService expects an instance of JibBuildConfig.");
-    }
 		this.project = project;
     this.exec = Exec.inProject(project);
     this.image = Images.getImage(Strings.isNullOrEmpty(config.getRegistry()) ? "docker.io" : config.getRegistry() , config.getGroup(), config.getName(), config.getVersion());
-		this.config = (JibBuildConfig) config;
+		this.config = config;
 	}
-
 
 	@Override
 	public void build() {
@@ -75,16 +71,19 @@ public class JibBuildService implements BuildService {
 
 	@Override
 	public void push() {
+    if (isDockerBuildEnabled(config)) {
+      exec.commands("docker", "push",  image);
+    }
 	}
 
   private void mavenBuild() {
-    exec.commands("mvn", "compile", String.format(MAVEN_GOAL, JIB_VERSION, config.isDockerBuild() ? DOCKER_BUILD : BUILD), "-Djib.to.image=" + image);
+    exec.commands("mvn", "compile", String.format(MAVEN_GOAL, JIB_VERSION, isDockerBuildEnabled(config) ? DOCKER_BUILD : BUILD), "-Djib.to.image=" + image);
   }
 
   private void gradleBuild() {
     Path outputPath = null;
     String content = null;
-    URL url = getClass().getClassLoader().getResource("init.gralde");
+    URL url = getClass().getClassLoader().getResource("init.gradle");
     try (InputStream is = url.openStream()) {
       content = Strings.read(is);
     } catch (IOException e) {
@@ -97,6 +96,15 @@ public class JibBuildService implements BuildService {
     } catch (IOException e) {
       throw DekorateException.launderThrowable("Error writing init.gradle to tmp.", e);
     }
-    exec.commands("gralde", config.isDockerBuild() ? JIB_DOCKER_BUILD : JIB, "--init-script", outputPath.toAbsolutePath().toString());
+    exec.commands("gradle", isDockerBuildEnabled(config) ? JIB_DOCKER_BUILD : JIB, "--init-script", outputPath.toAbsolutePath().toString());
+  }
+
+  private static boolean isDockerBuildEnabled(ImageConfiguration config) {
+    if (!(config instanceof JibBuildConfig)) {
+      //DockerBuild is the default behavior, so if generic config is passed, then do use docker build.
+      return true;
+    }
+    JibBuildConfig jibConfig = (JibBuildConfig) config;
+    return jibConfig.isDockerBuild();
   }
 }
