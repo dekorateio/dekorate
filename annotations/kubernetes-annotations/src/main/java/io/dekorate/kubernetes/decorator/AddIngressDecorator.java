@@ -20,6 +20,7 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.Port;
+import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +28,7 @@ import java.util.Optional;
 import static io.dekorate.utils.Ports.getHttpPort;
 
 @Description("Add an ingress to the list.")
-public class AddIngressDecorator extends Decorator<KubernetesListBuilder> {
+public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final KubernetesConfig config;
   private final Map<String, String> allLabels; //A combination of config and project labels.
@@ -65,6 +66,4 @@ public class AddIngressDecorator extends Decorator<KubernetesListBuilder> {
       .endSpec()
       .endIngressItem();
   }
-
-
 }

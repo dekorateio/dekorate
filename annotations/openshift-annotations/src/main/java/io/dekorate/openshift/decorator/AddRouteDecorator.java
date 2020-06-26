@@ -20,17 +20,15 @@ import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.kubernetes.config.Port;
-import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
-
-import java.util.Map;
-import java.util.Optional;
-
 import static io.dekorate.utils.Ports.getHttpPort;
 
+import java.util.Optional;
+
 @Description("Add a route to the list.")
-public class AddRouteDecorator extends Decorator<KubernetesListBuilder> {
+public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final OpenshiftConfig config;
 
