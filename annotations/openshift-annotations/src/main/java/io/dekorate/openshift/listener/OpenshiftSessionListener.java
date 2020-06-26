@@ -29,15 +29,17 @@ import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.hook.ImagePushHook;
 import io.dekorate.hook.OrderedHook;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.hook.ResourcesApplyHook;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.project.Project;
+import io.dekorate.s2i.config.S2iBuildConfig;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class OpenshiftSessionListener implements SessionListener, WithProject, WithSession {
 
@@ -67,12 +69,13 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
       String name = session.configurators().get(OpenshiftConfig.class).map(c -> c.getName())
           .orElse(getProject().getBuildInfo().getName());
 
-      if (imageConfig.isAutoBuildEnabled() || openshiftConfig.isAutoDeployEnabled()) {
+      BuildService buildService = null;
+      boolean s2iEnabled =  imageConfig instanceof S2iBuildConfig && ((S2iBuildConfig)imageConfig).isEnabled();
+      if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || openshiftConfig.isAutoDeployEnabled()) {
 
         KubernetesList list = session.getGeneratedResources().get("openshift");
         List<HasMetadata> generated = list != null ? list.getItems() : Collections.emptyList();
 
-        BuildService buildService = null;
         try {
           buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated))
               .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
@@ -82,6 +85,10 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
         }
 
         hooks.add(new ImageBuildHook(getProject(), buildService));
+      }
+
+      if (imageConfig.isAutoPushEnabled() && !s2iEnabled) {
+        hooks.add(new ImagePushHook(getProject(), buildService));
       }
 
       if (openshiftConfig.isAutoDeployEnabled()) {
