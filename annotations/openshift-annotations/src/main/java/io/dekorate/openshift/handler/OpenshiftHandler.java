@@ -59,13 +59,16 @@ import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.utils.Annotations;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
+import io.dekorate.utils.Images;
 
 public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig> implements HandlerFactory, WithProject {
 
   private static final String OPENSHIFT = "openshift";
+  private static final String DEFAULT_REGISTRY = "docker.io";
 
   private static final String IF_NOT_PRESENT = "IfNotPresent";
   private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";
@@ -170,6 +173,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    */
   public DeploymentConfig createDeploymentConfig(OpenshiftConfig config, ImageConfiguration imageConfig)  {
     Map<String, String> labels = Labels.createLabels(config);
+
     return new DeploymentConfigBuilder()
       .withNewMetadata()
       .withName(config.getName())
@@ -177,19 +181,8 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .endMetadata()
       .withNewSpec()
       .withReplicas(1)
-      .withTemplate(createPodTemplateSpec(config, labels))
+      .withTemplate(createPodTemplateSpec(config, imageConfig, labels))
       .withSelector(labels)
-      .addNewTrigger()
-      .withType(IMAGECHANGE)
-      .withNewImageChangeParams()
-      .withAutomatic(true)
-      .withContainerNames(config.getName())
-      .withNewFrom()
-      .withKind(IMAGESTREAMTAG)
-      .withName(imageConfig.getName() + ":" + imageConfig.getVersion())
-      .endFrom()
-      .endImageChangeParams()
-      .endTrigger()
       .endSpec()
       .build();
   }
@@ -199,9 +192,9 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @param config   The sesssion.
    * @return          The pod template specification.
    */
-  public PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config, Map<String, String> labels) {
+  public PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config, ImageConfiguration imageConfig, Map<String, String> labels) {
     return new PodTemplateSpecBuilder()
-      .withSpec(createPodSpec(config))
+      .withSpec(createPodSpec(config, imageConfig))
       .withNewMetadata()
       .withLabels(labels)
       .endMetadata()
@@ -213,11 +206,13 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @param config   The sesssion.
    * @return          The pod specification.
    */
-  public static PodSpec createPodSpec(OpenshiftConfig config) {
+  public static PodSpec createPodSpec(OpenshiftConfig config, ImageConfiguration imageConfig) {
+   String image = Images.getImage(imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
+
     return new PodSpecBuilder()
       .addNewContainer()
       .withName(config.getName())
-      .withImage("")
+      .withImage(image)
       .withImagePullPolicy(IF_NOT_PRESENT)
       .addNewEnv()
       .withName(KUBERNETES_NAMESPACE)
@@ -234,7 +229,9 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   }
  
   private static ImageConfiguration getImageConfiguration(Project project, OpenshiftConfig config, Configurators configurators) {
-    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(config, i)).orElse(ImageConfiguration.from(config));
+    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project))
+      .map(i -> merge(config, i))
+      .orElse(ImageConfiguration.from(config));
   }
 
   private static ImageConfiguration merge(OpenshiftConfig config, ImageConfiguration imageConfig) {
@@ -247,6 +244,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     return new ImageConfigurationBuilder()
       .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
       .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
+      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : DEFAULT_REGISTRY)
       .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
       .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
       .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)

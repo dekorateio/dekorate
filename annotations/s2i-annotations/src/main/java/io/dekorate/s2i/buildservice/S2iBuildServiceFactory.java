@@ -27,11 +27,13 @@ import io.dekorate.config.ConfigurationSupplier;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
+import io.dekorate.s2i.config.S2iBuildConfig;
 
 public class S2iBuildServiceFactory implements BuildServiceFactory {
 
   private final String S2I = "s2i";
   private final String MESSAGE_OK = "S2i build service is applicable.";
+  private final String MESSAGE_DISABLED = "S2i disabled.";
 
 	@Override
 	public BuildService create(Project project, ImageConfiguration config) {
@@ -55,7 +57,14 @@ public class S2iBuildServiceFactory implements BuildServiceFactory {
 
 	@Override
 	public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
-		return new BuildServiceApplicablility(true, MESSAGE_OK);
+    if (config instanceof S2iBuildConfig) {
+      if (((S2iBuildConfig)config).isEnabled()) {
+        return new BuildServiceApplicablility(true, MESSAGE_OK);
+      } else {
+        return new BuildServiceApplicablility(false, MESSAGE_DISABLED);
+      }
+    }
+    return new BuildServiceApplicablility(true, MESSAGE_OK);
 	}
 
 	@Override
@@ -65,5 +74,4 @@ public class S2iBuildServiceFactory implements BuildServiceFactory {
     }
     return checkApplicablility(project, supplier.get());
 	}
-
 }
