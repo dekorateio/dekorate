@@ -27,7 +27,7 @@ import java.util.Optional;
 import static io.dekorate.utils.Ports.getHttpPort;
 
 @Description("Add an ingress to the list.")
-public class AddIngressDecorator extends Decorator<KubernetesListBuilder> {
+public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final KubernetesConfig config;
   private final Map<String, String> allLabels; //A combination of config and project labels.
@@ -65,6 +65,4 @@ public class AddIngressDecorator extends Decorator<KubernetesListBuilder> {
       .endSpec()
       .endIngressItem();
   }
-
-
 }
