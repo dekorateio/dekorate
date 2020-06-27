@@ -100,11 +100,12 @@ jobs:
       - run:
           name: Run build on openshift
           command: |
+            docker login -u $DOCKERIO_USERNAME -p $DOCKERIO_PASSWORD docker.io
             oc login -u admin -p admin
             oc new-project itests
             oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-            mvn -B clean install -Pbuild -Pwith-examples -Pwith-tests
+            mvn -B clean install -Pbuild -Pwith-examples -Pwith-tests -Duser.name=dekorateio
 
   CLI_OPTIONS:
     machine: true
@@ -182,5 +183,6 @@ workflows:
     jobs:
       - JDK8
       - JDK11
-      - OPENSHIFT_3_11
+      - OPENSHIFT_3_11:
+          context: docker
       - CLI_OPTIONS
