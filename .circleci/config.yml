@@ -100,7 +100,7 @@ jobs:
       - run:
           name: Run build on openshift
           command: |
-            docker login -u $DOCKERIO_USERNAME -p $DOCKERIO_PASSWORD docker.io
+            docker login -u ${DOCKERIO_USERNAME} -p ${DOCKERIO_PASSWORD} docker.io
             oc login -u admin -p admin
             oc new-project itests
             oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
