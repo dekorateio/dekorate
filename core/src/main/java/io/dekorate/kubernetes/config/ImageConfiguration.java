@@ -41,6 +41,8 @@ public class ImageConfiguration extends ApplicationConfiguration {
   public static ImageConfiguration from(ApplicationConfiguration applicationConfiguration) {
     return new ImageConfigurationBuilder()
       .withProject(applicationConfiguration.getProject())
+      .withGroup(applicationConfiguration.getPartOf())
+      .withPartOf(applicationConfiguration.getPartOf())
       .withName(applicationConfiguration.getName())
       .withVersion(applicationConfiguration.getVersion())
       .withAttributes(applicationConfiguration.getAttributes())
