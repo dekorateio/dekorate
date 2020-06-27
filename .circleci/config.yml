@@ -100,6 +100,8 @@ jobs:
       - run:
           name: Run build on openshift
           command: |
+            echo "DOCKERIO_USERNAME: $DOCKERIO_USERNAME"
+            echo "DOCKERIO_PASSWORD: $DOCKERIO_PASSWORD"
             docker login -u $DOCKERIO_USERNAME -p $DOCKERIO_PASSWORD docker.io
             oc login -u admin -p admin
             oc new-project itests
