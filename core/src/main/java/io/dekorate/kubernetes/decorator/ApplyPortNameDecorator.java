@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import io.dekorate.kubernetes.config.PortFluent;
+import io.dekorate.deps.kubernetes.api.model.ContainerPortFluent;
 
-public class ApplyPortNameDecorator extends ApplicationContainerDecorator<PortFluent<?>> {
+public class ApplyPortNameDecorator extends ApplicationContainerDecorator<ContainerPortFluent<?>> {
 
   private final String name;
   private final Set<String> toReplace;
@@ -35,7 +35,7 @@ public class ApplyPortNameDecorator extends ApplicationContainerDecorator<PortFl
 	}
 
 	@Override
-	public void andThenVisit(PortFluent<?> port) {
+	public void andThenVisit(ContainerPortFluent<?> port) {
     if (toReplace.contains(port.getName())) {
       port.withName(name);
     }

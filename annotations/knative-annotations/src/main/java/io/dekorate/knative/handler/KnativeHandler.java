@@ -23,7 +23,6 @@ import io.dekorate.Configurators;
 import io.dekorate.Handler;
 import io.dekorate.HandlerFactory;
 import io.dekorate.Resources;
-import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.deps.knative.serving.v1.Service;
@@ -81,10 +80,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       resources.add(KNATIVE, createService(config));
     }
 
-    if (config.getHttpTransportVersion() != HttpTransportVersion.ANY) {
-      resources.decorate(KNATIVE, new ApplyPortNameDecorator(config.getName(), config.getName(), config.getHttpTransportVersion().name().toLowerCase(), Ports.HTTP_PORT_NAMES.toArray(new String[Ports.HTTP_PORT_NAMES.size()])));
-    }
-
+    resources.decorate(KNATIVE, new ApplyPortNameDecorator(null, null, config.getHttpTransportVersion().name().toLowerCase(), Ports.HTTP_PORT_NAMES.toArray(new String[Ports.HTTP_PORT_NAMES.size()])));
     addDecorators(KNATIVE, config);
   }
 

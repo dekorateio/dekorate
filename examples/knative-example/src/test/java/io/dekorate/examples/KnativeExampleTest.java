@@ -18,18 +18,37 @@ package io.dekorate.examples;
 
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
-import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
+import io.dekorate.deps.knative.serving.v1.Service;
+import io.dekorate.deps.kubernetes.api.model.Container;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+
 class KnativeExampleTest {
 
   @Test
-  public void shouldContainService() {
+  public void shouldContainServiceWithPortNamedHttp1() {
     KubernetesList list = Serialization.unmarshalAsList(KnativeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
-    assertEquals("Service", list.getItems().get(0).getKind());
+    Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException("No knative service found!"));
+    assertNotNull(s);
+    Container c = s.getSpec().getTemplate().getSpec().getContainers().get(0);
+    assertEquals("http1", c.getPorts().get(0).getName());
+
+  }
+
+  <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
+    return (Optional<T>) list.getItems().stream()
+      .filter(i -> t.isInstance(i))
+      .findFirst();
   }
 }
