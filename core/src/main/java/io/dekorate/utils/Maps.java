@@ -144,6 +144,8 @@ public class Maps {
               maps.add(nested);
             }
             result.put(m.getName(), maps.toArray(new Map[maps.size()]));
+          } else if (((Object[])value).length == 0) {
+            //let's skip empty arrays
           } else {
             result.put(m.getName(), Arrays.stream((Object[])value).map(String::valueOf).collect(Collectors.joining(",")));
           }
