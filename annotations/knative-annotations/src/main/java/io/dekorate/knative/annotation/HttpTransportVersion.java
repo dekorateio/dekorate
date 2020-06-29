@@ -21,5 +21,4 @@ public enum HttpTransportVersion {
 
   HTTP1,
   H2C,
-  ANY;
 }
