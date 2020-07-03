@@ -55,6 +55,7 @@
       <module>feat-547-spring-boot-request-mapping</module>
       <module>feat-575-knative-local-autoscaling</module>
       <module>feat-575-knative-global-autoscaling</module>
+      <module>feat-572-knative-cluster-local</module>
     </modules>
 
 </project>

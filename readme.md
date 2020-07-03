@@ -800,7 +800,7 @@ Dekorate also supports generating manifests for `knative`. To make use of
 ```xml
 <dependency>
   <groupId>io.dekorate</groupId>
-  <artifactId>knative</artifactId>
+  <artifactId>knative-annotations</artifactId>
   <version>1.0.1</version>
 </dependency>
 ```
@@ -808,6 +808,10 @@ Dekorate also supports generating manifests for `knative`. To make use of
 This module provides the 
 [@KnativeApplication](annotations/knative-annotations/src/main/java/io/dekorate/knative/annotation/Knative.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `knative.yml` / `knative.json` instead.
 Also instead of creating a `Deployment` it will create a knative serving `Service`.
+
+#### Cluster local services
+
+Knative `exposes` services out of the box. You can use the `@KnativeApplication(expose=false)` or the property `dekorate.knative.expose` set to false, in order to mark a service as cluster local.
 
 #### Autoscaling
 Dekorate provides access to both revision and global autoscaling configuration (see [Knative Autoscaling](https://knative.dev/docs/serving/configuring-autoscaling/).

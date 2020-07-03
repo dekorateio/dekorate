@@ -197,9 +197,10 @@ public @interface KnativeApplication {
   Container[] sidecars() default {};
 
   /**
-   * Controls whether the application should be exposed via Route
+   * Controls whether the application should be exposed (default: true).
+   * Services that are not exposed with be labeled as cluster local (see https://knative.dev/docs/serving/cluster-local-route).
    */
-  boolean expose() default false;
+  boolean expose() default true;
 
   /**
    * Flag to trigger the registration of the deploy hook.
