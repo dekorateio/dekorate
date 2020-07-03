@@ -59,7 +59,6 @@ import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
-import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.utils.Annotations;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
@@ -73,11 +72,6 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
   private static final String IF_NOT_PRESENT = "IfNotPresent";
   private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";
   private static final String METADATA_NAMESPACE = "metadata.namespace";
-
-  private static final String IMAGESTREAMTAG = "ImageStreamTag";
-  private static final String IMAGECHANGE = "ImageChange";
-
-  private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
 
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
 
@@ -150,7 +144,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     resources.decorate(group, new ApplyDeploymentTriggerDecorator(config.getName(), imageConfig.getName() + ":" + imageConfig.getVersion()));
     resources.decorate(group, new AddRouteDecorator(config));
 
-    if (config.hasAttribute(RUNTIME_TYPE)) {
+   if (config.hasAttribute(RUNTIME_TYPE)) {
       resources.decorate(group, new AddLabelDecorator(new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE))));
     }
     resources.decorate(group, new RemoveAnnotationDecorator(Annotations.VCS_URL));
@@ -219,10 +213,6 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       .withNewValueFrom()
       .withNewFieldRef(null, METADATA_NAMESPACE)
       .endValueFrom()
-      .endEnv()
-      .addNewEnv()
-      .withName(JAVA_APP_JAR)
-      .withValue("/deployments/" + config.getProject().getBuildInfo().getOutputFile().getFileName().toString())
       .endEnv()
       .endContainer()
       .build();
