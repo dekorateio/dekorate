@@ -54,6 +54,7 @@
       <module>issue-545-spring-boot-web-with-port-path</module>
       <module>feat-575-knative-local-autoscaling</module>
       <module>feat-575-knative-global-autoscaling</module>
+      <module>feat-572-knative-cluster-local</module>
     </modules>
 
 </project>

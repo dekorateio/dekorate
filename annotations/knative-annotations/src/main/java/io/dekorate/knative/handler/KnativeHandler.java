@@ -45,8 +45,10 @@ import io.dekorate.knative.decorator.ApplyLocalContainerConcurrencyDecorator;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
+import io.dekorate.kubernetes.config.LabelBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddConfigMapResourceProvidingDecorator;
+import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
@@ -59,6 +61,9 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
 
   private static final String KNATIVE = "knative";
   private static final String DEFAULT_REGISTRY = "dev.local/";
+
+  private static final String KNATIVE_VISIBILITY = "serving.knative.dev/visibility";
+  private static final String CLUSTER_LOCAL = "cluster-local";
 
   private final Configurators configurators;
 
@@ -151,6 +156,12 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
   @Override
   protected void addDecorators(String group, KnativeConfig config) {
     super.addDecorators(group, config);
+    if (!config.isExpose()) {
+      resources.decorate(group, new AddLabelDecorator(config.getName(), new LabelBuilder()
+                                               .withKey(KNATIVE_VISIBILITY)
+                                               .withValue(CLUSTER_LOCAL)
+                                               .build()));
+    }
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
