@@ -799,7 +799,7 @@ Dekorate also supports generating manifests for `knative`. To make use of
 ```xml
 <dependency>
   <groupId>io.dekorate</groupId>
-  <artifactId>knative</artifactId>
+  <artifactId>knative-annotations</artifactId>
   <version>0.12.4</version>
 </dependency>
 ```
