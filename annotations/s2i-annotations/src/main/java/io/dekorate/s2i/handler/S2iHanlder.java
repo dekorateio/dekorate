@@ -31,21 +31,24 @@ import io.dekorate.deps.openshift.api.model.ImageStream;
 import io.dekorate.deps.openshift.api.model.ImageStreamBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Env;
+import io.dekorate.kubernetes.config.EnvBuilder;
 import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.s2i.annotation.S2iBuild;
+import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.s2i.config.EditableS2iBuildConfig;
 import io.dekorate.s2i.config.S2iBuildConfig;
-import io.dekorate.s2i.decorator.AddBuildEnvDecorator;
 import io.dekorate.s2i.decorator.AddBuildConfigResourceDecorator;
-import io.dekorate.s2i.decorator.AddOutputImageStreamResourceDecorator;
-import io.dekorate.s2i.decorator.AddDockerImageStreamResourceDecorator;
+import io.dekorate.s2i.decorator.AddBuildEnvDecorator;
 import io.dekorate.s2i.decorator.AddBuilderImageStreamResourceDecorator;
+import io.dekorate.s2i.decorator.AddDockerImageStreamResourceDecorator;
+import io.dekorate.s2i.decorator.AddOutputImageStreamResourceDecorator;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Strings;
 
 public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, WithProject {
 
   private static final String OPENSHIFT = "openshift";
+  private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
+
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final Resources resources;
   private final Configurators configurators;
@@ -80,6 +83,13 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
       for (Env env : config.getBuildEnvVars()) {
         resources.decorate(new AddBuildEnvDecorator(env));
       }
+      resources.decorate(OPENSHIFT, new AddEnvVarDecorator(config.getName(), config.getName(),
+                                                           new EnvBuilder()
+                                                           .withName(JAVA_APP_JAR)
+                                                           .withValue("/deployments/" + config.getProject()
+                                                                      .getBuildInfo()
+                                                                      .getOutputFile()
+                                                                      .getFileName().toString()).build()));
     } else {
       //If S2i is disabled, check if other build configs are available and check it makes sense to create an ImageStream
       ImageConfiguration imageConfig = configurators

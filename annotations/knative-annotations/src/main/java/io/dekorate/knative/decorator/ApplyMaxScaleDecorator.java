@@ -18,8 +18,8 @@
 package io.dekorate.knative.decorator;
 
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.knative.serving.v1.ServiceFluent;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.dekorate.deps.knative.serving.v1.ServiceFluent;
 
 public class ApplyMaxScaleDecorator extends NamedResourceDecorator<ServiceFluent<?>> {
 

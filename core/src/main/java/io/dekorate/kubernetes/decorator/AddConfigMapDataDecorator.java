@@ -20,8 +20,8 @@ package io.dekorate.kubernetes.decorator;
 import java.util.Map;
 
 import io.dekorate.utils.Maps;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.ConfigMapFluent;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.dekorate.deps.kubernetes.api.model.ConfigMapFluent;
 
 public class AddConfigMapDataDecorator extends NamedResourceDecorator<ConfigMapFluent<?>> {
 
