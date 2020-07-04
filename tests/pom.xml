@@ -52,6 +52,8 @@
       <module>issue-507-unamed-port</module>
       <module>issue-517-exclude-optional</module>
       <module>issue-545-spring-boot-web-with-port-path</module>
+      <module>feat-575-knative-local-autoscaling</module>
+      <module>feat-575-knative-global-autoscaling</module>
     </modules>
 
 </project>

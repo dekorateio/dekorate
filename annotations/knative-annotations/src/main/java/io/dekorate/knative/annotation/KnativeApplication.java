@@ -15,11 +15,18 @@
  */
 package io.dekorate.knative.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import io.dekorate.kubernetes.annotation.Annotation;
 import io.dekorate.kubernetes.annotation.AwsElasticBlockStoreVolume;
 import io.dekorate.kubernetes.annotation.AzureDiskVolume;
 import io.dekorate.kubernetes.annotation.AzureFileVolume;
+import io.dekorate.kubernetes.annotation.ConfigMapVolume;
 import io.dekorate.kubernetes.annotation.Container;
+import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.annotation.GitRepoVolume;
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.annotation.Label;
@@ -29,17 +36,13 @@ import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.annotation.Probe;
 import io.dekorate.kubernetes.annotation.SecretVolume;
 import io.dekorate.kubernetes.annotation.ServiceType;
-import io.dekorate.kubernetes.annotation.ConfigMapVolume;
-import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.knative.config.AutoScalerClass;
+import io.dekorate.knative.config.AutoscalingMetric;
+import io.dekorate.knative.config.HttpTransportVersion;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 
 @Buildable(builderPackage = "io.dekorate.deps.kubernetes.api.builder")
@@ -47,6 +50,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KnativeApplication {
+
+  int DEFAULT_CONTAINER_CONCURRENCY = 0;
+  AutoscalingMetric DEFAULT_AUTOSCALING_METRIC = AutoscalingMetric.concurrency;
 
   /**
    * The name of the collection of componnet this component belongs to.
@@ -201,5 +207,15 @@ public @interface KnativeApplication {
    * @return  True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;
+
+  /**
+   * Revision autoscaling configuration.
+   */
+  AutoScaling revisionAutoScaling() default @AutoScaling(autoScalerClass=AutoScalerClass.kpa, metric=AutoscalingMetric.concurrency);
+
+  /**
+   * Global autoscaling configuration.
+   */
+  GlobalAutoScaling globalAutoScaling() default @GlobalAutoScaling(autoScalerClass = AutoScalerClass.kpa);
 
 }
