@@ -209,6 +209,24 @@ public @interface KnativeApplication {
    */
   boolean autoDeployEnabled() default false;
 
+
+  /**
+   * This value controls the minimum number of replicas each revision should have. 
+   * Knative will attempt to never have less than this number of replicas at any one point in time.
+   */
+  int minScale() default 0;
+
+  /**
+   * This value controls the maximum number of replicas each revision should have. 
+   * Knative will attempt to never have more than this number of replicas running, or in the process of being created, at any one point in time.
+   **/
+  int maxScale() default 0;
+
+  /**
+   * The scale-to-zero values control whether Knative allows revisions to scale down to zero, or stops at “1”.
+   */
+  boolean scaleToZeroEnabled() default true;
+
   /**
    * Revision autoscaling configuration.
    */
