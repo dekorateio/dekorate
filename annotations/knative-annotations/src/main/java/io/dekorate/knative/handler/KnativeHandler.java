@@ -38,11 +38,13 @@ import io.dekorate.knative.decorator.ApplyLocalAutoscalingClassDecorator;
 import io.dekorate.knative.decorator.ApplyLocalAutoscalingMetricDecorator;
 import io.dekorate.knative.decorator.ApplyLocalAutoscalingTargetDecorator;
 import io.dekorate.knative.decorator.ApplyLocalContainerConcurrencyDecorator;
+import io.dekorate.knative.decorator.ApplyMinScaleDecorator;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.LabelBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.decorator.AddConfigMapDataDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapResourceProvidingDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
@@ -129,6 +131,14 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
           config.getRevisionAutoScaling().getTargetUtilizationPercentage()));
     }
 
+    if (config.getMinScale() != 0) {
+      resources.decorate(KNATIVE, new ApplyMinScaleDecorator(config.getName(), config.getMinScale()));
+    }
+
+    if (config.getMaxScale() != 0) {
+      resources.decorate(KNATIVE, new ApplyMinScaleDecorator(config.getName(), config.getMaxScale()));
+    }
+
     // Global autoscaling configuration
     if (!isDefault(config.getGlobalAutoScaling())) {
       resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
@@ -142,11 +152,18 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       if (config.getGlobalAutoScaling().getTargetUtilizationPercentage() != 70) {
         resources.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getTargetUtilizationPercentage()));
       }
+
     }
 
-    if (config.getGlobalAutoScaling().getContainerConcurrency() != 0) {
+    if (config.getGlobalAutoScaling().getContainerConcurrency() != 0 || !config.isScaleToZeroEnabled()) {
       resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-defaults"));
-      resources.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getContainerConcurrency()));
+      if (config.getGlobalAutoScaling().getContainerConcurrency() != 0) {
+        resources.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getContainerConcurrency()));
+      }
+
+      if (!config.isScaleToZeroEnabled()) {
+        resources.decorate(KNATIVE, new AddConfigMapDataDecorator(config.getName(), "enable-scale-to-zero", String.valueOf(config.isScaleToZeroEnabled())));
+      }
     }
   }
 
