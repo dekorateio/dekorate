@@ -43,6 +43,7 @@ import io.dekorate.halkyon.decorator.DeploymentModeDecorator;
 import io.dekorate.halkyon.decorator.ExposeServiceDecorator;
 import io.dekorate.halkyon.model.Component;
 import io.dekorate.halkyon.model.ComponentBuilder;
+import io.dekorate.kubernetes.config.Annotation;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
@@ -51,6 +52,8 @@ import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.decorator.AddAnnotationDecorator;
+import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.project.ScmInfo;
@@ -105,12 +108,21 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     String type = config.getAttribute(RUNTIME_TYPE);
     String version = config.getAttribute(RUNTIME_VERSION);
 
+
     generateBuildConfigIfNeeded(config);
 
     if (config.isExposeService()) {
       resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
 
       BaseConfig kubernetesConfig = getKubernetesConfig();
+      for (Label label : kubernetesConfig.getLabels()) {
+        resources.decorate(new AddLabelDecorator(label));
+      }
+
+      for (Annotation annotation : kubernetesConfig.getAnnotations()) {
+        resources.decorate(new AddAnnotationDecorator(annotation));
+      }
+
       Port[] ports = kubernetesConfig.getPorts();
       if (ports.length == 0) {
         throw new IllegalStateException("Ports need to be present on KubernetesConfig");
