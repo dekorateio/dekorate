@@ -26,7 +26,7 @@ public class ApplyLocalContainerConcurrencyDecorator extends NamedResourceDecora
   private final long target;
 
   public ApplyLocalContainerConcurrencyDecorator(String name, long target) {
-		super(name);
+		super("Service", name);
     this.target = target;
 	}
 

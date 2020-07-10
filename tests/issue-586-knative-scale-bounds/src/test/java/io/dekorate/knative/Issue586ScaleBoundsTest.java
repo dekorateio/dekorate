@@ -26,20 +26,22 @@ import org.junit.jupiter.api.Test;
 
 import io.dekorate.utils.Serialization;
 import io.fabric8.knative.serving.v1.Service;
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 
-public class Feat575LocalAutoscalingTest {
+public class Issue586ScaleBoundsTest {
 
   @Test
-  public void shouldContainRequestsPerSecond() {
+  public void shouldContainMinAndMaxBounds() {
     KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
-    String metric = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/metric");
-    assertEquals("rps", metric);
-    String target = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/target");
-    assertEquals("100", target);
+    String minScale = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/minScale");
+    String maxScale = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/maxScale");
+    assertEquals("3", minScale);
+    assertEquals("5", maxScale);
+
   }
 
 

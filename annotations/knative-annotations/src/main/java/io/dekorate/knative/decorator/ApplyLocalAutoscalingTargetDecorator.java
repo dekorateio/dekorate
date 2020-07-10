@@ -28,14 +28,14 @@ public class ApplyLocalAutoscalingTargetDecorator extends NamedResourceDecorator
   private final int target;
 
   public ApplyLocalAutoscalingTargetDecorator(String name, int target) {
-		super(name);
+		super("Service", name);
     this.target = target;
 	}
 
 	@Override
 	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToLabels(AUTOSCALING_TARGET, String.valueOf(target))
+      .addToAnnotations(AUTOSCALING_TARGET, String.valueOf(target))
       .endMetadata();
 	}
 }
