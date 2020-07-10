@@ -40,4 +40,9 @@ public class AddConfigMapDataDecorator extends NamedResourceDecorator<ConfigMapF
 	public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
     config.addToData(map);
 	}
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ ResourceProvidingDecorator.class ,AddConfigMapDataDecorator.class };
+  }
 }
