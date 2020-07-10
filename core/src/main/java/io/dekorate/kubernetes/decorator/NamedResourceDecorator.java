@@ -85,4 +85,9 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
       return (Class)Generics.getTypeArguments(NamedResourceDecorator.class, NamedResourceDecorator.this.getClass()).get(0);
     }
   }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[]{ ResourceProvidingDecorator.class };
+  }
 }
