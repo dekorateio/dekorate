@@ -32,7 +32,11 @@ public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBui
   }
 
   public AddAnnotationDecorator(String name, Annotation annotation) {
-    super(name);
+    this(ANY, name, annotation);
+  }
+
+  public AddAnnotationDecorator(String kind, String name, Annotation annotation) {
+    super(kind, name);
     this.annotation = annotation;
   }
 

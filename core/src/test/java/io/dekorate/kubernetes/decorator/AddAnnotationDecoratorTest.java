@@ -15,17 +15,24 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
 import io.dekorate.kubernetes.config.Annotation;
 import io.dekorate.deps.kubernetes.api.model.Pod;
 import io.dekorate.deps.kubernetes.api.model.PodBuilder;
-import org.junit.jupiter.api.Test;
+import io.dekorate.deps.kubernetes.api.model.Service;
+import io.dekorate.deps.kubernetes.api.model.ServiceBuilder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AddAnnotationDecoratorTest {
 
   @Test
-  public void shouldAddAnnotationToResources() {
+  public void shouldAddAnnotationToPod() {
+    assertEquals("Pod", new PodBuilder().getKind());
+
     Pod expected = new PodBuilder()
       .withNewMetadata()
       .withName("pod")
@@ -41,5 +48,42 @@ class AddAnnotationDecoratorTest {
       .build();
 
     assertEquals(expected, actual);
+  }
+
+  @Test
+  public void shouldAddAnnotationToKind() {
+    assertEquals("Pod", new PodBuilder().getKind());
+
+    Pod expectedPod = new PodBuilder()
+      .withNewMetadata()
+      .withName("pod")
+      .addToAnnotations("key1","value1")
+      .endMetadata()
+      .build();
+
+    Service expectedService = new ServiceBuilder()
+      .withNewMetadata()
+      .withName("my-service")
+      .endMetadata()
+      .build();
+
+
+    Pod actualPod = new PodBuilder()
+      .withNewMetadata()
+      .withName("pod")
+      .endMetadata()
+      .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
+      .build();
+
+    assertEquals(expectedPod, actualPod);
+
+    Service actualService = new ServiceBuilder()
+      .withNewMetadata()
+      .withName("my-service")
+      .endMetadata()
+      .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
+      .build();
+
+    assertEquals(expectedService, actualService);
   }
 }

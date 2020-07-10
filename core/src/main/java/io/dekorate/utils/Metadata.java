@@ -28,6 +28,19 @@ import java.util.Optional;
 
 public class Metadata {
 
+  public static Optional<String> getKind(Builder builder) {
+    try {
+      Method method = builder.getClass().getMethod("getKind");
+      Object o = method.invoke(builder);
+      if (o instanceof String) {
+        return Optional.of((String)o);
+      }
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      //ignore
+    }
+    return Optional.empty();
+  }
+
   public static Optional<ObjectMeta> getMetadata(Builder builder) {
     try {
       Method method = builder.getClass().getMethod("buildMetadata");

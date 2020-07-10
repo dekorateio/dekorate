@@ -33,7 +33,11 @@ public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder>
   }
 
   public AddLabelDecorator(String name, Label label) {
-    super(name);
+    this(ANY, name, label);
+  }
+
+  public AddLabelDecorator(String kind, String name, Label label) {
+    super(kind, name);
     this.label = label;
   }
 
