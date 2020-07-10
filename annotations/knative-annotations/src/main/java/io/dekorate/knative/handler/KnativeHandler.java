@@ -155,15 +155,14 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
 
     }
 
-    if (config.getGlobalAutoScaling().getContainerConcurrency() != 0 || !config.isScaleToZeroEnabled()) {
+    if (config.getGlobalAutoScaling().getContainerConcurrency() != 0) {
       resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-defaults"));
-      if (config.getGlobalAutoScaling().getContainerConcurrency() != 0) {
-        resources.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getContainerConcurrency()));
-      }
+      resources.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getContainerConcurrency()));
+    }
 
-      if (!config.isScaleToZeroEnabled()) {
-        resources.decorate(KNATIVE, new AddConfigMapDataDecorator(config.getName(), "enable-scale-to-zero", String.valueOf(config.isScaleToZeroEnabled())));
-      }
+    if (!config.isScaleToZeroEnabled()) {
+      resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
+      resources.decorate(KNATIVE, new AddConfigMapDataDecorator("config-autoscaler", "enable-scale-to-zero", String.valueOf(config.isAutoDeployEnabled())));
     }
   }
 
