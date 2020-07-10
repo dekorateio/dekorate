@@ -29,14 +29,14 @@ public class ApplyMinScaleDecorator extends NamedResourceDecorator<ServiceFluent
 
 
   public ApplyMinScaleDecorator(String name, int scale) {
-		super(name);
+		super("Service", name);
     this.scale = scale;
 	}
 
 	@Override
 	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToLabels(MIN_SCALE, String.valueOf(scale))
+      .addToAnnotations(MIN_SCALE, String.valueOf(scale))
       .endMetadata();
 	}
 }

@@ -38,6 +38,7 @@ import io.dekorate.knative.decorator.ApplyLocalAutoscalingClassDecorator;
 import io.dekorate.knative.decorator.ApplyLocalAutoscalingMetricDecorator;
 import io.dekorate.knative.decorator.ApplyLocalAutoscalingTargetDecorator;
 import io.dekorate.knative.decorator.ApplyLocalContainerConcurrencyDecorator;
+import io.dekorate.knative.decorator.ApplyMaxScaleDecorator;
 import io.dekorate.knative.decorator.ApplyMinScaleDecorator;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -136,7 +137,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
     }
 
     if (config.getMaxScale() != 0) {
-      resources.decorate(KNATIVE, new ApplyMinScaleDecorator(config.getName(), config.getMaxScale()));
+      resources.decorate(KNATIVE, new ApplyMaxScaleDecorator(config.getName(), config.getMaxScale()));
     }
 
     // Global autoscaling configuration

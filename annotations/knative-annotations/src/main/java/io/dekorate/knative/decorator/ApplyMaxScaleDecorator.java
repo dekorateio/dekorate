@@ -27,16 +27,15 @@ public class ApplyMaxScaleDecorator extends NamedResourceDecorator<ServiceFluent
 
   private final int scale;
 
-
   public ApplyMaxScaleDecorator(String name, int scale) {
-		super(name);
+		super("Service", name);
     this.scale = scale;
 	}
 
 	@Override
 	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToLabels(MAX_SCALE, String.valueOf(scale))
+      .addToAnnotations(MAX_SCALE, String.valueOf(scale))
       .endMetadata();
 	}
 }
