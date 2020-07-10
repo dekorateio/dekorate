@@ -30,14 +30,14 @@ public class ApplyLocalAutoscalingClassDecorator extends NamedResourceDecorator<
   private final AutoScalerClass clazz;
 
   public ApplyLocalAutoscalingClassDecorator(String name, AutoScalerClass clazz) {
-		super(name);
+		super("Service", name);
 		this.clazz = clazz;
 	}
 
 	@Override
 	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToLabels(AUTOSCALING_CLASS, clazz.name().toLowerCase() + AUTOSCALING_CLASS_SUFFIX)
+      .addToAnnotations(AUTOSCALING_CLASS, clazz.name().toLowerCase() + AUTOSCALING_CLASS_SUFFIX)
       .endMetadata();
 	}
 }

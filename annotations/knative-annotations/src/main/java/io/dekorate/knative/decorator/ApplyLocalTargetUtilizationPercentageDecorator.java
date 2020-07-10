@@ -28,14 +28,14 @@ public class ApplyLocalTargetUtilizationPercentageDecorator extends NamedResourc
   private final int target;
 
   public ApplyLocalTargetUtilizationPercentageDecorator(String name, int target) {
-		super(name);
+		super("Service", name);
     this.target = target;
 	}
 
 	@Override
 	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToLabels(UTILIZATION_PERCENTAGE, String.valueOf(target))
+      .addToAnnotations(UTILIZATION_PERCENTAGE, String.valueOf(target))
       .endMetadata();
 	}
 }

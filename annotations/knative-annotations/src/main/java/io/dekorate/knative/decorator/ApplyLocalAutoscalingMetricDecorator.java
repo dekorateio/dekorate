@@ -29,14 +29,14 @@ public class ApplyLocalAutoscalingMetricDecorator extends NamedResourceDecorator
   private final AutoscalingMetric clazz;
 
   public ApplyLocalAutoscalingMetricDecorator(String name, AutoscalingMetric clazz) {
-		super(name);
+		super("Service", name);
 		this.clazz = clazz;
 	}
 
 	@Override
 	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToLabels(AUTOSCALING_METRIC, clazz.name().toLowerCase())
+      .addToAnnotations(AUTOSCALING_METRIC, clazz.name().toLowerCase())
       .endMetadata();
 	}
 }
