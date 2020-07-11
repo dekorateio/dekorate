@@ -45,6 +45,10 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
   }
 
   public void visit(KubernetesListBuilder list) {
+    if (contains(list, "v1", "Service", config.getName())) {
+      return;
+    }
+
     list.addNewServiceItem()
       .withNewMetadata()
       .withName(config.getName())

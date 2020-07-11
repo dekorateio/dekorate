@@ -43,6 +43,10 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
       ? repository
       : repository.substring(repository.lastIndexOf("/") + 1);
 
+    if (contains(list, "image.openshift.io/v1", "ImageStream", name)) {
+      return;
+    }
+
     String dockerImageRepo = Images.removeTag(config.getBuilderImage());
 
     list.addToItems(new ImageStreamBuilder()

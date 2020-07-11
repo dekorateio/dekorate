@@ -39,6 +39,10 @@ public class AddDockerImageStreamResourceDecorator extends ResourceProvidingDeco
 
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    
+    if (contains(list, "image.openshift.io/v1", "ImageStream", config.getName())) {
+      return;
+    }
 
     list.addToItems(new ImageStreamBuilder()
       .withNewMetadata()
