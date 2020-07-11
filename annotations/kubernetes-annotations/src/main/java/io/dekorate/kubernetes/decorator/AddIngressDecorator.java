@@ -43,6 +43,10 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
     if (!p.isPresent() || !config.isExpose()) {
       return;
     }
+
+    if (contains(list, ANY, "Ingress", config.getName())) {
+      return;
+    }
     Port port = p.get();
     list.addNewIngressItem()
       .withNewMetadata()
