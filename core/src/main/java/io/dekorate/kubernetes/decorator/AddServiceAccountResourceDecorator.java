@@ -37,6 +37,10 @@ public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorat
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
     String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName();
 
+    if (contains(list, "v1", "ServiceAccount", name)) {
+      return;
+    }
+
     list.addNewServiceAccountItem()
       .withNewMetadata()
       .withName(name)

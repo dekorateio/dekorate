@@ -44,6 +44,9 @@ public class TaskProvidingDecorator extends ResourceProvidingDecorator<Kubernete
 
   @Override
   public void visit(KubernetesListBuilder list) {
+    if (contains(list, task.getApiVersion(), task.getKind(), task.getMetadata().getName())) {
+      return;
+    }
     list.addToItems(task);
   }
 

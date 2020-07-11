@@ -43,6 +43,10 @@ public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesList
       return;
     }
 
+    if (contains(list, "route.openshift.io/v1", "Route", config.getName())) {
+      return;
+    }
+
     Port port = p.get();
     list.addNewRouteItem()
       .withNewMetadata()

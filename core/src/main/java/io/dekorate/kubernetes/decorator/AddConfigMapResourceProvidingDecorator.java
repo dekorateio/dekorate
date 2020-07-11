@@ -29,10 +29,7 @@ public class AddConfigMapResourceProvidingDecorator extends ResourceProvidingDec
 
 	@Override
 	public void visit(KubernetesListBuilder list) {
-    if (list.getItems().stream()
-        .filter(i -> "ConfigMap".equals(i.getKind()))
-        .filter(i -> name.equals(i.getMetadata().getName()))
-        .findAny().isPresent()) {
+    if (contains(list, "v1", "ConfigMap", name)) {
       return;
     }
 

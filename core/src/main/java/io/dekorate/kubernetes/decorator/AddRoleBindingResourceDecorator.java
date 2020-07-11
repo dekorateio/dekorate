@@ -60,6 +60,10 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
     String name = Strings.isNotNullOrEmpty(this.name) ? this.name :  meta.getName() + ":view";
     String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount :  meta.getName();
 
+    if (contains(list, "rbac.authorization.k8s.io/v1", "RoleBinding", name)) {
+      return;
+    }
+
     list.addToItems(new RoleBindingBuilder()
       .withNewMetadata()
       .withName(name)

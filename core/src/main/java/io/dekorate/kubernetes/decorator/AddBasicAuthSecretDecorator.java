@@ -60,6 +60,10 @@ public class AddBasicAuthSecretDecorator extends ResourceProvidingDecorator<Kube
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
     String name = Strings.isNullOrEmpty(this.name) ? meta.getName() : this.name;
 
+    if (contains(list, "v1", "Secret", name)) {
+      return;
+    }
+
     Map<String, String> data = new HashMap<String, String>() {
       {
         put(USERNAME, username);

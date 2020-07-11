@@ -25,11 +25,34 @@ import java.util.stream.Collectors;
 import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.dekorate.utils.Strings;
 
 public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
 
   private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service", "Pipeline", "Task");
 
+  protected static final String ANY = null;
+
+  public boolean contains(KubernetesListBuilder list, String apiVersion, String kind, String name) {
+    return list.getItems().stream()
+      .filter(i -> match(i, apiVersion, kind, name))
+      .findAny()
+      .isPresent();
+  }
+
+  public boolean match(HasMetadata h, String apiVersion, String kind, String name) {
+    if (Strings.isNotNullOrEmpty(apiVersion) && !apiVersion.equals(h.getApiVersion())) {
+      return false;
+    }
+    if (Strings.isNotNullOrEmpty(kind) && !kind.endsWith(h.getKind())) {
+      return false;
+    }
+    if (Strings.isNotNullOrEmpty(name) && !name.equals(h.getMetadata().getName())) {
+      return false;
+    }
+    return true;     
+  }
+  
   public Optional<ObjectMeta> getDeploymentMetadata(KubernetesListBuilder list) {
     return list.getItems()
       .stream()
