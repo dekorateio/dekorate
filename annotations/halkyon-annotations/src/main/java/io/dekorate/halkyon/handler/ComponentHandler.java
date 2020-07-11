@@ -111,18 +111,17 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
 
     generateBuildConfigIfNeeded(config);
 
+    BaseConfig kubernetesConfig = getKubernetesConfig();
+    for (Label label : kubernetesConfig.getLabels()) {
+      resources.decorate(new AddLabelDecorator(label));
+    }
+
+    for (Annotation annotation : kubernetesConfig.getAnnotations()) {
+      resources.decorate(new AddAnnotationDecorator(annotation));
+    }
+
     if (config.isExposeService()) {
       resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
-
-      BaseConfig kubernetesConfig = getKubernetesConfig();
-      for (Label label : kubernetesConfig.getLabels()) {
-        resources.decorate(new AddLabelDecorator(label));
-      }
-
-      for (Annotation annotation : kubernetesConfig.getAnnotations()) {
-        resources.decorate(new AddAnnotationDecorator(annotation));
-      }
-
       Port[] ports = kubernetesConfig.getPorts();
       if (ports.length == 0) {
         throw new IllegalStateException("Ports need to be present on KubernetesConfig");
@@ -130,6 +129,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       resources.decorateCustom(ResourceGroup.NAME, new AddExposedPortToComponentDecorator(ports[0].getContainerPort()));
     }
 
+   
     if (type != null) {
       resources.decorateCustom(ResourceGroup.NAME, new AddRuntimeTypeToComponentDecorator(type)); //
     }
