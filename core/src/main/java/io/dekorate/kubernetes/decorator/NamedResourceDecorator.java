@@ -58,8 +58,6 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
     if (!resourceKind.isPresent() || !objectMeta.isPresent()) {
       return;
     }
-
-    System.out.println("kind: " + resourceKind.get() + "name:" + objectMeta.get());
     if (Strings.isNullOrEmpty(kind)) {
       if (Strings.isNullOrEmpty(name)) {
         builder.accept(visitor.withKind(resourceKind.get()).withMetadata(objectMeta.get()));
