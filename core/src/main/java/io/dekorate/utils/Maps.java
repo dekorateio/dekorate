@@ -15,6 +15,7 @@
  */
 package io.dekorate.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dekorate.DekorateException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
