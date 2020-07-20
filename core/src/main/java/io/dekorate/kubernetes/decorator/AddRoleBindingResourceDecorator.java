@@ -57,7 +57,7 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
 
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
-    String name = Strings.isNotNullOrEmpty(this.name) ? this.name :  meta.getName() + ":view";
+    String name = Strings.isNotNullOrEmpty(this.name) ? this.name :  meta.getName() + ":" + this.role;
     String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount :  meta.getName();
 
     list.addToItems(new RoleBindingBuilder()
