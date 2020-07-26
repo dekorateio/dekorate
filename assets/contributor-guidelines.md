@@ -10,6 +10,13 @@ To make both your and our life easier here are some tips:
 To make sure that regardless of IDE/editor everyone uses the same settings we use `editorconfig`. 
 Just make sure that you have the `editorconfig` plugin for your editor installed.
 
+## configure IDE
+
+* use the `editorconfig` 
+* on the root level `mvn package` which also generates all sources and domains
+* add `target/generated-sources/annotations` as source in all projects where the `io.dekorate.application.config` domain classes are needed (e.g. all annotation projects, some test projects etc)
+
+
 ## pull request scope
 
 Keep your pull requests as small as possible.

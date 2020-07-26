@@ -209,6 +209,7 @@
 
 
   <build>
+    <pluginManagement>
     <plugins>
       <plugin>
         <groupId>io.sundr</groupId>
@@ -327,6 +328,8 @@
         </configuration>
       </plugin>
     </plugins>
+    </pluginManagement>
+    
   </build>
 
   <repositories>
