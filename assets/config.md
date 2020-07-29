@@ -317,6 +317,31 @@ The section below describes all the available subtypes.
 | dekorate.knative.revision-auto-scaling           | AutoScaling                   |             | ( see concurrency) ) |
 | dekorate.knative.global-auto-scaling             | GlobalAutoScaling             |             | ( see kpa) )         |
 
+## Tekton
+| Property                                        | Type                  | Description | Default Value                      |
+|-------------------------------------------------|-----------------------|-------------|------------------------------------|
+| dekorate.tekton.part-of                         | String                |             |                                    |
+| dekorate.tekton.name                            | String                |             |                                    |
+| dekorate.tekton.version                         | String                |             |                                    |
+| dekorate.tekton.labels                          | Label[]               |             |                                    |
+| dekorate.tekton.annotations                     | Annotation[]          |             |                                    |
+| dekorate.tekton.external-git-pipeline-resource  | String                |             |                                    |
+| dekorate.tekton.source-workspace                | String                |             | source                             |
+| dekorate.tekton.external-source-workspace-claim | String                |             |                                    |
+| dekorate.tekton.source-workspace-claim          | PersistentVolumeClaim |             | ( see PersistentVolumeClaim )      |
+| dekorate.tekton.m2-workspace                    | String                |             | m2                                 |
+| dekorate.tekton.external-m2-workspace-claim     | String                |             |                                    |
+| dekorate.tekton.m2-workspace-claim              | PersistentVolumeClaim |             | ( see PersistentVolumeClaim )      |
+| dekorate.tekton.builder-image                   | String                |             |                                    |
+| dekorate.tekton.builder-command                 | String                |             |                                    |
+| dekorate.tekton.builder-arguments               | String[]              |             |                                    |
+| dekorate.tekton.deployer-image                  | String                |             | lachlanevenson/k8s-kubectl:v1.18.0 |
+| dekorate.tekton.image-push-service-account      | String                |             |                                    |
+| dekorate.tekton.image-push-secret               | String                |             |                                    |
+| dekorate.tekton.use-local-docker-config-json    | boolean               |             | false                              |
+| dekorate.tekton.registry                        | String                |             | docker.io                          |
+| dekorate.tekton.registry-username               | String                |             |                                    |
+| dekorate.tekton.registry-password               | String                |             |                                    |
 A
 ## Halkyon types
 

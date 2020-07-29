@@ -28,6 +28,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
                            @PackageSelector(value="io.dekorate.docker.annotation"),
                            @PackageSelector(value="io.dekorate.kubernetes.annotation"),
                            @PackageSelector(value="io.dekorate.knative.annotation"),
+                           @PackageSelector(value="io.dekorate.tekton.annotation"),
                            @PackageSelector(value="io.dekorate.s2i.annotation"),
                            @PackageSelector(value="io.dekorate.openshift.annotation"),
                            @PackageSelector(value = "io.dekorate.halkyon.annotation"),
