@@ -86,6 +86,7 @@ limitations under the License.
         <configuration>
           <source>${java.source}</source>
           <target>${java.target}</target>
+          <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
           </annotationProcessors>

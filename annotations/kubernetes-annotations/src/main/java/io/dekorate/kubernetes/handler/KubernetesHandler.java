@@ -28,6 +28,7 @@ import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Labels;
+import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.deps.kubernetes.api.model.LabelSelector;
@@ -47,6 +48,7 @@ import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
+import io.dekorate.kubernetes.decorator.AddIngressRuleDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
@@ -143,7 +145,11 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       resources.decorate(group, new AddServiceResourceDecorator(config));
     }
 
-    resources.decorate(group, new AddIngressDecorator(config, Labels.createLabels(config)));
+    Ports.getHttpPort(config).ifPresent(p -> {
+        resources.decorate(group, new AddIngressDecorator(config, Labels.createLabels(config)));
+        resources.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
+    });
+
     resources.decorate(group, new ApplyLabelSelectorDecorator(createSelector(config)));
   }
 
