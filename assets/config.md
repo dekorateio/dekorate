@@ -83,7 +83,9 @@ The document is structured as follows.
 | dekorate.kubernetes.readiness-probe                 | Probe                         |             | ( see Probe ) |
 | dekorate.kubernetes.sidecars                        | Container[]                   |             |               |
 | dekorate.kubernetes.expose                          | boolean                       |             | false         |
+| dekorate.kubernetes.headless                        | boolean                       |             | false         |
 | dekorate.kubernetes.auto-deploy-enabled             | boolean                       |             | false         |
+
 
 ### Global Types
 The section below describes all the available subtypes.
@@ -219,8 +221,13 @@ The section below describes all the available subtypes.
 ## Docker
 | Property                            | Type    | Description | Default Value |
 |-------------------------------------|---------|-------------|---------------|
+| dekorate.docker.enabled             | boolean |             | true          |
+| dekorate.docker.registry          | String  |             |               |
+| dekorate.docker.group               | String  |             |               |
+| dekorate.docker.name                | String  |             |               |
+| dekorate.docker.version             | String  |             |               |
+| dekorate.docker.image               | String  |             |               |
 | dekorate.docker.docker-file         | String  |             | Dockerfile    |
-| dekorate.docker.registry            | String  |             |               |
 | dekorate.docker.auto-push-enabled   | boolean |             | false         |
 | dekorate.docker.auto-build-enabled  | boolean |             | false         |
 | dekorate.docker.auto-deploy-enabled | boolean |             | false         |
@@ -257,6 +264,7 @@ The section below describes all the available subtypes.
 | dekorate.openshift.readiness-probe                 | Probe                         |             | ( see Probe ) |
 | dekorate.openshift.sidecars                        | Container[]                   |             |               |
 | dekorate.openshift.expose                          | boolean                       |             | false         |
+| dekorate.openshift.headless                        | boolean                       |             | false         |
 | dekorate.openshift.auto-deploy-enabled             | boolean                       |             | false         |
 
 ### S2i
@@ -272,44 +280,52 @@ The section below describes all the available subtypes.
 
 ## Knative
 
-| Property                                         | Type                          | Description | Default Value |
-|--------------------------------------------------|-------------------------------|-------------|---------------|
-| dekorate.knative.part-o                          | String                        |             |               |
-| dekorate.knative.name                            | String                        |             |               |
-| dekorate.knative.version                         | String                        |             |               |
-| dekorate.knative.labels                          | Label[]                       |             |               |
-| dekorate.knative.annotations                     | Annotation[]                  |             |               |
-| dekorate.knative.env-vars                        | Env[]                         |             |               |
-| dekorate.knative.working-dir                     | String                        |             |               |
-| dekorate.knative.command                         | String[]                      |             |               |
-| dekorate.knative.arguments                       | String[]                      |             |               |
-| dekorate.knative.service-account                 | String                        |             |               |
-| dekorate.knative.host                            | String                        |             |               |
-| dekorate.knative.ports                           | Port[]                        |             |               |
-| dekorate.knative.service-type                    | ServiceType                   |             | ClusterIP     |
-| dekorate.knative.pvc-volumes                     | PersistentVolumeClaimVolume[] |             |               |
-| dekorate.knative.secret-volumes                  | SecretVolume[]                |             |               |
-| dekorate.knative.config-map-volumes              | ConfigMapVolume[]             |             |               |
-| dekorate.knative.git-repo-volumes                | GitRepoVolume[]               |             |               |
-| dekorate.knative.aws-elastic-block-store-volumes | AwsElasticBlockStoreVolume[]  |             |               |
-| dekorate.knative.azure-disk-volumes              | AzureDiskVolume[]             |             |               |
-| dekorate.knative.azure-file-volumes              | AzureFileVolume[]             |             |               |
-| dekorate.knative.mounts                          | Mount[]                       |             |               |
-| dekorate.knative.image-pull-policy               | ImagePullPolicy               |             | IfNotPresent  |
-| dekorate.knative.image-pull-secrets              | String[]                      |             |               |
-| dekorate.knative.liveness-probe                  | Probe                         |             | ( see Probe ) |
-| dekorate.knative.readiness-probe                 | Probe                         |             | ( see Probe ) |
-| dekorate.knative.sidecars                        | Container[]                   |             |               |
-| dekorate.knative.expose                          | boolean                       |             | false         |
-| dekorate.knative.auto-deploy-enabled             | boolean                       |             | false         |
+| Property                                         | Type                          | Description | Default Value        |
+|--------------------------------------------------|-------------------------------|-------------|----------------------|
+| dekorate.knative.part-of                         | String                        |             |                      |
+| dekorate.knative.name                            | String                        |             |                      |
+| dekorate.knative.version                         | String                        |             |                      |
+| dekorate.knative.labels                          | Label[]                       |             |                      |
+| dekorate.knative.annotations                     | Annotation[]                  |             |                      |
+| dekorate.knative.env-vars                        | Env[]                         |             |                      |
+| dekorate.knative.working-dir                     | String                        |             |                      |
+| dekorate.knative.command                         | String[]                      |             |                      |
+| dekorate.knative.arguments                       | String[]                      |             |                      |
+| dekorate.knative.service-account                 | String                        |             |                      |
+| dekorate.knative.host                            | String                        |             |                      |
+| dekorate.knative.ports                           | Port[]                        |             |                      |
+| dekorate.knative.http-transport-version          | HttpTransportVersion          |             | HTTP1                |
+| dekorate.knative.service-type                    | ServiceType                   |             | ClusterIP            |
+| dekorate.knative.pvc-volumes                     | PersistentVolumeClaimVolume[] |             |                      |
+| dekorate.knative.secret-volumes                  | SecretVolume[]                |             |                      |
+| dekorate.knative.config-map-volumes              | ConfigMapVolume[]             |             |                      |
+| dekorate.knative.git-repo-volumes                | GitRepoVolume[]               |             |                      |
+| dekorate.knative.aws-elastic-block-store-volumes | AwsElasticBlockStoreVolume[]  |             |                      |
+| dekorate.knative.azure-disk-volumes              | AzureDiskVolume[]             |             |                      |
+| dekorate.knative.azure-file-volumes              | AzureFileVolume[]             |             |                      |
+| dekorate.knative.mounts                          | Mount[]                       |             |                      |
+| dekorate.knative.image-pull-policy               | ImagePullPolicy               |             | IfNotPresent         |
+| dekorate.knative.image-pull-secrets              | String[]                      |             |                      |
+| dekorate.knative.liveness-probe                  | Probe                         |             | ( see Probe )        |
+| dekorate.knative.readiness-probe                 | Probe                         |             | ( see Probe )        |
+| dekorate.knative.sidecars                        | Container[]                   |             |                      |
+| dekorate.knative.expose                          | boolean                       |             | true                 |
+| dekorate.knative.auto-deploy-enabled             | boolean                       |             | false                |
+| dekorate.knative.min-scale                       | int                           |             | 0                    |
+| dekorate.knative.max-scale                       | int                           |             | 0                    |
+| dekorate.knative.scale-to-zero-enabled           | boolean                       |             | true                 |
+| dekorate.knative.revision-auto-scaling           | AutoScaling                   |             | ( see concurrency) ) |
+| dekorate.knative.global-auto-scaling             | GlobalAutoScaling             |             | ( see kpa) )         |
 
+A
 ## Halkyon types
 
 This section describes all halkyon related types.
 
 ### HalkyonComponent
+
 | Property                           | Type                        | Description   | Default Value   |
-|-- ---------------------------------| ----------------------------| ------------- | ------------- --|
+|------------------------------------|-----------------------------| --------------|-----------------|
 | dekorate.component.part-of         | String                      |               |                 |
 | dekorate.component.name            | String                      |               |                 |
 | dekorate.component.version         | String                      |               |                 |
@@ -323,6 +339,7 @@ This section describes all halkyon related types.
 | dekorate.component.requires        | HalkyonRequiredCapability[] |               |                 |
 
 #### HalkyonCapability
+
 | Property                       | Type        | Description | Default Value |
 |--------------------------------|-------------|-------------|---------------|
 | dekorate.capability.category   | String      |             |               |
@@ -332,8 +349,9 @@ This section describes all halkyon related types.
 | dekorate.capability.parameters | Parameter[] |             |               |
 
 #### HalkyonRequiredCapability 
+
 | Property                                  | Type          | Description   | Default Value   |
-|-- ----------------------------------------| ------------- | ------------- | ------------- --|
+|-------------------------------------------|---------------|---------------|-----------------|
 | dekorate.requiredcapability.name          | String        |               |                 |
 | dekorate.requiredcapability.category      | String        |               |                 |
 | dekorate.requiredcapability.type          | String        |               |                 |
