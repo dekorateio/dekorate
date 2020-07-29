@@ -1746,18 +1746,32 @@ In case, that dekorate bom is imported by a downstream project (e.g. snowdrop) a
 
 At the moment dekorate is using 3 branches in parallel and two major versions are developed at the same time.
 
-Branches:
+### Branches
 
-- master (active development)
+- master (active development, pull requests should point here)
+- 2.0.x  (not released yet)
 - 1.0.x  (important bug fixes)
 - 0.12.x (new features + bug fixes)
+- 0.11.x (old branch, no longer maintained, will soon be removed)
 
-From those branches we release:
+### Pull request guidelines
+
+All pull requests should target the `master` branch and from there things are backported to where it makes sense.
+
+### Release branches
+
+The current release branches are:
 
 - 1.0.x  (stable)
 - 0.12.x (volatile)
 
-The idea is that 1.0.x is the stable branch that doesn't change that often, while 0.12.x is the volatile one that changes more often.
+#### Fast vs slow paced branches
+
+The idea is that `1.0.x` is the stable branch (slow paced) that doesn't change that often, while `0.12.x` is the volatile one (fast paced) that changes more often.
+
+It's a bit strange to have a lower major version being more volatile (e.g. `0.12.x` being more volatile than `1.0.x`). 
+This paradox exists for various reasons, most evolving around the fact that we are not ready yet for a `2.0.0` release and we don't want to slow down releases on our fast paced branch.
+This paradox will be eliminated soon, once our fast paced branch will be `2.0.x`.
 
 ### Which version should you use?
 
