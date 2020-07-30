@@ -18,6 +18,8 @@
     <module>knative-example</module>
     <module>servicebinding-example</module>
     <module>servicebinding-annotationless-example</module>
+    <module>frameworkless-on-kubernetes-example</module>
+    <module>frameworkless-on-openshift-example</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-kubernetes-without-annotations</module>
     <module>spring-boot-on-kubernetes-with-jib-example</module>

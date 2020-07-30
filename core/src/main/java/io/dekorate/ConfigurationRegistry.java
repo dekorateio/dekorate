@@ -114,13 +114,14 @@ public class ConfigurationRegistry {
   private Stream<? extends ImageConfiguration> imageConfigStream(
       Predicate<ConfigurationSupplier<ImageConfiguration>> predicate) {
     return suppliers.values()
-        .stream()
-        .map(l -> combine(l.stream()
-            .map(s -> s.configure(configurators))
-            .filter(s -> s.get() instanceof ImageConfiguration)
-            .map(s -> (ConfigurationSupplier<ImageConfiguration>) s)
-            .filter(predicate)
-            .collect(Collectors.toList())));
+      .stream()
+      .map(l -> combine(l.stream()
+        .map(s -> s.configure(configurators))
+        .filter(s -> s.get() instanceof ImageConfiguration)
+        .map(s -> (ConfigurationSupplier<ImageConfiguration>) s)
+        .filter(predicate)
+        .sorted()
+        .collect(Collectors.toList())));
   }
 
   public <C extends ImageConfiguration> Optional<C> getImageConfig(Class<C> type) {
