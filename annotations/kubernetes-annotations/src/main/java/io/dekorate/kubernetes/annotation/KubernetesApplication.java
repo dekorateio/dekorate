@@ -34,7 +34,7 @@ import io.sundr.builder.annotations.Pojo;
 public @interface KubernetesApplication {
 
   /**
-   * The name of the collection of componnet this component belongs to.
+   * The name of the collection of component this component belongs to.
    * This value will be use as:
    * - docker image repo
    * - labeling resources
