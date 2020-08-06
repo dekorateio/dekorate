@@ -51,7 +51,7 @@ You can use a simple Dockerfile like:
     COPY target/*.jar kubernetes-example.jar
     CMD java ${JAVA_OPTS} -jar kubernetes-example.jar
     
-If such a Dockerfile is present in the module root it will be detected and used by dekorate, when specifying the option `-Ddekoreate.deploy=true`.
+If such a Dockerfile is present in the module root it will be detected and used by dekorate, when specifying the option `-Ddekorate.deploy=true`.
 
 #### On Openshift using binary builds
 
@@ -63,7 +63,7 @@ You will need to add dependency below as a supplement or replacement of `kuberne
       <version>1.0.1</version>
     </dependency>
  
-When `-Ddekoreate.deploy=true` is detected and `openshift-spring-starter` is available, an binary build will take place.
+When `-Ddekorate.deploy=true` is detected and `openshift-spring-starter` is available, an binary build will take place.
 Note: In this case, no `Dockerfile` is required.
 
 #### Rebuilding an image
