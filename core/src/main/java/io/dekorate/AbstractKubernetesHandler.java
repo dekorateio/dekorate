@@ -47,6 +47,7 @@ import io.dekorate.kubernetes.decorator.AddMountDecorator;
 import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
+import io.dekorate.kubernetes.decorator.AddResourcesRequirementDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
@@ -57,6 +58,7 @@ import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
+import io.dekorate.utils.ResourcesRequirement;
 import io.dekorate.utils.Strings;
 
 import java.util.Arrays;
@@ -179,6 +181,10 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
 
     if (Probes.isConfigured(config.getReadinessProbe())) {
       resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
+    }
+
+    if (ResourcesRequirement.isConfigured(config.getResources()) ) {
+      resources.decorate(group, new AddResourcesRequirementDecorator(config.getResources()));
     }
   }
 

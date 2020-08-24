@@ -84,4 +84,10 @@ public @interface Container {
    */
   Probe readinessProbe() default @Probe();
 
+  /**
+   * The pod resources
+   * @return The resources
+    */
+  Resources resources() default @Resources;
+
 }
