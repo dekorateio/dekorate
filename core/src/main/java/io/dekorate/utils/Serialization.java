@@ -51,7 +51,10 @@ public class Serialization {
     configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
     configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
   }};
-  private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory().enable(Feature.MINIMIZE_QUOTES))  {{
+  private static final ObjectMapper YAML_MAPPER = new ObjectMapper(
+    new YAMLFactory()
+      .enable(Feature.MINIMIZE_QUOTES)
+      .enable(Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS))  {{
     configure(SerializationFeature.INDENT_OUTPUT, true);
     configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
     configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
