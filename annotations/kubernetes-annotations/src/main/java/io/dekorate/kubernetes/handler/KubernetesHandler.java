@@ -15,6 +15,10 @@
  */
 package io.dekorate.kubernetes.handler;
 
+import static io.dekorate.utils.Labels.createLabels;
+
+import java.util.Optional;
+
 import io.dekorate.AbstractKubernetesHandler;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.Configurators;
@@ -25,6 +29,26 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.config.Container;
+import io.dekorate.kubernetes.config.DeploymentStrategy;
+import io.dekorate.kubernetes.config.EditableKubernetesConfig;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
+import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
+import io.dekorate.kubernetes.config.RollingUpdate;
+import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.decorator.AddIngressDecorator;
+import io.dekorate.kubernetes.decorator.AddIngressRuleDecorator;
+import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
+import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
+import io.dekorate.kubernetes.decorator.ApplyDeploymentStrategyDecorator;
+import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
+import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
+import io.dekorate.kubernetes.decorator.ApplyLabelSelectorDecorator;
+import io.dekorate.kubernetes.decorator.ApplyReplicasDecorator;
+import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Labels;
@@ -56,7 +80,6 @@ import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLabelSelectorDecorator;
 import io.dekorate.kubernetes.decorator.ApplyReplicasDecorator;
-import io.dekorate.project.ApplyProjectInfo;
 
 import java.util.Optional;
 
@@ -117,6 +140,8 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     if (config.getReplicas() != 1) {
       resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     }
+
+    resources.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(), config.getRollingUpdate()));
 
     String image = Strings.isNotNullOrEmpty(imageConfig.getImage())
       ? imageConfig.getImage()

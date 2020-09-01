@@ -1,4 +1,4 @@
-/**
+ /**
  * Copyright 2018 The original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@ package io.dekorate.kubernetes.annotation;
 
 import io.dekorate.deps.kubernetes.api.model.Service;
 import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.kubernetes.config.DeploymentStrategy;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -119,6 +120,19 @@ public @interface KubernetesApplication {
    */
   int replicas() default 1;
 
+
+  /**
+   * Specifies the deployment strategy.
+   */
+  DeploymentStrategy deploymentStrategy() default DeploymentStrategy.None;
+
+  /**
+   * Specifies rolling update configuration.
+   * The configuration is applied when DeploymentStrategy == Rolling update, or
+   * when explicit configuration has been provided. In the later case RollingUpdate is assumed.
+   */
+  RollingUpdate rollingUpdate() default @RollingUpdate;
+    
   /**
    * The service account.
    * 

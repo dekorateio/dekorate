@@ -57,6 +57,7 @@
       <module>feat-575-knative-scale-to-zero</module>
       <module>feat-572-knative-cluster-local</module>
       <module>issue-586-knative-scale-bounds</module>
+      <module>feat-590-custom-rolling-update-strategy</module>
     </modules>
 
 </project>
