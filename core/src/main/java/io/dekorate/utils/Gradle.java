@@ -22,6 +22,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.utils.Exec.ProjectExec;
 
 public class Gradle {
@@ -34,6 +36,8 @@ public class Gradle {
   public static String SPACE = " ";
 
   public static String FALLBACK_GRADLE_VERSION = "6.4";
+
+  private static final Logger LOGGER = LoggerFactory.getLogger();
 
   public static String getVersion(Path modulePath) {
     Path moduleGraldew = modulePath.resolve(GRADLEW);
@@ -60,20 +64,22 @@ public class Gradle {
 
   private static String getVersionFromOutput(String output) {
     if (Strings.isNullOrEmpty(output)) {
-      throw new IllegalArgumentException("Gradle version output should not be empty!");
+      LOGGER.warning("Unknown gradle version output format. Expected at least one line. Falling back to: " + FALLBACK_GRADLE_VERSION + "!");
+      return FALLBACK_GRADLE_VERSION;
     }
 
-    String[] lines = output.split(NEW_LINE);
     Optional<String> versionLine = Arrays.stream(output.split(NEW_LINE))
       .filter(l -> l.startsWith("Gradle"))
       .findFirst();
 
     if (!versionLine.isPresent()) {
-      throw new IllegalStateException("Unknown gradle version output format. Expected at least one line!");
+      LOGGER.warning("Unknown gradle version output format. Expected at least one line. Falling back to: " + FALLBACK_GRADLE_VERSION + "!");
+      return FALLBACK_GRADLE_VERSION;
     }
     String[] parts = versionLine.map(l -> l.split(SPACE)).get();
     if (parts.length < 2) {
-        throw new IllegalStateException("Unknown gradle version output format. Expected 'Gralde x.y.z ...'");
+      LOGGER.warning("Unknown gradle version output format. Expected 'Gralde x.y.z ...'. Falling back to: "+ FALLBACK_GRADLE_VERSION + "!");
+      return FALLBACK_GRADLE_VERSION;
     }
     return parts[1];
   }
