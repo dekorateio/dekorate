@@ -22,6 +22,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.utils.Exec.ProjectExec;
 
 public class Maven {
@@ -35,6 +37,8 @@ public class Maven {
 
   public static String FALLBACK_MAVEN_VERSION = "3.6.3";
 
+  private static final Logger LOGGER = LoggerFactory.getLogger();
+  
   public static String getVersion(Path modulePath) {
     Path moduleMvnw = modulePath.resolve(MVNW);
     Path rootMvnw = Git.getRoot(modulePath).orElse(modulePath).resolve(MVNW);
@@ -61,7 +65,8 @@ public class Maven {
 
   private static String getVersionFromOutput(String output) {
     if (Strings.isNullOrEmpty(output)) {
-      throw new IllegalArgumentException("Maven version output should not be empty!");
+      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: " + FALLBACK_MAVEN_VERSION + "!");
+      return FALLBACK_MAVEN_VERSION;
     }
 
     Optional<String> versionLine = Arrays.stream(output.split(NEW_LINE))
@@ -69,11 +74,14 @@ public class Maven {
       .findFirst();
 
     if (!versionLine.isPresent()) {
-      throw new IllegalStateException("Unknown maven version output format. Expected at least one line!");
+      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: " + FALLBACK_MAVEN_VERSION + "!");
+      return FALLBACK_MAVEN_VERSION;
+
     }
     String[] parts = versionLine.map(l -> l.split(SPACE)).get();
     if (parts.length < 3) {
-        throw new IllegalStateException("Unknown maven version output format. Expected 'Apache Maven x.y.z ...'");
+      LOGGER.warning("Unknown maven version output format. Expected 'Apache Maven x.y.z ...'. Falling back to: " + FALLBACK_MAVEN_VERSION + "!");
+      return FALLBACK_MAVEN_VERSION;
      }
     return parts[2];
   }
