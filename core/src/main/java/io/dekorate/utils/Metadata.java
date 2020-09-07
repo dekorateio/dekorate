@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.api.builder.Predicate;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ObjectMetaFluent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,6 +53,40 @@ public class Metadata {
       //ignore
     }
     return Optional.empty();
+  }
+
+  public static boolean addToLabels(Builder builder, String key, String value) {
+    try {
+      Method editMethod = builder.getClass().getMethod("editOrNewMetadata");
+      Object o = editMethod.invoke(builder);
+      if (o instanceof ObjectMetaFluent) {
+        ObjectMetaFluent fluent = (ObjectMetaFluent) o;
+        fluent.addToLabels(key, value);
+        Method endMethod = fluent.getClass().getMethod("endMetadata");
+        endMethod.invoke(fluent);
+        return true;
+      }
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      //ignore
+    }
+    return false;
+  }
+
+  public static boolean removeFromLabels(Builder builder, String key) {
+    try {
+      Method editMethod = builder.getClass().getMethod("editOrNewMetadata");
+      Object o = editMethod.invoke(builder);
+      if (o instanceof ObjectMetaFluent) {
+        ObjectMetaFluent fluent = (ObjectMetaFluent) o;
+        fluent.removeFromLabels(key);
+        Method endMethod = fluent.getClass().getMethod("endMetadata");
+        endMethod.invoke(fluent);
+        return true;
+      }
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      //ignore
+    }
+    return false;
   }
 
   /**

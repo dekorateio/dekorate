@@ -170,7 +170,7 @@ limitations under the License.
                     <include>io/dekorate/openshift/listener/**</include>
                     <include>io/dekorate/openshift/util/**</include>
                     <include>io/dekorate/openshift/*</include>
-                    <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>

@@ -15,16 +15,17 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Label;
+import io.dekorate.utils.Metadata;
 
 /**
  * A decorator that adds a label to resources.
  */
 @Description("Add a label to the all metadata.")
-public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
+public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> {
 
   private final Label label;
 
@@ -42,8 +43,8 @@ public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder>
   }
 
   @Override
-  public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
-    builder.addToLabels(label.getKey(), label.getValue());
+  public void andThenVisit(VisitableBuilder builder, ObjectMeta resourceMeta) {
+    Metadata.addToLabels(builder, label.getKey(), label.getValue());
   }
 
   public Label getLabel() {
