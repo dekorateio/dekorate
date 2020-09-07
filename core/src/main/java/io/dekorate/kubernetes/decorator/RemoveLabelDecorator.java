@@ -18,12 +18,13 @@ package io.dekorate.kubernetes.decorator;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
+import io.dekorate.utils.Metadata;
 
 /**
  * A decorator that removes a label.
  */
 @Description("Remove a label from the all metadata.")
-public class RemoveLabelDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
+public class RemoveLabelDecorator extends NamedResourceDecorator<VisitableBuilder> {
 
   private final String labelKey;
 
@@ -37,8 +38,8 @@ public class RemoveLabelDecorator extends NamedResourceDecorator<ObjectMetaBuild
   }
 
   @Override
-  public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
-    builder.removeFromLabels(labelKey);
+  public void andThenVisit(VisitableBuilder builder, ObjectMeta resourceMeta) {
+    Metadata.removeFromLabels(builder, labelKey);
   }
 
   public String getLabelKey() {
