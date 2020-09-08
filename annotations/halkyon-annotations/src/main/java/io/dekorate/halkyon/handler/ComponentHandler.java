@@ -16,6 +16,7 @@
 package io.dekorate.halkyon.handler;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,6 +55,7 @@ import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
+import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.project.ScmInfo;
@@ -112,21 +114,36 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     generateBuildConfigIfNeeded(config);
 
     BaseConfig kubernetesConfig = getKubernetesConfig();
-    for (Label label : kubernetesConfig.getLabels()) {
-      resources.decorate(new AddLabelDecorator(label));
+    Map<String, String> allLabels = new HashMap<>();
+    allLabels.put(Labels.NAME, config.getName());
+    if (Strings.isNotNullOrEmpty(config.getVersion())) {
+        allLabels.put(Labels.VERSION, config.getVersion());
     }
+    if (Strings.isNotNullOrEmpty(config.getPartOf())) {
+       allLabels.put(Labels.PART_OF, config.getPartOf());
+    }
+    Arrays.stream(config.getLabels()).forEach(l -> {
+            allLabels.put(l.getKey(), l.getValue());
+        });
 
-    for (Annotation annotation : kubernetesConfig.getAnnotations()) {
-      resources.decorate(new AddAnnotationDecorator(annotation));
-    }
+    Labels.createLabels(kubernetesConfig).forEach( (k,v) -> {
+            if (!allLabels.containsKey(k)) {
+                allLabels.put(k, v);
+            }
+        });
+
+    allLabels.forEach( (k,v)  -> {
+            resources.decorateCustom(ResourceGroup.NAME, new AddLabelDecorator(new Label(k, v)));
+            resources.decorateCustom(ResourceGroup.NAME, new AddToSelectorDecorator(k, v));
+        });
 
     if (config.isExposeService()) {
-      resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
-      Port[] ports = kubernetesConfig.getPorts();
-      if (ports.length == 0) {
-        throw new IllegalStateException("Ports need to be present on KubernetesConfig");
-      }
-      resources.decorateCustom(ResourceGroup.NAME, new AddExposedPortToComponentDecorator(ports[0].getContainerPort()));
+        resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
+        Port[] ports = kubernetesConfig.getPorts();
+        if (ports.length == 0) {
+            throw new IllegalStateException("Ports need to be present on KubernetesConfig");
+        }
+        resources.decorateCustom(ResourceGroup.NAME, new AddExposedPortToComponentDecorator(ports[0].getContainerPort()));
     }
 
    
@@ -187,13 +204,9 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
    * @return The component.
    */
   private Component createComponent(ComponentConfig config) {
-    Map<String, String> labels = createLabels(config);
-
-    labels.put(Labels.NAME, config.getName());
     return new ComponentBuilder()
       .withNewMetadata()
       .withName(config.getName())
-      .withLabels(labels)
       .endMetadata()
       .withNewSpec()
       .withDeploymentMode(config.getDeploymentMode())
@@ -210,16 +223,4 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       .accept(new ApplyDeployToApplicationConfiguration())
       .accept(new ApplyProjectInfo(p)));
   }
-
-  private static Map<String, String> createLabels(ComponentConfig config) {
-    Map<String, String> result = new HashMap<String, String>() {{
-      put(Labels.NAME, config.getName());
-    }};
-
-    for (Label label : config.getLabels()) {
-      result.put(label.getKey(), label.getValue());
-    }
-    return result;
-  }
-
 }
