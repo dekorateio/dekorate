@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ComponentSpringBootExampleTest {
   
@@ -38,7 +37,7 @@ public class ComponentSpringBootExampleTest {
     Component component = (Component) items.get(0);
     assertEquals("Component", component.getKind());
     assertEquals("halkyon-example", component.getMetadata().getName());
-    assertEquals(1, component.getMetadata().getLabels().size());
+    assertEquals(2, component.getMetadata().getLabels().size());
     assertNotNull(component.getSpec().getBuildConfig());
     assertNotNull(component.getSpec().getBuildConfig().getUrl());
   }
