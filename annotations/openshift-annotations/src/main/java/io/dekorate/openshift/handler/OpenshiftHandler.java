@@ -166,17 +166,13 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @return          The deployment config.
    */
   public DeploymentConfig createDeploymentConfig(OpenshiftConfig config, ImageConfiguration imageConfig)  {
-    Map<String, String> labels = Labels.createLabels(config);
-
     return new DeploymentConfigBuilder()
       .withNewMetadata()
       .withName(config.getName())
-      .withLabels(labels)
       .endMetadata()
       .withNewSpec()
       .withReplicas(1)
-      .withTemplate(createPodTemplateSpec(config, imageConfig, labels))
-      .withSelector(labels)
+      .withTemplate(createPodTemplateSpec(config, imageConfig))
       .endSpec()
       .build();
   }
@@ -186,11 +182,10 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
    * @param config   The sesssion.
    * @return          The pod template specification.
    */
-  public PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config, ImageConfiguration imageConfig, Map<String, String> labels) {
+  public PodTemplateSpec createPodTemplateSpec(OpenshiftConfig config, ImageConfiguration imageConfig) {
     return new PodTemplateSpecBuilder()
       .withSpec(createPodSpec(config, imageConfig))
       .withNewMetadata()
-      .withLabels(labels)
       .endMetadata()
       .build();
   }

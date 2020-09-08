@@ -15,6 +15,10 @@
  */
 package io.dekorate;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.config.Annotation;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
@@ -45,11 +49,13 @@ import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
+import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
 import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
 
@@ -98,9 +104,11 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     resources.decorate(new AddVcsUrlAnnotationDecorator());
     resources.decorate(new AddCommitIdAnnotationDecorator());
 
-    for (Label label : config.getLabels()) {
-      resources.decorate(new AddLabelDecorator(label));
-    }
+    Labels.createLabels(config).forEach( (k,v) -> {
+            resources.decorate(group, new AddLabelDecorator(new Label(k,v)));
+            resources.decorate(group, new AddToSelectorDecorator(k, v));
+    });
+
     for (Annotation annotation : config.getAnnotations()) {
       resources.decorate(new AddAnnotationDecorator(annotation));
     }

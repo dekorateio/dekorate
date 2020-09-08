@@ -55,7 +55,7 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
 
     //First we need to consult the labels
     String fallbackVersion = Strings.isNotNullOrEmpty(config.getVersion()) ? config.getVersion() : LATEST;
-    String version = meta.getLabels().getOrDefault(Labels.VERSION, fallbackVersion);
+    String version = meta.getLabels() != null ? meta.getLabels().getOrDefault(Labels.VERSION, fallbackVersion) : fallbackVersion;
 
     if (contains(list, "build.openshift.io/v1", "BuildConfig", config.getName())) {
       return;

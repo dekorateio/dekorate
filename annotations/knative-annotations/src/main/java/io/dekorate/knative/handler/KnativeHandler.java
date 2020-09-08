@@ -209,7 +209,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
                         : imageConfig.getRegistry(),
                     imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
-    return new ServiceBuilder().withNewMetadata().withName(config.getName()).withLabels(Labels.createLabels(config))
+    return new ServiceBuilder().withNewMetadata().withName(config.getName())
         .endMetadata().withNewSpec().withNewTemplate().withNewSpec().addNewContainer().withName(config.getName())
         .withImage(image).endContainer().endSpec().endTemplate().endSpec().build();
   }

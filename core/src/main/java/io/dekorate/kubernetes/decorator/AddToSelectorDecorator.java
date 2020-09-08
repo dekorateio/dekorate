@@ -29,6 +29,12 @@ public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuil
   private final String key;
   private final String value;
 
+	public AddToSelectorDecorator(String key, String value) {
+		super(ANY);
+		this.key = key;
+		this.value = value;
+	}
+
 	public AddToSelectorDecorator(String name, String key, String value) {
 		super(name);
 		this.key = key;
