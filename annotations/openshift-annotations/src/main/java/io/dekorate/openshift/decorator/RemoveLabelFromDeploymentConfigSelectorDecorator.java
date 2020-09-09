@@ -2,8 +2,8 @@ package io.dekorate.openshift.decorator;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.openshift.api.model.DeploymentConfigSpecFluent;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.dekorate.deps.openshift.api.model.DeploymentConfigSpecFluent;
 
 public class RemoveLabelFromDeploymentConfigSelectorDecorator extends NamedResourceDecorator<DeploymentConfigSpecFluent<?>> {
 

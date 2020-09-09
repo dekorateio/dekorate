@@ -1,8 +1,8 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.LabelSelectorFluent;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.dekorate.deps.kubernetes.api.model.LabelSelectorFluent;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
 public class AddToMatchingLabelsDecorator extends NamedResourceDecorator<LabelSelectorFluent<?>> {
 

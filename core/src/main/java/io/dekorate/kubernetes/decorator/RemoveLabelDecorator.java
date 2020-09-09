@@ -17,6 +17,7 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 import io.dekorate.deps.kubernetes.api.model.ObjectMetaBuilder;
+import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Metadata;
 

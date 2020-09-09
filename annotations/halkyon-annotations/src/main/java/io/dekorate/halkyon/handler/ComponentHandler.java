@@ -116,6 +116,8 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     BaseConfig kubernetesConfig = getKubernetesConfig();
     Map<String, String> allLabels = new HashMap<>();
     allLabels.put(Labels.NAME, config.getName());
+
+    System.out.println("Component version:" + config.getVersion()+".");
     if (Strings.isNotNullOrEmpty(config.getVersion())) {
         allLabels.put(Labels.VERSION, config.getVersion());
     }
@@ -137,6 +139,9 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
             resources.decorateCustom(ResourceGroup.NAME, new AddToSelectorDecorator(k, v));
         });
 
+    for (Annotation annotation : kubernetesConfig.getAnnotations()) {
+        resources.decorateCustom(ResourceGroup.NAME, new AddAnnotationDecorator(annotation));
+    }
     if (config.isExposeService()) {
         resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
         Port[] ports = kubernetesConfig.getPorts();

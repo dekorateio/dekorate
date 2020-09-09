@@ -21,8 +21,8 @@ import java.util.Optional;
 
 import io.dekorate.SelectorDecoratorFactories;
 import io.dekorate.SelectorDecoratorFactory;
-import io.fabric8.kubernetes.api.builder.VisitableBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
 public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuilder> {
 
