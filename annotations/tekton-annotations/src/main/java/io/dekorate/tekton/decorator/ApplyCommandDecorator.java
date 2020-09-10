@@ -16,8 +16,6 @@
 package io.dekorate.tekton.decorator;
 
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
-import io.dekorate.kubernetes.decorator.ContainerDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
