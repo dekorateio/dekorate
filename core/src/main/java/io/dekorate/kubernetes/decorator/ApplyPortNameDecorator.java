@@ -32,10 +32,12 @@ public class ApplyPortNameDecorator extends ApplicationContainerDecorator<Contai
 		super(deploymentName, containerName);
 		this.name = name;
     this.toReplace = new HashSet<String>(Arrays.asList(toReplace));
+    System.out.println("Created decorator");
 	}
 
 	@Override
 	public void andThenVisit(ContainerPortFluent<?> port) {
+    System.out.println("Visted container port!");
     if (toReplace.contains(port.getName())) {
       port.withName(name);
     }
@@ -43,6 +45,6 @@ public class ApplyPortNameDecorator extends ApplicationContainerDecorator<Contai
 
 	@Override
 	public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplicationContainerDecorator.class, AddSidecarDecorator.class, AddPortDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class, AddPortDecorator.class };
 	}
 }
