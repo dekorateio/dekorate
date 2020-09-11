@@ -1,0 +1,27 @@
+title How Dekorate works
+
+participant Compiler as c
+participant Processor as p
+participant Session as s
+participant Handler as h
+
+opt processing phase
+    c->+p: annotated classes
+    p->+s: start session
+    p->+s: register handler
+    p->+s: register config
+end
+
+
+opt generation phase
+
+    c->+p: notify processing over
+    p->+s: close
+    s-->+s: apply configurators
+    s-->+s: generate config
+    s->+h: send config
+    h->+s: generate model
+    s-->+s: apply docorators
+    s->+p: write to file
+
+end

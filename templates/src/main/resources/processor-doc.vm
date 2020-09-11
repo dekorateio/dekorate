@@ -1,0 +1,31 @@
+| Processor | Config | Supported Annotations | Descripton |
+|-
+#foreach ($m in ${model.values()})
+#set ($superclass = $m.getExtendsList().get(0))
+#if ($superclass.getName().equals("AbstractAnnotationProcessor") || $superclass.getName().equals("AbstractKubernetesProcessor"))
+#elseif ($superclass.getDefinition().getExtendsList().size() == 1)
+#set ($superclass = $superclass.getDefinition().getExtendsList().get(0))
+#end
+#if ($m.isAbstract())
+#elseif ($superclass.getName().equals("AbstractAnnotationProcessor") || $superclass.getName().equals("AbstractKubernetesProcessor"))
+#if ($superclass.getArguments().size() == 0)
+#set ($target = "none")
+#else
+#set ($target = $superclass.getArguments().get(0))
+#end
+#set  ($annotations = $m.annotations)
+#set ($supported = "")
+#foreach  ($annotation in $annotations)
+#if ($annotation.getClassRef().getName().equals("SupportedAnnotationTypes"))
+#set ($supported = $annotation.getParameters().get("value"))
+#end
+#end
+#set ($description = "")
+#foreach  ($annotation in $annotations)
+#if ($annotation.getClassRef().getName().equals("Description"))
+#set ($description = $annotation.getParameters().get("value"))
+#end
+#end
+| ${m.name} | $target | $supported | $description |
+#end
+#end

@@ -15,25 +15,20 @@
  * 
 **/
 
-package io.dekorate.doc;
+package io.dekorate.option.doc;
 
-import io.sundr.codegen.annotations.PackageSelector;
+import io.sundr.codegen.annotations.AnnotationSelector;
 import io.sundr.codegen.model.Attributeable;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
+import io.sundr.builder.annotations.Pojo;
 
 
 @VelocityTransformations(value = @VelocityTransformation(value="/annotation-doc.vm", outputPath="annotation-table.org", gather=true),
-                         packages = {
-                           @PackageSelector(value="io.dekorate.docker.annotation"),
-                           @PackageSelector(value="io.dekorate.kubernetes.annotation"),
-                           @PackageSelector(value="io.dekorate.knative.annotation"),
-                           @PackageSelector(value="io.dekorate.s2i.annotation"),
-                           @PackageSelector(value="io.dekorate.openshift.annotation"),
-                           @PackageSelector(value = "io.dekorate.halkyon.annotation"),
+                         annotations =  {
+                           @AnnotationSelector(value=Pojo.class)
                          })
-
-public class DocumentAnnotations {
+public class OptionAnnotationsTableGenerator {
 
   private Object DEFAULT_VALUE = Attributeable.DEFAULT_VALUE;
 }
