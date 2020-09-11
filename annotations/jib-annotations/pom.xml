@@ -44,7 +44,19 @@ limitations under the License.
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
-
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-templates</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.sundr</groupId>
+      <artifactId>transform-annotations</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 
   <build>
@@ -57,6 +69,7 @@ limitations under the License.
           <target>${java.target}</target>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
+            <processor>io.sundr.transform.internal.VelocityTransformationProcessor</processor>
           </annotationProcessors>
         </configuration>
       </plugin>

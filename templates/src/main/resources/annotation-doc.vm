@@ -53,11 +53,15 @@
 ##
 ## Description
 ##
-#set ($description = " ")
-#set  ($annotations = $m.annotations)
-#foreach  ($annotation in $annotations)
-#if ($annotation.getClassRef().getName().equals("Description"))
-#set ($description = $annotation.getParameters().get("value"))
+#set ($description = "")
+#set  ($comments = $method.comments)
+#foreach  ($comment in $comments)
+#if ($comment.startsWith("@"))
+#set ($description = $description)
+#elseif ($description.isEmpty())
+#set ($description = $comment)
+#else
+#set ($description = $description + " " + $comment)
 #end
 #end
 ##

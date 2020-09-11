@@ -1,0 +1,22 @@
+| Configurator | Target | Description |
+|-
+#foreach ($m in ${model.values()})
+#set ($superclass = $m.getExtendsList().get(0))
+#if ($superclass.getName().equals("Configurator"))
+#elseif ($superclass.getDefinition().getExtendsList().size() == 1)
+#set ($superclass = $superclass.getDefinition().getExtendsList().get(0))
+#end
+#if ($m.isAbstract())
+#elseif ($superclass.getName().equals("Configurator"))
+#set ($target = $superclass.getArguments().get(0))
+#set ($target = $target.toString().replaceAll("Builder","").replaceAll("Fluent$",""))
+#set ($description = $m.annotations)
+#set  ($annotations = $m.annotations)
+#foreach  ($annotation in $annotations)
+#if ($annotation.getClassRef().getName().equals("Description"))
+#set ($description = $annotation.getParameters().get("value"))
+#end
+#end
+| ${m.name} | $target | $description |
+#end
+#end
