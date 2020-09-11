@@ -54,6 +54,19 @@ limitations under the License.
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-templates</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.sundr</groupId>
+      <artifactId>transform-annotations</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
 
     <!-- Testing -->
     <dependency>
