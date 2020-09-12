@@ -53,7 +53,8 @@ public class GradleInfoReader implements BuildInfoReader {
 
   private static final String CLASSES = "classes";
   private static final String GROOVY = "groovy";
-  private static final String JAVA = "groovy";
+  private static final String JAVA = "java";
+  private static final String KOTLIN = "kotlin";
 
   private static final String OPEN_BRACKET = "{";
   private static final String CLOSE_BRACKET = "}";
@@ -79,6 +80,17 @@ public class GradleInfoReader implements BuildInfoReader {
     return root.resolve(BUILD_GRADLE_GROOVY).toFile().exists() || root.resolve(BUILD_GRADLE_KTS).toFile().exists();
   }
 
+  private String detectLanguage(Path root) {
+    Path buildDir = root.resolve(BUILD).resolve(CLASSES);
+    if (buildDir.resolve(KOTLIN).toFile().isDirectory()) {
+      return KOTLIN;
+    } else if (buildDir.resolve(GROOVY).toFile().isDirectory()) {
+      return GROOVY;
+    } else {
+      return JAVA;
+    }
+  }
+
   @Override
   public BuildInfo getInfo(Path root) {
     Path buildGradle = root.resolve(BUILD_GRADLE_GROOVY);
@@ -88,6 +100,8 @@ public class GradleInfoReader implements BuildInfoReader {
        buildGradle = root.resolve(BUILD_GRADLE_KTS);
        settingsGradle = root.resolve(SETTINGS_GRADLE_KTS);
     }
+
+    String language = detectLanguage(root);
 
     Path gradleProperties = root.resolve(GRADLE_PROPERTIES);
 
@@ -127,7 +141,7 @@ public class GradleInfoReader implements BuildInfoReader {
       .withBuildTool(GRADLE)
       .withBuildToolVersion(Gradle.getVersion(root))
       .withOutputFile(outputDir.resolve(sb.toString()))
-      .withClassOutputDir(root.resolve(BUILD).resolve(CLASSES).resolve(JAVA).resolve(MAIN))
+      .withClassOutputDir(root.resolve(BUILD).resolve(CLASSES).resolve(language).resolve(MAIN))
       .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
       .build();
   }
