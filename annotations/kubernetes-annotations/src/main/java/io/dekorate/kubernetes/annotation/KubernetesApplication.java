@@ -15,17 +15,17 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-import io.fabric8.kubernetes.api.model.Service;
-import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.kubernetes.config.DeploymentStrategy;
-import io.sundr.builder.annotations.Adapter;
-import io.sundr.builder.annotations.Buildable;
-import io.sundr.builder.annotations.Pojo;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.kubernetes.config.DeploymentStrategy;
+import io.fabric8.kubernetes.api.model.Service;
+import io.sundr.builder.annotations.Adapter;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "KubernetesConfig", relativePath = "../config", mutable = true, superClass = BaseConfig.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
@@ -203,6 +203,17 @@ public @interface KubernetesApplication {
    * @return The probe.
    */
   Probe readinessProbe() default @Probe();
+
+  /**
+   * The resources that the application container requires.
+   */ 
+	ResourceRequirements requestResources() default @ResourceRequirements();
+
+  /**
+   * The resource limit for the application container.
+   */ 
+	ResourceRequirements limitResources() default @ResourceRequirements();
+
 
   /**
    * The sidecars.
