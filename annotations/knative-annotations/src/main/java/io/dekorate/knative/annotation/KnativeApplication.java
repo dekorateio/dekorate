@@ -20,6 +20,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.dekorate.knative.config.AutoScalerClass;
+import io.dekorate.knative.config.AutoscalingMetric;
+import io.dekorate.knative.config.HttpTransportVersion;
 import io.dekorate.kubernetes.annotation.Annotation;
 import io.dekorate.kubernetes.annotation.AwsElasticBlockStoreVolume;
 import io.dekorate.kubernetes.annotation.AzureDiskVolume;
@@ -34,12 +37,10 @@ import io.dekorate.kubernetes.annotation.Mount;
 import io.dekorate.kubernetes.annotation.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.annotation.Probe;
+import io.dekorate.kubernetes.annotation.ResourceRequirements;
 import io.dekorate.kubernetes.annotation.SecretVolume;
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.knative.config.AutoScalerClass;
-import io.dekorate.knative.config.AutoscalingMetric;
-import io.dekorate.knative.config.HttpTransportVersion;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
@@ -189,6 +190,16 @@ public @interface KnativeApplication {
    * @return  The probe.
    */
   Probe readinessProbe() default @Probe();
+
+  /**
+   * The resources that the application container requires.
+   */ 
+	ResourceRequirements requestResources() default @ResourceRequirements();
+
+  /**
+   * The resource limit for the application container.
+   */ 
+	ResourceRequirements limitResources() default @ResourceRequirements();
 
   /**
   * The sidecars.

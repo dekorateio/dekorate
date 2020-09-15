@@ -28,6 +28,7 @@ import io.dekorate.kubernetes.annotation.Mount;
 import io.dekorate.kubernetes.annotation.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.annotation.Probe;
+import io.dekorate.kubernetes.annotation.ResourceRequirements;
 import io.dekorate.kubernetes.annotation.SecretVolume;
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.annotation.ConfigMapVolume;
@@ -193,6 +194,16 @@ public @interface OpenshiftApplication {
    * @return  The probe.
    */
   Probe readinessProbe() default @Probe();
+
+  /**
+   * The resources that the application container requires.
+   */ 
+	ResourceRequirements requestResources() default @ResourceRequirements();
+
+  /**
+   * The resource limit for the application container.
+   */ 
+	ResourceRequirements limitResources() default @ResourceRequirements();
 
   /**
   * The sidecars.

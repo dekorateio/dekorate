@@ -181,6 +181,16 @@ import java.lang.annotation.Target;
   Probe readinessProbe() default @Probe();
 
   /**
+   * The resources that the application container requires.
+   */ 
+	ResourceRequirements requestResources() default @ResourceRequirements();
+
+  /**
+   * The resource limit for the application container.
+   */ 
+	ResourceRequirements limitResources() default @ResourceRequirements();
+
+  /**
    * The sidecars.
    * 
    * @return the sidecar containers.

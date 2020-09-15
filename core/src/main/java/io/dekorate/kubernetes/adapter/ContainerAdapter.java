@@ -26,6 +26,10 @@ import io.dekorate.kubernetes.decorator.AddMountDecorator;
 import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
+import io.dekorate.kubernetes.decorator.ApplyLimitsCpuDecorator;
+import io.dekorate.kubernetes.decorator.ApplyLimitsMemoryDecorator;
+import io.dekorate.kubernetes.decorator.ApplyRequestsCpuDecorator;
+import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Strings;
 
@@ -57,6 +61,24 @@ public class ContainerAdapter {
 
     builder.accept(new AddLivenessProbeDecorator(name, container.getLivenessProbe()));
     builder.accept(new AddReadinessProbeDecorator(name, container.getReadinessProbe()));
+
+    //Container resources
+    if (Strings.isNotNullOrEmpty(container.getLimitResources().getCpu())) {
+      builder.accept(new ApplyLimitsCpuDecorator(name, container.getLimitResources().getCpu()));
+    }
+
+    if (Strings.isNotNullOrEmpty(container.getLimitResources().getMemory())) {
+      builder.accept(new ApplyLimitsMemoryDecorator(name, container.getLimitResources().getMemory()));
+    }
+
+    if (Strings.isNotNullOrEmpty(container.getRequestResources().getCpu())) {
+      builder.accept(new ApplyRequestsCpuDecorator(name, container.getRequestResources().getCpu()));
+    }
+
+    if (Strings.isNotNullOrEmpty(container.getRequestResources().getMemory())) {
+      builder.accept(new ApplyRequestsMemoryDecorator(name, container.getRequestResources().getMemory()));
+    }
+ 
     return builder.build();
   }
 }

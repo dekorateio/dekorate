@@ -47,7 +47,6 @@ import io.dekorate.kubernetes.decorator.AddMountDecorator;
 import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
-import io.dekorate.kubernetes.decorator.AddResourcesRequirementDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
@@ -55,10 +54,13 @@ import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
+import io.dekorate.kubernetes.decorator.ApplyLimitsCpuDecorator;
+import io.dekorate.kubernetes.decorator.ApplyLimitsMemoryDecorator;
+import io.dekorate.kubernetes.decorator.ApplyRequestsCpuDecorator;
+import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
-import io.dekorate.utils.ResourcesRequirement;
 import io.dekorate.utils.Strings;
 
 import java.util.Arrays;
@@ -183,9 +185,23 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
       resources.decorate(group, new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
     }
 
-    if (ResourcesRequirement.isConfigured(config.getResources()) ) {
-      resources.decorate(group, new AddResourcesRequirementDecorator(config.getResources()));
+    //Container resources
+    if (Strings.isNotNullOrEmpty(config.getLimitResources().getCpu())) {
+      resources.decorate(group, new ApplyLimitsCpuDecorator(config.getName(), config.getName(), config.getLimitResources().getCpu()));
     }
+
+    if (Strings.isNotNullOrEmpty(config.getLimitResources().getMemory())) {
+      resources.decorate(group, new ApplyLimitsMemoryDecorator(config.getName(), config.getName(), config.getLimitResources().getMemory()));
+    }
+
+    if (Strings.isNotNullOrEmpty(config.getRequestResources() .getCpu())) {
+      resources.decorate(group, new ApplyRequestsCpuDecorator(config.getName(), config.getName(), config.getRequestResources() .getCpu()));
+    }
+
+    if (Strings.isNotNullOrEmpty(config.getRequestResources() .getMemory())) {
+      resources.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(), config.getRequestResources() .getMemory()));
+    }
+ 
   }
 
   private static void validateVolume(SecretVolume volume) {

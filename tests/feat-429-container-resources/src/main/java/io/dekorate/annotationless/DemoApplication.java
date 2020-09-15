@@ -1,5 +1,5 @@
-/*
- * Copyright 2020 The original authors.
+/**
+ * Copyright 2018 The original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.dekorate.annotationless;
 
-package io.dekorate.kubernetes.annotation;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public @interface Resources {
+@SpringBootApplication
+public class DemoApplication {
 
-	ResourceRequirements requests() default @ResourceRequirements;
-
-	ResourceRequirements limits() default @ResourceRequirements;
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
+	}
 }

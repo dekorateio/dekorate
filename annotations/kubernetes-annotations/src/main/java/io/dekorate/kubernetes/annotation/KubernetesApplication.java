@@ -15,7 +15,6 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-import io.dekorate.deps.kubernetes.api.model.Service;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.DeploymentStrategy;
 import io.sundr.builder.annotations.Adapter;
@@ -203,6 +202,17 @@ public @interface KubernetesApplication {
    * @return The probe.
    */
   Probe readinessProbe() default @Probe();
+
+  /**
+   * The resources that the application container requires.
+   */ 
+	ResourceRequirements requestResources() default @ResourceRequirements();
+
+  /**
+   * The resource limit for the application container.
+   */ 
+	ResourceRequirements limitResources() default @ResourceRequirements();
+
 
   /**
    * The sidecars.
