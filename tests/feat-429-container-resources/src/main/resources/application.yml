@@ -1,0 +1,8 @@
+dekorate:
+  kubernetes:
+    request-resources:
+      cpu: 100m
+      memory: 64Mi
+    limit-resources:
+      cpu: 500m
+      memory: 256Mi

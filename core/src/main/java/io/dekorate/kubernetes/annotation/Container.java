@@ -85,9 +85,13 @@ public @interface Container {
   Probe readinessProbe() default @Probe();
 
   /**
-   * The pod resources
-   * @return The resources
-    */
-  Resources resources() default @Resources;
+   * The resources that the application container requires.
+   */ 
+	ResourceRequirements requestResources() default @ResourceRequirements();
+
+  /**
+   * The resource limit for the application container.
+   */ 
+	ResourceRequirements limitResources() default @ResourceRequirements();
 
 }
