@@ -58,8 +58,9 @@ public @interface JibBuild {
    */
   String version() default "";
 
- /*
+  /**
    * The name of the image to be generated.
+   * This property overrides group, name and version.
    * @return the image name.
    */
   String image() default "";
