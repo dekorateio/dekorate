@@ -513,6 +513,58 @@ This module can be added to the project using:
 
 **Note**: The module is included in all starters.
     
+### Container Resources
+
+Kubernets allwos setting rules about container resources:
+
+- Request CPU: The amount of CPU the container needs.
+- Request Memory: The amount of memory the container needs.
+- Limit CPU: The maximum amount of CPU the container will get.
+- Limit Memory: The maximum amount of memory the container will get.
+
+More information: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers
+
+Dekorate supports these options for both the application container and / or any of the side car containers.
+
+#### Application Container resources
+
+##### Using annotations
+There are parameters availbe for `@KubernetesApplication`, `@KnativeApplication` and `@OpenshiftApplication`.
+
+Using the `@KubernetesApplication` one could set the resources like:
+
+```java
+import io.dekorate.kubernetes.annotation.ResourceRequirements;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+
+@KubernetesApplication(requestResources=@ResourceRequirements(memory="64Mi", cpu="1m", limitResources=@ResourceRequirements(memory="256Mi", cpu="5m")
+public class Main {
+}
+```
+
+In the same spirit it workds for `@KnativeApplication` and `@OpenshiftApplication`.
+
+##### Using properties
+
+Users that prefer to configure dekorate using property configuration can use the following options:
+
+```
+dekorate.kubernetes.request-resources.cpu=1m
+dekorate.kubernetes.request-resources.memory=64Mi
+dekorate.kubernetes.limit-resources.cpu=5m
+dekorate.kubernetes.limit-resources.memory=256Mi
+```
+
+In a similar manner works for openshift:
+
+```
+dekorate.openshift.request-resources.cpu=1m
+dekorate.openshift.request-resources.memory=64Mi
+dekorate.openshift.limit-resources.cpu=5m
+dekorate.openshift.limit-resources.memory=256Mi
+```
+
+
 #### Init Containers
 
 If for any reason the application requires the use of init containers, they can be easily defined using the `initContainer`
