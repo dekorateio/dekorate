@@ -46,7 +46,22 @@ public class Packaging {
 
   private static final Charset UTF_8 = Charset.forName("UTF-8");
 
+  /**
+   * Packages the content of the path as a tarball
+   * @param path The path of the file or directory to package.
+   * @return a file pointing to the generated tar.
+   */
   public static File packageFile(String path) {
+    return packageFile(path, (String) null);
+  }
+
+  /**
+   * Packages the content of the path as a tarball
+   * @param path The path of the file or directory to package.
+   * @param destination The destination root in the tarball.
+   * @return a file pointing to the generated tar.
+   */
+  public static File packageFile(String path, String destination) {
     try {
       final Path root = Paths.get(path).getParent();
       File tempFile = Files.createTempFile(Paths.get(DEFAULT_TEMP_DIR), DOCKER_PREFIX, BZIP2_SUFFIX).toFile();
@@ -62,9 +77,14 @@ public class Packaging {
               if (!path.equals(absolutePath)) {
                 return FileVisitResult.CONTINUE;
               }
+
               final Path relativePath = root.relativize(file);
-              final TarArchiveEntry entry = new TarArchiveEntry(file.toFile());
-              entry.setName(relativePath.toString());
+              final boolean hasDestinationPath = Strings.isNotNullOrEmpty(destination);
+              final TarArchiveEntry entry = hasDestinationPath ? new TarArchiveEntry(destination + File.separator + file.toFile()) : new TarArchiveEntry(file.toFile());
+              entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString() : relativePath.toString());
+              if (file.toFile().canExecute()) {
+                entry.setMode(entry.getMode() | 0755);
+              }
               entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
               entry.setSize(attrs.size());
               putTarEntry(tout, entry, file);
@@ -80,7 +100,24 @@ public class Packaging {
     }
   }
 
+  /**
+   * Packages the content of the path as a tarball
+   * @param path The path of the file or directory to package.
+   * @param additional Additional entries to add to the tarball.
+   * @return a file pointing to the generated tar.
+   */
   public static File packageFile(Path root, Path... additional) {
+    return packageFile(root, (String) null, additional);
+  }
+
+  /**
+   * Packages the content of the path as a tarball
+   * @param path The path of the file or directory to package.
+   * @param destination The destination root in the tarball.
+   * @param additional Additional entries to add to the tarball.
+   * @return a file pointing to the generated tar.
+   */
+  public static File packageFile(Path root, String destination, Path... additional) {
     try {
       final Set<String> includes = Arrays
         .stream(additional)
@@ -102,8 +139,12 @@ public class Packaging {
                 return FileVisitResult.CONTINUE;
               }
               final Path relativePath = root.relativize(file);
-              final TarArchiveEntry entry = new TarArchiveEntry(file.toFile());
-              entry.setName(relativePath.toString());
+              final boolean hasDestinationPath = Strings.isNotNullOrEmpty(destination);
+              final TarArchiveEntry entry = hasDestinationPath ? new TarArchiveEntry(destination + File.separator + file.toFile()) : new TarArchiveEntry(file.toFile());
+              entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString() : relativePath.toString());
+              if (file.toFile().canExecute()) {
+                entry.setMode(entry.getMode() | 0755);
+              }
               entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
               entry.setSize(attrs.size());
               Packaging.putTarEntry(tout, entry, file);
