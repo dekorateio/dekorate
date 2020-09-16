@@ -157,18 +157,39 @@ public @interface KubernetesApplication {
    */
   ServiceType serviceType() default ServiceType.ClusterIP;
 
+  /**
+   * PersistentVolumeClaim volumues to add to all containers.
+   */
   PersistentVolumeClaimVolume[] pvcVolumes() default {};
 
+  /**
+   * Secret volumues to add to all containers.
+   */
   SecretVolume[] secretVolumes() default {};
 
+  /**
+   * ConfigMap volumues to add to all containers.
+   */
   ConfigMapVolume[] configMapVolumes() default {};
 
+  /**
+   * Git repo volumues to add to all containers.
+   */
   GitRepoVolume[] gitRepoVolumes() default {};
 
+  /**
+   * Aws elastic block store volumes to add to all containers
+   */
   AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes() default {};
 
+  /**
+   * Azure disk volumes to add
+   */
   AzureDiskVolume[] azureDiskVolumes() default {};
 
+  /**
+   * Azure file volumes to add
+   */
   AzureFileVolume[] azureFileVolumes() default {};
 
   /**
