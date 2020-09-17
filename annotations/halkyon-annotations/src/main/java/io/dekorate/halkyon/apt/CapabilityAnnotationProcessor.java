@@ -32,7 +32,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generate halkyon capability custom resources.")
 @SupportedAnnotationTypes("io.dekorate.halkyon.annotation.HalkyonCapability")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class CapabilityAnnotationProcessor extends AbstractAnnotationProcessor {
   
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

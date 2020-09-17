@@ -35,7 +35,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.project.ApplyProjectInfo;
 
 @SupportedAnnotationTypes("io.dekorate.jib.annotation.JibBuild")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class JibProcessor extends AbstractAnnotationProcessor {
 
 

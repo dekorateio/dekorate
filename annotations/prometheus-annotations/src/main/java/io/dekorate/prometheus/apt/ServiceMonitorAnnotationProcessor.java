@@ -28,7 +28,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.prometheus.annotation.EnableServiceMonitor;
 
 @SupportedAnnotationTypes({"io.dekorate.prometheus.annotation.EnableServiceMonitor"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ServiceMonitorAnnotationProcessor extends AbstractAnnotationProcessor  {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

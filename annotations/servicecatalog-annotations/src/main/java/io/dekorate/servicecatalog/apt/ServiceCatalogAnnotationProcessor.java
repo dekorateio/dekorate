@@ -33,7 +33,6 @@ import io.dekorate.servicecatalog.config.ServiceCatalogConfigBuilder;
 import io.dekorate.servicecatalog.generator.ServiceCatalogGenerator;
 
 @SupportedAnnotationTypes({"io.dekorate.servicecatalog.annotation.ServiceCatalog", "io.dekorate.servicecatalog.annotation.ServiceCatalogInstance"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcessor implements ServiceCatalogGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

@@ -29,7 +29,6 @@ import io.dekorate.jaeger.annotation.EnableJaegerAgent;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @SupportedAnnotationTypes({"io.dekorate.jaeger.annotation.EnableJaegerAgent"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class JaegerAgentAnnotationProcessor extends AbstractAnnotationProcessor  {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

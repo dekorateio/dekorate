@@ -39,7 +39,6 @@ import io.dekorate.project.ApplyProjectInfo;
 
 @Description("Generates kubernetes manifests.")
 @SupportedAnnotationTypes("io.dekorate.kubernetes.annotation.KubernetesApplication")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor implements KubernetesApplicationGenerator {
 
   private final Logger LOGGER = LoggerFactory.getLogger();

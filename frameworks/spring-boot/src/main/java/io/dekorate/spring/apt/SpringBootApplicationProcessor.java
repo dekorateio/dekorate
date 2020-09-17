@@ -32,7 +32,6 @@ import java.util.Set;
 
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
 @SupportedAnnotationTypes({"org.springframework.boot.autoconfigure.SpringBootApplication"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor implements SpringBootApplicationGenerator {
 
   private final Logger LOGGER = LoggerFactory.getLogger();

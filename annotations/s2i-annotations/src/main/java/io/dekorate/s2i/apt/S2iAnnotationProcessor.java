@@ -31,7 +31,6 @@ import io.dekorate.s2i.annotation.S2iBuild;
 import io.dekorate.s2i.generator.S2iBuildGenerator;
 
 @SupportedAnnotationTypes({"io.dekorate.s2i.annotation.S2iBuild"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class S2iAnnotationProcessor extends AbstractAnnotationProcessor implements S2iBuildGenerator {
 
   @Override

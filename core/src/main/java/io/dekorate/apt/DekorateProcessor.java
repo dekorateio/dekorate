@@ -36,7 +36,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Detects @Dekorate and configures application based on the specified configuration files.")
 @SupportedAnnotationTypes({"io.dekorate.annotation.Dekorate"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DekorateProcessor extends AbstractAnnotationProcessor {
 
   private static final String[] DEFAULT_CONFIG_FILES = { "application.properties", "application.yml" };

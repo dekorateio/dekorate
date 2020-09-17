@@ -31,7 +31,6 @@ import io.dekorate.tekton.annotation.TektonApplication;
 
 @Description("Generates tekton manifests.")
 @SupportedAnnotationTypes("io.dekorate.tekton.annotation.TektonApplication")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class TektonAnnotationProcessor extends AbstractAnnotationProcessor  {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
