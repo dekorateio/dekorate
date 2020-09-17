@@ -87,6 +87,7 @@
   </properties>
 
   <modules>
+    <module>dependencies</module>
     <module>templates</module>
     <module>doc</module>
     <module>core</module>
