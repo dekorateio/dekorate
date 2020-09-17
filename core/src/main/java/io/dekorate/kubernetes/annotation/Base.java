@@ -165,6 +165,13 @@ import java.lang.annotation.Target;
    * The image pull secret
    */
   String[] imagePullSecrets() default {};
+  
+  /**
+   * Host aliases
+   *
+   * @return The host aliases
+   */
+  HostAlias[] hostAliases() default {};
 
   /**
    * The liveness probe.
