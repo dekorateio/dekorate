@@ -28,6 +28,7 @@ import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.config.Mount;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
@@ -40,6 +41,7 @@ import io.dekorate.kubernetes.decorator.AddAzureFileVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
+import io.dekorate.kubernetes.decorator.AddHostAliasesDecorator;
 import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
@@ -129,6 +131,10 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
       resources.decorate(group, new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
     }
 
+    for (HostAlias hostAlias : config.getHostAliases()) {
+      resources.decorate(new AddHostAliasesDecorator(config.getName(), hostAlias));
+    }
+
     for (Container container : config.getSidecars()) {
       resources.decorate(group, new AddSidecarDecorator(config.getName(), container));
     }
@@ -200,7 +206,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     if (Strings.isNotNullOrEmpty(config.getRequestResources() .getMemory())) {
       resources.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(), config.getRequestResources() .getMemory()));
     }
- 
+
   }
 
   private static void validateVolume(SecretVolume volume) {

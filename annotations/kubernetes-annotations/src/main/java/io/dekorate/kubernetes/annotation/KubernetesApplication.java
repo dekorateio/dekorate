@@ -210,6 +210,11 @@ public @interface KubernetesApplication {
    * The image pull secret
    */
   String[] imagePullSecrets() default {};
+  
+  /**
+   * The hostAliases
+   */
+  HostAlias[] hostAliases() default {};
 
   /**
    * The liveness probe.
