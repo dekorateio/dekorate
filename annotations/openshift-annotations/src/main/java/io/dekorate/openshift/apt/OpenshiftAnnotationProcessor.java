@@ -31,7 +31,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generates openshift manifests.")
 @SupportedAnnotationTypes("io.dekorate.openshift.annotation.OpenshiftApplication")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

@@ -37,7 +37,6 @@ import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
 
 @Description("Detects Spring Boot web endpoints and registers the http port.")
 @SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RestController", "org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping", "org.springframework.data.rest.core.annotation.RepositoryRestResource", "javax.ws.rs.GET", "javax.ws.rs.POST", "javax.ws.rs.PUT", "javax.ws.rs.DELETE", "javax.ws.rs.OPTIONS", "javax.ws.rs.HEAD", "javax.ws.rs.PATCH"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SpringBootWebProcessor extends AbstractAnnotationProcessor implements SpringBootWebAnnotationGenerator {
 
   private final Logger LOGGER = LoggerFactory.getLogger();

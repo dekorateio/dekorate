@@ -29,7 +29,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.sundr.codegen.CodegenContext;
 
 @SupportedAnnotationTypes({"io.dekorate.application.annotation.EnableApplicationResource"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ApplicationInfoAnnotationProcessor extends AbstractAnnotationProcessor {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

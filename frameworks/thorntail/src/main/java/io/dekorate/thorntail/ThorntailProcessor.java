@@ -31,7 +31,6 @@ import java.util.Set;
 
 @Description("Detects JAX-RS and servlet annotations and registers the http port.")
 @SupportedAnnotationTypes({"javax.ws.rs.ApplicationPath", "javax.ws.rs.Path", "javax.servlet.annotation.WebServlet"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ThorntailProcessor extends AbstractAnnotationProcessor implements ThorntailWebAnnotationGenerator {
 
   @Override

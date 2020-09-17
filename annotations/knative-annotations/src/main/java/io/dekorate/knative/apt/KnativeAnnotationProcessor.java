@@ -39,7 +39,6 @@ import io.dekorate.utils.Maps;
 
 @Description("Generates knative manifests.")
 @SupportedAnnotationTypes("io.dekorate.knative.annotation.KnativeApplication")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

@@ -31,7 +31,6 @@ import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @SupportedAnnotationTypes({"io.dekorate.docker.annotation.DockerBuild"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class DockerAnnotationProcessor extends AbstractAnnotationProcessor  {
 
   @Override
