@@ -16,22 +16,21 @@
 package io.dekorate.project;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.Properties;
-import java.io.FileInputStream;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import io.dekorate.utils.Strings;
 import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.utils.Strings;
 
 public class GradleInfoReader implements BuildInfoReader {
 
@@ -80,10 +79,10 @@ public class GradleInfoReader implements BuildInfoReader {
   }
 
   private String detectLanguage(Path root) {
-    Path buildDir = root.resolve(BUILD).resolve(CLASSES);
-    if (buildDir.resolve(KOTLIN).toFile().isDirectory()) {
+    Path mainDir = root.resolve(SRC).resolve(MAIN);
+    if (mainDir.resolve(KOTLIN).toFile().isDirectory()) {
       return KOTLIN;
-    } else if (buildDir.resolve(GROOVY).toFile().isDirectory()) {
+    } else if (mainDir.resolve(GROOVY).toFile().isDirectory()) {
       return GROOVY;
     } else {
       return JAVA;
@@ -96,8 +95,8 @@ public class GradleInfoReader implements BuildInfoReader {
     Path settingsGradle = root.resolve(SETTINGS_GRADLE_GROOVY);
     boolean kts = root.resolve(BUILD_GRADLE_KTS).toFile().exists();
     if (kts) {
-       buildGradle = root.resolve(BUILD_GRADLE_KTS);
-       settingsGradle = root.resolve(SETTINGS_GRADLE_KTS);
+      buildGradle = root.resolve(BUILD_GRADLE_KTS);
+      settingsGradle = root.resolve(SETTINGS_GRADLE_KTS);
     }
 
     String language = detectLanguage(root);
@@ -134,19 +133,20 @@ public class GradleInfoReader implements BuildInfoReader {
     }
 
     return new BuildInfoBuilder()
-      .withName(name)
-      .withVersion(version)
-      .withPackaging(extension)
-      .withBuildTool(GRADLE)
-      .withOutputFile(outputDir.resolve(sb.toString()))
-      .withClassOutputDir(root.resolve(BUILD).resolve(CLASSES).resolve(language).resolve(MAIN))
-      .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
-      .build();
+        .withName(name)
+        .withVersion(version)
+        .withPackaging(extension)
+        .withBuildTool(GRADLE)
+        .withOutputFile(outputDir.resolve(sb.toString()))
+        .withClassOutputDir(root.resolve(BUILD).resolve(CLASSES).resolve(language).resolve(MAIN))
+        .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
+        .build();
   }
 
   /**
    * Read settings.gradle and get root project properties.
-   * @param path  The path to settings.gralde.
+   * 
+   * @param path The path to settings.gralde.
    * @return
    */
   protected static Map<String, String> readSettingsGradle(Path path) {
@@ -154,16 +154,16 @@ public class GradleInfoReader implements BuildInfoReader {
     if (path.toFile().exists()) {
       try {
         Files.lines(path)
-          .map(l -> l.replaceAll("[ ]*", ""))
-          .filter(l -> l.contains(EQUALS))
-          .forEach(l -> {
-            String key = l.substring(0, l.lastIndexOf(EQUALS));
-            if (key.startsWith(ROOT_PROJECT_PREFIX)) {
-              key = key.substring(ROOT_PROJECT_PREFIX.length());
-              String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "");
-              properties.put(key, value);
-            }
-          });
+            .map(l -> l.replaceAll("[ ]*", ""))
+            .filter(l -> l.contains(EQUALS))
+            .forEach(l -> {
+              String key = l.substring(0, l.lastIndexOf(EQUALS));
+              if (key.startsWith(ROOT_PROJECT_PREFIX)) {
+                key = key.substring(ROOT_PROJECT_PREFIX.length());
+                String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "");
+                properties.put(key, value);
+              }
+            });
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);
       }
@@ -173,7 +173,8 @@ public class GradleInfoReader implements BuildInfoReader {
 
   /**
    * Parse build.gradle and read the jar configuration as a {@link Map}.
-   * @param path  The path to build.gralde.
+   * 
+   * @param path The path to build.gralde.
    * @return A map containing all configuration found under jar.
    */
   protected static Map<String, String> readBuildGradle(Path path) {
@@ -182,7 +183,7 @@ public class GradleInfoReader implements BuildInfoReader {
     AtomicInteger quotes = new AtomicInteger(0);
     Map<String, String> properties = new HashMap<>();
     try {
-      Files.lines(path).map(l -> l.replaceAll("[ ]*","")).forEach(l ->  {
+      Files.lines(path).map(l -> l.replaceAll("[ ]*", "")).forEach(l -> {
         if (l.startsWith(JAR)) {
           inJar.set(true);
         }
@@ -202,7 +203,7 @@ public class GradleInfoReader implements BuildInfoReader {
         }
 
         if ((inShadowJar.get() || inJar.get() || quotes.get() == 0) && l.contains(EQUALS)) {
-          String key = l.substring(0 ,l.lastIndexOf(EQUALS));
+          String key = l.substring(0, l.lastIndexOf(EQUALS));
           String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "");
           properties.put(key, value);
         }
@@ -215,6 +216,7 @@ public class GradleInfoReader implements BuildInfoReader {
 
   /**
    * Parse gradle.properties into {@link Map}.
+   * 
    * @return A map containing all configuration found it the properties file.
    */
   protected static Map<String, String> readGradleProperties(Path gradlePropertiesPath) {
@@ -222,7 +224,7 @@ public class GradleInfoReader implements BuildInfoReader {
     Properties properties = new Properties();
     try (FileInputStream fis = new FileInputStream(gradlePropertiesPath.toFile())) {
       properties.load(fis);
-      properties.forEach( (k,v) -> result.put(String.valueOf(k), String.valueOf(v)));
+      properties.forEach((k, v) -> result.put(String.valueOf(k), String.valueOf(v)));
       return result;
     } catch (IOException e) {
       return Collections.emptyMap();
