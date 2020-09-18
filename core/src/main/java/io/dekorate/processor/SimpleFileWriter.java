@@ -74,10 +74,10 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
         name = name.replaceAll(s, "");
       }
       name = name.toLowerCase();
-      final Path yml = metaDir.resolve(String.format(CONFIG, name, YML));
+      final Path yml = metaDir.resolve(String.format(CONFIG, name, YML)).normalize();
       final String value = Serialization.asYaml(config);
       if (doWrite) {
-        yml.toFile().getParentFile().mkdirs();
+        yml.getParent().normalize().toFile().mkdirs();
         try (FileWriter writer = new FileWriter(yml.toFile())) {
           writer.write(value);
           return new AbstractMap.SimpleEntry<>(yml.toString(), value);
@@ -97,10 +97,10 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
    */
   public Map.Entry<String, String> write(Project project) {
     try {
-      final Path yml = metaDir.resolve(String.format(PROJECT_ONLY, YML));
+      final Path yml = metaDir.resolve(String.format(PROJECT_ONLY, YML)).normalize();
       final String value = Serialization.asYaml(project);
       if (doWrite) {
-        yml.toFile().getParentFile().mkdirs();
+        yml.getParent().normalize().toFile().mkdirs();
         try (FileWriter writer = new FileWriter(yml.toFile())) {
           writer.write(value);
           return new AbstractMap.SimpleEntry<>(yml.toString(), value);
@@ -125,10 +125,10 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
     try {
       //write json representation
       final Map<String, String> result = new HashMap<>();
-      final Path json = outputDir.resolve(String.format(FILENAME, group, JSON));
+      final Path json = outputDir.resolve(String.format(FILENAME, group, JSON)).normalize();
       final String jsonValue = Serialization.asJson(list);
       if (doWrite) {
-        json.toFile().getParentFile().mkdirs();
+        json.getParent().normalize().toFile().mkdirs();
         try (FileWriter writer = new FileWriter(json.toFile())) {
           writer.write(jsonValue);
           result.put(json.toString(), jsonValue);
@@ -138,10 +138,10 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
       }
 
       //write yml representation
-      final Path yml = outputDir.resolve(String.format(FILENAME, group, YML));
+      final Path yml = outputDir.resolve(String.format(FILENAME, group, YML)).normalize();
       final String yamlValue = Serialization.asYaml(list);
       if (doWrite) {
-        yml.toFile().getParentFile().mkdirs();
+        yml.getParent().normalize().toFile().mkdirs();
         try (FileWriter writer = new FileWriter(yml.toFile())) {
 
           writer.write(yamlValue);
