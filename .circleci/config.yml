@@ -91,7 +91,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v8-dependencies-
 
-      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline -Dformat.skip=true
       - save_cache:
           paths:
             - ~/.m2
@@ -105,7 +105,7 @@ jobs:
             oc new-project itests
             oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-            mvn -B clean install -Pbuild -Pwith-examples -Pwith-tests -Duser.name=dekorateio
+            mvn -B clean install -Pbuild -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
 
   CLI_OPTIONS:
     machine: true
@@ -119,7 +119,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v8-dependencies-
 
-      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline -Dformat.skip=true
       - save_cache:
           paths:
             - ~/.m2
@@ -130,13 +130,13 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project itests
-            mvn -B clean install -Pbuild
+            mvn -B clean install -Pbuild -Dformat.skip=true
       - run:
           name: Run build using -Ddekorate.build=true on kubernetes
           command: |
             oc login -u admin -p admin
             oc new-project dekorate-k8s-build
-            mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-kubernetes-example -Pwith-examples -Dapp.name=sbk-one
+            mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-kubernetes-example -Pwith-examples -Dapp.name=sbk-one -Dformat.skip=true
             docker images | grep sbk-one 
             IMAGES=`docker images | grep sbk-one | wc -l`
             if [ $IMAGES -lt 1 ]; then echo "Docker image sbk-one" exit 1; fi
@@ -145,7 +145,7 @@ jobs:
           command: |
             oc login -u admin -p admin
             oc new-project dekorate-k8s-deploy
-            mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-kubernetes-example -Pwith-examples -Dapp.name=sbk-two
+            mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-kubernetes-example -Pwith-examples -Dapp.name=sbk-two -Dformat.skip=true
             docker images 
             IMAGES=`docker images | grep sbk-two | wc -l`
             if [ $IMAGES -lt 1 ]; then exit 1; fi
@@ -159,7 +159,7 @@ jobs:
             oc new-project dekorate-os-build
             oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-            mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-one
+            mvn -B clean install -DskipTests -Ddekorate.build=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-one -Dformat.skip=true
             docker images 
             IMAGES=`oc get istag | grep sbo-one | wc -l`
             if [ $IMAGES -lt 1 ]; then echo "Docker image sbo-one"; exit 1; fi
@@ -170,7 +170,7 @@ jobs:
             oc new-project dekorate-os-deploy
             oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-            mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-two
+            mvn -B clean install -DskipTests -Ddekorate.deploy=true -pl :spring-boot-on-openshift-example -Pwith-examples -Dapp.name=sbo-two -Dformat.skip=true
             docker images | grep sbo-two
             IMAGES=`docker images | grep sbo-two | wc -l`
             if [ $IMAGES -lt 1 ]; then echo "Docker image sbo-two not found."; exit 1; fi
