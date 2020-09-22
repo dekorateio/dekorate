@@ -117,7 +117,6 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     Map<String, String> allLabels = new HashMap<>();
     allLabels.put(Labels.NAME, config.getName());
 
-    System.out.println("Component version:" + config.getVersion()+".");
     if (Strings.isNotNullOrEmpty(config.getVersion())) {
         allLabels.put(Labels.VERSION, config.getVersion());
     }

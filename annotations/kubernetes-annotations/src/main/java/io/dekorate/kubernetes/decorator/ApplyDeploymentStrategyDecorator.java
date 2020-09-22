@@ -38,7 +38,6 @@ public class ApplyDeploymentStrategyDecorator extends NamedResourceDecorator<Dep
   @Override
   public void andThenVisit(final DeploymentSpecFluent<?> spec, final ObjectMeta resourceMeta) {
     boolean hasCustomRollingUpdate = hasCusomRollingUpdateConfig(rollingUpdate);
-    System.out.println("Custom rolling update:" + hasCustomRollingUpdate);
     if (strategy == DeploymentStrategy.Recreate) {
       if (hasCustomRollingUpdate) {
         throw new IllegalStateException("Detected both Recreate strategy and custom Rolling Update config. Please use one or the other!");
@@ -47,7 +46,6 @@ public class ApplyDeploymentStrategyDecorator extends NamedResourceDecorator<Dep
         .withType("Recreate")
         .endStrategy();
     } else if (strategy == DeploymentStrategy.RollingUpdate || hasCustomRollingUpdate) {
-      System.out.println("Applying rolling update!");
       spec.withNewStrategy()
         .withType("RollingUpdate")
         .withNewRollingUpdate()
