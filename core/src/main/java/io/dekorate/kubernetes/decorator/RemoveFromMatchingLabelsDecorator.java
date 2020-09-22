@@ -7,6 +7,10 @@ public class RemoveFromMatchingLabelsDecorator extends NamedResourceDecorator<La
 
   private String key;
 
+  public RemoveFromMatchingLabelsDecorator(String key) {
+    this(ANY, key);
+  }
+
   public RemoveFromMatchingLabelsDecorator(String name, String key) {
     super(name);
     this.key = key;
