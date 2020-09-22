@@ -118,6 +118,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     BaseConfig kubernetesConfig = getKubernetesConfig();
     Map<String, String> allLabels = new HashMap<>();
     allLabels.put(Labels.NAME, config.getName());
+
     if (Strings.isNotNullOrEmpty(config.getVersion())) {
         allLabels.put(Labels.VERSION, config.getVersion());
     }
