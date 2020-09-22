@@ -19,18 +19,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import io.fabric8.kubernetes.api.model.ContainerFluent;
-import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Port;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.ContainerPort;
 
 public class Ports {
 
-  public static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[]{"http", "https", "web", "http1", "h2c"});
-  public static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[]{80, 443, 8080, 8443});
+  public static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[] { "http", "https", "web", "http1", "h2c" });
+  public static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[] { 80, 443, 8080, 8443 });
   public static final String DEFAULT_HTTP_PORT_PATH = "/";
-
 
   public static Optional<ContainerPort> getHttpPort(ContainerFluent<?> container) {
     //If we have a single port, return that no matter what.
@@ -39,7 +38,8 @@ public class Ports {
     }
 
     //Check the service name
-    Optional<ContainerPort> port = container.getPorts().stream().filter(p -> HTTP_PORT_NAMES.contains(p.getName())).findFirst();
+    Optional<ContainerPort> port = container.getPorts().stream().filter(p -> HTTP_PORT_NAMES.contains(p.getName()))
+        .findFirst();
     if (port.isPresent()) {
       return port;
     }
@@ -51,7 +51,6 @@ public class Ports {
     return Optional.empty();
   }
 
-
   public static Optional<Port> getHttpPort(Container container) {
     //If we have a single port, return that no matter what.
     if (container.getPorts().length == 1) {
@@ -59,7 +58,8 @@ public class Ports {
     }
 
     //Check the service name
-    Optional<Port> port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NAMES.contains(p.getName())).findFirst();
+    Optional<Port> port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NAMES.contains(p.getName()))
+        .findFirst();
     if (port.isPresent()) {
       return port;
     }

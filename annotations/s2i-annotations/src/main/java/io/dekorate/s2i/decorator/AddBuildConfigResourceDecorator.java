@@ -17,9 +17,6 @@
 
 package io.dekorate.s2i.decorator;
 
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.openshift.api.model.BuildConfigBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
@@ -29,6 +26,9 @@ import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.openshift.api.model.BuildConfigBuilder;
 
 @Description("Add a BuildConfig resource to the list of generated resources.")
 public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
@@ -50,43 +50,44 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
     String builderTag = Images.getTag(config.getBuilderImage());
 
     String builderName = !builderRepository.contains("/")
-      ? builderRepository
-      : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
+        ? builderRepository
+        : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
 
     //First we need to consult the labels
     String fallbackVersion = Strings.isNotNullOrEmpty(config.getVersion()) ? config.getVersion() : LATEST;
-    String version = meta.getLabels() != null ? meta.getLabels().getOrDefault(Labels.VERSION, fallbackVersion) : fallbackVersion;
+    String version = meta.getLabels() != null ? meta.getLabels().getOrDefault(Labels.VERSION, fallbackVersion)
+        : fallbackVersion;
 
     if (contains(list, "build.openshift.io/v1", "BuildConfig", config.getName())) {
       return;
     }
 
     list.addToItems(new BuildConfigBuilder()
-      .withNewMetadata()
-      .withName(config.getName())
-      .withLabels(meta.getLabels())
-      .endMetadata()
-      .withNewSpec()
-      .withNewOutput()
-      .withNewTo()
-      .withKind(IMAGESTREAMTAG)
-      .withName(config.getName() + ":" + version)
-      .endTo()
-      .endOutput()
-      .withNewSource()
-      .withNewBinary()
-      .endBinary()
-      .endSource()
-      .withNewStrategy()
-      .withNewSourceStrategy()
-      .withEnv()
-      .withNewFrom()
-      .withKind(IMAGESTREAMTAG)
-      .withName(builderName + ":" + builderTag)
-      .endFrom()
-      .endSourceStrategy()
-      .endStrategy()
-      .endSpec());
+        .withNewMetadata()
+        .withName(config.getName())
+        .withLabels(meta.getLabels())
+        .endMetadata()
+        .withNewSpec()
+        .withNewOutput()
+        .withNewTo()
+        .withKind(IMAGESTREAMTAG)
+        .withName(config.getName() + ":" + version)
+        .endTo()
+        .endOutput()
+        .withNewSource()
+        .withNewBinary()
+        .endBinary()
+        .endSource()
+        .withNewStrategy()
+        .withNewSourceStrategy()
+        .withEnv()
+        .withNewFrom()
+        .withKind(IMAGESTREAMTAG)
+        .withName(builderName + ":" + builderTag)
+        .endFrom()
+        .endSourceStrategy()
+        .endStrategy()
+        .endSpec());
   }
 
   @Override

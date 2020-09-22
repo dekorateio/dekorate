@@ -15,6 +15,7 @@
  */
 
 package io.dekorate.examples.kuberentes;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

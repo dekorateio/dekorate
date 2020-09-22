@@ -54,18 +54,18 @@ public class ServiceCatalogHandler implements Handler<ServiceCatalogConfig> {
 
   @Override
   public void handle(ServiceCatalogConfig config) {
-    Arrays.stream(config.getInstances()).forEach(i -> { 
-        resources.decorate(new AddServiceInstanceResourceDecorator(i));
-        if (i.getBindingSecret() != null) {
-          resources.decorate(new AddServiceBindingResourceDecorator(i));
-          resources.decorate(new AddEnvVarDecorator(new EnvBuilder().withSecret(i.getBindingSecret()).build()));
-        }
-      });
+    Arrays.stream(config.getInstances()).forEach(i -> {
+      resources.decorate(new AddServiceInstanceResourceDecorator(i));
+      if (i.getBindingSecret() != null) {
+        resources.decorate(new AddServiceBindingResourceDecorator(i));
+        resources.decorate(new AddEnvVarDecorator(new EnvBuilder().withSecret(i.getBindingSecret()).build()));
+      }
+    });
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(ServiceCatalogConfig.class) ||
-      type.equals(EditableServiceCatalogConfig.class);
+        type.equals(EditableServiceCatalogConfig.class);
   }
 
 }

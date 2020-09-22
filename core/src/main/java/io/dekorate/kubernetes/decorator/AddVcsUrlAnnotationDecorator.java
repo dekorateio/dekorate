@@ -15,12 +15,12 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.utils.Annotations;
 import io.dekorate.WithProject;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Annotations;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 
 /**
  * A decorator that adds a label to resources.
@@ -58,7 +58,7 @@ public class AddVcsUrlAnnotationDecorator extends NamedResourceDecorator<ObjectM
 
   @Override
   public Class<? extends Decorator>[] before() {
-    return new Class[]{ RemoveLabelDecorator.class };
+    return new Class[] { RemoveLabelDecorator.class };
   }
 
   public int hashCode() {
@@ -84,6 +84,5 @@ public class AddVcsUrlAnnotationDecorator extends NamedResourceDecorator<ObjectM
       return false;
     return true;
   }
-
 
 }

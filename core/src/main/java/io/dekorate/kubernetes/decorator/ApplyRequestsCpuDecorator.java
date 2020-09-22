@@ -21,26 +21,26 @@ import io.fabric8.kubernetes.api.model.Quantity;
 
 public class ApplyRequestsCpuDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
-	private static final String CPU = "cpu";
+  private static final String CPU = "cpu";
 
   private final String amount;
 
-	public ApplyRequestsCpuDecorator(String containerName, String amount) {
-		super(containerName);
-		this.amount = amount;
-	}
+  public ApplyRequestsCpuDecorator(String containerName, String amount) {
+    super(containerName);
+    this.amount = amount;
+  }
 
-	public ApplyRequestsCpuDecorator(String deploymentName, String containerName, String amount) {
-		super(deploymentName, containerName);
-		this.amount = amount;
-	}
+  public ApplyRequestsCpuDecorator(String deploymentName, String containerName, String amount) {
+    super(deploymentName, containerName);
+    this.amount = amount;
+  }
 
   @Override
-	public void andThenVisit(ContainerFluent<?> container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     container.editOrNewResources().addToRequests(CPU, new Quantity(amount)).endResources();
-	}
+  }
 
-	public Class<? extends Decorator>[] after() {
-		return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
-	}
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
+  }
 }

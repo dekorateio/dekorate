@@ -25,28 +25,28 @@ import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.config.ConfigurationSupplier;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.MavenInfoReader;
 import io.dekorate.project.Project;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 
 public class JibBuildServiceFactory implements BuildServiceFactory {
 
   private static final List<String> SUPPORTED_TOOLS = Arrays.asList(MavenInfoReader.MAVEN);
-  private static final String JIB="jib";
- 
-	@Override
-	public String name() {
-		return JIB;
-	}
+  private static final String JIB = "jib";
 
-	@Override
-	public int order() {
-		return 15;
-	}
+  @Override
+  public String name() {
+    return JIB;
+  }
 
-	@Override
-	public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
+  @Override
+  public int order() {
+    return 15;
+  }
+
+  @Override
+  public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
     boolean supportedTool = SUPPORTED_TOOLS.contains(project.getBuildInfo().getBuildTool());
 
     if (!supportedTool) {
@@ -54,23 +54,23 @@ public class JibBuildServiceFactory implements BuildServiceFactory {
     } else {
       return new BuildServiceApplicablility(true, "ok");
     }
-	}
+  }
 
-	@Override
-	public BuildService create(Project project, ImageConfiguration config) {
-		return new JibBuildService(project, config);
-	}
+  @Override
+  public BuildService create(Project project, ImageConfiguration config) {
+    return new JibBuildService(project, config);
+  }
 
-	@Override
-	public BuildService create(Project project, ImageConfiguration config, Collection<HasMetadata> resources) {
-		return new JibBuildService(project, config);
-	}
+  @Override
+  public BuildService create(Project project, ImageConfiguration config, Collection<HasMetadata> resources) {
+    return new JibBuildService(project, config);
+  }
 
-	@Override
-	public BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier) {
+  @Override
+  public BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier) {
     if (supplier.isExplicit()) {
       return new BuildServiceApplicablility(true, "Jib has been explicitly configured!");
     }
     return checkApplicablility(project, supplier.get());
-	}
+  }
 }

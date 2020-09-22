@@ -49,21 +49,21 @@ public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesList
 
     Port port = p.get();
     list.addNewRouteItem()
-      .withNewMetadata()
-      .withName(config.getName())
-      .withLabels(Labels.createLabels(config))
-      .endMetadata()
-      .withNewSpec()
-      .withHost(config.getHost())
-      .withPath(port.getPath())
-      .withNewTo()
+        .withNewMetadata()
+        .withName(config.getName())
+        .withLabels(Labels.createLabels(config))
+        .endMetadata()
+        .withNewSpec()
+        .withHost(config.getHost())
+        .withPath(port.getPath())
+        .withNewTo()
         .withKind("Service")
         .withName(config.getName())
-      .endTo()
-      .withNewPort()
+        .endTo()
+        .withNewPort()
         .withNewTargetPort(port.getContainerPort())
-      .endPort()
-      .endSpec()
-      .endRouteItem();
+        .endPort()
+        .endSpec()
+        .endRouteItem();
   }
 }

@@ -16,18 +16,19 @@
  **/
 
 package io.dekorate.prometheus.decorator;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
+
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
 import io.dekorate.prometheus.model.ServiceMonitorBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 @Description("Add a ServiceMonitor resource to the list of generated resources.")
 public class AddServiceMonitorResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
-    
+
   private final ServiceMonitorConfig config;
-  
+
   public AddServiceMonitorResourceDecorator(ServiceMonitorConfig config) {
     this.config = config;
   }
@@ -35,21 +36,21 @@ public class AddServiceMonitorResourceDecorator extends ResourceProvidingDecorat
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
     list.addToItems(new ServiceMonitorBuilder()
-                    .withNewMetadata()
-                    .withName(meta.getName())
-                    .withLabels(meta.getLabels())
-                    .endMetadata()
-                    .withNewSpec()
-                    .withNewSelector()
-                    .addToMatchLabels(meta.getLabels())
-                    .endSelector()
-                    .addNewEndpoint()
-                    .withPort(config.getPort())
-                    .withNewPath(config.getPath())
-                    .withInterval(config.getInterval() + "s")
-                    .withHonorLabels(config.isHonorLabels())
-                    .endEndpoint()
-                    .endSpec());
+        .withNewMetadata()
+        .withName(meta.getName())
+        .withLabels(meta.getLabels())
+        .endMetadata()
+        .withNewSpec()
+        .withNewSelector()
+        .addToMatchLabels(meta.getLabels())
+        .endSelector()
+        .addNewEndpoint()
+        .withPort(config.getPort())
+        .withNewPath(config.getPath())
+        .withInterval(config.getInterval() + "s")
+        .withHonorLabels(config.isHonorLabels())
+        .endEndpoint()
+        .endSpec());
   }
 
 }

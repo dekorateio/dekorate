@@ -15,9 +15,6 @@
  */
 package io.dekorate.utils;
 
-import io.dekorate.DekorateException;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -31,6 +28,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import io.dekorate.DekorateException;
 
 public class Maps {
   private static final String PROPERTY_PREFIX = "dekorate";
@@ -56,6 +57,7 @@ public class Maps {
    * 1. Unrolls nested entries (keys separated with dots) into nested maps.
    * 2. Unrolls arrays.
    * The configuration map follows all the required conventions in order to be usable by a Generator.
+   * 
    * @return a {@link Map} with in the Generator format.
    */
   public static Map<String, Object> fromProperties(Map<String, Object> properties) {
@@ -81,9 +83,9 @@ public class Maps {
     // Second pass unroll arrays
     unrollArrays(result);
     return result;
- 
+
   }
- 
+
   /**
    * Read a properties input stream and crate a configuration map.
    * The configuration map follows all the required conventions in order to be usable by a Generator.
@@ -97,7 +99,8 @@ public class Maps {
     } catch (IOException e) {
       throw DekorateException.launderThrowable(e);
     }
-    return fromProperties(properties.entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), e -> e.getValue())));
+    return fromProperties(
+        properties.entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), e -> e.getValue())));
   }
 
   /**
@@ -116,14 +119,15 @@ public class Maps {
       Map<Object, Object> valueAsMap = (Map<Object, Object>) prefixed;
       for (Map.Entry<Object, Object> entry : valueAsMap.entrySet()) {
         // value should be a Map<String, Object>
-        Map<String, Object> kv = asMap(new String[]{String.valueOf(entry.getKey())}, entry.getValue());
+        Map<String, Object> kv = asMap(new String[] { String.valueOf(entry.getKey()) }, entry.getValue());
         merge(result, kv);
       }
     }
     return result;
   }
 
- public static <A extends Annotation> Map<String, Object> fromAnnotation(String root, A annotation, Class<? extends A> type) {
+  public static <A extends Annotation> Map<String, Object> fromAnnotation(String root, A annotation,
+      Class<? extends A> type) {
     Map<String, Object> result = new HashMap<>();
     result.put(root, fromAnnotation(annotation, type));
     return result;
@@ -139,29 +143,29 @@ public class Maps {
           Class componentType = clazz.getComponentType();
           if (componentType.isAnnotation()) {
             List<Map<String, Object>> maps = new ArrayList<>();
-            for (Object o : (Object[])value) {
-              Map<String, Object> nested = fromAnnotation((Annotation)o, componentType);
+            for (Object o : (Object[]) value) {
+              Map<String, Object> nested = fromAnnotation((Annotation) o, componentType);
               maps.add(nested);
             }
             result.put(m.getName(), maps.toArray(new Map[maps.size()]));
-          } else if (((Object[])value).length == 0) {
+          } else if (((Object[]) value).length == 0) {
             //let's skip empty arrays
           } else {
-            result.put(m.getName(), Arrays.stream((Object[])value).map(String::valueOf).collect(Collectors.joining(",")));
+            result.put(m.getName(),
+                Arrays.stream((Object[]) value).map(String::valueOf).collect(Collectors.joining(",")));
           }
         } else if (clazz.isAnnotation()) {
-            result.put(m.getName(), fromAnnotation((Annotation) value, (Class) clazz));
+          result.put(m.getName(), fromAnnotation((Annotation) value, (Class) clazz));
         } else {
           result.put(m.getName(), String.valueOf(value));
         }
       }
-    } catch (Exception e)  {
+    } catch (Exception e) {
       throw DekorateException.launderThrowable(e);
     }
     return result;
   }
 
-  
   /**
    * Convert a multipart-key value pair to a Map.
    */
@@ -188,7 +192,7 @@ public class Maps {
    * Merge a nested map to an existing one.
    *
    * @param existing the existing map.
-   * @param map      the map that will be merged into the existing.
+   * @param map the map that will be merged into the existing.
    */
   public static void merge(Map<String, Object> existing, Map<String, Object> map) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -209,6 +213,7 @@ public class Maps {
   /**
    * Recursively convert all {@link Map} keys from kebab case to camel case.
    * Recursively here means that if a value is a {@link Map} it will also be converted.
+   * 
    * @param The input string.
    * @return The camel cased string.
    */
@@ -234,8 +239,8 @@ public class Maps {
       } else if (newValue.getClass().isArray()) {
         List<T> newList = new ArrayList<>();
         Arrays.stream((T[]) newValue).forEach(item -> {
-           if (item instanceof Map) {
-            newList.add((T)kebabToCamelCase((Map) item));
+          if (item instanceof Map) {
+            newList.add((T) kebabToCamelCase((Map) item));
           } else {
             newList.add(item);
           }
@@ -248,7 +253,7 @@ public class Maps {
   }
 
   private static void unrollArrays(Map<String, Object> result) {
-     Map<String, Object> copy = new HashMap<>(result);
+    Map<String, Object> copy = new HashMap<>(result);
     for (Map.Entry<String, Object> entry : copy.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
@@ -260,7 +265,7 @@ public class Maps {
         List<Object> list = new ArrayList<>();
         List<Map> listOfMap = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
-        for (int i=0;result.containsKey(strippedKey+"["+i+"]");i++) {
+        for (int i = 0; result.containsKey(strippedKey + "[" + i + "]"); i++) {
           String currentKey = strippedKey + "[" + i + "]";
           Object obj = result.get(currentKey);
           if (obj instanceof Map) {
@@ -272,11 +277,11 @@ public class Maps {
         }
 
         if (!list.isEmpty()) {
-          result.put(strippedKey , list);
+          result.put(strippedKey, list);
         }
 
         if (!listOfMap.isEmpty()) {
-          result.put(strippedKey , listOfMap.toArray(new Map[listOfMap.size()]));
+          result.put(strippedKey, listOfMap.toArray(new Map[listOfMap.size()]));
         }
       }
     }

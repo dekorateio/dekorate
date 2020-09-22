@@ -15,7 +15,6 @@
  */
 package io.dekorate.halkyon.annotation;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,7 +30,7 @@ import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "ComponentConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false)
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface HalkyonComponent {
 
@@ -39,6 +38,7 @@ public @interface HalkyonComponent {
    * The name of the collection of componnet this component belongs to.
    * This value will be use as:
    * - labeling resources
+   * 
    * @return The specified group name.
    */
   String partOf() default "";
@@ -53,7 +53,9 @@ public @interface HalkyonComponent {
    * If its a maven/gradle project use the artifact id.
    * Else if its a bazel project use the name.
    * Else if the system property app.name is present it will be used.
-   * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until .git is found).
+   * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until
+   * .git is found).
+   * 
    * @return The specified application name.
    */
   String name() default "";
@@ -63,10 +65,10 @@ public @interface HalkyonComponent {
    * This value be used for things like:
    * - The docker image tag.
    * If no value specified it will attempt to determine the name using the following rules:
+   * 
    * @return The version.
    */
   String version() default "";
-
 
   DeploymentMode deploymentMode() default DeploymentMode.dev;
 

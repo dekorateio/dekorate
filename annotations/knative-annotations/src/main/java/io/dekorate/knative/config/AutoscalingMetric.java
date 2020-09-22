@@ -21,16 +21,16 @@ public enum AutoscalingMetric {
 
   /**
    * Concurrency
-   */  
+   */
   concurrency,
 
   /**
    * Requests per second
    **/
   rps,
-  
+
   /**
    * CPU
-   **/ 
+   **/
   cpu;
 }

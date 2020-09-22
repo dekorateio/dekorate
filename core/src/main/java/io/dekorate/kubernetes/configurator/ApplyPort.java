@@ -39,6 +39,7 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
     this.port = port;
     this.names = names;
   }
+
   public ApplyPort(Port port, String... names) {
     this(port, Arrays.asList(names));
   }
@@ -49,25 +50,25 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
     if (config.hasMatchingPort(predicate)) {
       if (Strings.isNotNullOrEmpty(port.getPath()) && !DEFAULT_PATH.equals(port.getPath())) {
         config.editMatchingPort(predicate)
-          .withPath(port.getPath())
-          .endPort();
+            .withPath(port.getPath())
+            .endPort();
       }
       if (port.getContainerPort() != 0) {
         config.editMatchingPort(predicate)
-          .withContainerPort(port.getContainerPort())
-          .endPort();
+            .withContainerPort(port.getContainerPort())
+            .endPort();
       }
       if (port.getHostPort() != 0) {
         config.editMatchingPort(predicate)
-          .withHostPort(port.getHostPort())
-          .endPort();
+            .withHostPort(port.getHostPort())
+            .endPort();
       }
     } else {
       String name = names.size() > 0 ? names.get(0) : FALLBACK_PORT_NAME;
       config.addNewPortLike(port)
-        .withName(name)
-        .withContainerPort(port.getContainerPort())
-        .endPort();
+          .withName(name)
+          .withContainerPort(port.getContainerPort())
+          .endPort();
     }
   }
 }

@@ -15,24 +15,19 @@
  */
 package io.dekorate.option.annotation;
 
-import io.dekorate.kubernetes.config.Configuration;
-import io.sundr.builder.annotations.Adapter;
-import io.sundr.builder.annotations.Buildable;
-import io.sundr.builder.annotations.Pojo;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.dekorate.kubernetes.config.Configuration;
+import io.sundr.builder.annotations.Adapter;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
+
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "GeneratorConfig", relativePath = "../config",
-      mutable = true,
-      superClass = Configuration.class,
-      withStaticBuilderMethod = false,
-      withStaticAdapterMethod = false,
-      adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Pojo(name = "GeneratorConfig", relativePath = "../config", mutable = true, superClass = Configuration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface GeneratorOptions {
 
@@ -41,14 +36,15 @@ public @interface GeneratorOptions {
    * If the path is specified and the manifests are found, they will be used as input to the generator process.
    * In this case, the instead of generating resources from scratch, the existing will be used and will be decarated
    * according to the annotation configuration.
-   * @return  The path, or empty string.
+   * 
+   * @return The path, or empty string.
    */
   String inputPath() default "";
 
-
   /**
    * The output path where the generated/decorated manifests will be stored.
-   * @return  The path, or empty string.
+   * 
+   * @return The path, or empty string.
    */
   String outputPath() default "";
 }

@@ -30,33 +30,32 @@ public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuil
   private final String key;
   private final String value;
 
-	public AddToSelectorDecorator(String key, String value) {
-		super(ANY);
-		this.key = key;
-		this.value = value;
-	}
+  public AddToSelectorDecorator(String key, String value) {
+    super(ANY);
+    this.key = key;
+    this.value = value;
+  }
 
-	public AddToSelectorDecorator(String name, String key, String value) {
-		super(name);
-		this.key = key;
-		this.value = value;
-	}
+  public AddToSelectorDecorator(String name, String key, String value) {
+    super(name);
+    this.key = key;
+    this.value = value;
+  }
 
-	public AddToSelectorDecorator(String kind, String name, String key, String value) {
-		super(kind, name);
-		this.key = key;
-		this.value = value;
-	}
+  public AddToSelectorDecorator(String kind, String name, String key, String value) {
+    super(kind, name);
+    this.key = key;
+    this.value = value;
+  }
 
-
-	@Override
-	public void andThenVisit(VisitableBuilder builder ,String kind, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(VisitableBuilder builder, String kind, ObjectMeta resourceMeta) {
     Optional<SelectorDecoratorFactory> factory = SelectorDecoratorFactories.find(kind);
     factory.map(f -> f.createAddToSelectorDecorator(resourceMeta.getName(), key, value)).ifPresent(m -> builder.accept((Visitor) m));
 	}
 
   @Override
-	public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
+  public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
     //Not needed
 	}
 

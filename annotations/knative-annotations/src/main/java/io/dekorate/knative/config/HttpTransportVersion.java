@@ -19,6 +19,5 @@ package io.dekorate.knative.config;
 
 public enum HttpTransportVersion {
 
-  HTTP1,
-  H2C,
+  HTTP1, H2C,
 }

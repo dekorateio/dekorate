@@ -15,56 +15,57 @@
  */
 package io.dekorate.servicecatalog.annotation;
 
-
-import io.sundr.builder.annotations.Adapter;
-import io.sundr.builder.annotations.Buildable;
-import io.sundr.builder.annotations.Pojo;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.sundr.builder.annotations.Adapter;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
+
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo( relativePath = "../config",
-       mutable = true,
-       withStaticBuilderMethod = false,
-       withStaticAdapterMethod = false,
-       adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Pojo(relativePath = "../config", mutable = true, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
-       public @interface ServiceCatalogInstance {
+public @interface ServiceCatalogInstance {
 
-         /**
-          * The name of the {@link me.snowdrop.servicecatalog.api.model.ServiceInstance} to generate.
-          * @return  The name.
-          */
-         String name();
+  /**
+   * The name of the {@link me.snowdrop.servicecatalog.api.model.ServiceInstance} to generate.
+   * 
+   * @return The name.
+   */
+  String name();
 
-         /**
-          * The external name of the {@link me.snowdrop.servicecatalog.api.model.ClusterServiceClass}.
-          * @return  The external name.
-          */
-         String serviceClass();
+  /**
+   * The external name of the {@link me.snowdrop.servicecatalog.api.model.ClusterServiceClass}.
+   * 
+   * @return The external name.
+   */
+  String serviceClass();
 
+  /**
+   * The external name of the {@link me.snowdrop.servicecatalog.api.model.ClusterServicePlan}.
+   * 
+   * @return The external name.
+   */
+  String servicePlan();
 
-         /**
-          * The external name of the {@link me.snowdrop.servicecatalog.api.model.ClusterServicePlan}.
-          * @return  The external name.
-          */
-         String servicePlan();
+  /**
+   * An array of {@link Parameter} that is used to describe {@link me.snowdrop.servicecatalog.api.model.ServiceInstance}
+   * parameters.
+   * 
+   * @return The array.
+   */
+  Parameter[] parameters() default {};
 
-         /**
-          * An array of {@link Parameter} that is used to describe {@link me.snowdrop.servicecatalog.api.model.ServiceInstance} parameters.
-          * @return  The array.
-          */
-         Parameter[] parameters() default {};
-
-         /**
-          * The name of the secret to use inside the {@link me.snowdrop.servicecatalog.api.model.ServiceBinding}.
-          * When this is used, a {@link me.snowdrop.servicecatalog.api.model.ServiceBinding} will be generated for the target {@link me.snowdrop.servicecatalog.api.model.ServiceInstance}.
-          * The generated binding will use the specified secret.
-          * @return The name of the secret.
-          */
-         String bindingSecret() default "";
-       }
+  /**
+   * The name of the secret to use inside the {@link me.snowdrop.servicecatalog.api.model.ServiceBinding}.
+   * When this is used, a {@link me.snowdrop.servicecatalog.api.model.ServiceBinding} will be generated for the target
+   * {@link me.snowdrop.servicecatalog.api.model.ServiceInstance}.
+   * The generated binding will use the specified secret.
+   * 
+   * @return The name of the secret.
+   */
+  String bindingSecret() default "";
+}

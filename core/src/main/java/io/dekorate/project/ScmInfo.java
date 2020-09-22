@@ -33,7 +33,7 @@ public class ScmInfo {
 
   @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
   public ScmInfo(Path root, String url, String branch, String commit) {
-    this.root=root;
+    this.root = root;
     this.url = url;
     this.branch = branch;
     this.commit = commit;

@@ -64,7 +64,6 @@ public class NodeInfoReader implements BuildInfoReader {
 
   private static final String INDEX_JS = "index.js";
 
-
   @Override
   public int order() {
     return 500;
@@ -96,17 +95,16 @@ public class NodeInfoReader implements BuildInfoReader {
       version = "latest";
     }
 
-
     return new BuildInfoBuilder()
-      .withName(name)
-      .withVersion(version)
-      .withPackaging("js")
-      .withBuildTool(NPM)
-      .withBuildToolVersion(getVersion(root))
-      .withOutputFile(root.resolve(main))
-      .withClassOutputDir(null)
-      .withResourceDir(null)
-      .build();
+        .withName(name)
+        .withVersion(version)
+        .withPackaging("js")
+        .withBuildTool(NPM)
+        .withBuildToolVersion(getVersion(root))
+        .withOutputFile(root.resolve(main))
+        .withClassOutputDir(null)
+        .withResourceDir(null)
+        .build();
   }
 
   /**
@@ -115,7 +113,8 @@ public class NodeInfoReader implements BuildInfoReader {
    * - name
    * - version
    * - main
-   * @param path  The path to package.json.
+   * 
+   * @param path The path to package.json.
    * @return A map containing all configuration.
    */
   protected static Map<String, String> readPackageJson(Path path) {
@@ -123,7 +122,7 @@ public class NodeInfoReader implements BuildInfoReader {
 
     Map<String, String> properties = new HashMap<>();
     try {
-      Files.lines(path).map(l -> l.replaceAll("[ ]*","")).forEach(l ->  {
+      Files.lines(path).map(l -> l.replaceAll("[ ]*", "")).forEach(l -> {
         if (l.contains(OPEN_BRACKET)) {
           quotes.incrementAndGet();
         }
@@ -151,12 +150,11 @@ public class NodeInfoReader implements BuildInfoReader {
     return properties;
   }
 
-
   private static String readValue(String l) {
     return l.substring(l.lastIndexOf(COLON) + 1)
-      .replaceAll(QUOTE, "")
-      .replaceAll(Pattern.quote("\""), "")
-      .replaceAll(",$", "").trim();
+        .replaceAll(QUOTE, "")
+        .replaceAll(Pattern.quote("\""), "")
+        .replaceAll(",$", "").trim();
   }
 
   public static String getVersion(Path modulePath) {
@@ -174,9 +172,10 @@ public class NodeInfoReader implements BuildInfoReader {
       throw new IllegalArgumentException("nodejs version output should not be empty!");
     }
     return Arrays.stream(output.split(NEW_LINE))
-      .filter(l -> l.contains("npm"))
-      .map(NodeInfoReader::readValue)
-      .findFirst()
-      .orElseThrow(() -> new IllegalStateException("Unknown nodejs version output format. Expected at least one line!"));
+        .filter(l -> l.contains("npm"))
+        .map(NodeInfoReader::readValue)
+        .findFirst()
+        .orElseThrow(
+            () -> new IllegalStateException("Unknown nodejs version output format. Expected at least one line!"));
   }
 }

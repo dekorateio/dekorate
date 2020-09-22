@@ -33,11 +33,11 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Processing generator options, which are used for customizing the generation process")
 @SupportedAnnotationTypes({
-  "io.dekorate.annotation.Dekorate",
-  "io.dekorate.kubernetes.annotation.KubernetesApplication",
-  "io.dekorate.openshift.annotation.OpenshiftApplication",
-  "io.dekorate.knative.annotation.KnativeApplication",
-  "io.dekorate.option.annotation.GeneratorOptions"
+    "io.dekorate.annotation.Dekorate",
+    "io.dekorate.kubernetes.annotation.KubernetesApplication",
+    "io.dekorate.openshift.annotation.OpenshiftApplication",
+    "io.dekorate.knative.annotation.KnativeApplication",
+    "io.dekorate.option.annotation.GeneratorOptions"
 })
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements OptionsGenerator, WithSession {
 
@@ -62,17 +62,17 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
 
         configurePaths(options.inputPath(), options.outputPath());
         return false;
-       }
+      }
     }
     return false;
   }
 
- 
-    public void add(Element element) {
-        GeneratorOptions options = element.getAnnotation(GeneratorOptions.class);
-        if (options != null) {
-            AnnotationConfiguration<GeneratorConfig> config = new AnnotationConfiguration<>(GeneratorConfigAdapter.newBuilder(options));
-            on(config);
-        }
+  public void add(Element element) {
+    GeneratorOptions options = element.getAnnotation(GeneratorOptions.class);
+    if (options != null) {
+      AnnotationConfiguration<GeneratorConfig> config = new AnnotationConfiguration<>(
+          GeneratorConfigAdapter.newBuilder(options));
+      on(config);
     }
+  }
 }

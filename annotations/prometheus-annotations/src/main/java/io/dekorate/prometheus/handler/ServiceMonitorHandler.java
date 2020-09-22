@@ -21,7 +21,6 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.prometheus.config.EditableServiceMonitorConfig;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
 import io.dekorate.prometheus.decorator.AddServiceMonitorResourceDecorator;
-import io.dekorate.prometheus.model.ServiceMonitorBuilder;
 
 public class ServiceMonitorHandler implements Handler<ServiceMonitorConfig> {
 

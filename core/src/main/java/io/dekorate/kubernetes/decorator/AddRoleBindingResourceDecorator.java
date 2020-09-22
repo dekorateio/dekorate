@@ -15,11 +15,11 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.doc.Description;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder;
-import io.dekorate.doc.Description;
-import io.dekorate.utils.Strings;
 
 /**
  * AddRoleBindingDecorator
@@ -27,18 +27,16 @@ import io.dekorate.utils.Strings;
 @Description("Add a Rolebinding resource to the list of generated resources.")
 public class AddRoleBindingResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
-private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io";
+  private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io";
 
   public static enum RoleKind {
-    Role,
-    ClusterRole
+    Role, ClusterRole
   }
 
   private final String serviceAccount;
   private final String name;
   private final String role;
   private final RoleKind kind;
-
 
   public AddRoleBindingResourceDecorator(String role) {
     this(null, null, role, RoleKind.ClusterRole);
@@ -57,27 +55,26 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
 
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
-    String name = Strings.isNotNullOrEmpty(this.name) ? this.name :  meta.getName() + ":" + this.role;
-    String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount :  meta.getName();
+    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName() + ":" + this.role;
+    String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount : meta.getName();
 
     if (contains(list, "rbac.authorization.k8s.io/v1", "RoleBinding", name)) {
       return;
     }
 
     list.addToItems(new RoleBindingBuilder()
-      .withNewMetadata()
-      .withName(name)
-      .withLabels(meta.getLabels())
-      .endMetadata()
-      .withNewRoleRef()
-      .withKind(kind.name())
-      .withName(role)
-      .withApiGroup(DEFAULT_RBAC_API_GROUP)
-      .endRoleRef()
-      .addNewSubject()
-      .withKind("ServiceAccount")
-      .withName(serviceAccount)
-      .endSubject());
+        .withNewMetadata()
+        .withName(name)
+        .withLabels(meta.getLabels())
+        .endMetadata()
+        .withNewRoleRef()
+        .withKind(kind.name())
+        .withName(role)
+        .withApiGroup(DEFAULT_RBAC_API_GROUP)
+        .endRoleRef()
+        .addNewSubject()
+        .withKind("ServiceAccount")
+        .withName(serviceAccount)
+        .endSubject());
   }
 }
-

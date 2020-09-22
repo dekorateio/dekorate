@@ -15,12 +15,12 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.kubernetes.config.Port;
-import io.dekorate.kubernetes.annotation.Protocol;
-import io.fabric8.kubernetes.api.model.ContainerBuilder;
-import io.dekorate.doc.Description;
-
 import java.util.Objects;
+
+import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.annotation.Protocol;
+import io.dekorate.kubernetes.config.Port;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 
 /**
  * A decorator that adds a port to all containers.
@@ -41,26 +41,28 @@ public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBui
 
   @Override
   public void andThenVisit(ContainerBuilder container) {
-    if (container.buildPorts().stream().anyMatch(p -> p.getName().equals(port.getName())))  {
+    if (container.buildPorts().stream().anyMatch(p -> p.getName().equals(port.getName()))) {
       container.editMatchingPort(p -> p.getName().equals(port.getName()))
-        .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
-        .withContainerPort(port.getContainerPort())
-        .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
-        .endPort();
+          .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
+          .withContainerPort(port.getContainerPort())
+          .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
+          .endPort();
     } else {
       container.addNewPort()
-        .withName(port.getName())
-        .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
-        .withContainerPort(port.getContainerPort())
-        .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
-        .endPort();
+          .withName(port.getName())
+          .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
+          .withContainerPort(port.getContainerPort())
+          .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
+          .endPort();
     }
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     AddPortDecorator addPortDecorator = (AddPortDecorator) o;
     return Objects.equals(port, addPortDecorator.port);
   }
@@ -72,7 +74,7 @@ public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBui
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
 
 }

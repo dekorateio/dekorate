@@ -17,19 +17,20 @@
 
 package io.dekorate.logger;
 
-import java.io.PrintStream;
-
-import io.dekorate.Logger;
-import io.dekorate.LoggerFactory;
-import org.fusesource.jansi.*;
 import static org.fusesource.jansi.Ansi.*;
 import static org.fusesource.jansi.Ansi.Color.*;
 
+import java.io.PrintStream;
+
+import org.fusesource.jansi.*;
+
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
+
 public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
 
-
   private final PrintStream stream;
-  
+
   public Logger create(PrintStream stream) {
     return new AnsiLogger(stream);
   }
@@ -39,34 +40,34 @@ public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
     this.stream = AnsiConsole.out;
   }
 
-  public AnsiLogger (PrintStream stream) {
+  public AnsiLogger(PrintStream stream) {
     check();
     this.stream = stream != null ? AnsiConsole.wrapPrintStream(stream, 0) : AnsiConsole.out;
   }
-  
-	@Override
-	public void debug(String message) {
+
+  @Override
+  public void debug(String message) {
     check();
     stream.println(ansi().a("[").fg(CYAN).bold().a(DEBUG).reset().a("] ").a(message));
-	}
+  }
 
-	@Override
-	public void info(String message) {
+  @Override
+  public void info(String message) {
     check();
     stream.println(ansi().a("[").fg(BLUE).bold().a(INFO).reset().a("] ").a(message));
-	}
+  }
 
-	@Override
-	public void warning(String message) {
+  @Override
+  public void warning(String message) {
     check();
     stream.println(ansi().a("[").fg(MAGENTA).bold().a(WARN).reset().a("] ").a(message));
-	}
+  }
 
-	@Override
-	public void error(String message) {
+  @Override
+  public void error(String message) {
     check();
     stream.println(ansi().a("[").fg(RED).bold().a(ERROR).reset().a("] ").a(message));
-	}
+  }
 
   private void check() {
     if (stream == null) {

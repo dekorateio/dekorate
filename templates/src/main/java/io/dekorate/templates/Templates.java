@@ -2,7 +2,7 @@
 package io.dekorate.templates;
 
 /**
- * Templates 
+ * Templates
  */
 public class Templates {
 

@@ -10,31 +10,31 @@ import io.dekorate.kubernetes.decorator.Decorator;
 
 @Description("Add the build configuration to the component.")
 public class AddBuildConfigToComponentDecorator extends Decorator<ComponentSpecBuilder> {
-  
+
   private final Path modulePath;
   private final String url;
   private final String ref;
   private final String type;
-  
+
   public AddBuildConfigToComponentDecorator(Path modulePath, String url, String ref, String type) {
     this.modulePath = modulePath;
     this.url = url;
     this.ref = ref;
     this.type = type;
   }
-  
+
   @Override
   public void visit(ComponentSpecBuilder component) {
     component
-      .withNewBuildConfig()
-      .withUrl(url)
-      .withRef(ref)
-      .withType(type)
-      .withContextPath(toContextPath(modulePath))
-      .withModuleDirName(toModuleDirName(modulePath))
-      .endBuildConfig();
+        .withNewBuildConfig()
+        .withUrl(url)
+        .withRef(ref)
+        .withType(type)
+        .withContextPath(toContextPath(modulePath))
+        .withModuleDirName(toModuleDirName(modulePath))
+        .endBuildConfig();
   }
-  
+
   /**
    * Get the context path of the current module.
    * This is the relative path from project root, excluding the module directory.
@@ -54,7 +54,7 @@ public class AddBuildConfigToComponentDecorator extends Decorator<ComponentSpecB
     }
     return sb.toString();
   }
-  
+
   /**
    * Get the directory name of the current module.
    *
@@ -71,6 +71,5 @@ public class AddBuildConfigToComponentDecorator extends Decorator<ComponentSpecB
     }
     return null;
   }
-  
-  
+
 }

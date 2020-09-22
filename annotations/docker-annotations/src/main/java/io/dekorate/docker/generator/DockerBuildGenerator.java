@@ -19,7 +19,6 @@ package io.dekorate.docker.generator;
 
 import java.util.Map;
 
-
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
@@ -45,16 +44,18 @@ public interface DockerBuildGenerator extends Generator, WithSession, WithProjec
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))
-                                                                                 .accept(new ApplyProjectInfo(getProject()))
-                                                                                 .accept(new ApplyBuildToImageConfiguration())));
+    on(new AnnotationConfiguration<DockerBuildConfig>(
+        DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))
+            .accept(new ApplyProjectInfo(getProject()))
+            .accept(new ApplyBuildToImageConfiguration())));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))
-                                                                                 .accept(new ApplyProjectInfo(getProject()))
-                                                                                 .accept(new ApplyBuildToImageConfiguration())));
+    on(new PropertyConfiguration<DockerBuildConfig>(
+        DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))
+            .accept(new ApplyProjectInfo(getProject()))
+            .accept(new ApplyBuildToImageConfiguration())));
   }
 
   default void on(ConfigurationSupplier<DockerBuildConfig> config) {

@@ -23,10 +23,10 @@ import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.config.ConfigurationSupplier;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 
 public class DockerBuildServiceFactory implements BuildServiceFactory {
 
@@ -59,8 +59,8 @@ public class DockerBuildServiceFactory implements BuildServiceFactory {
     String dockerFile = Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile";
     boolean applicable = project.getRoot().resolve(dockerFile).toFile().exists();
     String message = applicable
-      ? MESSAGE_OK
-      : String.format(MESSAGE_NOK, project.getRoot().resolve(dockerFile));
+        ? MESSAGE_OK
+        : String.format(MESSAGE_NOK, project.getRoot().resolve(dockerFile));
     return new BuildServiceApplicablility(applicable, message);
   }
 

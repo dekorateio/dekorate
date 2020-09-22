@@ -16,26 +16,28 @@
 
 package io.dekorate.examples.kubernetes;
 
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.openshift.api.model.*;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.knative.serving.v1.Service;
-import io.dekorate.utils.Serialization;
-import io.dekorate.utils.Labels;
-import java.net.URL;
-import java.util.Optional;
-import java.util.Map;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Map;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Labels;
+import io.dekorate.utils.Serialization;
+import io.fabric8.knative.serving.v1.Service;
+import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.openshift.api.model.*;
 
 public class Issue442MultiPlatformTest {
 
   @Test
   public void shouldHaveCustomNameInOpenshiftYml() {
-    KubernetesList list = Serialization.unmarshalAsList(Issue442MultiPlatformTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        Issue442MultiPlatformTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -47,7 +49,8 @@ public class Issue442MultiPlatformTest {
 
   @Test
   public void shouldHaveCustomNameAndVersionInKubernetesYml() {
-    KubernetesList list = Serialization.unmarshalAsList(Issue442MultiPlatformTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        Issue442MultiPlatformTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -60,7 +63,8 @@ public class Issue442MultiPlatformTest {
 
   @Test
   public void shouldHaveCustomGroupAndVersionInKnativeYml() {
-    KubernetesList list = Serialization.unmarshalAsList(Issue442MultiPlatformTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(Issue442MultiPlatformTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(s);
@@ -70,10 +74,9 @@ public class Issue442MultiPlatformTest {
     assertEquals("1.0-knative", labels.get(Labels.VERSION));
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

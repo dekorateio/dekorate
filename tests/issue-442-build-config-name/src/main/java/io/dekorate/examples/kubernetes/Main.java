@@ -15,6 +15,7 @@
  */
 
 package io.dekorate.examples.kuberentes;
+
 import io.dekorate.annotation.Dekorate;
 
 @Dekorate

@@ -39,31 +39,36 @@ public class BuildInfo {
 
   /**
    * Constructor
-   * @param name                  The project name (e.g. maven artifactId).
-   * @param version               The project version (e.g. maven version).
-   * @param packaging             The project packaging (e.g. jar, war).
-   * @param buildTool             The project build tool (e.g. maven, gralde, sbt)
-   * @param buildToolVersion      The build tool version
-   * @param outputFile            The output file (the path to the actual jar, war etc).
-   * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
+   * 
+   * @param name The project name (e.g. maven artifactId).
+   * @param version The project version (e.g. maven version).
+   * @param packaging The project packaging (e.g. jar, war).
+   * @param buildTool The project build tool (e.g. maven, gralde, sbt)
+   * @param buildToolVersion The build tool version
+   * @param outputFile The output file (the path to the actual jar, war etc).
+   * @param classOutputDir The resource output directory (e.g. target/classes, build/classes/main/java etc).
    */
-  public BuildInfo(String name, String version, String packaging, String buildTool, String buildToolVersion, Path outputFile, Path classOutputDir) {
+  public BuildInfo(String name, String version, String packaging, String buildTool, String buildToolVersion, Path outputFile,
+      Path classOutputDir) {
     this(name, version, packaging, buildTool, buildToolVersion, outputFile, classOutputDir, classOutputDir);
   }
 
   /**
    * Constructor
-   * @param name                  The project name (e.g. maven artifactId).
-   * @param version               The project version (e.g. maven version).
-   * @param packaging             The project packaging (e.g. jar, war).
-   * @param buildTool             The project build tool (e.g. maven, gralde, sbt)
-   * @param buildToolVersion      The build tool version
-   * @param outputFile            The output file (the path to the actual jar, war etc).
-   * @param classOutputDir        The resource output directory (e.g. target/classes, build/classes/main/java etc).
-   * @param resourceDir           The directory from which application resources should be read. (e.g. target/classes for maven, src/main/resources from gralde and so on).
+   * 
+   * @param name The project name (e.g. maven artifactId).
+   * @param version The project version (e.g. maven version).
+   * @param packaging The project packaging (e.g. jar, war).
+   * @param buildTool The project build tool (e.g. maven, gralde, sbt)
+   * @param buildToolVersion The build tool version
+   * @param outputFile The output file (the path to the actual jar, war etc).
+   * @param classOutputDir The resource output directory (e.g. target/classes, build/classes/main/java etc).
+   * @param resourceDir The directory from which application resources should be read. (e.g. target/classes for maven,
+   *        src/main/resources from gralde and so on).
    */
   @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-  public BuildInfo(String name, String version, String packaging, String buildTool, String buildToolVersion, Path outputFile, Path classOutputDir, Path resourceDir) {
+  public BuildInfo(String name, String version, String packaging, String buildTool, String buildToolVersion, Path outputFile,
+      Path classOutputDir, Path resourceDir) {
     this.name = name;
     this.version = version;
     this.packaging = packaging;
@@ -80,6 +85,7 @@ public class BuildInfo {
 
   /**
    * Get the project name.
+   * 
    * @return The project name.
    */
   public String getName() {
@@ -88,15 +94,16 @@ public class BuildInfo {
 
   /**
    * Get the project version.
+   * 
    * @return The project version.
    */
   public String getVersion() {
     return version;
   }
 
-
   /**
    * Get the project packaging.
+   * 
    * @return The project packaging.
    */
   public String getPackaging() {
@@ -105,25 +112,26 @@ public class BuildInfo {
 
   /**
    * Get the build tool name.
+   * 
    * @return the name of the build tool.
    */
   public String getBuildTool() {
     return buildTool;
   }
 
-
   /*
    * Get the build tool version.
+   * 
    * @return the version of the build tool.
    */
   public String getBuildToolVersion() {
     return this.buildToolVersion;
   }
 
-
   /**
    * Get the output file name.
-   * @return  The output file name.
+   * 
+   * @return The output file name.
    */
   public Path getOutputFile() {
     return outputFile;

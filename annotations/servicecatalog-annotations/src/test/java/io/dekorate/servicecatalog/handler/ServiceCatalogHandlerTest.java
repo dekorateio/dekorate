@@ -15,13 +15,14 @@
  */
 package io.dekorate.servicecatalog.handler;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.servicecatalog.config.EditableServiceCatalogConfig;
 import io.dekorate.servicecatalog.config.ServiceCatalogConfig;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ServiceCatalogHandlerTest {
 

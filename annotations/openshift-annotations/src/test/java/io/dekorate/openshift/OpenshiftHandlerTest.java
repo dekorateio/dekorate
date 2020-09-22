@@ -16,14 +16,15 @@
 
 package io.dekorate.openshift;
 
-import io.dekorate.openshift.config.OpenshiftConfig;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import io.dekorate.openshift.config.EditableOpenshiftConfig;
-import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.openshift.handler.OpenshiftHandler;
 import org.junit.jupiter.api.Test;
+
+import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.openshift.config.EditableOpenshiftConfig;
+import io.dekorate.openshift.config.OpenshiftConfig;
+import io.dekorate.openshift.handler.OpenshiftHandler;
 
 class OpenshiftHandlerTest {
 

@@ -15,8 +15,8 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.dekorate.doc.Description;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 
 @Description("A decorator that applies the command args to the application container.")
 public class ApplyArgsDecorator extends ApplicationContainerDecorator<ContainerFluent> {
@@ -27,6 +27,7 @@ public class ApplyArgsDecorator extends ApplicationContainerDecorator<ContainerF
     super(null, containerName);
     this.argument = argument;
   }
+
   public ApplyArgsDecorator(String deploymentName, String containerName, String... argument) {
     super(deploymentName, containerName);
     this.argument = argument;
@@ -40,6 +41,6 @@ public class ApplyArgsDecorator extends ApplicationContainerDecorator<ContainerF
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
 }

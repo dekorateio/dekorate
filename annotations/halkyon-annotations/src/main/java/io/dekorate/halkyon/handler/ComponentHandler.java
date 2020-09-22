@@ -65,7 +65,6 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
 
-
   private final Resources resources;
   private final Configurators configurators;
   private final Logger LOGGER = LoggerFactory.getLogger();
@@ -106,7 +105,7 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(ComponentConfig.class) ||
-      type.equals(EditableComponentConfig.class);
+        type.equals(EditableComponentConfig.class);
   }
 
   private void addVisitors(ComponentConfig config) {
@@ -120,33 +119,33 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     allLabels.put(Labels.NAME, config.getName());
 
     if (Strings.isNotNullOrEmpty(config.getVersion())) {
-        allLabels.put(Labels.VERSION, config.getVersion());
+      allLabels.put(Labels.VERSION, config.getVersion());
     }
     if (Strings.isNotNullOrEmpty(config.getPartOf())) {
-       allLabels.put(Labels.PART_OF, config.getPartOf());
+      allLabels.put(Labels.PART_OF, config.getPartOf());
     }
     Arrays.stream(config.getLabels()).forEach(l -> {
-            allLabels.put(l.getKey(), l.getValue());
-        });
+      allLabels.put(l.getKey(), l.getValue());
+    });
 
-    Labels.createLabels(kubernetesConfig).forEach( (k,v) -> {
-            if (!allLabels.containsKey(k)) {
-                allLabels.put(k, v);
-            }
-        });
+    Labels.createLabels(kubernetesConfig).forEach((k, v) -> {
+      if (!allLabels.containsKey(k)) {
+        allLabels.put(k, v);
+      }
+    });
 
-    allLabels.forEach( (k,v)  -> {
-            resources.decorateCustom(ResourceGroup.NAME, new AddLabelDecorator(new Label(k, v)));
-            resources.decorateCustom(ResourceGroup.NAME, new AddToSelectorDecorator(k, v));
-        });
+    allLabels.forEach((k, v) -> {
+      resources.decorateCustom(ResourceGroup.NAME, new AddLabelDecorator(new Label(k, v)));
+      resources.decorateCustom(ResourceGroup.NAME, new AddToSelectorDecorator(k, v));
+    });
 
     if (config.isExposeService()) {
-        resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
-        Port[] ports = kubernetesConfig.getPorts();
-        if (ports.length == 0) {
-            throw new IllegalStateException("Ports need to be present on KubernetesConfig");
-        }
-        resources.decorateCustom(ResourceGroup.NAME, new AddExposedPortToComponentDecorator(ports[0].getContainerPort()));
+      resources.decorateCustom(ResourceGroup.NAME, new ExposeServiceDecorator());
+      Port[] ports = kubernetesConfig.getPorts();
+      if (ports.length == 0) {
+        throw new IllegalStateException("Ports need to be present on KubernetesConfig");
+      }
+      resources.decorateCustom(ResourceGroup.NAME, new AddExposedPortToComponentDecorator(ports[0].getContainerPort()));
     }
 
     if (type != null) {
@@ -180,7 +179,8 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
         if (!remote.equals(Git.ORIGIN)) {
           url = Git.getSafeRemoteUrl(scmInfo.getRoot(), remote).orElse(url);
         }
-        resources.decorateCustom(ResourceGroup.NAME, new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
+        resources.decorateCustom(ResourceGroup.NAME,
+            new AddBuildConfigToComponentDecorator(modulePath, url, branch, buildType));
       }
     }
   }
@@ -207,22 +207,22 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
    */
   private Component createComponent(ComponentConfig config) {
     return new ComponentBuilder()
-      .withNewMetadata()
-      .withName(config.getName())
-      .endMetadata()
-      .withNewSpec()
-      .withDeploymentMode(config.getDeploymentMode())
-      .withVersion(config.getVersion())
-      .endSpec()
-      .build();
+        .withNewMetadata()
+        .withName(config.getName())
+        .endMetadata()
+        .withNewSpec()
+        .withDeploymentMode(config.getDeploymentMode())
+        .withVersion(config.getVersion())
+        .endSpec()
+        .build();
   }
 
   @Override
   public ConfigurationSupplier<ComponentConfig> getFallbackConfig() {
     Project p = getProject();
     return new ConfigurationSupplier<ComponentConfig>(new ComponentConfigBuilder()
-      .withName(p.getBuildInfo().getName())
-      .accept(new ApplyDeployToApplicationConfiguration())
-      .accept(new ApplyProjectInfo(p)));
+        .withName(p.getBuildInfo().getName())
+        .accept(new ApplyDeployToApplicationConfiguration())
+        .accept(new ApplyProjectInfo(p)));
   }
 }

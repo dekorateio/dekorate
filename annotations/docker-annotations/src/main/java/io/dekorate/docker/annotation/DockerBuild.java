@@ -34,7 +34,7 @@ import io.sundr.builder.annotations.Pojo;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DockerBuild {
 
-   boolean enabled() default true;
+  boolean enabled() default true;
 
   /**
    * The registry that holds the image.
@@ -44,38 +44,40 @@ public @interface DockerBuild {
   String registry() default "";
 
   /**
-   * The group of the application. This value will be use as image user. 
+   * The group of the application. This value will be use as image user.
+   * 
    * @return The specified group name.
    */
   String group() default "";
 
   /**
    * The name of the application. This value will be used as name.
+   * 
    * @return The specified application name.
    */
   String name() default "";
 
   /**
    * The version of the application. This value be used as image tag.
+   * 
    * @return The version.
    */
   String version() default "";
 
-
   /**
    * The name of the image to be generated.
    * This property overrides group, name and version.
+   * 
    * @return the image name.
    */
   String image() default "";
-    
+
   /**
    * The relative path of the Dockerfile, from the module root.
    * 
    * @return The relative path.
    */
   String dockerFile() default "Dockerfile";
-
 
   /**
    * Flag to automatically push the image, to the specified registry.

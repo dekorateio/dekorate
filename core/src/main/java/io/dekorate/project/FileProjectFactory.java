@@ -28,11 +28,11 @@ public class FileProjectFactory {
 
   private static Project PROJECT = null;
 
-
   /**
    * Creates a {@link Project} from the specified {@link File}.
-   * @param file          A file within the project.
-   * @return              The project.
+   * 
+   * @param file A file within the project.
+   * @return The project.
    */
   public static Project create(File file) {
     if (PROJECT != null) {
@@ -59,24 +59,29 @@ public class FileProjectFactory {
       scmPath = scmPath.getParent();
     }
     Optional<ScmInfo> scmInfo = getScmInfo(scmPath);
-    return new Project(infoPath, info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")), scmInfo.orElse(null));
+    return new Project(infoPath,
+        info.orElseThrow(() -> new IllegalStateException("Could not find matching project info read")),
+        scmInfo.orElse(null));
   }
 
   /**
    * Read the {@link BuildInfo} from the specified path.
-   * @param path  The path.
-   * @return      An {@link Optional} {@link BuildInfo}.
+   * 
+   * @param path The path.
+   * @return An {@link Optional} {@link BuildInfo}.
    */
   private static Optional<BuildInfo> getProjectInfo(Path path) {
     if (path == null) {
       return Optional.empty();
     }
 
-    return StreamSupport.stream(ServiceLoader.load(BuildInfoReader.class, FileProjectFactory.class.getClassLoader()).spliterator(), false)
-      .filter(r -> r.isApplicable(path))
-      .sorted(Comparator.comparingInt(BuildInfoReader::order))
-      .findFirst()
-      .map(r -> r.getInfo(path));
+    return StreamSupport
+        .stream(ServiceLoader.load(BuildInfoReader.class, FileProjectFactory.class.getClassLoader()).spliterator(),
+            false)
+        .filter(r -> r.isApplicable(path))
+        .sorted(Comparator.comparingInt(BuildInfoReader::order))
+        .findFirst()
+        .map(r -> r.getInfo(path));
   }
 
   private static Optional<ScmInfo> getScmInfo(Path path) {

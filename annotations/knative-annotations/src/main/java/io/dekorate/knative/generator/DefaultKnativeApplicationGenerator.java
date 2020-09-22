@@ -24,10 +24,10 @@ import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultKnativeApplicationGenerator implements KnativeApplicationGenerator {
 
-    public DefaultKnativeApplicationGenerator () {
-      on(new DefaultConfiguration<KnativeConfig>(new KnativeConfigBuilder()
-                                                   .accept(new ApplyImagePullSecretConfiguration())
-                                                   .accept(new ApplyProjectInfo(getProject()))
-                                                   .accept(new ApplyDeployToApplicationConfiguration())));
-    }
+  public DefaultKnativeApplicationGenerator() {
+    on(new DefaultConfiguration<KnativeConfig>(new KnativeConfigBuilder()
+        .accept(new ApplyImagePullSecretConfiguration())
+        .accept(new ApplyProjectInfo(getProject()))
+        .accept(new ApplyDeployToApplicationConfiguration())));
+  }
 }

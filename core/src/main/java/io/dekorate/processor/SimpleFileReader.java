@@ -28,8 +28,8 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.SessionReader;
-import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class SimpleFileReader implements SessionReader {
 
@@ -50,11 +50,11 @@ public class SimpleFileReader implements SessionReader {
   public void read(Session session) {
     LOGGER.info("Checking for existing resources in: " + path.toAbsolutePath().normalize().toString() + ".");
     findApplicableResources().forEach((k, v) -> {
-        v.getItems().forEach(i -> {
-            LOGGER.info("Adding existing " + i.getKind() + " with name: " + i.getMetadata().getName() + ".");
-            session.resources().add(k, i);
-          });
+      v.getItems().forEach(i -> {
+        LOGGER.info("Adding existing " + i.getKind() + " with name: " + i.getMetadata().getName() + ".");
+        session.resources().add(k, i);
       });
+    });
   }
 
   private Path pathToJson(String target) {
@@ -77,7 +77,8 @@ public class SimpleFileReader implements SessionReader {
     try (InputStream is = new FileInputStream(pathToYml(target).toFile())) {
       return Serialization.unmarshalAsList(is);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read kubernetes resources from: " + path.toAbsolutePath().normalize().toString(), e);
+      throw new RuntimeException(
+          "Failed to read kubernetes resources from: " + path.toAbsolutePath().normalize().toString(), e);
     }
   }
 
@@ -85,7 +86,8 @@ public class SimpleFileReader implements SessionReader {
     try (InputStream is = new FileInputStream(pathToJson(target).toFile())) {
       return Serialization.unmarshalAsList(is);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read kubernetes resources from: " + path.toAbsolutePath().normalize().toString(), e);
+      throw new RuntimeException(
+          "Failed to read kubernetes resources from: " + path.toAbsolutePath().normalize().toString(), e);
     }
   }
 
@@ -95,12 +97,12 @@ public class SimpleFileReader implements SessionReader {
       return result;
     }
     Map<String, KubernetesList> ymlResourcePaths = targets.stream()
-      .filter(this::hasYml)
-      .collect(Collectors.toMap(t -> t, this::readYml));
+        .filter(this::hasYml)
+        .collect(Collectors.toMap(t -> t, this::readYml));
 
     Map<String, KubernetesList> jsonResourcePaths = targets.stream()
-      .filter(this::hasJson)
-      .collect(Collectors.toMap(t -> t, this::readJson));
+        .filter(this::hasJson)
+        .collect(Collectors.toMap(t -> t, this::readJson));
 
     result.putAll(jsonResourcePaths);
     result.putAll(ymlResourcePaths);

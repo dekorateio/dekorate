@@ -21,17 +21,18 @@ import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 
 public class ApplyProject extends Configurator<ComponentConfigFluent<?>> {
-  
+
   private static final String APP_NAME = "app.name";
   private final Project project;
-  
+
   public ApplyProject(Project project) {
     this.project = project;
   }
-  
+
   @Override
   public void visit(ComponentConfigFluent<?> fluent) {
     fluent.withProject(project)
-      .withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : project.getBuildInfo().getName()));
+        .withName(System.getProperty(APP_NAME,
+            Strings.isNotNullOrEmpty(fluent.getName()) ? fluent.getName() : project.getBuildInfo().getName()));
   }
 }

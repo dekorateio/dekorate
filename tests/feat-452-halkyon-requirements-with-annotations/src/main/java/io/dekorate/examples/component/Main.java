@@ -16,16 +16,16 @@
 
 package io.dekorate.examples.component;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import io.dekorate.halkyon.annotation.HalkyonCapability;
 import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.halkyon.annotation.HalkyonRequiredCapability;
 import io.dekorate.halkyon.annotation.Parameter;
 import io.dekorate.kubernetes.annotation.Env;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@HalkyonComponent(name = "hello-world", buildType = "docker", exposeService = true, envs = @Env(name = "key1", value = "val1"), provides = @HalkyonCapability(name = "hello-world-endpoint", category = "api", type = "rest-component", version = "1"), requires = @HalkyonRequiredCapability(name = "db", category = "database", type = "postgres", boundTo = "postgres-db", autoBindable = true,
-  parameters = @Parameter(name = "postgres-name", value = "postgres-value")))
+@HalkyonComponent(name = "hello-world", buildType = "docker", exposeService = true, envs = @Env(name = "key1", value = "val1"), provides = @HalkyonCapability(name = "hello-world-endpoint", category = "api", type = "rest-component", version = "1"), requires = @HalkyonRequiredCapability(name = "db", category = "database", type = "postgres", boundTo = "postgres-db", autoBindable = true, parameters = @Parameter(name = "postgres-name", value = "postgres-value")))
 @SpringBootApplication
 public class Main {
 

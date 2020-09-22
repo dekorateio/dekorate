@@ -19,12 +19,14 @@ public @interface HostAlias {
 
   /**
    * Ip address to resolve to.
+   * 
    * @return the ip address.
    */
   String ip() default "";
 
   /**
    * List of hostnames (comma separated)
+   * 
    * @return the hostnames
    */
   String hostnames() default "";

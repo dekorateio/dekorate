@@ -40,21 +40,21 @@ public class AddResourceInputToTaskDecorator extends NamedTaskDecorator {
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     if (!taskSpec.hasResources()) {
       taskSpec.withNewResources()
-        .addNewInput()
-        .withName(name)
-        .withType(type)
-        .withTargetPath(targetPath)
-        .endInput()
-        .endResources();
+          .addNewInput()
+          .withName(name)
+          .withType(type)
+          .withTargetPath(targetPath)
+          .endInput()
+          .endResources();
     } else {
       taskSpec.editResources().removeMatchingFromInputs(r -> r.getName().equals(name)).endResources();
       taskSpec.editResources()
-        .addNewInput()
-        .withName(name)
-        .withType(type)
-        .withTargetPath(targetPath)
-        .endInput()
-        .endResources();
+          .addNewInput()
+          .withName(name)
+          .withType(type)
+          .withTargetPath(targetPath)
+          .endInput()
+          .endResources();
     }
   }
 }

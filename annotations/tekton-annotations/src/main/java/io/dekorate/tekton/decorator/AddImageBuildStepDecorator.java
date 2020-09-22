@@ -17,12 +17,11 @@
 
 package io.dekorate.tekton.decorator;
 
+import io.dekorate.kubernetes.decorator.Decorator;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
-import io.dekorate.kubernetes.decorator.Decorator;
 
-public class AddImageBuildStepDecorator extends NamedTaskDecorator implements StepDecorator{
-
+public class AddImageBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
   private static final String BUILD_AND_PUSH = "build-and-push";
   private static final String BUILDER_IMAGE_REF = "$(inputs.params.builderImage)";
@@ -51,16 +50,16 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     taskSpec.addNewStep()
-          .withName(stepName)
-          .withImage(BUILDER_IMAGE_REF)
-          .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
-          .withCommand(KANIKO_CMD)
-          .addToArgs(DOCKERFILE_ARG)
-          .addToArgs(CONTEXT_ARG)
-          .addToArgs(IMAGE_DESTINATION_ARG)
-          .addToArgs(VERBOSITY_DEBUG)
-          .withWorkingDir(sourcePath(projectName))
-      .endStep();
+        .withName(stepName)
+        .withImage(BUILDER_IMAGE_REF)
+        .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
+        .withCommand(KANIKO_CMD)
+        .addToArgs(DOCKERFILE_ARG)
+        .addToArgs(CONTEXT_ARG)
+        .addToArgs(IMAGE_DESTINATION_ARG)
+        .addToArgs(VERBOSITY_DEBUG)
+        .withWorkingDir(sourcePath(projectName))
+        .endStep();
   }
 
   @Override

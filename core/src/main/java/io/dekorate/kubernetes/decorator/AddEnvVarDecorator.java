@@ -15,15 +15,15 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import java.util.Objects;
+
+import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.builder.Predicate;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.EnvFromSourceBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
-import io.dekorate.doc.Description;
-
-import java.util.Objects;
 
 /**
  * A decorator that adds an environment variable to the specified container(s).
@@ -115,7 +115,8 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
   }
 
   private void populateFromField(ContainerBuilder builder) {
-    builder.addNewEnv().withName(this.env.getName()).withNewValueFrom().withNewFieldRef().withFieldPath(this.env.getField()).endFieldRef().endValueFrom().endEnv();
+    builder.addNewEnv().withName(this.env.getName()).withNewValueFrom().withNewFieldRef().withFieldPath(this.env.getField())
+        .endFieldRef().endValueFrom().endEnv();
   }
 
   @Override
@@ -135,7 +136,7 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
 
 }

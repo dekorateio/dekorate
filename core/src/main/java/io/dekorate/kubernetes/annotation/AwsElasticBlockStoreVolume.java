@@ -19,13 +19,15 @@ public @interface AwsElasticBlockStoreVolume {
 
   /**
    * The volumeName name.
-   * @return  The volumeName name.
+   * 
+   * @return The volumeName name.
    */
   String volumeName();
 
   /**
    * The name of the disk to mount.
-   * @return  The name.
+   * 
+   * @return The name.
    */
   String volumeId();
 
@@ -35,7 +37,8 @@ public @interface AwsElasticBlockStoreVolume {
 
   /**
    * Wether the volumeName is read only or not.
-   * @return  True if read only, False otherwise.
+   * 
+   * @return True if read only, False otherwise.
    */
   boolean readOnly() default false;
 

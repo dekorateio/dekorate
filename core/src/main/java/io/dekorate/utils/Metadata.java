@@ -15,17 +15,16 @@
  */
 package io.dekorate.utils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Optional;
+
 import io.fabric8.kubernetes.api.builder.Builder;
 import io.fabric8.kubernetes.api.builder.Predicate;
-
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ObjectMetaFluent;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Optional;
 
 public class Metadata {
 
@@ -34,7 +33,7 @@ public class Metadata {
       Method method = builder.getClass().getMethod("getKind");
       Object o = method.invoke(builder);
       if (o instanceof String) {
-        return Optional.of((String)o);
+        return Optional.of((String) o);
       }
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
       //ignore
@@ -47,7 +46,7 @@ public class Metadata {
       Method method = builder.getClass().getMethod("buildMetadata");
       Object o = method.invoke(builder);
       if (o instanceof ObjectMeta) {
-        return Optional.of((ObjectMeta)o);
+        return Optional.of((ObjectMeta) o);
       }
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
       //ignore
@@ -91,6 +90,7 @@ public class Metadata {
 
   /**
    * Create a {@link Predicate} that checks that a resource builder doesn't match the name and kind.
+   * 
    * @param HasMetadata The specified resource.
    * @return The predicate.
    */
@@ -100,6 +100,7 @@ public class Metadata {
 
   /**
    * Create a {@link Predicate} that checks that a resource builder doesn't match the name and kind.
+   * 
    * @param kind The specified kind.
    * @param name The specified name.
    * @return The predicate.
@@ -111,8 +112,8 @@ public class Metadata {
         HasMetadata item = builder.build();
         ObjectMeta metadata = item.getMetadata();
         return apiVersion.equals(item.getApiVersion()) &&
-          kind != null && kind.equals(item.getKind()) &&
-          name != null && name.equals(metadata.getName());
+            kind != null && kind.equals(item.getKind()) &&
+            name != null && name.equals(metadata.getName());
       }
     };
   }

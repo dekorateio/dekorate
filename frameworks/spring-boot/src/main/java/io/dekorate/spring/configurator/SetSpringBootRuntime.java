@@ -27,6 +27,6 @@ public class SetSpringBootRuntime extends Configurator<ConfigurationFluent<?>> {
 
   @Override
   public void visit(ConfigurationFluent<?> config) {
-    config.addToAttributes(RUNTIME_TYPE,RUNTIME_SPRING_BOOT);
+    config.addToAttributes(RUNTIME_TYPE, RUNTIME_SPRING_BOOT);
   }
 }

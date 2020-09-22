@@ -20,12 +20,13 @@ package io.dekorate.kubernetes.config;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 import io.sundr.builder.annotations.Buildable;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class ImageConfiguration extends ApplicationConfiguration {
 
   private String registry;
@@ -40,20 +41,20 @@ public class ImageConfiguration extends ApplicationConfiguration {
 
   public static ImageConfiguration from(ApplicationConfiguration applicationConfiguration) {
     return new ImageConfigurationBuilder()
-      .withProject(applicationConfiguration.getProject())
-      .withGroup(applicationConfiguration.getPartOf())
-      .withPartOf(applicationConfiguration.getPartOf())
-      .withName(applicationConfiguration.getName())
-      .withVersion(applicationConfiguration.getVersion())
-      .withAttributes(applicationConfiguration.getAttributes())
-      .build();
+        .withProject(applicationConfiguration.getProject())
+        .withGroup(applicationConfiguration.getPartOf())
+        .withPartOf(applicationConfiguration.getPartOf())
+        .withName(applicationConfiguration.getName())
+        .withVersion(applicationConfiguration.getVersion())
+        .withAttributes(applicationConfiguration.getAttributes())
+        .build();
   }
 
   public ImageConfiguration() {
   }
 
   public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, String registry, String group, String name,
-                            String version, String image, String dockerFile, boolean autoBuildEnabled, boolean autoPushEnabled) {
+      String version, String image, String dockerFile, boolean autoBuildEnabled, boolean autoPushEnabled) {
     super(project, attributes, group, name, version);
     this.registry = registry;
     this.group = Strings.isNotNullOrEmpty(group) ? group : System.getProperty("user.name");

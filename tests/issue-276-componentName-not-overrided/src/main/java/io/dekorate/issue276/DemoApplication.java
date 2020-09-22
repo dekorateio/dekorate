@@ -6,11 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.dekorate.halkyon.annotation.HalkyonComponent;
 
 @SpringBootApplication
-@HalkyonComponent(exposeService=true, name="customName")
+@HalkyonComponent(exposeService = true, name = "customName")
 public class DemoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
 
 }

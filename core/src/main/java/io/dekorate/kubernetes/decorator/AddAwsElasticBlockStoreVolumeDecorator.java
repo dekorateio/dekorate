@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.dekorate.doc.Description;
 
 @Description("Add an elastic block store volume to the pod spec.")
 public class AddAwsElasticBlockStoreVolumeDecorator extends Decorator<PodSpecBuilder> {
@@ -31,13 +31,13 @@ public class AddAwsElasticBlockStoreVolumeDecorator extends Decorator<PodSpecBui
   @Override
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
-      .withName(volume.getVolumeName())
-      .withNewAwsElasticBlockStore()
-      .withVolumeID(volume.getVolumeId())
-      .withFsType(volume.getFsType())
-      .withPartition(volume.getPartition())
-      .withReadOnly(volume.isReadOnly())
-      .endAwsElasticBlockStore()
-      .endVolume();
+        .withName(volume.getVolumeName())
+        .withNewAwsElasticBlockStore()
+        .withVolumeID(volume.getVolumeId())
+        .withFsType(volume.getFsType())
+        .withPartition(volume.getPartition())
+        .withReadOnly(volume.isReadOnly())
+        .endAwsElasticBlockStore()
+        .endVolume();
   }
 }

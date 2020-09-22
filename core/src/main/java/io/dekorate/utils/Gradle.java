@@ -47,10 +47,10 @@ public class Gradle {
     ProjectExec exec = Exec.inPath(modulePath).redirectingOutput(out);
 
     boolean success = false;
-    if  (moduleGraldew.toFile().exists()) {
+    if (moduleGraldew.toFile().exists()) {
       success = exec.commands(moduleGraldew.toAbsolutePath().toString(), DASH_VERSION);
-    } else if  (rootGraldew.toFile().exists()) {
-       success = exec.commands(rootGraldew.toAbsolutePath().toString(), DASH_VERSION);
+    } else if (rootGraldew.toFile().exists()) {
+      success = exec.commands(rootGraldew.toAbsolutePath().toString(), DASH_VERSION);
     } else {
       success = exec.commands(GRADLE, DASH_VERSION);
     }
@@ -64,21 +64,24 @@ public class Gradle {
 
   private static String getVersionFromOutput(String output) {
     if (Strings.isNullOrEmpty(output)) {
-      LOGGER.warning("Unknown gradle version output format. Expected at least one line. Falling back to: " + FALLBACK_GRADLE_VERSION + "!");
+      LOGGER.warning("Unknown gradle version output format. Expected at least one line. Falling back to: "
+          + FALLBACK_GRADLE_VERSION + "!");
       return FALLBACK_GRADLE_VERSION;
     }
 
     Optional<String> versionLine = Arrays.stream(output.split(NEW_LINE))
-      .filter(l -> l.startsWith("Gradle"))
-      .findFirst();
+        .filter(l -> l.startsWith("Gradle"))
+        .findFirst();
 
     if (!versionLine.isPresent()) {
-      LOGGER.warning("Unknown gradle version output format. Expected at least one line. Falling back to: " + FALLBACK_GRADLE_VERSION + "!");
+      LOGGER.warning("Unknown gradle version output format. Expected at least one line. Falling back to: "
+          + FALLBACK_GRADLE_VERSION + "!");
       return FALLBACK_GRADLE_VERSION;
     }
     String[] parts = versionLine.map(l -> l.split(SPACE)).get();
     if (parts.length < 2) {
-      LOGGER.warning("Unknown gradle version output format. Expected 'Gralde x.y.z ...'. Falling back to: "+ FALLBACK_GRADLE_VERSION + "!");
+      LOGGER.warning("Unknown gradle version output format. Expected 'Gralde x.y.z ...'. Falling back to: "
+          + FALLBACK_GRADLE_VERSION + "!");
       return FALLBACK_GRADLE_VERSION;
     }
     return parts[1];

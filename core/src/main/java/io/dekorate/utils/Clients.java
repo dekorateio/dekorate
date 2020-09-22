@@ -15,14 +15,14 @@
  */
 package io.dekorate.utils;
 
+import static io.dekorate.utils.Serialization.*;
+
+import java.lang.reflect.Method;
+
 import io.dekorate.DekorateException;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
-
-import static io.dekorate.utils.Serialization.*;
-
-import java.lang.reflect.Method;
 
 /*
  * As dekorate is using a shaded version of the kubernetes client, there are cases where we need to convert from the actual to that shaded/internal one.
@@ -32,21 +32,26 @@ public class Clients {
 
   /*
    * Adapt an existing client instance, to the internal one.
+   * 
    * @param instance A client instance.
+   * 
    * @return An intneranl KubernetesClient.
    */
   public static KubernetesClient fromInstance(Object client) {
     try {
       Method m = client.getClass().getMethod("getConfiguration");
       return fromConfig(m.invoke(client));
-    } catch(Throwable e) {
-      throw DekorateException.launderThrowable("Type: " + client.getClass() + " is not adaptable to internal Kubernetes Client!", e);
-      }
+    } catch (Throwable e) {
+      throw DekorateException
+          .launderThrowable("Type: " + client.getClass() + " is not adaptable to internal Kubernetes Client!", e);
+    }
   }
 
   /*
    * Create an internal client from an external configuration instnace.
+   * 
    * @param config A client configuration.
+   * 
    * @return An intneranl KubernetesClient.
    */
   public static KubernetesClient fromConfig(Object config) {

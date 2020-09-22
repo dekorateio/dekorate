@@ -20,7 +20,7 @@ package io.dekorate.halkyon.handler;
  */
 final class ResourceGroup {
   static final String NAME = "halkyon";
-  
+
   private ResourceGroup() {
   }
 }

@@ -17,12 +17,12 @@
 
 package io.dekorate.s2i.decorator;
 
+import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
+import io.dekorate.s2i.config.S2iBuildConfig;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.openshift.api.model.ImageStreamBuilder;
-import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
-import io.dekorate.s2i.config.S2iBuildConfig;
-import io.dekorate.doc.Description;
 
 @Description("Add a output ImageStream resource to the list of generated resources.")
 public class AddOutputImageStreamResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
@@ -30,7 +30,7 @@ public class AddOutputImageStreamResourceDecorator extends ResourceProvidingDeco
   private final S2iBuildConfig config;
 
   public AddOutputImageStreamResourceDecorator(S2iBuildConfig config) {
-    this.config=config;
+    this.config = config;
   }
 
   public void visit(KubernetesListBuilder list) {
@@ -41,12 +41,12 @@ public class AddOutputImageStreamResourceDecorator extends ResourceProvidingDeco
     }
 
     list.addToItems(new ImageStreamBuilder()
-      .withNewMetadata()
-      .withName(config.getName())
-      .withLabels(meta.getLabels())
-      .endMetadata()
-      .withNewSpec()
-      .endSpec());
+        .withNewMetadata()
+        .withName(config.getName())
+        .withLabels(meta.getLabels())
+        .endMetadata()
+        .withNewSpec()
+        .endSpec());
   }
 
 }

@@ -30,47 +30,51 @@ public @interface Probe {
 
   /**
    * The command to use for the probe.
-   * @return  The command.
+   * 
+   * @return The command.
    */
   String execAction() default "";
 
   /**
    * The tcp socket to use for the probe (the format is host:port).
-   * @return  The string representation of the socket.
+   * 
+   * @return The string representation of the socket.
    */
   String tcpSocketAction() default "";
 
   /**
    * The amount of time to wait in seconds before starting to probe.
-   * @return  The initial delay.
+   * 
+   * @return The initial delay.
    */
   int initialDelaySeconds() default 0;
 
   /**
    * The period in which the action should be called.
-   * @return  The period.
+   * 
+   * @return The period.
    */
   int periodSeconds() default 30;
 
   /**
    * The amount of time to wait for each action.
-   * @return  The timeout.
+   * 
+   * @return The timeout.
    */
   int timeoutSeconds() default 10;
 
-
   /**
    * The success threshold to use.
+   * 
    * @return The threshold.
    */
   int successThreshold() default 1;
 
-
   /**
    * The failure threshold to use.
+   * 
    * @return The threshold.
    */
   int failureThreshold() default 3;
 
 }
-

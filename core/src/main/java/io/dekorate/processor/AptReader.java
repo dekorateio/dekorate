@@ -15,8 +15,6 @@
  */
 package io.dekorate.processor;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,17 +24,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.tools.Diagnostic;
+
 import io.dekorate.Session;
 import io.dekorate.SessionReader;
 import io.dekorate.WithProject;
+import io.dekorate.utils.Serialization;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.internal.KubernetesDeserializer;
-import io.dekorate.utils.Serialization;
-import io.dekorate.utils.Strings;
 
 public class AptReader implements SessionReader, WithProject {
 
@@ -56,24 +57,26 @@ public class AptReader implements SessionReader, WithProject {
 
   private void hack() {
     // InternalResourceMappingProvider not loaded in FMP probably due to Kubernetes-Client collisions
-    StreamSupport.stream(ServiceLoader.load(KubernetesResourceMappingProvider.class, AptReader.class.getClassLoader()).spliterator(), false)
-      .map(KubernetesResourceMappingProvider::getMappings)
-      .map(Map::entrySet).flatMap(Set::stream)
-      .forEach(e -> {
-        if (e.getKey().contains("#")){
-          final String[] apiKind = e.getKey().split("#");
-          KubernetesDeserializer.registerCustomKind(apiKind[0], apiKind[1], e.getValue());
-        } else {
-          KubernetesDeserializer.registerCustomKind(e.getKey(), e.getValue());
-        }
-      });
+    StreamSupport
+        .stream(ServiceLoader.load(KubernetesResourceMappingProvider.class, AptReader.class.getClassLoader())
+            .spliterator(), false)
+        .map(KubernetesResourceMappingProvider::getMappings)
+        .map(Map::entrySet).flatMap(Set::stream)
+        .forEach(e -> {
+          if (e.getKey().contains("#")) {
+            final String[] apiKind = e.getKey().split("#");
+            KubernetesDeserializer.registerCustomKind(apiKind[0], apiKind[1], e.getValue());
+          } else {
+            KubernetesDeserializer.registerCustomKind(e.getKey(), e.getValue());
+          }
+        });
   }
 
   @Override
   public void read(Session session) {
     if (canRead()) {
       listInputFiles().stream().map(this::read).filter(Objects::nonNull).map(Map::entrySet).flatMap(Set::stream)
-        .forEach(e -> e.getValue().getItems().forEach(item -> session.resources().add(e.getKey(), item)));
+          .forEach(e -> e.getValue().getItems().forEach(item -> session.resources().add(e.getKey(), item)));
     }
   }
 
@@ -82,14 +85,14 @@ public class AptReader implements SessionReader, WithProject {
   }
 
   private boolean canRead() {
-    return projectExists() && Strings.isNotNullOrEmpty(getProject().getDekorateInputDir()) && getInputDir().exists() && getInputDir().isDirectory();
+    return projectExists() && Strings.isNotNullOrEmpty(getProject().getDekorateInputDir()) && getInputDir().exists()
+        && getInputDir().isDirectory();
   }
 
   private List<File> listInputFiles() {
-    final File[] filteredInputFiles = getInputDir().listFiles(((dir, name) ->
-      inputFileIncludePattern.matcher(name).matches()
-        && !inputFileExcludePattern.matcher(name).matches()
-    ));
+    final File[] filteredInputFiles = getInputDir()
+        .listFiles(((dir, name) -> inputFileIncludePattern.matcher(name).matches()
+            && !inputFileExcludePattern.matcher(name).matches()));
     return Arrays.asList(Optional.ofNullable(filteredInputFiles).orElse(new File[0]));
   }
 
@@ -99,7 +102,7 @@ public class AptReader implements SessionReader, WithProject {
       final String name = fileNameMatcher.find() ? fileNameMatcher.group(1) : "invalid-name";
       final KubernetesResource resource = Serialization.unmarshal(is, KubernetesResource.class);
       if (resource instanceof KubernetesList) {
-        return Collections.singletonMap(name,  (KubernetesList) resource);
+        return Collections.singletonMap(name, (KubernetesList) resource);
       } else if (resource instanceof HasMetadata) {
         final KubernetesListBuilder klb = new KubernetesListBuilder();
         klb.addToItems((HasMetadata) resource);

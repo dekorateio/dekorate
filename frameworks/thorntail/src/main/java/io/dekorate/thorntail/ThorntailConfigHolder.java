@@ -15,11 +15,11 @@
  */
 package io.dekorate.thorntail;
 
-import io.dekorate.WithProject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.dekorate.WithProject;
 
 public interface ThorntailConfigHolder extends WithProject {
 

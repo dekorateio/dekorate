@@ -15,11 +15,11 @@
  */
 package io.dekorate.prometheus.model;
 
-import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 public class ServiceMonitorMappingProvider implements KubernetesResourceMappingProvider {
 

@@ -16,16 +16,17 @@
 
 package io.dekorate.config;
 
-
-import io.fabric8.kubernetes.api.builder.VisitableBuilder;
-import io.dekorate.kubernetes.config.Configurator;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
 
+import io.dekorate.kubernetes.config.Configurator;
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
+
 /**
- * This is a Facade around configuration builders, which hide the builder specifics and only allows the use of {@link Configurator} as visitors.
+ * This is a Facade around configuration builders, which hide the builder specifics and only allows the use of
+ * {@link Configurator} as visitors.
+ * 
  * @param <C> The configuration class.
  */
 public class ConfigurationSupplier<C> implements Supplier<C>, Comparable<ConfigurationSupplier<C>> {
@@ -37,12 +38,12 @@ public class ConfigurationSupplier<C> implements Supplier<C>, Comparable<Configu
     return new ConfigurationSupplier<>(null);
   }
 
-  public ConfigurationSupplier (VisitableBuilder<C, ?> builder) {
+  public ConfigurationSupplier(VisitableBuilder<C, ?> builder) {
     this(builder, false);
   }
 
-  public ConfigurationSupplier (VisitableBuilder<C, ?> builder, boolean explicit) {
-    this.builder = builder; 
+  public ConfigurationSupplier(VisitableBuilder<C, ?> builder, boolean explicit) {
+    this.builder = builder;
     this.explicit = explicit;
   }
 
@@ -77,7 +78,6 @@ public class ConfigurationSupplier<C> implements Supplier<C>, Comparable<Configu
     return this;
   }
 
-  
   public Type getType() {
     checkBuilder();
     Class builderClass = builder.getClass();

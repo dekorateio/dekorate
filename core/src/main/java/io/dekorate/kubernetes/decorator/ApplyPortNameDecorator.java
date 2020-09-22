@@ -28,21 +28,21 @@ public class ApplyPortNameDecorator extends ApplicationContainerDecorator<Contai
   private final String name;
   private final Set<String> toReplace;
 
-	public ApplyPortNameDecorator(String deploymentName, String containerName, String name, String... toReplace) {
-		super(deploymentName, containerName);
-		this.name = name;
+  public ApplyPortNameDecorator(String deploymentName, String containerName, String name, String... toReplace) {
+    super(deploymentName, containerName);
+    this.name = name;
     this.toReplace = new HashSet<String>(Arrays.asList(toReplace));
-	}
+  }
 
-	@Override
-	public void andThenVisit(ContainerPortFluent<?> port) {
+  @Override
+  public void andThenVisit(ContainerPortFluent<?> port) {
     if (toReplace.contains(port.getName())) {
       port.withName(name);
     }
-	}
+  }
 
-	@Override
-	public Class<? extends Decorator>[] after() {
+  @Override
+  public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class, AddPortDecorator.class };
-	}
+  }
 }

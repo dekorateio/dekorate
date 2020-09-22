@@ -15,51 +15,51 @@
  */
 package io.dekorate.prometheus.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
-import io.fabric8.kubernetes.api.model.ListMeta;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.ListMeta;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"apiVersion", "items", "kind", "metadata"})
-@JsonDeserialize(
-    using = JsonDeserializer.None.class
-)
+@JsonPropertyOrder({ "apiVersion", "items", "kind", "metadata" })
+@JsonDeserialize(using = JsonDeserializer.None.class)
 public class ServiceMonitorList implements KubernetesResource, KubernetesResourceList {
 
-    @NotNull
-    @JsonProperty("apiVersion")
-    private String apiVersion = "app.k8s.io/v1beta1";
-    @JsonProperty("items")
-    @Valid
-    private List<ServiceMonitor> items = new ArrayList();
-    @NotNull
-    @JsonProperty("kind")
-    private String kind = "ServiceMonitorList";
-    @JsonProperty("metadata")
-    @Valid
-    private ListMeta metadata;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap();
+  @NotNull
+  @JsonProperty("apiVersion")
+  private String apiVersion = "app.k8s.io/v1beta1";
+  @JsonProperty("items")
+  @Valid
+  private List<ServiceMonitor> items = new ArrayList();
+  @NotNull
+  @JsonProperty("kind")
+  private String kind = "ServiceMonitorList";
+  @JsonProperty("metadata")
+  @Valid
+  private ListMeta metadata;
+  @JsonIgnore
+  private Map<String, Object> additionalProperties = new HashMap();
 
   public ServiceMonitorList() {
   }
 
-  public ServiceMonitorList(String apiVersion, List<ServiceMonitor> items, String kind, ListMeta metadata, Map<String, Object> additionalProperties) {
+  public ServiceMonitorList(String apiVersion, List<ServiceMonitor> items, String kind, ListMeta metadata,
+      Map<String, Object> additionalProperties) {
     this.apiVersion = apiVersion;
     this.items = items;
     this.kind = kind;
@@ -111,14 +111,16 @@ public class ServiceMonitorList implements KubernetesResource, KubernetesResourc
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     ServiceMonitorList that = (ServiceMonitorList) o;
     return Objects.equals(apiVersion, that.apiVersion) &&
-      Objects.equals(items, that.items) &&
-      Objects.equals(kind, that.kind) &&
-      Objects.equals(metadata, that.metadata) &&
-      Objects.equals(additionalProperties, that.additionalProperties);
+        Objects.equals(items, that.items) &&
+        Objects.equals(kind, that.kind) &&
+        Objects.equals(metadata, that.metadata) &&
+        Objects.equals(additionalProperties, that.additionalProperties);
   }
 
   @Override

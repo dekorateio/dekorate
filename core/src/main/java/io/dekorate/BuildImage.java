@@ -42,20 +42,21 @@ public class BuildImage {
   private final String jdkFlavor;
 
   private static final List<BuildImage> IMAGES = Arrays.asList(
-    new BuildImage("docker.io/maven:3.6.3-jdk-8", "maven", "3.6.3", 8, "openjdk", "mvn", "clean", "install"),
-    new BuildImage("docker.io/maven:3.6.3-jdk-11", "maven", "3.6.3", 11, "openjdk", "mvn", "clean", "install" ),
-    new BuildImage("docker.io/maven:3.6.3-jdk-13", "maven", "3.6.3", 14, "openjdk", "mvn", "clean", "install"),
+      new BuildImage("docker.io/maven:3.6.3-jdk-8", "maven", "3.6.3", 8, "openjdk", "mvn", "clean", "install"),
+      new BuildImage("docker.io/maven:3.6.3-jdk-11", "maven", "3.6.3", 11, "openjdk", "mvn", "clean", "install"),
+      new BuildImage("docker.io/maven:3.6.3-jdk-13", "maven", "3.6.3", 14, "openjdk", "mvn", "clean", "install"),
 
-    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-8", "maven", "3.6.3", 8, "amazoncorretto", "mvn", "clean", "install"),
-    new BuildImage("docker.io/maven:3.6.3-amazoncorretto-11", "maven", "3.6.3", 11, "amazoncorreto", "mvn", "clean", "install"),
+      new BuildImage("docker.io/maven:3.6.3-amazoncorretto-8", "maven", "3.6.3", 8, "amazoncorretto", "mvn", "clean",
+          "install"),
+      new BuildImage("docker.io/maven:3.6.3-amazoncorretto-11", "maven", "3.6.3", 11, "amazoncorreto", "mvn", "clean",
+          "install"),
 
-    new BuildImage("docker.io/maven:3.6.3-openj9-11", "maven", "3.6.3", 11, "openj9", "mvn", "clean", "install"),
-    new BuildImage("docker.io/maven:3.6.3-ibmjava-8", "maven", "3.6.3", 8, "ibmjava", "mvn", "clean", "install"),
+      new BuildImage("docker.io/maven:3.6.3-openj9-11", "maven", "3.6.3", 11, "openj9", "mvn", "clean", "install"),
+      new BuildImage("docker.io/maven:3.6.3-ibmjava-8", "maven", "3.6.3", 8, "ibmjava", "mvn", "clean", "install"),
 
-    new BuildImage("docker.io/gradle:6.3.0-jdk8", "gradle", "6.3.0", 8, "openjdk", "gradle", "clean", "build"),
-    new BuildImage("docker.io/gradle:6.3.0-jdk11", "gradle", "6.3.0", 11, "openjdk", "gradle", "clean", "build"),
-    new BuildImage("docker.io/gradle:6.3.0-jdk13", "gradle", "6.3.0", 13, "openjdk", "gradle", "clean", "build")
-  );
+      new BuildImage("docker.io/gradle:6.3.0-jdk8", "gradle", "6.3.0", 8, "openjdk", "gradle", "clean", "build"),
+      new BuildImage("docker.io/gradle:6.3.0-jdk11", "gradle", "6.3.0", 11, "openjdk", "gradle", "clean", "build"),
+      new BuildImage("docker.io/gradle:6.3.0-jdk13", "gradle", "6.3.0", 13, "openjdk", "gradle", "clean", "build"));
 
   /**
    * Finds an image that best matches the specified parameters.
@@ -78,7 +79,8 @@ public class BuildImage {
     this(image, null, null, 0, null, command, arguments);
   }
 
-  public BuildImage(String image, String tool, String toolVersion, int jdkVersion, String jdkFlavor, String command, String... arguments) {
+  public BuildImage(String image, String tool, String toolVersion, int jdkVersion, String jdkFlavor, String command,
+      String... arguments) {
     this.image = image;
     this.command = command;
     this.arguments = arguments;

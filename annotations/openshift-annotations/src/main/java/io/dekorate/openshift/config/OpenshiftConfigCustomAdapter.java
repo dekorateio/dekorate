@@ -25,10 +25,10 @@ public class OpenshiftConfigCustomAdapter {
   public static OpenshiftConfigBuilder newBuilder(Project project, OpenshiftApplication openshiftApplication) {
     if (openshiftApplication != null) {
       return OpenshiftConfigAdapter.newBuilder(openshiftApplication)
-        .accept(new ApplyProjectInfo(project));
-    } else  {
+          .accept(new ApplyProjectInfo(project));
+    } else {
       return new OpenshiftConfigBuilder()
-        .accept(new ApplyProjectInfo(project));
+          .accept(new ApplyProjectInfo(project));
     }
   }
 }

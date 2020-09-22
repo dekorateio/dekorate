@@ -15,16 +15,16 @@
  */
 package io.dekorate.project;
 
-
-import io.dekorate.utils.Urls;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Urls;
 
 class SbtInfoReaderTest {
 
@@ -48,7 +48,9 @@ class SbtInfoReaderTest {
     assertEquals("jar", info.getPackaging());
     assertEquals(SbtInfoReader.DEFAULT_VERSION, info.getVersion());
 
-    String expectedOutputFile = root.resolve("target/").resolve(info.getName() + "_" + systemScalaVersion + "-" + info.getVersion() + ".jar").toAbsolutePath().toString();
+    String expectedOutputFile = root.resolve("target/")
+        .resolve(info.getName() + "_" + systemScalaVersion + "-" + info.getVersion() + ".jar").toAbsolutePath()
+        .toString();
     assertEquals(expectedOutputFile, info.getOutputFile().toAbsolutePath().toString());
   }
 
@@ -63,7 +65,9 @@ class SbtInfoReaderTest {
     assertEquals("jar", info.getPackaging());
     assertEquals("1.0.0", info.getVersion());
 
-    String expectedOutputFile = root.resolve("target/").resolve(info.getName() + "_" + systemScalaVersion + "-" + info.getVersion() + ".jar").toAbsolutePath().toString();
+    String expectedOutputFile = root.resolve("target/")
+        .resolve(info.getName() + "_" + systemScalaVersion + "-" + info.getVersion() + ".jar").toAbsolutePath()
+        .toString();
     assertEquals(expectedOutputFile, info.getOutputFile().toAbsolutePath().toString());
   }
 }

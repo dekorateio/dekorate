@@ -21,22 +21,22 @@ import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
 public class DefaultConfiguration<C> extends ConfigurationSupplier<C> {
 
-	public DefaultConfiguration() {
+  public DefaultConfiguration() {
     super(null);
-	}
+  }
 
   public DefaultConfiguration(VisitableBuilder<C, ?> builder) {
     super(builder);
   }
 
-	@Override
-	public int compareTo(ConfigurationSupplier<C> o) {
+  @Override
+  public int compareTo(ConfigurationSupplier<C> o) {
     if (o instanceof AnnotationConfiguration) {
       return -1;
     }
     if (o instanceof PropertyConfiguration) {
       return -1;
     }
-		return super.compareTo(o);
-	}
+    return super.compareTo(o);
+  }
 }

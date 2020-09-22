@@ -18,20 +18,20 @@
 package io.dekorate.knative.decorator;
 
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.knative.serving.v1.RevisionSpecFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyLocalContainerConcurrencyDecorator extends NamedResourceDecorator<RevisionSpecFluent<?>> {
 
   private final long target;
 
   public ApplyLocalContainerConcurrencyDecorator(String name, long target) {
-		super("Service", name);
+    super("Service", name);
     this.target = target;
-	}
+  }
 
-	@Override
-	public void andThenVisit(RevisionSpecFluent<?> revisionSpec, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(RevisionSpecFluent<?> revisionSpec, ObjectMeta resourceMeta) {
     revisionSpec.withContainerConcurrency(target);
-	}
+  }
 }

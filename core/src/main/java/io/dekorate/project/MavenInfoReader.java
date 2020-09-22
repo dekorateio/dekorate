@@ -15,22 +15,24 @@
  */
 package io.dekorate.project;
 
-import io.dekorate.utils.Maven;
-import io.dekorate.utils.Strings;
+import static io.dekorate.project.BuildInfo.DEFAULT_PACKAGING;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Optional;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Optional;
-
-import static io.dekorate.project.BuildInfo.DEFAULT_PACKAGING;
+import io.dekorate.utils.Maven;
+import io.dekorate.utils.Strings;
 
 public class MavenInfoReader implements BuildInfoReader {
 
@@ -66,17 +68,16 @@ public class MavenInfoReader implements BuildInfoReader {
     String packaging = getPackaging(document);
 
     return new BuildInfoBuilder()
-      .withName(name)
-      .withVersion(version)
-      .withPackaging(packaging)
-      .withBuildTool(MAVEN)
-      .withBuildToolVersion(Maven.getVersion(root))
-      .withOutputFile(root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)))
-      .withClassOutputDir(root.resolve(TARGET).resolve(CLASSES))
-      .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
-      .build();
+        .withName(name)
+        .withVersion(version)
+        .withPackaging(packaging)
+        .withBuildTool(MAVEN)
+        .withBuildToolVersion(Maven.getVersion(root))
+        .withOutputFile(root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)))
+        .withClassOutputDir(root.resolve(TARGET).resolve(CLASSES))
+        .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
+        .build();
   }
-
 
   protected static Document parse(Path pom) {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -94,20 +95,21 @@ public class MavenInfoReader implements BuildInfoReader {
 
   /**
    * Read the artifactId from the document.
-   * @param document      The document.
-   * @return              The artifactId.
+   * 
+   * @param document The document.
+   * @return The artifactId.
    */
   public static String getArtifactId(Document document) {
     return getElement(document.getDocumentElement(), ARTIFACT_ID)
-      .map(e -> e.getTextContent())
-      .orElseThrow(() -> new RuntimeException("Failed to read artifact id from maven project."));
+        .map(e -> e.getTextContent())
+        .orElseThrow(() -> new RuntimeException("Failed to read artifact id from maven project."));
   }
-
 
   /**
    * Read the version form the document.
-   * @pairam document     The document.
-   * @return              The version, if exists, the parent version otherwise.
+   * 
+   * @pairam document The document.
+   * @return The version, if exists, the parent version otherwise.
    */
   public static String getVersion(Document document) {
     String version = getElement(document.getDocumentElement(), VERSION).map(e -> e.getTextContent()).orElse(null);
@@ -116,59 +118,62 @@ public class MavenInfoReader implements BuildInfoReader {
 
   /**
    * Read the packaging form the document.
-   * @pairam document     The document.
-   * @return              The version, if exists, the parent version otherwise.
+   * 
+   * @pairam document The document.
+   * @return The version, if exists, the parent version otherwise.
    */
   public static String getPackaging(Document document) {
     return getElement(document.getDocumentElement(), PACKAGING)
-      .map(e -> e.getTextContent())
-      .orElse(DEFAULT_PACKAGING);
+        .map(e -> e.getTextContent())
+        .orElse(DEFAULT_PACKAGING);
   }
 
   /**
    * Read the parent version from the document.
-   * @param document      The document.
-   * @return              The parent version, if exists. Throws IllegalStateException otherwise.
+   * 
+   * @param document The document.
+   * @return The parent version, if exists. Throws IllegalStateException otherwise.
    */
   private static String getParentVersion(Document document) {
     return getElement(document.getDocumentElement(), PARENT, VERSION)
-      .map(e -> e.getTextContent())
-      .orElseThrow(() -> new RuntimeException("Failed to read parent version from maven project."));
+        .map(e -> e.getTextContent())
+        .orElseThrow(() -> new RuntimeException("Failed to read parent version from maven project."));
   }
-
 
   /**
    * Get the child {@link Element} that matches the specified name.
-   * @param element   The element.
-   * @param name      The name.
-   * @return          An {@link Optional} element.
+   * 
+   * @param element The element.
+   * @param name The name.
+   * @return An {@link Optional} element.
    */
   private static Optional<Element> getChildElement(Element element, String name) {
     NodeList list = element.getElementsByTagName(name);
-    for (int i=0; i < list.getLength(); i++) {
+    for (int i = 0; i < list.getLength(); i++) {
       Node n = list.item(i);
       if (n.getNodeType() == Node.ELEMENT_NODE && n.getParentNode().equals(element)) {
-        return Optional.of((Element)n);
+        return Optional.of((Element) n);
       }
     }
     return Optional.empty();
   }
 
-
   /**
    * Get the child {@link Element} that matches the specified names.
    * This method will recurisively go through the names.
-   * @param element   The element.
-   * @param names     The name array.
-   * @return          An {@link Optional} element.
+   * 
+   * @param element The element.
+   * @param names The name array.
+   * @return An {@link Optional} element.
    */
   private static Optional<Element> getElement(Element element, String... names) {
     if (names.length > 1) {
       String[] remaining = new String[names.length - 1];
       System.arraycopy(names, 1, remaining, 0, names.length - 1);
       String first = names[0];
-      return getElement(getChildElement(element, first).orElseThrow(()-> new IllegalStateException("Could not read child element: " + first)), remaining);
-    } else if (names.length == 1){
+      return getElement(getChildElement(element, first)
+          .orElseThrow(() -> new IllegalStateException("Could not read child element: " + first)), remaining);
+    } else if (names.length == 1) {
       return getChildElement(element, names[0]);
     }
     throw new IllegalStateException("Could not read element.");

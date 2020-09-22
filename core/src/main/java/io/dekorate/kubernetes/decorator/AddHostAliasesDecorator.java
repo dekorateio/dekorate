@@ -17,6 +17,9 @@
 
 package io.dekorate.kubernetes.decorator;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.builder.Predicate;
@@ -24,12 +27,9 @@ import io.fabric8.kubernetes.api.model.HostAliasBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 public class AddHostAliasesDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
- private final HostAlias hostAlias;
+  private final HostAlias hostAlias;
 
   public AddHostAliasesDecorator(String deploymentName, HostAlias hostAlias) {
     super(deploymentName);
@@ -47,16 +47,18 @@ public class AddHostAliasesDecorator extends NamedResourceDecorator<PodSpecFluen
       podSpec.removeMatchingFromHostAliases(matchingHostAlias);
 
       podSpec.addNewHostAlias()
-        .withIp(hostAlias.getIp())
-        .withHostnames(Arrays.asList(hostAlias.getHostnames().split(",")))
-        .endHostAlias();
+          .withIp(hostAlias.getIp())
+          .withHostnames(Arrays.asList(hostAlias.getHostnames().split(",")))
+          .endHostAlias();
     }
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     AddHostAliasesDecorator that = (AddHostAliasesDecorator) o;
     return Objects.equals(hostAlias, that.hostAlias);
   }

@@ -15,6 +15,11 @@
  */
 package io.dekorate.s2i.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -24,21 +29,17 @@ import io.fabric8.openshift.api.model.SourceBuildStrategyFluent;
 import io.fabric8.openshift.client.DefaultOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collection;
-import java.util.concurrent.TimeUnit;
-
 public class S2iUtils {
 
   private static final OpenShiftClient client = new DefaultOpenShiftClient();
 
   /**
    * Wait for the references ImageStreamTags to become available.
-   * @param items       A list of items, possibly referencing image stream tags.
-   * @param amount      The max amount of time to wait.
-   * @param timeUnit    The time unit of the time to wait.
-   * @return            True if the items became available false otherwise.
+   * 
+   * @param items A list of items, possibly referencing image stream tags.
+   * @param amount The max amount of time to wait.
+   * @param timeUnit The time unit of the time to wait.
+   * @return True if the items became available false otherwise.
    */
   public static boolean waitForImageStreamTags(Collection<HasMetadata> items, long amount, TimeUnit timeUnit) {
     if (items == null || items.isEmpty()) {
@@ -46,8 +47,8 @@ public class S2iUtils {
     }
     final List<String> tags = new ArrayList<>();
     new KubernetesListBuilder()
-      .withItems(new ArrayList<>(items))
-      .accept(new Decorator<SourceBuildStrategyFluent>() {
+        .withItems(new ArrayList<>(items))
+        .accept(new Decorator<SourceBuildStrategyFluent>() {
           @Override
           public void visit(SourceBuildStrategyFluent strategy) {
             ObjectReference from = strategy.buildFrom();

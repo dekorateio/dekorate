@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.dekorate.project.Project;
@@ -31,7 +30,7 @@ public class OrderedHook extends ProjectHook {
 
   private final ProjectHook[] hooks;
 
-  public static OrderedHook create(ProjectHook... hooks)  {
+  public static OrderedHook create(ProjectHook... hooks) {
     return new OrderedHook(hooks);
   }
 
@@ -65,8 +64,9 @@ public class OrderedHook extends ProjectHook {
         visited.add(h);
         pending.remove(h);
       } catch (Exception e) {
-        System.out.println("Error while calling hook:" + h.getClass().getTypeName()+". Message:" + e.getMessage());
-        System.out.println("Aborting execution of hooks:" + pending.stream().map(a -> a.getClass().getTypeName()).collect(Collectors.joining(", "))+ ".");
+        System.out.println("Error while calling hook:" + h.getClass().getTypeName() + ". Message:" + e.getMessage());
+        System.out.println("Aborting execution of hooks:"
+            + pending.stream().map(a -> a.getClass().getTypeName()).collect(Collectors.joining(", ")) + ".");
         e.printStackTrace();
       }
     }
@@ -74,10 +74,11 @@ public class OrderedHook extends ProjectHook {
 
   /**
    * Get the first non-null project found in the specified hooks.
+   * 
    * @param hooks The hooks.
-   * @return      The project or null, if no project found.
+   * @return The project or null, if no project found.
    */
-  private static Project projectOf(ProjectHook... hooks)  {
+  private static Project projectOf(ProjectHook... hooks) {
     for (ProjectHook h : hooks) {
       if (h.project != null) {
         return h.project;

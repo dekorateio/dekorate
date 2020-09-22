@@ -15,14 +15,14 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-import io.dekorate.kubernetes.config.ApplicationConfiguration;
-import io.sundr.builder.annotations.Buildable;
-import io.sundr.builder.annotations.Pojo;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import io.dekorate.kubernetes.config.ApplicationConfiguration;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
 
 /**
  * This annotation is not meant to be used and thus not public. The purpose of
@@ -41,6 +41,7 @@ import java.lang.annotation.Target;
    * This value will be use as:
    * - docker image repo
    * - labeling resources
+   * 
    * @return The specified group name.
    */
   String partOf() default "";
@@ -165,7 +166,7 @@ import java.lang.annotation.Target;
    * The image pull secret
    */
   String[] imagePullSecrets() default {};
-  
+
   /**
    * Host aliases
    *
@@ -189,13 +190,13 @@ import java.lang.annotation.Target;
 
   /**
    * The resources that the application container requires.
-   */ 
-	ResourceRequirements requestResources() default @ResourceRequirements();
+   */
+  ResourceRequirements requestResources() default @ResourceRequirements();
 
   /**
    * The resource limit for the application container.
-   */ 
-	ResourceRequirements limitResources() default @ResourceRequirements();
+   */
+  ResourceRequirements limitResources() default @ResourceRequirements();
 
   /**
    * The sidecars.

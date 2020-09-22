@@ -19,18 +19,16 @@ import io.sundr.codegen.annotations.PackageSelector;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
 
-
-@VelocityTransformations(value = @VelocityTransformation(value="/processor-doc.vm", outputPath="processors-table.org", gather=true),
-                         packages = {
-                           @PackageSelector(value="io.dekorate.processor"),
-                           @PackageSelector(value="io.dekorate.kubernetes.processor"),
-                           @PackageSelector(value="io.dekorate.openshift.processor"),
-                           @PackageSelector(value="io.dekorate.servicecatalog.processor"),
-                           @PackageSelector(value = "io.dekorate.halkyon.processor"),
-                           @PackageSelector(value="io.dekorate.spring.processor"),
-                           @PackageSelector(value="io.dekorate.thorntail"),
-                           @PackageSelector(value="io.dekorate.micronaut")
-                         })
+@VelocityTransformations(value = @VelocityTransformation(value = "/processor-doc.vm", outputPath = "processors-table.org", gather = true), packages = {
+    @PackageSelector(value = "io.dekorate.processor"),
+    @PackageSelector(value = "io.dekorate.kubernetes.processor"),
+    @PackageSelector(value = "io.dekorate.openshift.processor"),
+    @PackageSelector(value = "io.dekorate.servicecatalog.processor"),
+    @PackageSelector(value = "io.dekorate.halkyon.processor"),
+    @PackageSelector(value = "io.dekorate.spring.processor"),
+    @PackageSelector(value = "io.dekorate.thorntail"),
+    @PackageSelector(value = "io.dekorate.micronaut")
+})
 public class DocumentProcessors {
 
 }

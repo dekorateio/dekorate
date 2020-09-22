@@ -19,27 +19,31 @@ public @interface Port {
 
   /**
    * The container port name.
-   * @return  The name.
+   * 
+   * @return The name.
    */
   String name();
 
   /**
    * The port number. Refers to the container port.
-   * @return  The port number.
+   * 
+   * @return The port number.
    */
   int containerPort();
 
   /**
    * The host port.
-   * When a host port is not specified (or is set  to 0) then the container port will be used.
+   * When a host port is not specified (or is set to 0) then the container port will be used.
+   * 
    * @return The host port, or 0 if none specified.
    */
   int hostPort() default 0;
 
   /**
-  * The application path (refers to web application path).
-  * @return The path, defaults to /.
-  */
+   * The application path (refers to web application path).
+   * 
+   * @return The path, defaults to /.
+   */
   String path() default "/";
 
   Protocol protocol() default Protocol.TCP;

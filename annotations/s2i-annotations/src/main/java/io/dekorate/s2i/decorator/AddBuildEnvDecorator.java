@@ -15,10 +15,10 @@
  */
 package io.dekorate.s2i.decorator;
 
-import io.fabric8.openshift.api.model.SourceBuildStrategyFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.decorator.Decorator;
+import io.fabric8.openshift.api.model.SourceBuildStrategyFluent;
 
 @Description("Add environment variable to to build.")
 public class AddBuildEnvDecorator extends Decorator<SourceBuildStrategyFluent<?>> {
@@ -31,14 +31,14 @@ public class AddBuildEnvDecorator extends Decorator<SourceBuildStrategyFluent<?>
 
   @Override
   public void visit(SourceBuildStrategyFluent<?> sourceBuildStrategy) {
-   sourceBuildStrategy.addNewEnv()
-    .withName(env.getName())
-    .withValue(env.getValue())
-   .endEnv();
+    sourceBuildStrategy.addNewEnv()
+        .withName(env.getName())
+        .withValue(env.getValue())
+        .endEnv();
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{AddBuildConfigResourceDecorator.class};
+    return new Class[] { AddBuildConfigResourceDecorator.class };
   }
 }

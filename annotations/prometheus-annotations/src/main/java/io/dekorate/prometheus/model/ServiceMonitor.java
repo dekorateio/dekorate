@@ -15,11 +15,16 @@
  */
 package io.dekorate.prometheus.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import javax.validation.constraints.NotNull;
+
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.LabelSelector;
@@ -28,18 +33,16 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Inline;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "apiVersion",
-      "kind",
-      "metadata",
-      "spec",
-      })
-      @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"), refs = {@BuildableReference(ObjectMeta.class), @BuildableReference(LabelSelector.class)})
+    "kind",
+    "metadata",
+    "spec",
+})
+@JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
+@Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"), refs = {
+    @BuildableReference(ObjectMeta.class), @BuildableReference(LabelSelector.class) })
 public class ServiceMonitor implements HasMetadata {
 
   /**
@@ -76,7 +79,8 @@ public class ServiceMonitor implements HasMetadata {
   public ServiceMonitor() {
   }
 
-  public ServiceMonitor(String apiVersion, String kind, ObjectMeta metadata, ServiceMonitorSpec spec, Map<String, Object> additionalProperties) {
+  public ServiceMonitor(String apiVersion, String kind, ObjectMeta metadata, ServiceMonitorSpec spec,
+      Map<String, Object> additionalProperties) {
     this.apiVersion = apiVersion;
     this.kind = kind;
     this.metadata = metadata;

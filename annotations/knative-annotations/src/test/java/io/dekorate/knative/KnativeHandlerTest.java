@@ -16,14 +16,15 @@
 
 package io.dekorate.knative;
 
-import io.dekorate.knative.config.KnativeConfig;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import io.dekorate.knative.config.EditableKnativeConfig;
-import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.knative.handler.KnativeHandler;
 import org.junit.jupiter.api.Test;
+
+import io.dekorate.knative.config.EditableKnativeConfig;
+import io.dekorate.knative.config.KnativeConfig;
+import io.dekorate.knative.handler.KnativeHandler;
+import io.dekorate.kubernetes.config.BaseConfig;
 
 class KnativeHandlerTest {
 

@@ -16,22 +16,24 @@
 
 package io.dekorate.examples.component;
 
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.dekorate.halkyon.model.Component;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.halkyon.model.Component;
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class Issue65Test {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshalAsList(Issue65Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(Issue65Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     assertEquals("Component", list.getItems().get(0).getKind());
-    assertEquals(1, ((Component)list.getItems().get(0)).getSpec().getEnvs().length);
+    assertEquals(1, ((Component) list.getItems().get(0)).getSpec().getEnvs().length);
   }
 }

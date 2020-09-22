@@ -18,13 +18,13 @@
 package io.dekorate.knative.config;
 
 public enum AutoScalerClass {
-  /** 
-   * Kubernetes Pod Autoscaler 
-  **/
+  /**
+   * Kubernetes Pod Autoscaler
+   **/
   kpa,
 
-  /** 
-   * Horizontal Pod Autoscaler 
-  **/
+  /**
+   * Horizontal Pod Autoscaler
+   **/
   hpa,
 }

@@ -38,7 +38,9 @@ public class Beans {
   /**
    * Combines two objects.
    * Combined object contains origin values overridden with the ones found in override Object (when not null).
-   * Arrays and collections are merged, but items with matching `name` or `id` are combined into one before added to the merged collection/array.
+   * Arrays and collections are merged, but items with matching `name` or `id` are combined into one before added to the
+   * merged collection/array.
+   * 
    * @param The object two use as origin.
    * @param The object with override values.
    */
@@ -51,22 +53,22 @@ public class Beans {
       return origin;
     }
 
-
     Class<C> originClass = (Class<C>) origin.getClass();
     Class<C> overrideClass = (Class<C>) override.getClass();
 
     if (String.class.isAssignableFrom(originClass)) {
-      if (Strings.isNullOrEmpty((String)origin)) {
+      if (Strings.isNullOrEmpty((String) origin)) {
         return override;
       }
 
-      if (Strings.isNullOrEmpty((String)override)) {
+      if (Strings.isNullOrEmpty((String) override)) {
         return origin;
       }
     }
 
     if (!overrideClass.equals(originClass)) {
-      throw new IllegalStateException(String.format("Objects types don't match. Found: [%s] and [%s].", overrideClass, originClass));
+      throw new IllegalStateException(
+          String.format("Objects types don't match. Found: [%s] and [%s].", overrideClass, originClass));
     }
 
     if (overrideClass.isPrimitive() || overrideClass.isEnum()) {
@@ -119,17 +121,18 @@ public class Beans {
 
   private static List<Field> getAllFields(Class clazz) {
     if (clazz == null) {
-        return Collections.emptyList();
+      return Collections.emptyList();
     }
- 
+
     List<Field> result = new ArrayList<>(getAllFields(clazz.getSuperclass()));
     List<Field> filteredFields = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toList());
     result.addAll(filteredFields);
     return result;
-}
-  
+  }
+
   /**
    * Merges two instances of {@link List}.
+   * 
    * @param origin The original list.
    * @param override The override list.
    * @return The combined list.
@@ -155,9 +158,10 @@ public class Beans {
       throw DekorateException.launderThrowable(e);
     }
   }
-  
+
   /**
    * Merges two arrays.
+   * 
    * @param origin The original array.
    * @param override The override array.
    * @return The combined array.
@@ -167,8 +171,8 @@ public class Beans {
       Class originClass = origin.getClass().getComponentType();
       List result = new ArrayList<>();
       //We wrap the Arrays.asList() in an ArrayList so that we can mutate it.
-      List originList = new ArrayList(Arrays.asList((Object[])origin));
-      List overrideList = new ArrayList(Arrays.asList((Object[])override));
+      List originList = new ArrayList(Arrays.asList((Object[]) origin));
+      List overrideList = new ArrayList(Arrays.asList((Object[]) override));
       for (Object o : (Object[]) origin) {
         Object matching = findMatching(o, overrideList);
         if (matching != null) {
@@ -184,9 +188,10 @@ public class Beans {
       throw DekorateException.launderThrowable(e);
     }
   }
-  
+
   /**
    * Merges two instances of {@link Set}.
+   * 
    * @param origin The original set.
    * @param override The override set.
    * @return The combined set.
@@ -215,6 +220,7 @@ public class Beans {
 
   /**
    * Merges two instances of {@link Map}.
+   * 
    * @param origin The original map.
    * @param override The override map.
    * @return The combined map.
@@ -225,7 +231,7 @@ public class Beans {
       Map originMap = new HashMap((Map) origin);
       Map overrideMap = new HashMap((Map) override);
       Map result = (Map) originClass.newInstance();
-      for (Object k : ((Map)origin).keySet()) {
+      for (Object k : ((Map) origin).keySet()) {
         if (overrideMap.containsKey(k)) {
           Object originValue = originMap.get(k);
           Object overrideValue = overrideMap.get(k);
@@ -253,8 +259,8 @@ public class Beans {
 
   private static <C> boolean matches(C obj, C other) {
     return (obj != null && obj.equals(other))
-      || fieldEquals("id", obj, other)
-      || fieldEquals("name", obj, other);
+        || fieldEquals("id", obj, other)
+        || fieldEquals("name", obj, other);
   }
 
   private static <C> boolean fieldEquals(String name, C obj, C other) {

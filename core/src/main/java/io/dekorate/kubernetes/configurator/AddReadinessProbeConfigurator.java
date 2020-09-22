@@ -27,16 +27,14 @@ public class AddReadinessProbeConfigurator extends Configurator<BaseConfigFluent
   private final Probe probe;
   private final boolean overwrite;
 
-	public AddReadinessProbeConfigurator(Probe probe, boolean overwrite) {
+  public AddReadinessProbeConfigurator(Probe probe, boolean overwrite) {
     this.probe = probe;
     this.overwrite = overwrite;
-	}
+  }
 
-	@Override
-	public void visit(BaseConfigFluent config) {
+  @Override
+  public void visit(BaseConfigFluent config) {
     Probe existing = config.getReadinessProbe();
-    config.withReadinessProbe(overwrite ?
-                              Beans.combine(existing, probe) :
-                              Beans.combine(probe, existing));
-	}
+    config.withReadinessProbe(overwrite ? Beans.combine(existing, probe) : Beans.combine(probe, existing));
+  }
 }

@@ -29,9 +29,6 @@ import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClient;
 import io.dekorate.hook.ImageBuildHook;
 import io.dekorate.hook.ImagePushHook;
 import io.dekorate.hook.OrderedHook;
@@ -41,17 +38,19 @@ import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
 import io.dekorate.project.Project;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class KubernetesSessionListener implements SessionListener, WithProject, WithSession {
 
   private static final String KUBERNETES = "kubernetes";
 
-	@Override
-	public void onClosed() {
+  @Override
+  public void onClosed() {
     Session session = getSession();
     Project project = getProject();
     Optional<KubernetesConfig> optionalAppConfig = session.configurators().get(KubernetesConfig.class);
-    Optional<ImageConfiguration> optionalImageConfig = session.configurators().getImageConfig(BuildServiceFactories.supplierMatches(project));
+    Optional<ImageConfiguration> optionalImageConfig = session.configurators()
+        .getImageConfig(BuildServiceFactories.supplierMatches(project));
     if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
       return;
     }
@@ -64,14 +63,15 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
     ImageConfiguration imageConfig = optionalImageConfig.get();
     if (imageConfig.isAutoPushEnabled() || imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
       try {
-          buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems())).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+        buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems()))
+            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
       } catch (Exception e) {
         BuildServiceFactories.log(project, session.configurators().getAll(ImageConfiguration.class));
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
       }
     }
 
-    List<ProjectHook> hooks = new ArrayList<>() ;
+    List<ProjectHook> hooks = new ArrayList<>();
     if (kubernetesConfig.isAutoDeployEnabled()) {
       hooks.add(new ResourcesApplyHook(getProject(), KUBERNETES, "kubectl"));
       hooks.add(new ScaleDeploymentHook(getProject(), kubernetesConfig.getName(), 0));
@@ -94,5 +94,5 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
       OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
       hook.register();
     }
-	}
+  }
 }

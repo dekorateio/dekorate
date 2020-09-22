@@ -15,10 +15,10 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.builder.VisitableBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Metadata;
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 /**
  * A decorator that removes a label.
@@ -48,7 +48,7 @@ public class RemoveLabelDecorator extends NamedResourceDecorator<VisitableBuilde
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddLabelDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddLabelDecorator.class };
   }
 
   @Override

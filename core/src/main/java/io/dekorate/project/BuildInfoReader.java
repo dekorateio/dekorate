@@ -15,7 +15,6 @@
  */
 package io.dekorate.project;
 
-
 import java.nio.file.Path;
 
 public interface BuildInfoReader {
@@ -31,21 +30,24 @@ public interface BuildInfoReader {
   /**
    * The order the reader will be applied.
    * Info readers will be sorted in ascending order.
+   * 
    * @return The order.
    */
   int order();
 
   /**
    * Checks if the reader can be applied to the current project.
-   * @param root  The project root.
-   * @return      Returns true if applicable.
+   * 
+   * @param root The project root.
+   * @return Returns true if applicable.
    */
   boolean isApplicable(Path root);
 
   /**
    * Reads all related project info from filesystem.
-   * @param root  The project root.
-   * @return      The {@link BuildInfo} instance.
+   * 
+   * @param root The project root.
+   * @return The {@link BuildInfo} instance.
    */
   BuildInfo getInfo(Path root);
 

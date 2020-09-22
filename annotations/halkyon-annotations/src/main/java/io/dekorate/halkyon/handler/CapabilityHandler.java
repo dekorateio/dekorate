@@ -36,33 +36,33 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.utils.Strings;
 
 public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConfig> {
-  
+
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final Resources resources;
-  
+
   public Handler create(Resources resources, Configurators configurators) {
     return new CapabilityHandler(resources);
   }
-  
+
   public CapabilityHandler() {
     this(new Resources());
-    
+
   }
-  
+
   public CapabilityHandler(Resources resources) {
     this.resources = resources;
   }
-  
+
   @Override
   public int order() {
     return 1200;
   }
-  
+
   @Override
   public String getKey() {
     return ResourceGroup.NAME;
   }
-  
+
   @Override
   public void handle(CapabilityConfig config) {
     LOGGER.info("Processing capability config.");
@@ -70,13 +70,13 @@ public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConf
       resources.addCustom(ResourceGroup.NAME, createCapability(config));
     }
   }
-  
+
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(CapabilityConfig.class) ||
-      type.equals(EditableCapabilityConfig.class);
+        type.equals(EditableCapabilityConfig.class);
   }
-  
+
   /**
    * Create a {@link Capability} from a {@link CapabilityConfig}.
    *
@@ -85,24 +85,24 @@ public class CapabilityHandler implements HandlerFactory, Handler<CapabilityConf
    */
   private Capability createCapability(CapabilityConfig config) {
     return new CapabilityBuilder()
-      .withNewMetadata()
-      .withName(config.getName())
-      .endMetadata()
-      .withNewSpec()
-      .withCategory(config.getCategory())
-      .withType(config.getType())
-      .withVersion(config.getVersion())
-      .addAllToParameters(Arrays.stream(config.getParameters())
-        .map(p -> new Parameter(p.getName(), p.getValue()))
-        .collect(Collectors.toList()))
-      
-      .endSpec()
-      .build();
+        .withNewMetadata()
+        .withName(config.getName())
+        .endMetadata()
+        .withNewSpec()
+        .withCategory(config.getCategory())
+        .withType(config.getType())
+        .withVersion(config.getVersion())
+        .addAllToParameters(Arrays.stream(config.getParameters())
+            .map(p -> new Parameter(p.getName(), p.getValue()))
+            .collect(Collectors.toList()))
+
+        .endSpec()
+        .build();
   }
-  
+
   @Override
   public ConfigurationSupplier<CapabilityConfig> getFallbackConfig() {
     return new ConfigurationSupplier<CapabilityConfig>(new CapabilityConfigBuilder());
   }
-  
+
 }

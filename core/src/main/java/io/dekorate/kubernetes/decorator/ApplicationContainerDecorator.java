@@ -19,19 +19,20 @@ import static io.dekorate.utils.Metadata.getMetadata;
 
 import java.util.Optional;
 
+import io.dekorate.utils.Generics;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.dekorate.utils.Generics;
-import io.dekorate.utils.Strings;
 
 /**
  * An abstract class for decorating the application container.
- * This is meant to be used by decorators that are intended to be applied only to the application container (e.g. skip sidecars).
+ * This is meant to be used by decorators that are intended to be applied only to the application container (e.g. skip
+ * sidecars).
  */
-public abstract class ApplicationContainerDecorator<T> extends Decorator<VisitableBuilder>  {
+public abstract class ApplicationContainerDecorator<T> extends Decorator<VisitableBuilder> {
 
   /**
    * For container and deployment name null acts as a wildcards.
@@ -58,14 +59,14 @@ public abstract class ApplicationContainerDecorator<T> extends Decorator<Visitab
     this.containerName = containerName;
   }
 
-
   @Override
   public void visit(VisitableBuilder builder) {
     Optional<ObjectMeta> objectMeta = getMetadata(builder);
     if (Strings.isNotNullOrEmpty(deploymentName) && !objectMeta.isPresent()) {
       return;
     }
-    if (Strings.isNullOrEmpty(deploymentName) || objectMeta.map(m -> m.getName()).filter(s -> s.equals(deploymentName)).isPresent()) {
+    if (Strings.isNullOrEmpty(deploymentName)
+        || objectMeta.map(m -> m.getName()).filter(s -> s.equals(deploymentName)).isPresent()) {
       builder.accept(deploymentVisitor);
     }
   }
@@ -77,7 +78,7 @@ public abstract class ApplicationContainerDecorator<T> extends Decorator<Visitab
   public abstract void andThenVisit(T item);
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 
   private class DeploymentVisitor extends TypedVisitor<ContainerBuilder> {
@@ -95,11 +96,13 @@ public abstract class ApplicationContainerDecorator<T> extends Decorator<Visitab
   private class ContainerVisitor extends TypedVisitor<T> {
     @Override
     public void visit(T item) {
-     andThenVisit(item);
+      andThenVisit(item);
     }
 
     public Class<T> getType() {
-      return (Class)Generics.getTypeArguments(ApplicationContainerDecorator.class, ApplicationContainerDecorator.this.getClass()).get(0);
+      return (Class) Generics
+          .getTypeArguments(ApplicationContainerDecorator.class, ApplicationContainerDecorator.this.getClass())
+          .get(0);
     }
   }
 }

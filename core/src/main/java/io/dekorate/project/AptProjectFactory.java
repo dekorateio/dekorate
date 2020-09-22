@@ -15,12 +15,13 @@
  */
 package io.dekorate.project;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.UUID;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
 
 public class AptProjectFactory {
 
@@ -28,8 +29,9 @@ public class AptProjectFactory {
 
   /**
    * Creates a {@link Project} form the specified {@link ProcessingEnvironment}.
-   * @param environment   The environment.
-   * @return              The project.
+   * 
+   * @param environment The environment.
+   * @return The project.
    */
   public static Project create(ProcessingEnvironment environment) {
     if (PROJECT != null) {
@@ -46,7 +48,8 @@ public class AptProjectFactory {
   private static Project createInternal(ProcessingEnvironment environment) {
     FileObject f = null;
     try {
-      f = environment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", ".marker-" + UUID.randomUUID().toString());
+      f = environment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
+          ".marker-" + UUID.randomUUID().toString());
       return FileProjectFactory.create(Paths.get(f.toUri()).toFile());
     } catch (IOException e) {
       throw new RuntimeException("Failed to determine the project root!", e);

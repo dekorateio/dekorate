@@ -32,6 +32,16 @@ import io.dekorate.BuildServiceFactory;
 import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.testing.Diagnostics;
+import io.dekorate.testing.Pods;
+import io.dekorate.testing.WithEvents;
+import io.dekorate.testing.WithImageConfig;
+import io.dekorate.testing.WithKubernetesClient;
+import io.dekorate.testing.WithPod;
+import io.dekorate.testing.WithProject;
+import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -43,23 +53,13 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.VersionInfo;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
-import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.testing.Diagnostics;
-import io.dekorate.testing.Pods;
-import io.dekorate.testing.WithEvents;
-import io.dekorate.testing.WithKubernetesClient;
-import io.dekorate.testing.WithPod;
-import io.dekorate.testing.WithProject;
-import io.dekorate.testing.WithImageConfig;
-import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
 
-public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallback, AfterAllCallback,
-                                             WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject, WithKubernetesConfig, WithImageConfig {
+public class KubernetesExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
+    WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject,
+    WithKubernetesConfig, WithImageConfig {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
-   
+
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     try {
@@ -86,7 +86,7 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
       BuildService buildService = null;
       try {
         BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfig)
-          .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
         buildService = buildServiceFactory.create(getProject(), imageConfig, list.getItems());
       } catch (Exception e) {
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
@@ -109,43 +109,43 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
         buildService.build();
       }
     }
-    
+
     if (config.isDeployEnabled()) {
       list.getItems().stream()
-        .forEach(i -> {
-          client.resourceList(i).createOrReplace();
-          LOGGER.info("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
-        });
+          .forEach(i -> {
+            client.resourceList(i).createOrReplace();
+            LOGGER.info("Created: " + i.getKind() + " name:" + i.getMetadata().getName() + ".");
+          });
 
-            List<HasMetadata> waitables = list.getItems().stream().filter(i->
-                                                                    i instanceof Deployment ||
-                                                                    i instanceof DeploymentConfig ||
-                                                                    i instanceof Pod ||
-                                                                    i instanceof ReplicaSet ||
-                                                                    i instanceof ReplicationController).collect(Collectors.toList());
+      List<HasMetadata> waitables = list.getItems().stream().filter(i -> i instanceof Deployment ||
+          i instanceof DeploymentConfig ||
+          i instanceof Pod ||
+          i instanceof ReplicaSet ||
+          i instanceof ReplicationController).collect(Collectors.toList());
       long started = System.currentTimeMillis();
-      LOGGER.info("Waiting until ready ("+config.getReadinessTimeout()+ " ms)...");
-      waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(), TimeUnit.MILLISECONDS);
+      LOGGER.info("Waiting until ready (" + config.getReadinessTimeout() + " ms)...");
+      waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(),
+          TimeUnit.MILLISECONDS);
       long ended = System.currentTimeMillis();
-      LOGGER.info("Waited: " +  (ended-started)+ " ms.");
+      LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
-      waitables.stream().map(r->client.resource(r).fromServer().get())
-        .forEach(i -> {
-          if (!Readiness.isReady(i)) {
-            LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
-          }
-        });
+      waitables.stream().map(r -> client.resource(r).fromServer().get())
+          .forEach(i -> {
+            if (!Readiness.isReady(i)) {
+              LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
+            }
+          });
     }
   }
 
   @Override
   public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
-    Arrays.stream( testInstance.getClass().getDeclaredFields())
-      .forEach(f -> {
-        injectKubernetesClient(context, testInstance, f);
-        injectKubernetesResources(context, testInstance, f);
-        injectPod(context, testInstance, f);
-      });
+    Arrays.stream(testInstance.getClass().getDeclaredFields())
+        .forEach(f -> {
+          injectKubernetesClient(context, testInstance, f);
+          injectKubernetesResources(context, testInstance, f);
+          injectPod(context, testInstance, f);
+        });
   }
 
   @Override
@@ -179,12 +179,12 @@ public class KubernetesExtension implements  ExecutionCondition, BeforeAllCallba
     }
   }
 
-  
- /**
+  /**
    * Returns the configured name.
-   * @return  The name.
+   * 
+   * @return The name.
    */
   public String getName() {
     return getKubernetesConfig().getName();
-  } 
+  }
 }

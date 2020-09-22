@@ -31,6 +31,7 @@ public class DekorateException extends RuntimeException {
   public static RuntimeException launderThrowable(Throwable cause) {
     return launderThrowable(cause.getMessage(), cause);
   }
+
   public static RuntimeException launderThrowable(String message, Throwable cause) {
     if (cause instanceof RuntimeException) {
       return ((RuntimeException) cause);

@@ -18,8 +18,8 @@
 package io.dekorate.knative.decorator;
 
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.knative.serving.v1.ServiceFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyMinScaleDecorator extends NamedResourceDecorator<ServiceFluent<?>> {
 
@@ -27,16 +27,15 @@ public class ApplyMinScaleDecorator extends NamedResourceDecorator<ServiceFluent
 
   private final int scale;
 
-
   public ApplyMinScaleDecorator(String name, int scale) {
-		super("Service", name);
+    super("Service", name);
     this.scale = scale;
-	}
+  }
 
-	@Override
-	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToAnnotations(MIN_SCALE, String.valueOf(scale))
-      .endMetadata();
-	}
+        .addToAnnotations(MIN_SCALE, String.valueOf(scale))
+        .endMetadata();
+  }
 }

@@ -15,13 +15,13 @@
  */
 package io.dekorate.testing;
 
-import io.dekorate.DekorateException;
-import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.utils.Serialization;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import io.dekorate.DekorateException;
+import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.utils.Serialization;
 
 public interface WithBaseConfig {
 
@@ -31,15 +31,15 @@ public interface WithBaseConfig {
     return getBaseConfig(KUBERNETES_CONFIG_PATH);
   }
 
-  default BaseConfig getBaseConfig (String path) {
+  default BaseConfig getBaseConfig(String path) {
     URL url = WithBaseConfig.class.getClassLoader().getResource(path);
     if (url != null) {
-      try (InputStream is = url.openStream())  {
+      try (InputStream is = url.openStream()) {
         return Serialization.unmarshal(is, BaseConfig.class);
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);
       }
     }
-    throw new IllegalStateException("Expected to find base config at: "+path+"!");
+    throw new IllegalStateException("Expected to find base config at: " + path + "!");
   }
 }

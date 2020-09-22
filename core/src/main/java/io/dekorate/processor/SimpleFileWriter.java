@@ -27,10 +27,10 @@ import java.util.Set;
 
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class SimpleFileWriter implements SessionWriter, WithProject {
 
@@ -44,7 +44,8 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
   }
 
   public SimpleFileWriter(Project project, boolean doWrite) {
-    this(project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir()), project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir()), doWrite);
+    this(project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir()),
+        project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir()), doWrite);
   }
 
   public SimpleFileWriter(Path metaDir, Path outputDir) {
@@ -64,7 +65,8 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
 
   /**
    * Writes a {@link Configuration}.
-   * @param config  The target session configurations.
+   * 
+   * @param config The target session configurations.
    * @return Map Entry containing the file system path of the written configuration and the actual content as the value
    */
   public Map.Entry<String, String> write(Configuration config) {
@@ -92,7 +94,8 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
 
   /**
    * Writes a {@link Project}.
-   * @param project  The project.
+   * 
+   * @param project The project.
    * @return Map Entry containing the file system path of the written project and the actual content as the value
    */
   public Map.Entry<String, String> write(Project project) {
@@ -116,8 +119,9 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
 
   /**
    * Write the resources contained in the {@link KubernetesList} in a directory named after the specififed group.
+   * 
    * @param group The group.
-   * @param list  The resource list.
+   * @param list The resource list.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
   public Map<String, String> write(String group, KubernetesList list) {

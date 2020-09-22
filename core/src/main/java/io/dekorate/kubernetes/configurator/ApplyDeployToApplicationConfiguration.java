@@ -16,8 +16,8 @@
 package io.dekorate.kubernetes.configurator;
 
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
+import io.dekorate.kubernetes.config.Configurator;
 
 @Description("Apply deployment related info to application configuration.")
 public class ApplyDeployToApplicationConfiguration extends Configurator<BaseConfigFluent> {
@@ -26,6 +26,7 @@ public class ApplyDeployToApplicationConfiguration extends Configurator<BaseConf
 
   @Override
   public void visit(BaseConfigFluent config) {
-    config.withAutoDeployEnabled(Boolean.parseBoolean(System.getProperty(DEKORATE_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
+    config.withAutoDeployEnabled(
+        Boolean.parseBoolean(System.getProperty(DEKORATE_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
   }
 }

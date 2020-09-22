@@ -17,16 +17,16 @@
 
 package io.dekorate.servicecatalog.decorator;
 
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.servicecatalog.api.model.ServiceBindingBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.servicecatalog.config.ServiceCatalogInstance;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.servicecatalog.api.model.ServiceBindingBuilder;
 
 @Description("Add a ServiceBinding resource(s) to the list of generated resources.")
 public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
-    
+
   private ServiceCatalogInstance instance;
 
   public AddServiceBindingResourceDecorator(ServiceCatalogInstance instance) {
@@ -35,13 +35,13 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
 
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
-          list.addToItems(new ServiceBindingBuilder()
-                          .withNewMetadata()
-                          .withName(instance.getName())
-                          .endMetadata()
-                          .withNewSpec()
-                          .withNewInstanceRef(instance.getName())
-                          .withSecretName(instance.getBindingSecret())
-                          .endSpec());
+    list.addToItems(new ServiceBindingBuilder()
+        .withNewMetadata()
+        .withName(instance.getName())
+        .endMetadata()
+        .withNewSpec()
+        .withNewInstanceRef(instance.getName())
+        .withSecretName(instance.getBindingSecret())
+        .endSpec());
   }
 }

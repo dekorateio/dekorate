@@ -17,17 +17,15 @@
 
 package io.dekorate.application.doc;
 
+import io.sundr.builder.annotations.Pojo;
 import io.sundr.codegen.annotations.AnnotationSelector;
 import io.sundr.codegen.model.Attributeable;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
-import io.sundr.builder.annotations.Pojo;
 
-
-@VelocityTransformations(value = @VelocityTransformation(value="/annotation-doc.vm", outputPath="annotation-table.org", gather=true),
-                         annotations =  {
-                           @AnnotationSelector(value=Pojo.class)
-                         })
+@VelocityTransformations(value = @VelocityTransformation(value = "/annotation-doc.vm", outputPath = "annotation-table.org", gather = true), annotations = {
+    @AnnotationSelector(value = Pojo.class)
+})
 public class ApplicationAnnotationsTableGenerator {
 
   private Object DEFAULT_VALUE = Attributeable.DEFAULT_VALUE;

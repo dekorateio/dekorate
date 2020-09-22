@@ -19,4 +19,3 @@ package io.dekorate.halkyon.generator;
 public class DefaultCapabilityConfigGenerator implements CapabilityConfigGenerator {
 
 }
-

@@ -17,7 +17,6 @@
 
 package io.dekorate.jib.buildservice;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -54,30 +53,33 @@ public class JibBuildService implements BuildService {
   private final String image;
   private final Exec.ProjectExec exec;
 
-	public JibBuildService(Project project, ImageConfiguration config) {
-		this.project = project;
+  public JibBuildService(Project project, ImageConfiguration config) {
+    this.project = project;
     this.exec = Exec.inProject(project);
-    this.image = Images.getImage(Strings.isNullOrEmpty(config.getRegistry()) ? "docker.io" : config.getRegistry() , config.getGroup(), config.getName(), config.getVersion());
-		this.config = config;
-	}
+    this.image = Images.getImage(Strings.isNullOrEmpty(config.getRegistry()) ? "docker.io" : config.getRegistry(),
+        config.getGroup(), config.getName(), config.getVersion());
+    this.config = config;
+  }
 
-	@Override
-	public void build() {
+  @Override
+  public void build() {
     LOGGER.info("Performing jib build.");
     if (project.getBuildInfo().getBuildTool().equals(MavenInfoReader.MAVEN)) {
       mavenBuild();
     }
-	}
+  }
 
-	@Override
-	public void push() {
+  @Override
+  public void push() {
     if (isDockerBuildEnabled(config)) {
-      exec.commands("docker", "push",  image);
+      exec.commands("docker", "push", image);
     }
-	}
+  }
 
   private void mavenBuild() {
-    exec.commands("mvn", "compile", String.format(MAVEN_GOAL, JIB_VERSION, isDockerBuildEnabled(config) ? DOCKER_BUILD : BUILD), "-Djib.to.image=" + image);
+    exec.commands("mvn", "compile",
+        String.format(MAVEN_GOAL, JIB_VERSION, isDockerBuildEnabled(config) ? DOCKER_BUILD : BUILD),
+        "-Djib.to.image=" + image);
   }
 
   private void gradleBuild() {
@@ -96,7 +98,8 @@ public class JibBuildService implements BuildService {
     } catch (IOException e) {
       throw DekorateException.launderThrowable("Error writing init.gradle to tmp.", e);
     }
-    exec.commands("gradle", isDockerBuildEnabled(config) ? JIB_DOCKER_BUILD : JIB, "--init-script", outputPath.toAbsolutePath().toString());
+    exec.commands("gradle", isDockerBuildEnabled(config) ? JIB_DOCKER_BUILD : JIB, "--init-script",
+        outputPath.toAbsolutePath().toString());
   }
 
   private static boolean isDockerBuildEnabled(ImageConfiguration config) {

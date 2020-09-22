@@ -24,10 +24,10 @@ import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultKubernetesApplicationGenerator implements KubernetesApplicationGenerator {
 
-    public DefaultKubernetesApplicationGenerator () {
-      add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()
-                                                     .accept(new ApplyProjectInfo(getProject()))
-                                                     .accept(new ApplyImagePullSecretConfiguration())
-                                                     .accept(new ApplyDeployToApplicationConfiguration())));
-    }
+  public DefaultKubernetesApplicationGenerator() {
+    add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()
+        .accept(new ApplyProjectInfo(getProject()))
+        .accept(new ApplyImagePullSecretConfiguration())
+        .accept(new ApplyDeployToApplicationConfiguration())));
+  }
 }

@@ -51,12 +51,13 @@ public class Diagnostics {
   }
 
   public void displayAll() {
-    PodList pods = client.pods().list(); 
-    pods.getItems().stream().forEach(p->display(p));
+    PodList pods = client.pods().list();
+    pods.getItems().stream().forEach(p -> display(p));
   }
-  
+
   public <T extends HasMetadata> void display(T resource) {
-   logger.info("Diagnostics for kind: [" + resource.getKind() + "] with name : [" + resource.getMetadata().getName() + "].");
+    logger.info(
+        "Diagnostics for kind: [" + resource.getKind() + "] with name : [" + resource.getMetadata().getName() + "].");
     try {
       PodList podList = pods.list(resource);
       if (podList == null) {
@@ -81,7 +82,8 @@ public class Diagnostics {
   protected void log(Pod pod, Container container) {
     try {
       logger.info("Logs of pod: [" + pod.getMetadata().getName() + "], container: [" + container.getName() + "]");
-      logger.info(client.pods().inNamespace(pod.getMetadata().getNamespace()).withName(pod.getMetadata().getName()).inContainer(container.getName()).tailingLines(100).withPrettyOutput().getLog());
+      logger.info(client.pods().inNamespace(pod.getMetadata().getNamespace()).withName(pod.getMetadata().getName())
+          .inContainer(container.getName()).tailingLines(100).withPrettyOutput().getLog());
     } catch (Throwable t) {
       logger.error("Failed to read logs, due to:" + t.getMessage());
     } finally {

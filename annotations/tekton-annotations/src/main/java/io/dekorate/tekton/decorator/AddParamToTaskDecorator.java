@@ -37,9 +37,9 @@ public class AddParamToTaskDecorator extends NamedTaskDecorator {
     taskSpec.removeMatchingFromParams(p -> name.equals(p.getName()));
 
     taskSpec.addNewParam()
-      .withName(name)
-      .withDescription(description)
-      .withNewDefault().withStringVal(defaultValue).endDefault()
-      .endParam();
+        .withName(name)
+        .withDescription(description)
+        .withNewDefault().withStringVal(defaultValue).endDefault()
+        .endParam();
   }
 }

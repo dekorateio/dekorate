@@ -29,6 +29,7 @@ public class ApplyArgsDecorator extends TektonStepDecorator<StepFluent> {
     super(null, containerName);
     this.argument = argument;
   }
+
   public ApplyArgsDecorator(String deploymentName, String containerName, String... argument) {
     super(deploymentName, containerName);
     this.argument = argument;
@@ -42,6 +43,6 @@ public class ApplyArgsDecorator extends TektonStepDecorator<StepFluent> {
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 }

@@ -15,25 +15,19 @@
  */
 package io.dekorate.application.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import io.dekorate.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "ApplicationConfig", relativePath = "../config",
-  mutable = true,
-  superClass = Configuration.class,
-  withStaticBuilderMethod = false,
-  withStaticAdapterMethod = false,
-  adapter = @Adapter(name = "ApplicationConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Pojo(name = "ApplicationConfig", relativePath = "../config", mutable = true, superClass = Configuration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(name = "ApplicationConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface EnableApplicationResource {
   /**
@@ -41,6 +35,7 @@ public @interface EnableApplicationResource {
    * This value will be use as:
    * - docker image repo
    * - labeling resources
+   * 
    * @return The specified group name.
    */
   String group() default "";
@@ -55,7 +50,9 @@ public @interface EnableApplicationResource {
    * If its a maven/gradle project use the artifact id.
    * Else if its a bazel project use the name.
    * Else if the system property app.name is present it will be used.
-   * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until .git is found).
+   * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until
+   * .git is found).
+   * 
    * @return The specified application name.
    */
   String name() default "";
@@ -65,15 +62,22 @@ public @interface EnableApplicationResource {
    * This value be used for things like:
    * - The docker image tag.
    * If no value specified it will attempt to determine the name using the following rules:
+   * 
    * @return The version.
    */
   String version() default "";
 
   Contact[] owners() default {};
+
   Contact[] maintainers() default {};
+
   Info[] info() default {};
+
   Icon[] icons() default {};
+
   Link[] links() default {};
+
   String notes() default "";
+
   String[] keywords() default {};
 }

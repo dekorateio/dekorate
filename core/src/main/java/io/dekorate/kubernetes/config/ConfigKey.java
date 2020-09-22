@@ -47,11 +47,13 @@ public class ConfigKey<T> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     ConfigKey<?> configKey = (ConfigKey<?>) o;
     return Objects.equals(name, configKey.name) &&
-      Objects.equals(type, configKey.type);
+        Objects.equals(type, configKey.type);
   }
 
   @Override

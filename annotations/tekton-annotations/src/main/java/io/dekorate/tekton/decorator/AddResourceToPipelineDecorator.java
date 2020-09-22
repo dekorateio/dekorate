@@ -37,9 +37,9 @@ public class AddResourceToPipelineDecorator extends NamedPipelineDecorator {
     pipelineSpec.removeMatchingFromResources(r -> name.equals(r.getName()));
 
     pipelineSpec.addNewResource()
-      .withType(type)
-      .withName(name)
-      .withOptional(optional)
-      .endResource();
+        .withType(type)
+        .withName(name)
+        .withOptional(optional)
+        .endResource();
   }
 }

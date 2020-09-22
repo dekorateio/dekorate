@@ -18,15 +18,14 @@ package io.dekorate.kubernetes.decorator;
 import java.util.Arrays;
 import java.util.Collections;
 
-import io.fabric8.kubernetes.api.model.Container;
+import io.dekorate.kubernetes.config.Probe;
+import io.dekorate.utils.Ports;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.ExecAction;
 import io.fabric8.kubernetes.api.model.HTTPGetAction;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.TCPSocketAction;
-import io.dekorate.kubernetes.config.Probe;
-import io.dekorate.utils.Ports;
-import io.dekorate.utils.Strings;
 
 /**
  * Base class for any kind of {@link Decorator} that acts on probes.
@@ -76,17 +75,19 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(8080), "HTTP");
     }
 
-    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(Ports.getHttpPort(container).get().getContainerPort()), "HTTP");
+    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(),
+        new IntOrString(Ports.getHttpPort(container).get().getContainerPort()), "HTTP");
   }
 
   private TCPSocketAction tcpSocketAction(Probe probe) {
-    if (Strings.isNullOrEmpty(probe.getTcpSocketAction()))  {
+    if (Strings.isNullOrEmpty(probe.getTcpSocketAction())) {
       return null;
     }
 
     String[] parts = probe.getTcpSocketAction().split(":");
     if (parts.length != 2) {
-      throw  new RuntimeException("Invalid format for tcp socket action! Expected: <host>:<port>. Found:"+probe.getTcpSocketAction()+".");
+      throw new RuntimeException(
+          "Invalid format for tcp socket action! Expected: <host>:<port>. Found:" + probe.getTcpSocketAction() + ".");
     }
 
     return new TCPSocketAction(parts[0], new IntOrString(parts[1]));

@@ -20,29 +20,29 @@ package io.dekorate.kubernetes.decorator;
 import java.util.Map;
 
 import io.dekorate.utils.Maps;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ConfigMapFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class AddConfigMapDataDecorator extends NamedResourceDecorator<ConfigMapFluent<?>> {
 
   private final Map<String, String> map;
 
-	public AddConfigMapDataDecorator(String name, String... keyValues) {
+  public AddConfigMapDataDecorator(String name, String... keyValues) {
     this(name, Maps.from(keyValues));
   }
-  
-	public AddConfigMapDataDecorator(String name, Map<String, String> map) {
-		super(name);
-		this.map = map;
-	}
 
-	@Override
-	public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
+  public AddConfigMapDataDecorator(String name, Map<String, String> map) {
+    super(name);
+    this.map = map;
+  }
+
+  @Override
+  public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
     config.addToData(map);
-	}
+  }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ ResourceProvidingDecorator.class ,AddConfigMapDataDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, AddConfigMapDataDecorator.class };
   }
 }

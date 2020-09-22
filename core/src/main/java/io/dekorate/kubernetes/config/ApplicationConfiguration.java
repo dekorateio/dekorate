@@ -15,11 +15,11 @@
  */
 package io.dekorate.kubernetes.config;
 
+import java.util.Map;
+
 import io.dekorate.Coordinates;
 import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
-
-import java.util.Map;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 public class ApplicationConfiguration extends Configuration implements Coordinates {
@@ -31,7 +31,8 @@ public class ApplicationConfiguration extends Configuration implements Coordinat
   public ApplicationConfiguration() {
   }
 
-  public ApplicationConfiguration(Project project, Map<ConfigKey, Object> attributes, String partOf, String name, String version) {
+  public ApplicationConfiguration(Project project, Map<ConfigKey, Object> attributes, String partOf, String name,
+      String version) {
     super(project, attributes);
     this.partOf = partOf;
     this.name = name;

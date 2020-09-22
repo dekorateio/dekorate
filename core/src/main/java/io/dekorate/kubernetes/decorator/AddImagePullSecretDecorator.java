@@ -17,13 +17,13 @@
 
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodSpecFluent;
-import io.dekorate.utils.Strings;
 
 public class AddImagePullSecretDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
- private final String imagePullSecret;
+  private final String imagePullSecret;
 
   public AddImagePullSecretDecorator(String deploymentName, String imagePullSecret) {
     super(deploymentName);
@@ -31,10 +31,11 @@ public class AddImagePullSecretDecorator extends NamedResourceDecorator<PodSpecF
   }
 
   public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
-    if (Strings.isNotNullOrEmpty(imagePullSecret) && !podSpec.hasMatchingImagePullSecret(r -> imagePullSecret.equals(r.getName()))) {
-       podSpec.addNewImagePullSecret()
-         .withName(imagePullSecret)
-       .endImagePullSecret();
+    if (Strings.isNotNullOrEmpty(imagePullSecret)
+        && !podSpec.hasMatchingImagePullSecret(r -> imagePullSecret.equals(r.getName()))) {
+      podSpec.addNewImagePullSecret()
+          .withName(imagePullSecret)
+          .endImagePullSecret();
     }
   }
 }

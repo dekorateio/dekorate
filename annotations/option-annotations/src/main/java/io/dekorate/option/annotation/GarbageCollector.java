@@ -15,13 +15,10 @@
  */
 package io.dekorate.option.annotation;
 
-public enum  GarbageCollector {
+public enum GarbageCollector {
 
-  Undefined(""),
-  SerialGC("-XX:+UseSerialGC"),
-  ParallelGC("-XX:+UseParallelGC"),
-  ParNewGC("-XX:+UseParNewGC"),
-  G1GC("-XX:+UseG1GC");
+  Undefined(""), SerialGC("-XX:+UseSerialGC"), ParallelGC("-XX:+UseParallelGC"), ParNewGC("-XX:+UseParNewGC"), G1GC(
+      "-XX:+UseG1GC");
 
   String value;
 

@@ -15,14 +15,15 @@
  */
 package io.dekorate.testing.annotation;
 
-import io.dekorate.testing.ServicePresentCondition;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import io.dekorate.testing.ServicePresentCondition;
 
 @Target({ TYPE })
 @Retention(RUNTIME)
@@ -31,13 +32,15 @@ public @interface OnServicePresentCondition {
 
   /**
    * The name of the service.
-   * @return  The name.
+   * 
+   * @return The name.
    */
   String value();
 
   /**
    * The service namespace.
-   * @return  The namespace or "" for the current namespace.
+   * 
+   * @return The namespace or "" for the current namespace.
    */
   String namespace() default "";
 }

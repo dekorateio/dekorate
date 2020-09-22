@@ -15,9 +15,10 @@
  */
 
 package io.dekorate.examples.kuberentes;
+
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
-@KubernetesApplication(imagePullSecrets="my-secret")
+@KubernetesApplication(imagePullSecrets = "my-secret")
 public class Main {
 
   public static void main(String[] args) {

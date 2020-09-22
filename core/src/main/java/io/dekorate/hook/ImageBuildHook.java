@@ -24,23 +24,23 @@ public class ImageBuildHook extends ProjectHook {
 
   private final BuildService build;
 
-	public ImageBuildHook(Project project, BuildService build) {
-		super(project);
-		this.build = build;
-	}
+  public ImageBuildHook(Project project, BuildService build) {
+    super(project);
+    this.build = build;
+  }
 
-	@Override
-	public void init() {
-	}
+  @Override
+  public void init() {
+  }
 
-	@Override
-	public void warmup() {
+  @Override
+  public void warmup() {
     build.prepare();
-	}
+  }
 
-	@Override
-	public void run() {
+  @Override
+  public void run() {
     build.build();
-	}
+  }
 
 }

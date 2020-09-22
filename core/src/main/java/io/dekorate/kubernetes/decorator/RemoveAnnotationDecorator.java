@@ -15,10 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.doc.Description;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
-import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.Annotation;
 
 @Description("A decorator that adds an annotation to all resources.")
 public class RemoveAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
@@ -41,7 +40,8 @@ public class RemoveAnnotationDecorator extends NamedResourceDecorator<ObjectMeta
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddAnnotationDecorator.class, AddVcsUrlAnnotationDecorator.class, AddCommitIdAnnotationDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddAnnotationDecorator.class, AddVcsUrlAnnotationDecorator.class,
+        AddCommitIdAnnotationDecorator.class };
   }
 
   @Override
@@ -68,6 +68,5 @@ public class RemoveAnnotationDecorator extends NamedResourceDecorator<ObjectMeta
       return false;
     return true;
   }
-
 
 }

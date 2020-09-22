@@ -15,29 +15,27 @@
  */
 package io.dekorate.testing;
 
-import io.dekorate.DekorateException;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.client.BaseClient;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClientException;
-
-import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import static io.dekorate.testing.Testing.Dekorate_STORE;
+import static java.util.Arrays.stream;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.dekorate.testing.Testing.Dekorate_STORE;
-import static java.util.Arrays.stream;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+
+import io.dekorate.DekorateException;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.client.BaseClient;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 
 /**
  * Mixin for storing the kubernetes client into the context.
@@ -48,15 +46,16 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
   String KUBERNETES_CLIENT = "KUBERNETES_CLIENT";
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
-    stream( testInstance.getClass().getDeclaredFields())
-      .forEach(f -> injectKubernetesClient(context, testInstance, f) );
+    stream(testInstance.getClass().getDeclaredFields())
+        .forEach(f -> injectKubernetesClient(context, testInstance, f));
   }
 
   /**
    * Inject an instance of {@link KubernetesClient} to the specified {@link Field}.
-   * @param context       The execution context.
-   * @param testInstance  The target test instance.
-   * @param field         The field to inject.
+   * 
+   * @param context The execution context.
+   * @param testInstance The target test instance.
+   * @param field The field to inject.
    */
   default void injectKubernetesClient(ExtensionContext context, Object testInstance, Field field) {
     if (!field.getType().isAssignableFrom(KubernetesClient.class)) {
@@ -64,22 +63,24 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
     }
 
     //This is to make sure we don't write on fields by accident.
-    if (!stream(field.getDeclaredAnnotations()).filter(a -> a.annotationType().getSimpleName().equalsIgnoreCase("Inject")).findAny().isPresent()) {
+    if (!stream(field.getDeclaredAnnotations()).filter(a -> a.annotationType().getSimpleName().equalsIgnoreCase("Inject"))
+        .findAny().isPresent()) {
       return;
     }
 
-    field.setAccessible( true );
+    field.setAccessible(true);
     try {
       field.set(testInstance, getKubernetesClient(context));
-    } catch( IllegalAccessException e ) {
+    } catch (IllegalAccessException e) {
       throw DekorateException.launderThrowable(e);
     }
   }
 
   /**
    * Gets or creates an instance of {@link KubernetesClient} from the {@link ExtensionContext}.
+   * 
    * @param context The context.
-   * @return        An instance of the client.
+   * @return An instance of the client.
    */
   default KubernetesClient getKubernetesClient(ExtensionContext context) {
     Object client = context.getStore(Dekorate_STORE).get(KUBERNETES_CLIENT);
@@ -99,35 +100,40 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
     }
   }
 
-
   /**
    * Wait until the specified resources satisfy the specified predicate.
    * Workaround for https://github.com/fabric8io/kubernetes-client/issues/1607.
+   * 
    * @param context The context.
-   * @param items   The items.
+   * @param items The items.
    * @param condition The condition.
    * @param amount The amount of time to wait.
    * @param timeUnit The time unit of the amount of time to wait.
    * @return true if condition was met.
    */
-  default <T extends HasMetadata> boolean waitUntilCondition(ExtensionContext context, Collection<T> items, Predicate<T> condition, long amount, TimeUnit timeUnit) throws InterruptedException {
+  default <T extends HasMetadata> boolean waitUntilCondition(ExtensionContext context, Collection<T> items,
+      Predicate<T> condition, long amount, TimeUnit timeUnit) throws InterruptedException {
     long amountInNanos = timeUnit.toNanos(amount);
     long end = System.nanoTime() + amountInNanos;
 
     KubernetesClient client = getKubernetesClient(context);
-    List<T> notReady = items.stream().map(i-> client.resource(i).fromServer().get()).filter(condition.negate()).collect(Collectors.toList());
+    List<T> notReady = items.stream().map(i -> client.resource(i).fromServer().get()).filter(condition.negate())
+        .collect(Collectors.toList());
     while (System.nanoTime() < end && !notReady.isEmpty()) {
       Thread.sleep(1000);
-      notReady = items.stream().map(i-> client.resource(i).fromServer().get()).filter(condition.negate()).collect(Collectors.toList());
+      notReady = items.stream().map(i -> client.resource(i).fromServer().get()).filter(condition.negate())
+          .collect(Collectors.toList());
     }
     return notReady.isEmpty();
   }
 
-  default <T extends HasMetadata> boolean deleteAndWait(ExtensionContext context, T item, long amount, TimeUnit timeUnit) throws InterruptedException {
+  default <T extends HasMetadata> boolean deleteAndWait(ExtensionContext context, T item, long amount, TimeUnit timeUnit)
+      throws InterruptedException {
     return deleteAndWait(context, Arrays.asList(item), amount, timeUnit);
   }
 
-  default <T extends HasMetadata> boolean deleteAndWait(ExtensionContext context, Collection<T> items, long amount, TimeUnit timeUnit) throws InterruptedException {
+  default <T extends HasMetadata> boolean deleteAndWait(ExtensionContext context, Collection<T> items, long amount,
+      TimeUnit timeUnit) throws InterruptedException {
     long amountInNanos = timeUnit.toNanos(amount);
     long end = System.nanoTime() + amountInNanos;
 
@@ -148,24 +154,23 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
 
     List<T> notDeleted = new ArrayList<>(items);
     while (System.nanoTime() < end && !notDeleted.isEmpty()) {
-    for (T item : items) {
-      if (!notDeleted.contains(item)) {
+      for (T item : items) {
+        if (!notDeleted.contains(item)) {
           continue;
-      }
-      try {
-        if (client.resource(item).fromServer().get() == null) {
-            notDeleted.remove(item);
         }
-      } catch (KubernetesClientException e) {
-        if (e.getCode() == 404) {
+        try {
+          if (client.resource(item).fromServer().get() == null) {
             notDeleted.remove(item);
+          }
+        } catch (KubernetesClientException e) {
+          if (e.getCode() == 404) {
+            notDeleted.remove(item);
+          }
         }
+        Thread.sleep(1000);
       }
-      Thread.sleep(1000);
     }
-  }
     return notDeleted.isEmpty();
   }
-  
 
 }

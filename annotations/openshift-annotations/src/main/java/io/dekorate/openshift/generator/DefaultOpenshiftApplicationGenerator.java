@@ -15,7 +15,6 @@
  */
 package io.dekorate.openshift.generator;
 
-import io.dekorate.Session;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
@@ -25,10 +24,10 @@ import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultOpenshiftApplicationGenerator implements OpenshiftApplicationGenerator {
 
-    public DefaultOpenshiftApplicationGenerator () {
-      on(new DefaultConfiguration<OpenshiftConfig>(new OpenshiftConfigBuilder()
-                                                   .accept(new ApplyImagePullSecretConfiguration())
-                                                   .accept(new ApplyProjectInfo(getProject()))
-                                                   .accept(new ApplyDeployToApplicationConfiguration())));
-    }
+  public DefaultOpenshiftApplicationGenerator() {
+    on(new DefaultConfiguration<OpenshiftConfig>(new OpenshiftConfigBuilder()
+        .accept(new ApplyImagePullSecretConfiguration())
+        .accept(new ApplyProjectInfo(getProject()))
+        .accept(new ApplyDeployToApplicationConfiguration())));
+  }
 }

@@ -17,17 +17,13 @@ package io.dekorate.kubernetes.generator;
 
 import java.util.Map;
 
-import javax.lang.model.element.Element;
-
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
@@ -36,7 +32,7 @@ import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.kubernetes.handler.KubernetesHandler;
 import io.dekorate.kubernetes.listener.KubernetesSessionListener;
 import io.dekorate.project.ApplyProjectInfo;
-import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 public interface KubernetesApplicationGenerator extends Generator, WithProject {
 
@@ -53,20 +49,19 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-        add(new AnnotationConfiguration<>(
-            KubernetesConfigAdapter
+    add(new AnnotationConfiguration<>(
+        KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesConfig.class))
             .accept(new ApplyBuildToImageConfiguration())
             .accept(new ApplyImagePullSecretConfiguration())
             .accept(new ApplyDeployToApplicationConfiguration())
             .accept(new ApplyProjectInfo(getProject()))));
   }
-
 
   @Override
   default void addPropertyConfiguration(Map map) {
-        add(new PropertyConfiguration<>(
-            KubernetesConfigAdapter
+    add(new PropertyConfiguration<>(
+        KubernetesConfigAdapter
             .newBuilder(propertiesMap(map, KubernetesConfig.class))
             .accept(new ApplyBuildToImageConfiguration())
             .accept(new ApplyImagePullSecretConfiguration())
@@ -74,7 +69,7 @@ public interface KubernetesApplicationGenerator extends Generator, WithProject {
             .accept(new ApplyProjectInfo(getProject()))));
   }
 
-  default void add(ConfigurationSupplier<KubernetesConfig> config)  {
+  default void add(ConfigurationSupplier<KubernetesConfig> config) {
     Session session = getSession();
     session.configurators().add(config);
     session.resources().groups().putIfAbsent(KUBERNETES, new KubernetesListBuilder());

@@ -15,17 +15,17 @@
  */
 package io.dekorate;
 
-import io.dekorate.project.Project;
-
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+
+import io.dekorate.project.Project;
 
 public interface WithProject {
 
   AtomicReference<Project> project = new AtomicReference<>();
 
   default boolean projectExists() {
-   return project.get() != null;
+    return project.get() != null;
   }
 
   default Project getProject() {

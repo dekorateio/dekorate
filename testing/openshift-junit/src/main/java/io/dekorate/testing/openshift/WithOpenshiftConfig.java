@@ -37,14 +37,14 @@ public interface WithOpenshiftConfig {
   }
 
   default Path getOpenshiftConfigPath() {
-    Project p =  new FileProjectFactory().create(new File("."));
+    Project p = new FileProjectFactory().create(new File("."));
     return p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(CONFIG_DIR).resolve(OPENSHIFT_YML);
   }
 
   default OpenshiftConfig getOpenshiftConfig(Path path) {
     File f = path.toFile();
     if (f.exists()) {
-      try (InputStream is = new FileInputStream(f))  {
+      try (InputStream is = new FileInputStream(f)) {
         return Serialization.unmarshal(is, OpenshiftConfig.class);
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);

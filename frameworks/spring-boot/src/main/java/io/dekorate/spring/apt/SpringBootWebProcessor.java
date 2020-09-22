@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -36,21 +34,25 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
 
 @Description("Detects Spring Boot web endpoints and registers the http port.")
-@SupportedAnnotationTypes({"org.springframework.web.bind.annotation.RestController", "org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping", "org.springframework.data.rest.core.annotation.RepositoryRestResource", "javax.ws.rs.GET", "javax.ws.rs.POST", "javax.ws.rs.PUT", "javax.ws.rs.DELETE", "javax.ws.rs.OPTIONS", "javax.ws.rs.HEAD", "javax.ws.rs.PATCH"})
+@SupportedAnnotationTypes({ "org.springframework.web.bind.annotation.RestController",
+    "org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping",
+    "org.springframework.data.rest.core.annotation.RepositoryRestResource", "javax.ws.rs.GET", "javax.ws.rs.POST",
+    "javax.ws.rs.PUT", "javax.ws.rs.DELETE", "javax.ws.rs.OPTIONS", "javax.ws.rs.HEAD", "javax.ws.rs.PATCH" })
 public class SpringBootWebProcessor extends AbstractAnnotationProcessor implements SpringBootWebAnnotationGenerator {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
   private static final String REQUESTMAPPING = "RequestMapping";
-  private static final Set<String> PATH_METHODS = new HashSet<String>() {{
+  private static final Set<String> PATH_METHODS = new HashSet<String>() {
+    {
       add("value");
       add("path");
-  }};
-
+    }
+  };
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    if  (roundEnv.processingOver()) {
+    if (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }
@@ -62,12 +64,12 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
         for (Element element : roundEnv.getElementsAnnotatedWith(typeElement)) {
           if (element instanceof TypeElement) {
             Set<String> detectedPaths = element.getAnnotationMirrors()
-              .stream()
-              .filter(a -> a.getAnnotationType().toString().contains(REQUESTMAPPING))
-              .flatMap(a -> a.getElementValues().entrySet().stream())
-              .filter(e -> PATH_METHODS.contains(e.getKey().getSimpleName().toString()))
-              .map(p -> p.getValue().getValue().toString().replace('"', ' ').trim())
-              .collect(Collectors.toSet());
+                .stream()
+                .filter(a -> a.getAnnotationType().toString().contains(REQUESTMAPPING))
+                .flatMap(a -> a.getElementValues().entrySet().stream())
+                .filter(e -> PATH_METHODS.contains(e.getKey().getSimpleName().toString()))
+                .map(p -> p.getValue().getValue().toString().replace('"', ' ').trim())
+                .collect(Collectors.toSet());
 
             if (detectedPaths.isEmpty()) {
               paths.add("/");
@@ -78,7 +80,7 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
         }
       }
     }
-    
+
     LOGGER.info("Found Spring web annotation!");
     Map<String, Object> config = new HashMap<String, Object>();
     config.put(DEKORATE_SPRING_WEB_PATH, findShortedCommonPath(paths));
@@ -88,6 +90,7 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
 
   /**
    * Find the shortest common path of the specified paths.
+   * 
    * @param paths The set of paths
    * @return the shorted common path, or / if there is no common path.
    */
@@ -95,7 +98,8 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
     if (paths.isEmpty()) {
       return "/";
     }
-    String longestPath = paths.stream().sorted(Comparator.comparingInt(String::length).reversed()).findFirst().orElseThrow(IllegalStateException::new);
+    String longestPath = paths.stream().sorted(Comparator.comparingInt(String::length).reversed()).findFirst()
+        .orElseThrow(IllegalStateException::new);
     String shortedPath = longestPath;
     for (String p : paths) {
       if (shortedPath.startsWith(p)) {
@@ -106,6 +110,5 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
     }
     return shortedPath;
   }
-
 
 }

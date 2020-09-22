@@ -16,16 +16,16 @@
 package io.dekorate.tekton.generator;
 
 import io.dekorate.config.DefaultConfiguration;
-import io.dekorate.tekton.config.TektonConfig;
-import io.dekorate.tekton.config.TektonConfigBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
+import io.dekorate.tekton.config.TektonConfig;
+import io.dekorate.tekton.config.TektonConfigBuilder;
 
 public class DefaultTektonApplicationGenerator implements TektonApplicationGenerator {
 
-    public DefaultTektonApplicationGenerator () {
-      on(new DefaultConfiguration<TektonConfig>(new TektonConfigBuilder()
-                                                   .accept(new ApplyProjectInfo(getProject()))
-                                                   .accept(new ApplyDeployToApplicationConfiguration())));
-    }
+  public DefaultTektonApplicationGenerator() {
+    on(new DefaultConfiguration<TektonConfig>(new TektonConfigBuilder()
+        .accept(new ApplyProjectInfo(getProject()))
+        .accept(new ApplyDeployToApplicationConfiguration())));
+  }
 }

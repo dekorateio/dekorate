@@ -28,9 +28,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import io.dekorate.config.ConfigurationSupplier;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 
 public class BuildServiceFactories {
 
@@ -47,7 +47,8 @@ public class BuildServiceFactories {
   }
 
   public static Function<ImageConfiguration, BuildService> create(Project project, Collection<HasMetadata> items) {
-    return c -> find(project, c).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found.")).create(project, c, items);
+    return c -> find(project, c).orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."))
+        .create(project, c, items);
   }
 
   public static Predicate<ImageConfiguration> configMatches(Project project) {
@@ -59,7 +60,8 @@ public class BuildServiceFactories {
   }
 
   public static void log(Project project, Collection<ImageConfiguration> configs) {
-    configs.stream().forEach(c -> stream().map(f -> f.checkApplicablility(project, c).getMessage()).forEach(s -> LOGGER.warning(s)));
+    configs.stream().forEach(
+        c -> stream().map(f -> f.checkApplicablility(project, c).getMessage()).forEach(s -> LOGGER.warning(s)));
   }
 
   public static List<String> names() {
@@ -67,8 +69,9 @@ public class BuildServiceFactories {
   }
 
   private static Stream<BuildServiceFactory> stream() {
-     ServiceLoader<BuildServiceFactory> loader = ServiceLoader.load(BuildServiceFactory.class, BuildServiceFactory.class.getClassLoader());
-     return StreamSupport.stream(loader.spliterator(), false);
+    ServiceLoader<BuildServiceFactory> loader = ServiceLoader.load(BuildServiceFactory.class,
+        BuildServiceFactory.class.getClassLoader());
+    return StreamSupport.stream(loader.spliterator(), false);
   }
 
 }

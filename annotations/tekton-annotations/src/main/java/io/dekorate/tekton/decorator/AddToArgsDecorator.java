@@ -17,10 +17,10 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
+import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
 
 @Description("A decorator that applies the command args to the task step.")
 public class AddToArgsDecorator extends TektonStepDecorator<StepFluent> {
@@ -40,6 +40,6 @@ public class AddToArgsDecorator extends TektonStepDecorator<StepFluent> {
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, NamedTaskDecorator.class, ApplyArgsDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, NamedTaskDecorator.class, ApplyArgsDecorator.class };
   }
 }

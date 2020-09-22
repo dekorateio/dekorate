@@ -15,11 +15,5 @@
  */
 package io.dekorate.servicecatalog.generator;
 
-import io.dekorate.servicecatalog.annotation.ServiceCatalog;
-import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
-
-import java.util.Arrays;
-import java.util.List;
-
 public class DefaultServiceCatalogGenerator implements ServiceCatalogGenerator {
 }

@@ -16,7 +16,6 @@
 
 package io.dekorate.utils;
 
-
 public class Images {
 
   private static final String SLASH = "/";
@@ -24,34 +23,36 @@ public class Images {
 
   /**
    * Create an image from the individual parts.
-   * @param registry      The registry.
-   * @param repository    The repository.
-   * @param name          The name.
-   * @param tag           The tag.
-   * @return              The image.
+   * 
+   * @param registry The registry.
+   * @param repository The repository.
+   * @param name The name.
+   * @param tag The tag.
+   * @return The image.
    */
   public static String getImage(String registry, String repository, String name, String tag) {
-      if (Strings.isNullOrEmpty(name)) {
-        throw new IllegalArgumentException("Docker image name cannot be null!");
-      }
-      if (Strings.isNullOrEmpty(tag)) {
-        throw new IllegalArgumentException("Docker image tag cannot be null!");
-      }
-      StringBuilder sb = new StringBuilder();
-      if (Strings.isNotNullOrEmpty(registry)) {
-        sb.append(registry).append(SLASH);
-      }
-      if (Strings.isNotNullOrEmpty(repository)) {
-        sb.append(repository).append(SLASH);
-      }
-      sb.append(name).append(COLN).append(tag);
-      return sb.toString();
+    if (Strings.isNullOrEmpty(name)) {
+      throw new IllegalArgumentException("Docker image name cannot be null!");
+    }
+    if (Strings.isNullOrEmpty(tag)) {
+      throw new IllegalArgumentException("Docker image tag cannot be null!");
+    }
+    StringBuilder sb = new StringBuilder();
+    if (Strings.isNotNullOrEmpty(registry)) {
+      sb.append(registry).append(SLASH);
+    }
+    if (Strings.isNotNullOrEmpty(repository)) {
+      sb.append(repository).append(SLASH);
+    }
+    sb.append(name).append(COLN).append(tag);
+    return sb.toString();
   }
 
   /**
    * Return the registry part of the docker image.
-   * @param image  The actual docker image.
-   * @return       The registry or null, if not registry was found.
+   * 
+   * @param image The actual docker image.
+   * @return The registry or null, if not registry was found.
    */
   public static String getRegistry(String image) {
     String[] parts = image.split(SLASH);
@@ -64,8 +65,9 @@ public class Images {
 
   /**
    * Return the docker image repository.
-   * @param image The docker image. 
-   * @return The image repository. 
+   * 
+   * @param image The docker image.
+   * @return The image repository.
    */
   public static String getRepository(String image) {
     String[] parts = image.split(SLASH);
@@ -81,8 +83,10 @@ public class Images {
     }
     return tagged;
   }
+
   /**
    * Return the docker image name.
+   * 
    * @param image The docker image.
    * @return The image name.
    */
@@ -103,6 +107,7 @@ public class Images {
 
   /**
    * Return the tag of the image.
+   * 
    * @param image The docker image.
    * @return The tag if present, {@code latest} otherwise.
    */
@@ -115,6 +120,7 @@ public class Images {
 
   /**
    * Removes the tag of the image, if present.
+   * 
    * @param image The docker image.
    * @return The docker image without the tag.
    */

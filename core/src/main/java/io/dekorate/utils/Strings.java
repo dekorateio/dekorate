@@ -70,8 +70,9 @@ public class Strings {
    * "a" -> "A"
    * "string" -> "String"
    * "myString" -> "MyString"
+   * 
    * @param str The input string.
-   * @return The input string with the first character upper cased. 
+   * @return The input string with the first character upper cased.
    */
   public static String uppercaseFirst(String str) {
     if (str == null) {
@@ -96,10 +97,11 @@ public class Strings {
    * "A" -> "a"
    * "String" -> "string"
    * "MyString" -> "myString"
+   * 
    * @param str The input string.
-   * @return The input string with the first character lower cased. 
+   * @return The input string with the first character lower cased.
    */
- 
+
   public static String lowerFirst(String str) {
     if (str == null) {
       return null;
@@ -117,12 +119,14 @@ public class Strings {
 
   /**
    * Convert kebab case to camel case.
+   * 
    * @param The input string.
    * @return The camel cased string.
    */
   public static String kebabToCamelCase(String str) {
-      final AtomicBoolean first = new AtomicBoolean(true);
-      return str != null && str.contains("-") ? Arrays.stream(str.split("-")).map(s -> first.getAndSet(false) ? s : Strings.uppercaseFirst(s)).collect(Collectors.joining()) : str;
+    final AtomicBoolean first = new AtomicBoolean(true);
+    return str != null && str.contains("-") ? Arrays.stream(str.split("-"))
+        .map(s -> first.getAndSet(false) ? s : Strings.uppercaseFirst(s)).collect(Collectors.joining()) : str;
   }
 
   public static String read(Path path) {
@@ -133,7 +137,7 @@ public class Strings {
     }
   }
 
- public static String read(InputStream is) {
+  public static String read(InputStream is) {
     try (BufferedReader buffer = new BufferedReader(new InputStreamReader(is))) {
       return buffer.lines().collect(Collectors.joining("\n"));
     } catch (IOException e) {

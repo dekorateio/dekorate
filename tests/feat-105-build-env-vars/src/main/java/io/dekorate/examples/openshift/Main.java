@@ -21,7 +21,7 @@ import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.s2i.annotation.S2iBuild;
 
 @OpenshiftApplication
-@S2iBuild(buildEnvVars = @Env(name="MAVEN_ARGS", value="-Popenshift"))
+@S2iBuild(buildEnvVars = @Env(name = "MAVEN_ARGS", value = "-Popenshift"))
 public class Main {
 
   public static void main(String[] args) {

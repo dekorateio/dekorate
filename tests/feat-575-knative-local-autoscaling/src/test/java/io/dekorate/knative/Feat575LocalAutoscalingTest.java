@@ -33,7 +33,8 @@ public class Feat575LocalAutoscalingTest {
 
   @Test
   public void shouldContainRequestsPerSecond() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     String metric = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/metric");
@@ -42,10 +43,9 @@ public class Feat575LocalAutoscalingTest {
     assertEquals("100", target);
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

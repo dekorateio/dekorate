@@ -23,8 +23,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.dekorate.utils.Serialization;
 
+import io.dekorate.utils.Serialization;
 import io.sundr.builder.annotations.Buildable;
 
 public class Project {
@@ -52,7 +52,8 @@ public class Project {
   }
 
   @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-  public Project(Path root, String dekorateInputDir, String dekorateMetaDir, String dekorateOutputDir, BuildInfo buildInfo, ScmInfo scmInfo) {
+  public Project(Path root, String dekorateInputDir, String dekorateMetaDir, String dekorateOutputDir, BuildInfo buildInfo,
+      ScmInfo scmInfo) {
     this.root = root;
     this.dekorateInputDir = dekorateInputDir;
     this.dekorateMetaDir = dekorateMetaDir;
@@ -86,7 +87,7 @@ public class Project {
   }
 
   public Project withDekorateInputDir(String dekorateInputDir) {
-      return new Project(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo);
+    return new Project(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo);
   }
 
   public Project withDekorateMetaDir(String dekorateMetaDir) {
@@ -114,7 +115,9 @@ public class Project {
 
   private Map<String, Object> parse(Path path, ObjectMapper javaPropsMapper) {
     try {
-      return javaPropsMapper.readValue(new FileInputStream(path.toFile().getAbsoluteFile()), new TypeReference<Map<String, Object>>() {});
+      return javaPropsMapper.readValue(new FileInputStream(path.toFile().getAbsoluteFile()),
+          new TypeReference<Map<String, Object>>() {
+          });
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

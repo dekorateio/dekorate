@@ -21,26 +21,26 @@ import io.fabric8.kubernetes.api.model.Quantity;
 
 public class ApplyLimitsMemoryDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
-	private static final String MEM = "mem";
+  private static final String MEM = "mem";
 
   private final String amount;
 
-	public ApplyLimitsMemoryDecorator(String containerName, String amount) {
-		super(containerName);
-		this.amount = amount;
-	}
+  public ApplyLimitsMemoryDecorator(String containerName, String amount) {
+    super(containerName);
+    this.amount = amount;
+  }
 
-	public ApplyLimitsMemoryDecorator(String deploymentName, String containerName, String amount) {
-		super(deploymentName, containerName);
-		this.amount = amount;
-	}
+  public ApplyLimitsMemoryDecorator(String deploymentName, String containerName, String amount) {
+    super(deploymentName, containerName);
+    this.amount = amount;
+  }
 
   @Override
-	public void andThenVisit(ContainerFluent<?> container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     container.editOrNewResources().addToLimits(MEM, new Quantity(amount)).endResources();
-	}
+  }
 
-	public Class<? extends Decorator>[] after() {
-		return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
-	}
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
+  }
 }

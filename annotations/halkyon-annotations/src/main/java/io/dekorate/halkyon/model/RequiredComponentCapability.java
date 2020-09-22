@@ -12,7 +12,8 @@ public class RequiredComponentCapability extends ComponentCapability {
   public RequiredComponentCapability() {
   }
 
-  public RequiredComponentCapability(String name, CapabilitySpec spec, Parameter[] parameters, String boundTo, boolean autoBindable) {
+  public RequiredComponentCapability(String name, CapabilitySpec spec, Parameter[] parameters, String boundTo,
+      boolean autoBindable) {
     super(name, spec, parameters);
     this.boundTo = boundTo;
     this.autoBindable = autoBindable;

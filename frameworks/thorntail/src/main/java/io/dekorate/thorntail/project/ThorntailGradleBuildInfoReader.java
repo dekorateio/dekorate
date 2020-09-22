@@ -1,9 +1,9 @@
 package io.dekorate.thorntail.project;
 
+import java.nio.file.Path;
+
 import io.dekorate.project.BuildInfo;
 import io.dekorate.project.GradleInfoReader;
-
-import java.nio.file.Path;
 
 public class ThorntailGradleBuildInfoReader extends GradleInfoReader {
   private static final String THORNTAIL_JAR = "-thorntail.jar";

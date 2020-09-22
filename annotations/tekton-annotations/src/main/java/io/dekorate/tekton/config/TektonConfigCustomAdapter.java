@@ -15,20 +15,20 @@
  */
 package io.dekorate.tekton.config;
 
-import io.dekorate.tekton.adapter.TektonConfigAdapter;
-import io.dekorate.tekton.annotation.TektonApplication;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.tekton.adapter.TektonConfigAdapter;
+import io.dekorate.tekton.annotation.TektonApplication;
 
 public class TektonConfigCustomAdapter {
 
   public static TektonConfigBuilder newBuilder(Project project, TektonApplication tektonApplication) {
     if (tektonApplication != null) {
       return TektonConfigAdapter.newBuilder(tektonApplication)
-        .accept(new ApplyProjectInfo(project));
-    } else  {
+          .accept(new ApplyProjectInfo(project));
+    } else {
       return new TektonConfigBuilder()
-        .accept(new ApplyProjectInfo(project));
+          .accept(new ApplyProjectInfo(project));
     }
   }
 }

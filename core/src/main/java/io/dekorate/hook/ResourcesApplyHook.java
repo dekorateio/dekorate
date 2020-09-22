@@ -27,27 +27,28 @@ public class ResourcesApplyHook extends ProjectHook {
   private final String command;
   private final String path;
 
-	public ResourcesApplyHook(Project project, String group, String command) {
-		super(project);
+  public ResourcesApplyHook(Project project, String group, String command) {
+    super(project);
     this.exec = Exec.inProject(project);
     this.group = group;
     this.command = command;
-    this.path = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir()).resolve(group + ".yml").toAbsolutePath().toString();
-	}
+    this.path = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir()).resolve(group + ".yml")
+        .toAbsolutePath().toString();
+  }
 
-	@Override
-	public void run() {
+  @Override
+  public void run() {
     exec.commands(command, "apply", "--force", "-f", path);
-	}
+  }
 
-	@Override
-	public void init() {
-		
-	}
+  @Override
+  public void init() {
 
-	@Override
-	public void warmup() {
-		
-	}
+  }
+
+  @Override
+  public void warmup() {
+
+  }
 
 }

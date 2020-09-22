@@ -21,10 +21,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
-import io.dekorate.utils.Strings;
 
 public class AddBasicAuthSecretDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
@@ -40,6 +40,7 @@ public class AddBasicAuthSecretDecorator extends ResourceProvidingDecorator<Kube
   public AddBasicAuthSecretDecorator(String username, String password) {
     this(null, username, password, Collections.emptyMap());
   }
+
   public AddBasicAuthSecretDecorator(String username, String password, Map<String, String> annotations) {
     this(null, username, password, annotations);
   }
@@ -72,10 +73,10 @@ public class AddBasicAuthSecretDecorator extends ResourceProvidingDecorator<Kube
     };
 
     list.addToItems(new SecretBuilder()
-                    .withNewMetadata()
-                      .withName(name)
-                    .withAnnotations(annotations)
-                    .endMetadata()
+        .withNewMetadata()
+        .withName(name)
+        .withAnnotations(annotations)
+        .endMetadata()
         .withType(KUBERNETES_IO_BASIC_AUTH).addToStringData(data).build());
   }
 

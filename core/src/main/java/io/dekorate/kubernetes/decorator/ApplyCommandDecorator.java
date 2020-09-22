@@ -15,8 +15,8 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.dekorate.doc.Description;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 
 @Description("A decorator that applies the command to the application container.")
 public class ApplyCommandDecorator extends ApplicationContainerDecorator<ContainerFluent> {
@@ -41,7 +41,7 @@ public class ApplyCommandDecorator extends ApplicationContainerDecorator<Contain
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
 
 }

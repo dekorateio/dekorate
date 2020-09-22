@@ -22,11 +22,9 @@ import io.sundr.codegen.model.Attributeable;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
 
-
-@VelocityTransformations(value = @VelocityTransformation(value="/annotation-doc.vm", outputPath="annotation-table.org", gather=true),
-                         packages  =  {
-                           @PackageSelector(value="io.dekorate.kubernetes.annotation")
-                         })
+@VelocityTransformations(value = @VelocityTransformation(value = "/annotation-doc.vm", outputPath = "annotation-table.org", gather = true), packages = {
+    @PackageSelector(value = "io.dekorate.kubernetes.annotation")
+})
 public class CoreAnnotationsTableGenerator {
 
   private Object DEFAULT_VALUE = Attributeable.DEFAULT_VALUE;

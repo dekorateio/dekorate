@@ -26,5 +26,5 @@ public @interface RollingUpdate {
    * Specifies the maximum number of Pods that can be created over the desired number of Pods.
    */
   String maxSurge() default "25%";
- 
+
 }

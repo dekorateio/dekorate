@@ -15,21 +15,22 @@
  */
 package io.dekorate.thorntail;
 
-import io.dekorate.WithSession;
-import io.dekorate.Generator;
-import io.dekorate.Session;
-import io.dekorate.kubernetes.config.Port;
-import io.dekorate.kubernetes.config.PortBuilder;
-import io.dekorate.kubernetes.configurator.AddPort;
-import io.dekorate.kubernetes.configurator.SetPortPath;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.servlet.annotation.WebServlet;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+
+import io.dekorate.Generator;
+import io.dekorate.Session;
+import io.dekorate.WithSession;
+import io.dekorate.kubernetes.config.Port;
+import io.dekorate.kubernetes.config.PortBuilder;
+import io.dekorate.kubernetes.configurator.AddPort;
+import io.dekorate.kubernetes.configurator.SetPortPath;
 
 public interface ThorntailWebAnnotationGenerator extends Generator, WithSession, ThorntailConfigHolder {
   @Override
@@ -38,9 +39,11 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
     ApplicationPath applicationPath = element.getAnnotation(ApplicationPath.class);
     if (applicationPath != null) {
       HashMap<String, Object> map = new HashMap<>();
-      map.put(ApplicationPath.class.getName(), new HashMap<String, String>() {{
-        put("value", applicationPath.value());
-      }});
+      map.put(ApplicationPath.class.getName(), new HashMap<String, String>() {
+        {
+          put("value", applicationPath.value());
+        }
+      });
       addAnnotationConfiguration(map);
     }
 
@@ -66,13 +69,13 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
     //TODO add support for detecting microprofile-health and setting the liveness/readiness probes
 
     if (map.containsKey(ApplicationPath.class.getName())) {
-      Object o  = map.get(ApplicationPath.class.getName());
+      Object o = map.get(ApplicationPath.class.getName());
       if (o instanceof Map) {
-        Map<String, Object> applicationPath = (Map) o;   
-          if (applicationPath != null && applicationPath.containsKey("value")) {
-            String path = String.valueOf(applicationPath.get("value"));
-            session.configurators().add(new SetPortPath(port.getName(), path));
-          }
+        Map<String, Object> applicationPath = (Map) o;
+        if (applicationPath != null && applicationPath.containsKey("value")) {
+          String path = String.valueOf(applicationPath.get("value"));
+          session.configurators().add(new SetPortPath(port.getName(), path));
+        }
       }
     }
   }

@@ -16,10 +16,10 @@
  */
 package io.dekorate.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author <a href="claprun@redhat.com">Christophe Laprun</a>
@@ -27,12 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SanitizeRemoteUrlTest {
   @ParameterizedTest(name = "{0} should be sanitized to {1}")
   @CsvSource({
-    "git@github.com:myorg/myproject.git, https://github.com/myorg/myproject.git",
-    "https://github.com/myorg/myproject.git, https://github.com/myorg/myproject.git",
-    "git+ssh://git@github.com/halkyonio/operator, https://github.com/halkyonio/operator.git",
-    "https://gitlab.com/foo/bar.git, https://gitlab.com/foo/bar.git",
-    "git@gitlab.com:foo/bar.git, https://gitlab.com/foo/bar.git",
-    "git+ssh://git@gitlab.com/foo/bar.git, https://gitlab.com/foo/bar.git",
+      "git@github.com:myorg/myproject.git, https://github.com/myorg/myproject.git",
+      "https://github.com/myorg/myproject.git, https://github.com/myorg/myproject.git",
+      "git+ssh://git@github.com/halkyonio/operator, https://github.com/halkyonio/operator.git",
+      "https://gitlab.com/foo/bar.git, https://gitlab.com/foo/bar.git",
+      "git@gitlab.com:foo/bar.git, https://gitlab.com/foo/bar.git",
+      "git+ssh://git@gitlab.com/foo/bar.git, https://gitlab.com/foo/bar.git",
   })
   void sanitizeRemoteUrlShouldWork(String original, String expected) {
     assertEquals(expected, Git.sanitizeRemoteUrl(original));

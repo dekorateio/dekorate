@@ -16,22 +16,21 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.kubernetes.config.Port;
+import static io.dekorate.utils.Ports.getHttpPort;
 
 import java.util.Map;
 import java.util.Optional;
 
-import static io.dekorate.utils.Ports.getHttpPort;
+import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.kubernetes.config.Port;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 @Description("Add an ingress to the list.")
 public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final KubernetesConfig config;
   private final Map<String, String> allLabels; //A combination of config and project labels.
-
 
   public AddIngressDecorator(KubernetesConfig config, Map<String, String> allLabels) {
     this.config = config;
@@ -49,24 +48,24 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
     }
     Port port = p.get();
     list.addNewIngressItem()
-      .withNewMetadata()
-      .withName(config.getName())
-      .withLabels(allLabels)
-      .endMetadata()
-      .withNewSpec()
-      .addNewRule()
-      .withHost(config.getHost())
-      .withNewHttp()
-      .addNewPath()
+        .withNewMetadata()
+        .withName(config.getName())
+        .withLabels(allLabels)
+        .endMetadata()
+        .withNewSpec()
+        .addNewRule()
+        .withHost(config.getHost())
+        .withNewHttp()
+        .addNewPath()
         .withPath(port.getPath())
         .withNewBackend()
-          .withServiceName(config.getName())
-          .withNewServicePort(port.getContainerPort())
+        .withServiceName(config.getName())
+        .withNewServicePort(port.getContainerPort())
         .endBackend()
-      .endPath()
-      .endHttp()
-      .endRule()
-      .endSpec()
-      .endIngressItem();
+        .endPath()
+        .endHttp()
+        .endRule()
+        .endSpec()
+        .endIngressItem();
   }
 }

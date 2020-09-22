@@ -38,7 +38,7 @@ public class Maven {
   public static String FALLBACK_MAVEN_VERSION = "3.6.3";
 
   private static final Logger LOGGER = LoggerFactory.getLogger();
-  
+
   public static String getVersion(Path modulePath) {
     Path moduleMvnw = modulePath.resolve(MVNW);
     Path rootMvnw = Git.getRoot(modulePath).orElse(modulePath).resolve(MVNW);
@@ -47,10 +47,10 @@ public class Maven {
     ProjectExec exec = Exec.inPath(modulePath).redirectingOutput(out);
 
     boolean success = false;
-    if  (moduleMvnw.toFile().exists()) {
+    if (moduleMvnw.toFile().exists()) {
       success = exec.commands(moduleMvnw.toAbsolutePath().toString(), DASH_VERSION);
-    } else if  (rootMvnw.toFile().exists()) {
-       success = exec.commands(rootMvnw.toAbsolutePath().toString(), DASH_VERSION);
+    } else if (rootMvnw.toFile().exists()) {
+      success = exec.commands(rootMvnw.toAbsolutePath().toString(), DASH_VERSION);
     } else {
       success = exec.commands(MVN, DASH_VERSION);
     }
@@ -62,27 +62,29 @@ public class Maven {
     return getVersionFromOutput(new String(out.toByteArray()));
   }
 
-
   private static String getVersionFromOutput(String output) {
     if (Strings.isNullOrEmpty(output)) {
-      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: " + FALLBACK_MAVEN_VERSION + "!");
+      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: "
+          + FALLBACK_MAVEN_VERSION + "!");
       return FALLBACK_MAVEN_VERSION;
     }
 
     Optional<String> versionLine = Arrays.stream(output.split(NEW_LINE))
-      .filter(l -> l.startsWith("Apache Maven"))
-      .findFirst();
+        .filter(l -> l.startsWith("Apache Maven"))
+        .findFirst();
 
     if (!versionLine.isPresent()) {
-      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: " + FALLBACK_MAVEN_VERSION + "!");
+      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: "
+          + FALLBACK_MAVEN_VERSION + "!");
       return FALLBACK_MAVEN_VERSION;
 
     }
     String[] parts = versionLine.map(l -> l.split(SPACE)).get();
     if (parts.length < 3) {
-      LOGGER.warning("Unknown maven version output format. Expected 'Apache Maven x.y.z ...'. Falling back to: " + FALLBACK_MAVEN_VERSION + "!");
+      LOGGER.warning("Unknown maven version output format. Expected 'Apache Maven x.y.z ...'. Falling back to: "
+          + FALLBACK_MAVEN_VERSION + "!");
       return FALLBACK_MAVEN_VERSION;
-     }
+    }
     return parts[2];
   }
 }

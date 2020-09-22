@@ -13,17 +13,17 @@ public class AddToMatchingLabelsDecorator extends NamedResourceDecorator<LabelSe
     this(ANY, key, value);
   }
 
- 	public AddToMatchingLabelsDecorator(String name, String key, String value) {
-		super(name);
-		this.key = key;
-		this.value = value;
+  public AddToMatchingLabelsDecorator(String name, String key, String value) {
+    super(name);
+    this.key = key;
+    this.value = value;
   }
 
-	public AddToMatchingLabelsDecorator(String kind, String name, String key, String value) {
-		super(kind, name);
-		this.key = key;
-		this.value = value;
-	}   
+  public AddToMatchingLabelsDecorator(String kind, String name, String key, String value) {
+    super(kind, name);
+    this.key = key;
+    this.value = value;
+  }
 
   @Override
   public void andThenVisit(LabelSelectorFluent<?> selector, ObjectMeta resourceMeta) {

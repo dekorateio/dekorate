@@ -17,7 +17,10 @@ package io.dekorate.application.annotation;
 
 public @interface Info {
   String name();
+
   String value() default "";
+
   String type() default "";
+
   String valueFrom() default "";
 }

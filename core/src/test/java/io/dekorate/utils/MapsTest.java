@@ -15,13 +15,13 @@
  */
 package io.dekorate.utils;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class MapsTest {
 
@@ -39,12 +39,11 @@ class MapsTest {
       Map<String, Object> map = Maps.fromProperties(is);
       Map<String, Object> result = Maps.kebabToCamelCase(map);
       Map<String, Object> kubernetes = (Map<String, Object>) result.get("kubernetes");
-      Map<String, Object>[] envVars = (Map<String,Object>[]) kubernetes.get("envVars");
+      Map<String, Object>[] envVars = (Map<String, Object>[]) kubernetes.get("envVars");
       assertEquals("FOO", envVars[0].get("name"));
       assertEquals("BAR", envVars[0].get("value"));
     }
   }
-
 
   @Test
   public void testMapFromYAML() throws Exception {
@@ -70,7 +69,6 @@ class MapsTest {
       assertEquals(10, readinesProbe.get("periodSeconds"));
     }
   }
-
 
   private void checkFlattenMap(Map<String, Object> map) {
     assertNotNull(map);
@@ -103,4 +101,3 @@ class MapsTest {
     }
   }
 }
-

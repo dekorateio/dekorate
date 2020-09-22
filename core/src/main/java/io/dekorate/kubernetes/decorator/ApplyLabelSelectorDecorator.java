@@ -18,7 +18,7 @@ package io.dekorate.kubernetes.decorator;
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecFluent;
 
-public class ApplyLabelSelectorDecorator extends Decorator<DeploymentSpecFluent>  {
+public class ApplyLabelSelectorDecorator extends Decorator<DeploymentSpecFluent> {
 
   private final LabelSelector labelSelector;
 
@@ -28,6 +28,6 @@ public class ApplyLabelSelectorDecorator extends Decorator<DeploymentSpecFluent>
 
   @Override
   public void visit(DeploymentSpecFluent deploymentSpec) {
-   deploymentSpec.withSelector(labelSelector);
+    deploymentSpec.withSelector(labelSelector);
   }
 }

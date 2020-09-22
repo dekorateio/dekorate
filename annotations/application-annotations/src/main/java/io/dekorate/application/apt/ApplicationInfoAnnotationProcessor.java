@@ -19,8 +19,6 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -28,11 +26,11 @@ import io.dekorate.application.annotation.EnableApplicationResource;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.sundr.codegen.CodegenContext;
 
-@SupportedAnnotationTypes({"io.dekorate.application.annotation.EnableApplicationResource"})
+@SupportedAnnotationTypes({ "io.dekorate.application.annotation.EnableApplicationResource" })
 public class ApplicationInfoAnnotationProcessor extends AbstractAnnotationProcessor {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    if  (roundEnv.processingOver()) {
+    if (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }

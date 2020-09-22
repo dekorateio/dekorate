@@ -35,35 +35,35 @@ public class AptLogger extends LoggerFactory<Messager> implements Logger {
   public AptLogger() {
     this.messager = null;
   }
-    
+
   public AptLogger(Messager messager) {
     this.messager = messager;
     check();
   }
-  
-	@Override
-	public void debug(String message) {
+
+  @Override
+  public void debug(String message) {
     check();
     messager.printMessage(Kind.NOTE, String.format(DEBUG, message));
-	}
+  }
 
-	@Override
-	public void info(String message) {
+  @Override
+  public void info(String message) {
     check();
     messager.printMessage(Kind.NOTE, String.format(INFO, message));
-	}
+  }
 
-	@Override
-	public void warning(String message) {
+  @Override
+  public void warning(String message) {
     check();
     messager.printMessage(Kind.WARNING, String.format(WARN, message));
-	}
+  }
 
-	@Override
-	public void error(String message) {
+  @Override
+  public void error(String message) {
     check();
     messager.printMessage(Kind.ERROR, String.format(ERROR, message));
-	}
+  }
 
   private void check() {
     if (messager == null) {

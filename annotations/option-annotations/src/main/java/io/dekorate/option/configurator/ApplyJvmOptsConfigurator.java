@@ -16,16 +16,17 @@
 
 package io.dekorate.option.configurator;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Env;
-import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.option.annotation.GarbageCollector;
 import io.dekorate.option.annotation.SecureRandomSource;
 import io.dekorate.option.config.JvmConfig;
 
-import java.util.Arrays;
-import java.util.Optional;
 /**
  * Copyright 2018 The original authors.
  *
@@ -33,7 +34,7 @@ import java.util.Optional;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -69,7 +70,6 @@ public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> 
     this.config = config;
   }
 
-
   @Override
   public void visit(BaseConfigFluent<?> kubernetesConfig) {
     JvmConfig config = this.config.get();
@@ -80,19 +80,19 @@ public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> 
 
   private void setJavaOptsEnvVar(String envVar, BaseConfigFluent<?> kubernetesConfig, JvmConfig jvmConfig) {
     Optional<String> existing = Arrays.stream(kubernetesConfig.getEnvVars())
-      .filter(e -> e.getName().equals(envVar))
-      .map(Env::getValue)
-      .findFirst();
+        .filter(e -> e.getName().equals(envVar))
+        .map(Env::getValue)
+        .findFirst();
 
     if (existing.isPresent()) {
       kubernetesConfig.editMatchingEnvVar(e -> e.getName().equals(envVar))
-        .withValue(mergeOptions(existing.get(), jvmConfig))
-        .endEnvVar();
+          .withValue(mergeOptions(existing.get(), jvmConfig))
+          .endEnvVar();
     } else {
       kubernetesConfig.addNewEnvVar()
-        .withName(envVar)
-        .withValue(mergeOptions("", jvmConfig))
-        .endEnvVar();
+          .withName(envVar)
+          .withValue(mergeOptions("", jvmConfig))
+          .endEnvVar();
     }
   }
 

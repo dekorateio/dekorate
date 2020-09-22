@@ -48,16 +48,17 @@ public interface S2iBuildGenerator extends Generator, WithProject {
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(propertiesMap(map, S2iBuildConfig.class))
-                                                 .accept(new ApplyBuildToImageConfiguration())
-                                                 .accept(new ApplyProjectInfo(getProject()))));
+    on(new AnnotationConfiguration<S2iBuildConfig>(
+        S2iBuildConfigAdapter.newBuilder(propertiesMap(map, S2iBuildConfig.class))
+            .accept(new ApplyBuildToImageConfiguration())
+            .accept(new ApplyProjectInfo(getProject()))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
     on(new PropertyConfiguration<S2iBuildConfig>(S2iBuildConfigAdapter.newBuilder(propertiesMap(map, S2iBuildConfig.class))
-                                                 .accept(new ApplyBuildToImageConfiguration())
-                                                 .accept(new ApplyProjectInfo(getProject()))));
+        .accept(new ApplyBuildToImageConfiguration())
+        .accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void on(ConfigurationSupplier<S2iBuildConfig> config) {

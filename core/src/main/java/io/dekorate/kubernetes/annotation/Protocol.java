@@ -15,6 +15,6 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-public enum  Protocol {
+public enum Protocol {
   TCP, UDP
 }

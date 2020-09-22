@@ -15,22 +15,20 @@
  */
 package io.dekorate.thorntail;
 
-import io.dekorate.Generator;
+import java.util.Set;
+
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
 import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.thorntail.configurator.ThorntailPrometheusAgentConfigurator;
 
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import java.util.Set;
-
 @Description("Detects JAX-RS and servlet annotations and registers the http port.")
-@SupportedAnnotationTypes({"javax.ws.rs.ApplicationPath", "javax.ws.rs.Path", "javax.servlet.annotation.WebServlet"})
+@SupportedAnnotationTypes({ "javax.ws.rs.ApplicationPath", "javax.ws.rs.Path", "javax.servlet.annotation.WebServlet" })
 public class ThorntailProcessor extends AbstractAnnotationProcessor implements ThorntailWebAnnotationGenerator {
 
   @Override

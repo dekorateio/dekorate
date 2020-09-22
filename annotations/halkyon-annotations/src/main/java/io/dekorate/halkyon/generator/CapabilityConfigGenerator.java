@@ -30,9 +30,9 @@ import io.dekorate.halkyon.handler.CapabilityHandler;
 import io.dekorate.kubernetes.config.Configuration;
 
 public interface CapabilityConfigGenerator extends Generator, WithProject {
-  
+
   String GENERATOR_KEY = "capability";
-  
+
   default String getKey() {
     return GENERATOR_KEY;
   }
@@ -44,18 +44,17 @@ public interface CapabilityConfigGenerator extends Generator, WithProject {
   @Override
   default void addAnnotationConfiguration(Map map) {
     add(new AnnotationConfiguration<>(
-      CapabilityConfigAdapter
-        .newBuilder(propertiesMap(map, CapabilityConfig.class))));
+        CapabilityConfigAdapter
+            .newBuilder(propertiesMap(map, CapabilityConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
     add(new PropertyConfiguration<>(
-      CapabilityConfigAdapter
-        .newBuilder(propertiesMap(map, CapabilityConfig.class))));
+        CapabilityConfigAdapter
+            .newBuilder(propertiesMap(map, CapabilityConfig.class))));
   }
-  
- 
+
   default void add(ConfigurationSupplier<CapabilityConfig> config) {
     Session session = getSession();
     session.configurators().add(config);

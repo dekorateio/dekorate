@@ -15,24 +15,19 @@
  */
 package io.dekorate.jaeger.generator;
 
+import java.util.Map;
+
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
-import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.jaeger.adapter.JaegerAgentConfigAdapter;
-import io.dekorate.jaeger.annotation.EnableJaegerAgent;
 import io.dekorate.jaeger.config.AddDefaultPortsToAgentConfigurator;
 import io.dekorate.jaeger.config.JaegerAgentConfig;
-import io.dekorate.jaeger.config.JaegerAgentConfigBuilder;
 import io.dekorate.jaeger.handler.JaegerAgentHandler;
 import io.dekorate.kubernetes.config.Configuration;
-
-import javax.lang.model.element.Element;
-
-import java.lang.annotation.Annotation;
-import java.util.Map;
 
 public interface JaegerAgentGenerator extends Generator, WithSession {
 

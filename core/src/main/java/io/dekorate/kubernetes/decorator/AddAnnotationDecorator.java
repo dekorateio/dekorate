@@ -15,12 +15,12 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
+import java.util.Objects;
+
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Annotation;
-
-import java.util.Objects;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 
 @Description("A decorator that adds an annotation to all resources.")
 public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
@@ -47,19 +47,20 @@ public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBui
 
   @Override
   public Class<? extends Decorator>[] before() {
-    return new Class[]{RemoveAnnotationDecorator.class};
+    return new Class[] { RemoveAnnotationDecorator.class };
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
-
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     AddAnnotationDecorator that = (AddAnnotationDecorator) o;
     return Objects.equals(annotation, that.annotation);
   }

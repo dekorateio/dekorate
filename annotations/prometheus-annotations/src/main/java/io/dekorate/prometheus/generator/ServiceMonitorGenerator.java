@@ -17,7 +17,6 @@ package io.dekorate.prometheus.generator;
 
 import java.util.Map;
 
-
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.config.AnnotationConfiguration;
@@ -28,7 +27,7 @@ import io.dekorate.prometheus.adapter.ServiceMonitorConfigAdapter;
 import io.dekorate.prometheus.config.ServiceMonitorConfig;
 import io.dekorate.prometheus.handler.ServiceMonitorHandler;
 
-public interface ServiceMonitorGenerator extends Generator  {
+public interface ServiceMonitorGenerator extends Generator {
 
   default String getKey() {
     return "servicemonitor";
@@ -40,7 +39,8 @@ public interface ServiceMonitorGenerator extends Generator  {
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<>(ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, ServiceMonitorConfig.class))));
+    on(new AnnotationConfiguration<>(
+        ServiceMonitorConfigAdapter.newBuilder(propertiesMap(map, ServiceMonitorConfig.class))));
   }
 
   @Override

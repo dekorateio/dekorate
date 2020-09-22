@@ -40,7 +40,8 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
     if (!spec.hasMatchingRule(matchingHost)) {
       spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPath(port.getPath()).withNewBackend()
-          .withServiceName(meta.getName()).withNewServicePort(port.getContainerPort()).endBackend().endPath().endHttp()
+          .withServiceName(meta.getName()).withNewServicePort(port.getContainerPort()).endBackend().endPath()
+          .endHttp()
           .endRule();
     } else {
       spec.accept(new HostVisitor(meta));

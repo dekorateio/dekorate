@@ -15,34 +15,24 @@
  */
 package io.dekorate.knative.apt;
 
-import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.doc.Description;
-import io.dekorate.knative.adapter.KnativeConfigAdapter;
 import io.dekorate.knative.annotation.KnativeApplication;
-import io.dekorate.knative.generator.KnativeApplicationGenerator;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.project.ApplyProjectInfo;
-import io.dekorate.utils.Maps;
 
 @Description("Generates knative manifests.")
 @SupportedAnnotationTypes("io.dekorate.knative.annotation.KnativeApplication")
 public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    if  (roundEnv.processingOver()) {
+    if (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }
@@ -60,4 +50,3 @@ public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor {
   }
 
 }
-

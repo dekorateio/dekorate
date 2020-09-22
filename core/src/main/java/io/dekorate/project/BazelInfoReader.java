@@ -15,9 +15,6 @@
  */
 package io.dekorate.project;
 
-import io.dekorate.DekorateException;
-import io.dekorate.utils.Strings;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.dekorate.DekorateException;
+import io.dekorate.utils.Strings;
 
 public class BazelInfoReader implements BuildInfoReader {
 
@@ -46,7 +45,6 @@ public class BazelInfoReader implements BuildInfoReader {
   private static final String NAME = "name";
 
   private static final Pattern NAME_AND_VERSION = Pattern.compile("(?<name>[^ ]+)-(?<version>[0-9\\.]+)");
-
 
   private static final String BAZEL_BIN = "bazel-bin";
   private static final String BAZEL_OUT = "bazel-out";
@@ -89,19 +87,20 @@ public class BazelInfoReader implements BuildInfoReader {
     sb.append(DOT).append(extension);
 
     return new BuildInfoBuilder()
-      .withName(name)
-      .withVersion(version)
-      .withPackaging(extension)
-      .withBuildTool(BAZEL)
-      .withBuildToolVersion(null) //TODO: Implement at some point.
-      .withOutputFile(outputDir.resolve(sb.toString()))
-      .withClassOutputDir(root.resolve(BAZEL_OUT))
-      .build();
+        .withName(name)
+        .withVersion(version)
+        .withPackaging(extension)
+        .withBuildTool(BAZEL)
+        .withBuildToolVersion(null) //TODO: Implement at some point.
+        .withOutputFile(outputDir.resolve(sb.toString()))
+        .withClassOutputDir(root.resolve(BAZEL_OUT))
+        .build();
   }
 
   /**
    * Parse BUILD and read the jar configuration as a {@link Map}.
-   * @param path  The path to BUILD.
+   * 
+   * @param path The path to BUILD.
    * @return A map containing all configuration found under jar.
    */
   protected static Map<String, String> readBuild(Path path) {
@@ -109,7 +108,7 @@ public class BazelInfoReader implements BuildInfoReader {
     AtomicInteger quotes = new AtomicInteger(0);
     Map<String, String> properties = new HashMap<>();
     try {
-      Files.lines(path).map(l -> l.replaceAll("[ ]*","")).forEach(l ->  {
+      Files.lines(path).map(l -> l.replaceAll("[ ]*", "")).forEach(l -> {
         if (l.startsWith(JAVA_BINARY)) {
           inJavaBinary.set(true);
         }
@@ -124,7 +123,7 @@ public class BazelInfoReader implements BuildInfoReader {
         }
 
         if ((inJavaBinary.get() || quotes.get() == 0) && l.contains(EQUALS)) {
-          String key = l.substring(0 ,l.lastIndexOf(EQUALS));
+          String key = l.substring(0, l.lastIndexOf(EQUALS));
           String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(DOUBLE_QUOTE, "").replaceAll(",$", "");
           Matcher matcher = NAME_AND_VERSION.matcher(value);
           if (key.equals(NAME) && matcher.matches()) {

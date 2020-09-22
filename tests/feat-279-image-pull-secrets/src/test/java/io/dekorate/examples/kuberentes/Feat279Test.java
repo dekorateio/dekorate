@@ -16,22 +16,23 @@
 
 package io.dekorate.examples.component;
 
-import java.net.URL;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.*;
-import io.dekorate.utils.Serialization;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Feat279Test {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshalAsList(Feat279Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(Feat279Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment deployment = findFirst(list, Deployment.class).orElseThrow(IllegalStateException::new);
     assertNotNull(deployment.getSpec().getTemplate().getSpec().getImagePullSecrets());
@@ -40,7 +41,7 @@ public class Feat279Test {
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

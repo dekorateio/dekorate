@@ -24,21 +24,20 @@ public class AddSecretToServiceAccountDecorator extends NamedResourceDecorator<S
 
   private final String secret;
 
-
-	public AddSecretToServiceAccountDecorator(String secret) {
+  public AddSecretToServiceAccountDecorator(String secret) {
     this(ANY, secret);
-	}
+  }
 
-	public AddSecretToServiceAccountDecorator(String name, String secret) {
-		super(name);
-		this.secret = secret;
-	}
+  public AddSecretToServiceAccountDecorator(String name, String secret) {
+    super(name);
+    this.secret = secret;
+  }
 
-	@Override
-	public void andThenVisit(ServiceAccountFluent<?> serviceAccount, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ServiceAccountFluent<?> serviceAccount, ObjectMeta resourceMeta) {
     serviceAccount.addNewSecret()
-      .withKind("Secret")
-      .withName(secret)
-      .endSecret();
-	}
+        .withKind("Secret")
+        .withName(secret)
+        .endSecret();
+  }
 }

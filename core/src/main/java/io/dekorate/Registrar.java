@@ -15,7 +15,6 @@
  */
 package io.dekorate;
 
-
 /**
  * Registers hook, listeners etc, to be triggered when the session closed.
  */

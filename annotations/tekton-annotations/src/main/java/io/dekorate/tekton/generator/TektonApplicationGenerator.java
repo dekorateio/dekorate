@@ -45,21 +45,21 @@ public interface TektonApplicationGenerator extends Generator, WithProject, Sess
 
   default void addAnnotationConfiguration(Map map) {
     on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonConfig.class))
-                                   .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyProjectInfo(getProject()))));
+        .accept(new ApplyBuildToImageConfiguration())
+        .accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void addPropertyConfiguration(Map map) {
     on(new PropertyConfiguration<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonConfig.class))
-                                   .accept(new ApplyBuildToImageConfiguration())
-                                   .accept(new ApplyProjectInfo(getProject()))));
+        .accept(new ApplyBuildToImageConfiguration())
+        .accept(new ApplyProjectInfo(getProject()))));
   }
 
-    default void on(ConfigurationSupplier<TektonConfig> config) {
-      Session session = getSession();
-      session.configurators().add(config);
-      session.handlers().add(new TektonHandler(session.resources(), session.configurators()));
-      session.addListener(this);
+  default void on(ConfigurationSupplier<TektonConfig> config) {
+    Session session = getSession();
+    session.configurators().add(config);
+    session.handlers().add(new TektonHandler(session.resources(), session.configurators()));
+    session.addListener(this);
   }
 
   default void onClosed() {

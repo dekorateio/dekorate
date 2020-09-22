@@ -1,18 +1,18 @@
- /**
- * Copyright 2018 The original authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/**
+* Copyright 2018 The original authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package io.dekorate.kubernetes.annotation;
 
 import java.lang.annotation.ElementType;
@@ -38,6 +38,7 @@ public @interface KubernetesApplication {
    * This value will be use as:
    * - docker image repo
    * - labeling resources
+   * 
    * @return The specified group name.
    */
   String partOf() default "";
@@ -120,7 +121,6 @@ public @interface KubernetesApplication {
    */
   int replicas() default 1;
 
-
   /**
    * Specifies the deployment strategy.
    */
@@ -132,7 +132,7 @@ public @interface KubernetesApplication {
    * when explicit configuration has been provided. In the later case RollingUpdate is assumed.
    */
   RollingUpdate rollingUpdate() default @RollingUpdate;
-    
+
   /**
    * The service account.
    * 
@@ -210,7 +210,7 @@ public @interface KubernetesApplication {
    * The image pull secret
    */
   String[] imagePullSecrets() default {};
-  
+
   /**
    * The hostAliases
    */
@@ -232,14 +232,13 @@ public @interface KubernetesApplication {
 
   /**
    * The resources that the application container requires.
-   */ 
-	ResourceRequirements requestResources() default @ResourceRequirements();
+   */
+  ResourceRequirements requestResources() default @ResourceRequirements();
 
   /**
    * The resource limit for the application container.
-   */ 
-	ResourceRequirements limitResources() default @ResourceRequirements();
-
+   */
+  ResourceRequirements limitResources() default @ResourceRequirements();
 
   /**
    * The sidecars.
@@ -255,6 +254,7 @@ public @interface KubernetesApplication {
 
   /**
    * Controls whether the generated {@link Service} will be headless.
+   * 
    * @return true if headless.
    */
   boolean headless() default false;
