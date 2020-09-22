@@ -8,6 +8,10 @@ public class AddToMatchingLabelsDecorator extends NamedResourceDecorator<LabelSe
 
   private String key;
   private String value;
+  
+ 	public AddToMatchingLabelsDecorator(String key, String value) {
+    this(ANY, key, value);
+  }
 
  	public AddToMatchingLabelsDecorator(String name, String key, String value) {
 		super(name);
@@ -21,10 +25,10 @@ public class AddToMatchingLabelsDecorator extends NamedResourceDecorator<LabelSe
 		this.value = value;
 	}   
 
-	@Override
-	public void andThenVisit(LabelSelectorFluent<?> selector, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(LabelSelectorFluent<?> selector, ObjectMeta resourceMeta) {
     selector.addToMatchLabels(key, value);
-	}
+  }
 
   @Override
   public Class<? extends Decorator>[] after() {
