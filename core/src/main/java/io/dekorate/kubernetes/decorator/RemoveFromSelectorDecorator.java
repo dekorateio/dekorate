@@ -22,11 +22,16 @@ import java.util.Optional;
 import io.dekorate.SelectorDecoratorFactories;
 import io.dekorate.SelectorDecoratorFactory;
 import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
+import io.dekorate.deps.kubernetes.api.builder.Visitor;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
 public class RemoveFromSelectorDecorator extends NamedResourceDecorator<VisitableBuilder> {
 
   private final String key;
+
+	public RemoveFromSelectorDecorator(String key) {
+    this(ANY, key);
+	}
 
 	public RemoveFromSelectorDecorator(String name, String key) {
 		super(name);
@@ -42,11 +47,16 @@ public class RemoveFromSelectorDecorator extends NamedResourceDecorator<Visitabl
 	@Override
 	public void andThenVisit(VisitableBuilder builder ,String kind, ObjectMeta resourceMeta) {
     Optional<SelectorDecoratorFactory> factory = SelectorDecoratorFactories.find(kind);
-    factory.ifPresent(f -> f.createRemoveFromSelectorDecorator(resourceMeta.getName(), key));
+    factory.map(f -> f.createRemoveFromSelectorDecorator(resourceMeta.getName(), key)).ifPresent(m -> builder.accept((Visitor) m));
 	}
 
 	@Override
 	public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
     //Not needed
 	}
+
+	@Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] {ResourceProvidingDecorator.class, AddToSelectorDecorator.class};
+  }
 }

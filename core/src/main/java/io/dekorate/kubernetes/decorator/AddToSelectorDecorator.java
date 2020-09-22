@@ -22,6 +22,7 @@ import java.util.Optional;
 import io.dekorate.SelectorDecoratorFactories;
 import io.dekorate.SelectorDecoratorFactory;
 import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
+import io.dekorate.deps.kubernetes.api.builder.Visitor;
 import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
 public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuilder> {
@@ -51,11 +52,17 @@ public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuil
 	@Override
 	public void andThenVisit(VisitableBuilder builder ,String kind, ObjectMeta resourceMeta) {
     Optional<SelectorDecoratorFactory> factory = SelectorDecoratorFactories.find(kind);
-    factory.ifPresent(f -> f.createAddToSelectorDecorator(resourceMeta.getName(), key, value));
+    factory.map(f -> f.createAddToSelectorDecorator(resourceMeta.getName(), key, value)).ifPresent(m -> builder.accept((Visitor) m));
 	}
 
-	@Override
+  @Override
 	public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
     //Not needed
 	}
+
+	@Override
+  public Class<? extends Decorator>[] before() {
+    return new Class[] {AddToSelectorDecorator.class};
+  }
+
 }
