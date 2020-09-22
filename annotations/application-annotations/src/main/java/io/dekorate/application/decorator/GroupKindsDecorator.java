@@ -15,16 +15,16 @@
  */
 package io.dekorate.application.decorator;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.decorator.Decorator;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import me.snowdrop.applicationcrd.api.model.ApplicationSpecBuilder;
 import me.snowdrop.applicationcrd.api.model.GroupKind;
 import me.snowdrop.applicationcrd.api.model.GroupKindBuilder;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.decorator.Decorator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Description("A decorator that adds GroupKinds to application resources.")
 public class GroupKindsDecorator extends Decorator<KubernetesListBuilder> {
@@ -34,27 +34,27 @@ public class GroupKindsDecorator extends Decorator<KubernetesListBuilder> {
 
     for (HasMetadata h : kubernetesList.getItems()) {
       groupKinds.add(new GroupKindBuilder()
-        .withKind(h.getKind())
-        .withGroup(apiVersionGroup(h.getApiVersion()))
-        .build());
+          .withKind(h.getKind())
+          .withGroup(apiVersionGroup(h.getApiVersion()))
+          .build());
     }
 
     kubernetesList.accept(new Decorator<ApplicationSpecBuilder>() {
       @Override
       public void visit(ApplicationSpecBuilder applicationSpec) {
-       applicationSpec.withComponentKinds(groupKinds);
+        applicationSpec.withComponentKinds(groupKinds);
       }
     });
   }
 
   private static String apiVersionGroup(String apiVersion) {
-    if (apiVersion == null)  {
+    if (apiVersion == null) {
       return null;
     }
 
     if (apiVersion.contains("/")) {
       return apiVersion.substring(0, apiVersion.indexOf("/"));
-    }
-    else return "core";
+    } else
+      return "core";
   }
 }

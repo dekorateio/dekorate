@@ -28,15 +28,14 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import io.dekorate.config.ConfigurationSupplier;
-import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.utils.Generators;
 import io.dekorate.utils.Maps;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 /**
  * The object that holds the state used by all processors.
@@ -65,7 +64,7 @@ public class Session {
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
 
-  private final Map<String, KubernetesList> generatedResources= new HashMap<>();
+  private final Map<String, KubernetesList> generatedResources = new HashMap<>();
   private final AtomicReference<SessionReader> reader = new AtomicReference<>();
   private final AtomicReference<SessionWriter> writer = new AtomicReference<>();
   private final Map<Class<? extends SessionListener>, SessionListener> listeners = new HashMap<>();
@@ -74,7 +73,8 @@ public class Session {
 
   /**
    * Creates or reuses a single instance of Session.
-   * @return  The Session.
+   * 
+   * @return The Session.
    */
   public static Session getSession() {
     return getSession(LoggerFactory.getLogger());
@@ -82,7 +82,8 @@ public class Session {
 
   /**
    * Creates or reuses a single instance of Session.
-   * @return  The Session.
+   * 
+   * @return The Session.
    */
   public static Session getSession(Logger logger) {
     if (INSTANCE != null) {
@@ -106,7 +107,7 @@ public class Session {
 
   public void loadHandlers() {
     Iterator<HandlerFactory> iterator = ServiceLoader.load(HandlerFactory.class, Session.class.getClassLoader()).iterator();
-    while(iterator.hasNext())  {
+    while (iterator.hasNext()) {
       this.handlers.add(iterator.next().create(this.resources, this.configurators));
     }
   }
@@ -137,19 +138,21 @@ public class Session {
   }
 
   public void addAnnotationConfiguration(Map<String, Object> map) {
-    addConfiguration(map, (g,m) -> g.addAnnotationConfiguration(m) );
+    addConfiguration(map, (g, m) -> g.addAnnotationConfiguration(m));
   }
+
   public void addPropertyConfiguration(Map<String, Object> map) {
-    addConfiguration(map, (g,m) -> g.addPropertyConfiguration(m) );
+    addConfiguration(map, (g, m) -> g.addPropertyConfiguration(m));
   }
-  
+
   public void addConfiguration(Map<String, Object> map, BiConsumer<Generator, Map<String, Object>> consumer) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
       Generator generator = generators.get(key);
       if (generator == null) {
-        throw new IllegalArgumentException("Unknown generator '" + key + "'. Known generators are: " + generators.keySet());
+        throw new IllegalArgumentException(
+            "Unknown generator '" + key + "'. Known generators are: " + generators.keySet());
       }
 
       if (value instanceof Map) {
@@ -243,15 +246,20 @@ public class Session {
 
   /**
    * Close the session an get all resource groups.
+   * 
    * @return A map of {@link KubernetesList} by group name.
    */
   private Map<String, KubernetesList> generate() {
-    Set<Handler> handlersToRemove = handlers.stream().filter(h -> disabledGroups.contains(h.getKey()) || (!enabledGroups.isEmpty() && !enabledGroups.contains(h.getKey()))).collect(Collectors.toSet());
+    Set<Handler> handlersToRemove = handlers.stream().filter(
+        h -> disabledGroups.contains(h.getKey()) || (!enabledGroups.isEmpty() && !enabledGroups.contains(h.getKey())))
+        .collect(Collectors.toSet());
     this.handlers.removeAll(handlersToRemove);
 
-    Set<String> generatorsToRemove = generators.keySet().stream().filter(g -> disabledGroups.contains(g) || (!enabledGroups.isEmpty() && !enabledGroups.contains(g))).collect(Collectors.toSet());
+    Set<String> generatorsToRemove = generators.keySet().stream()
+        .filter(g -> disabledGroups.contains(g) || (!enabledGroups.isEmpty() && !enabledGroups.contains(g)))
+        .collect(Collectors.toSet());
     generatorsToRemove.forEach(g -> generators.remove(g));
-                                           
+
     if (generated.compareAndSet(false, true)) {
       LOGGER.info("Generating manifests.");
       closed.set(true);
@@ -283,17 +291,17 @@ public class Session {
   private static void handle(Handler h, Configurators configurators) {
     configurators.stream().forEach(c -> {
       if (h.canHandle(c.getClass())) {
-      h.handle(c);
-    }
-   });
+        h.handle(c);
+      }
+    });
   }
 
   private static boolean hasApplicationConfiguration(Configurators configurators) {
-    return configurators.stream().anyMatch(c->ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
+    return configurators.stream().anyMatch(c -> ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
   }
 
   private static boolean hasMatchingConfiguration(Handler h, Configurators configurators) {
-    return configurators.stream().anyMatch(c->h.canHandle(c.getClass()));
+    return configurators.stream().anyMatch(c -> h.canHandle(c.getClass()));
   }
 
 }

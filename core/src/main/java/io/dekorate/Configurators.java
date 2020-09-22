@@ -15,24 +15,24 @@
  */
 package io.dekorate;
 
-import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.kubernetes.config.Configurator;
-import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.utils.Beans;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.config.Configurator;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.utils.Beans;
 
 public class Configurators {
 
@@ -46,9 +46,11 @@ public class Configurators {
     }
     this.suppliers.get(supplier.getType()).add(supplier);
   }
+
   /**
    * Add a {@link Configurator}.
-   * @param configurator   The configurator.
+   * 
+   * @param configurator The configurator.
    */
   public void add(Configurator configurator) {
     configurators.add(configurator);
@@ -60,17 +62,16 @@ public class Configurators {
 
   public Stream<? extends Configuration> stream() {
     return suppliers.values()
-      .stream()
-      .map(l -> combine(l.stream()
-                        .map(s -> s.configure(configurators)).collect(Collectors.toList())));
+        .stream()
+        .map(l -> combine(l.stream()
+            .map(s -> s.configure(configurators)).collect(Collectors.toList())));
   }
-  
 
   public boolean isEmpty() {
     return suppliers.isEmpty();
   }
 
-  public Set<? extends Configuration> toSet()  {
+  public Set<? extends Configuration> toSet() {
     return stream().collect(Collectors.toSet());
   }
 
@@ -80,9 +81,9 @@ public class Configurators {
 
   public <C extends Configuration> Optional<C> get(Class<C> type, Predicate<C> predicate) {
     return stream().filter(i -> type.isInstance(i))
-      .map(i -> (C) i)
-      .filter(predicate)
-      .findFirst();
+        .map(i -> (C) i)
+        .filter(predicate)
+        .findFirst();
   }
 
   public <C extends Configuration> List<C> getAll(Class<C> type) {
@@ -91,9 +92,9 @@ public class Configurators {
 
   public <C extends Configuration> List<C> getAll(Class<C> type, Predicate<C> predicate) {
     return stream().filter(i -> type.isInstance(i))
-      .map(i -> (C) i)
-      .filter(predicate)
-      .collect(Collectors.toList());
+        .map(i -> (C) i)
+        .filter(predicate)
+        .collect(Collectors.toList());
   }
 
   //
@@ -102,26 +103,25 @@ public class Configurators {
 
   private Stream<? extends ImageConfiguration> imageConfigStream() {
     return suppliers.values()
-      .stream()
-      .map(l -> combine(l.stream()
-                        .map(s -> s.configure(configurators))
-                        .filter(s -> s.get() instanceof ImageConfiguration)
-                        .map(s ->(ConfigurationSupplier<ImageConfiguration>) s)
-                        .collect(Collectors.toList())));
+        .stream()
+        .map(l -> combine(l.stream()
+            .map(s -> s.configure(configurators))
+            .filter(s -> s.get() instanceof ImageConfiguration)
+            .map(s -> (ConfigurationSupplier<ImageConfiguration>) s)
+            .collect(Collectors.toList())));
   }
 
-  private Stream<? extends ImageConfiguration> imageConfigStream(Predicate<ConfigurationSupplier<ImageConfiguration>> predicate) {
+  private Stream<? extends ImageConfiguration> imageConfigStream(
+      Predicate<ConfigurationSupplier<ImageConfiguration>> predicate) {
     return suppliers.values()
-      .stream()
-      .map(l -> combine(l.stream()
-                        .map(s -> s.configure(configurators))
-                        .filter(s -> s.get() instanceof ImageConfiguration)
-                        .map(s ->(ConfigurationSupplier<ImageConfiguration>) s)
-                        .filter(predicate)
-                        .collect(Collectors.toList())));
+        .stream()
+        .map(l -> combine(l.stream()
+            .map(s -> s.configure(configurators))
+            .filter(s -> s.get() instanceof ImageConfiguration)
+            .map(s -> (ConfigurationSupplier<ImageConfiguration>) s)
+            .filter(predicate)
+            .collect(Collectors.toList())));
   }
-
-
 
   public <C extends ImageConfiguration> Optional<C> getImageConfig(Class<C> type) {
     return getImageConfig(type, c -> true);
@@ -130,15 +130,15 @@ public class Configurators {
   //Copy
   public Optional<ImageConfiguration> getImageConfig(Predicate<ConfigurationSupplier<ImageConfiguration>> predicate) {
     return imageConfigStream(predicate).filter(i -> i instanceof ImageConfiguration)
-      .map(i -> (ImageConfiguration) i)
-      .findFirst();
+        .map(i -> (ImageConfiguration) i)
+        .findFirst();
   }
 
   public <C extends ImageConfiguration> Optional<C> getImageConfig(Class<C> type, Predicate<C> predicate) {
     return imageConfigStream().filter(i -> type.isInstance(i))
-      .map(i -> (C) i)
-      .filter(predicate)
-      .findFirst();
+        .map(i -> (C) i)
+        .filter(predicate)
+        .findFirst();
   }
 
   public <C extends ImageConfiguration> List<C> getAllImageConfigs(Class<C> type) {
@@ -147,11 +147,10 @@ public class Configurators {
 
   public <C extends ImageConfiguration> List<C> getAllImageConfigs(Class<C> type, Predicate<C> predicate) {
     return imageConfigStream().filter(i -> type.isInstance(i))
-      .map(i -> (C) i)
-      .filter(predicate)
-      .collect(Collectors.toList());
+        .map(i -> (C) i)
+        .filter(predicate)
+        .collect(Collectors.toList());
   }
-  
 
   private static <C extends Configuration> C combine(ConfigurationSupplier<C> origin, ConfigurationSupplier<C> override) {
     return Beans.combine(origin.get(), override.get());
@@ -173,4 +172,3 @@ public class Configurators {
     return Beans.combine(origin.get(), combine(copy));
   }
 }
-

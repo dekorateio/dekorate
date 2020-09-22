@@ -2,7 +2,6 @@ package io.dekorate.examples.kubernetes;
 
 import org.junit.jupiter.api.Test;
 
-import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
 
 @OpenshiftIntegrationTest

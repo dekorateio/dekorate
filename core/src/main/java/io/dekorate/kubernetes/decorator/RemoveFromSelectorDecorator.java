@@ -29,29 +29,24 @@ public class RemoveFromSelectorDecorator extends NamedResourceDecorator<Visitabl
 
   private final String key;
 
-	public RemoveFromSelectorDecorator(String key) {
-    this(ANY, key);
-	}
+  public RemoveFromSelectorDecorator(String name, String key) {
+    super(name);
+    this.key = key;
+  }
 
-	public RemoveFromSelectorDecorator(String name, String key) {
-		super(name);
-		this.key = key;
-	}
-
-	public RemoveFromSelectorDecorator(String kind, String name, String key) {
-		super(kind, name);
-		this.key = key;
-	}
-
+  public RemoveFromSelectorDecorator(String kind, String name, String key) {
+    super(kind, name);
+    this.key = key;
+  }
 
 	@Override
 	public void andThenVisit(VisitableBuilder builder ,String kind, ObjectMeta resourceMeta) {
     Optional<SelectorDecoratorFactory> factory = SelectorDecoratorFactories.find(kind);
     factory.map(f -> f.createRemoveFromSelectorDecorator(resourceMeta.getName(), key)).ifPresent(m -> builder.accept((Visitor) m));
-	}
+  }
 
-	@Override
-	public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
     //Not needed
 	}
 

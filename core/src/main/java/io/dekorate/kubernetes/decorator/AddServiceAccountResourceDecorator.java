@@ -15,10 +15,10 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 @Description("Add a ServiceAccount resource to the list of generated resources.")
 public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
@@ -26,7 +26,7 @@ public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorat
   private final String name;
 
   public AddServiceAccountResourceDecorator() {
-   this(null);
+    this(null);
   }
 
   public AddServiceAccountResourceDecorator(String name) {
@@ -42,10 +42,10 @@ public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorat
     }
 
     list.addNewServiceAccountItem()
-      .withNewMetadata()
-      .withName(name)
-      .withLabels(meta.getLabels())
-      .endMetadata()
-      .endServiceAccountItem();
+        .withNewMetadata()
+        .withName(name)
+        .withLabels(meta.getLabels())
+        .endMetadata()
+        .endServiceAccountItem();
   }
 }

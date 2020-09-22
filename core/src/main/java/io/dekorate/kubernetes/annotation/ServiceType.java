@@ -18,8 +18,5 @@ package io.dekorate.kubernetes.annotation;
 
 public enum ServiceType {
 
-  ClusterIP,
-  NodePort,
-  LoadBalancer,
-  ExternalName
+  ClusterIP, NodePort, LoadBalancer, ExternalName
 }

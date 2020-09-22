@@ -10,8 +10,8 @@ public interface SelectorDecoratorFactory {
 
   String kind();
 
- <D extends NamedResourceDecorator<?>> D createAddToSelectorDecorator(String name, String key, String value); 
+  <D extends NamedResourceDecorator<?>> D createAddToSelectorDecorator(String name, String key, String value);
 
- <D extends NamedResourceDecorator<?>> D createRemoveFromSelectorDecorator(String name, String key); 
-  
+  <D extends NamedResourceDecorator<?>> D createRemoveFromSelectorDecorator(String name, String key);
+
 }

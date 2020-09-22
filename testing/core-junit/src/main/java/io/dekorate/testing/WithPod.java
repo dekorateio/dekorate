@@ -15,18 +15,19 @@
  */
 package io.dekorate.testing;
 
-import io.dekorate.DekorateException;
-import io.fabric8.kubernetes.api.model.Endpoints;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.dekorate.testing.annotation.Named;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import static java.util.Arrays.stream;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
 
-import static java.util.Arrays.stream;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+
+import io.dekorate.DekorateException;
+import io.dekorate.testing.annotation.Named;
+import io.fabric8.kubernetes.api.model.Endpoints;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.client.KubernetesClient;
 
 /**
  * Mixin for storing / loading the KubernetesList to context.
@@ -36,16 +37,17 @@ public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, With
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
     stream(testInstance.getClass().getDeclaredFields())
-      .forEach(f -> injectPod(context, testInstance, f));
+        .forEach(f -> injectPod(context, testInstance, f));
   }
 
   /**
    * Inject a {@link Pod} to the specified {@link Field}.
    * The pod is matched using its corresponding endpoints.
    * In other words this acts like `inject pod of service`
-   * @param context      The execution context.
+   * 
+   * @param context The execution context.
    * @param testInstance The target test instance.
-   * @param field        The field to inject.
+   * @param field The field to inject.
    */
   default void injectPod(ExtensionContext context, Object testInstance, Field field) {
     if (!field.getType().isAssignableFrom(Pod.class)) {
@@ -54,7 +56,8 @@ public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, With
 
     //This is to make sure we don't write on fields by accident.
     //Note: we don't require the exact annotation. Any annotation named Inject will do (be it javax, guice etc)
-    if (!stream(field.getDeclaredAnnotations()).filter(a -> a.annotationType().getSimpleName().equalsIgnoreCase("Inject")).findAny().isPresent()) {
+    if (!stream(field.getDeclaredAnnotations()).filter(a -> a.annotationType().getSimpleName().equalsIgnoreCase("Inject"))
+        .findAny().isPresent()) {
       return;
     }
 
@@ -72,27 +75,27 @@ public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, With
     Endpoints endpoints = client.endpoints().withName(service).get();
     if (endpoints != null) {
       String pod = endpoints.getSubsets().stream()
-        .flatMap(s -> s.getAddresses().stream())
-        .filter(a -> a.getTargetRef().getKind().equals("Pod"))
-        .map(a -> a.getTargetRef().getName())
-        .findAny().orElseThrow(() -> new IllegalStateException("Failed to detect pod for service:" + service));
+          .flatMap(s -> s.getAddresses().stream())
+          .filter(a -> a.getTargetRef().getKind().equals("Pod"))
+          .map(a -> a.getTargetRef().getName())
+          .findAny().orElseThrow(() -> new IllegalStateException("Failed to detect pod for service:" + service));
 
       return client.pods().withName(pod).get();
     }
     throw new IllegalStateException("Failed to detect endpoints for service:" + service);
   }
 
-
   /**
    * Returns the value of the {@link Named} annotation.
+   * 
    * @param field The target field.
-   * @return      An optional string with the name if the field is annotated or empty otherwise.
+   * @return An optional string with the name if the field is annotated or empty otherwise.
    */
   default Optional<String> namedAnnotation(Field field) {
     return stream(field.getDeclaredAnnotations())
-      .filter(a -> a.annotationType().isAssignableFrom(Named.class))
-      .map(a -> field.getAnnotation(Named.class).value())
-      .findFirst();
+        .filter(a -> a.annotationType().isAssignableFrom(Named.class))
+        .map(a -> field.getAnnotation(Named.class).value())
+        .findFirst();
   }
 
   /**
@@ -101,4 +104,3 @@ public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, With
   String getName();
 
 }
-

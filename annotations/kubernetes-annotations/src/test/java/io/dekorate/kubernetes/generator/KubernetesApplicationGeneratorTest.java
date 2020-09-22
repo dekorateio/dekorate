@@ -15,17 +15,7 @@
  */
 package io.dekorate.kubernetes.generator;
 
-import io.dekorate.Session;
-import io.dekorate.SessionWriter;
-import io.dekorate.WithProject;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.processor.SimpleFileWriter;
-import io.dekorate.project.FileProjectFactory;
-
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +24,16 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.Session;
+import io.dekorate.SessionWriter;
+import io.dekorate.WithProject;
+import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.processor.SimpleFileWriter;
+import io.dekorate.project.FileProjectFactory;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 
 class KubernetesApplicationGeneratorTest {
 
@@ -42,56 +41,68 @@ class KubernetesApplicationGeneratorTest {
   public void shouldGenerateKubernetesWithoutWritingToFileSystem() throws IOException {
     Path tempDir = Files.createTempDirectory("dekorate");
 
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    WithProject withProject = new WithProject() {
+    };
+    withProject
+        .setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+            .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
 
     SessionWriter writer = new SimpleFileWriter(withProject.getProject(), false);
     Session session = Session.getSession();
     session.setWriter(writer);
 
-    KubernetesApplicationGenerator generator = new KubernetesApplicationGenerator() {};
+    KubernetesApplicationGenerator generator = new KubernetesApplicationGenerator() {
+    };
 
-    Map<String, Object> map = new HashMap<String, Object>() {{
-      put(KubernetesConfig.class.getName(), new HashMap<String, Object>() {{
-        put("name", "generator-test");
-        put("group", "generator-test-group");
-        put("version", "latest");
-        put("replicas", 2);
-        put("ports", new Map[] {new HashMap<String, Object>(){{
-          put("containerPort", 8080);
-          put("name", "HTTP");
-        }}});
-        put("livenessProbe", new HashMap<String, Object>() {{
-          put("httpActionPath", "/health");
-        }});
-      }});
-    }};
+    Map<String, Object> map = new HashMap<String, Object>() {
+      {
+        put(KubernetesConfig.class.getName(), new HashMap<String, Object>() {
+          {
+            put("name", "generator-test");
+            put("group", "generator-test-group");
+            put("version", "latest");
+            put("replicas", 2);
+            put("ports", new Map[] { new HashMap<String, Object>() {
+              {
+                put("containerPort", 8080);
+                put("name", "HTTP");
+              }
+            } });
+            put("livenessProbe", new HashMap<String, Object>() {
+              {
+                put("httpActionPath", "/health");
+              }
+            });
+          }
+        });
+      }
+    };
 
     generator.addPropertyConfiguration(map);
     final Map<String, String> result = session.close();
-    KubernetesList list=session.getGeneratedResources().get("kubernetes");
+    KubernetesList list = session.getGeneratedResources().get("kubernetes");
     assertThat(list).isNotNull();
     assertThat(list.getItems())
-            .filteredOn(i -> "Deployment".equals(i.getKind()))
-            .hasOnlyOneElementSatisfying(item -> {
-              assertThat(item).isInstanceOfSatisfying(Deployment.class, dep -> {
-                assertThat(dep.getSpec()).satisfies(spec -> {
-                  assertThat(spec.getReplicas()).isEqualTo(2);
-                  assertThat(spec.getTemplate().getSpec()).satisfies(podSpec -> {
-                    assertThat(podSpec.getContainers()).hasOnlyOneElementSatisfying(container -> {
-                      assertThat(container.getPorts()).hasOnlyOneElementSatisfying(port -> {
-                        assertThat(port.getContainerPort()).isEqualTo(8080);
-                        assertThat(port.getName()).isEqualTo("HTTP");
-                      });
-                      assertThat(container.getLivenessProbe().getHttpGet()).satisfies(httpGetAction -> {
-                        assertThat(httpGetAction.getPath()).isEqualTo("/health");
-                        assertThat(httpGetAction.getPort().getIntVal()).isEqualTo(8080);
-                      });
-                    });
+        .filteredOn(i -> "Deployment".equals(i.getKind()))
+        .hasOnlyOneElementSatisfying(item -> {
+          assertThat(item).isInstanceOfSatisfying(Deployment.class, dep -> {
+            assertThat(dep.getSpec()).satisfies(spec -> {
+              assertThat(spec.getReplicas()).isEqualTo(2);
+              assertThat(spec.getTemplate().getSpec()).satisfies(podSpec -> {
+                assertThat(podSpec.getContainers()).hasOnlyOneElementSatisfying(container -> {
+                  assertThat(container.getPorts()).hasOnlyOneElementSatisfying(port -> {
+                    assertThat(port.getContainerPort()).isEqualTo(8080);
+                    assertThat(port.getName()).isEqualTo("HTTP");
+                  });
+                  assertThat(container.getLivenessProbe().getHttpGet()).satisfies(httpGetAction -> {
+                    assertThat(httpGetAction.getPath()).isEqualTo("/health");
+                    assertThat(httpGetAction.getPort().getIntVal()).isEqualTo(8080);
                   });
                 });
               });
             });
+          });
+        });
 
     assertThat(tempDir.resolve("kubernetes.json")).doesNotExist();
     assertThat(tempDir.resolve("kubernetes.yml")).doesNotExist();

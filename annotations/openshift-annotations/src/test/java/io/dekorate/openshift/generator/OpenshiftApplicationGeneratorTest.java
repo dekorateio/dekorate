@@ -30,11 +30,11 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.openshift.api.model.DeploymentConfig;
 
 class OpenshiftApplicationGeneratorTest {
   static Path tempDir;
@@ -45,32 +45,40 @@ class OpenshiftApplicationGeneratorTest {
   }
 
   @Test
-  public void shouldGenerateOpenshiftAndWriteToTheFilesystem()  {
-    WithProject withProject = new WithProject() {};
+  public void shouldGenerateOpenshiftAndWriteToTheFilesystem() {
+    WithProject withProject = new WithProject() {
+    };
 
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    withProject
+        .setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+            .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
     SessionWriter writer = new SimpleFileWriter(withProject.getProject());
     Session session = Session.getSession();
     session.setWriter(writer);
 
-    OpenshiftApplicationGenerator generator = new OpenshiftApplicationGenerator() {};
+    OpenshiftApplicationGenerator generator = new OpenshiftApplicationGenerator() {
+    };
 
-    Map<String, Object> map = new HashMap<String, Object>() {{
-      put(OpenshiftConfig.class.getName(), new HashMap<String, Object>() {{
-        put("name", "generator-test");
-        put("version", "latest");
-        put("replicas", 2);
-      }});
-    }};
+    Map<String, Object> map = new HashMap<String, Object>() {
+      {
+        put(OpenshiftConfig.class.getName(), new HashMap<String, Object>() {
+          {
+            put("name", "generator-test");
+            put("version", "latest");
+            put("replicas", 2);
+          }
+        });
+      }
+    };
 
     generator.addPropertyConfiguration(map);
     final Map<String, String> result = session.close();
-    KubernetesList list=session.getGeneratedResources().get("openshift");
+    KubernetesList list = session.getGeneratedResources().get("openshift");
     assertThat(list).isNotNull();
     assertThat(list.getItems())
-      .filteredOn(i -> "DeploymentConfig".equals(i.getKind()))
-      .filteredOn(i -> ((DeploymentConfig)i).getSpec().getReplicas() == 2)
-      .isNotEmpty();
+        .filteredOn(i -> "DeploymentConfig".equals(i.getKind()))
+        .filteredOn(i -> ((DeploymentConfig) i).getSpec().getReplicas() == 2)
+        .isNotEmpty();
 
     assertThat(tempDir.resolve("openshift.json")).exists();
     assertThat(tempDir.resolve("openshift.yml")).exists();

@@ -15,37 +15,40 @@
  */
 package io.dekorate.servicecatalog.mapping;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.List;
+import java.util.ServiceLoader;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.ServiceLoader;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ServiceCatalogMappingTest {
 
   @Test
   void shouldLoadProvider() {
     ServiceLoader loader = ServiceLoader.load(KubernetesResourceMappingProvider.class);
-    loader.forEach(l -> System.out.println("Found loader:" + l ));
+    loader.forEach(l -> System.out.println("Found loader:" + l));
   }
 
   @Test
   public void shouldUnmarshall() {
-    KubernetesList list = Serialization.unmarshalAsList(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml"));
     assertNotNull(list);
   }
 
   @Test
   public void shouldUnmarshallUsingTheClient() {
     KubernetesClient client = new DefaultKubernetesClient();
-    List<HasMetadata> list = client.load(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml")).get();
+    List<HasMetadata> list = client.load(ServiceCatalogMappingTest.class.getClassLoader().getResourceAsStream("svcat.yml"))
+        .get();
     assertNotNull(list);
   }
 }

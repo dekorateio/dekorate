@@ -15,21 +15,23 @@
  */
 package io.dekorate.testing.openshift;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
+
 import io.dekorate.testing.openshift.adapter.OpenshiftIntegrationTestConfigAdapter;
 import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
 import io.dekorate.testing.openshift.config.OpenshiftIntegrationTestConfig;
 import io.dekorate.testing.openshift.config.OpenshiftIntegrationTestConfigBuilder;
-import org.junit.jupiter.api.extension.ExtensionContext;
-
 
 public interface WithOpenshiftIntegrationTest {
 
   OpenshiftIntegrationTestConfig DEFAULT_OPENSHIFT_INTEGRATION_TEST_CONFIG = new OpenshiftIntegrationTestConfigBuilder()
-    .withImageStreamTagTimeout(120000)
-    .withReadinessTimeout(500000)
-    .build();
+      .withImageStreamTagTimeout(120000)
+      .withReadinessTimeout(500000)
+      .build();
 
   default OpenshiftIntegrationTestConfig getOpenshiftIntegrationTestConfig(ExtensionContext context) {
-    return context.getElement().map(e -> OpenshiftIntegrationTestConfigAdapter.adapt(e.getAnnotation(OpenshiftIntegrationTest.class))).orElse(DEFAULT_OPENSHIFT_INTEGRATION_TEST_CONFIG);
+    return context.getElement()
+        .map(e -> OpenshiftIntegrationTestConfigAdapter.adapt(e.getAnnotation(OpenshiftIntegrationTest.class)))
+        .orElse(DEFAULT_OPENSHIFT_INTEGRATION_TEST_CONFIG);
   }
 }

@@ -40,9 +40,10 @@ public class Git {
   public static final String HEAD = "HEAD";
   public static final String URL = "url";
   public static final String REF = "ref";
-  
+
   /**
    * Get the git root.
+   * 
    * @param path Any path under the target git repo.
    * @return The {@link Path} to the git root.
    */
@@ -56,6 +57,7 @@ public class Git {
 
   /**
    * Get the git config.
+   * 
    * @param root the git root.
    * @return The {@link Path} to the git config.
    */
@@ -66,8 +68,10 @@ public class Git {
   public static Path getHead(Path root) {
     return root.resolve(DOT_GIT).resolve(HEAD);
   }
+
   /**
    * Get the git remote url.
+   * 
    * @param path the path to the git config.
    * @param remote the remote.
    * @return The an {@link Optional} String with the URL of the specified remote.
@@ -75,20 +79,20 @@ public class Git {
   public static Optional<String> getRemoteUrl(Path path, String remote) {
     try {
       return Files.lines(getConfig(path)).map(String::trim)
-        .filter(inRemote(remote, new AtomicBoolean()))
-        .filter(l->l.startsWith(URL) && l.contains(EQUALS))
-        .map(s->s.split(EQUALS)[1].trim())
-        .findAny();
+          .filter(inRemote(remote, new AtomicBoolean()))
+          .filter(l -> l.startsWith(URL) && l.contains(EQUALS))
+          .map(s -> s.split(EQUALS)[1].trim())
+          .findAny();
     } catch (Exception e) {
       return Optional.empty();
     }
   }
-  
+
   public static Optional<String> getSafeRemoteUrl(Path path, String remote) {
     final Optional<String> remoteUrl = getRemoteUrl(path, remote);
     return remoteUrl.map(Git::sanitizeRemoteUrl);
   }
-  
+
   static String sanitizeRemoteUrl(String remoteUrl) {
     final int atSign = remoteUrl.indexOf('@');
     if (atSign > 0) {
@@ -104,15 +108,16 @@ public class Git {
 
   /**
    * Get the git branch.
+   * 
    * @param path the path to the git config.
    * @return The an {@link Optional} String with the branch.
    */
   public static Optional<String> getBranch(Path path) {
     try {
       return Files.lines(getHead(path)).map(String::trim)
-        .filter(l -> l.startsWith(REF) &&  l.contains(SLASH))
-        .map(s -> s.substring(s.lastIndexOf(SLASH) + 1).trim())
-        .findAny();
+          .filter(l -> l.startsWith(REF) && l.contains(SLASH))
+          .map(s -> s.substring(s.lastIndexOf(SLASH) + 1).trim())
+          .findAny();
     } catch (Exception e) {
       return Optional.empty();
     }
@@ -120,28 +125,30 @@ public class Git {
 
   /**
    * Get the git branch.
+   * 
    * @param path the path to the git config.
    * @return The an {@link Optional} String with the branch.
    */
   public static Optional<String> getCommitSHA(Path path) {
     try {
-       return Files.lines(getHead(path)).map(String::trim)
-        .filter(l -> l.startsWith(REF) &&  l.contains(COLN))
-         .map(s -> s.substring(s.lastIndexOf(COLN) + 1).trim())
-         .map(ref -> path.resolve(DOT_GIT).resolve(ref))
-         .filter(ref -> ref.toFile().exists())
-         .map(Strings::read)
-         .map(String::trim)
-         .findAny();
+      return Files.lines(getHead(path)).map(String::trim)
+          .filter(l -> l.startsWith(REF) && l.contains(COLN))
+          .map(s -> s.substring(s.lastIndexOf(COLN) + 1).trim())
+          .map(ref -> path.resolve(DOT_GIT).resolve(ref))
+          .filter(ref -> ref.toFile().exists())
+          .map(Strings::read)
+          .map(String::trim)
+          .findAny();
     } catch (Exception e) {
       return Optional.empty();
     }
   }
 
- /**
+  /**
    * Create a predicate function that tracks if the a line is defined in the specified remote section.
+   * 
    * @param remote The target remote.
-   * @param state  An atomic boolean which holds the predicate state.
+   * @param state An atomic boolean which holds the predicate state.
    * @reuturn The predicate.
    */
   public static Predicate<String> inRemote(String remote, AtomicBoolean state) {
@@ -154,6 +161,5 @@ public class Git {
       return state.get();
     };
   }
-
 
 }

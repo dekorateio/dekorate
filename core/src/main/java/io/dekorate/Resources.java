@@ -15,13 +15,6 @@
  */
 package io.dekorate;
 
-import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.utils.Metadata;
-import io.fabric8.kubernetes.api.model.Doneable;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,9 +24,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
-public class Resources  {
+import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.utils.Metadata;
+import io.fabric8.kubernetes.api.model.Doneable;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+
+public class Resources {
 
   private static final String DEFAULT_GROUP = "kubernetes";
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
@@ -44,19 +43,22 @@ public class Resources  {
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
 
-  private static final Comparator<Decorator> DECORATOR_COMPARATOR = (a,b) -> a.compareTo(b) == 0 ? b.compareTo(a) : a.equals(b) ? 0 : 1;
+  private static final Comparator<Decorator> DECORATOR_COMPARATOR = (a, b) -> a.compareTo(b) == 0 ? b.compareTo(a)
+      : a.equals(b) ? 0 : 1;
 
   /**
    * Get all registered groups.
-   * @return  The groups map.
+   * 
+   * @return The groups map.
    */
-  public Map<String, KubernetesListBuilder> groups()  {
+  public Map<String, KubernetesListBuilder> groups() {
     return this.groups;
   }
 
   /**
    * Add a {@link Decorator}.
-   * @param decorator   The decorator.
+   * 
+   * @param decorator The decorator.
    */
   public void decorate(Decorator decorator) {
     globalDecorators.add(decorator);
@@ -64,11 +66,12 @@ public class Resources  {
 
   /**
    * Add a {@link Decorator} to the specified resource group.
-   * @param group     The group.
-   * @param decorator   The decorator.
+   * 
+   * @param group The group.
+   * @param decorator The decorator.
    */
   public void decorate(String group, Decorator decorator) {
-    if (!groupDecorators.containsKey(group))  {
+    if (!groupDecorators.containsKey(group)) {
       groupDecorators.put(group, new TreeSet<>());
     }
     groupDecorators.get(group).add(decorator);
@@ -76,13 +79,16 @@ public class Resources  {
 
   /**
    * Add a {@link Decorator}.
-   * @param decorator   The decorator.
+   * 
+   * @param decorator The decorator.
    */
   public void decorate(Doneable<? extends Decorator> decorator) {
-    globalDecorators.add(decorator.done()); }
+    globalDecorators.add(decorator.done());
+  }
 
   /**
    * Add a resource to all groups.
+   * 
    * @param metadata
    */
   public void add(HasMetadata metadata) {
@@ -91,8 +97,9 @@ public class Resources  {
 
   /**
    * Add a resource to the specified group.
-   * @param group     The group.
-   * @param metadata  The resource.
+   * 
+   * @param group The group.
+   * @param metadata The resource.
    */
   public void add(String group, HasMetadata metadata) {
     if (!groups.containsKey(group)) {
@@ -108,8 +115,9 @@ public class Resources  {
    * Add a {@link Decorator} to the specified custom group.
    * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
    * To add a custom decorator, you need to explicitly specify it using this method.
-   * @param group       The group.
-   * @param decorator   The decorator.
+   * 
+   * @param group The group.
+   * @param decorator The decorator.
    */
   public void decorateCustom(String group, Decorator decorator) {
     if (!customDecorators.containsKey(group)) {
@@ -122,8 +130,9 @@ public class Resources  {
    * Add a resource to the specified custom group.
    * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
    * To add a custom resource, you need to explicitly specify it using this method.
-   * @param group     The group.
-   * @param metadata  The resource.
+   * 
+   * @param group The group.
+   * @param metadata The resource.
    */
   public void addCustom(String group, HasMetadata metadata) {
     if (!customGroups.containsKey(group)) {
@@ -136,6 +145,7 @@ public class Resources  {
 
   /**
    * Generate all resources.
+   * 
    * @return A map of {@link KubernetesList} by group name.
    */
   protected Map<String, KubernetesList> generate() {
@@ -145,7 +155,8 @@ public class Resources  {
         builder.addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()]));
         this.groups.put(DEFAULT_GROUP, builder);
       } else {
-        this.groups.forEach((group, builder) -> builder.addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()])));
+        this.groups.forEach((group, builder) -> builder
+            .addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()])));
       }
     }
 
@@ -154,9 +165,9 @@ public class Resources  {
     Map<String, KubernetesList> resources = new HashMap<>();
 
     groups.forEach((group, l) -> {
-        if (!groupDecorators.containsKey(group) || groupDecorators.get(group).isEmpty()) {
-          groupDecorators.put(group, globalDecorators);
-        }
+      if (!groupDecorators.containsKey(group) || groupDecorators.get(group).isEmpty()) {
+        groupDecorators.put(group, globalDecorators);
+      }
     });
 
     groupDecorators.forEach((group, decorators) -> {
@@ -167,7 +178,8 @@ public class Resources  {
         for (Decorator d : applyConstraints(union)) {
           groups.get(group).accept(d);
         }
-      }});
+      }
+    });
     groups.forEach((g, b) -> resources.put(g, b.build()));
 
     if (customDecorators.isEmpty()) {
@@ -182,7 +194,8 @@ public class Resources  {
         for (Decorator d : applyConstraints(union)) {
           customGroups.get(group).accept(d);
         }
-      }});
+      }
+    });
     customGroups.forEach((g, b) -> resources.put(g, b.build()));
 
     return resources;
@@ -209,11 +222,11 @@ public class Resources  {
   public void bubbleSort(Decorator[] decorators) {
     int n = decorators.length;
     Decorator temp = null;
-    for(int i=0; i < n; i++){
-      for(int j=1; j < (n-i); j++){
-        if(decorators[j].compareTo(decorators[j-1]) < 0) {
-          temp = decorators[j-1];
-          decorators[j-1] = decorators[j];
+    for (int i = 0; i < n; i++) {
+      for (int j = 1; j < (n - i); j++) {
+        if (decorators[j].compareTo(decorators[j - 1]) < 0) {
+          temp = decorators[j - 1];
+          decorators[j - 1] = decorators[j];
           decorators[j] = temp;
         }
       }

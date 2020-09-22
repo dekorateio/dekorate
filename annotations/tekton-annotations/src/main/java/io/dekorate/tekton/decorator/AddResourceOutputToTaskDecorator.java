@@ -34,19 +34,19 @@ public class AddResourceOutputToTaskDecorator extends NamedTaskDecorator {
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     if (!taskSpec.hasResources()) {
       taskSpec.withNewResources()
-        .addNewOutput()
-        .withName(resourceName)
-        .withType(resourceType)
-        .endOutput()
-        .endResources();
+          .addNewOutput()
+          .withName(resourceName)
+          .withType(resourceType)
+          .endOutput()
+          .endResources();
     } else {
       taskSpec.editResources().removeMatchingFromOutputs(r -> r.getName().equals(resourceName)).endResources();
       taskSpec.editResources()
-        .addNewOutput()
-        .withName(resourceName)
-        .withType(resourceType)
-        .endOutput()
-        .endResources();
+          .addNewOutput()
+          .withName(resourceName)
+          .withType(resourceType)
+          .endOutput()
+          .endResources();
     }
   }
 }

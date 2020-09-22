@@ -15,26 +15,25 @@
  */
 package io.dekorate.processor;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
+
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Path;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class AptWriter extends SimpleFileWriter implements SessionWriter, WithProject {
 
@@ -42,7 +41,7 @@ public class AptWriter extends SimpleFileWriter implements SessionWriter, WithPr
   protected static final String FILENAME = "%s.%s";
   protected static final String CONFIG = ".config/%s.%s";
   protected static final String PROJECT = "META-INF/dekorate/.project.%s";
-  protected static final String[] STRIP = {"^Editable", "BuildConfig$", "Config$"};
+  protected static final String[] STRIP = { "^Editable", "BuildConfig$", "Config$" };
   protected static final String JSON = "json";
   protected static final String YML = "yml";
   protected static final String TMP = "tmp";
@@ -58,6 +57,7 @@ public class AptWriter extends SimpleFileWriter implements SessionWriter, WithPr
 
   /**
    * Writes all {@link Session} resources.
+   * 
    * @param session The target session.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
@@ -73,25 +73,28 @@ public class AptWriter extends SimpleFileWriter implements SessionWriter, WithPr
 
   /**
    * Write the resources contained in the {@link KubernetesList} in a directory named after the specififed group.
+   * 
    * @param group The group.
-   * @param list  The resource list.
+   * @param list The resource list.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
   public Map<String, String> write(String group, KubernetesList list) {
-    
+
     try {
       final Map<String, String> result = new HashMap<>();
-      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getDekorateOutputDir() + "/" + String.format(FILENAME, group, JSON));
+      FileObject json = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE,
+          getProject().getDekorateOutputDir() + "/" + String.format(FILENAME, group, JSON));
       try (Writer writer = json.openWriter()) {
         final String jsonValue = Serialization.asJson(list);
-        LOGGER.info("Writing: "+json.toUri());
+        LOGGER.info("Writing: " + json.toUri());
         writer.write(jsonValue);
         result.put(json.getName(), jsonValue);
       }
-      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE, getProject().getDekorateOutputDir() + "/" + String.format(FILENAME, group, YML));
+      FileObject yml = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, PACKAGE,
+          getProject().getDekorateOutputDir() + "/" + String.format(FILENAME, group, YML));
       try (Writer writer = yml.openWriter()) {
         final String yamlValue = Serialization.asYaml(list);
-        LOGGER.info("Writing: "+yml.toUri());
+        LOGGER.info("Writing: " + yml.toUri());
         writer.write(yamlValue);
         result.put(yml.getName(), yamlValue);
       }

@@ -20,16 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.dekorate.DekorateException;
-
-
 public class Generators {
 
   private static Field findField(Class c, String field) throws NoSuchFieldError, SecurityException, NoSuchFieldException {
     return findField(c, c, field);
   }
 
-  private static Field findField(Class c, Class origin, String field) throws NoSuchFieldError, SecurityException, NoSuchFieldException {
+  private static Field findField(Class c, Class origin, String field)
+      throws NoSuchFieldError, SecurityException, NoSuchFieldException {
     try {
       return c.getDeclaredField(field);
     } catch (NoSuchFieldError | SecurityException | NoSuchFieldException e) {
@@ -43,20 +41,22 @@ public class Generators {
 
   /**
    * Process the specified map and wrap sub-maps into arrays of maps when needed.
+   * 
    * @param annotationClass The class of the annotation.
    * @param map The actual map.
    */
   public static void populateArrays(Class configClass, Map<String, Object> map) {
-    for (Map.Entry<String,Object> entry : new HashMap<String, Object>(map).entrySet()) {
-      String key =  Strings.kebabToCamelCase(entry.getKey());
+    for (Map.Entry<String, Object> entry : new HashMap<String, Object>(map).entrySet()) {
+      String key = Strings.kebabToCamelCase(entry.getKey());
       Object value = entry.getValue();
       try {
 
         Class fieldType = findField(configClass, key).getType();
         if (value instanceof String && fieldType.isArray()) {
-          String[] newValue = ((String)value).split("\\s*,\\s*");
+          String[] newValue = ((String) value).split("\\s*,\\s*");
           map.put(key, newValue);
-        } if (value instanceof Map) {
+        }
+        if (value instanceof Map) {
           populateArrays(fieldType, (Map<String, Object>) value);
           if (fieldType.isArray()) {
             Map[] newValue = new Map[1];
@@ -71,8 +71,8 @@ public class Generators {
         } else if (value instanceof List && isMapList((List) value)) {
           List list = (List) value;
           Map[] newValue = new Map[list.size()];
-          for (int i=0;i<list.size();i++) {
-            newValue[i]=(Map)list.get(i);
+          for (int i = 0; i < list.size(); i++) {
+            newValue[i] = (Map) list.get(i);
           }
           map.put(key, newValue);
         }
@@ -85,11 +85,12 @@ public class Generators {
 
   /**
    * Check if specified Object array is actually an array of maps.
+   * 
    * @param objects the object array.
    * @return true if all elements are instance of Map.
    */
   private static boolean isMapArray(Object[] objects) {
-    for (Object o: objects) {
+    for (Object o : objects) {
       if (!(o instanceof Map)) {
         return false;
       }
@@ -99,11 +100,12 @@ public class Generators {
 
   /**
    * Check if specified list is actually a list of maps.
+   * 
    * @param list the list..
    * @return true if all elements are instance of Map.
    */
   private static boolean isMapList(List<?> list) {
-    for (Object o: list) {
+    for (Object o : list) {
       if (!(o instanceof Map)) {
         return false;
       }

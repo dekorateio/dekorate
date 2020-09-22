@@ -15,9 +15,9 @@
  */
 package io.dekorate;
 
-import io.dekorate.kubernetes.config.Configuration;
-
 import java.util.*;
+
+import io.dekorate.kubernetes.config.Configuration;
 
 /**
  * Generates resources, based on the detected annotations.
@@ -26,28 +26,29 @@ public interface Generator extends SessionHandler {
 
   /**
    * Get the {@link Configuration} class that is associated with the {@link Generator}.
+   * 
    * @return The {@link Configuration} class.
-   */  
+   */
   default Class<? extends Configuration> getConfigType() {
     return null;
   }
-  
+
   /**
    * Get the string key associated with the generator.
    * This key is used to correlate configuration properties, with the generator.
-   * So a generator with key X will be associated configuration property prefix dekorate.X.  
+   * So a generator with key X will be associated configuration property prefix dekorate.X.
    * Example: The `KubernetesApplicationGenerator` is using the key `kubernetes`.
    * The string key.
    */
   default String getKey() {
     return null;
   }
-  
+
   /**
    * Add a map as the generator annotation configuration.
    */
   void addAnnotationConfiguration(Map map);
- 
+
   /**
    * Add a map as the generator configuration.
    */

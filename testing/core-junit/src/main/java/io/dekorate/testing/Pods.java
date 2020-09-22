@@ -17,11 +17,9 @@
 
 package io.dekorate.testing;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import io.fabric8.kubernetes.api.model.Endpoints;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.LabelSelectorRequirement;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -46,6 +44,7 @@ public class Pods {
 
   /**
    * Finds the pod that correspond to the specified resource.
+   * 
    * @param resource The resource.
    * @return The podList with the matching pods.
    */
@@ -53,8 +52,9 @@ public class Pods {
     if (resource instanceof KubernetesList) {
       KubernetesList list = (KubernetesList) resource;
       return new PodListBuilder()
-        .withItems(list.getItems().stream() .map(i -> list(i)).filter(i -> i != null && !i.getItems().isEmpty()).flatMap(i->i.getItems().stream()).collect(Collectors.toList()))
-        .build();
+          .withItems(list.getItems().stream().map(i -> list(i)).filter(i -> i != null && !i.getItems().isEmpty())
+              .flatMap(i -> i.getItems().stream()).collect(Collectors.toList()))
+          .build();
     }
     if (resource instanceof Pod) {
       return new PodListBuilder().withItems((Pod) resource).build();
@@ -78,6 +78,7 @@ public class Pods {
 
   /**
    * Returns the {@link PodList} that match the specified {@link Deployment}.
+   * 
    * @param deployment The {@link Deployment}
    */
   protected PodList map(Deployment deployment) {
@@ -89,18 +90,18 @@ public class Pods {
     if (deployment.getSpec().getSelector().getMatchExpressions() != null) {
       for (LabelSelectorRequirement req : deployment.getSpec().getSelector().getMatchExpressions()) {
         switch (req.getOperator()) {
-        case "In":
-          podLister.withLabelIn(req.getKey(), req.getValues().toArray(new String[] {}));
-          break;
-        case "NotIn":
-          podLister.withLabelNotIn(req.getKey(), req.getValues().toArray(new String[] {}));
-          break;
-        case "DoesNotExist":
-          podLister.withoutLabel(req.getKey());
-          break;
-        case "Exists":
-          podLister.withLabel(req.getKey());
-          break;
+          case "In":
+            podLister.withLabelIn(req.getKey(), req.getValues().toArray(new String[] {}));
+            break;
+          case "NotIn":
+            podLister.withLabelNotIn(req.getKey(), req.getValues().toArray(new String[] {}));
+            break;
+          case "DoesNotExist":
+            podLister.withoutLabel(req.getKey());
+            break;
+          case "Exists":
+            podLister.withLabel(req.getKey());
+            break;
         }
       }
     }
@@ -121,18 +122,18 @@ public class Pods {
     if (replicaSet.getSpec().getSelector().getMatchExpressions() != null) {
       for (LabelSelectorRequirement req : replicaSet.getSpec().getSelector().getMatchExpressions()) {
         switch (req.getOperator()) {
-        case "In":
-          podLister.withLabelIn(req.getKey(), req.getValues().toArray(new String[] {}));
-          break;
-        case "NotIn":
-          podLister.withLabelNotIn(req.getKey(), req.getValues().toArray(new String[] {}));
-          break;
-        case "DoesNotExist":
-          podLister.withoutLabel(req.getKey());
-          break;
-        case "Exists":
-          podLister.withLabel(req.getKey());
-          break;
+          case "In":
+            podLister.withLabelIn(req.getKey(), req.getValues().toArray(new String[] {}));
+            break;
+          case "NotIn":
+            podLister.withLabelNotIn(req.getKey(), req.getValues().toArray(new String[] {}));
+            break;
+          case "DoesNotExist":
+            podLister.withoutLabel(req.getKey());
+            break;
+          case "Exists":
+            podLister.withLabel(req.getKey());
+            break;
         }
       }
     }

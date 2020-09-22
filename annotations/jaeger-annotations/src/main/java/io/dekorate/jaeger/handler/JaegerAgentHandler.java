@@ -15,6 +15,9 @@
  */
 package io.dekorate.jaeger.handler;
 
+import static io.dekorate.jaeger.config.Defaults.AGENT_IMAGE;
+import static io.dekorate.jaeger.config.Defaults.AGENT_NAME;
+
 import io.dekorate.Handler;
 import io.dekorate.Resources;
 import io.dekorate.jaeger.config.Collector;
@@ -28,9 +31,6 @@ import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.decorator.AddAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.utils.Strings;
-
-import static io.dekorate.jaeger.config.Defaults.AGENT_IMAGE;
-import static io.dekorate.jaeger.config.Defaults.AGENT_NAME;
 
 public class JaegerAgentHandler implements Handler<JaegerAgentConfig> {
 
@@ -54,14 +54,14 @@ public class JaegerAgentHandler implements Handler<JaegerAgentConfig> {
   public void handle(JaegerAgentConfig config) {
     if (config.isOperatorEnabled()) {
       resources.decorate(new AddAnnotationDecorator(new AnnotationBuilder()
-        .withKey("sidecar.jaegertracing.io/inject")
-        .withValue("true")
-        .build()));
+          .withKey("sidecar.jaegertracing.io/inject")
+          .withValue("true")
+          .build()));
     } else {
       ContainerBuilder builder = new ContainerBuilder()
-        .withName(AGENT_NAME)
-        .withImage(AGENT_IMAGE + ":" + config.getVersion())
-        .withArguments("--collector.host-port="+ collectorHostPort(config));
+          .withName(AGENT_NAME)
+          .withImage(AGENT_IMAGE + ":" + config.getVersion())
+          .withArguments("--collector.host-port=" + collectorHostPort(config));
 
       for (Port port : config.getPorts()) {
         //We can't use the AddPortToContainerDecorator as it expects to be applies on a top level resource.
@@ -70,33 +70,34 @@ public class JaegerAgentHandler implements Handler<JaegerAgentConfig> {
             .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : 0)
             .withContainerPort(port.getContainerPort())
             .withProtocol(port.getProtocol() != null ? port.getProtocol() : Protocol.TCP)
-          .endPort();
-       }
+            .endPort();
+      }
       resources.decorate(new AddSidecarDecorator(builder.build()));
     }
   }
 
   /**
    * Create the collector host-port based on the specified {@link JaegerAgentConfig}.
-   * @param config  The config.
-   * @return        A string with the full host-port.
+   * 
+   * @param config The config.
+   * @return A string with the full host-port.
    */
   private static String collectorHostPort(JaegerAgentConfig config) {
-      StringBuilder sb = new StringBuilder();
-      Collector collector = config.getCollector();
-      if (Strings.isNotNullOrEmpty(collector.getHost())) {
-        sb.append(collector.getHost());
-      } else {
-        sb.append(collector.getName());
-        if (Strings.isNotNullOrEmpty(collector.getNamespace())) {
-          sb.append(".").append(collector.getNamespace());
-        }
-        sb.append("svc");
+    StringBuilder sb = new StringBuilder();
+    Collector collector = config.getCollector();
+    if (Strings.isNotNullOrEmpty(collector.getHost())) {
+      sb.append(collector.getHost());
+    } else {
+      sb.append(collector.getName());
+      if (Strings.isNotNullOrEmpty(collector.getNamespace())) {
+        sb.append(".").append(collector.getNamespace());
       }
-      sb.append(":");
-      sb.append(collector.getPort());
-      return sb.toString();
+      sb.append("svc");
     }
+    sb.append(":");
+    sb.append(collector.getPort());
+    return sb.toString();
+  }
 
   @Override
   public boolean canHandle(Class<? extends Configuration> type) {

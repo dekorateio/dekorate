@@ -31,10 +31,10 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 class KnativeApplicationGeneratorTest {
   static Path tempDir;
@@ -45,31 +45,39 @@ class KnativeApplicationGeneratorTest {
   }
 
   @Test
-  public void shouldGenerateKnativeAndWriteToTheFilesystem()  {
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+  public void shouldGenerateKnativeAndWriteToTheFilesystem() {
+    WithProject withProject = new WithProject() {
+    };
+    withProject
+        .setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+            .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
     SessionWriter writer = new SimpleFileWriter(withProject.getProject());
 
     Session session = Session.getSession();
     session.setWriter(writer);
 
-    KnativeApplicationGenerator generator = new KnativeApplicationGenerator() {};
+    KnativeApplicationGenerator generator = new KnativeApplicationGenerator() {
+    };
     generator.setProject(FileProjectFactory.create(new File(".")));
 
-    Map<String, Object> map = new HashMap<String, Object>() {{
-      put(KnativeConfig.class.getName(), new HashMap<String, Object>() {{
-        put("name", "generator-test");
-        put("version", "latest");
-      }});
-    }};
+    Map<String, Object> map = new HashMap<String, Object>() {
+      {
+        put(KnativeConfig.class.getName(), new HashMap<String, Object>() {
+          {
+            put("name", "generator-test");
+            put("version", "latest");
+          }
+        });
+      }
+    };
 
     generator.addPropertyConfiguration(map);
     final Map<String, String> result = session.close();
-    KubernetesList list=session.getGeneratedResources().get("knative");
+    KubernetesList list = session.getGeneratedResources().get("knative");
     assertThat(list).isNotNull();
     assertThat(list.getItems())
-      .filteredOn(i -> "Service".equals(i.getKind()))
-      .isNotEmpty();
+        .filteredOn(i -> "Service".equals(i.getKind()))
+        .isNotEmpty();
 
     assertThat(tempDir.resolve("knative.json")).exists();
     assertThat(tempDir.resolve("knative.yml")).exists();

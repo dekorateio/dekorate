@@ -16,21 +16,22 @@
 
 package io.dekorate.annotationless;
 
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 
 public class Issue446Test {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshalAsList(Issue446Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(Issue446Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -40,17 +41,15 @@ public class Issue446Test {
     assertEquals("greeting-security", volume.getSecret().getSecretName());
     assertEquals("github-token", volume.getName());
 
-
     Container c = p.getContainers().get(0);
     assertNotNull(c);
     VolumeMount mount = c.getVolumeMounts().get(0);
     assertTrue(mount.getReadOnly());
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

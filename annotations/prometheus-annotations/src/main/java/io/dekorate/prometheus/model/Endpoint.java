@@ -16,6 +16,7 @@
 package io.dekorate.prometheus.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.sundr.builder.annotations.Buildable;

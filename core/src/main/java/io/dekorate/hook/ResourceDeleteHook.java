@@ -27,26 +27,27 @@ public class ResourceDeleteHook extends ProjectHook {
   private final String command;
   private final String path;
 
-	public ResourceDeleteHook(Project project, String group, String command) {
-		super(project);
+  public ResourceDeleteHook(Project project, String group, String command) {
+    super(project);
     this.exec = Exec.inProject(project);
     this.group = group;
     this.command = command;
-    this.path = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir()).resolve(group + ".yml").toAbsolutePath().toString();
-	}
+    this.path = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir()).resolve(group + ".yml")
+        .toAbsolutePath().toString();
+  }
 
-	@Override
-	public void run() {
+  @Override
+  public void run() {
     exec.commands(command, "delete", "-f", path);
-	}
+  }
 
-	@Override
-	public void init() {
-		
-	}
+  @Override
+  public void init() {
 
-	@Override
-	public void warmup() {
-		
-	}
+  }
+
+  @Override
+  public void warmup() {
+
+  }
 }

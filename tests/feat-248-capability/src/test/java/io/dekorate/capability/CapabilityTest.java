@@ -17,22 +17,24 @@
 
 package io.dekorate.capability;
 
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.dekorate.halkyon.model.Capability;
-import io.dekorate.utils.Serialization;
-import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.halkyon.model.Capability;
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class CapabilityTest {
 
   @Test
   public void shouldContainCapability() {
-    KubernetesList list = Serialization.unmarshalAsList(Capability.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(Capability.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     Optional<Capability> capability = findFirst(list, Capability.class);
     assertTrue(capability.isPresent());
@@ -40,7 +42,7 @@ public class CapabilityTest {
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Mount;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
-import io.dekorate.doc.Description;
 
 @Description("Add mount to all containers.")
 public class AddMountDecorator extends Decorator<ContainerBuilder> {
@@ -31,15 +31,15 @@ public class AddMountDecorator extends Decorator<ContainerBuilder> {
   @Override
   public void visit(ContainerBuilder container) {
     container.addNewVolumeMount()
-      .withName(mount.getName())
-      .withMountPath(mount.getPath())
-      .withSubPath(mount.getSubPath())
-      .withReadOnly(mount.isReadOnly())
-      .endVolumeMount();
+        .withName(mount.getName())
+        .withMountPath(mount.getPath())
+        .withSubPath(mount.getSubPath())
+        .withReadOnly(mount.isReadOnly())
+        .endVolumeMount();
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
 
 }

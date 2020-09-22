@@ -48,12 +48,12 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
   default void addAnnotationConfiguration(Map map) {
     addConfiguration(map);
   }
-  
+
   @Override
   default void addPropertyConfiguration(Map map) {
     addConfiguration(map);
   }
-  
+
   default void addConfiguration(Map map) {
     Session session = getSession();
     session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
@@ -62,77 +62,79 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
     session.handlers().add(new Handler() {
 
-       @Override
-       public int order() {
-         return 410;
-       }
+      @Override
+      public int order() {
+        return 410;
+      }
 
-       @Override
-       public String getKey() {
-         return "spring";
-       }
+      @Override
+      public String getKey() {
+        return "spring";
+      }
 
-       @Override
-       public void handle(Configuration config) {
-         LOGGER.info("Processing service monitor config.");
-         session.resources().decorate(new EndpointPathDecorator("http", "/actuator/prometheus"));
-       }
+      @Override
+      public void handle(Configuration config) {
+        LOGGER.info("Processing service monitor config.");
+        session.resources().decorate(new EndpointPathDecorator("http", "/actuator/prometheus"));
+      }
 
-       @Override
-       public boolean canHandle(Class config) {
-         return SpringApplicationConfig.class.equals(config) || EditableServiceMonitorConfig.class.equals(config);
-       }
-     });
+      @Override
+      public boolean canHandle(Class config) {
+        return SpringApplicationConfig.class.equals(config) || EditableServiceMonitorConfig.class.equals(config);
+      }
+    });
 
     if (isActuatorAvailable()) {
       //Users configuration should take priority, so add but don't overwrite.
-      session.configurators().add(new AddLivenessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/info").build(), false));
-      session.configurators().add(new AddReadinessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
+      session.configurators().add(
+          new AddLivenessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/info").build(), false));
+      session.configurators().add(new AddReadinessProbeConfigurator(
+          new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
     }
 
     if (isSpringCloudKubernetesAvailable()) {
       session.handlers().add(new Handler() {
-          @Override
-           public int order() {
-            return 310; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
-           }
+        @Override
+        public int order() {
+          return 310; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
+        }
 
-          @Override
-          public String getKey() {
-            return "spring";
-          }
+        @Override
+        public String getKey() {
+          return "spring";
+        }
 
-          @Override
-          public void handle(Configuration config) {
-            LOGGER.info("Detected spring cloud kubernetes.");
-            session.resources().decorate(new ApplyServiceAccountNamedDecorator());
-            session.resources().decorate(new AddServiceAccountResourceDecorator());
-            session.resources().decorate(new AddRoleBindingResourceDecorator("view"));
-          }
+        @Override
+        public void handle(Configuration config) {
+          LOGGER.info("Detected spring cloud kubernetes.");
+          session.resources().decorate(new ApplyServiceAccountNamedDecorator());
+          session.resources().decorate(new AddServiceAccountResourceDecorator());
+          session.resources().decorate(new AddRoleBindingResourceDecorator("view"));
+        }
 
-          @Override
-          public boolean canHandle(Class config) {
-            return SpringApplicationConfig.class.isAssignableFrom(config);
-          }
-        });
+        @Override
+        public boolean canHandle(Class config) {
+          return SpringApplicationConfig.class.isAssignableFrom(config);
+        }
+      });
     }
   }
 
   default boolean isActuatorAvailable() {
-     try {
-       Class c = Class.forName("org.springframework.boot.actuate.health.HealthIndicator");
-       return c != null;
-     } catch (ClassNotFoundException | NoClassDefFoundError e) {
-       return false;
-     }
+    try {
+      Class c = Class.forName("org.springframework.boot.actuate.health.HealthIndicator");
+      return c != null;
+    } catch (ClassNotFoundException | NoClassDefFoundError e) {
+      return false;
+    }
   }
 
-   default boolean isSpringCloudKubernetesAvailable() {
-     try {
-       Class c = Class.forName("org.springframework.cloud.kubernetes.KubernetesAutoConfiguration");
-       return c != null;
-     } catch (ClassNotFoundException | NoClassDefFoundError e) {
-       return false;
-     }
+  default boolean isSpringCloudKubernetesAvailable() {
+    try {
+      Class c = Class.forName("org.springframework.cloud.kubernetes.KubernetesAutoConfiguration");
+      return c != null;
+    } catch (ClassNotFoundException | NoClassDefFoundError e) {
+      return false;
+    }
   }
 }

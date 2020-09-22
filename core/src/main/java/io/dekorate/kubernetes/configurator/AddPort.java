@@ -15,12 +15,12 @@
  */
 package io.dekorate.kubernetes.configurator;
 
-import io.dekorate.kubernetes.config.Configurator;
-import io.dekorate.kubernetes.config.BaseConfigFluent;
-import io.dekorate.kubernetes.config.Port;
-import io.dekorate.doc.Description;
-
 import java.util.Objects;
+
+import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.config.BaseConfigFluent;
+import io.dekorate.kubernetes.config.Configurator;
+import io.dekorate.kubernetes.config.Port;
 
 @Description("adds a port to all containers.")
 public class AddPort extends Configurator<BaseConfigFluent> {
@@ -40,12 +40,13 @@ public class AddPort extends Configurator<BaseConfigFluent> {
 
   /**
    * Check if the {@link io.dekorate.kubernetes.config.BaseConfig} already has port.
-   * @param config  The port.
-   * @return        True if port with same container port exists.
+   * 
+   * @param config The port.
+   * @return True if port with same container port exists.
    */
   private boolean hasPort(BaseConfigFluent config) {
     for (Port p : config.getPorts()) {
-      if (p.getContainerPort() == port.getContainerPort())  {
+      if (p.getContainerPort() == port.getContainerPort()) {
         return true;
       }
     }
@@ -54,8 +55,10 @@ public class AddPort extends Configurator<BaseConfigFluent> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     AddPort addPort = (AddPort) o;
     return Objects.equals(port, addPort.port);
   }

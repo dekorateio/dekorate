@@ -19,8 +19,8 @@ package io.dekorate.knative.decorator;
 
 import io.dekorate.knative.config.AutoScalerClass;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.knative.serving.v1.ServiceFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyLocalAutoscalingClassDecorator extends NamedResourceDecorator<ServiceFluent<?>> {
 
@@ -30,14 +30,14 @@ public class ApplyLocalAutoscalingClassDecorator extends NamedResourceDecorator<
   private final AutoScalerClass clazz;
 
   public ApplyLocalAutoscalingClassDecorator(String name, AutoScalerClass clazz) {
-		super("Service", name);
-		this.clazz = clazz;
-	}
+    super("Service", name);
+    this.clazz = clazz;
+  }
 
-	@Override
-	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToAnnotations(AUTOSCALING_CLASS, clazz.name().toLowerCase() + AUTOSCALING_CLASS_SUFFIX)
-      .endMetadata();
-	}
+        .addToAnnotations(AUTOSCALING_CLASS, clazz.name().toLowerCase() + AUTOSCALING_CLASS_SUFFIX)
+        .endMetadata();
+  }
 }

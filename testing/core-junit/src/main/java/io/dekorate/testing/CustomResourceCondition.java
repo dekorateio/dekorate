@@ -15,36 +15,39 @@
  */
 package io.dekorate.testing;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtensionContext;
+
+import io.dekorate.testing.annotation.OnCustomResourcePresentCondition;
+import io.dekorate.utils.Pluralize;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.utils.URLUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import io.dekorate.testing.annotation.OnCustomResourcePresentCondition;
-import io.dekorate.utils.Strings;
-import io.dekorate.utils.Pluralize;
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class CustomResourceCondition implements ExecutionCondition, WithKubernetesClient {
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-   Optional<OnCustomResourcePresentCondition> annotation = context.getElement().map(e -> e.getAnnotation(OnCustomResourcePresentCondition.class));
-   if (!annotation.isPresent()) {
-    return ConditionEvaluationResult.enabled("Condition not found!");
-   }
-   OnCustomResourcePresentCondition condition = annotation.get();
+    Optional<OnCustomResourcePresentCondition> annotation = context.getElement()
+        .map(e -> e.getAnnotation(OnCustomResourcePresentCondition.class));
+    if (!annotation.isPresent()) {
+      return ConditionEvaluationResult.enabled("Condition not found!");
+    }
+    OnCustomResourcePresentCondition condition = annotation.get();
     try {
       String apiVersion = condition.apiVersion();
       String kind = condition.kind();
-      String plural = Strings.isNotNullOrEmpty(condition.plural()) ? condition.plural() : Pluralize.FUNCTION.apply(kind).toLowerCase();
+      String plural = Strings.isNotNullOrEmpty(condition.plural()) ? condition.plural()
+          : Pluralize.FUNCTION.apply(kind).toLowerCase();
       String name = condition.name();
       String namespace = condition.namespace();
 
@@ -67,7 +70,7 @@ public class CustomResourceCondition implements ExecutionCondition, WithKubernet
         parts.add(name);
       }
       parts.add(plural);
-      String requestUrl = URLUtils.join(parts.stream().toArray(s->new String[s]));
+      String requestUrl = URLUtils.join(parts.stream().toArray(s -> new String[s]));
       Request request = new Request.Builder().get().url(requestUrl).build();
       Response response = http.newCall(request).execute();
 
@@ -75,10 +78,11 @@ public class CustomResourceCondition implements ExecutionCondition, WithKubernet
         return ConditionEvaluationResult.disabled("Could not lookup custom resource.");
       }
 
-
       //TODO: Add support for cases where name() is empty. In this case the result will be a list.
       //We need to check if empty.
-      return ConditionEvaluationResult.enabled("Found resource with apiVersion:" + apiVersion + " kind:" + kind + " namespace: " + (Strings.isNullOrEmpty(namespace) ? "any" : namespace) + " name: " + (Strings.isNullOrEmpty(name) ? "any" : name));
+      return ConditionEvaluationResult.enabled("Found resource with apiVersion:" + apiVersion + " kind:" + kind
+          + " namespace: " + (Strings.isNullOrEmpty(namespace) ? "any" : namespace) + " name: "
+          + (Strings.isNullOrEmpty(name) ? "any" : name));
 
     } catch (Throwable t) {
       return ConditionEvaluationResult.disabled("Could not lookup for service.");

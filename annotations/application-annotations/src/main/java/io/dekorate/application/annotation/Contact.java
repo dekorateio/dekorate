@@ -17,7 +17,9 @@ package io.dekorate.application.annotation;
 
 public @interface Contact {
 
-    String name();
-    String email();
-    String url();
+  String name();
+
+  String email();
+
+  String url();
 }

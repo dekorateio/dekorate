@@ -21,15 +21,15 @@ import io.dekorate.halkyon.model.DeploymentMode;
 import io.dekorate.kubernetes.decorator.Decorator;
 
 public class DeploymentModeDecorator extends Decorator<ComponentSpecBuilder> {
-  
+
   private final DeploymentMode deploymentMode;
-  
+
   public DeploymentModeDecorator(DeploymentMode deploymentMode) {
     this.deploymentMode = deploymentMode;
   }
-  
+
   public void visit(ComponentSpecBuilder spec) {
     spec.withDeploymentMode(deploymentMode);
   }
-  
+
 }

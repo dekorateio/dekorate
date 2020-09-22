@@ -15,37 +15,39 @@
  */
 package io.dekorate.jaeger.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(name = "JaegerAgentConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "JaegerAgentConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnableJaegerAgent {
 
   /**
    * Flag to specify if Jaeger operator is available / enabled.
+   * 
    * @return True, if operator is available / enabled.
    */
   boolean operatorEnabled() default false;
 
   /**
    * The jaeger agent version.
-   * @return  The version, or default to 1.10
+   * 
+   * @return The version, or default to 1.10
    */
   String version() default "1.10";
 
   Collector collector() default @Collector();
 
-  Port[] ports() default { };
+  Port[] ports() default {};
 
 }

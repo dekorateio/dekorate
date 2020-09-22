@@ -15,7 +15,6 @@
  */
 package io.dekorate.openshift.config;
 
-
 import org.junit.jupiter.api.Test;
 
 public class OpenshiftConfigTest {
@@ -23,12 +22,11 @@ public class OpenshiftConfigTest {
   @Test
   public void testGeneratedCode() {
     OpenshiftConfig config = OpenshiftConfig.newOpenshiftConfigBuilder()
-      .withName("myapp")
-      .withVersion("1.0.0")
-      .withExpose(true)
-      .addNewLabel("key1", "val1")
-      .build();
-
+        .withName("myapp")
+        .withVersion("1.0.0")
+        .withExpose(true)
+        .addNewLabel("key1", "val1")
+        .build();
 
   }
 

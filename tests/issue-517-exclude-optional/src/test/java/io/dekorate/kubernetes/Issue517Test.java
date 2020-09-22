@@ -17,12 +17,9 @@
 
 package io.dekorate.kubernetes;
 
-import io.dekorate.utils.Serialization;
-import io.dekorate.utils.Strings;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.dekorate.utils.Strings;
 
 public class Issue517Test {
 

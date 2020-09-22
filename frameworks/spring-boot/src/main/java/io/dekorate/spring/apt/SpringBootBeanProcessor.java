@@ -25,8 +25,6 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -37,14 +35,14 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.BeanListener;
 
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
-@SupportedAnnotationTypes({"org.springframework.context.annotation.Bean"})
+@SupportedAnnotationTypes({ "org.springframework.context.annotation.Bean" })
 public class SpringBootBeanProcessor extends AbstractAnnotationProcessor {
 
   private Map<String, BeanListener> listeners = new HashMap<>();
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    if  (roundEnv.processingOver()) {
+    if (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }
@@ -72,7 +70,8 @@ public class SpringBootBeanProcessor extends AbstractAnnotationProcessor {
 
   private void registerListeners() {
     if (listeners.isEmpty()) {
-      ServiceLoader<BeanListener> serviceLoader = ServiceLoader.load(BeanListener.class, BeanListener.class.getClassLoader());
+      ServiceLoader<BeanListener> serviceLoader = ServiceLoader.load(BeanListener.class,
+          BeanListener.class.getClassLoader());
       Iterator<BeanListener> iterator = serviceLoader.iterator();
       while (iterator.hasNext()) {
         BeanListener listener = iterator.next();

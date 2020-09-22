@@ -31,13 +31,11 @@ import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
-import io.dekorate.kubernetes.config.DeploymentStrategy;
 import io.dekorate.kubernetes.config.EditableKubernetesConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
-import io.dekorate.kubernetes.config.RollingUpdate;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddIngressRuleDecorator;
@@ -62,10 +60,6 @@ import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
-
-import java.util.Optional;
-
-import static io.dekorate.utils.Labels.createLabels;
 
 public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> implements HandlerFactory, WithProject {
 
@@ -107,12 +101,12 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     LOGGER.info("Processing kubernetes configuration.");
     ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
 
-    Optional<Deployment> existingDeployment = resources.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder()).buildItems().stream()
-      .filter(i -> i instanceof Deployment)
-      .map(i -> (Deployment)i)
-      .filter(i -> i.getMetadata().getName().equals(config.getName()))
-      .findAny();
-
+    Optional<Deployment> existingDeployment = resources.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder())
+        .buildItems().stream()
+        .filter(i -> i instanceof Deployment)
+        .map(i -> (Deployment) i)
+        .filter(i -> i.getMetadata().getName().equals(config.getName()))
+        .findAny();
 
     if (!existingDeployment.isPresent()) {
       resources.add(KUBERNETES, createDeployment(config, imageConfig));
@@ -128,21 +122,22 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     }
 
-    resources.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(), config.getRollingUpdate()));
+    resources.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(),
+        config.getRollingUpdate()));
 
     String image = Strings.isNotNullOrEmpty(imageConfig.getImage())
-      ? imageConfig.getImage()
-      : Images.getImage(imageConfig.isAutoPushEnabled()
-                        ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
-                        : imageConfig.getRegistry(),
-                        imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
+        ? imageConfig.getImage()
+        : Images.getImage(imageConfig.isAutoPushEnabled()
+            ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
+            : imageConfig.getRegistry(),
+            imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     resources.decorate(KUBERNETES, new ApplyImageDecorator(config.getName(), image));
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(KubernetesConfig.class) ||
-      type.equals(EditableKubernetesConfig.class);
+        type.equals(EditableKubernetesConfig.class);
   }
 
   @Override
@@ -158,92 +153,101 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     }
 
     Ports.getHttpPort(config).ifPresent(p -> {
-        resources.decorate(group, new AddIngressDecorator(config, Labels.createLabels(config)));
-        resources.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
+      resources.decorate(group, new AddIngressDecorator(config, Labels.createLabels(config)));
+      resources.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
     });
 
   }
 
   /**
    * Creates a {@link Deployment} for the {@link KubernetesConfig}.
-   * @param appConfig   The session.
-   * @return          The deployment.
+   * 
+   * @param appConfig The session.
+   * @return The deployment.
    */
-  public Deployment createDeployment(KubernetesConfig appConfig, ImageConfiguration imageConfig)  {
+  public Deployment createDeployment(KubernetesConfig appConfig, ImageConfiguration imageConfig) {
     return new DeploymentBuilder()
-      .withNewMetadata()
-      .withName(appConfig.getName())
-      .withLabels(Labels.createLabels(appConfig))
-      .endMetadata()
-      .withNewSpec()
-      .withReplicas(1)
-      .withTemplate(createPodTemplateSpec(appConfig, imageConfig))
-      .withSelector(createSelector(appConfig))
-      .endSpec()
-      .build();
+        .withNewMetadata()
+        .withName(appConfig.getName())
+        .withLabels(Labels.createLabels(appConfig))
+        .endMetadata()
+        .withNewSpec()
+        .withReplicas(1)
+        .withTemplate(createPodTemplateSpec(appConfig, imageConfig))
+        .withSelector(createSelector(appConfig))
+        .endSpec()
+        .build();
   }
-
 
   /**
    * Creates a {@link LabelSelector} that matches the labels for the {@link KubernetesConfig}.
-   * @return          A labels selector.
+   * 
+   * @return A labels selector.
    */
   public LabelSelector createSelector(KubernetesConfig config) {
     return new LabelSelectorBuilder()
-      .withMatchLabels(Labels.createLabels(config))
-      .build();
+        .withMatchLabels(Labels.createLabels(config))
+        .build();
   }
-
 
   /**
    * Creates a {@link PodTemplateSpec} for the {@link KubernetesConfig}.
-   * @param appConfig   The sesssion.
-   * @return          The pod template specification.
+   * 
+   * @param appConfig The sesssion.
+   * @return The pod template specification.
    */
   public static PodTemplateSpec createPodTemplateSpec(KubernetesConfig appConfig, ImageConfiguration imageConfig) {
     return new PodTemplateSpecBuilder()
-      .withSpec(createPodSpec(appConfig, imageConfig))
-      .withNewMetadata()
-      .withLabels(createLabels(appConfig))
-      .endMetadata()
-      .build();
+        .withSpec(createPodSpec(appConfig, imageConfig))
+        .withNewMetadata()
+        .withLabels(createLabels(appConfig))
+        .endMetadata()
+        .build();
   }
 
   /**
    * Creates a {@link PodSpec} for the {@link KubernetesConfig}.
-   * @param imageConfig   The sesssion.
+   * 
+   * @param imageConfig The sesssion.
    * @return The pod specification.
    */
   public static PodSpec createPodSpec(KubernetesConfig appConfig, ImageConfiguration imageConfig) {
-   String image = Images.getImage(imageConfig.isAutoPushEnabled() ?
-                                  (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
-                                  : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion()); 
+    String image = Images
+        .getImage(
+            imageConfig.isAutoPushEnabled()
+                ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY
+                    : imageConfig.getRegistry())
+                : imageConfig.getRegistry(),
+            imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     return new PodSpecBuilder()
-      .addNewContainer()
-      .withName(appConfig.getName())
-      .withImage(image)
-      .withImagePullPolicy(IF_NOT_PRESENT)
-      .addNewEnv()
-      .withName(KUBERNETES_NAMESPACE)
-      .withNewValueFrom()
-      .withNewFieldRef(null, METADATA_NAMESPACE)
-      .endValueFrom()
-      .endEnv()
-      .endContainer()
-      .build();
+        .addNewContainer()
+        .withName(appConfig.getName())
+        .withImage(image)
+        .withImagePullPolicy(IF_NOT_PRESENT)
+        .addNewEnv()
+        .withName(KUBERNETES_NAMESPACE)
+        .withNewValueFrom()
+        .withNewFieldRef(null, METADATA_NAMESPACE)
+        .endValueFrom()
+        .endEnv()
+        .endContainer()
+        .build();
   }
 
   @Override
   public ConfigurationSupplier<KubernetesConfig> getFallbackConfig() {
     Project p = getProject();
-    return new ConfigurationSupplier<KubernetesConfig>(new KubernetesConfigBuilder().accept(new ApplyDeployToApplicationConfiguration()).accept(new ApplyProjectInfo(p)));
+    return new ConfigurationSupplier<KubernetesConfig>(new KubernetesConfigBuilder()
+        .accept(new ApplyDeployToApplicationConfiguration()).accept(new ApplyProjectInfo(p)));
   }
-  
-  private static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig appConfig, Configurators configurators) {
+
+  private static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig appConfig,
+      Configurators configurators) {
     Optional<ImageConfiguration> origin = configurators.getImageConfig(BuildServiceFactories.supplierMatches(project));
 
-    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i)).orElse(ImageConfiguration.from(appConfig));
+    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i))
+        .orElse(ImageConfiguration.from(appConfig));
   }
 
   private static ImageConfiguration merge(KubernetesConfig appConfig, ImageConfiguration imageConfig) {
@@ -254,14 +258,14 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       return ImageConfiguration.from(appConfig);
     }
     return new ImageConfigurationBuilder()
-      .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : appConfig.getProject())
-      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
-      .withName(imageConfig.getName() != null ? imageConfig.getName() : appConfig.getName())
-      .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : appConfig.getVersion())
-      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
-      .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : "Dockerfile")
-      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
-      .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
-      .build();
+        .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : appConfig.getProject())
+        .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
+        .withName(imageConfig.getName() != null ? imageConfig.getName() : appConfig.getName())
+        .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : appConfig.getVersion())
+        .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
+        .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : "Dockerfile")
+        .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
+        .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
+        .build();
   }
 }

@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 public class BeansTest {
@@ -86,7 +85,6 @@ public class BeansTest {
     }
 
   }
-     
 
   @Test
   public void shouldCombineSimpleBeans() throws Exception {
@@ -97,7 +95,6 @@ public class BeansTest {
     assertEquals("Jim", combined.getName());
     assertEquals("Some place", combined.getAddress());
   }
-
 
   @Test
   public void shouldCombineSynteticObjects() throws Exception {
@@ -156,7 +153,7 @@ public class BeansTest {
     team1.put("Joe", member1);
     team1.put("John", member2);
     team1.put("Jordan", member3a);
-    
+
     Map<String, Person> team2 = new HashMap<>();
     team2.put("Jordan", member3b);
 
@@ -170,4 +167,3 @@ public class BeansTest {
     assertEquals("555-12345", combinePerson.getPhone());
   }
 }
-

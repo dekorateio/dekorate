@@ -29,7 +29,7 @@ import io.dekorate.utils.Images;
 import io.dekorate.utils.Strings;
 
 public class DockerBuildService implements BuildService {
-    
+
   private Logger LOGGER = LoggerFactory.getLogger();
 
   private final File dockerFile;
@@ -39,25 +39,26 @@ public class DockerBuildService implements BuildService {
   private final Project project;
   private final ImageConfiguration config;
 
-	public DockerBuildService(Project project, ImageConfiguration config) {
+  public DockerBuildService(Project project, ImageConfiguration config) {
     this.project = project;
     this.config = config;
 
     this.exec = Exec.inProject(project);
-    this.dockerFile = project.getRoot().resolve(Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile").toFile();
+    this.dockerFile = project.getRoot()
+        .resolve(Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile").toFile();
     this.image = Images.getImage(config.getRegistry(), config.getGroup(), config.getName(), config.getVersion());
-	}
+  }
 
-
-	@Override
-	public void build() {
+  @Override
+  public void build() {
     LOGGER.info("Performing docker build.");
-    exec.commands("docker", "build", "-f" + dockerFile.getAbsolutePath(), "-t" + image, project.getRoot().toAbsolutePath().toString());
-	}
+    exec.commands("docker", "build", "-f" + dockerFile.getAbsolutePath(), "-t" + image,
+        project.getRoot().toAbsolutePath().toString());
+  }
 
-	@Override
-	public void push() {
+  @Override
+  public void push() {
     LOGGER.info("Performing docker push.");
-    exec.commands("docker", "push",  image);
-	}
+    exec.commands("docker", "push", image);
+  }
 }

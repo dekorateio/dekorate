@@ -15,34 +15,37 @@
  */
 package io.dekorate.examples;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import io.dekorate.halkyon.model.Capabilities;
 import io.dekorate.halkyon.model.Component;
 import io.dekorate.halkyon.model.ComponentCapability;
 import io.dekorate.halkyon.model.Parameter;
 import io.dekorate.halkyon.model.RequiredComponentCapability;
 import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 public class ComponentSpringBootExampleTest {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshalAsList(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
     assertNotNull(list);
     List<HasMetadata> items = list.getItems();
     Assertions.assertEquals(1, items.size());
     Component component = (Component) items.get(0);
     Assertions.assertEquals("Component", component.getKind());
-    assertEquals("feat-452-halkyon-requirements-annotationless-properties", component.getSpec().getBuildConfig().getModuleDirName());
+    assertEquals("feat-452-halkyon-requirements-annotationless-properties",
+        component.getSpec().getBuildConfig().getModuleDirName());
     Capabilities capabilities = component.getSpec().getCapabilities();
 
     RequiredComponentCapability[] requires = capabilities.getRequires();

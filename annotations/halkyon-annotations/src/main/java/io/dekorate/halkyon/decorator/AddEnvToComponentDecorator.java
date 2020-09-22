@@ -22,18 +22,18 @@ import io.dekorate.kubernetes.decorator.Decorator;
 
 @Description("Add environment variable to component.")
 public class AddEnvToComponentDecorator extends Decorator<ComponentSpecBuilder> {
-  
+
   private final Env env;
-  
+
   public AddEnvToComponentDecorator(Env env) {
     this.env = env;
   }
-  
+
   @Override
   public void visit(ComponentSpecBuilder component) {
     component.addNewEnv()
-      .withName(env.getName())
-      .withValue(env.getValue())
-      .endEnv();
+        .withName(env.getName())
+        .withValue(env.getValue())
+        .endEnv();
   }
 }

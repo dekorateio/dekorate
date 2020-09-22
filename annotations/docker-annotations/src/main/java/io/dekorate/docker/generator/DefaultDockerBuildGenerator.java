@@ -24,9 +24,9 @@ import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultDockerBuildGenerator implements DockerBuildGenerator {
 
-    public DefaultDockerBuildGenerator () {
-        on(new DefaultConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
-                                                       .accept(new ApplyProjectInfo(getProject()))
-                                                       .accept(new ApplyBuildToImageConfiguration())));
-    }
+  public DefaultDockerBuildGenerator() {
+    on(new DefaultConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
+        .accept(new ApplyProjectInfo(getProject()))
+        .accept(new ApplyBuildToImageConfiguration())));
+  }
 }

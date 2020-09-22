@@ -15,34 +15,39 @@
  */
 package io.dekorate.kubernetes.adapter;
 
-import io.dekorate.kubernetes.annotation.Protocol;
-import io.dekorate.kubernetes.config.KubernetesConfig;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.kubernetes.annotation.Protocol;
+import io.dekorate.kubernetes.config.KubernetesConfig;
 
 public class KubernetesConfigAdapterTest {
 
   @Test
   public void testKubernetesAppWithPorts() {
     final Map<String, Object> ports[] = new Map[1];
-    ports[0] = new HashMap<String, Object>() {{
-      put("name", "http");
-      put("containerPort", 8080);
-      put("protocol", Protocol.TCP);
+    ports[0] = new HashMap<String, Object>() {
+      {
+        put("name", "http");
+        put("containerPort", 8080);
+        put("protocol", Protocol.TCP);
 
-    }};
+      }
+    };
 
-    Map<String, Object> map = new HashMap<String, Object>() {{
+    Map<String, Object> map = new HashMap<String, Object>() {
+      {
         put("name", "generator-test");
         put("group", "generator-test-group");
         put("version", "latest");
         put("replicas", 2);
         put("ports", ports);
-    }};
+      }
+    };
 
     KubernetesConfig config = KubernetesConfigAdapter.adapt(map);
     assertNotNull(config);

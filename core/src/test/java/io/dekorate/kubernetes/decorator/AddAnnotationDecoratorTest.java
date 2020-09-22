@@ -32,18 +32,18 @@ class AddAnnotationDecoratorTest {
     assertEquals("Pod", new PodBuilder().getKind());
 
     Pod expected = new PodBuilder()
-      .withNewMetadata()
-      .withName("pod")
-      .addToAnnotations("key1","value1")
-      .endMetadata()
-      .build();
+        .withNewMetadata()
+        .withName("pod")
+        .addToAnnotations("key1", "value1")
+        .endMetadata()
+        .build();
 
     Pod actual = new PodBuilder()
-      .withNewMetadata()
-      .withName("pod")
-      .endMetadata()
-      .accept(new AddAnnotationDecorator(new Annotation("key1", "value1")))
-      .build();
+        .withNewMetadata()
+        .withName("pod")
+        .endMetadata()
+        .accept(new AddAnnotationDecorator(new Annotation("key1", "value1")))
+        .build();
 
     assertEquals(expected, actual);
   }
@@ -53,34 +53,33 @@ class AddAnnotationDecoratorTest {
     assertEquals("Pod", new PodBuilder().getKind());
 
     Pod expectedPod = new PodBuilder()
-      .withNewMetadata()
-      .withName("pod")
-      .addToAnnotations("key1","value1")
-      .endMetadata()
-      .build();
+        .withNewMetadata()
+        .withName("pod")
+        .addToAnnotations("key1", "value1")
+        .endMetadata()
+        .build();
 
     Service expectedService = new ServiceBuilder()
-      .withNewMetadata()
-      .withName("my-service")
-      .endMetadata()
-      .build();
-
+        .withNewMetadata()
+        .withName("my-service")
+        .endMetadata()
+        .build();
 
     Pod actualPod = new PodBuilder()
-      .withNewMetadata()
-      .withName("pod")
-      .endMetadata()
-      .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
-      .build();
+        .withNewMetadata()
+        .withName("pod")
+        .endMetadata()
+        .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
+        .build();
 
     assertEquals(expectedPod, actualPod);
 
     Service actualService = new ServiceBuilder()
-      .withNewMetadata()
-      .withName("my-service")
-      .endMetadata()
-      .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
-      .build();
+        .withNewMetadata()
+        .withName("my-service")
+        .endMetadata()
+        .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
+        .build();
 
     assertEquals(expectedService, actualService);
   }

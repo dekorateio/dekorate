@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * This annotation marks classes that are meant for internal consumption.
  * A typical example is classes that are used for own testing.
  */
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface Internal {
 }

@@ -16,8 +16,8 @@
 package io.dekorate.kubernetes.configurator;
 
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
+import io.dekorate.kubernetes.config.Configurator;
 
 @Description("sets the hostname based on system property: `dekorate.host`.")
 public class ApplyHost extends Configurator<BaseConfigFluent> {

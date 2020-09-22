@@ -15,23 +15,21 @@
  */
 package io.dekorate.spring.apt;
 
-import io.dekorate.Logger;
-import io.dekorate.LoggerFactory;
-import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.doc.Description;
-import io.dekorate.spring.generator.SpringBootApplicationGenerator;
+import java.util.Set;
 
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import java.util.Set;
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
+import io.dekorate.doc.Description;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.dekorate.spring.generator.SpringBootApplicationGenerator;
 
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
-@SupportedAnnotationTypes({"org.springframework.boot.autoconfigure.SpringBootApplication"})
+@SupportedAnnotationTypes({ "org.springframework.boot.autoconfigure.SpringBootApplication" })
 public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor implements SpringBootApplicationGenerator {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
@@ -49,11 +47,11 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
       }
     }
     getSession().addPropertyConfiguration(readApplicationConfig("application.properties",
-                                         "application.yaml",
-                                         "application.yml", 
-                                         "application-kubernetes.properties",
-                                         "application-kubernetes.yaml",
-                                         "application-kubernetes.yml"));
+        "application.yaml",
+        "application.yml",
+        "application-kubernetes.properties",
+        "application-kubernetes.yaml",
+        "application-kubernetes.yml"));
     addPropertyConfiguration(SPRING_BOOT_APPLICATION);
     return false;
   }

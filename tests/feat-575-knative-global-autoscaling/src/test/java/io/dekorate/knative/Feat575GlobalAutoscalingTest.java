@@ -33,17 +33,17 @@ public class Feat575GlobalAutoscalingTest {
 
   @Test
   public void shouldContainRequestsPerSecond() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     ConfigMap c = findFirst(list, ConfigMap.class).orElseThrow(() -> new IllegalStateException());
     String rps = c.getData().get("requests-per-second-target-default");
     assertEquals("100", rps);
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

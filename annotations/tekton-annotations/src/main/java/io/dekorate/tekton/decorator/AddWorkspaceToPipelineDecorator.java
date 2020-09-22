@@ -24,19 +24,19 @@ public class AddWorkspaceToPipelineDecorator extends NamedPipelineDecorator {
   private final String workspace;
   private final String description;
 
-public AddWorkspaceToPipelineDecorator(String pipelineName, String workspace, String description) {
-  super(pipelineName);
-  this.workspace = workspace;
-  this.description = description;
-}
+  public AddWorkspaceToPipelineDecorator(String pipelineName, String workspace, String description) {
+    super(pipelineName);
+    this.workspace = workspace;
+    this.description = description;
+  }
 
   @Override
   public void andThenVisit(PipelineSpecFluent<?> pipelineSpec) {
     pipelineSpec.removeMatchingFromWorkspaces(w -> workspace.equals(w.getName()));
 
     pipelineSpec.addNewWorkspace()
-      .withName(workspace)
-      .withDescription(description)
-      .endWorkspace();
+        .withName(workspace)
+        .withDescription(description)
+        .endWorkspace();
   }
 }

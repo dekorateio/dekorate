@@ -23,10 +23,10 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
 
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
-import io.dekorate.utils.Strings;
 
 public class AddDockerConfigJsonSecretDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
@@ -43,33 +43,39 @@ public class AddDockerConfigJsonSecretDecorator extends ResourceProvidingDecorat
     this(name, registry, username, password, Collections.emptyMap());
   }
 
-  public AddDockerConfigJsonSecretDecorator(String name, String registry, String username, String password, Map<String, String> annotations) {
+  public AddDockerConfigJsonSecretDecorator(String name, String registry, String username, String password,
+      Map<String, String> annotations) {
     this.name = name;
     this.annotations = annotations;
-    this.content = new String(Base64.getEncoder().encode(String.format(DOCKER_CONFIG_STR, registry, new String(Base64.getEncoder().encode( (username + ":" + password).getBytes(CHARSET)), CHARSET)).getBytes(CHARSET)), CHARSET);
+    this.content = new String(Base64.getEncoder()
+        .encode(String
+            .format(DOCKER_CONFIG_STR, registry,
+                new String(Base64.getEncoder().encode((username + ":" + password).getBytes(CHARSET)), CHARSET))
+            .getBytes(CHARSET)),
+        CHARSET);
   }
 
   public AddDockerConfigJsonSecretDecorator(String name, Path existingConfigJson) {
-      this(name, existingConfigJson, Collections.emptyMap());
+    this(name, existingConfigJson, Collections.emptyMap());
   }
 
   public AddDockerConfigJsonSecretDecorator(String name, Path existingConfigJson, Map<String, String> annotations) {
-     this.name = name;
-     this.annotations = annotations;
-     this.content=new String(Base64.getEncoder().encode(Strings.read(existingConfigJson).getBytes(CHARSET)), CHARSET);
+    this.name = name;
+    this.annotations = annotations;
+    this.content = new String(Base64.getEncoder().encode(Strings.read(existingConfigJson).getBytes(CHARSET)), CHARSET);
   }
 
   @Override
   public void visit(KubernetesListBuilder list) {
     String name = Strings.isNotNullOrEmpty(this.name) ? this.name : getMandatoryDeploymentMetadata(list).getName();
     Secret secret = new SecretBuilder()
-      .withNewMetadata()
+        .withNewMetadata()
         .withName(name)
         .withAnnotations(this.annotations)
-      .endMetadata()
-      .withType(TYPE)
-      .addToData(DOT_DOCKER_CONFIG_JSON, this.content)
-      .build();
+        .endMetadata()
+        .withType(TYPE)
+        .addToData(DOT_DOCKER_CONFIG_JSON, this.content)
+        .build();
 
     list.addToSecretItems(secret);
   }

@@ -16,10 +16,11 @@
 
 package io.dekorate.examples.component;
 
-import io.dekorate.halkyon.annotation.HalkyonComponent;
-import io.dekorate.kubernetes.annotation.Env;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import io.dekorate.halkyon.annotation.HalkyonComponent;
+import io.dekorate.kubernetes.annotation.Env;
 
 @HalkyonComponent(name = "hello-spring-boot", exposeService = true, envs = @Env(name = "key1", value = "val1"))
 @SpringBootApplication

@@ -17,23 +17,22 @@
 package io.dekorate.knative.decorator;
 
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ConfigMapFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyGlobalContainerConcurrencyDecorator extends NamedResourceDecorator<ConfigMapFluent<?>> {
-
 
   private static final String CONTAINER_CONCURRENCY = "container-concurrency";
 
   private final int target;
 
   public ApplyGlobalContainerConcurrencyDecorator(int target) {
-		super("config-autoscaler");
+    super("config-autoscaler");
     this.target = target;
-	}
+  }
 
-	@Override
-	public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
     config.addToData(CONTAINER_CONCURRENCY, String.valueOf(target));
-	}
+  }
 }

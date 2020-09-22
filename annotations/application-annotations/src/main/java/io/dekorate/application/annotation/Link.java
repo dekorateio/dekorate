@@ -18,5 +18,6 @@ package io.dekorate.application.annotation;
 public @interface Link {
 
   String description();
+
   String url();
 }

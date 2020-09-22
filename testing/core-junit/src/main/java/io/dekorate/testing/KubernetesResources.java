@@ -19,17 +19,20 @@ package io.dekorate.testing;
 
 import java.util.Optional;
 
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.dekorate.utils.Serialization;
 
 public class KubernetesResources {
 
   public static KubernetesList loadGenerated(String group) {
-    return Serialization.unmarshalAsList(Serialization.class.getClassLoader().getResourceAsStream("META-INF/dekorate/" + group + ".yml"));
+    return Serialization.unmarshalAsList(
+        Serialization.class.getClassLoader().getResourceAsStream("META-INF/dekorate/" + group + ".yml"));
   }
+
   /**
    * Find the first resource of the specified type.
+   * 
    * @param list The list with the generated resources.
    * @param t The type of resource that we are looking for.
    * @return An optional containing the resource.

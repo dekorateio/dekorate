@@ -15,17 +15,14 @@
  */
 package io.dekorate.project;
 
-import java.io.Flushable;
-
 import io.dekorate.kubernetes.config.ApplicationConfigurationFluent;
-import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.ConfigurationFluent;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.ImageConfigurationFluent;
 import io.dekorate.utils.Strings;
 
 public class ApplyProjectInfo extends Configurator<ConfigurationFluent> {
- 
+
   private static final String APP_NAME = "app.name";
   private static final String APP_VERSION = "app.version";
 
@@ -38,14 +35,24 @@ public class ApplyProjectInfo extends Configurator<ConfigurationFluent> {
   @Override
   public void visit(ConfigurationFluent fluent) {
     fluent.withProject(project);
-     if (fluent instanceof ApplicationConfigurationFluent) {
+    if (fluent instanceof ApplicationConfigurationFluent) {
       ApplicationConfigurationFluent appConfig = (ApplicationConfigurationFluent) fluent;
-      appConfig.withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(appConfig.getName()) ? appConfig.getName() : project.getBuildInfo().getName()))
-            .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(appConfig.getVersion()) ? appConfig.getVersion() : project.getBuildInfo().getVersion()));
+      appConfig
+          .withName(System.getProperty(APP_NAME,
+              Strings.isNotNullOrEmpty(appConfig.getName()) ? appConfig.getName()
+                  : project.getBuildInfo().getName()))
+          .withVersion(System.getProperty(APP_VERSION,
+              Strings.isNotNullOrEmpty(appConfig.getVersion()) ? appConfig.getVersion()
+                  : project.getBuildInfo().getVersion()));
     } else if (fluent instanceof ImageConfigurationFluent) {
       ImageConfigurationFluent imageConfig = (ImageConfigurationFluent) fluent;
-      imageConfig.withName(System.getProperty(APP_NAME, Strings.isNotNullOrEmpty(imageConfig.getName()) ? imageConfig.getName() : project.getBuildInfo().getName()))
-            .withVersion(System.getProperty(APP_VERSION, Strings.isNotNullOrEmpty(imageConfig.getVersion()) ? imageConfig.getVersion() : project.getBuildInfo().getVersion()));
+      imageConfig
+          .withName(System.getProperty(APP_NAME,
+              Strings.isNotNullOrEmpty(imageConfig.getName()) ? imageConfig.getName()
+                  : project.getBuildInfo().getName()))
+          .withVersion(System.getProperty(APP_VERSION,
+              Strings.isNotNullOrEmpty(imageConfig.getVersion()) ? imageConfig.getVersion()
+                  : project.getBuildInfo().getVersion()));
     }
   }
 }

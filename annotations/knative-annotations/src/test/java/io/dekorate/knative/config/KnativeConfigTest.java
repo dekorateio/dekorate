@@ -15,7 +15,6 @@
  */
 package io.dekorate.knative.config;
 
-
 import org.junit.jupiter.api.Test;
 
 public class KnativeConfigTest {
@@ -23,12 +22,11 @@ public class KnativeConfigTest {
   @Test
   public void testGeneratedCode() {
     KnativeConfig config = KnativeConfig.newKnativeConfigBuilder()
-      .withName("myapp")
-      .withVersion("1.0.0")
-      .withExpose(true)
-      .addNewLabel("key1", "val1")
-      .build();
-
+        .withName("myapp")
+        .withVersion("1.0.0")
+        .withExpose(true)
+        .addNewLabel("key1", "val1")
+        .build();
 
   }
 

@@ -17,8 +17,9 @@ package io.dekorate.kubernetes.decorator;
 
 /**
  * A simple interface to mark that a class is used to generate fluent decorator.
+ * 
  * @param <T>
  * @param <P>
  */
-public interface FluentDecorator<T, P>  {
+public interface FluentDecorator<T, P> {
 }

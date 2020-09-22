@@ -22,29 +22,29 @@ import io.dekorate.project.Project;
 
 public class ScaleDeploymentHook extends ProjectHook {
 
-    private final String name;
-    private final int replicas;
-    private Logger LOGGER = LoggerFactory.getLogger();
+  private final String name;
+  private final int replicas;
+  private Logger LOGGER = LoggerFactory.getLogger();
 
-    public ScaleDeploymentHook(Project project, String name, int replicas) {
-        super(project);
-        this.name = name;
-        this.replicas = replicas;
-    }
+  public ScaleDeploymentHook(Project project, String name, int replicas) {
+    super(project);
+    this.name = name;
+    this.replicas = replicas;
+  }
 
-    @Override
-    public void init() {
+  @Override
+  public void init() {
 
-    }
+  }
 
-    @Override
-    public void warmup() {
+  @Override
+  public void warmup() {
 
-    }
+  }
 
-    @Override
-    public void run() {
-      LOGGER.info("Scaling deployment: "+name +" to: "+replicas+".");
-      exec("kubectl", "scale", "deployment/" + name, "--replicas="+replicas);
-    }
+  @Override
+  public void run() {
+    LOGGER.info("Scaling deployment: " + name + " to: " + replicas + ".");
+    exec("kubectl", "scale", "deployment/" + name, "--replicas=" + replicas);
+  }
 }

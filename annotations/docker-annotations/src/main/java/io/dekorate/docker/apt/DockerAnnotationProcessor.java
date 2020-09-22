@@ -21,8 +21,6 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -30,13 +28,13 @@ import io.dekorate.Session;
 import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedAnnotationTypes({"io.dekorate.docker.annotation.DockerBuild"})
-public class DockerAnnotationProcessor extends AbstractAnnotationProcessor  {
+@SupportedAnnotationTypes({ "io.dekorate.docker.annotation.DockerBuild" })
+public class DockerAnnotationProcessor extends AbstractAnnotationProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = getSession();
-    if  (roundEnv.processingOver()) {
+    if (roundEnv.processingOver()) {
       session.close();
       return true;
     }

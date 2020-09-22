@@ -40,19 +40,20 @@ public class ApplyDeploymentStrategyDecorator extends NamedResourceDecorator<Dep
     boolean hasCustomRollingUpdate = hasCusomRollingUpdateConfig(rollingUpdate);
     if (strategy == DeploymentStrategy.Recreate) {
       if (hasCustomRollingUpdate) {
-        throw new IllegalStateException("Detected both Recreate strategy and custom Rolling Update config. Please use one or the other!");
+        throw new IllegalStateException(
+            "Detected both Recreate strategy and custom Rolling Update config. Please use one or the other!");
       }
       spec.withNewStrategy()
-        .withType("Recreate")
-        .endStrategy();
+          .withType("Recreate")
+          .endStrategy();
     } else if (strategy == DeploymentStrategy.RollingUpdate || hasCustomRollingUpdate) {
       spec.withNewStrategy()
-        .withType("RollingUpdate")
-        .withNewRollingUpdate()
-        .withNewMaxSurge().withNewStrVal(rollingUpdate.getMaxSurge()).endMaxSurge()
-        .withNewMaxUnavailable().withNewStrVal(rollingUpdate.getMaxUnavailable()).endMaxUnavailable()
-        .endRollingUpdate()
-        .endStrategy();
+          .withType("RollingUpdate")
+          .withNewRollingUpdate()
+          .withNewMaxSurge().withNewStrVal(rollingUpdate.getMaxSurge()).endMaxSurge()
+          .withNewMaxUnavailable().withNewStrVal(rollingUpdate.getMaxUnavailable()).endMaxUnavailable()
+          .endRollingUpdate()
+          .endStrategy();
     }
   }
 

@@ -15,16 +15,16 @@
  */
 package io.dekorate.testing.annotation;
 
-import io.dekorate.testing.CustomResourceCondition;
-import io.dekorate.testing.ServicePresentCondition;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static io.dekorate.testing.Constants.ANY;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static io.dekorate.testing.Constants.ANY;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import io.dekorate.testing.CustomResourceCondition;
 
 @Target({ TYPE })
 @Retention(RUNTIME)
@@ -32,31 +32,36 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface OnCustomResourcePresentCondition {
   /**
    * The custom resource apiVersion.
-   * @return  The apiVersion.
+   * 
+   * @return The apiVersion.
    */
   String apiVersion() default "v1";
 
   /**
    * The custom resource kind.
-   * @return  The kind.
+   * 
+   * @return The kind.
    */
   String kind();
 
   /**
    * The custom resource plural.
+   * 
    * @return The plural. If not specified the kind will be pluralized and converted to lowercase.
    */
   String plural() default "";
 
   /**
    * The name of the service.
-   * @return  The name. Defaults to ANY.
+   * 
+   * @return The name. Defaults to ANY.
    */
   String name() default ANY;
 
   /**
    * The service namespace.
-   * @return  The namespace. Defaults to ANY.
+   * 
+   * @return The namespace. Defaults to ANY.
    */
   String namespace() default ANY;
 }

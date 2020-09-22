@@ -28,11 +28,11 @@ import io.dekorate.s2i.config.S2iBuildConfigBuilder;
 
 public class DefaultS2iBuildGenerator implements S2iBuildGenerator, WithProject {
 
-    public Logger LOGGER = LoggerFactory.getLogger();
-  
-    public DefaultS2iBuildGenerator () {
-        on(new DefaultConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()
-                                                    .accept(new ApplyProjectInfo(getProject()))
-                                                    .accept(new ApplyBuildToImageConfiguration())));
-   }
+  public Logger LOGGER = LoggerFactory.getLogger();
+
+  public DefaultS2iBuildGenerator() {
+    on(new DefaultConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()
+        .accept(new ApplyProjectInfo(getProject()))
+        .accept(new ApplyBuildToImageConfiguration())));
+  }
 }

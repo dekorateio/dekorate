@@ -19,7 +19,6 @@ package io.dekorate.tekton.decorator;
 
 import java.nio.file.Path;
 
-import io.dekorate.WithProject;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 
@@ -30,7 +29,7 @@ public class AddContextParamToTaskDecorator extends AddParamToTaskDecorator {
 
   public AddContextParamToTaskDecorator(String taskName, Project project) {
     super(taskName, PATH_TO_CONTEXT_PARAM_NAME, PATH_TO_CONTEXT_DESCRIPTION, getContextPath(project));
-	}
+  }
 
   public static final String getContextPath(Project project) {
     Path root = project != null && project.getScmInfo() != null ? project.getScmInfo().getRoot() : null;
@@ -45,6 +44,5 @@ public class AddContextParamToTaskDecorator extends AddParamToTaskDecorator {
     }
     return result;
   }
-
 
 }

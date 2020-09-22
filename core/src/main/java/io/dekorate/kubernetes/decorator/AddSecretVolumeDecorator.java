@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.SecretVolume;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.dekorate.doc.Description;
 
 @Description("Add a secret volume to all pod specs.")
 public class AddSecretVolumeDecorator extends Decorator<PodSpecBuilder> {
@@ -31,13 +31,13 @@ public class AddSecretVolumeDecorator extends Decorator<PodSpecBuilder> {
   @Override
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
-      .withName(volume.getVolumeName())
-      .withNewSecret()
-      .withSecretName(volume.getSecretName())
-      .withDefaultMode(volume.getDefaultMode())
-      .withOptional(volume.isOptional())
-      .endSecret()
-      .endVolume();
+        .withName(volume.getVolumeName())
+        .withNewSecret()
+        .withSecretName(volume.getSecretName())
+        .withDefaultMode(volume.getDefaultMode())
+        .withOptional(volume.isOptional())
+        .endSecret()
+        .endVolume();
 
   }
 }

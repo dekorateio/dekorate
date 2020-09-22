@@ -26,8 +26,4 @@ public class Testing {
    */
   public static Namespace Dekorate_STORE = Namespace.create("Dekorate_STORE");
 
-
-
-
-
 }

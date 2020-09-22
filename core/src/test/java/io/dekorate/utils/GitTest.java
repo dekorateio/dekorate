@@ -16,6 +16,11 @@
 
 package io.dekorate.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
@@ -28,52 +33,48 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 class GitTest {
-  
+
   private static final ClassLoader loader = GitTest.class.getClassLoader();
   private static final String CONFIG_SUFFIX = "/git/config";
   private static final String GIT_SIMPLE = "git-simple";
   private static final String GIT_SSH = "git-ssh";
   private static final String GIT_GITLAB = "git-gitlab";
   private static final Map<String, Path> configurationNameToConfigRoot = new HashMap<>(7);
-  
+
   @BeforeAll
   static void setup() {
     setup(GIT_SIMPLE);
     setup(GIT_SSH);
     setup(GIT_GITLAB);
   }
-  
+
   private static Path getDotGit(File configFile) {
     return configFile.toPath().getParent().getParent().resolve(Git.DOT_GIT);
   }
-  
+
   private static Path getRoot(File configFile) {
     return configFile.toPath().getParent().getParent();
   }
-  
+
   static void setup(String gitConfig) {
     final URL configURL = loader.getResource(gitConfig + CONFIG_SUFFIX);
     final File configFile = Urls.toFile(configURL);
     configFile.toPath().getParent().toFile().renameTo(getDotGit(configFile).toFile());
     configurationNameToConfigRoot.put(gitConfig, getRoot(configFile));
   }
-  
+
   @ParameterizedTest
-  @ValueSource(strings = {GIT_SIMPLE, GIT_SSH})
+  @ValueSource(strings = { GIT_SIMPLE, GIT_SSH })
   void shouldDetectRoot(String configFile) {
     final Path root = getRootFor(configFile);
     final Path detected = Git.getRoot(root).orElse(null);
     assertEquals(root, detected);
   }
-  
+
   @ParameterizedTest(name = "{0} should have \"{1}\" as remote url")
-  @CsvSource({GIT_SIMPLE + ", git@github.com:myorg/myproject.git", GIT_SSH + ", git+ssh://git@github.com/halkyonio/operator"})
+  @CsvSource({ GIT_SIMPLE + ", git@github.com:myorg/myproject.git",
+      GIT_SSH + ", git+ssh://git@github.com/halkyonio/operator" })
   void shouldGetRemoteUrl(String configFile, String expected) throws Exception {
     final Path root = getRootFor(configFile);
     Optional<String> repoUrl = Git.getRemoteUrl(root, Git.ORIGIN);
@@ -81,20 +82,21 @@ class GitTest {
     assertTrue(repoUrl.isPresent());
     assertEquals(expected, repoUrl.get());
   }
-  
+
   private Path getRootFor(String configFile) {
     final Path root = configurationNameToConfigRoot.get(configFile);
     if (root == null) {
-      fail("No configuration named '" + configFile + "' exist. Did you properly set it up in @BeforeAll annotated method?");
+      fail("No configuration named '" + configFile
+          + "' exist. Did you properly set it up in @BeforeAll annotated method?");
     }
     return root;
   }
-  
+
   @ParameterizedTest(name = "{0} should have \"{1}\" as safe remote url")
   @CsvSource({
-    GIT_SIMPLE + ", https://github.com/myorg/myproject.git",
-    GIT_SSH + ", https://github.com/halkyonio/operator.git",
-    GIT_GITLAB + ", https://gitlab.com/foo/bar.git"
+      GIT_SIMPLE + ", https://github.com/myorg/myproject.git",
+      GIT_SSH + ", https://github.com/halkyonio/operator.git",
+      GIT_GITLAB + ", https://gitlab.com/foo/bar.git"
   })
   void shouldGetSafeRemoteUrl(String configFile, String expected) throws Exception {
     final Path root = getRootFor(configFile);
@@ -103,9 +105,9 @@ class GitTest {
     assertTrue(repoUrl.isPresent());
     assertEquals(expected, repoUrl.get());
   }
-  
+
   @ParameterizedTest(name = "{0} should have \"{1}\" as branch")
-  @CsvSource({GIT_SIMPLE + ", master", GIT_SSH + ", extract-api"})
+  @CsvSource({ GIT_SIMPLE + ", master", GIT_SSH + ", extract-api" })
   void shouldGetBranch(String configFile, String expected) throws Exception {
     final Path root = getRootFor(configFile);
     Optional<String> branch = Git.getBranch(root);
@@ -113,9 +115,9 @@ class GitTest {
     assertTrue(branch.isPresent());
     assertEquals(expected, branch.get());
   }
-  
+
   @ParameterizedTest(name = "{0} should have \"{1}\" as commit sha")
-  @CsvSource({GIT_SIMPLE + ", myawesomegitsha"})
+  @CsvSource({ GIT_SIMPLE + ", myawesomegitsha" })
   void shouldGetCommitSHA(String configFile, String expected) throws Exception {
     final Path root = getRootFor(configFile);
     Optional<String> sha = Git.getCommitSHA(root);

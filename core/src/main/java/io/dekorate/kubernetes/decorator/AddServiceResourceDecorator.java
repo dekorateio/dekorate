@@ -16,22 +16,23 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.dekorate.kubernetes.config.BaseConfig;
-import io.fabric8.kubernetes.api.model.ServicePort;
-import io.dekorate.kubernetes.config.Port;
-import io.fabric8.kubernetes.api.model.ServicePortBuilder;
-import io.dekorate.Logger;
-import io.dekorate.LoggerFactory;
-import io.fabric8.kubernetes.api.model.IntOrString;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import io.dekorate.utils.Labels;
+
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.kubernetes.config.Port;
+import io.dekorate.utils.Labels;
+import io.fabric8.kubernetes.api.model.IntOrString;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ServicePort;
+import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 
 @Description("Add a service to the list.")
 public class AddServiceResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
@@ -50,25 +51,25 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
     }
 
     list.addNewServiceItem()
-      .withNewMetadata()
-      .withName(config.getName())
-      .withLabels(Labels.createLabels(config))
-      .endMetadata()
-      .withNewSpec()
-      .withType(config.getServiceType().name())
-      .withSelector(Labels.createLabels(config))
-      .withPorts(Arrays.asList(config.getPorts()).stream()
-                 .filter(distinct(p->p.getName())).map(this::toServicePort).collect(Collectors.toList()))
-      .endSpec()
-      .endServiceItem();
+        .withNewMetadata()
+        .withName(config.getName())
+        .withLabels(Labels.createLabels(config))
+        .endMetadata()
+        .withNewSpec()
+        .withType(config.getServiceType().name())
+        .withSelector(Labels.createLabels(config))
+        .withPorts(Arrays.asList(config.getPorts()).stream()
+            .filter(distinct(p -> p.getName())).map(this::toServicePort).collect(Collectors.toList()))
+        .endSpec()
+        .endServiceItem();
   }
 
   private ServicePort toServicePort(Port port) {
     return new ServicePortBuilder()
-      .withName(port.getName())
-      .withPort(port.getContainerPort())
-      .withTargetPort(new IntOrString(port.getHostPort() > 0 ? port.getHostPort() : port.getContainerPort()))
-      .build();
+        .withName(port.getName())
+        .withPort(port.getContainerPort())
+        .withTargetPort(new IntOrString(port.getHostPort() > 0 ? port.getHostPort() : port.getContainerPort()))
+        .build();
   }
 
   public static <T> Predicate<T> distinct(Function<? super T, Object> keyExtractor) {

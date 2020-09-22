@@ -34,7 +34,6 @@ public abstract class ProjectHook implements Runnable {
    */
   public abstract void init();
 
-
   /**
    * Call an operation that will preload all required classes.
    * A shutdown hook cannot load new classes (at least it seems so).
@@ -45,7 +44,7 @@ public abstract class ProjectHook implements Runnable {
   /**
    * Register the hook for execution on shutdown.
    */
-  public void register () {
+  public void register() {
     init();
     warmup();
     Runtime.getRuntime().addShutdownHook(new Thread(this));

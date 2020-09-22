@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.doc.Description;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecFluent;
-import io.dekorate.doc.Description;
 
 @Description("Apply the number of replicas to the DeploymentSpec.")
 public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpecFluent> {

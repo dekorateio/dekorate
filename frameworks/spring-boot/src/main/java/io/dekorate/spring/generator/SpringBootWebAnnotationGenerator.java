@@ -27,9 +27,9 @@ import io.dekorate.spring.SpringPropertiesHolder;
 import io.dekorate.utils.Ports;
 
 public interface SpringBootWebAnnotationGenerator extends Generator, SpringPropertiesHolder {
- 
+
   String DEKORATE_SPRING_WEB_PATH = "dekorate.spring.web.path";
-    
+
   Map WEB_ANNOTATIONS = Collections.emptyMap();
 
   @Override
@@ -50,10 +50,10 @@ public interface SpringBootWebAnnotationGenerator extends Generator, SpringPrope
 
   default Port detectHttpPort(Map map) {
     return new PortBuilder()
-      .withName("http")
-      .withContainerPort(extractPortFromProperties())
-      .withPath(String.valueOf(map.getOrDefault(DEKORATE_SPRING_WEB_PATH, Ports.DEFAULT_HTTP_PORT_PATH)))
-      .build();
+        .withName("http")
+        .withContainerPort(extractPortFromProperties())
+        .withPath(String.valueOf(map.getOrDefault(DEKORATE_SPRING_WEB_PATH, Ports.DEFAULT_HTTP_PORT_PATH)))
+        .build();
   }
 
   default Integer extractPortFromProperties() {

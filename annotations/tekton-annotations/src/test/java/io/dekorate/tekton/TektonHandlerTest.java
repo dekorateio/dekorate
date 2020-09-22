@@ -16,14 +16,15 @@
 
 package io.dekorate.tekton;
 
-import io.dekorate.tekton.config.TektonConfig;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import io.dekorate.tekton.config.EditableTektonConfig;
-import io.dekorate.kubernetes.config.BaseConfig;
-import io.dekorate.tekton.handler.TektonHandler;
 import org.junit.jupiter.api.Test;
+
+import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.tekton.config.EditableTektonConfig;
+import io.dekorate.tekton.config.TektonConfig;
+import io.dekorate.tekton.handler.TektonHandler;
 
 class TektonHandlerTest {
 

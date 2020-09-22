@@ -18,8 +18,8 @@
 package io.dekorate.tekton.decorator;
 
 import io.dekorate.BuildImage;
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 import io.dekorate.kubernetes.decorator.Decorator;
+import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 public class AddJavaBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
@@ -31,8 +31,8 @@ public class AddJavaBuildStepDecorator extends NamedTaskDecorator implements Ste
   private final String stepName;
   private final BuildImage builder;
 
-  public AddJavaBuildStepDecorator(String taskName,  String projectName, BuildImage builder) {
-    this(taskName, JAVA  + DASH + BUILD, projectName, builder);
+  public AddJavaBuildStepDecorator(String taskName, String projectName, BuildImage builder) {
+    this(taskName, JAVA + DASH + BUILD, projectName, builder);
   }
 
   public AddJavaBuildStepDecorator(String taskName, String stepName, String projectName, BuildImage builder) {
@@ -45,12 +45,12 @@ public class AddJavaBuildStepDecorator extends NamedTaskDecorator implements Ste
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     taskSpec.addNewStep()
-      .withName(stepName)
-      .withImage(builder.getImage())
-      .withCommand(builder.getCommand())
-      .withArgs(builder.getArguments())
-      .withWorkingDir(sourcePath(projectName))
-      .endStep();
+        .withName(stepName)
+        .withImage(builder.getImage())
+        .withCommand(builder.getCommand())
+        .withArgs(builder.getArguments())
+        .withWorkingDir(sourcePath(projectName))
+        .endStep();
   }
 
   @Override

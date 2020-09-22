@@ -20,12 +20,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Collector {
 
   /**
    * The collector host
+   * 
    * @return The host.
    */
   String host() default "";
@@ -33,6 +34,7 @@ public @interface Collector {
   /**
    * The collector name.
    * This is used if no host has been specified.
+   * 
    * @return
    */
   String name() default "jaeger-collector";
@@ -40,13 +42,15 @@ public @interface Collector {
   /**
    * The collector namespace.
    * This is used if no host has been specified.
+   * 
    * @return
    */
   String namespace() default "";
 
   /**
    * The collector port.
-   * @return  The collector port.
+   * 
+   * @return The collector port.
    */
   int port() default 14267;
 }

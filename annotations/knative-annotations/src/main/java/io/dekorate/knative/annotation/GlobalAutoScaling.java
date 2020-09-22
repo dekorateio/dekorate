@@ -23,19 +23,22 @@ public @interface GlobalAutoScaling {
 
   /**
    * The Autoscaler class.
-   * Knative Serving comes with its own autoscaler, the KPA (Knative Pod Autoscaler) but can also be configured to use Kubernetes’ HPA (Horizontal Pod Autoscaler) or even a custom third-party autoscaler.
+   * Knative Serving comes with its own autoscaler, the KPA (Knative Pod Autoscaler) but can also be configured to use
+   * Kubernetes’ HPA (Horizontal Pod Autoscaler) or even a custom third-party autoscaler.
    * Possible values (kpa, hpa, default: kpa).
+   * 
    * @return The autoscaler class.
    */
   AutoScalerClass autoScalerClass() default AutoScalerClass.kpa;
 
   /**
    * The exact amount of requests allowed to the replica at a time.
-   * Its default value is “0”, which means an unlimited number of requests are allowed to flow into the replica. 
+   * Its default value is “0”, which means an unlimited number of requests are allowed to flow into the replica.
+   * 
    * @return the container concurrenct or zero if its not bound.
    */
   int containerConcurrency() default 0;
- 
+
   /**
    * This value specifies a percentage of the target to actually be targeted by the autoscaler.
    */

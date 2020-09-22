@@ -17,13 +17,13 @@
 
 package io.dekorate.s2i.decorator;
 
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.openshift.api.model.ImageStreamBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.utils.Images;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.openshift.api.model.ImageStreamBuilder;
 
 @Description("Add a builder ImageStream resource to the list of generated resources.")
 public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
@@ -40,8 +40,8 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
     String repository = Images.getRepository(config.getBuilderImage());
 
     String name = !repository.contains("/")
-      ? repository
-      : repository.substring(repository.lastIndexOf("/") + 1);
+        ? repository
+        : repository.substring(repository.lastIndexOf("/") + 1);
 
     if (contains(list, "image.openshift.io/v1", "ImageStream", name)) {
       return;
@@ -50,13 +50,13 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
     String dockerImageRepo = Images.removeTag(config.getBuilderImage());
 
     list.addToItems(new ImageStreamBuilder()
-      .withNewMetadata()
-      .withName(name)
-      .withLabels(meta.getLabels())
-      .endMetadata()
-      .withNewSpec()
-      .withDockerImageRepository(dockerImageRepo)
-      .endSpec());
+        .withNewMetadata()
+        .withName(name)
+        .withLabels(meta.getLabels())
+        .endMetadata()
+        .withNewSpec()
+        .withDockerImageRepository(dockerImageRepo)
+        .endSpec());
   }
 
 }

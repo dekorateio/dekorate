@@ -15,14 +15,15 @@
  */
 package io.dekorate.kubernetes.config;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.dekorate.project.Project;
-import io.sundr.builder.annotations.Buildable;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.dekorate.project.Project;
+import io.sundr.builder.annotations.Buildable;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 public class Configuration {
@@ -38,6 +39,7 @@ public class Configuration {
     this.project = project;
     this.attributes = attributes != null ? attributes : new HashMap<>();
   }
+
   public Project getProject() {
     return project;
   }
@@ -48,7 +50,7 @@ public class Configuration {
 
   @JsonIgnore
   public Map<ConfigKey, Object> getAttributes() {
-    return  Collections.unmodifiableMap(attributes);
+    return Collections.unmodifiableMap(attributes);
   }
 
   public void setAttributes(Map<ConfigKey, Object> attributes) {
@@ -65,7 +67,8 @@ public class Configuration {
     } else if (key.getDefaultValue() != null) {
       return key.getDefaultValue();
     }
-    throw new IllegalStateException("No attribute named: " + key.getName() + " was found and no default value has been configured.");
+    throw new IllegalStateException(
+        "No attribute named: " + key.getName() + " was found and no default value has been configured.");
   }
 
   public <T> T put(ConfigKey<T> key, T value) {

@@ -35,25 +35,25 @@ import io.fabric8.kubernetes.api.model.ContainerBuilder;
 
 public class ContainerAdapter {
 
-  public static Container adapt(io.dekorate.kubernetes.config.Container container)  {
-     String name = container.getName();
+  public static Container adapt(io.dekorate.kubernetes.config.Container container) {
+    String name = container.getName();
     if (Strings.isNullOrEmpty(name)) {
       name = Images.getName(container.getImage());
     }
 
     ContainerBuilder builder = new ContainerBuilder()
-      .withName(name)
-      .withImage(container.getImage())
-      .withCommand(container.getCommand())
-      .withArgs(container.getArguments());
+        .withName(name)
+        .withImage(container.getImage())
+        .withCommand(container.getCommand())
+        .withArgs(container.getArguments());
 
-     for (Env env : container.getEnvVars()) {
+    for (Env env : container.getEnvVars()) {
       builder.accept(new AddEnvVarDecorator(env));
     }
     for (Port port : container.getPorts()) {
       builder.accept(new AddPortDecorator(port));
     }
-    for (Mount mount: container.getMounts()) {
+    for (Mount mount : container.getMounts()) {
       builder.accept(new AddMountDecorator(mount));
     }
 
@@ -78,7 +78,7 @@ public class ContainerAdapter {
     if (Strings.isNotNullOrEmpty(container.getRequestResources().getMemory())) {
       builder.accept(new ApplyRequestsMemoryDecorator(name, container.getRequestResources().getMemory()));
     }
- 
+
     return builder.build();
   }
 }

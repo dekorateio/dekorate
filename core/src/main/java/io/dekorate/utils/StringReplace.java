@@ -15,28 +15,25 @@
  */
 package io.dekorate.utils;
 
-
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringReplace implements Function<String, String> {
 
-    private final String replacement;
-    private final Pattern pattern;
+  private final String replacement;
+  private final Pattern pattern;
 
+  public StringReplace(String target, String replacement) {
+    this.replacement = replacement;
+    this.pattern = Pattern.compile(target, Pattern.CASE_INSENSITIVE);
+  }
 
-    public StringReplace(String target, String replacement) {
-        this.replacement = replacement;
-        this.pattern = Pattern.compile(target, Pattern.CASE_INSENSITIVE);
+  public String apply(String word) {
+    Matcher matcher = this.pattern.matcher(word);
+    if (!matcher.find()) {
+      return null;
     }
-
-    public String apply(String word) {
-        Matcher matcher = this.pattern.matcher(word);
-        if (!matcher.find()) {
-            return null;
-        }
-        return matcher.replaceAll(replacement);
-    }
+    return matcher.replaceAll(replacement);
+  }
 }
-

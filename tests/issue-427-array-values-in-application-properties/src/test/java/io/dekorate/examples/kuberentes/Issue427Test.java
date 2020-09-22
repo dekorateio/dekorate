@@ -16,10 +16,11 @@
 
 package io.dekorate.examples.component;
 
-import java.net.URL;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.net.URL;
+
+import org.junit.jupiter.api.Test;
 
 public class Issue427Test {
 

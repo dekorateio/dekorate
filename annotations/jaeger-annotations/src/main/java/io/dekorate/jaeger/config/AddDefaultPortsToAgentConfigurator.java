@@ -25,10 +25,10 @@ public class AddDefaultPortsToAgentConfigurator extends Configurator<JaegerAgent
       return;
     }
 
-    config.
-      addNewConfigPort().withName("zipkin-compact").withContainerPort(5775).withProtocol(Protocol.UDP).endConfigPort().
-      addNewConfigPort().withName("jaeger-compact").withContainerPort(6831).withProtocol(Protocol.UDP).endConfigPort().
-      addNewConfigPort().withName("jaeger-binary").withContainerPort(6832).withProtocol(Protocol.UDP).endConfigPort().
-      addNewConfigPort().withName("config-rest").withContainerPort(5778).withProtocol(Protocol.TCP).endConfigPort();
+    config.addNewConfigPort().withName("zipkin-compact").withContainerPort(5775).withProtocol(Protocol.UDP).endConfigPort()
+        .addNewConfigPort().withName("jaeger-compact").withContainerPort(6831).withProtocol(Protocol.UDP)
+        .endConfigPort().addNewConfigPort().withName("jaeger-binary").withContainerPort(6832).withProtocol(Protocol.UDP)
+        .endConfigPort().addNewConfigPort().withName("config-rest").withContainerPort(5778).withProtocol(Protocol.TCP)
+        .endConfigPort();
   }
 }

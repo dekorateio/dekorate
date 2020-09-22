@@ -27,11 +27,11 @@ public class SelectorDecoratorFactories {
   public static Optional<SelectorDecoratorFactory> find(String kind) {
     return stream().filter(s -> s.kind().equalsIgnoreCase(kind)).findFirst();
   }
-    
-  private static Stream<SelectorDecoratorFactory> stream() {
-     ServiceLoader<SelectorDecoratorFactory> loader = ServiceLoader.load(SelectorDecoratorFactory.class, SelectorDecoratorFactory.class.getClassLoader());
-     return StreamSupport.stream(loader.spliterator(), false);
-  }
 
+  private static Stream<SelectorDecoratorFactory> stream() {
+    ServiceLoader<SelectorDecoratorFactory> loader = ServiceLoader.load(SelectorDecoratorFactory.class,
+        SelectorDecoratorFactory.class.getClassLoader());
+    return StreamSupport.stream(loader.spliterator(), false);
+  }
 
 }

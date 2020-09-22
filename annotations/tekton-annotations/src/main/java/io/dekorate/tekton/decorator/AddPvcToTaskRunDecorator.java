@@ -17,9 +17,9 @@
 
 package io.dekorate.tekton.decorator;
 
+import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.tekton.pipeline.v1beta1.TaskRunSpecFluent;
-import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 
 public class AddPvcToTaskRunDecorator extends NamedResourceDecorator<TaskRunSpecFluent<?>> {
 
@@ -36,9 +36,9 @@ public class AddPvcToTaskRunDecorator extends NamedResourceDecorator<TaskRunSpec
 
   @Override
   public void andThenVisit(TaskRunSpecFluent<?> spec, ObjectMeta meta) {
-     spec.addNewWorkspace()
-      .withName(workspace)
-      .withNewPersistentVolumeClaim(claim, readOnly)
-      .endWorkspace();
+    spec.addNewWorkspace()
+        .withName(workspace)
+        .withNewPersistentVolumeClaim(claim, readOnly)
+        .endWorkspace();
   }
 }

@@ -33,11 +33,11 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
 
   @Override
   public void andThenVisit(ContainerFluent container) {
-      container.withImage(image);
+    container.withImage(image);
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
 
 }

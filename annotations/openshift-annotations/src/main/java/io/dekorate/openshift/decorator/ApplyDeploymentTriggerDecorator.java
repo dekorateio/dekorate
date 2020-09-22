@@ -50,42 +50,44 @@ public class ApplyDeploymentTriggerDecorator extends NamedResourceDecorator<Depl
   public ApplyDeploymentTriggerDecorator(String containerName, String imageStreamTag) {
     this.containerName = containerName;
     this.imageStreamTag = imageStreamTag;
-    this.predicate  = d -> d.hasImageChangeParams() && d.buildImageChangeParams().getContainerNames() != null && d.buildImageChangeParams().getContainerNames().contains(containerName);
+    this.predicate = d -> d.hasImageChangeParams() && d.buildImageChangeParams().getContainerNames() != null
+        && d.buildImageChangeParams().getContainerNames().contains(containerName);
   }
 
   @Override
   public void andThenVisit(DeploymentConfigSpecFluent<?> deploymentConfigSpec, ObjectMeta resourceMeta) {
     DeploymentConfigSpecFluent.TriggersNested<?> target;
 
-    if (deploymentConfigSpec.buildMatchingTrigger(predicate) != null)  {
+    if (deploymentConfigSpec.buildMatchingTrigger(predicate) != null) {
       target = deploymentConfigSpec.editMatchingTrigger(predicate);
     } else {
       target = deploymentConfigSpec.addNewTrigger();
     }
     target.withType(IMAGECHANGE)
-      .withNewImageChangeParams()
-      .withAutomatic(true)
-      .withContainerNames(containerName)
-      .withNewFrom()
-      .withKind(IMAGESTREAMTAG)
-      .withName(imageStreamTag)
-      .endFrom()
-      .endImageChangeParams()
-      .endTrigger();
+        .withNewImageChangeParams()
+        .withAutomatic(true)
+        .withContainerNames(containerName)
+        .withNewFrom()
+        .withKind(IMAGESTREAMTAG)
+        .withName(imageStreamTag)
+        .endFrom()
+        .endImageChangeParams()
+        .endTrigger();
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
     //Due to: https://github.com/sundrio/sundrio/issues/135 this decorator breaks the decoratros below.
     //So, let's make sure its called after them (as a workaround).
-    return new Class[] {AddEnvVarDecorator.class, AddPortDecorator.class,
-      AddMountDecorator.class, AddPvcVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class, AddAzureDiskVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
-      ApplyImageDecorator.class, ApplyImagePullPolicyDecorator.class,
-      ApplyWorkingDirDecorator.class, ApplyCommandDecorator.class, ApplyArgsDecorator.class,
-      ApplyServiceAccountNamedDecorator.class,
-      AddReadinessProbeDecorator.class,
-      AddLivenessProbeDecorator.class,
-      AddSidecarDecorator.class,
-      AddInitContainerDecorator.class};
+    return new Class[] { AddEnvVarDecorator.class, AddPortDecorator.class,
+        AddMountDecorator.class, AddPvcVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
+        AddAzureDiskVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
+        ApplyImageDecorator.class, ApplyImagePullPolicyDecorator.class,
+        ApplyWorkingDirDecorator.class, ApplyCommandDecorator.class, ApplyArgsDecorator.class,
+        ApplyServiceAccountNamedDecorator.class,
+        AddReadinessProbeDecorator.class,
+        AddLivenessProbeDecorator.class,
+        AddSidecarDecorator.class,
+        AddInitContainerDecorator.class };
   }
 }

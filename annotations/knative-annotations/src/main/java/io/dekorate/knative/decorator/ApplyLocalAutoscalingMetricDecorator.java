@@ -19,8 +19,8 @@ package io.dekorate.knative.decorator;
 
 import io.dekorate.knative.config.AutoscalingMetric;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.knative.serving.v1.ServiceFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyLocalAutoscalingMetricDecorator extends NamedResourceDecorator<ServiceFluent<?>> {
 
@@ -29,14 +29,14 @@ public class ApplyLocalAutoscalingMetricDecorator extends NamedResourceDecorator
   private final AutoscalingMetric clazz;
 
   public ApplyLocalAutoscalingMetricDecorator(String name, AutoscalingMetric clazz) {
-		super("Service", name);
-		this.clazz = clazz;
-	}
+    super("Service", name);
+    this.clazz = clazz;
+  }
 
-	@Override
-	public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
     service.editMetadata()
-      .addToAnnotations(AUTOSCALING_METRIC, clazz.name().toLowerCase())
-      .endMetadata();
-	}
+        .addToAnnotations(AUTOSCALING_METRIC, clazz.name().toLowerCase())
+        .endMetadata();
+  }
 }

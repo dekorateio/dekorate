@@ -19,12 +19,11 @@ import io.sundr.codegen.annotations.PackageSelector;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
 
-@VelocityTransformations(value = @VelocityTransformation(value="/configurator-doc.vm", outputPath="configurators-table.org", gather=true),
-                         packages = {
-                           @PackageSelector(value="io.dekorate.kubernetes.configurator"),
-                           @PackageSelector(value="io.dekorate.openshift.configurator"),
-                           @PackageSelector(value = "io.dekorate.halkyon.configurator")
-                         })
+@VelocityTransformations(value = @VelocityTransformation(value = "/configurator-doc.vm", outputPath = "configurators-table.org", gather = true), packages = {
+    @PackageSelector(value = "io.dekorate.kubernetes.configurator"),
+    @PackageSelector(value = "io.dekorate.openshift.configurator"),
+    @PackageSelector(value = "io.dekorate.halkyon.configurator")
+})
 public class DocumentConfigurators {
 
 }

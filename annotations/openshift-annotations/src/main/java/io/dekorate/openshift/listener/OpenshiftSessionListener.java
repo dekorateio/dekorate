@@ -57,7 +57,8 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
     try {
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       Optional<OpenshiftConfig> optionalAppConfig = session.configurators().get(OpenshiftConfig.class);
-      Optional<ImageConfiguration> optionalImageConfig = session.configurators().getImageConfig(BuildServiceFactories.supplierMatches(project));
+      Optional<ImageConfiguration> optionalImageConfig = session.configurators()
+          .getImageConfig(BuildServiceFactories.supplierMatches(project));
 
       if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
         return;
@@ -70,7 +71,7 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
           .orElse(getProject().getBuildInfo().getName());
 
       BuildService buildService = null;
-      boolean s2iEnabled =  imageConfig instanceof S2iBuildConfig && ((S2iBuildConfig)imageConfig).isEnabled();
+      boolean s2iEnabled = imageConfig instanceof S2iBuildConfig && ((S2iBuildConfig) imageConfig).isEnabled();
       if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || openshiftConfig.isAutoDeployEnabled()) {
 
         KubernetesList list = session.getGeneratedResources().get("openshift");

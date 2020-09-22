@@ -15,12 +15,11 @@
  * 
 **/
 
-
 package io.dekorate.examples.component;
 
 import io.dekorate.halkyon.annotation.HalkyonComponent;
-import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.halkyon.model.DeploymentMode;
+import io.dekorate.kubernetes.annotation.Env;
 
 @HalkyonComponent(name = "hello-world", deploymentMode = DeploymentMode.build, exposeService = false, envs = @Env(name = "key1", value = "val1"))
 public class Main {
@@ -29,4 +28,3 @@ public class Main {
   }
 
 }
-

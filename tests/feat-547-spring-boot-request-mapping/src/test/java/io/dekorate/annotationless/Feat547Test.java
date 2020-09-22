@@ -16,9 +16,9 @@
 
 package io.dekorate.annotationless;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Optional;
 
@@ -35,7 +35,8 @@ public class Feat547Test {
 
   @Test
   public void shouldHaveMatchingPath() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -43,23 +44,25 @@ public class Feat547Test {
     assertNotNull(c);
     assertTrue(c.getPorts().stream().filter(p -> "http".equals(p.getName())).findAny().isPresent());
     Ingress i = findFirst(list, Ingress.class).orElseThrow(() -> new IllegalStateException());
-    assertTrue(i.getSpec().getRules().stream().flatMap(r -> r.getHttp().getPaths().stream()).anyMatch(p -> p.getPath().equals("/app")));
+    assertTrue(i.getSpec().getRules().stream().flatMap(r -> r.getHttp().getPaths().stream())
+        .anyMatch(p -> p.getPath().equals("/app")));
   }
 
   @Test
   public void shouldHaveMatchingLabels() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Ingress i = findFirst(list, Ingress.class).orElseThrow(() -> new IllegalStateException());
-    assertTrue(i.getSpec().getRules().stream().flatMap(r -> r.getHttp().getPaths().stream()).anyMatch(p -> p.getPath().equals("/app")));
+    assertTrue(i.getSpec().getRules().stream().flatMap(r -> r.getHttp().getPaths().stream())
+        .anyMatch(p -> p.getPath().equals("/app")));
     assertFalse(i.getMetadata().getLabels().isEmpty());
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 
 }

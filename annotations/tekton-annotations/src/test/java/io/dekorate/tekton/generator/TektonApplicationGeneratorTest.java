@@ -15,7 +15,6 @@
  */
 package io.dekorate.tekton.generator;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,24 +41,32 @@ class TektonApplicationGeneratorTest {
   }
 
   @Test
-  public void shouldGenerateTektonAndWriteToTheFilesystem()  {
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+  public void shouldGenerateTektonAndWriteToTheFilesystem() {
+    WithProject withProject = new WithProject() {
+    };
+    withProject
+        .setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+            .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
     SessionWriter writer = new SimpleFileWriter(withProject.getProject(), false);
     Session session = Session.getSession();
     session.setWriter(writer);
 
-    TektonApplicationGenerator generator = new TektonApplicationGenerator() {};
+    TektonApplicationGenerator generator = new TektonApplicationGenerator() {
+    };
     generator.setProject(FileProjectFactory.create(new File(".")));
     System.out.println("Project root:" + generator.getProject());
 
-    Map<String, Object> map = new HashMap<String, Object>() {{
-      put(TektonConfig.class.getName(), new HashMap<String, Object>() {{
-        put("name", "generator-test");
-        put("version", "latest");
-        put("externalGitPipelineResource", "yagpr");
-      }});
-    }};
+    Map<String, Object> map = new HashMap<String, Object>() {
+      {
+        put(TektonConfig.class.getName(), new HashMap<String, Object>() {
+          {
+            put("name", "generator-test");
+            put("version", "latest");
+            put("externalGitPipelineResource", "yagpr");
+          }
+        });
+      }
+    };
 
     generator.addPropertyConfiguration(map);
     final Map<String, String> result = session.close();

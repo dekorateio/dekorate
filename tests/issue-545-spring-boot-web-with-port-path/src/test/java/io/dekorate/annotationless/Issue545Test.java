@@ -32,9 +32,10 @@ import io.fabric8.kubernetes.api.model.extensions.Ingress;
 
 public class Issue545Test {
 
-   @Test
+  @Test
   public void shouldHaveMatchingPath() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -42,13 +43,14 @@ public class Issue545Test {
     assertNotNull(c);
     assertTrue(c.getPorts().stream().filter(p -> "http".equals(p.getName())).findAny().isPresent());
     Ingress i = findFirst(list, Ingress.class).orElseThrow(() -> new IllegalStateException());
-    assertTrue(i.getSpec().getRules().stream().flatMap(r -> r.getHttp().getPaths().stream()).anyMatch(p -> p.getPath().equals("/app")));
+    assertTrue(i.getSpec().getRules().stream().flatMap(r -> r.getHttp().getPaths().stream())
+        .anyMatch(p -> p.getPath().equals("/app")));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 
 }

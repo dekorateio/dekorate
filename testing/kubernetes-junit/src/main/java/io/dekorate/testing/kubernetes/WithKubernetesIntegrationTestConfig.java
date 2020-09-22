@@ -15,19 +15,22 @@
  */
 package io.dekorate.testing.kubernetes;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
+
 import io.dekorate.testing.adapter.KubernetesIntegrationTestConfigAdapter;
 import io.dekorate.testing.annotation.KubernetesIntegrationTest;
 import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
 import io.dekorate.testing.config.KubernetesIntegrationTestConfigBuilder;
-import org.junit.jupiter.api.extension.ExtensionContext;
 
 public interface WithKubernetesIntegrationTestConfig {
 
   KubernetesIntegrationTestConfig DEFAULT_KUBERNETES_INTEGRATION_TEST_CONFIG = new KubernetesIntegrationTestConfigBuilder()
-    .withReadinessTimeout(500000)
-    .build();
+      .withReadinessTimeout(500000)
+      .build();
 
-  default KubernetesIntegrationTestConfig getKubernetesIntegrationTestConfig(ExtensionContext context)  {
-    return context.getElement().map(e->KubernetesIntegrationTestConfigAdapter.adapt(e.getAnnotation(KubernetesIntegrationTest.class))).orElse(DEFAULT_KUBERNETES_INTEGRATION_TEST_CONFIG);
+  default KubernetesIntegrationTestConfig getKubernetesIntegrationTestConfig(ExtensionContext context) {
+    return context.getElement()
+        .map(e -> KubernetesIntegrationTestConfigAdapter.adapt(e.getAnnotation(KubernetesIntegrationTest.class)))
+        .orElse(DEFAULT_KUBERNETES_INTEGRATION_TEST_CONFIG);
   }
 }

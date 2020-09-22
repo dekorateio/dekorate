@@ -19,17 +19,17 @@ import static io.dekorate.utils.Metadata.getMetadata;
 
 import java.util.Optional;
 
+import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
+import io.dekorate.utils.Generics;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.tekton.pipeline.v1beta1.StepBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
-import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
-import io.dekorate.utils.Generics;
-import io.dekorate.utils.Strings;
 
-public abstract class TektonStepDecorator<T> extends Decorator<VisitableBuilder>  {
+public abstract class TektonStepDecorator<T> extends Decorator<VisitableBuilder> {
 
   /**
    * For container and deployment name null acts as a wildcards.
@@ -56,7 +56,6 @@ public abstract class TektonStepDecorator<T> extends Decorator<VisitableBuilder>
     this.stepName = stepName;
   }
 
-
   @Override
   public void visit(VisitableBuilder builder) {
     Optional<ObjectMeta> objectMeta = getMetadata(builder);
@@ -75,7 +74,7 @@ public abstract class TektonStepDecorator<T> extends Decorator<VisitableBuilder>
   public abstract void andThenVisit(T item);
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 
   private class TaskVisitor extends TypedVisitor<StepBuilder> {
@@ -93,11 +92,11 @@ public abstract class TektonStepDecorator<T> extends Decorator<VisitableBuilder>
   private class StepVisitor extends TypedVisitor<T> {
     @Override
     public void visit(T item) {
-     andThenVisit(item);
+      andThenVisit(item);
     }
 
     public Class<T> getType() {
-      return (Class)Generics.getTypeArguments(TektonStepDecorator.class, TektonStepDecorator.this.getClass()).get(0);
+      return (Class) Generics.getTypeArguments(TektonStepDecorator.class, TektonStepDecorator.this.getClass()).get(0);
     }
   }
 }

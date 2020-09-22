@@ -21,26 +21,26 @@ import io.fabric8.kubernetes.api.model.Quantity;
 
 public class ApplyRequestsMemoryDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
-	private static final String MEM = "mem";
+  private static final String MEM = "mem";
 
   private final String amount;
 
-	public ApplyRequestsMemoryDecorator(String containerName, String amount) {
-		super(containerName);
-		this.amount = amount;
-	}
+  public ApplyRequestsMemoryDecorator(String containerName, String amount) {
+    super(containerName);
+    this.amount = amount;
+  }
 
-	public ApplyRequestsMemoryDecorator(String deploymentName, String containerName, String amount) {
-		super(deploymentName, containerName);
-		this.amount = amount;
-	}
+  public ApplyRequestsMemoryDecorator(String deploymentName, String containerName, String amount) {
+    super(deploymentName, containerName);
+    this.amount = amount;
+  }
 
   @Override
-	public void andThenVisit(ContainerFluent<?> container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     container.editOrNewResources().addToRequests(MEM, new Quantity(amount)).endResources();
-	}
+  }
 
-	public Class<? extends Decorator>[] after() {
-		return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
-	}
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
+  }
 }

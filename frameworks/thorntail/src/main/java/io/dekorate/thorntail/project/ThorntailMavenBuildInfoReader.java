@@ -15,11 +15,10 @@
  */
 package io.dekorate.thorntail.project;
 
-import io.dekorate.project.BuildInfo;
-import io.dekorate.project.BuildInfoBuilder;
-import io.dekorate.project.MavenInfoReader;
-
 import java.nio.file.Path;
+
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.MavenInfoReader;
 
 public class ThorntailMavenBuildInfoReader extends MavenInfoReader {
   private static final String THORNTAIL_JAR = "-thorntail.jar";

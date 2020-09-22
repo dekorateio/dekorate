@@ -17,6 +17,8 @@ package io.dekorate.application.annotation;
 
 public @interface Icon {
   String type();
+
   String src();
+
   String size();
 }

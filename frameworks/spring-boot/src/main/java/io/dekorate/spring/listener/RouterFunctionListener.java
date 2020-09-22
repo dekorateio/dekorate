@@ -22,13 +22,13 @@ import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
 
 public class RouterFunctionListener implements BeanListener, SpringBootWebAnnotationGenerator {
 
-	@Override
-	public String getType() {
-		return "org.springframework.web.reactive.function.server.RouterFunction";
-	}
+  @Override
+  public String getType() {
+    return "org.springframework.web.reactive.function.server.RouterFunction";
+  }
 
-	@Override
-	public void onBean() {
-		addPropertyConfiguration(WEB_ANNOTATIONS);
-	}
+  @Override
+  public void onBean() {
+    addPropertyConfiguration(WEB_ANNOTATIONS);
+  }
 }

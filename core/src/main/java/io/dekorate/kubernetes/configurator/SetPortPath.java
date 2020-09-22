@@ -15,12 +15,11 @@
  */
 package io.dekorate.kubernetes.configurator;
 
-import io.fabric8.kubernetes.api.builder.Predicate;
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
+import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.PortBuilder;
-
+import io.fabric8.kubernetes.api.builder.Predicate;
 
 @Description("Sets the path for the matching port.")
 public class SetPortPath extends Configurator<BaseConfigFluent<?>> {
@@ -35,7 +34,7 @@ public class SetPortPath extends Configurator<BaseConfigFluent<?>> {
 
   @Override
   public void visit(BaseConfigFluent<?> config) {
-    if(config.hasMatchingPort(predicate)) {
+    if (config.hasMatchingPort(predicate)) {
       config.editMatchingPort(predicate).withPath(path);
     }
   }

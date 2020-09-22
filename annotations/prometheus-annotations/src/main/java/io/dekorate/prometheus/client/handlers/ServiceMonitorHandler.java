@@ -15,22 +15,17 @@
  */
 package io.dekorate.prometheus.client.handlers;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import io.dekorate.prometheus.client.dsl.internal.ServiceMonitorOperationsImpl;
+import io.dekorate.prometheus.model.ServiceMonitor;
+import io.dekorate.prometheus.model.ServiceMonitorBuilder;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ResourceHandler;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
-import io.dekorate.prometheus.client.dsl.internal.ServiceMonitorOperationsImpl;
-
-import io.fabric8.kubernetes.client.dsl.base.OperationContext;
 import okhttp3.OkHttpClient;
-
-import io.dekorate.prometheus.model.ServiceMonitor;
-import io.dekorate.prometheus.model.ServiceMonitorBuilder;
-
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 
 public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, ServiceMonitorBuilder> {
 
@@ -41,8 +36,8 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
 
   @Override
   public String getApiVersion() {
-        return "monitoring.coreos.com/v1";
-      }
+    return "monitoring.coreos.com/v1";
+  }
 
   @Override
   public ServiceMonitor create(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
@@ -51,12 +46,14 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
 
   @Override
   public ServiceMonitor replace(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).replace(item);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).replace(item);
   }
 
   @Override
   public ServiceMonitor reload(OkHttpClient client, Config config, String namespace, ServiceMonitor item) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).fromServer().get();
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).fromServer().get();
   }
 
   @Override
@@ -74,22 +71,30 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   }
 
   @Override
-  public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, Watcher<ServiceMonitor> watcher) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(watcher);
+  public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item,
+      Watcher<ServiceMonitor> watcher) {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).watch(watcher);
   }
 
   @Override
-  public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, String resourceVersion, Watcher<ServiceMonitor> watcher) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
+  public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, String resourceVersion,
+      Watcher<ServiceMonitor> watcher) {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
   }
 
   @Override
-  public ServiceMonitor waitUntilReady(OkHttpClient client, Config config, String namespace, ServiceMonitor item, long amount, TimeUnit timeUnit) throws InterruptedException {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).waitUntilReady(amount, timeUnit);
+  public ServiceMonitor waitUntilReady(OkHttpClient client, Config config, String namespace, ServiceMonitor item, long amount,
+      TimeUnit timeUnit) throws InterruptedException {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).waitUntilReady(amount, timeUnit);
   }
 
   @Override
-  public ServiceMonitor waitUntilCondition(OkHttpClient client, Config config, String namespace, ServiceMonitor item, Predicate<ServiceMonitor> condition, long amount, TimeUnit timeUnit) throws InterruptedException {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).waitUntilCondition(condition, amount, timeUnit);
+  public ServiceMonitor waitUntilCondition(OkHttpClient client, Config config, String namespace, ServiceMonitor item,
+      Predicate<ServiceMonitor> condition, long amount, TimeUnit timeUnit) throws InterruptedException {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).waitUntilCondition(condition, amount, timeUnit);
   }
 }

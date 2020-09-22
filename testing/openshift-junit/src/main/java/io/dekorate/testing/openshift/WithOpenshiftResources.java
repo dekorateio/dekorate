@@ -15,12 +15,8 @@
  */
 package io.dekorate.testing.openshift;
 
-import io.dekorate.DekorateException;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.dekorate.testing.WithProject;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import static io.dekorate.testing.Testing.Dekorate_STORE;
+import static java.util.Arrays.stream;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +24,13 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 
-import static io.dekorate.testing.Testing.Dekorate_STORE;
-import static java.util.Arrays.stream;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+
+import io.dekorate.DekorateException;
+import io.dekorate.testing.WithProject;
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 /**
  * Mixin for storing / loading the KubernetesList to context.
@@ -42,15 +43,15 @@ public interface WithOpenshiftResources extends TestInstancePostProcessor, WithP
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
     stream(testInstance.getClass().getDeclaredFields())
-      .forEach(f -> injectOpenshiftResources(context, testInstance, f));
+        .forEach(f -> injectOpenshiftResources(context, testInstance, f));
   }
 
   /**
    * Inject an instance of {@link KubernetesList} to the specified {@link Field}.
    *
-   * @param context      The execution context.
+   * @param context The execution context.
    * @param testInstance The target test instance.
-   * @param field        The field to inject.
+   * @param field The field to inject.
    */
   default void injectOpenshiftResources(ExtensionContext context, Object testInstance, Field field) {
     if (!field.getType().isAssignableFrom(KubernetesList.class)) {
@@ -59,7 +60,8 @@ public interface WithOpenshiftResources extends TestInstancePostProcessor, WithP
 
     //This is to make sure we don't write on fields by accident.
     //Note: we don't require the exact annotation. Any annotation named Inject will do (be it javax, guice etc)
-    if (!stream(field.getDeclaredAnnotations()).filter(a -> a.annotationType().getSimpleName().equalsIgnoreCase("Inject")).findAny().isPresent()) {
+    if (!stream(field.getDeclaredAnnotations()).filter(a -> a.annotationType().getSimpleName().equalsIgnoreCase("Inject"))
+        .findAny().isPresent()) {
       return;
     }
 
@@ -90,22 +92,23 @@ public interface WithOpenshiftResources extends TestInstancePostProcessor, WithP
 
   /**
    * Load an unmarshal the {@KubernetesList} from the manifest file.
-   * @return  The kubernetes list if found or an empty kubernetes list otherwise.
+   * 
+   * @return The kubernetes list if found or an empty kubernetes list otherwise.
    */
   default KubernetesList fromManifest() {
     KubernetesList result = new KubernetesList();
-    URL manifestUrl = WithOpenshiftResources.class.getClassLoader().getResource(getProject().getDekorateOutputDir() + File.separatorChar + MANIFEST_PATH);
-    if (manifestUrl == null)  {
+    URL manifestUrl = WithOpenshiftResources.class.getClassLoader()
+        .getResource(getProject().getDekorateOutputDir() + File.separatorChar + MANIFEST_PATH);
+    if (manifestUrl == null) {
       return result;
     }
 
     System.out.println("Apply test resources from:" + manifestUrl);
     try (InputStream is = manifestUrl.openStream()) {
-        result = Serialization.unmarshalAsList(is);
+      result = Serialization.unmarshalAsList(is);
     } catch (IOException e) {
-       throw DekorateException.launderThrowable(e);
+      throw DekorateException.launderThrowable(e);
     }
     return result;
   }
 }
-

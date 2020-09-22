@@ -39,10 +39,10 @@ public class AddWorkspaceToTaskDecorator extends NamedTaskDecorator {
     taskSpec.removeMatchingFromWorkspaces(w -> id.equals(w.getName()));
 
     taskSpec.addNewWorkspace()
-      .withName(id)
-      .withDescription(description)
-      .withReadOnly(readOnly)
-      .withMountPath(path)
-      .endWorkspace();
+        .withName(id)
+        .withDescription(description)
+        .withReadOnly(readOnly)
+        .withMountPath(path)
+        .endWorkspace();
   }
 }

@@ -32,7 +32,7 @@ public class SetSpringBootVersion extends Configurator<ConfigurationFluent<?>> {
   public static String getSpringBootVersion() {
     try {
       return Class.forName("org.springframework.boot.autoconfigure.SpringBootApplication")
-        .getPackage().getImplementationVersion();
+          .getPackage().getImplementationVersion();
     } catch (ClassNotFoundException e) {
       return null;
     }

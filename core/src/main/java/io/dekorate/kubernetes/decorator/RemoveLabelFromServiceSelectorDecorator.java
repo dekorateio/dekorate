@@ -7,24 +7,24 @@ public class RemoveLabelFromServiceSelectorDecorator extends NamedResourceDecora
 
   private String key;
 
- 	public RemoveLabelFromServiceSelectorDecorator(String name, String key) {
-		super(name);
-		this.key = key;
-	}
+  public RemoveLabelFromServiceSelectorDecorator(String name, String key) {
+    super(name);
+    this.key = key;
+  }
 
-	public RemoveLabelFromServiceSelectorDecorator(String kind, String name, String key) {
-		super(kind, name);
-		this.key = key;
-	}   
+  public RemoveLabelFromServiceSelectorDecorator(String kind, String name, String key) {
+    super(kind, name);
+    this.key = key;
+  }
 
-	@Override
-	public void andThenVisit(ServiceSpecFluent<?> spec, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ServiceSpecFluent<?> spec, ObjectMeta resourceMeta) {
     spec.removeFromSelector(key);
-	}
+  }
 
-	@Override
-	public Class<? extends Decorator>[] after() {
-		return new Class[] { AddLabelToServiceSelectorDecorator.class };
-	}
-  
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { AddLabelToServiceSelectorDecorator.class };
+  }
+
 }

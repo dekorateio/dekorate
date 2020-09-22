@@ -15,16 +15,17 @@
  */
 package io.dekorate.project;
 
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.IOException;
-import io.dekorate.DekorateException;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.util.stream.Collectors;
-import java.util.Arrays;
+
+import io.dekorate.DekorateException;
 
 public class SbtInfoReader implements BuildInfoReader {
 
@@ -44,13 +45,12 @@ public class SbtInfoReader implements BuildInfoReader {
   private static final String UNDERSCORE = "_";
   private static final String NEWLINE = "\n";
 
-
   protected static final String JAR = "jar";
 
   protected static final String DEFAULT_VERSION = "0.1.0-SNAPSHOT";
   protected static final String DEFAULT_SCALA_VERSION = "2.12";
 
-  private static final String[] SCALA_VERSION_CMD = new String[]{"scala", "-version"};
+  private static final String[] SCALA_VERSION_CMD = new String[] { "scala", "-version" };
   private static final String VERSION_PATTERN = "^(\\d+\\.\\d+\\.\\d+).*";
 
   private static final int MAJOR = 0;
@@ -72,12 +72,12 @@ public class SbtInfoReader implements BuildInfoReader {
     Map<String, String> properties = new HashMap<>();
 
     try {
-      Files.lines(gradlePath).map(l -> l.replaceAll("[ ]*","")).filter(l -> l.contains(SET)).forEach(l ->  {
-          String key = l.substring(0, l.lastIndexOf(SET));
-          String value = l.substring(l.lastIndexOf(SET) + 2).replaceAll(DOUBLE_QUOTE, "");
-          properties.put(key, value);
-        });
-    } catch (IOException e)  {
+      Files.lines(gradlePath).map(l -> l.replaceAll("[ ]*", "")).filter(l -> l.contains(SET)).forEach(l -> {
+        String key = l.substring(0, l.lastIndexOf(SET));
+        String value = l.substring(l.lastIndexOf(SET) + 2).replaceAll(DOUBLE_QUOTE, "");
+        properties.put(key, value);
+      });
+    } catch (IOException e) {
       throw DekorateException.launderThrowable(e);
     }
 
@@ -89,33 +89,34 @@ public class SbtInfoReader implements BuildInfoReader {
     Path resourceOutputDir = root.resolve(TARGET).resolve(CLASSES);
 
     return new BuildInfoBuilder()
-      .withName(name)
-      .withVersion(version)
-      .withPackaging(JAR)
-      .withBuildTool(SBT)
-      .withBuildToolVersion(null) //TODO: Implement at some point
-      .withOutputFile(outputFile)
-      .withResourceDir(resourceOutputDir)
-      .build();
+        .withName(name)
+        .withVersion(version)
+        .withPackaging(JAR)
+        .withBuildTool(SBT)
+        .withBuildToolVersion(null) //TODO: Implement at some point
+        .withOutputFile(outputFile)
+        .withResourceDir(resourceOutputDir)
+        .build();
   }
 
   /**
    * Get the system scala version.
+   * 
    * @return The scala version found using exec, or fallback to the default version.
    */
   protected static String getSystemScalaVersion() {
     try {
       Process p = new ProcessBuilder()
-        .command(SCALA_VERSION_CMD)
-        .redirectErrorStream(true)
-        .start();
-      
+          .command(SCALA_VERSION_CMD)
+          .redirectErrorStream(true)
+          .start();
 
       BufferedReader buffer = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String output = buffer.lines().collect(Collectors.joining(NEWLINE));
-      String fullVersion = Arrays.stream(output.split(" ")).filter(w -> w.matches(VERSION_PATTERN)).findFirst().orElse(DEFAULT_VERSION);
+      String fullVersion = Arrays.stream(output.split(" ")).filter(w -> w.matches(VERSION_PATTERN)).findFirst()
+          .orElse(DEFAULT_VERSION);
       String[] version = fullVersion.split("\\.");
-      if  (version.length >= 2) {
+      if (version.length >= 2) {
         return version[MAJOR] + DOT + version[MINOR];
       }
     } catch (IOException e) {

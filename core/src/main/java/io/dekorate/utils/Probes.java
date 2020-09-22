@@ -20,13 +20,14 @@ import io.dekorate.kubernetes.config.Probe;
 public class Probes {
 
   /**
-     Checks if {@link Probe} has been configured.
+   * Checks if {@link Probe} has been configured.
+   * 
    * @return true if {@link Probe} has been explicitly configured.
    */
   public static boolean isConfigured(Probe probe) {
     return probe != null
-      && (Strings.isNotNullOrEmpty(probe.getHttpActionPath())
-          || Strings.isNotNullOrEmpty(probe.getExecAction())
-          || Strings.isNotNullOrEmpty(probe.getTcpSocketAction()));
+        && (Strings.isNotNullOrEmpty(probe.getHttpActionPath())
+            || Strings.isNotNullOrEmpty(probe.getExecAction())
+            || Strings.isNotNullOrEmpty(probe.getTcpSocketAction()));
   }
 }

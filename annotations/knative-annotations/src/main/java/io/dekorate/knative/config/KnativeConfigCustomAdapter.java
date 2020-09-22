@@ -25,10 +25,10 @@ public class KnativeConfigCustomAdapter {
   public static KnativeConfigBuilder newBuilder(Project project, KnativeApplication knativeApplication) {
     if (knativeApplication != null) {
       return KnativeConfigAdapter.newBuilder(knativeApplication)
-        .accept(new ApplyProjectInfo(project));
-    } else  {
+          .accept(new ApplyProjectInfo(project));
+    } else {
       return new KnativeConfigBuilder()
-        .accept(new ApplyProjectInfo(project));
+          .accept(new ApplyProjectInfo(project));
     }
   }
 }

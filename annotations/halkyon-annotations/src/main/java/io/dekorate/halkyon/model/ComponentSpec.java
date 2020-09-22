@@ -15,9 +15,10 @@
  */
 package io.dekorate.halkyon.model;
 
-import io.dekorate.crd.annotation.CustomResource;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import io.dekorate.crd.annotation.CustomResource;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Inline;
@@ -29,24 +30,24 @@ import io.sundr.transform.annotations.VelocityTransformations;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-  "deploymentMode",
-  "runtime",
-  "version",
-  "exposeService",
-  "storage",
-  "envs",
-  "capabilities",
-  "buildConfig"
+    "deploymentMode",
+    "runtime",
+    "version",
+    "exposeService",
+    "storage",
+    "envs",
+    "capabilities",
+    "buildConfig"
 })
 @Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 @VelocityTransformations({
-  @VelocityTransformation(value = "/halkyon-resource.vm"),
-  @VelocityTransformation(value = "/halkyon-resource-list.vm"),
-  @VelocityTransformation(value = "/halkyon-status.vm"),
+    @VelocityTransformation(value = "/halkyon-resource.vm"),
+    @VelocityTransformation(value = "/halkyon-resource-list.vm"),
+    @VelocityTransformation(value = "/halkyon-status.vm"),
 })
 @CustomResource(group = "halkyon.io", version = "v1beta1")
 public class ComponentSpec {
-  
+
   private DeploymentMode deploymentMode;
   private String runtime;
   private String version;
@@ -56,11 +57,12 @@ public class ComponentSpec {
   private Env[] envs;
   private BuildConfig buildConfig;
   private Capabilities capabilities;
-  
+
   public ComponentSpec() {
   }
-  
-  public ComponentSpec(DeploymentMode deploymentMode, String runtime, String version, boolean exposeService, Integer port, Storage storage, Env[] envs, BuildConfig buildConfig, Capabilities capabilities) {
+
+  public ComponentSpec(DeploymentMode deploymentMode, String runtime, String version, boolean exposeService, Integer port,
+      Storage storage, Env[] envs, BuildConfig buildConfig, Capabilities capabilities) {
     this.deploymentMode = deploymentMode;
     this.runtime = runtime;
     this.version = version;
@@ -71,67 +73,67 @@ public class ComponentSpec {
     this.capabilities = capabilities;
     this.buildConfig = buildConfig;
   }
-  
+
   public DeploymentMode getDeploymentMode() {
     return deploymentMode;
   }
-  
+
   public void setDeploymentMode(DeploymentMode deploymentMode) {
     this.deploymentMode = deploymentMode;
   }
-  
+
   public String getRuntime() {
     return runtime;
   }
-  
+
   public void setRuntime(String runtime) {
     this.runtime = runtime;
   }
-  
+
   public String getVersion() {
     return version;
   }
-  
+
   public void setVersion(String version) {
     this.version = version;
   }
-  
+
   public boolean isExposeService() {
     return exposeService;
   }
-  
+
   public void setExposeService(boolean exposeService) {
     this.exposeService = exposeService;
   }
-  
+
   public Integer getPort() {
     return port;
   }
-  
+
   public void setPort(Integer port) {
     this.port = port;
   }
-  
+
   public Storage getStorage() {
     return storage;
   }
-  
+
   public void setStorage(Storage storage) {
     this.storage = storage;
   }
-  
+
   public Env[] getEnvs() {
     return envs;
   }
-  
+
   public void setEnvs(Env[] envs) {
     this.envs = envs;
   }
-  
+
   public BuildConfig getBuildConfig() {
     return buildConfig;
   }
-  
+
   public void setBuildConfig(BuildConfig buildConfig) {
     this.buildConfig = buildConfig;
   }

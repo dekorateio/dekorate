@@ -15,10 +15,10 @@
  */
 package io.dekorate.thorntail.configurator;
 
+import java.util.Arrays;
+
 import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
-
-import java.util.Arrays;
 
 /**
  * For OpenShift deployments, we typically use a base image that is similar to Fabric8 image.
@@ -30,17 +30,18 @@ public class ThorntailPrometheusAgentConfigurator extends Configurator<BaseConfi
 
   @Override
   public void visit(BaseConfigFluent<?> openshiftConfig) {
-    boolean alreadyExists = Arrays.stream(openshiftConfig.getEnvVars()).anyMatch(e -> AB_PROMETHEUS_OFF.equals(e.getName()));
+    boolean alreadyExists = Arrays.stream(openshiftConfig.getEnvVars())
+        .anyMatch(e -> AB_PROMETHEUS_OFF.equals(e.getName()));
 
     if (alreadyExists) {
       openshiftConfig.editMatchingEnvVar(e -> e.getName().equals(AB_PROMETHEUS_OFF))
-        .withValue("true")
-        .endEnvVar();
+          .withValue("true")
+          .endEnvVar();
     } else {
       openshiftConfig.addNewEnvVar()
-        .withName(AB_PROMETHEUS_OFF)
-        .withValue("true")
-        .endEnvVar();
+          .withName(AB_PROMETHEUS_OFF)
+          .withValue("true")
+          .endEnvVar();
     }
   }
 }

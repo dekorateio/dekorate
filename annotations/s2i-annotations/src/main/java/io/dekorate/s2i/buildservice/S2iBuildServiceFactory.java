@@ -24,10 +24,10 @@ import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.config.ConfigurationSupplier;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.s2i.config.S2iBuildConfig;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 
 public class S2iBuildServiceFactory implements BuildServiceFactory {
 
@@ -35,43 +35,43 @@ public class S2iBuildServiceFactory implements BuildServiceFactory {
   private final String MESSAGE_OK = "S2i build service is applicable.";
   private final String MESSAGE_DISABLED = "S2i disabled.";
 
-	@Override
-	public BuildService create(Project project, ImageConfiguration config) {
-		return new S2iBuildService(project, config, Collections.emptyList());
-	}
+  @Override
+  public BuildService create(Project project, ImageConfiguration config) {
+    return new S2iBuildService(project, config, Collections.emptyList());
+  }
 
-	@Override
-	public BuildService create(Project project, ImageConfiguration config, Collection<HasMetadata> resources) {
-		return new S2iBuildService(project, config, resources);
-	}
+  @Override
+  public BuildService create(Project project, ImageConfiguration config, Collection<HasMetadata> resources) {
+    return new S2iBuildService(project, config, resources);
+  }
 
-	@Override
-	public int order() {
-		return 20;
-	}
+  @Override
+  public int order() {
+    return 20;
+  }
 
-	@Override
-	public String name() {
+  @Override
+  public String name() {
     return S2I;
-	}
+  }
 
-	@Override
-	public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
+  @Override
+  public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
     if (config instanceof S2iBuildConfig) {
-      if (((S2iBuildConfig)config).isEnabled()) {
+      if (((S2iBuildConfig) config).isEnabled()) {
         return new BuildServiceApplicablility(true, MESSAGE_OK);
       } else {
         return new BuildServiceApplicablility(false, MESSAGE_DISABLED);
       }
     }
     return new BuildServiceApplicablility(true, MESSAGE_OK);
-	}
+  }
 
-	@Override
-	public BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier) {
+  @Override
+  public BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier) {
     if (supplier.isExplicit()) {
       return new BuildServiceApplicablility(true, MESSAGE_OK);
     }
     return checkApplicablility(project, supplier.get());
-	}
+  }
 }

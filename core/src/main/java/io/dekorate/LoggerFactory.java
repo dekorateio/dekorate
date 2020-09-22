@@ -28,7 +28,7 @@ public abstract class LoggerFactory<C> {
 
   private static Logger LOGGER;
 
-  public Class<C> getType()  {
+  public Class<C> getType() {
     ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
     Type[] types = type.getActualTypeArguments();
     return (Class<C>) types[0];
@@ -39,7 +39,7 @@ public abstract class LoggerFactory<C> {
   public static synchronized void setLogger(Logger logger) {
     LOGGER = logger;
   }
-  
+
   public static Logger getLogger() {
     if (LOGGER != null) {
       return LOGGER;
@@ -58,12 +58,14 @@ public abstract class LoggerFactory<C> {
     }
     synchronized (LoggerFactory.class) {
       if (LOGGER == null) {
-        ServiceLoader<LoggerFactory> loader = ServiceLoader.load(LoggerFactory.class, LoggerFactory.class.getClassLoader());
+        ServiceLoader<LoggerFactory> loader = ServiceLoader.load(LoggerFactory.class,
+            LoggerFactory.class.getClassLoader());
         LOGGER = StreamSupport.stream(loader.spliterator(), false)
-          .filter(l->l.getType().isAssignableFrom(context.getClass()))
-          .findFirst()
-          .orElseThrow(()->new IllegalStateException("Could not find LoggerFactory that supports: "+ context.getClass()+"."))
-          .create(context);
+            .filter(l -> l.getType().isAssignableFrom(context.getClass()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException(
+                "Could not find LoggerFactory that supports: " + context.getClass() + "."))
+            .create(context);
       }
     }
     return LOGGER;

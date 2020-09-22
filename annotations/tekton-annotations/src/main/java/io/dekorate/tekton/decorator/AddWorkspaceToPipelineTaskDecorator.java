@@ -17,8 +17,8 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
 import io.dekorate.utils.Strings;
+import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
 
 public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator {
 
@@ -36,6 +36,7 @@ public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator 
   @Override
   public void andThenVisit(PipelineSpecFluent<?> spec) {
     //If no task name is specified we need to add the workspace to all pipeline tasks.
-    spec.editMatchingTask(t -> Strings.isNullOrEmpty(taskName) ? true : taskName.equals(t.getName())).addNewWorkspace().withName(id).withWorkspace(workspace).endWorkspace().endTask();
+    spec.editMatchingTask(t -> Strings.isNullOrEmpty(taskName) ? true : taskName.equals(t.getName())).addNewWorkspace()
+        .withName(id).withWorkspace(workspace).endWorkspace().endTask();
   }
 }

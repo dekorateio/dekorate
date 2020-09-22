@@ -19,13 +19,13 @@ import io.dekorate.halkyon.model.ComponentSpecBuilder;
 import io.dekorate.kubernetes.decorator.Decorator;
 
 public class AddRuntimeVersionToComponentDecorator extends Decorator<ComponentSpecBuilder> {
-  
+
   private final String version;
-  
+
   public AddRuntimeVersionToComponentDecorator(String version) {
     this.version = version;
   }
-  
+
   @Override
   public void visit(ComponentSpecBuilder component) {
     component.withVersion(version);

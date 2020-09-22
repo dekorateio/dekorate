@@ -16,23 +16,25 @@
 
 package io.dekorate.examples.openshift;
 
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.openshift.api.model.BuildConfig;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.openshift.api.model.BuildConfig;
 
 public class BuildEnvTest {
 
   @Test
   public void shouldContainEnvVars() {
-    KubernetesList list = Serialization.unmarshalAsList(BuildEnvTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(BuildEnvTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     BuildConfig buildConfig = findFirst(list, BuildConfig.class).orElseThrow(IllegalStateException::new);
 
@@ -43,7 +45,7 @@ public class BuildEnvTest {
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

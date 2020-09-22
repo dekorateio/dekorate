@@ -23,29 +23,31 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.dekorate.utils.Serialization;
 
 public class Issue507Test {
 
-   @Test
+  @Test
   public void shouldHaveMatchingPortNumber() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     Container c = d.getSpec().getTemplate().getSpec().getContainers().get(0);
     assertNotNull(c);
-    assertTrue(c.getPorts().stream().filter(p -> "http".equals(p.getName()) && 8081 == p.getContainerPort()).findAny().isPresent());
+    assertTrue(
+        c.getPorts().stream().filter(p -> "http".equals(p.getName()) && 8081 == p.getContainerPort()).findAny().isPresent());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 
 }

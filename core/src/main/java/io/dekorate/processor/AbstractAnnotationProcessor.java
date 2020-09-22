@@ -46,7 +46,7 @@ import io.dekorate.project.AptProjectFactory;
 import io.dekorate.utils.Maps;
 import io.dekorate.utils.Urls;
 
-public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject, WithSession  {
+public abstract class AbstractAnnotationProcessor extends AbstractProcessor implements WithProject, WithSession {
 
   protected static final String PACKAGE = "";
   protected static final String PROJECT = "META-INF/dekorate/.project.%s";
@@ -86,7 +86,8 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   }
 
   public <A extends Annotation> void process(String key, Element element, Class<A> annotationClass) {
-    getSession().addAnnotationConfiguration(Maps.fromAnnotation(key, element.getAnnotation(annotationClass), annotationClass));
+    getSession()
+        .addAnnotationConfiguration(Maps.fromAnnotation(key, element.getAnnotation(annotationClass), annotationClass));
   }
 
   /**
@@ -95,7 +96,8 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   protected Map<String, Object> readApplicationConfig(String... resourceNames) {
     Map<String, Object> result = new HashMap<>();
     for (String resourceName : resourceNames) {
-      try (InputStream is = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve(resourceName).toFile())) {
+      try (InputStream is = new FileInputStream(
+          getProject().getBuildInfo().getResourceDir().resolve(resourceName).toFile())) {
         if (resourceName.endsWith(".properties")) {
           Map<String, Object> newProps = fromProperties(is);
           merge(result, newProps);
@@ -103,7 +105,8 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
           Map<String, Object> newProps = Maps.kebabToCamelCase(fromYaml(is));
           merge(result, newProps);
         } else {
-          throw new IllegalArgumentException("Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
+          throw new IllegalArgumentException(
+              "Illegal resource name:" + resourceName + ". It needs to be properties or yaml file.");
         }
       } catch (FileNotFoundException | NoSuchFileException e) {
         continue;
@@ -121,9 +124,10 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
    */
   @Deprecated
   private void mergeProperties(Map<String, Object> result, Map<String, Object> newProps) {
-    for(String newKey : newProps.keySet()) {
-      if(result.containsKey(newKey) && Map.class.isInstance(result.get(newKey)) && Map.class.isInstance(newProps.get(newKey))) {
-        mergeProperties((Map)result.get(newKey), (Map)newProps.get(newKey));
+    for (String newKey : newProps.keySet()) {
+      if (result.containsKey(newKey) && Map.class.isInstance(result.get(newKey))
+          && Map.class.isInstance(newProps.get(newKey))) {
+        mergeProperties((Map) result.get(newKey), (Map) newProps.get(newKey));
       } else {
         result.putAll(newProps);
       }
@@ -132,11 +136,13 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
 
   /**
    * Get the output directory of the processor.
-   * @return  The directroy.
+   * 
+   * @return The directroy.
    */
   public Path getOutputDirectory() {
     try {
-      FileObject project = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, PACKAGE, String.format(PROJECT, TMP));
+      FileObject project = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, PACKAGE,
+          String.format(PROJECT, TMP));
       return Paths.get(Urls.toFile(project.toUri().toURL()).getParentFile().getAbsolutePath());
     } catch (IOException e) {
       throw DekorateException.launderThrowable(e);

@@ -17,11 +17,11 @@
 
 package io.dekorate.tekton.decorator;
 
+import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.Task;
 import io.fabric8.tekton.pipeline.v1beta1.TaskBuilder;
-import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 
 public class TaskProvidingDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
@@ -36,10 +36,11 @@ public class TaskProvidingDecorator extends ResourceProvidingDecorator<Kubernete
   }
 
   public TaskProvidingDecorator(String name, Task task) {
-    this.task = task != null ? task : new TaskBuilder()
-      .withNewMetadata().withName(name).endMetadata()
-      .withNewSpec().endSpec()
-      .build();
+    this.task = task != null ? task
+        : new TaskBuilder()
+            .withNewMetadata().withName(name).endMetadata()
+            .withNewSpec().endSpec()
+            .build();
   }
 
   @Override

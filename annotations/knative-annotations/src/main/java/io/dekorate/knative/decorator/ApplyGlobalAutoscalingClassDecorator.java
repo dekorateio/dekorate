@@ -18,8 +18,8 @@ package io.dekorate.knative.decorator;
 
 import io.dekorate.knative.config.AutoScalerClass;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ConfigMapFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyGlobalAutoscalingClassDecorator extends NamedResourceDecorator<ConfigMapFluent<?>> {
 
@@ -30,12 +30,12 @@ public class ApplyGlobalAutoscalingClassDecorator extends NamedResourceDecorator
   private final AutoScalerClass clazz;
 
   public ApplyGlobalAutoscalingClassDecorator(AutoScalerClass clazz) {
-		super("config-autoscaler");
-		this.clazz = clazz;
-	}
+    super("config-autoscaler");
+    this.clazz = clazz;
+  }
 
-	@Override
-	public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
     config.addToData(POD_AUTOSCALER_CLASS, clazz.name().toLowerCase() + AUTOSCALING_CLASS_SUFFIX);
-	}
+  }
 }

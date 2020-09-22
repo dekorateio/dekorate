@@ -17,10 +17,10 @@
 
 package io.dekorate.tekton.decorator;
 
+import io.dekorate.kubernetes.decorator.Decorator;
 import io.fabric8.tekton.pipeline.v1beta1.Step;
 import io.fabric8.tekton.pipeline.v1beta1.StepBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
-import io.dekorate.kubernetes.decorator.Decorator;
 
 public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDecorator {
 

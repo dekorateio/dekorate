@@ -21,21 +21,19 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.annotation.Dekorate;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.adapter.DekorateConfigAdapter;
+import io.dekorate.annotation.Dekorate;
 import io.dekorate.config.DekorateConfig;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Detects @Dekorate and configures application based on the specified configuration files.")
-@SupportedAnnotationTypes({"io.dekorate.annotation.Dekorate"})
+@SupportedAnnotationTypes({ "io.dekorate.annotation.Dekorate" })
 public class DekorateProcessor extends AbstractAnnotationProcessor {
 
   private static final String[] DEFAULT_CONFIG_FILES = { "application.properties", "application.yml" };
@@ -43,7 +41,7 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    if  (roundEnv.processingOver()) {
+    if (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }
@@ -53,7 +51,8 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
         LOGGER.info("Found @Dekorate on: " + mainClass.toString());
         Dekorate dekorate = mainClass.getAnnotation(Dekorate.class);
         DekorateConfig dekorateConfig = DekorateConfigAdapter.adapt(dekorate);
-        String[] configFiles = dekorateConfig.getResources().length > 0 ? dekorateConfig.getResources() : DEFAULT_CONFIG_FILES;
+        String[] configFiles = dekorateConfig.getResources().length > 0 ? dekorateConfig.getResources()
+            : DEFAULT_CONFIG_FILES;
         getSession().addPropertyConfiguration(readApplicationConfig(configFiles));
       }
     }

@@ -15,24 +15,25 @@
  */
 package io.dekorate.jib.annotation;
 
-import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.sundr.builder.annotations.Adapter;
-import io.sundr.builder.annotations.Buildable;
-import io.sundr.builder.annotations.Pojo;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.sundr.builder.annotations.Adapter;
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
+
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 
 @Pojo(name = "JibBuildConfig", mutable = true, superClass = ImageConfiguration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "JibBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
-@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface JibBuild {
 
   boolean enabled() default true;
+
   /**
    * The registry that holds the image.
    * 
@@ -41,19 +42,22 @@ public @interface JibBuild {
   String registry() default "";
 
   /**
-   * The group of the application. This value will be use as image user. 
+   * The group of the application. This value will be use as image user.
+   * 
    * @return The specified group name.
    */
   String group() default "";
 
   /**
    * The name of the application. This value will be used as name.
+   * 
    * @return The specified application name.
    */
   String name() default "";
 
   /**
    * The version of the application. This value be used as image tag.
+   * 
    * @return The version.
    */
   String version() default "";
@@ -61,22 +65,24 @@ public @interface JibBuild {
   /**
    * The name of the image to be generated.
    * This property overrides group, name and version.
+   * 
    * @return the image name.
    */
   String image() default "";
 
   /**
    * Flag that indicates whether to perform a docker build (build using the docker daemon) or not.
+   * 
    * @return true, if docker build is desired, false otherwise.
    */
   boolean dockerBuild() default true;
 
   /**
    * The base image to use.
+   * 
    * @return The base image.
    */
-  String from() default  "openjdk:8-jdk";
-
+  String from() default "openjdk:8-jdk";
 
   /**
    * Flag to automatically push the image, to the specified registry.

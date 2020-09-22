@@ -56,7 +56,8 @@ public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements 
   public void add(Element element) {
     JvmOptions jvmOptions = element.getAnnotation(JvmOptions.class);
     if (jvmOptions != null) {
-      AnnotationConfiguration<JvmConfig> config = new AnnotationConfiguration<JvmConfig>(JvmConfigAdapter.newBuilder(jvmOptions));
+      AnnotationConfiguration<JvmConfig> config = new AnnotationConfiguration<JvmConfig>(
+          JvmConfigAdapter.newBuilder(jvmOptions));
       on(config);
     }
   }

@@ -15,13 +15,10 @@
  */
 package io.dekorate.servicecatalog.apt;
 
-
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -32,7 +29,8 @@ import io.dekorate.servicecatalog.annotation.ServiceCatalog;
 import io.dekorate.servicecatalog.config.ServiceCatalogConfigBuilder;
 import io.dekorate.servicecatalog.generator.ServiceCatalogGenerator;
 
-@SupportedAnnotationTypes({"io.dekorate.servicecatalog.annotation.ServiceCatalog", "io.dekorate.servicecatalog.annotation.ServiceCatalogInstance"})
+@SupportedAnnotationTypes({ "io.dekorate.servicecatalog.annotation.ServiceCatalog",
+    "io.dekorate.servicecatalog.annotation.ServiceCatalogInstance" })
 public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcessor implements ServiceCatalogGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -52,7 +50,7 @@ public class ServiceCatalogAnnotationProcessor extends AbstractAnnotationProcess
   public void add(Element element) {
     ServiceCatalog serviceCatalog = element.getAnnotation(ServiceCatalog.class);
     on(serviceCatalog != null
-      ? new AnnotationConfiguration<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
-      : new AnnotationConfiguration<>(new ServiceCatalogConfigBuilder()));
+        ? new AnnotationConfiguration<>(ServiceCatalogConfigAdapter.newBuilder(serviceCatalog))
+        : new AnnotationConfiguration<>(new ServiceCatalogConfigBuilder()));
   }
 }

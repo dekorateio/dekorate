@@ -33,17 +33,18 @@ public interface WithImageConfig extends WithProject {
 
   default <C extends ImageConfiguration> Stream<C> stream(Class<C> type) {
     final Project project = getProject();
-    final Path configDir = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir()).resolve(CONFIG_DIR);
+    final Path configDir = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir())
+        .resolve(CONFIG_DIR);
 
     return BuildServiceFactories.names()
-      .stream()
-      .map(n -> String.format(CONFIG_YML, n))
-      .map(s -> configDir.resolve(s))
-      .filter(p -> p.toFile().exists())
-      .map(p -> Serialization.unmarshal(p.toFile(), ImageConfiguration.class))
-      .filter(BuildServiceFactories.configMatches(getProject()))
-      .filter(i -> type.isInstance(i))
-      .map(i -> (C) i);
+        .stream()
+        .map(n -> String.format(CONFIG_YML, n))
+        .map(s -> configDir.resolve(s))
+        .filter(p -> p.toFile().exists())
+        .map(p -> Serialization.unmarshal(p.toFile(), ImageConfiguration.class))
+        .filter(BuildServiceFactories.configMatches(getProject()))
+        .filter(i -> type.isInstance(i))
+        .map(i -> (C) i);
   }
 
   default boolean hasImageConfig() {

@@ -21,6 +21,8 @@ package io.dekorate;
 public interface Coordinates {
 
   String getPartOf();
+
   String getName();
+
   String getVersion();
 }

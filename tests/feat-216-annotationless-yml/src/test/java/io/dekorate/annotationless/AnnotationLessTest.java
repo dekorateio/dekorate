@@ -16,23 +16,24 @@
 
 package io.dekorate.annotationless;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Map;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.dekorate.utils.Labels;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AnnotationLessTest {
 
   @Test
   public void shouldContainComponent() {
-    KubernetesList list = Serialization.unmarshalAsList(AnnotationLessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        AnnotationLessTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -42,10 +43,9 @@ public class AnnotationLessTest {
     assertEquals("baz", labels.get("zoo"));
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

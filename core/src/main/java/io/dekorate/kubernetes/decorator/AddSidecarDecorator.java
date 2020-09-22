@@ -15,11 +15,11 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.adapter.ContainerAdapter;
 import io.dekorate.kubernetes.config.Container;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.PodSpecBuilder;
 
 /**
  * A decorator that adds an init container to a pod template.
@@ -44,7 +44,7 @@ public class AddSidecarDecorator extends NamedResourceDecorator<PodSpecBuilder> 
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 
 }

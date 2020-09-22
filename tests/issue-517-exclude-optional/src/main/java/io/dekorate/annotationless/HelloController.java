@@ -25,8 +25,8 @@ public class HelloController {
 
   private static final String HELLO = "hello world!";
 
-    @RequestMapping("/")
-    public String hello() {
-        return HELLO;
-    }
+  @RequestMapping("/")
+  public String hello() {
+    return HELLO;
+  }
 }

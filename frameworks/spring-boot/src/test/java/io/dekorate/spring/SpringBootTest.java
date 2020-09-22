@@ -17,7 +17,6 @@ package io.dekorate.spring;
 
 import org.junit.jupiter.api.Test;
 
-
 class SpringBootTest {
 
   @Test

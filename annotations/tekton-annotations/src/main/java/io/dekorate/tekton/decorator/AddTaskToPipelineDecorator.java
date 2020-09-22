@@ -44,27 +44,32 @@ public class AddTaskToPipelineDecorator extends NamedPipelineDecorator {
     this.pipelineTask = pipelineTask;
   }
 
-  public AddTaskToPipelineDecorator(String pipelineName, String name, String ref, Map<String, String> workspaces, Map<String, String> params, Map<String, String> inputs, Map<String, String> outputs) {
+  public AddTaskToPipelineDecorator(String pipelineName, String name, String ref, Map<String, String> workspaces,
+      Map<String, String> params, Map<String, String> inputs, Map<String, String> outputs) {
     this(pipelineName,
-         new PipelineTaskBuilder()
-         .withName(name)
-         .withNewTaskRef().withName(ref).endTaskRef()
-         .withWorkspaces(workspaces.entrySet().stream().map(e -> workspace(e.getKey(), e.getValue())).collect(Collectors.toList()))
-         .withParams(params.entrySet().stream().map(e -> param(e.getKey(), e.getValue())).collect(Collectors.toList()))
-         .accept(new TypedVisitor<PipelineTaskFluent<?>>() {
-             @Override
-             public void visit(PipelineTaskFluent<?> t) {
-               if (!inputs.isEmpty() || !outputs.isEmpty()) {
-                 PipelineTaskResourcesBuilder b = new PipelineTaskResourcesBuilder();
-                 if (!inputs.isEmpty()) {
-                   b.withInputs(inputs.entrySet().stream().map(e -> input(e.getKey(), e.getValue())).collect(Collectors.toList()));
-                 }
-                 if (!outputs.isEmpty()) {
-                   b.withOutputs(outputs.entrySet().stream().map(e -> output(e.getKey(), e.getValue())).collect(Collectors.toList()));
-                 }
-               }
-             }
-         }).build());
+        new PipelineTaskBuilder()
+            .withName(name)
+            .withNewTaskRef().withName(ref).endTaskRef()
+            .withWorkspaces(workspaces.entrySet().stream().map(e -> workspace(e.getKey(), e.getValue()))
+                .collect(Collectors.toList()))
+            .withParams(params.entrySet().stream().map(e -> param(e.getKey(), e.getValue()))
+                .collect(Collectors.toList()))
+            .accept(new TypedVisitor<PipelineTaskFluent<?>>() {
+              @Override
+              public void visit(PipelineTaskFluent<?> t) {
+                if (!inputs.isEmpty() || !outputs.isEmpty()) {
+                  PipelineTaskResourcesBuilder b = new PipelineTaskResourcesBuilder();
+                  if (!inputs.isEmpty()) {
+                    b.withInputs(inputs.entrySet().stream().map(e -> input(e.getKey(), e.getValue()))
+                        .collect(Collectors.toList()));
+                  }
+                  if (!outputs.isEmpty()) {
+                    b.withOutputs(outputs.entrySet().stream().map(e -> output(e.getKey(), e.getValue()))
+                        .collect(Collectors.toList()));
+                  }
+                }
+              }
+            }).build());
   }
 
   @Override

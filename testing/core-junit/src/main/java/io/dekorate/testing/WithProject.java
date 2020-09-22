@@ -15,34 +15,35 @@
  */
 package io.dekorate.testing;
 
-import io.dekorate.DekorateException;
-import io.dekorate.project.FileProjectFactory;
-import io.dekorate.project.Project;
-import io.dekorate.utils.Serialization;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import io.dekorate.DekorateException;
+import io.dekorate.project.FileProjectFactory;
+import io.dekorate.project.Project;
+import io.dekorate.utils.Serialization;
 
 public interface WithProject {
 
   String PROJECT_YML = ".project.yml";
 
   default Project getProject() {
-    Project p =  new FileProjectFactory().create(new File("."));
-    return getProject(p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(PROJECT_YML).toAbsolutePath().toString());
+    Project p = new FileProjectFactory().create(new File("."));
+    return getProject(p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(PROJECT_YML)
+        .toAbsolutePath().toString());
   }
 
   default Project getProject(String projectDescriptorPath) {
     System.err.println("Getting project from:" + projectDescriptorPath);
     if (projectDescriptorPath != null) {
-      try (InputStream is = new FileInputStream(new File(projectDescriptorPath)))  {
+      try (InputStream is = new FileInputStream(new File(projectDescriptorPath))) {
         return Serialization.unmarshal(is, Project.class);
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);
       }
     }
-    throw new IllegalStateException("Expected to find manifest at: "+projectDescriptorPath+"!");
+    throw new IllegalStateException("Expected to find manifest at: " + projectDescriptorPath + "!");
   }
 }

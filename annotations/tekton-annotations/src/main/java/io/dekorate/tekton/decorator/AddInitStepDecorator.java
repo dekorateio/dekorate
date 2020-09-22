@@ -41,7 +41,7 @@ public class AddInitStepDecorator extends NamedTaskDecorator implements StepDeco
     this.gitResourceName = gitResourceName;
     this.projectName = projectName;
   }
-   
+
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     taskSpec.addToSteps(createStep());
@@ -50,10 +50,10 @@ public class AddInitStepDecorator extends NamedTaskDecorator implements StepDeco
   private Step createStep() {
     String sourcePath = sourcePath(projectName);
     return new StepBuilder()
-      .withName(stepName)
-      .withImage(BUSYBOX)
-      .withCommand("cp").withArgs("-r", resourceInputPath(gitResourceName), sourcePath)
-      .withWorkingDir(workspacePath(SOURCE))
-      .build();
+        .withName(stepName)
+        .withImage(BUSYBOX)
+        .withCommand("cp").withArgs("-r", resourceInputPath(gitResourceName), sourcePath)
+        .withWorkingDir(workspacePath(SOURCE))
+        .build();
   }
 }

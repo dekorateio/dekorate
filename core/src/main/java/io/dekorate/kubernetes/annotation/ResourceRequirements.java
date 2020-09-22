@@ -18,7 +18,7 @@ package io.dekorate.kubernetes.annotation;
 
 public @interface ResourceRequirements {
 
-	String memory() default "";
+  String memory() default "";
 
-	String cpu() default "";
+  String cpu() default "";
 }

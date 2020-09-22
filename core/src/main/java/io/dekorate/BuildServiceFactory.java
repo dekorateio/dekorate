@@ -20,25 +20,25 @@ package io.dekorate;
 import java.util.Collection;
 
 import io.dekorate.config.ConfigurationSupplier;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 
 public interface BuildServiceFactory extends Comparable<BuildServiceFactory> {
 
   int order();
 
   String name();
-  
+
   BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config);
 
   BuildServiceApplicablility checkApplicablility(Project project, ConfigurationSupplier<ImageConfiguration> supplier);
 
   BuildService create(Project project, ImageConfiguration config);
-  
+
   BuildService create(Project project, ImageConfiguration config, Collection<HasMetadata> resources);
 
-	default int compareTo(BuildServiceFactory o) {
-		return order() - o.order();
-	}
+  default int compareTo(BuildServiceFactory o) {
+    return order() - o.order();
+  }
 }

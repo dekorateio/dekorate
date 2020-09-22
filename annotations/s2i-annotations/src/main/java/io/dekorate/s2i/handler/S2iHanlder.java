@@ -66,7 +66,7 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
 
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(S2iBuildConfig.class) ||
-      type.equals(EditableS2iBuildConfig.class);
+        type.equals(EditableS2iBuildConfig.class);
   }
 
   @Override
@@ -85,20 +85,23 @@ public class S2iHanlder implements Handler<S2iBuildConfig>, HandlerFactory, With
         resources.decorate(new AddBuildEnvDecorator(env));
       }
       resources.decorate(OPENSHIFT, new AddEnvVarDecorator(config.getName(), config.getName(),
-                                                           new EnvBuilder()
-                                                           .withName(JAVA_APP_JAR)
-                                                           .withValue("/deployments/" + config.getProject()
-                                                                      .getBuildInfo()
-                                                                      .getOutputFile()
-                                                                      .getFileName().toString()).build()));
+          new EnvBuilder()
+              .withName(JAVA_APP_JAR)
+              .withValue("/deployments/" + config.getProject()
+                  .getBuildInfo()
+                  .getOutputFile()
+                  .getFileName().toString())
+              .build()));
     } else {
       //If S2i is disabled, check if other build configs are available and check it makes sense to create an ImageStream
       ImageConfiguration imageConfig = configurators
-        .getImageConfig(BuildServiceFactories.supplierMatches(getProject())
-                        .and(i -> Strings.isNotNullOrEmpty(i.get().getRegistry()))).orElse(null);
+          .getImageConfig(BuildServiceFactories.supplierMatches(getProject())
+              .and(i -> Strings.isNotNullOrEmpty(i.get().getRegistry())))
+          .orElse(null);
 
       if (imageConfig != null) {
-        String image = Images.getImage(imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
+        String image = Images.getImage(imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(),
+            imageConfig.getVersion());
         String repository = imageConfig.getRegistry() + "/" + Images.getRepository(image);
         resources.decorate(OPENSHIFT, new AddDockerImageStreamResourceDecorator(imageConfig, repository));
       }

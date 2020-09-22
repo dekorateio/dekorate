@@ -27,16 +27,14 @@ public class AddLivenessProbeConfigurator extends Configurator<BaseConfigFluent>
   private final Probe probe;
   private final boolean overwrite;
 
-	public AddLivenessProbeConfigurator(Probe probe, boolean overwrite) {
+  public AddLivenessProbeConfigurator(Probe probe, boolean overwrite) {
     this.probe = probe;
     this.overwrite = overwrite;
-	}
+  }
 
-	@Override
-	public void visit(BaseConfigFluent config) {
+  @Override
+  public void visit(BaseConfigFluent config) {
     Probe existing = config.getLivenessProbe();
-    config.withLivenessProbe(overwrite ?
-                              Beans.combine(existing, probe) :
-                              Beans.combine(probe, existing));
-	}
+    config.withLivenessProbe(overwrite ? Beans.combine(existing, probe) : Beans.combine(probe, existing));
+  }
 }

@@ -33,4 +33,3 @@ class StringsTest {
     assertEquals("myOtherString", Strings.kebabToCamelCase("my-other-string"));
   }
 }
-

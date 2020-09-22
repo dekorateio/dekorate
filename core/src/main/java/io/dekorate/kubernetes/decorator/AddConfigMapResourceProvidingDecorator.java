@@ -22,21 +22,21 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 public class AddConfigMapResourceProvidingDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final String name;
-  
-	public AddConfigMapResourceProvidingDecorator(String name) {
-		this.name = name;
-	}
 
-	@Override
-	public void visit(KubernetesListBuilder list) {
+  public AddConfigMapResourceProvidingDecorator(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public void visit(KubernetesListBuilder list) {
     if (contains(list, "v1", "ConfigMap", name)) {
       return;
     }
 
     list.addNewConfigMapItem()
-      .withNewMetadata()
-      .withName(name)
-      .endMetadata()
-      .endConfigMapItem();
-	}
+        .withNewMetadata()
+        .withName(name)
+        .endMetadata()
+        .endConfigMapItem();
+  }
 }

@@ -19,40 +19,45 @@ public @interface Container {
 
   /**
    * The container image.
-   * @return  The container image.
+   * 
+   * @return The container image.
    */
   String image();
 
   /**
    * The container name.
+   * 
    * @return The container name, or the name part of the image, if no name has been specified.
    */
   String name() default "";
 
   /**
    * Environment variables to add to all containers.
+   * 
    * @return The environment variables.
    */
   Env[] envVars() default {};
 
   /**
    * Working directory.
+   * 
    * @return The working directory if specified, else empty string.
    */
   String workingDir() default "";
 
   /**
    * The commands
+   * 
    * @return The commands.
    */
   String[] command() default {};
 
   /**
    * The arguments
+   * 
    * @return The arguments.
    */
   String[] arguments() default {};
-
 
   /**
    * The application ports.
@@ -61,37 +66,40 @@ public @interface Container {
 
   /**
    * Mounts to add to all containers.
-   * @return  The mounts.
+   * 
+   * @return The mounts.
    */
   Mount[] mounts() default {};
 
   /**
    * Image pull policy.
+   * 
    * @return The image pull policy.
    */
   ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
 
-
   /**
    * The liveness probe.
-   * @return  The probe.
+   * 
+   * @return The probe.
    */
   Probe livenessProbe() default @Probe();
 
   /**
    * The readiness probe.
-   * @return  The probe.
+   * 
+   * @return The probe.
    */
   Probe readinessProbe() default @Probe();
 
   /**
    * The resources that the application container requires.
-   */ 
-	ResourceRequirements requestResources() default @ResourceRequirements();
+   */
+  ResourceRequirements requestResources() default @ResourceRequirements();
 
   /**
    * The resource limit for the application container.
-   */ 
-	ResourceRequirements limitResources() default @ResourceRequirements();
+   */
+  ResourceRequirements limitResources() default @ResourceRequirements();
 
 }

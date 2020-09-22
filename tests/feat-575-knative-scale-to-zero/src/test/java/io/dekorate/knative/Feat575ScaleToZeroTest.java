@@ -33,16 +33,16 @@ public class Feat575ScaleToZeroTest {
 
   @Test
   public void shouldContainRequestsPerSecond() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     ConfigMap c = findFirst(list, ConfigMap.class).orElseThrow(() -> new IllegalStateException());
     assertEquals("false", c.getData().get("enable-scale-to-zero"));
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

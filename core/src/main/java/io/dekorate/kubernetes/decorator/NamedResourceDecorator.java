@@ -15,16 +15,16 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.kubernetes.api.builder.VisitableBuilder;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.dekorate.utils.Generics;
-import io.dekorate.utils.Strings;
+import static io.dekorate.utils.Metadata.getKind;
+import static io.dekorate.utils.Metadata.getMetadata;
 
 import java.util.Optional;
 
-import static io.dekorate.utils.Metadata.getKind;
-import static io.dekorate.utils.Metadata.getMetadata;
+import io.dekorate.utils.Generics;
+import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.builder.TypedVisitor;
+import io.fabric8.kubernetes.api.builder.VisitableBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuilder> {
   /**
@@ -75,6 +75,7 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
 
   /**
    * Visit a part of a Resource.
+   * 
    * @param item the visited item
    * @param the {@link ObjectMeta} of the current resource.
    */
@@ -82,6 +83,7 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
 
   /**
    * Visit a part of a Resource.
+   * 
    * @param item the visited item
    * @param item toplevel resource kind
    * @param the {@link ObjectMeta} of the current resource.
@@ -99,7 +101,7 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
       this.kind = kind;
       this.metadata = metadata;
     }
-    
+
     @Override
     public void visit(T item) {
       andThenVisit(item, kind, metadata);
@@ -114,12 +116,13 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
     }
 
     public Class<T> getType() {
-      return (Class)Generics.getTypeArguments(NamedResourceDecorator.class, NamedResourceDecorator.this.getClass()).get(0);
+      return (Class) Generics.getTypeArguments(NamedResourceDecorator.class, NamedResourceDecorator.this.getClass())
+          .get(0);
     }
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ ResourceProvidingDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 }

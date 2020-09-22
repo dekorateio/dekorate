@@ -22,12 +22,13 @@ public class Urls {
 
   /**
    * Convert a {@URL} pointing to a local file or resource to an actual {@File}.
+   * 
    * @param url The url.
-   * @return    The file that the url points at, or the file that contains the resource if its contained in a jar etc.
+   * @return The file that the url points at, or the file that contains the resource if its contained in a jar etc.
    */
   public static File toFile(URL url) {
     String path = url.getPath();
-    if  (path.contains("!")) {
+    if (path.contains("!")) {
       path = path.substring(0, path.indexOf("!"));
     }
     if (path.startsWith("jar:")) {

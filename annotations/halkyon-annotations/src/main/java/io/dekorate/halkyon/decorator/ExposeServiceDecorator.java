@@ -20,20 +20,20 @@ import io.dekorate.halkyon.model.ComponentSpecBuilder;
 import io.dekorate.kubernetes.decorator.Decorator;
 
 public class ExposeServiceDecorator extends Decorator<ComponentSpecBuilder> {
-  
+
   private final boolean exposeEnabled;
-  
+
   public ExposeServiceDecorator() {
     this(true);
   }
-  
+
   public ExposeServiceDecorator(boolean exposeEnabled) {
     this.exposeEnabled = exposeEnabled;
   }
-  
+
   @Override
   public void visit(ComponentSpecBuilder spec) {
     spec.withExposeService(exposeEnabled);
   }
-  
+
 }

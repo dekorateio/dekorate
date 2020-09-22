@@ -15,8 +15,6 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-public enum  ImagePullPolicy {
-  Always,
-  IfNotPresent,
-  Never
+public enum ImagePullPolicy {
+  Always, IfNotPresent, Never
 }

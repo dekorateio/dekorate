@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 
 @Description("A decorator that applies the working directory to the application container.")
 public class ApplyWorkingDirDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {

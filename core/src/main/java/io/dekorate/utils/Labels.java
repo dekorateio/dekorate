@@ -22,7 +22,6 @@ import java.util.Map;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Label;
 
-
 public class Labels {
 
   public static final String NAME = "app.kubernetes.io/name";
@@ -32,21 +31,24 @@ public class Labels {
 
   /**
    * Creates a {@link Map} with the labels for the {@link BaseConfig}.
-   * @param config   The config.
-   * @return          A map containing the lables.
+   * 
+   * @param config The config.
+   * @return A map containing the lables.
    */
   public static Map<String, String> createLabels(BaseConfig config) {
-    Map<String,String> result =  new HashMap<String, String >() {{
+    Map<String, String> result = new HashMap<String, String>() {
+      {
         put(NAME, config.getName());
         put(VERSION, config.getVersion());
         if (Strings.isNotNullOrEmpty(config.getPartOf())) {
           put(PART_OF, config.getPartOf());
         }
-      }};
+      }
+    };
 
     for (Label label : config.getLabels()) {
       result.put(label.getKey(), label.getValue());
     }
-    return result; 
+    return result;
   }
 }

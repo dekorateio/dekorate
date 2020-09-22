@@ -17,8 +17,8 @@
 package io.dekorate.knative.decorator;
 
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ConfigMapFluent;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyGlobalRequestsPerSecondTargetDecorator extends NamedResourceDecorator<ConfigMapFluent<?>> {
 
@@ -27,12 +27,12 @@ public class ApplyGlobalRequestsPerSecondTargetDecorator extends NamedResourceDe
   private final int target;
 
   public ApplyGlobalRequestsPerSecondTargetDecorator(int target) {
-		super("config-autoscaler");
+    super("config-autoscaler");
     this.target = target;
-	}
+  }
 
-	@Override
-	public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ConfigMapFluent<?> config, ObjectMeta resourceMeta) {
     config.addToData(CONTAINER_CONCURRENCY_TARGET_DEFAULT, String.valueOf(target));
-	}
+  }
 }

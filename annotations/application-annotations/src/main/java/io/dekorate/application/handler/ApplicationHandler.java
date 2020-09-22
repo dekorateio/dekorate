@@ -52,5 +52,4 @@ public class ApplicationHandler implements Handler<ApplicationConfig> {
     return ApplicationConfig.class.equals(config) || EditableApplicationConfig.class.equals(config);
   }
 
-  
 }

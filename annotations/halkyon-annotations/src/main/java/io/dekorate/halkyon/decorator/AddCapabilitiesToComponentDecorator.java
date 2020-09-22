@@ -27,13 +27,13 @@ public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpec
   public void visit(ComponentSpecBuilder component) {
 
     component.withNewCapabilities()
-      .addAllToProvides(Arrays.stream(provides)
-        .map(this::createComponentCapability)
-        .collect(Collectors.toList()))
-      .addAllToRequires(Arrays.stream(requires)
-        .map(this::createRequiredComponentCapability)
-        .collect(Collectors.toList()))
-      .endCapabilities();
+        .addAllToProvides(Arrays.stream(provides)
+            .map(this::createComponentCapability)
+            .collect(Collectors.toList()))
+        .addAllToRequires(Arrays.stream(requires)
+            .map(this::createRequiredComponentCapability)
+            .collect(Collectors.toList()))
+        .endCapabilities();
 
   }
 
@@ -45,16 +45,16 @@ public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpec
    */
   private ComponentCapability createComponentCapability(CapabilityConfig config) {
     return new ComponentCapabilityBuilder()
-      .withName(config.getName())
-      .withNewSpec()
-      .withCategory(config.getCategory())
-      .withType(config.getType())
-      .withVersion(config.getVersion())
-      .addAllToParameters(Arrays.stream(config.getParameters())
-        .map(p -> new Parameter(p.getName(), p.getValue()))
-        .collect(Collectors.toList()))
-      .endSpec()
-      .build();
+        .withName(config.getName())
+        .withNewSpec()
+        .withCategory(config.getCategory())
+        .withType(config.getType())
+        .withVersion(config.getVersion())
+        .addAllToParameters(Arrays.stream(config.getParameters())
+            .map(p -> new Parameter(p.getName(), p.getValue()))
+            .collect(Collectors.toList()))
+        .endSpec()
+        .build();
   }
 
   /**
@@ -66,18 +66,17 @@ public class AddCapabilitiesToComponentDecorator extends Decorator<ComponentSpec
   private RequiredComponentCapability createRequiredComponentCapability(RequiredCapabilityConfig config) {
 
     return new RequiredComponentCapabilityBuilder()
-      .withBoundTo(config.getBoundTo())
-      .withName(config.getName())
-      .withAutoBindable(config.isAutoBindable())
-      .withNewSpec()
-      .withCategory(config.getCategory())
-      .withType(config.getType())
-      .addAllToParameters(Arrays.stream(config.getParameters())
-        .map(p -> new Parameter(p.getName(), p.getValue()))
-        .collect(Collectors.toList()))
-      .endSpec()
-      .build();
+        .withBoundTo(config.getBoundTo())
+        .withName(config.getName())
+        .withAutoBindable(config.isAutoBindable())
+        .withNewSpec()
+        .withCategory(config.getCategory())
+        .withType(config.getType())
+        .addAllToParameters(Arrays.stream(config.getParameters())
+            .map(p -> new Parameter(p.getName(), p.getValue()))
+            .collect(Collectors.toList()))
+        .endSpec()
+        .build();
   }
-
 
 }

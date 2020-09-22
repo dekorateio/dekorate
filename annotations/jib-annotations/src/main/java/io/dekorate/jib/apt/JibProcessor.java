@@ -19,24 +19,14 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.config.AnnotationConfiguration;
-import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.jib.adapter.JibBuildConfigAdapter;
 import io.dekorate.jib.annotation.JibBuild;
-import io.dekorate.jib.config.JibBuildConfig;
-import io.dekorate.jib.generator.JibGenerator;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.project.ApplyProjectInfo;
 
 @SupportedAnnotationTypes("io.dekorate.jib.annotation.JibBuild")
 public class JibProcessor extends AbstractAnnotationProcessor {
-
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
@@ -56,4 +46,3 @@ public class JibProcessor extends AbstractAnnotationProcessor {
     return false;
   }
 }
-

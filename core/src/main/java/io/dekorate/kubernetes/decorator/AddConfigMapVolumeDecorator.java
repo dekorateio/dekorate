@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.dekorate.doc.Description;
 
 @Description("Add a configmap volume to the pod spec.")
 public class AddConfigMapVolumeDecorator extends Decorator<PodSpecBuilder> {
@@ -31,13 +31,13 @@ public class AddConfigMapVolumeDecorator extends Decorator<PodSpecBuilder> {
   @Override
   public void visit(PodSpecBuilder podSpec) {
     podSpec.addNewVolume()
-      .withName(volume.getVolumeName())
-      .withNewConfigMap()
-      .withName(volume.getConfigMapName())
-      .withDefaultMode(volume.getDefaultMode())
-      .withOptional(volume.isOptional())
-      .endConfigMap()
-      .endVolume();
+        .withName(volume.getVolumeName())
+        .withNewConfigMap()
+        .withName(volume.getConfigMapName())
+        .withDefaultMode(volume.getDefaultMode())
+        .withOptional(volume.isOptional())
+        .endConfigMap()
+        .endVolume();
 
   }
 }

@@ -15,15 +15,16 @@
  */
 package io.dekorate.testing;
 
-import io.dekorate.DekorateException;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import static io.dekorate.testing.Testing.Dekorate_STORE;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.dekorate.testing.Testing.Dekorate_STORE;
+import org.junit.jupiter.api.extension.ExtensionContext;
+
+import io.dekorate.DekorateException;
 
 public interface WithClosables {
 
@@ -31,7 +32,7 @@ public interface WithClosables {
 
   default List<Closeable> getCloseables(ExtensionContext context) {
     Object closables = context.getStore(Dekorate_STORE).get(CLOSABLES);
-    if  (closables instanceof List) {
+    if (closables instanceof List) {
       return (List<Closeable>) closables;
     }
 
@@ -39,7 +40,6 @@ public interface WithClosables {
     context.getStore(Dekorate_STORE).put(CLOSABLES, closables);
     return (List<Closeable>) closables;
   }
-
 
   default void closeAll(ExtensionContext context) {
     getCloseables(context).forEach(c -> {

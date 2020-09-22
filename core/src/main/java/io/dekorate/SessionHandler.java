@@ -15,7 +15,6 @@
  */
 package io.dekorate;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -26,6 +25,7 @@ public interface SessionHandler extends WithSession {
 
   /**
    * Add an {@link Element} to the generator.
+   * 
    * @param element The element.
    */
   default void add(Element element) {
@@ -33,6 +33,7 @@ public interface SessionHandler extends WithSession {
 
   /**
    * Add a {@link Map} to the generator.
+   * 
    * @param map The map.
    */
   default void add(Map map) {
@@ -40,23 +41,25 @@ public interface SessionHandler extends WithSession {
 
   /**
    * Get the annotation properties {@link Map} that matches, to the specified {@link Configuration} type.
-   * @param map     The source map.
-   * @param type    The annotation type.
-   * @return        The the properties map.
+   * 
+   * @param map The source map.
+   * @param type The annotation type.
+   * @return The the properties map.
    */
-  default Map propertiesMap(Map map, Class<? extends Configuration> type)  {
+  default Map propertiesMap(Map map, Class<? extends Configuration> type) {
     if (map == null) {
       throw new NullPointerException("Map cannot be null.");
     }
     String key = type.getName();
     if (!map.containsKey(key)) {
-      throw new IllegalStateException("The specified map doesn't contain the required key:"+ key+".");
+      throw new IllegalStateException("The specified map doesn't contain the required key:" + key + ".");
     }
     Object o = map.get(key);
     if (o instanceof Map) {
-      return (Map)o;
+      return (Map) o;
     }
-    throw new ClassCastException("The value found for key:"+key+" was expected to be a java.util.Map, but was "+o.getClass().toString()+".");
+    throw new ClassCastException("The value found for key:" + key + " was expected to be a java.util.Map, but was "
+        + o.getClass().toString() + ".");
   }
 
 }

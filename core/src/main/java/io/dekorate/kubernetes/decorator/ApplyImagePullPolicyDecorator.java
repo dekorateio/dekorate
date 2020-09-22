@@ -15,10 +15,10 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 
-public class ApplyImagePullPolicyDecorator extends Decorator<ContainerFluent>  {
+public class ApplyImagePullPolicyDecorator extends Decorator<ContainerFluent> {
 
   private final ImagePullPolicy imagePullPolicy;
 
@@ -32,7 +32,7 @@ public class ApplyImagePullPolicyDecorator extends Decorator<ContainerFluent>  {
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
   }
 
 }

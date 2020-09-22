@@ -19,12 +19,10 @@ import io.sundr.codegen.annotations.PackageSelector;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
 
-
-@VelocityTransformations(value = @VelocityTransformation(value="/decorator-doc.vm", outputPath="decorators-table.org", gather=true),
-                         packages = {
-                           @PackageSelector(value="io.dekorate.kubernetes.decorator"),
-                           @PackageSelector(value = "io.dekorate.halkyon.decorator")
-                         })
+@VelocityTransformations(value = @VelocityTransformation(value = "/decorator-doc.vm", outputPath = "decorators-table.org", gather = true), packages = {
+    @PackageSelector(value = "io.dekorate.kubernetes.decorator"),
+    @PackageSelector(value = "io.dekorate.halkyon.decorator")
+})
 public class DocumentDecorators {
 
 }

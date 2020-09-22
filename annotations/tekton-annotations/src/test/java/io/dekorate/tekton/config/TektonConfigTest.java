@@ -15,7 +15,6 @@
  */
 package io.dekorate.tekton.config;
 
-
 import org.junit.jupiter.api.Test;
 
 public class TektonConfigTest {
@@ -23,9 +22,9 @@ public class TektonConfigTest {
   @Test
   public void testGeneratedCode() {
     TektonConfig config = TektonConfig.newTektonConfigBuilder()
-      .withName("myapp")
-      .withVersion("1.0.0")
-      .build();
+        .withName("myapp")
+        .withVersion("1.0.0")
+        .build();
   }
 
 }

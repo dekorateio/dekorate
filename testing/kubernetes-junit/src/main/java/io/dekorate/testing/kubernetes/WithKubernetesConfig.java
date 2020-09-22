@@ -33,7 +33,7 @@ public interface WithKubernetesConfig {
   String CONFIG_DIR = "config";
   String KUBERNETES_YML = "kubernetes.yml";
 
-  default boolean hasKubernetesConfig()  {
+  default boolean hasKubernetesConfig() {
     return getKubernetesConfigPath().toFile().exists();
   }
 
@@ -42,14 +42,14 @@ public interface WithKubernetesConfig {
   }
 
   default Path getKubernetesConfigPath() {
-    Project p =  new FileProjectFactory().create(new File("."));
+    Project p = new FileProjectFactory().create(new File("."));
     return p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(CONFIG_DIR).resolve(KUBERNETES_YML);
   }
 
   default KubernetesConfig getKubernetesConfig(Path path) {
     File f = path.toFile();
     if (f.exists()) {
-      try (InputStream is = new FileInputStream(f))  {
+      try (InputStream is = new FileInputStream(f)) {
         return Serialization.unmarshal(is, KubernetesConfig.class);
       } catch (IOException e) {
         throw DekorateException.launderThrowable(e);

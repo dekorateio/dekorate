@@ -43,7 +43,7 @@ public class ApplyCommandDecorator extends TektonStepDecorator<StepFluent> {
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 
 }

@@ -15,21 +15,19 @@
  */
 package io.dekorate.annotationless;
 
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.annotation.Port;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.Port;
+
 @SpringBootApplication
-@KubernetesApplication(replicas = 1,
-                       serviceAccount = "test",
-                       ports = {
-                         @Port(name="http", containerPort = 8080),
-                         @Port(name="admin-console", containerPort = 9090)})
+@KubernetesApplication(replicas = 1, serviceAccount = "test", ports = {
+    @Port(name = "http", containerPort = 8080),
+    @Port(name = "admin-console", containerPort = 9090) })
 public class DemoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
 }

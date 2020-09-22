@@ -16,22 +16,24 @@
 
 package io.dekorate.examples.kubernetes;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.openshift.api.model.*;
-import io.dekorate.utils.Serialization;
-import java.net.URL;
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Issue442BuildConfigNameTest {
 
   @Test
   public void shouldHaveModuleBuildConfigNameYaml() {
-    KubernetesList list = Serialization.unmarshalAsList(Issue442BuildConfigNameTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        Issue442BuildConfigNameTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     BuildConfig b = findFirst(list, BuildConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(b);
@@ -40,7 +42,7 @@ public class Issue442BuildConfigNameTest {
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

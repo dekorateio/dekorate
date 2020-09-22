@@ -16,9 +16,7 @@
 package io.dekorate.option.annotation;
 
 public enum SecureRandomSource {
-  Undefined(""),
-  Blocking("file:/dev/random"),
-  NonBlocking("file:/dev/urandom");
+  Undefined(""), Blocking("file:/dev/random"), NonBlocking("file:/dev/urandom");
 
   String value;
 

@@ -16,11 +16,11 @@
 
 package io.dekorate.examples.component;
 
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.kubernetes.annotation.Annotation;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
-@KubernetesApplication(annotations=@Annotation(key="foo", value="bar"))
+@KubernetesApplication(annotations = @Annotation(key = "foo", value = "bar"))
 @HalkyonComponent
 public class Main {
 

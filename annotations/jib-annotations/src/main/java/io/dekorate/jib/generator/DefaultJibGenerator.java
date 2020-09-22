@@ -25,10 +25,10 @@ import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultJibGenerator implements JibGenerator {
 
-	public DefaultJibGenerator() {
+  public DefaultJibGenerator() {
     on(new DefaultConfiguration<JibBuildConfig>(new JibBuildConfigBuilder()
-                                                .accept(new ApplyProjectInfo(getProject()))
-                                                .accept(new ApplyBuildToImageConfiguration())));
-	}
+        .accept(new ApplyProjectInfo(getProject()))
+        .accept(new ApplyBuildToImageConfiguration())));
+  }
 
 }

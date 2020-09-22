@@ -22,26 +22,26 @@ import io.fabric8.kubernetes.api.model.Quantity;
 
 public class ApplyLimitsCpuDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
-	private static final String CPU = "cpu";
+  private static final String CPU = "cpu";
 
   private final String amount;
 
-	public ApplyLimitsCpuDecorator(String containerName, String amount) {
-		super(containerName);
-		this.amount = amount;
-	}
+  public ApplyLimitsCpuDecorator(String containerName, String amount) {
+    super(containerName);
+    this.amount = amount;
+  }
 
-	public ApplyLimitsCpuDecorator(String deploymentName, String containerName, String amount) {
-		super(deploymentName, containerName);
-		this.amount = amount;
-	}
+  public ApplyLimitsCpuDecorator(String deploymentName, String containerName, String amount) {
+    super(deploymentName, containerName);
+    this.amount = amount;
+  }
 
   @Override
-	public void andThenVisit(ContainerFluent<?> container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     container.editOrNewResources().addToLimits(CPU, new Quantity(amount)).endResources();
-	}
+  }
 
-	public Class<? extends Decorator>[] after() {
-		return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
-	}
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
+  }
 }

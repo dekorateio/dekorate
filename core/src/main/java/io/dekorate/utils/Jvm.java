@@ -25,22 +25,23 @@ public class Jvm {
   /*
    * Get the current Jvm version.
    * As this is an int, it trims "1.x" prefix of older version.
+   * 
    * @return The Jvm version.
    */
   public static int getVersion() {
     String version = System.getProperty(JAVA_VERSION_KEY);
     if (Strings.isNullOrEmpty(version)) {
-      throw new IllegalStateException("System property: " +JAVA_VERSION_KEY + " is not defined!");
+      throw new IllegalStateException("System property: " + JAVA_VERSION_KEY + " is not defined!");
     }
 
     String[] parts = version.trim().split(DOT);
     if (parts.length == 0) {
       throw new IllegalStateException("Java version: " + version + " uses an unknown format!");
-     
+
     }
 
-    if(parts[0].equals("1")) {
-        version = parts[2];
+    if (parts[0].equals("1")) {
+      version = parts[2];
     } else {
       version = parts[1];
     }

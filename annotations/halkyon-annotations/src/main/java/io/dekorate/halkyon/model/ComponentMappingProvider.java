@@ -22,14 +22,15 @@ import java.util.Map;
 import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 
-
 public class ComponentMappingProvider implements KubernetesResourceMappingProvider {
-  
-  private Map<String, Class<? extends KubernetesResource>> mappings = new HashMap<String, Class<? extends KubernetesResource>>() {{
-    put("halkyon.io/v1beta1#Component", Component.class);
-    put("halkyon.io/v1beta1#Capability", Capability.class);
-  }};
-  
+
+  private Map<String, Class<? extends KubernetesResource>> mappings = new HashMap<String, Class<? extends KubernetesResource>>() {
+    {
+      put("halkyon.io/v1beta1#Component", Component.class);
+      put("halkyon.io/v1beta1#Capability", Capability.class);
+    }
+  };
+
   public Map<String, Class<? extends KubernetesResource>> getMappings() {
     return mappings;
   }

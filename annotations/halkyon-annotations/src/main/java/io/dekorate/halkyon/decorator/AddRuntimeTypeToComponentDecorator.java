@@ -21,13 +21,13 @@ import io.dekorate.kubernetes.decorator.Decorator;
 
 @Description("Add the runtime information to the component.")
 public class AddRuntimeTypeToComponentDecorator extends Decorator<ComponentSpecBuilder> {
-  
+
   private final String runtime;
-  
+
   public AddRuntimeTypeToComponentDecorator(String runtime) {
     this.runtime = runtime;
   }
-  
+
   @Override
   public void visit(ComponentSpecBuilder component) {
     component.withRuntime(runtime);

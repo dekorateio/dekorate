@@ -15,7 +15,6 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 
 public abstract class Decorator<T> extends TypedVisitor<T> implements Comparable<Decorator> {
@@ -24,7 +23,7 @@ public abstract class Decorator<T> extends TypedVisitor<T> implements Comparable
     return new Class[0];
   }
 
-  public Class<?extends Decorator>[] before()  {
+  public Class<? extends Decorator>[] before() {
     return new Class[0];
   }
 

@@ -15,9 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Probe;
+import io.fabric8.kubernetes.api.model.ContainerFluent;
 
 @Description("Add a readiness probe to all containers.")
 public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
@@ -33,14 +33,14 @@ public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
   @Override
   protected void doCreateProbe(ContainerFluent<?> container, Actions actions) {
     container.withNewReadinessProbe()
-      .withExec(actions.execAction)
-      .withHttpGet(actions.httpGetAction)
-      .withTcpSocket(actions.tcpSocketAction)
-      .withInitialDelaySeconds(probe.getInitialDelaySeconds())
-      .withPeriodSeconds(probe.getPeriodSeconds())
-      .withTimeoutSeconds(probe.getTimeoutSeconds())
-      .withSuccessThreshold(probe.getSuccessThreshold())
-      .withFailureThreshold(probe.getFailureThreshold())
-      .endReadinessProbe();
+        .withExec(actions.execAction)
+        .withHttpGet(actions.httpGetAction)
+        .withTcpSocket(actions.tcpSocketAction)
+        .withInitialDelaySeconds(probe.getInitialDelaySeconds())
+        .withPeriodSeconds(probe.getPeriodSeconds())
+        .withTimeoutSeconds(probe.getTimeoutSeconds())
+        .withSuccessThreshold(probe.getSuccessThreshold())
+        .withFailureThreshold(probe.getFailureThreshold())
+        .endReadinessProbe();
   }
 }

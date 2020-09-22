@@ -15,11 +15,9 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.utils.Images;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
-import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
-import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.utils.Images;
 
 public class ApplyRegistryToImageDecorator extends Decorator<DeploymentBuilder> {
 
@@ -39,19 +37,19 @@ public class ApplyRegistryToImageDecorator extends Decorator<DeploymentBuilder> 
   public void visit(DeploymentBuilder deployment) {
     if (name.equals(deployment.getMetadata().getName())) {
       deployment.accept(new Decorator<ContainerFluent>() {
-          @Override
-          public void visit(ContainerFluent container) {
-            if (container.getName().equals(name)) {
-              String image = Images.getImage(registry, group, name, version);
-              container.withImage(image);
-            }
+        @Override
+        public void visit(ContainerFluent container) {
+          if (container.getName().equals(name)) {
+            String image = Images.getImage(registry, group, name, version);
+            container.withImage(image);
           }
-        });
+        }
+      });
     }
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ApplyImageDecorator.class};
+    return new Class[] { ApplyImageDecorator.class };
   }
 }

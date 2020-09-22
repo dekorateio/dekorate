@@ -15,21 +15,21 @@
  */
 package io.dekorate.application.generator;
 
+import java.util.Map;
+
+import javax.lang.model.element.Element;
+
 import io.dekorate.Generator;
 import io.dekorate.Session;
-import io.dekorate.WithSession;
 import io.dekorate.application.adapter.ApplicationConfigAdapter;
 import io.dekorate.application.annotation.EnableApplicationResource;
 import io.dekorate.application.config.ApplicationConfigBuilder;
 import io.dekorate.application.handler.ApplicationHandler;
+import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
-import io.dekorate.config.AnnotationConfiguration;
 
-import javax.lang.model.element.Element;
-import java.util.Map;
-
-public interface ApplicationResourceGenerator extends Generator  {
+public interface ApplicationResourceGenerator extends Generator {
 
   @Override
   default void addAnnotationConfiguration(Map map) {

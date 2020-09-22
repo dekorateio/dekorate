@@ -16,16 +16,17 @@
 
 package io.dekorate.examples.component;
 
-import java.net.URL;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.net.URL;
+
+import org.junit.jupiter.api.Test;
 
 public class Issue130Test {
 
   @Test
   public void shouldContainComponent() {
-    URL url =Issue130Test.class.getClassLoader().getResource("META-INF/dekorate/kuberentes.yml");
+    URL url = Issue130Test.class.getClassLoader().getResource("META-INF/dekorate/kuberentes.yml");
     assertNull(url);
   }
 }
