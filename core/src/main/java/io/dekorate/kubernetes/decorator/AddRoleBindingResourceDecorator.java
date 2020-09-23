@@ -55,7 +55,7 @@ public class AddRoleBindingResourceDecorator extends ResourceProvidingDecorator<
 
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
-    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName() + ":" + this.role;
+    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName() + "-" + this.role;
     String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount : meta.getName();
 
     if (contains(list, "rbac.authorization.k8s.io/v1", "RoleBinding", name)) {
