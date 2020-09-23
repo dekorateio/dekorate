@@ -50,7 +50,7 @@ private static final String DEFAULT_RBAC_API_GROUP = "rbac.authorization.k8s.io"
 
     list.addToItems(new RoleBindingBuilder()
       .withNewMetadata()
-      .withName(meta.getName()+":view")
+      .withName(meta.getName()+"-view")
       .withLabels(meta.getLabels())
       .endMetadata()
       .withNewRoleRef()
