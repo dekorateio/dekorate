@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 The original authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,10 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class GradleInfoReaderTest {
   String GRADLE_INITIAL = "gradle/gradle-initial/build.gradle";
@@ -61,5 +64,16 @@ class GradleInfoReaderTest {
     BuildInfo info = new GradleInfoReader().getInfo(root);
     assertNotNull(info);
     assertEquals("with-settings", info.getName());
+  }
+
+  @Test
+  void shouldSetCorrectResourcePath() {
+    URL gradleInitial = GradleInfoReaderTest.class.getClassLoader().getResource(GRADLE_WITH_SETTINGS);
+    File file = Urls.toFile(gradleInitial);
+    Path root = file.toPath().getParent();
+    BuildInfo info = new GradleInfoReader().getInfo(root);
+    assertNotNull(info);
+    assertNotEquals(info.getResourceDir(), info.getClassOutputDir());
+    assertThat(info.getResourceDir().toString()).contains("src", "main", "resources");
   }
 }
