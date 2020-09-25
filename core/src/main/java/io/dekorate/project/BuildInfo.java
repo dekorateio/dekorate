@@ -47,22 +47,6 @@ public class BuildInfo {
    * @param buildToolVersion The build tool version
    * @param outputFile The output file (the path to the actual jar, war etc).
    * @param classOutputDir The resource output directory (e.g. target/classes, build/classes/main/java etc).
-   */
-  public BuildInfo(String name, String version, String packaging, String buildTool, String buildToolVersion, Path outputFile,
-      Path classOutputDir) {
-    this(name, version, packaging, buildTool, buildToolVersion, outputFile, classOutputDir, classOutputDir);
-  }
-
-  /**
-   * Constructor
-   * 
-   * @param name The project name (e.g. maven artifactId).
-   * @param version The project version (e.g. maven version).
-   * @param packaging The project packaging (e.g. jar, war).
-   * @param buildTool The project build tool (e.g. maven, gralde, sbt)
-   * @param buildToolVersion The build tool version
-   * @param outputFile The output file (the path to the actual jar, war etc).
-   * @param classOutputDir The resource output directory (e.g. target/classes, build/classes/main/java etc).
    * @param resourceDir The directory from which application resources should be read. (e.g. target/classes for maven,
    *        src/main/resources from gralde and so on).
    */
