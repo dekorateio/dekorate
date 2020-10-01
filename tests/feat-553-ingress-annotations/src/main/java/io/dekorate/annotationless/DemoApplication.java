@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.openshift.config;
+package io.dekorate.annotationless;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.junit.jupiter.api.Test;
+@SpringBootApplication
+public class DemoApplication {
 
-public class OpenshiftConfigTest {
-
-  @Test
-  public void testGeneratedCode() {
-    OpenshiftConfig config = OpenshiftConfig.newOpenshiftConfigBuilder()
-        .withName("myapp")
-        .withVersion("1.0.0")
-        .withExpose(true)
-        .addNewLabel("key1", "val1", new String[0])
-        .build();
-
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
   }
-
 }

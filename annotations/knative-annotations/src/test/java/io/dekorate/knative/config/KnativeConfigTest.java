@@ -23,13 +23,10 @@ public class KnativeConfigTest {
   @Test
   public void testGeneratedCode() {
     KnativeConfig config = KnativeConfig.newKnativeConfigBuilder()
-      .withName("myapp")
-      .withVersion("1.0.0")
-      .withExpose(true)
-      .addNewLabel("key1", "val1")
-      .build();
-
-
+        .withName("myapp")
+        .withVersion("1.0.0")
+        .withExpose(true)
+        .addNewLabel("key1", "val1", new String[0])
+        .build();
   }
-
 }

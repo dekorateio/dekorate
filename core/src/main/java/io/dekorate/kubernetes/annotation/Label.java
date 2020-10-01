@@ -16,6 +16,9 @@
 package io.dekorate.kubernetes.annotation;
 
 public @interface Label {
+
   String key();
   String value();
+
+  String[] kinds() default {};
 }

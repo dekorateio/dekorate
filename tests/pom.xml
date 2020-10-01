@@ -59,6 +59,7 @@
       <module>issue-586-knative-scale-bounds</module>
       <module>feat-590-custom-rolling-update-strategy</module>
       <module>feat-429-container-resources</module>
+      <module>feat-553-ingress-annotations</module>
     </modules>
 
 </project>

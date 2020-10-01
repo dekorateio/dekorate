@@ -170,8 +170,8 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
     }
 
     Ports.getHttpPort(config).ifPresent(p -> {
-        resources.decorate(group, new AddIngressDecorator(config, Labels.createLabels(config)));
-        resources.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
+      resources.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
+      resources.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
     });
 
   }
@@ -183,27 +183,14 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
    */
   public Deployment createDeployment(KubernetesConfig appConfig, ImageConfiguration imageConfig)  {
     return new DeploymentBuilder()
-      .withNewMetadata()
-      .withName(appConfig.getName())
-      .withLabels(Labels.createLabels(appConfig))
-      .endMetadata()
-      .withNewSpec()
-      .withReplicas(1)
-      .withTemplate(createPodTemplateSpec(appConfig, imageConfig))
-      .withSelector(createSelector(appConfig))
-      .endSpec()
-      .build();
-  }
-
-
-  /**
-   * Creates a {@link LabelSelector} that matches the labels for the {@link KubernetesConfig}.
-   * @return          A labels selector.
-   */
-  public LabelSelector createSelector(KubernetesConfig config) {
-    return new LabelSelectorBuilder()
-      .withMatchLabels(Labels.createLabels(config))
-      .build();
+        .withNewMetadata()
+        .withName(appConfig.getName())
+        .endMetadata()
+        .withNewSpec()
+        .withReplicas(1)
+        .withTemplate(createPodTemplateSpec(appConfig, imageConfig))
+        .endSpec()
+        .build();
   }
 
 
@@ -214,11 +201,10 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
    */
   public static PodTemplateSpec createPodTemplateSpec(KubernetesConfig appConfig, ImageConfiguration imageConfig) {
     return new PodTemplateSpecBuilder()
-      .withSpec(createPodSpec(appConfig, imageConfig))
-      .withNewMetadata()
-      .withLabels(createLabels(appConfig))
-      .endMetadata()
-      .build();
+        .withSpec(createPodSpec(appConfig, imageConfig))
+        .withNewMetadata()
+        .endMetadata()
+        .build();
   }
 
   /**

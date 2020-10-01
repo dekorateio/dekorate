@@ -16,8 +16,11 @@
 
 package io.dekorate.utils;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Label;
@@ -35,18 +38,24 @@ public class Labels {
    * @param config   The config.
    * @return          A map containing the lables.
    */
-  public static Map<String, String> createLabels(BaseConfig config) {
-    Map<String,String> result =  new HashMap<String, String >() {{
-        put(NAME, config.getName());
-        put(VERSION, config.getVersion());
+  public static Set<Label> createLabels(BaseConfig config) {
+    Set<Label> result = new HashSet<Label>() {
+      {
+        add(new Label(NAME, config.getName(), null));
+        add(new Label(VERSION, config.getVersion(), null));
         if (Strings.isNotNullOrEmpty(config.getPartOf())) {
-          put(PART_OF, config.getPartOf());
+          add(new Label(PART_OF, config.getPartOf(), null));
         }
       }};
 
     for (Label label : config.getLabels()) {
-      result.put(label.getKey(), label.getValue());
+      result.add(label);
     }
     return result; 
+  }
+
+
+  public static Map<String, String> createLabelsAsMap(BaseConfig config, String kind) {
+    return createLabels(config).stream().filter(l -> l.getKinds().length == 0 || Arrays.asList(l.getKinds()).contains(kind)).collect(Collectors.toMap(l -> l.getKey(), l -> l.getValue()));
   }
 }

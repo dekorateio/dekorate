@@ -22,6 +22,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Label;
 import io.dekorate.utils.Metadata;
 
+import java.util.Arrays;
 /**
  * A decorator that adds a label to resources.
  */
@@ -35,12 +36,15 @@ public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> 
   }
 
   public AddLabelDecorator(String name, Label label) {
-    this(ANY, name, label);
+    super(ANY, name);
+    this.label = label;
   }
 
-  public AddLabelDecorator(String kind, String name, Label label) {
-    super(kind, name);
-    this.label = label;
+  @Override
+  public void andThenVisit(VisitableBuilder builder, String kind, ObjectMeta resourceMeta) {
+    if (label.getKinds() == null || label.getKinds().length == 0 || Arrays.asList(label.getKinds()).contains(kind)) {
+      andThenVisit(builder, resourceMeta);
+    }
   }
 
   @Override
