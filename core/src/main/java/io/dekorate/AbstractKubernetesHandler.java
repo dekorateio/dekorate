@@ -56,6 +56,7 @@ import io.dekorate.kubernetes.decorator.ApplyLimitsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
+import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
@@ -109,6 +110,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     Labels.createLabels(config).forEach(l -> {
         resources.decorate(group, new AddLabelDecorator(l));
         resources.decorate(group, new AddToSelectorDecorator(l.getKey(), l.getValue()));
+        resources.decorate(group, new AddToMatchingLabelsDecorator(l.getKey(), l.getValue()));
     });
 
     for (Annotation annotation : config.getAnnotations()) {
