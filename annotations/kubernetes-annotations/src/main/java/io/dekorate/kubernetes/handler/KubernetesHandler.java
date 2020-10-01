@@ -17,6 +17,7 @@ package io.dekorate.kubernetes.handler;
 
 import static io.dekorate.utils.Labels.createLabels;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesHandler;
@@ -188,6 +189,9 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
         .endMetadata()
         .withNewSpec()
         .withReplicas(1)
+        .withNewSelector() //We need to have at least an empty selector so that the decorator can work with it.
+        .withMatchLabels(new HashMap<String, String>())
+        .endSelector()
         .withTemplate(createPodTemplateSpec(appConfig, imageConfig))
         .endSpec()
         .build();
