@@ -236,6 +236,7 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     }
     return new ImageConfigurationBuilder()
         .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
+        .withImage(imageConfig.getImage() != null ? imageConfig.getImage() : null)
         .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
         .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : DEFAULT_REGISTRY)
         .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
