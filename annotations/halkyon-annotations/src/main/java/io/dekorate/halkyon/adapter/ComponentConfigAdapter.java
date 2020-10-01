@@ -53,8 +53,8 @@ public class ComponentConfigAdapter {
             i.secret(),
             i.configmap(),
             i.field())).collect(Collectors.toList()).toArray(new io.dekorate.kubernetes.config.Env[0]),
-        Arrays.asList(instance.labels()).stream().map(i -> new io.dekorate.kubernetes.config.Label(i.key(),
-            i.value())).collect(Collectors.toList()).toArray(new io.dekorate.kubernetes.config.Label[0]),
+                                                                                     Arrays.asList(instance.labels()).stream().map(i -> new io.dekorate.kubernetes.config.Label(i.key(), i.value(),
+                                                                                                                                                                                i.kinds())).collect(Collectors.toList()).toArray(new io.dekorate.kubernetes.config.Label[0]),
         instance.buildType(),
         instance.remote(),
         Arrays.asList(instance.provides()).stream().map(i -> new io.dekorate.halkyon.config.CapabilityConfig(null,
@@ -121,7 +121,8 @@ public class ComponentConfigAdapter {
   private static Label getLabel(Map i) {
     return new Label(
         (String) i.getOrDefault("key", null),
-        (String) i.getOrDefault("value", null));
+        (String) i.getOrDefault("value", null),
+        (String[]) i.getOrDefault("kinds", new String[0]));
   }
 
   private static Env getEnv(Map i) {

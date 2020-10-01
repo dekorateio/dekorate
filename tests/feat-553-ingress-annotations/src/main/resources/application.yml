@@ -1,0 +1,10 @@
+dekorate:
+  kubernetes:
+    expose: true
+    ports:
+      - name: HTTP
+        container-port: 8080
+    annotations:
+      - key: nginx.ingress.kubernetes.io/auth-secret
+        value: my-secret
+        kinds: Ingress,Route

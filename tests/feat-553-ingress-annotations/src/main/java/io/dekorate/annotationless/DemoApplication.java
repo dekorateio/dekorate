@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.kubernetes.annotation;
+package io.dekorate.annotationless;
 
-public @interface Label {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-  String key();
+@SpringBootApplication
+public class DemoApplication {
 
-  String value();
-
-  String[] kinds() default {};
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
 }

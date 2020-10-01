@@ -25,7 +25,6 @@ import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.HostAlias;
-import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.config.Mount;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.config.Port;
@@ -107,9 +106,9 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     resources.decorate(new AddVcsUrlAnnotationDecorator());
     resources.decorate(new AddCommitIdAnnotationDecorator());
 
-    Labels.createLabels(config).forEach((k, v) -> {
-      resources.decorate(group, new AddLabelDecorator(new Label(k, v)));
-      resources.decorate(group, new AddToSelectorDecorator(k, v));
+    Labels.createLabels(config).forEach(l -> {
+        resources.decorate(group, new AddLabelDecorator(l));
+        resources.decorate(group, new AddToSelectorDecorator(l.getKey(), l.getValue()));
     });
 
     for (Annotation annotation : config.getAnnotations()) {

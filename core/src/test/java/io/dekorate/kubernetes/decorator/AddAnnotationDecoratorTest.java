@@ -42,7 +42,7 @@ class AddAnnotationDecoratorTest {
         .withNewMetadata()
         .withName("pod")
         .endMetadata()
-        .accept(new AddAnnotationDecorator(new Annotation("key1", "value1")))
+      .accept(new AddAnnotationDecorator(new Annotation("key1", "value1", new String[0])))
         .build();
 
     assertEquals(expected, actual);
@@ -69,7 +69,7 @@ class AddAnnotationDecoratorTest {
         .withNewMetadata()
         .withName("pod")
         .endMetadata()
-        .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
+      .accept(new AddAnnotationDecorator(null, new Annotation("key1", "value1", new String[]{"Pod"})))
         .build();
 
     assertEquals(expectedPod, actualPod);
@@ -78,7 +78,7 @@ class AddAnnotationDecoratorTest {
         .withNewMetadata()
         .withName("my-service")
         .endMetadata()
-        .accept(new AddAnnotationDecorator("Pod", null, new Annotation("key1", "value1")))
+      .accept(new AddAnnotationDecorator(null, new Annotation("key1", "value1", new String[]{"Pod"})))
         .build();
 
     assertEquals(expectedService, actualService);
