@@ -16,7 +16,10 @@
 package io.dekorate.kubernetes.annotation;
 
 public @interface Annotation {
+
   String key();
 
   String value();
+
+  String[] kinds() default {};
 }

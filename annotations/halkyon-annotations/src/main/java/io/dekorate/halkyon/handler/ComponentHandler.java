@@ -128,14 +128,14 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
       allLabels.put(l.getKey(), l.getValue());
     });
 
-    Labels.createLabels(kubernetesConfig).forEach((k, v) -> {
+    Labels.createLabelsAsMap(kubernetesConfig, "Component").forEach((k, v) -> {
       if (!allLabels.containsKey(k)) {
         allLabels.put(k, v);
       }
     });
 
     allLabels.forEach((k, v) -> {
-      resources.decorateCustom(ResourceGroup.NAME, new AddLabelDecorator(new Label(k, v)));
+        resources.decorateCustom(ResourceGroup.NAME, new AddLabelDecorator(new Label(k, v, new String[]{"Component"})));
       resources.decorateCustom(ResourceGroup.NAME, new AddToSelectorDecorator(k, v));
     });
 

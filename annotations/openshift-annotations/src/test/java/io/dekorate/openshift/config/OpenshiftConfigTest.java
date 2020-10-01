@@ -25,7 +25,7 @@ public class OpenshiftConfigTest {
         .withName("myapp")
         .withVersion("1.0.0")
         .withExpose(true)
-        .addNewLabel("key1", "val1")
+        .addNewLabel("key1", "val1", new String[0])
         .build();
 
   }

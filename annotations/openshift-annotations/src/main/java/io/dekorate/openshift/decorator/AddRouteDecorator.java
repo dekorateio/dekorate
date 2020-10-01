@@ -51,7 +51,7 @@ public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesList
     list.addNewRouteItem()
         .withNewMetadata()
         .withName(config.getName())
-        .withLabels(Labels.createLabels(config))
+        .withLabels(Labels.createLabelsAsMap(config, "Route"))
         .endMetadata()
         .withNewSpec()
         .withHost(config.getHost())

@@ -50,14 +50,15 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
       return;
     }
 
+    Map<String, String> labels = Labels.createLabelsAsMap(config, "Service");
     list.addNewServiceItem()
         .withNewMetadata()
         .withName(config.getName())
-        .withLabels(Labels.createLabels(config))
+        .withLabels(labels)
         .endMetadata()
         .withNewSpec()
         .withType(config.getServiceType().name())
-        .withSelector(Labels.createLabels(config))
+        .withSelector(labels)
         .withPorts(Arrays.asList(config.getPorts()).stream()
             .filter(distinct(p -> p.getName())).map(this::toServicePort).collect(Collectors.toList()))
         .endSpec()
