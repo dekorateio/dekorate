@@ -222,13 +222,14 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
       return ImageConfiguration.from(config);
     }
     return new ImageConfigurationBuilder()
-      .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
-      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
-      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : DEFAULT_REGISTRY)
-      .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
-      .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
-      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
-      .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
-      .build();
+        .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
+        .withImage(imageConfig.getImage() != null ? imageConfig.getImage() : null)
+        .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
+        .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : DEFAULT_REGISTRY)
+        .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
+        .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
+        .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
+        .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
+        .build();
   }
 }

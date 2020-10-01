@@ -1856,6 +1856,39 @@ This paradox will be eliminated soon, once our fast paced branch will be `2.0.x`
 
 Depends on what your goal is. If you need all the latest features use the volatile branch. If you need something that more slower paced that is in bug fixing mode, then use the stable branch.
 
+## Frequently asked questions
+
+### How do I tell dekorate to use a custom image name?
+
+By default the image name used is `${group}/${name}:${version}` as extracted by the project / environment or explicitly configured by the user.
+If you don't want to tinker those properties then you can:
+
+#### Using annotations
+
+Add `@DockerBuild(image="foo/bar:baz")` to the your main or whatever class you use to configure dekorate. If instead of docker you are using jib or s2i you can use `@JibBuild(image="foo/bar:baz")` or `@S2iBuild(image="foo/bar:baz")` respectively.
+
+#### Using annotations
+
+Add the following to your application.properties
+
+```
+dekorate.docker.image=foo/bar:baz
+```
+
+#### Using annotations
+
+Add the following to your application.yaml
+
+```
+dekorate:
+  docker:
+    image: foo/bar:baz
+```
+
+#### related examples
+ - [kubernetes with custom image name example](examples/kubernetes-example-with-custom-image-name)
+
+
 ## Want to get involved?
 
 By all means please do! We love contributions! 

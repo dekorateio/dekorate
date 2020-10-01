@@ -253,9 +253,8 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
   }
   
   private static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig appConfig, Configurators configurators) {
-    Optional<ImageConfiguration> origin = configurators.getImageConfig(BuildServiceFactories.supplierMatches(project));
-
-    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i)).orElse(ImageConfiguration.from(appConfig));
+    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i))
+        .orElse(ImageConfiguration.from(appConfig));
   }
 
   private static ImageConfiguration merge(KubernetesConfig appConfig, ImageConfiguration imageConfig) {
@@ -266,14 +265,15 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       return ImageConfiguration.from(appConfig);
     }
     return new ImageConfigurationBuilder()
-      .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : appConfig.getProject())
-      .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
-      .withName(imageConfig.getName() != null ? imageConfig.getName() : appConfig.getName())
-      .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : appConfig.getVersion())
-      .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
-      .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : "Dockerfile")
-      .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
-      .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
-      .build();
+        .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : appConfig.getProject())
+        .withImage(imageConfig.getImage() != null ? imageConfig.getImage() : null)
+        .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
+        .withName(imageConfig.getName() != null ? imageConfig.getName() : appConfig.getName())
+        .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : appConfig.getVersion())
+        .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
+        .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : "Dockerfile")
+        .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
+        .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
+        .build();
   }
 }
