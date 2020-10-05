@@ -94,10 +94,16 @@ public @interface KnativeApplication {
   Label[] labels() default {};
 
   /**
+   *
+   */
+  String revisionName() default "";
+
+  /**
    * Custom annotations to add to all resources.
    * @return The annotations.
    */
   Annotation[] annotations() default {};
+
 
   /**
    * Environment variables to add to all containers.
@@ -271,5 +277,16 @@ public @interface KnativeApplication {
    * Global autoscaling configuration.
    */
   GlobalAutoScaling globalAutoScaling() default @GlobalAutoScaling(autoScalerClass = AutoScalerClass.kpa);
+
+  /**
+   * The template name to specify.
+   */
+  String templateName() default ""; 
+
+
+  /**
+   * Traffic configuration for the application.
+   */
+  Traffic[] traffic() default {};
 
 }
