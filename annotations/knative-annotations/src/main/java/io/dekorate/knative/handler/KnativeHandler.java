@@ -31,6 +31,7 @@ import io.dekorate.knative.config.EditableKnativeConfig;
 import io.dekorate.knative.config.GlobalAutoScaling;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigBuilder;
+import io.dekorate.knative.config.Traffic;
 import io.dekorate.knative.decorator.ApplyGlobalAutoscalingClassDecorator;
 import io.dekorate.knative.decorator.ApplyGlobalContainerConcurrencyDecorator;
 import io.dekorate.knative.decorator.ApplyGlobalRequestsPerSecondTargetDecorator;
@@ -40,6 +41,8 @@ import io.dekorate.knative.decorator.ApplyLocalAutoscalingTargetDecorator;
 import io.dekorate.knative.decorator.ApplyLocalContainerConcurrencyDecorator;
 import io.dekorate.knative.decorator.ApplyMaxScaleDecorator;
 import io.dekorate.knative.decorator.ApplyMinScaleDecorator;
+import io.dekorate.knative.decorator.ApplyRevisionNameDecorator;
+import io.dekorate.knative.decorator.ApplyTrafficDecorator;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
@@ -172,6 +175,18 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
       resources.decorate(KNATIVE, new AddConfigMapDataDecorator("config-autoscaler", "enable-scale-to-zero",
           String.valueOf(config.isAutoDeployEnabled())));
+    }
+
+    if (Strings.isNotNullOrEmpty(config.getRevisionName())) {
+      resources.decorate(KNATIVE, new ApplyRevisionNameDecorator(config.getName(), config.getRevisionName()));
+    }
+
+    for (Traffic traffic: config.getTraffic()) {
+      String revisionName = Strings.isNotNullOrEmpty(config.getRevisionName()) ? config.getRevisionName() : null;
+      String tag = Strings.isNotNullOrEmpty(traffic.getTag()) ? traffic.getTag() : null;
+      boolean latestRevision =  revisionName == null ? true : traffic.isLatestRevision();
+      long percentage = traffic.getPercentage();
+      resources.decorate(KNATIVE, new ApplyTrafficDecorator(config.getName(), revisionName, latestRevision, percentage, tag));
     }
   }
 

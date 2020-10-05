@@ -61,6 +61,7 @@
       <module>feat-590-custom-rolling-update-strategy</module>
       <module>feat-429-container-resources</module>
       <module>feat-553-ingress-annotations</module>
+      <module>feat-642-knative-traffic-splitting</module>
     </modules>
 
 </project>
