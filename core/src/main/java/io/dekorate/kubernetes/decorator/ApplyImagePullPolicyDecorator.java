@@ -18,21 +18,42 @@ package io.dekorate.kubernetes.decorator;
 import io.dekorate.deps.kubernetes.api.model.ContainerFluent;
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 
-public class ApplyImagePullPolicyDecorator extends Decorator<ContainerFluent>  {
+public class ApplyImagePullPolicyDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
   private final ImagePullPolicy imagePullPolicy;
 
+  public ApplyImagePullPolicyDecorator(String deploymentName, String containerName, ImagePullPolicy imagePullPolicy) {
+    super(deploymentName, containerName);
+    this.imagePullPolicy = imagePullPolicy;
+  }
+
+  public ApplyImagePullPolicyDecorator(String containerName, ImagePullPolicy imagePullPolicy) {
+    this(ANY, containerName, imagePullPolicy);
+  }
+
   public ApplyImagePullPolicyDecorator(ImagePullPolicy imagePullPolicy) {
-    this.imagePullPolicy = imagePullPolicy != null ? imagePullPolicy : ImagePullPolicy.IfNotPresent;
+    this(ANY, imagePullPolicy);
+  }
+
+  public ApplyImagePullPolicyDecorator(String deploymentName, String containerName, String imagePullPolicy) {
+    this(deploymentName, containerName, ImagePullPolicy.valueOf(imagePullPolicy));
+  }
+
+  public ApplyImagePullPolicyDecorator(String containerName, String imagePullPolicy) {
+    this(ANY, containerName, imagePullPolicy);
+  }
+
+  public ApplyImagePullPolicyDecorator(String imagePullPolicy) {
+    this(ANY, imagePullPolicy);
   }
 
   @Override
-  public void visit(ContainerFluent container) {
+  public void andThenVisit(ContainerFluent<?> container) {
     container.withImagePullPolicy(imagePullPolicy.name());
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class, AddInitContainerDecorator.class };
   }
 
 }
