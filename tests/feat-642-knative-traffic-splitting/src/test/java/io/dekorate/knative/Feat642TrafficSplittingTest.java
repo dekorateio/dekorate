@@ -26,10 +26,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.utils.Serialization;
-import io.fabric8.knative.serving.v1.Service;
-import io.fabric8.knative.serving.v1.TrafficTarget;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.knative.serving.v1.Service;
+import io.dekorate.deps.knative.serving.v1.TrafficTarget;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 
 public class Feat642TrafficSplittingTest {
 

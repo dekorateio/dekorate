@@ -23,10 +23,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.utils.Serialization;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.extensions.Ingress;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
+import io.dekorate.deps.kubernetes.api.model.extensions.Ingress;
 
 public class Feat533Test {
 
