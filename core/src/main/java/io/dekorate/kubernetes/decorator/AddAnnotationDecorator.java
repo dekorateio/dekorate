@@ -37,6 +37,13 @@ public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBui
     this.annotation = annotation;
   }
 
+  public AddAnnotationDecorator(String name, String key, String value, String... kinds) {
+    super(ANY, name);
+    this.annotation = new Annotation(key, value, kinds);
+  }
+
+
+
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, String kind, ObjectMeta resourceMeta) {
     if (annotation.getKinds() == null || annotation.getKinds().length == 0 || Arrays.asList(annotation.getKinds()).contains(kind)) {
