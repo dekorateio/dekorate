@@ -40,6 +40,12 @@ public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> 
     this.label = label;
   }
 
+  public AddLabelDecorator(String name, String key, String value, String... kinds) {
+    super(ANY, name);
+    this.label = new Label(key, value, kinds);
+  }
+
+
   @Override
   public void andThenVisit(VisitableBuilder builder, String kind, ObjectMeta resourceMeta) {
     if (label.getKinds() == null || label.getKinds().length == 0 || Arrays.asList(label.getKinds()).contains(kind)) {
