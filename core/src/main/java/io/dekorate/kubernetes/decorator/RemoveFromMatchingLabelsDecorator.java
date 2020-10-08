@@ -28,6 +28,6 @@ public class RemoveFromMatchingLabelsDecorator extends NamedResourceDecorator<La
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ApplyLabelSelectorDecorator.class };
+    return new Class[] { ApplyLabelSelectorDecorator.class, AddToMatchingLabelsDecorator.class };
   }
 }
