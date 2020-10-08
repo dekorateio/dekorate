@@ -1831,8 +1831,8 @@ At the moment dekorate is using 3 branches in parallel and two major versions ar
 - master (active development, pull requests should point here)
 - 2.0.x  (not released yet)
 - 1.0.x  (important bug fixes)
-- 0.12.x (new features + bug fixes)
-- 0.11.x (old branch, no longer maintained, will soon be removed)
+- 0.13.x (new features + bug fixes)
+- 0.12.x (old branch, no longer maintained, will soon be removed)
 
 ### Pull request guidelines
 
