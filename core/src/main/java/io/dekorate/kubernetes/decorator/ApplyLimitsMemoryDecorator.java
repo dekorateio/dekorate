@@ -21,7 +21,7 @@ import io.dekorate.deps.kubernetes.api.model.Quantity;
 
 public class ApplyLimitsMemoryDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
 
-	private static final String MEM = "mem";
+  private static final String MEM = "memory";
 
   private final String amount;
 

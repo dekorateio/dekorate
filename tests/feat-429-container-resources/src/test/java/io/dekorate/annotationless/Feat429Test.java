@@ -38,9 +38,9 @@ public class Feat429Test {
     Container c = d.getSpec().getTemplate().getSpec().getContainers().get(0);
     assertNotNull(c);
     assertEquals("100m", c.getResources().getRequests().get("cpu").toString());
-    assertEquals("64Mi", c.getResources().getRequests().get("mem").toString());
+    assertEquals("64Mi", c.getResources().getRequests().get("memory").toString());
     assertEquals("500m", c.getResources().getLimits().get("cpu").toString());
-    assertEquals("256Mi", c.getResources().getLimits().get("mem").toString());
+    assertEquals("256Mi", c.getResources().getLimits().get("memory").toString());
   }
 
 
