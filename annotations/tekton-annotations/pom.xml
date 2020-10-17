@@ -154,6 +154,7 @@ limitations under the License.
                   <includes>
                     <include>io/dekorate/tekton/adapter/**</include>
                     <include>io/dekorate/tekton/apt/**</include>
+                    <include>io/dekorate/kubernetes/config/**</include>
                     <include>io/dekorate/tekton/config/**</include>
                     <include>io/dekorate/tekton/configurator/**</include>
                     <include>io/dekorate/tekton/generator/**</include>
@@ -181,6 +182,7 @@ limitations under the License.
                   <includes>
                     <include>io/dekorate/tekton/adapter/**</include>
                     <include>io/dekorate/tekton/annotation/**</include>
+                    <include>io/dekorate/kubernetes/config/**</include>
                     <include>io/dekorate/tekton/config/**</include>
                     <include>io/dekorate/tekton/configurator/**</include>
                     <include>io/dekorate/tekton/generator/**</include>
