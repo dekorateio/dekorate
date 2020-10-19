@@ -39,10 +39,10 @@ public class Jvm {
      
     }
 
-    if(parts[0].equals("1")) {
-        version = parts[2];
-    } else {
+    if (parts[0].equals("1")) {
       version = parts[1];
+    } else {
+      version = parts[0];
     }
     return Integer.parseInt(version);
   }
