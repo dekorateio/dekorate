@@ -14,18 +14,22 @@
  * limitations under the License.
  *
  **/
-
 package io.dekorate.tekton.decorator;
 
+import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-public class AddParamToTaskDecorator extends NamedTaskDecorator {
+/**
+ * Similar to {@link AddParamToTaskDecorator} but will replace existing values.
+ */
+public class ApplyParamToTaskDecorator extends NamedTaskDecorator {
 
   private final String name;
   private final String description;
   private final String defaultValue;
 
-  public AddParamToTaskDecorator(String taskName, String name, String description, String defaultValue) {
+  public ApplyParamToTaskDecorator(String taskName, String name, String description, String defaultValue) {
     super(taskName);
     this.name = name;
     this.description = description;
@@ -34,10 +38,14 @@ public class AddParamToTaskDecorator extends NamedTaskDecorator {
 
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
-    taskSpec.addNewParam()
-      .withName(name)
-      .withDescription(description)
-      .withNewDefault().withStringVal(defaultValue).endDefault()
-      .endParam();
+    taskSpec.removeMatchingFromParams(p -> name.equals(p.getName()));
+    taskSpec.addNewParam().withName(name).withDescription(description).withNewDefault().withStringVal(defaultValue)
+        .endDefault().endParam();
   }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, TaskProvidingDecorator.class, AddParamToTaskDecorator.class };
+  }
+
 }
