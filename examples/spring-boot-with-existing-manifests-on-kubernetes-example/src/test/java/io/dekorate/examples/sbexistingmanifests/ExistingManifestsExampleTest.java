@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.batch.Job;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
@@ -37,10 +38,20 @@ class ExistingManifestsExampleTest {
     assertTrue(job.isPresent());
     assertEquals(job.get().getMetadata().getName(), "Example Job");
     assertEquals(job.get().getSpec().getTemplate().getMetadata().getName(), "Example Job");
-    final Optional<Container> container = job.get().getSpec().getTemplate().getSpec().getContainers().stream()
+    Optional<Container> container = job.get().getSpec().getTemplate().getSpec().getContainers().stream()
       .filter(c -> c.getName().equals("countdown"))
       .filter(c -> c.getImage().equals("alpine:3.10"))
       .findAny();
     assertTrue(container.isPresent());
+
+
+    final Optional<Deployment> deployment = list.getItems().stream().filter(Deployment.class::isInstance).map(Deployment.class::cast).findAny();
+    assertTrue(deployment.isPresent());
+    container = deployment.get().getSpec().getTemplate().getSpec().getContainers().stream()
+      .filter(c -> c.getName().equals("spring-boot-with-existing-manifests-example"))
+      .findAny();
+    assertTrue(container.isPresent());
+    assertEquals(123, container.get().getSecurityContext().getRunAsUser());
+    assertEquals(789, container.get().getSecurityContext().getRunAsGroup());
   }
 }
