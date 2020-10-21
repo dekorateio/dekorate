@@ -25,6 +25,7 @@ import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
+import io.dekorate.kubernetes.decorator.ApplyApplicationContainerDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
@@ -87,6 +88,7 @@ public class ApplyDeploymentTriggerDecorator extends NamedResourceDecorator<Depl
         ApplyServiceAccountNamedDecorator.class,
         AddReadinessProbeDecorator.class,
         AddLivenessProbeDecorator.class,
+        ApplyApplicationContainerDecorator.class,
         AddSidecarDecorator.class,
         AddInitContainerDecorator.class };
   }
