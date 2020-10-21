@@ -29,6 +29,7 @@ import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
+import io.dekorate.kubernetes.decorator.ApplyApplicationContainerDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
@@ -78,14 +79,16 @@ public class ApplyDeploymentTriggerDecorator extends NamedResourceDecorator<Depl
   public Class<? extends Decorator>[] after() {
     //Due to: https://github.com/sundrio/sundrio/issues/135 this decorator breaks the decoratros below.
     //So, let's make sure its called after them (as a workaround).
-    return new Class[] {AddEnvVarDecorator.class, AddPortDecorator.class,
-      AddMountDecorator.class, AddPvcVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class, AddAzureDiskVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
-      ApplyImageDecorator.class, ApplyImagePullPolicyDecorator.class,
-      ApplyWorkingDirDecorator.class, ApplyCommandDecorator.class, ApplyArgsDecorator.class,
-      ApplyServiceAccountNamedDecorator.class,
-      AddReadinessProbeDecorator.class,
-      AddLivenessProbeDecorator.class,
-      AddSidecarDecorator.class,
-      AddInitContainerDecorator.class};
+    return new Class[] { AddEnvVarDecorator.class, AddPortDecorator.class,
+        AddMountDecorator.class, AddPvcVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
+        AddAzureDiskVolumeDecorator.class, AddAwsElasticBlockStoreVolumeDecorator.class,
+        ApplyImageDecorator.class, ApplyImagePullPolicyDecorator.class,
+        ApplyWorkingDirDecorator.class, ApplyCommandDecorator.class, ApplyArgsDecorator.class,
+        ApplyServiceAccountNamedDecorator.class,
+        AddReadinessProbeDecorator.class,
+        AddLivenessProbeDecorator.class,
+        ApplyApplicationContainerDecorator.class,
+        AddSidecarDecorator.class,
+        AddInitContainerDecorator.class };
   }
 }

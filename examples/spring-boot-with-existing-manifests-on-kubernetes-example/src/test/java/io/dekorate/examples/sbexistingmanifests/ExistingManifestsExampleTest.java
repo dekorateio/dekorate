@@ -48,7 +48,7 @@ class ExistingManifestsExampleTest {
     final Optional<Deployment> deployment = list.getItems().stream().filter(Deployment.class::isInstance).map(Deployment.class::cast).findAny();
     assertTrue(deployment.isPresent());
     container = deployment.get().getSpec().getTemplate().getSpec().getContainers().stream()
-      .filter(c -> c.getName().equals("spring-boot-with-existing-manifests-example"))
+      .filter(c -> "spring-boot-with-existing-manifests-example".equals(c.getName()))
       .findAny();
     assertTrue(container.isPresent());
     assertEquals(123, container.get().getSecurityContext().getRunAsUser());

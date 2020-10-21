@@ -30,9 +30,11 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.DeploymentStrategy;
+import io.dekorate.kubernetes.config.ContainerBuilder;
 import io.dekorate.kubernetes.config.EditableKubernetesConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
@@ -44,6 +46,7 @@ import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddIngressRuleDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
+import io.dekorate.kubernetes.decorator.ApplyApplicationContainerDecorator;
 import io.dekorate.kubernetes.decorator.ApplyDeploymentStrategyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
@@ -133,16 +136,18 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
 
     addDecorators(KUBERNETES, config);
 
-    if (config.isHeadless()) {
-      resources.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
-    }
+  }
 
-    if (config.getReplicas() != 1) {
-      resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
-    }
+  public boolean canHandle(Class<? extends Configuration> type) {
+    return type.equals(KubernetesConfig.class) ||
+        type.equals(EditableKubernetesConfig.class);
+  }
 
-    resources.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(), config.getRollingUpdate()));
+  @Override
+  protected void addDecorators(String group, KubernetesConfig config) {
+    super.addDecorators(group, config);
 
+    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
     String image = Strings.isNotNullOrEmpty(imageConfig.getImage())
       ? imageConfig.getImage()
       : Images.getImage(imageConfig.isAutoPushEnabled()
@@ -150,17 +155,18 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
                         : imageConfig.getRegistry(),
                         imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
-    resources.decorate(KUBERNETES, new ApplyImageDecorator(config.getName(), image));
-  }
+    Container appContainer = new ContainerBuilder()
+          .withName(config.getName())
+          .withImage(image)
+          .withImagePullPolicy(ImagePullPolicy.IfNotPresent)
+          .addNewEnvVar()
+            .withName(KUBERNETES_NAMESPACE)
+            .withField(METADATA_NAMESPACE)
+          .endEnvVar()
+          .build();
 
-  public boolean canHandle(Class<? extends Configuration> type) {
-    return type.equals(KubernetesConfig.class) ||
-      type.equals(EditableKubernetesConfig.class);
-  }
-
-  @Override
-  protected void addDecorators(String group, KubernetesConfig config) {
-    super.addDecorators(group, config);
+    resources.decorate(group, new ApplyApplicationContainerDecorator(config.getName(), appContainer));
+    resources.decorate(group, new ApplyImageDecorator(config.getName(), image));
 
     for (Container container : config.getInitContainers()) {
       resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
@@ -175,6 +181,18 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
       resources.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
     });
 
+    if (config.isHeadless()) {
+      resources.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
+    }
+
+    if (config.getReplicas() != 1) {
+      resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+    }
+
+    resources.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(),
+        config.getRollingUpdate()));
+
+    resources.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(), config.getRollingUpdate()));
   }
 
   /**
@@ -217,23 +235,8 @@ public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfi
    * @return The pod specification.
    */
   public static PodSpec createPodSpec(KubernetesConfig appConfig, ImageConfiguration imageConfig) {
-   String image = Images.getImage(imageConfig.isAutoPushEnabled() ?
-                                  (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY : imageConfig.getRegistry())
-                                  : imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion()); 
-
     return new PodSpecBuilder()
-      .addNewContainer()
-      .withName(appConfig.getName())
-      .withImage(image)
-      .withImagePullPolicy(IF_NOT_PRESENT)
-      .addNewEnv()
-      .withName(KUBERNETES_NAMESPACE)
-      .withNewValueFrom()
-      .withNewFieldRef(null, METADATA_NAMESPACE)
-      .endValueFrom()
-      .endEnv()
-      .endContainer()
-      .build();
+        .build();
   }
 
   @Override

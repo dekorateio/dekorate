@@ -37,7 +37,7 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
   }
 
 }

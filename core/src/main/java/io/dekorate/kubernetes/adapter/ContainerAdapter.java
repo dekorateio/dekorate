@@ -30,22 +30,20 @@ import io.dekorate.kubernetes.decorator.ApplyLimitsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLimitsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
-import io.dekorate.utils.Images;
 import io.dekorate.utils.Strings;
 
 public class ContainerAdapter {
 
-  public static Container adapt(io.dekorate.kubernetes.config.Container container)  {
-     String name = container.getName();
-    if (Strings.isNullOrEmpty(name)) {
-      name = Images.getName(container.getImage());
-    }
+  /**
+   * Applies all container properties to the {@link ContainerBuilder}.
+   * @param builder The container builder
+   * @param container The container
+   */
+  public static void applyContainerToBuilder(ContainerBuilder builder, io.dekorate.kubernetes.config.Container container) {
+    String name = container.getName();
 
-    ContainerBuilder builder = new ContainerBuilder()
-      .withName(name)
-      .withImage(container.getImage())
-      .withCommand(container.getCommand())
-      .withArgs(container.getArguments());
+    builder.withName(container.getName()).withImage(container.getImage()).withCommand(container.getCommand())
+        .withArgs(container.getArguments());
 
      for (Env env : container.getEnvVars()) {
       builder.accept(new AddEnvVarDecorator(env));
@@ -62,7 +60,7 @@ public class ContainerAdapter {
     builder.accept(new AddLivenessProbeDecorator(name, container.getLivenessProbe()));
     builder.accept(new AddReadinessProbeDecorator(name, container.getReadinessProbe()));
 
-    //Container resources
+    // Container resources
     if (Strings.isNotNullOrEmpty(container.getLimitResources().getCpu())) {
       builder.accept(new ApplyLimitsCpuDecorator(name, container.getLimitResources().getCpu()));
     }
@@ -78,7 +76,16 @@ public class ContainerAdapter {
     if (Strings.isNotNullOrEmpty(container.getRequestResources().getMemory())) {
       builder.accept(new ApplyRequestsMemoryDecorator(name, container.getRequestResources().getMemory()));
     }
- 
+  }
+
+  /**
+   * Adapt the dekorate {@link io.dekorate.kubernetes.config.Container} to a kuberntes model {@link Container}.
+   * @param container the input container
+   * @return the kubernetes model container
+   */
+  public static Container adapt(io.dekorate.kubernetes.config.Container container) {
+    ContainerBuilder builder = new ContainerBuilder();
+    applyContainerToBuilder(builder, container);
     return builder.build();
   }
 }

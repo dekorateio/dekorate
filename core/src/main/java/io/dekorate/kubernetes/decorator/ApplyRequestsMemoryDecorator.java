@@ -40,7 +40,7 @@ public class ApplyRequestsMemoryDecorator extends ApplicationContainerDecorator<
     container.editOrNewResources().addToRequests(MEM, new Quantity(amount)).endResources();
 	}
 
-	public Class<? extends Decorator>[] after() {
-		return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
-	}
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
+  }
 }

@@ -40,7 +40,7 @@ public class ApplyRequestsCpuDecorator extends ApplicationContainerDecorator<Con
     container.editOrNewResources().addToRequests(CPU, new Quantity(amount)).endResources();
 	}
 
-	public Class<? extends Decorator>[] after() {
-		return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
-	}
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
+  }
 }

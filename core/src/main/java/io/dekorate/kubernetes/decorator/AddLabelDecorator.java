@@ -73,7 +73,7 @@ public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> 
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[]{ResourceProvidingDecorator.class, AddSidecarDecorator.class};
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
   }
 
   @Override
