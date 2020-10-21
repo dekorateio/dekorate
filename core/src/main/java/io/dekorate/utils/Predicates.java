@@ -4,10 +4,10 @@ package io.dekorate.utils;
 import java.util.function.Predicate;
 
 import io.dekorate.kubernetes.config.Port;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.ContainerBuilder;
-import io.fabric8.kubernetes.api.model.ContainerPort;
-import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
+import io.dekorate.deps.kubernetes.api.model.Container;
+import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
+import io.dekorate.deps.kubernetes.api.model.ContainerPort;
+import io.dekorate.deps.kubernetes.api.model.ContainerPortBuilder;
 
 public class Predicates {
   /**
@@ -23,10 +23,10 @@ public class Predicates {
   }
 
   /**
-   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
+   * Creates a {@link io.dekorate.deps.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
    */
-  public static io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(io.dekorate.kubernetes.config.Container container) {
-    return new io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder>() {
+  public static io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(io.dekorate.kubernetes.config.Container container) {
+    return new io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder>() {
       @Override
       public Boolean apply(ContainerBuilder builder) {
         return matches(container).test(builder.build());
@@ -49,10 +49,10 @@ public class Predicates {
   }
 
   /**
-   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerPortBuilder}.
+   * Creates a {@link io.dekorate.deps.kubernetes.api.builder.Predicate} for {@link ContainerPortBuilder}.
    */
-  public static io.fabric8.kubernetes.api.builder.Predicate<ContainerPortBuilder> builderMatches(io.dekorate.kubernetes.config.Port port) {
-     return new io.fabric8.kubernetes.api.builder.Predicate<ContainerPortBuilder> () {
+  public static io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerPortBuilder> builderMatches(io.dekorate.kubernetes.config.Port port) {
+     return new io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerPortBuilder> () {
       @Override
       public Boolean apply(ContainerPortBuilder builder) {
         return matches(port).test(builder.build());

@@ -16,7 +16,6 @@
 package io.dekorate.kubernetes.decorator;
 
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.annotation.Protocol;
@@ -25,6 +24,7 @@ import io.dekorate.utils.Strings;
 import io.dekorate.deps.kubernetes.api.model.ContainerBuilder;
 import io.dekorate.deps.kubernetes.api.model.ContainerPort;
 import io.dekorate.deps.kubernetes.api.model.ContainerPortBuilder;
+import io.dekorate.utils.Predicates;
 
 /**
  * A decorator that adds a port to all containers.
@@ -45,8 +45,8 @@ public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBui
 
   @Override
   public void andThenVisit(ContainerBuilder container) {
-    if (container.buildPorts().stream().anyMatch(matches(port))) {
-      container.editMatchingPort(adapt(matches(port)))
+    if (container.buildPorts().stream().anyMatch(Predicates.matches(port))) {
+      container.editMatchingPort(Predicates.builderMatches(port))
           .withName(port.getName())
           .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
           .withContainerPort(port.getContainerPort())
@@ -79,32 +79,4 @@ public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBui
   public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
   }
-
-  /**
-   * Adapts java.util.function.Predicate to kubernetes client Predicate.
-   */ 
-  private static io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerPortBuilder> adapt(Predicate<ContainerPort> p) {
-    return new io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerPortBuilder> () {
-      @Override
-      public Boolean apply(ContainerPortBuilder item) {
-        return p.test(item.build());
-      }
-    };
-  }
-
-  /**
-   * Creates a {@link Predicate} that matches the {@link Port}.
-   */
-  private static Predicate<ContainerPort> matches(Port port) {
-    return new Predicate<ContainerPort>() {
-      @Override
-      public boolean test(ContainerPort containerPort) {
-        if (Strings.isNullOrEmpty(containerPort.getName())) {
-          return containerPort.getContainerPort().intValue() == port.getContainerPort();
-        } else return containerPort.getName().equals(port.getName());
-      }
-    };
-  }
-
-
 }
