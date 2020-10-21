@@ -19,3 +19,17 @@ items:
                 - "-c"
                 - "for i in 9 8 7 6 5 4 3 2 1 ; do echo $i; done"
               restartPolicy: Never
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: spring-boot-with-existing-manifests-example
+    spec:
+      template:
+        spec:
+          securityContext:
+            supplementalGroups: [5555]
+          containers:
+          - image: busybox
+            securityContext:
+              runAsUser: 123
+              runAsGroup: 789
