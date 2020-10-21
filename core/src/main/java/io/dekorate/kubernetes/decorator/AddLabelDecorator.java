@@ -24,9 +24,9 @@ import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 /**
- * A decorator that adds a label to resources.
+ * A decorator that adds a label to the matching resources (filtered by name and/or kinds).
  */
-@Description("Add a label to the all metadata.")
+@Description("Add a label to the matching resources (filtered by name and/or kinds).")
 public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> {
 
   private final Label label;
