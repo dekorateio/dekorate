@@ -20,7 +20,10 @@ import io.dekorate.deps.kubernetes.api.model.ObjectMetaBuilder;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Annotation;
 
-@Description("A decorator that adds an annotation to all resources.")
+/**
+ * A decorator that removes an annotation from the matching resources (filtered by name and/or kinds).
+ */
+@Description("Remove an annotation from the matching resources (filtered by name and/or kinds).")
 public class RemoveAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
 
   private final String annotationKey;

@@ -24,9 +24,9 @@ import io.dekorate.utils.Metadata;
 
 import java.util.Arrays;
 /**
- * A decorator that adds a label to resources.
+ * A decorator that adds a label to the matching resources (filtered by name and/or kinds).
  */
-@Description("Add a label to the all metadata.")
+@Description("Add a label to the matching resources (filtered by name and/or kinds).")
 public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> {
 
   private final Label label;

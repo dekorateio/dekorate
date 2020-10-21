@@ -140,15 +140,14 @@ public class OpenshiftHandler extends AbstractKubernetesHandler<OpenshiftConfig>
     resources.decorate(group, new AddRouteDecorator(config));
 
     if (config.hasAttribute(RUNTIME_TYPE)) {
-      resources.decorate(group,
-                         new AddLabelDecorator(new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE), new String[0])));
+      resources.decorate(group, new AddLabelDecorator(config.getName(), new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE), new String[0])));
     }
-    resources.decorate(group, new RemoveAnnotationDecorator(Annotations.VCS_URL));
+    resources.decorate(group, new RemoveAnnotationDecorator(config.getName(), Annotations.VCS_URL));
     Project p = getProject();
     String vcsUrl = p.getScmInfo() != null && Strings.isNotNullOrEmpty(p.getScmInfo().getUrl())
         ? p.getScmInfo().getUrl()
         : Labels.UNKNOWN;
-    resources.decorate(group, new AddAnnotationDecorator(new Annotation(OpenshiftAnnotations.VCS_URL, vcsUrl, new String[0])));
+    resources.decorate(group, new AddAnnotationDecorator(config.getName(), new Annotation(OpenshiftAnnotations.VCS_URL, vcsUrl, new String[0])));
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {

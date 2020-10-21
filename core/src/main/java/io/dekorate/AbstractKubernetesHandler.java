@@ -112,13 +112,13 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     resources.decorate(new AddCommitIdAnnotationDecorator());
 
     Labels.createLabels(config).forEach(l -> {
-        resources.decorate(group, new AddLabelDecorator(l));
-        resources.decorate(group, new AddToSelectorDecorator(l.getKey(), l.getValue()));
-        resources.decorate(group, new AddToMatchingLabelsDecorator(l.getKey(), l.getValue()));
+        resources.decorate(group, new AddLabelDecorator(config.getName(), l));
+        resources.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
+        resources.decorate(group, new AddToMatchingLabelsDecorator(config.getName(), l.getKey(), l.getValue()));
     });
 
     for (Annotation annotation : config.getAnnotations()) {
-      resources.decorate(new AddAnnotationDecorator(annotation));
+      resources.decorate(new AddAnnotationDecorator(config.getName(), annotation));
     }
 
     if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
@@ -126,7 +126,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     }
 
     if (config.getImagePullPolicy() != ImagePullPolicy.IfNotPresent) {
-      resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
+      resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getName(), config.getImagePullPolicy()));
     }
 
     for (String imagePullSecret: config.getImagePullSecrets()) {

@@ -24,7 +24,10 @@ import io.dekorate.kubernetes.config.Annotation;
 import java.util.Arrays;
 import java.util.Objects;
 
-@Description("A decorator that adds an annotation to all resources.")
+/**
+ * A decorator that adds an annotation to the matching resources (filtered by name and/or kinds).
+ */
+@Description("Add an annotation to the matching resources (filtered by name and/or kinds).")
 public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
 
   private final Annotation annotation;

@@ -22,9 +22,9 @@ import io.dekorate.doc.Description;
 import io.dekorate.utils.Metadata;
 
 /**
- * A decorator that removes a label.
+ * A decorator that removes a label from the matching resources (filtered by name and/or kinds).
  */
-@Description("Remove a label from the all metadata.")
+@Description("Remove a label from the matching resources (filtered by name and/or kinds).")
 public class RemoveLabelDecorator extends NamedResourceDecorator<VisitableBuilder> {
 
   private final String labelKey;
