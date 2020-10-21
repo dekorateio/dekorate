@@ -135,8 +135,8 @@ public class ComponentHandler implements HandlerFactory, Handler<ComponentConfig
     });
 
     allLabels.forEach((k, v) -> {
-        resources.decorateCustom(ResourceGroup.NAME, new AddLabelDecorator(new Label(k, v, new String[]{"Component"})));
-      resources.decorateCustom(ResourceGroup.NAME, new AddToSelectorDecorator(k, v));
+        resources.decorateCustom(ResourceGroup.NAME, new AddLabelDecorator(config.getName(), new Label(k, v, new String[]{"Component"})));
+        resources.decorateCustom(ResourceGroup.NAME, new AddToSelectorDecorator(config.getName(), k, v));
     });
 
     if (config.isExposeService()) {
