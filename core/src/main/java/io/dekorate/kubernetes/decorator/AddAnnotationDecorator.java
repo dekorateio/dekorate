@@ -64,7 +64,7 @@ public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBui
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, AddSidecarDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
   }
 
   @Override
