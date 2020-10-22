@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.dekorate</groupId>
     <artifactId>halkyon-starters</artifactId>
-    <version>0.13.5</version>
+    <version>0.13-SNAPSHOT</version>
   </parent>
 
   <artifactId>halkyon-spring-starter</artifactId>
