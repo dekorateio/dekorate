@@ -28,6 +28,7 @@ import io.dekorate.kubernetes.decorator.ApplyLimitsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLimitsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
+import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
@@ -57,8 +58,14 @@ public class ContainerAdapter {
 
     builder.accept(new ApplyImagePullPolicyDecorator(container.getImagePullPolicy()));
 
-    builder.accept(new AddLivenessProbeDecorator(name, container.getLivenessProbe()));
-    builder.accept(new AddReadinessProbeDecorator(name, container.getReadinessProbe()));
+    //Probes
+    if (Probes.isConfigured(container.getLivenessProbe())) {
+        builder.accept(new AddLivenessProbeDecorator(name, container.getLivenessProbe()));
+    }
+
+    if (Probes.isConfigured(container.getReadinessProbe())) {
+      builder.accept(new AddReadinessProbeDecorator(name, container.getReadinessProbe()));
+    }
 
     // Container resources
     if (Strings.isNotNullOrEmpty(container.getLimitResources().getCpu())) {

@@ -56,6 +56,7 @@ import io.dekorate.kubernetes.decorator.ApplyLimitsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
+import io.dekorate.kubernetes.decorator.RemoveProbesFromInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
@@ -211,6 +212,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
           config.getRequestResources().getMemory()));
     }
 
+    resources.decorate(group,new RemoveProbesFromInitContainerDecorator());
   }
 
   private static void validateVolume(SecretVolume volume) {
