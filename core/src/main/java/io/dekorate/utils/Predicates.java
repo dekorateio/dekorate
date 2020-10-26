@@ -10,8 +10,9 @@ import io.dekorate.deps.kubernetes.api.model.ContainerPort;
 import io.dekorate.deps.kubernetes.api.model.ContainerPortBuilder;
 
 public class Predicates {
+
   /**
-   * Creates a {@link Predicate} for {@link Container}.
+   * Creates a {@link Predicate} for {@link io.dekorate.kubernetes.config.Container}.
    */
   public static Predicate<Container> matches(io.dekorate.kubernetes.config.Container container) {
     return new Predicate<Container>() {
@@ -23,7 +24,20 @@ public class Predicates {
   }
 
   /**
-   * Creates a {@link io.dekorate.deps.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
+   * Creates a {@link Predicate} for {@link Container}.
+   */
+  public static Predicate<Container> matches(Container container) {
+    return new Predicate<Container>() {
+      @Override
+      public boolean test(Container c) {
+        return Strings.isNullOrEmpty(c.getName()) || c.getName().equals(container.getName());
+      }
+    };
+  }
+
+
+  /**
+   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
    */
   public static io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(io.dekorate.kubernetes.config.Container container) {
     return new io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder>() {
@@ -35,7 +49,20 @@ public class Predicates {
   }
 
   /**
-   * Creates a {@link Predicate} for {@link ContainerPort}.
+   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
+   */
+  public static io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(Container container) {
+    return new io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder>() {
+      @Override
+      public Boolean apply(ContainerBuilder builder) {
+        return matches(container).test(builder.build());
+      }
+    };
+  }
+
+
+  /**
+   * Creates a {@link Predicate} for {@link io.dekorate.kubernetes.config.Port}.
    */
   public static Predicate<ContainerPort> matches(io.dekorate.kubernetes.config.Port port) {
     return new Predicate<ContainerPort>() {
