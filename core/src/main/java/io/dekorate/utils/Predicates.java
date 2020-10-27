@@ -37,7 +37,7 @@ public class Predicates {
 
 
   /**
-   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
+   * Creates a {@link io.dekorate.deps.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
    */
   public static io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(io.dekorate.kubernetes.config.Container container) {
     return new io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder>() {
@@ -49,10 +49,10 @@ public class Predicates {
   }
 
   /**
-   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
+   * Creates a {@link io.dekorate.deps.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
    */
-  public static io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(Container container) {
-    return new io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder>() {
+  public static io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(Container container) {
+    return new io.dekorate.deps.kubernetes.api.builder.Predicate<ContainerBuilder>() {
       @Override
       public Boolean apply(ContainerBuilder builder) {
         return matches(container).test(builder.build());

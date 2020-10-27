@@ -618,7 +618,7 @@ public class Main {
 or via `application.properties`:
 
     dekorate.kubernetes.sidecars[0].image=jaegertracing/jaeger-agent
-    dekorate.kuberentes.args=--collector.host-port=jaeger-collector.jaeger-infra.svc:14267
+    dekorate.kubernetes.args=--collector.host-port=jaeger-collector.jaeger-infra.svc:14267
 
 As in the case of [init containers](#init-containers) the [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
 

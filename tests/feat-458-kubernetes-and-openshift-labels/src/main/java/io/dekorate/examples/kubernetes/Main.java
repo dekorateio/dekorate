@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.dekorate.examples.kuberentes;
+package io.dekorate.examples.kubernetes;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

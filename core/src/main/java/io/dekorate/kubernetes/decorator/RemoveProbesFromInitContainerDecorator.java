@@ -18,8 +18,8 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.utils.Predicates;
-import io.dekorate.kubernetes.deps.api.model.ObjectMeta;
-import io.dekorate.kubernetes.deps.api.model.PodSpecFluent;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
+import io.dekorate.deps.kubernetes.api.model.PodSpecFluent;
 
 public class RemoveProbesFromInitContainerDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 

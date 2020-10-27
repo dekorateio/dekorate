@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.dekorate.examples.kuberentes;
+package io.dekorate.examples.kubernetes;
 
 public class Main {
 

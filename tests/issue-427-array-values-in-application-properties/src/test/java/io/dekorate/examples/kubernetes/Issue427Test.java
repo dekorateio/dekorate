@@ -25,7 +25,7 @@ public class Issue427Test {
 
   @Test
   public void shouldContainComponent() {
-    URL url = Issue427Test.class.getClassLoader().getResource("META-INF/dekorate/kuberentes.yml");
+    URL url = Issue427Test.class.getClassLoader().getResource("META-INF/dekorate/kubernetes.yml");
     assertNull(url);
   }
 }
