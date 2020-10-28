@@ -993,7 +993,7 @@ dekorate.kubernetes.expose=true
 An alternative way of configuration is via `application properties`:
 
 ```
-dekorate.kubernetes.expose=true
+dekorate.openshift.expose=true
 ```
 
 There are cases where the `Ingress` or `Route` host needs to be customized. This is done using the `host` parametes either via annotation or property configuration.
