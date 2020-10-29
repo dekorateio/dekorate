@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package io.dekorate.examples.component;
+package io.dekorate.examples.kubernetes;
 
 import java.net.URL;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class Issue427Test {
 
   @Test
-  public void shouldContainComponent() {
+  public void shouldContainKubernetes() {
     URL url = Issue427Test.class.getClassLoader().getResource("META-INF/dekorate/kubernetes.yml");
-    assertNull(url);
+    assertNotNull(url);
   }
 }
