@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dummy
+data:
+  dummykey: "dummyvalue"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-quickstart
+spec:
+  template:
+    spec:
+      containers:
+      - securityContext:
+           runAsUser: 123
+           supplementalGroups: [5555]            
+           runAsGroup: 789
+error
