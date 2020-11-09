@@ -38,6 +38,6 @@ public class AddServiceAccountToTaskDecorator extends NamedResourceDecorator<Pip
 
   @Override
   public void andThenVisit(PipelineRunSpecFluent item, ObjectMeta resourceMeta) {
-    item.addNewServiceAccountName(task, serviceAccount);
+    item.addNewServiceAccountName(serviceAccount, task);
   }
 }

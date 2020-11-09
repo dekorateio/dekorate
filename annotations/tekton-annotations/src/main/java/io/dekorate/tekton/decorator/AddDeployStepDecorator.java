@@ -24,7 +24,7 @@ import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
-  private static final String DEPLOY = "deploy";
+  private static final String STEP_NAME = "deploy";
   private static final String DEPLOY_CMD = "kubectl";
   private static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
 
@@ -40,7 +40,7 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
   }
 
   public AddDeployStepDecorator(String taskName, String projectName, String deployerImage) {
-    this(taskName, DEPLOY, projectName, deployerImage);
+    this(taskName, STEP_NAME, projectName, deployerImage);
   }
 
   @Override
@@ -56,6 +56,6 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class, AddJavaBuildStepDecorator.class, AddImageBuildStepDecorator.class };
+    return new Class[] { AddInitStepDecorator.class, AddProjectBuildStepDecorator.class, AddImageBuildStepDecorator.class };
   }
 }

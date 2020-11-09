@@ -19,36 +19,46 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.BuildImage;
 import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.tekton.step.ProjectBuildStep;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-public class AddJavaBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
-  private static final String JAVA = "java";
-  private static final String DASH = "-";
-  private static final String BUILD = "build";
+public class AddProjectBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
   private final String projectName;
   private final String stepName;
-  private final BuildImage builder;
+  private final String image;
+  private final String command;
+  private final String[] arguments;
 
-  public AddJavaBuildStepDecorator(String taskName, String projectName, BuildImage builder) {
-    this(taskName, JAVA + DASH + BUILD, projectName, builder);
+  public AddProjectBuildStepDecorator(String taskName, String projectName, BuildImage builder) {
+    this(taskName, ProjectBuildStep.ID, projectName, builder);
   }
 
-  public AddJavaBuildStepDecorator(String taskName, String stepName, String projectName, BuildImage builder) {
+  public AddProjectBuildStepDecorator(String taskName, String stepName, String projectName) {
+    this(taskName, stepName, projectName, ProjectBuildStep.IMAGE_PARAM_REF, ProjectBuildStep.COMMAND_PARAM_REF, ProjectBuildStep.ARGS_PARAM_REF);
+  }
+
+  public AddProjectBuildStepDecorator(String taskName, String stepName, String projectName, BuildImage builder) {
+    this(taskName, stepName, projectName, builder.getImage(), builder.getCommand(), builder.getArguments());
+  }
+  
+  public AddProjectBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command, String... arguments) {
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;
-    this.builder = builder;
+    this.image = image;
+    this.command = command;
+    this.arguments = arguments;
   }
 
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     taskSpec.addNewStep()
         .withName(stepName)
-        .withImage(builder.getImage())
-        .withCommand(builder.getCommand())
-        .withArgs(builder.getArguments())
+        .withImage(image)
+        .withCommand(command)
+        .withArgs(arguments)
         .withWorkingDir(sourcePath(projectName))
         .endStep();
   }
