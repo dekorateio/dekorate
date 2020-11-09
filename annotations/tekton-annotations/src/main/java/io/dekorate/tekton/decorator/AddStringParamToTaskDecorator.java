@@ -19,13 +19,15 @@ package io.dekorate.tekton.decorator;
 
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-public class AddParamToTaskDecorator extends NamedTaskDecorator {
+public class AddStringParamToTaskDecorator extends NamedTaskDecorator {
 
   private final String name;
   private final String description;
   private final String defaultValue;
 
-  public AddParamToTaskDecorator(String taskName, String name, String description, String defaultValue) {
+  private static final String TYPE = "string";
+
+  public AddStringParamToTaskDecorator(String taskName, String name, String description, String defaultValue) {
     super(taskName);
     this.name = name;
     this.description = description;
@@ -37,6 +39,7 @@ public class AddParamToTaskDecorator extends NamedTaskDecorator {
     taskSpec.addNewParam()
         .withName(name)
         .withDescription(description)
+        .withType(TYPE)
         .withNewDefault().withStringVal(defaultValue).endDefault()
         .endParam();
   }
