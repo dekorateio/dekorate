@@ -23,7 +23,7 @@ import io.dekorate.WithProject;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 
-public class AddContextParamToTaskDecorator extends AddParamToTaskDecorator {
+public class AddContextParamToTaskDecorator extends AddStringParamToTaskDecorator {
 
   private static final String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
   private static final String PATH_TO_CONTEXT_DESCRIPTION = "Path to context. Usually refers to module directory";

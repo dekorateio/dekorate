@@ -27,8 +27,8 @@ public class AddToArgsDecorator extends TektonStepDecorator<StepFluent> {
 
   private final String[] argument;
 
-  public AddToArgsDecorator(String deploymentName, String containerName, String... argument) {
-    super(deploymentName, containerName);
+  public AddToArgsDecorator(String taskName, String stepName, String... argument) {
+    super(taskName, stepName);
     this.argument = argument;
   }
 
