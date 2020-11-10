@@ -20,6 +20,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -36,6 +38,7 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.utils.Generators;
 import io.dekorate.utils.Maps;
 import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.sundr.codegen.model.TypeDef;
 
 /**
  * The object that holds the state used by all processors.
@@ -63,6 +66,7 @@ public class Session {
 
   private final Configurators configurators = new Configurators();
   private final Resources resources = new Resources();
+  private final List<TypeDef> sources = new LinkedList<>();
 
   private final Map<String, KubernetesList> generatedResources = new HashMap<>();
   private final AtomicReference<SessionReader> reader = new AtomicReference<>();
@@ -195,6 +199,10 @@ public class Session {
 
   public Resources resources() {
     return resources;
+  }
+
+  public List<TypeDef> sources() {
+    return sources;
   }
 
   public Set<Handler> handlers() {

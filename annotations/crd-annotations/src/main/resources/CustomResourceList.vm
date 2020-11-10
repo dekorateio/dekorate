@@ -1,0 +1,120 @@
+#set ($attributes = $model.attributes)
+#foreach ($key in $attributes.keySet())
+  #if ($key.getName().equals("CUSTOM_RESOURCE_CONFIG"))
+    #set ($config = $attributes.get($key))
+    #set ($group = $config.group)
+    #set ($version = $config.version)
+    #set ($kind = $config.kind)
+    #set ($modelPackage = $config.modelPackage)
+  #end
+#end
+
+package ${model.packageName};
+
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.JsonDeserializer.None;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.ListMeta;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@JsonInclude(Include.NON_NULL)
+@JsonPropertyOrder({"apiVersion", "kind", "metadata", "spec", "status"})
+@JsonDeserialize(
+using = None.class
+)
+public class ${kind}List implements KubernetesResource, KubernetesResourceList {
+@NotNull
+@JsonProperty("apiVersion")
+private String apiVersion = "v1";
+@JsonProperty("items")
+@Valid
+private List<${kind}> items = new ArrayList();
+@NotNull
+@JsonProperty("kind")
+private String kind = "${kind}List";
+@JsonProperty("metadata")
+@Valid
+private ListMeta metadata;
+@JsonIgnore
+private Map
+<String, Object> additionalProperties = new HashMap();
+
+public ${kind}List() {
+}
+
+public ${kind}List(String apiVersion, List<${kind}> items, String kind, ListMeta metadata) {
+this.apiVersion = apiVersion;
+this.items = items;
+this.kind = kind;
+this.metadata = metadata;
+}
+
+@JsonProperty("apiVersion")
+public String getApiVersion() {
+return this.apiVersion;
+}
+
+@JsonProperty("apiVersion")
+public void setApiVersion(String apiVersion) {
+this.apiVersion = apiVersion;
+}
+
+@JsonProperty("items")
+public List<${kind}> getItems() {
+return this.items;
+}
+
+@JsonProperty("items")
+public void setItems(List<${kind}> items) {
+this.items = items;
+}
+
+@JsonProperty("kind")
+public String getKind() {
+return this.kind;
+}
+
+@JsonProperty("kind")
+public void setKind(String kind) {
+this.kind = kind;
+}
+
+@JsonProperty("metadata")
+public ListMeta getMetadata() {
+return this.metadata;
+}
+
+@JsonProperty("metadata")
+public void setMetadata(ListMeta metadata) {
+this.metadata = metadata;
+}
+
+@JsonAnyGetter
+public Map
+<String, Object> getAdditionalProperties() {
+return this.additionalProperties;
+}
+
+@JsonAnySetter
+public void setAdditionalProperty(String name, Object value) {
+this.additionalProperties.put(name, value);
+}
+
+public String toString() {
+return "${kind}List(apiVersion=" + this.getApiVersion() + ", items=" + this.getItems() + ", kind=" + this.getKind() + ", metadata=" + this.getMetadata() + ", additionalProperties=" + this.getAdditionalProperties() + ")";
+}
+}

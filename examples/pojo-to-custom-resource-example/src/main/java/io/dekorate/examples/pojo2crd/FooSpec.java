@@ -15,13 +15,13 @@
  */
 package io.dekorate.examples.pojo2crd;
 
+import java.util.List;
+
 import io.dekorate.crd.annotation.CustomResource;
 import io.dekorate.crd.confg.Scope;
 
-import java.util.List;
-
-@CustomResource(group = "dekorate.io", version = "v1", scope = Scope.Namespaced)
-public class Foo {
+@CustomResource(group = "dekorate.io", kind = "Foo", version = "v1", scope = Scope.Namespaced)
+public class FooSpec {
   int size;
   boolean enabled;
   private Bar bar;

@@ -56,13 +56,13 @@ public class JsonSchema {
   private static final TypeRef P_BOOLEAN_REF = new PrimitiveRefBuilder().withName("boolean").build();
   private static final TypeRef OPTIONAL_REF = OPTIONAL.toReference();
 
-  private static final Map<TypeRef, String> TYPE_MAP = new HashMap<TypeRef, String>() {
+  private static final Map<TypeRef, String> TYPE_MAP = new HashMap<>() {
     {
 
       put(STRING_REF, "string");
       put(DATE_REF, "string");
-      put(INT_REF, "int");
-      put(P_INT_REF, "int");
+      put(INT_REF, "integer");
+      put(P_INT_REF, "integer");
       put(LONG_REF, "number");
       put(P_LONG_REF, "number");
       put(DOUBLE_REF, "number");
@@ -122,5 +122,11 @@ public class JsonSchema {
       return from(def);
     }
     return null;
+  }
+
+  public static JSONSchemaProps newSpec(TypeDef definition) {
+    return new JSONSchemaPropsBuilder()
+      .addToProperties("spec", from(definition))
+      .build();
   }
 }

@@ -42,6 +42,6 @@ public interface CustomResourceGenerator extends Generator {
   default void on(ConfigurationSupplier<CustomResourceConfig> config) {
     Session session = getSession();
     session.configurators().add(config);
-    session.handlers().add(new CustomResourceHandler(session.resources()));
+    session.handlers().add(new CustomResourceHandler(session.resources(), session.sources()));
   }
 }

@@ -16,6 +16,8 @@
 package io.dekorate.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -119,8 +121,8 @@ public class Strings {
 
   /**
    * Convert kebab case to camel case.
-   * 
-   * @param The input string.
+   *
+   * @param str the input string.
    * @return The camel cased string.
    */
   public static String kebabToCamelCase(String str) {
@@ -143,5 +145,25 @@ public class Strings {
     } catch (IOException e) {
       throw DekorateException.launderThrowable(e);
     }
+  }
+
+  public static String fromFile(File file) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+      return reader.lines().collect(Collectors.joining("\n"));
+    } catch (Exception e) {
+      throw DekorateException.launderThrowable(e);
+    }
+  }
+
+  public static String fromInputStream(InputStream is) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+      return reader.lines().collect(Collectors.joining("\n"));
+    } catch (Exception e) {
+      throw DekorateException.launderThrowable(e);
+    }
+  }
+
+  public static String fromResource(String resourceName) {
+    return fromInputStream(Strings.class.getClassLoader().getResourceAsStream(resourceName));
   }
 }
