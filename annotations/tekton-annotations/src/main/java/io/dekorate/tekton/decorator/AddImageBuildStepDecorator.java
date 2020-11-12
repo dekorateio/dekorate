@@ -20,12 +20,11 @@ package io.dekorate.tekton.decorator;
 import io.dekorate.deps.kubernetes.api.model.EnvVarBuilder;
 import io.dekorate.deps.tekton.pipeline.v1beta1.TaskSpecFluent;
 import io.dekorate.kubernetes.decorator.Decorator;
+import io.dekorate.tekton.step.ImageBuildStep;
 import io.dekorate.utils.Strings;
 
 public class AddImageBuildStepDecorator extends NamedTaskDecorator implements StepDecorator{
 
-
-private static final String STEP_NAME = "image-build";
 
   private static final String BUILDER_IMAGE_REF = "$(inputs.params.imageBuilderImage)";
   private static final String BUILDER_COMMAND_REF = "$(inputs.params.imageBuilderCommand)";
@@ -40,9 +39,8 @@ private static final String STEP_NAME = "image-build";
   private final String command;
   private final String[] args;
 
-
   public AddImageBuildStepDecorator(String taskName, String projectName) {
-    this(taskName, STEP_NAME, projectName);
+    this(taskName, ImageBuildStep.ID, projectName);
   }
 
   public AddImageBuildStepDecorator(String taskName, String stepName, String projectName) {

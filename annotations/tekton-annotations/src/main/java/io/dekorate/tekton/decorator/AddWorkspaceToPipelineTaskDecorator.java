@@ -19,6 +19,9 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineSpecFluent;
 import io.dekorate.utils.Strings;
+import io.dekorate.deps.kubernetes.api.builder.Predicate;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineSpecFluent;
+import io.dekorate.deps.tekton.pipeline.v1beta1.PipelineTaskBuilder;
 
 public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator {
 
@@ -35,7 +38,16 @@ public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator 
 
   @Override
   public void andThenVisit(PipelineSpecFluent<?> spec) {
+    Predicate<PipelineTaskBuilder> predicate = new Predicate<PipelineTaskBuilder>() {
+        @Override
+        public Boolean apply(PipelineTaskBuilder task) {
+          return Strings.isNullOrEmpty(taskName) || taskName.equals(task.getName());
+        }
+      };
+
     //If no task name is specified we need to add the workspace to all pipeline tasks.
-    spec.editMatchingTask(t -> Strings.isNullOrEmpty(taskName) ? true : taskName.equals(t.getName())).addNewWorkspace().withName(id).withWorkspace(workspace).endWorkspace().endTask();
+    if (spec.hasMatchingTask(predicate)) {
+      spec.editMatchingTask(predicate).addNewWorkspace().withName(id).withWorkspace(workspace).endWorkspace().endTask();
+    }
   }
 }

@@ -17,9 +17,15 @@
 
 package io.dekorate.tekton.step;
 
-public interface Step {
+public interface ImageStep extends Step {
 
-  String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
-  String PATH_TO_CONTEXT_PARAM_DESCRIPTION = "Path to context. Usually refers to module directory";
-  String PATH_TO_CONTEXT_PARAM_DEFAULT = ".";
+  String PATH_TO_DOCKERFILE_PARAM_NAME = "pathToDockerfile";
+  String PATH_TO_DOCKERFILE_PARAM_DESCRIPTION = "Path to Dockerfile";
+  String PATH_TO_DOCKERFILE_PARAM_DEFAULT = "Dockerfile";
+
+
+  String DOCKER_SOCKET_NAME = "docker-socket";
+  String DOCKER_SOCKET_PATH = "/var/run/docker.sock";
+  String DOCKER_SOCKET_TYPE = "Socket";
+  boolean DOCKER_SOCKET_READ_ONLY = false;
 }

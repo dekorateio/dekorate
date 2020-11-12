@@ -15,11 +15,22 @@
  * 
 **/
 
-package io.dekorate.tekton.step;
+package io.dekorate.tekton.decorator;
 
-public interface Step {
+import io.dekorate.tekton.step.ImageStep;
 
-  String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
-  String PATH_TO_CONTEXT_PARAM_DESCRIPTION = "Path to context. Usually refers to module directory";
-  String PATH_TO_CONTEXT_PARAM_DEFAULT = ".";
+public class AddDockerSocketMountDecorator extends AddMountDecorator {
+
+    public AddDockerSocketMountDecorator() {
+        this(ANY, ANY);
+    }
+
+    public AddDockerSocketMountDecorator(String taskName, String stepName) {
+        this(taskName, stepName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, null, false);
+    }
+
+	public AddDockerSocketMountDecorator(String taskName, String stepName, String name, String path, String subPath, boolean readOnly) {
+		super(taskName, stepName, name, path, subPath, readOnly);
+	}
+
 }

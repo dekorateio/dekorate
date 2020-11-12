@@ -143,27 +143,53 @@ public @interface TektonApplication {
    */
   String[] projectBuilderArguments() default {};
 
+  /**
+   * The image builder strategy to use.
+   * @return the strategy.
+   */
+  TektonImageBuildStrategy imageBuildStrategy() default TektonImageBuildStrategy.kaniko;
 
   /**
    * The container image builder image to use.
    * 
    * @return The container image builder image, or empty if the image should be inferred.
    */
-  String imageBuilderImage() default "";
+  String imageBuildImage() default "";
 
   /*
    * The container image builder command to use.
    * 
    * @return The container image builder command or empty if the command is to be inferred
    */
-  String imageBuilderCommand() default "";
+  String imageBuildCommand() default "";
 
   /*
    * The container image builder command arguments to use.
    * 
    * @return The container image builder command arguments or empty if the command is to be inferred
    */
-  String[] imageBuilderArguments() default {};
+  String[] imageBuildArguments() default {};
+
+  /**
+   * The container image push image to use.
+   * 
+   * @return The container image push image, or empty if the image should be inferred.
+   */
+  String imagePushImage() default "";
+
+  /*
+   * The container image push command to use.
+   * 
+   * @return The container image push command or empty if the command is to be inferred
+   */
+  String imagePushCommand() default "";
+
+  /*
+   * The container image push command arguments to use.
+   * 
+   * @return The container image push command arguments or empty if the command is to be inferred
+   */
+  String[] imagePushArguments() default {};
 
   /**
    * The relative path to the Dockerfile.
