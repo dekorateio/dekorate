@@ -20,15 +20,15 @@ public class ApplyTektonImageBuilderInfoConfigurator extends Configurator<Tekton
 	@Override
 	public void visit(TektonConfigFluent<?> config) {
     if (Strings.isNotNullOrEmpty(image)) {
-      config.withImageBuilderImage(image);
+      config.withImageBuildImage(image);
     }
 
     if (Strings.isNotNullOrEmpty(command)) {
-      config.withImageBuilderCommand(command);
+      config.withImageBuildCommand(command);
     }
 
     if (arguments != null) {
-      config.withImageBuilderArguments(arguments);
+      config.withImageBuildArguments(arguments);
     }
 	}
 }

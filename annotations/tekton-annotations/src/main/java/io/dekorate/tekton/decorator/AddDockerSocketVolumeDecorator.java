@@ -15,11 +15,17 @@
  * 
 **/
 
-package io.dekorate.tekton.step;
+package io.dekorate.tekton.decorator;
 
-public interface Step {
+import io.dekorate.tekton.step.ImageStep;
 
-  String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
-  String PATH_TO_CONTEXT_PARAM_DESCRIPTION = "Path to context. Usually refers to module directory";
-  String PATH_TO_CONTEXT_PARAM_DEFAULT = ".";
+public class AddDockerSocketVolumeDecorator extends AddHostPathVolumeDecorator {
+
+  public AddDockerSocketVolumeDecorator(String taskName) {
+    super(taskName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, ImageStep.DOCKER_SOCKET_TYPE);
+  }
+
+    public AddDockerSocketVolumeDecorator(String taskName, String name, String path, String type) {
+        super(taskName, name, path, type);
+    }
 }

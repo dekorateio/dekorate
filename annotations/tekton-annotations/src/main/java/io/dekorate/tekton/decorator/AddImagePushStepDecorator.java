@@ -14,20 +14,19 @@
  * limitations under the License.
  *
  **/
-
 package io.dekorate.tekton.decorator;
 
 import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.tekton.step.ImageBuildStep;
+import io.dekorate.tekton.step.ImagePushStep;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-public class AddImageBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
+public class AddImagePushStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
-  private static final String BUILDER_IMAGE_REF = "$(inputs.params.imageBuilderImage)";
-  private static final String BUILDER_COMMAND_REF = "$(inputs.params.imageBuilderCommand)";
-  private static final String BUILDER_ARGS_REF = "$(inputs.params.imageBuilderArgs[*])";
+  private static final String PUSH_IMAGE_REF = "$(inputs.params.imagePushImage)";
+  private static final String PUSH_COMMAND_REF = "$(inputs.params.imagePushCommand)";
+  private static final String PUSH_ARGS_REF = "$(inputs.params.imagePushArgs[*])";
 
   private static final String DOCKER_CONFIG = "DOCKER_CONFIG";
   private static final String DOCKER_CONFIG_DEFAULT = "/tekton/home/.docker";
@@ -38,33 +37,33 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
   private final String command;
   private final String[] args;
 
-  public AddImageBuildStepDecorator(String taskName, String projectName) {
-    this(taskName, ImageBuildStep.ID, projectName);
+  public AddImagePushStepDecorator(String taskName, String projectName) {
+    this(taskName, ImagePushStep.ID, projectName);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, String projectName) {
-    this(taskName, stepName, projectName, BUILDER_IMAGE_REF, BUILDER_COMMAND_REF, BUILDER_ARGS_REF);
+  public AddImagePushStepDecorator(String taskName, String stepName, String projectName) {
+    this(taskName, stepName, projectName, PUSH_IMAGE_REF, PUSH_COMMAND_REF, PUSH_ARGS_REF);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command, String... args) {
+  public AddImagePushStepDecorator(String taskName, String stepName, String projectName, String image, String command, String... args) {
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;
-    this.image = Strings.isNotNullOrEmpty(image) ? image : BUILDER_IMAGE_REF;
-    this.command = Strings.isNotNullOrEmpty(command) ? command : BUILDER_COMMAND_REF;
-    this.args = args != null && args.length != 0 ? args : new String[] { BUILDER_ARGS_REF };
+    this.image = Strings.isNotNullOrEmpty(image) ? image : PUSH_IMAGE_REF;
+    this.command = Strings.isNotNullOrEmpty(command) ? command : PUSH_COMMAND_REF;
+    this.args = args != null && args.length != 0 ? args : new String[] { PUSH_ARGS_REF };
   }
 
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     taskSpec.addNewStep()
-        .withName(stepName)
-        .withImage(image)
-        .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
-        .withCommand(command)
-        .withArgs(args)
-        .withWorkingDir(sourcePath(projectName))
-        .endStep();
+      .withName(stepName)
+      .withImage(image)
+      .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
+      .withCommand(command)
+      .withArgs(args)
+      .withWorkingDir(sourcePath(projectName))
+      .endStep();
   }
 
   @Override

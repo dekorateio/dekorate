@@ -41,7 +41,7 @@ class SpringBootWithTektonTest {
     Pipeline p = findFirst(list, Pipeline.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(p);
     assertTrue(p.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("pipeline-m2-ws")).findAny().isPresent(), "Pipeline should contain workspace named 'pipeline-m2-ws'");
-    Optional<PipelineTask> buildTask = findTask("build", p);
+    Optional<PipelineTask> buildTask = findTask("project-build", p);
     assertTrue(buildTask.isPresent());
 
     assertTrue(buildTask.get().getWorkspaces().stream().filter(w -> w.getName().equals("m2") && w.getWorkspace().equals("pipeline-m2-ws")).findAny().isPresent(), "Build task should contain workspace 'm2 -> pipeline-m2-ws'");

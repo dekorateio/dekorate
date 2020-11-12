@@ -17,7 +17,7 @@
 
 package io.dekorate.tekton.step;
 
-public class DeployStep extends Step {
+public class DeployStep implements Step {
 
   public static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
   public static final String PATH_TO_YML_PARAM_DESCRIPTION = "Path to yml";
