@@ -15,11 +15,26 @@
  * 
 **/
 
-package io.dekorate.tekton.step;
+package io.dekorate.tekton.annotation;
 
-public interface Step {
+import io.dekorate.tekton.step.BuildahBuildStep;
+import io.dekorate.tekton.step.DockerBuildStep;
+import io.dekorate.tekton.step.ImageBuildStep;
+import io.dekorate.tekton.step.KanikoBuildStep;
 
-  String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
-  String PATH_TO_CONTEXT_PARAM_DESCRIPTION = "Path to context. Usually refers to module directory";
-  String PATH_TO_CONTEXT_PARAM_DEFAULT = ".";
+public enum TektonImageBuildStrategy {
+
+  kaniko(new KanikoBuildStep()),
+  docker(new DockerBuildStep()),
+  buildah(new BuildahBuildStep());
+
+  ImageBuildStep<?> step;
+
+  private TektonImageBuildStrategy(ImageBuildStep<?> step) {
+    this.step = step;
+  }
+
+  public ImageBuildStep<?> getStep() {
+    return this.step;
+  }
 }

@@ -45,12 +45,18 @@ import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.BuildInfo;
 import io.dekorate.project.Project;
 import io.dekorate.project.ScmInfo;
+import io.dekorate.tekton.annotation.TektonImageBuildStrategy;
 import io.dekorate.tekton.config.EditableTektonConfig;
 import io.dekorate.tekton.config.TektonConfig;
 import io.dekorate.tekton.config.TektonConfigBuilder;
 import io.dekorate.tekton.decorator.AddArrayParamToTaskDecorator;
 import io.dekorate.tekton.decorator.AddDeployStepDecorator;
+import io.dekorate.tekton.decorator.AddDockerSocketMountDecorator;
+import io.dekorate.tekton.decorator.AddDockerSocketVolumeDecorator;
+import io.dekorate.tekton.decorator.AddHostPathVolumeDecorator;
 import io.dekorate.tekton.decorator.AddImageBuildStepDecorator;
+import io.dekorate.tekton.decorator.AddImagePushStepDecorator;
+import io.dekorate.tekton.decorator.AddMountDecorator;
 import io.dekorate.tekton.decorator.AddProjectBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddStringParamToTaskDecorator;
 import io.dekorate.tekton.decorator.AddPvcToPipelineRunDecorator;
@@ -65,7 +71,7 @@ import io.dekorate.tekton.decorator.AddWorkspaceToPipelineTaskDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToTaskDecorator;
 import io.dekorate.tekton.step.DeployStep;
 import io.dekorate.tekton.step.ImageBuildStep;
-import io.dekorate.tekton.step.KanikoBuildStep;
+import io.dekorate.tekton.step.ImagePushStep;
 import io.dekorate.tekton.step.ProjectBuildStep;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Jvm;
@@ -92,6 +98,8 @@ import io.fabric8.tekton.pipeline.v1beta1.TaskRunBuilder;
 import io.fabric8.tekton.resource.v1alpha1.PipelineResource;
 import io.fabric8.tekton.resource.v1alpha1.PipelineResourceBuilder;
 
+import static io.dekorate.tekton.util.TektonUtils.getContextPath;
+
 public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, WithProject {
 
   private static final Logger LOGGER = LoggerFactory.getLogger();
@@ -109,6 +117,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String URL = "url";
   private static final String IMAGE = "image";
   private static final String BUILD = "build";
+  private static final String PUSH = "push";
   private static final String DEPLOY = "deploy";
   private static final String WORKSPACE = "workspace";
   private static final String RUN = "run";
@@ -207,11 +216,13 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     String projectBuildTaskName = projectBuildTaskName(config);
     String projectBuildStepName = projectBuildStepName(config);
     String imageBuildTaskName = imageBuildTaskName(config);
+    String imagePushTaskName = imagePushTaskName(config);
     String deployTaskName = deployTaskName(config);
 
     if (group.equals(TEKTON_TASK)) { //We just a single task
       projectBuildTaskName = monolithTaskName;
       imageBuildTaskName = monolithTaskName;
+      imagePushTaskName = monolithTaskName;
       deployTaskName = monolithTaskName;
     }
 
@@ -233,16 +244,49 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
     resources.decorate(group, new AddProjectBuildStepDecorator(projectBuildTaskName, ProjectBuildStep.ID, config.getName()));
 
     //Image Build
-    String imageBuilderImage = Strings.isNotNullOrEmpty(config.getImageBuilderImage()) ? config.getImageBuilderImage() : KanikoBuildStep.IMAGE_PARAM_DEFAULT;
-    String imageBuilderCommand = Strings.isNotNullOrEmpty(config.getImageBuilderCommand()) ? config.getImageBuilderCommand() : KanikoBuildStep.COMMAND_PARAM_DEFAULT;
-    String[] imageBuilderArgs = config.getImageBuilderArguments() != null && config.getImageBuilderArguments().length > 0 ? config.getImageBuilderArguments(): KanikoBuildStep.getDefaultArguments(config.getDockerfile(), getContextPath(getProject()));
+    TektonImageBuildStrategy imageBuildStrategy = config.getImageBuildStrategy();
+    ImageBuildStep imageBuildStep = imageBuildStrategy.getStep()
+      .withContext(getContextPath(getProject()))
+      .withDockerfile(config.getDockerfile())
+      .withBuildImage(config.getImageBuildImage())
+      .withBuildCommand(config.getImageBuildCommand())
+      .withBuildArguments(config.getImageBuildArguments())
+      .withPushImage(config.getImagePushImage())
+      .withPushCommand(config.getImagePushCommand())
+      .withPushArguments(config.getImagePushArguments());
 
-    resources.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.IMAGE_PARAM_NAME, ImageBuildStep.IMAGE_PARAM_DESCRIPTION, imageBuilderImage));
-    resources.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.COMMAND_PARAM_NAME, ImageBuildStep.COMMAND_PARAM_DESCRIPTION, imageBuilderCommand));
-    resources.decorate(group, new AddArrayParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.ARGS_PARAM_NAME, ImageBuildStep.ARGS_PARAM_DESCRIPTION, imageBuilderArgs));
-    resources.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, KanikoBuildStep.PATH_TO_DOCKERFILE_PARAM_NAME, KanikoBuildStep.PATH_TO_DOCKERFILE_PARAM_DESCRIPTION, config.getDockerfile()));
-    resources.decorate(group, new AddResourceOutputToTaskDecorator(imageBuildTaskName, IMAGE, IMAGE));
+    String imageBuildImage = imageBuildStep.getBuildImage();
+    String imageBuildCommand = imageBuildStep.getBuildCommand();
+    String[] imageBuildArgs = imageBuildStep.getBuildArguments();
+
+    resources.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.IMAGE_PARAM_NAME, ImageBuildStep.IMAGE_PARAM_DESCRIPTION, imageBuildImage));
+    resources.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.COMMAND_PARAM_NAME, ImageBuildStep.COMMAND_PARAM_DESCRIPTION, imageBuildCommand));
+    resources.decorate(group, new AddArrayParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.ARGS_PARAM_NAME, ImageBuildStep.ARGS_PARAM_DESCRIPTION, imageBuildArgs));
+    resources.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.PATH_TO_DOCKERFILE_PARAM_NAME, ImageBuildStep.PATH_TO_DOCKERFILE_PARAM_DESCRIPTION, config.getDockerfile()));
+
     resources.decorate(group, new AddImageBuildStepDecorator(imageBuildTaskName, config.getName()));
+    resources.decorate(group, new AddResourceOutputToTaskDecorator(imageBuildTaskName, IMAGE, IMAGE));
+
+    if (imageBuildStep.isDockerSocketRequired()) {
+      resources.decorate(group, new AddDockerSocketMountDecorator(imageBuildTaskName, ImageBuildStep.ID));
+      resources.decorate(group, new AddDockerSocketVolumeDecorator(imageBuildTaskName));
+    }
+    
+    if (imageBuildStep.isPushRequired()) {
+      String imagePushImage = imageBuildStep.getPushImage();
+      String imagePushCommand = imageBuildStep.getPushCommand();
+      String[] imagePushArgs = imageBuildStep.getPushArguments();
+
+      resources.decorate(group, new AddStringParamToTaskDecorator(imagePushTaskName, ImagePushStep.IMAGE_PARAM_NAME, ImagePushStep.IMAGE_PARAM_DESCRIPTION, imagePushImage));
+      resources.decorate(group, new AddStringParamToTaskDecorator(imagePushTaskName, ImagePushStep.COMMAND_PARAM_NAME, ImagePushStep.COMMAND_PARAM_DESCRIPTION, imagePushCommand));
+      resources.decorate(group, new AddArrayParamToTaskDecorator(imagePushTaskName, ImagePushStep.ARGS_PARAM_NAME, ImagePushStep.ARGS_PARAM_DESCRIPTION, imagePushArgs));
+      resources.decorate(group, new AddImagePushStepDecorator(imagePushTaskName, config.getName()));
+
+      if (imageBuildStep.isDockerSocketRequired()) {
+        resources.decorate(group, new AddDockerSocketMountDecorator(imagePushTaskName, ImagePushStep.ID));
+        resources.decorate(group, new AddDockerSocketVolumeDecorator(imagePushTaskName));
+      }
+    }
    
     //Deploy Task
     resources.decorate(group, new AddStringParamToTaskDecorator(deployTaskName, DeployStep.PATH_TO_YML_PARAM_NAME, DeployStep.PATH_TO_YML_PARAM_DESCRIPTION, DeployStep.PATH_TO_YML_PARAM_DEFAULT));
@@ -328,7 +372,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
     if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
       resources.decorate(TEKTON_PIPELINE,
-          new AddWorkspaceToPipelineTaskDecorator(null, BUILD, config.getM2Workspace(), PIPELINE_M2_WS));
+          new AddWorkspaceToPipelineTaskDecorator(null, PROJECT + DASH + BUILD, config.getM2Workspace(), PIPELINE_M2_WS));
       resources.decorate(TEKTON_PIPELINE,
           new AddWorkspaceToPipelineDecorator(null, PIPELINE_M2_WS, "Local maven repository workspace"));
       resources.decorate(TEKTON_PIPELINE_RUN,
@@ -596,18 +640,30 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .build();
   }
 
-  public static final String getContextPath(Project project) {
-    Path root = project != null && project.getScmInfo() != null ? project.getScmInfo().getRoot() : null;
-    Path module = project != null ? project.getRoot() : null;
+  public static final String getDefaultBuildImage(TektonConfig config) {
+         return null;
+  }
 
-    String result = "";
-    if (root != null && module != null) {
-      result = module.toAbsolutePath().toString().substring(root.toAbsolutePath().toString().length());
-    }
-    if (Strings.isNullOrEmpty(result)) {
-      result = "./";
-    }
-    return result;
+  public static final String getDefaultBuildCommand(TektonConfig config) {
+         return null;
+  }
+
+  public static final String[] getDefaultBuildArguments(TektonConfig config, String dockerfile, String context) {
+    return null;
+  }
+
+
+  public static final boolean requiresPushStep(TektonConfig config) {
+    return true;
+  }
+
+
+  public static final String getDefaultPushCommand(TektonConfig config) {
+    return null;
+  }
+
+  public static final String[] getDefaultPushArguments(TektonConfig config, String dockerfile, String context) {
+         return null;
   }
 
   public static final String getYamlPath(Project project) {
@@ -652,6 +708,10 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
 
   public static final String imageBuildTaskName(TektonConfig config) {
     return config.getName() + DASH + IMAGE + DASH + BUILD;
+  }
+
+  public static final String imagePushTaskName(TektonConfig config) {
+    return config.getName() + DASH + IMAGE + DASH + PUSH;
   }
 
   public static final String projectBuildTaskName(TektonConfig config) {

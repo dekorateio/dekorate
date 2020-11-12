@@ -17,9 +17,7 @@
 
 package io.dekorate.tekton.step;
 
-public interface Step {
+public interface ImageBuildStepProvider<T extends ImageBuildStep<T>>  {
 
-  String PATH_TO_CONTEXT_PARAM_NAME = "pathToContext";
-  String PATH_TO_CONTEXT_PARAM_DESCRIPTION = "Path to context. Usually refers to module directory";
-  String PATH_TO_CONTEXT_PARAM_DEFAULT = ".";
+  T getStep();
 }
