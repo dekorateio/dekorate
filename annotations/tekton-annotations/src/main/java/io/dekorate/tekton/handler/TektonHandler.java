@@ -17,6 +17,7 @@ package io.dekorate.tekton.handler;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +66,7 @@ import io.dekorate.tekton.decorator.AddWorkspaceToTaskDecorator;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Jvm;
 import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.Duration;
 import io.fabric8.kubernetes.api.model.EmptyDirVolumeSourceBuilder;
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
@@ -142,7 +144,15 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   private static final String BUILDER_IMAGE_DESCRIPTION = "The image to use for performing image build";
   private static final String BUILDER_IMAGE_DEFAULT = "gcr.io/kaniko-project/executor:v0.18.0";
 
-  private static final String DEFAULT_TIMEOUT = "1h0m0s";
+  private static final Duration DEFAULT_TIMEOUT;
+
+  static {
+    try {
+      DEFAULT_TIMEOUT = Duration.parse("1h0m0s");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private final Resources resources;
   private final Configurators configurators;

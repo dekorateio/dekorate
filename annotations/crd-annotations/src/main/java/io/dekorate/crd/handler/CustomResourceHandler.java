@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 The original authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,8 +25,8 @@ import io.dekorate.crd.config.EditableCustomResourceConfig;
 import io.dekorate.crd.util.JsonSchema;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
-import io.fabric8.kubernetes.api.model.apiextensions.JSONSchemaProps;
+import io.fabric8.kubernetes.api.model.apiextensions.v1.CustomResourceDefinitionBuilder;
+import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 import io.sundr.codegen.generator.CodeGeneratorContext;
 import io.sundr.codegen.model.TypeDef;
 import io.sundr.codegen.model.TypeDefBuilder;
@@ -75,25 +75,24 @@ public class CustomResourceHandler implements Handler<CustomResourceConfig> {
     }
 
     resources.add(new CustomResourceDefinitionBuilder()
-      .withApiVersion("apiextensions.k8s.io/v1beta1")
+      .withApiVersion("apiextensions.k8s.io/v1")
       .withNewMetadata()
       .withName(config.getPlural() + "." + config.getGroup())
       .endMetadata()
       .withNewSpec()
       .withScope(config.getScope().name())
       .withGroup(config.getGroup())
-      .withVersion(config.getVersion())
+      .addNewVersion().withName(config.getVersion())
+      .withNewSchema().withOpenAPIV3Schema(schema).endSchema()
+      .endVersion()
       .withNewNames()
       .withKind(config.getKind())
       .withShortNames(config.getShortName())
       .withPlural(config.getPlural())
       .withSingular(config.getKind().toLowerCase())
       .endNames()
-      .withNewValidation()
-      .withOpenAPIV3Schema(schema)
-        .endValidation()
-        .endSpec()
-        .build());
+      .endSpec()
+      .build());
   }
 
   @Override

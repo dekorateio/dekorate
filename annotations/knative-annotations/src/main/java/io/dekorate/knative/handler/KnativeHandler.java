@@ -59,6 +59,7 @@ import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 import io.fabric8.knative.serving.v1.Service;
 import io.fabric8.knative.serving.v1.ServiceBuilder;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> implements HandlerFactory, WithProject {
@@ -233,8 +234,8 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
                     imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     return new ServiceBuilder().withNewMetadata().withName(config.getName())
-        .endMetadata().withNewSpec().withNewTemplate().withNewSpec().addNewContainer().withName(config.getName())
-        .withImage(image).endContainer().endSpec().endTemplate().endSpec().build();
+      .endMetadata().withNewSpec().withNewTemplate().withNewSpec().addToContainers(new ContainerBuilder().withName(config.getName())
+        .withImage(image).build()).endSpec().endTemplate().endSpec().build();
   }
 
   public static boolean isDefault(GlobalAutoScaling autoScaling) {

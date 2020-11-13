@@ -21,6 +21,8 @@ import java.util.function.Predicate;
 import io.dekorate.prometheus.client.dsl.internal.ServiceMonitorOperationsImpl;
 import io.dekorate.prometheus.model.ServiceMonitor;
 import io.dekorate.prometheus.model.ServiceMonitorBuilder;
+import io.fabric8.kubernetes.api.model.DeletionPropagation;
+import io.fabric8.kubernetes.api.model.ListOptions;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ResourceHandler;
 import io.fabric8.kubernetes.client.Watch;
@@ -62,9 +64,9 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   }
 
   @Override
-  public Boolean delete(OkHttpClient client, Config config, String namespace, Boolean cascading, ServiceMonitor item) {
-    if (cascading) {
-      return new ServiceMonitorOperationsImpl(client, config).withItem(item).cascading(cascading).delete();
+  public Boolean delete(OkHttpClient client, Config config, String namespace, DeletionPropagation deletionPropagation, ServiceMonitor item) {
+    if (deletionPropagation != DeletionPropagation.ORPHAN) {
+      return new ServiceMonitorOperationsImpl(client, config).withItem(item).withPropagationPolicy(deletionPropagation).delete();
     } else {
       return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).delete(item);
     }
@@ -74,21 +76,27 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item,
       Watcher<ServiceMonitor> watcher) {
     return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
-        .withName(item.getMetadata().getName()).watch(watcher);
+      .withName(item.getMetadata().getName()).watch(watcher);
   }
 
   @Override
   public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, String resourceVersion,
-      Watcher<ServiceMonitor> watcher) {
+                     Watcher<ServiceMonitor> watcher) {
     return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
-        .withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
+      .withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
+  }
+
+  @Override
+  public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, ListOptions listOptions, Watcher<ServiceMonitor> watcher) {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+      .withName(item.getMetadata().getName()).watch(listOptions, watcher);
   }
 
   @Override
   public ServiceMonitor waitUntilReady(OkHttpClient client, Config config, String namespace, ServiceMonitor item, long amount,
-      TimeUnit timeUnit) throws InterruptedException {
+                                       TimeUnit timeUnit) throws InterruptedException {
     return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
-        .withName(item.getMetadata().getName()).waitUntilReady(amount, timeUnit);
+      .withName(item.getMetadata().getName()).waitUntilReady(amount, timeUnit);
   }
 
   @Override

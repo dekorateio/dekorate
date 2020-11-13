@@ -59,7 +59,7 @@
     <version.commons-compress>1.19</version.commons-compress>
     <version.jansi>1.18</version.jansi>
     <version.jackson>2.10.3</version.jackson>
-    <version.kubernetes-client>4.9.1</version.kubernetes-client>
+    <version.kubernetes-client>4.13.0</version.kubernetes-client>
     <version.sundrio>0.22.1</version.sundrio>
 
     <!-- Testing Dependencies -->

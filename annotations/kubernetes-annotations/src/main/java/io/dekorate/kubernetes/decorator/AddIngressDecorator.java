@@ -16,8 +16,6 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.utils.Ports.getHttpPort;
-
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +23,9 @@ import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.Port;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.networking.v1.IngressBuilder;
+
+import static io.dekorate.utils.Ports.getHttpPort;
 
 @Description("Add an ingress to the list.")
 public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
@@ -47,25 +48,21 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
       return;
     }
     Port port = p.get();
-    list.addNewIngressItem()
-        .withNewMetadata()
-        .withName(config.getName())
-        .withLabels(allLabels)
-        .endMetadata()
-        .withNewSpec()
-        .addNewRule()
-        .withHost(config.getHost())
-        .withNewHttp()
-        .addNewPath()
-        .withPath(port.getPath())
-        .withNewBackend()
-        .withServiceName(config.getName())
-        .withNewServicePort(port.getContainerPort())
-        .endBackend()
-        .endPath()
-        .endHttp()
-        .endRule()
-        .endSpec()
-        .endIngressItem();
+    list.addToItems(new IngressBuilder()
+      .withNewMetadata().withName(config.getName()).withLabels(allLabels).endMetadata()
+      .withNewSpec()
+      .addNewRule()
+      .withHost(config.getHost())
+      .withNewHttp()
+      .addNewPath()
+      .withPath(port.getPath())
+      .withNewBackend()
+      .withNewService().withName(config.getName()).withNewPort().withNumber(port.getContainerPort()).endPort().endService()
+      .endBackend()
+      .endPath()
+      .endHttp()
+      .endRule()
+      .endSpec()
+      .build());
   }
 }

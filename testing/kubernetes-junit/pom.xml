@@ -50,6 +50,10 @@
       <version>${version.junit-jupiter}</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-model</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
