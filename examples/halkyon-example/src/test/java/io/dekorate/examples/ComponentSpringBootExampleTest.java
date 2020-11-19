@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ComponentSpringBootExampleTest {
-  
+
   @Test
   public void shouldContainComponentWithDefaultValues() {
     KubernetesList list = Serialization.unmarshalAsList(ComponentSpringBootExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/halkyon.yml"));
@@ -41,5 +41,5 @@ public class ComponentSpringBootExampleTest {
     assertNotNull(component.getSpec().getBuildConfig());
     assertNotNull(component.getSpec().getBuildConfig().getUrl());
   }
-  
+
 }

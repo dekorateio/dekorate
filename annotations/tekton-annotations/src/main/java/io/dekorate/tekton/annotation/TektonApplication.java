@@ -142,21 +142,76 @@ public @interface TektonApplication {
    * 
    * @return The builder image, or empty if the image should be inferred.
    */
-  String builderImage() default "";
+  String projectBuilderImage() default "";
 
   /*
    * The builder command to use.
    * 
    * @return The builder command or empty if the command is to be inferred
    */
-  String builderCommand() default "";
+  String projectBuilderCommand() default "";
 
   /*
    * The builder command arguments to use.
    * 
    * @return The builder command arguments or empty if the command is to be inferred
    */
-  String[] builderArguments() default {};
+  String[] projectBuilderArguments() default {};
+
+  /**
+   * The image builder strategy to use.
+   * @return the strategy.
+   */
+  TektonImageBuildStrategy imageBuildStrategy() default TektonImageBuildStrategy.kaniko;
+
+  /**
+   * The container image builder image to use.
+   * 
+   * @return The container image builder image, or empty if the image should be inferred.
+   */
+  String imageBuildImage() default "";
+
+  /*
+   * The container image builder command to use.
+   * 
+   * @return The container image builder command or empty if the command is to be inferred
+   */
+  String imageBuildCommand() default "";
+
+  /*
+   * The container image builder command arguments to use.
+   * 
+   * @return The container image builder command arguments or empty if the command is to be inferred
+   */
+  String[] imageBuildArguments() default {};
+
+  /**
+   * The container image push image to use.
+   * 
+   * @return The container image push image, or empty if the image should be inferred.
+   */
+  String imagePushImage() default "";
+
+  /*
+   * The container image push command to use.
+   * 
+   * @return The container image push command or empty if the command is to be inferred
+   */
+  String imagePushCommand() default "";
+
+  /*
+   * The container image push command arguments to use.
+   * 
+   * @return The container image push command arguments or empty if the command is to be inferred
+   */
+  String[] imagePushArguments() default {};
+
+  /**
+   * The relative path to the Dockerfile.
+   * @return the path to the Dockerfile.
+   */
+  String dockerfile() default "Dockerfile";
+
 
   /**
    * The docker image to be used for the deployment task.

@@ -19,12 +19,14 @@ As the project now supports `decorating` of kubernetes manifests without the use
 - Generates manifest via annotation processing
   - [Kubernetes](#kubernetes)
   - [OpenShift](#openshift)
-  - [Tekton](#tekton)
   - [Knative](#knative)
+  - [Tekton](#tekton)
+  - [Pojo to CRD](#pojo-to-crd)
   - [Prometheus](#prometheus)
   - [Jaeger](#jaeger)
   - [Service Catalog](#service-catalog)
   - [Halkyon CRD](#halkyon-crd)
+  - [ServiceBinding CRD](#servicebinding-crd)
 - Customize manifests using annotations
   - Kubernetes
     - labels
@@ -1472,6 +1474,143 @@ or using yaml:
  - [Vert.x on kubernetes example](examples/vertx-on-kubernetes-example)
  - [Vert.x on openshift example](examples/vertx-on-openshift-example)
 
+
+### Pojo to CRD
+
+Dekorate allows the generation of Kubernetes CustomResourceDefinition resources from annotated POJOs.
+
+Pojos annotated with the `@CustomResource` annotation will trigger the generation of the CRD for the POJO.
+The main CRD attributes will be derived from the POJO class (e.g. the Schema) and the rest will be specified using the annotation parameters.
+
+The generated CRD will be added to the list of generated resources.
+
+For example a CustomResourceDefinition for an imaginary Github bot, could be generated from a POJO like:
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1")
+    public class GithubBot {
+       String token;
+       String organization;
+       List<String> repositories;
+
+       String warnMessage;
+       long warnDays;
+       
+       String closeMessage;
+       long closeDays;
+    }
+```
+
+Out of the box the generated CRD will be considered `Namespaced`. To change that users can use the `scope` parameter on the annotation.
+Also the plural and shortNames will be automatically calculated. Of course they can be overriden using `plural` and `shortName` respectively.
+
+#### Subresources
+
+Dekorate does allow users to specify subresources. Subresources may be configured directly through the `CustomResource` anntotation or may be automatically detected with the use of annotations.
+The latter is more convinient as the user only need to mark the property that affects the subresource and the paths are calculated automatically. The former is there just to support cases where using annotations everywhere is not option (refering to 3rd party classes).
+
+##### Scale
+
+###### Scale annotations
+
+To configure the scale subresources one needs to specify one or more paths for the the following fields:
+
+- spec replicas
+- status replicas
+- status label selector
+
+These paths may be automatically detected if the corresponding fields are annotated with: 
+
+- @SpecReplicas
+- @StatusReplicas
+- @LabelSelector
+
+For example, if in the previous example we make our bot scalable, it could look like:
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1")
+    public class GithubBot {
+       GithubBotSpec spec;
+   }
+   
+   public class GithubBotSpec {
+       @SpecReplicas
+       int replicas;
+       String token;
+       String organization;
+       List<String> repositories;
+
+       String warnMessage;
+       long warnDays;
+       
+       String closeMessage;
+       long closeDays;
+   }
+```
+
+In this example dekorate will detect that the path to spec replicas is `.spec.replicas`.
+
+
+###### Scale configuration
+To specify the scale subresource configration directly via `CustomResource` the `scale` property can be used. This property is of type: `io.dekorate.crd.annotation.Scale` which allows the configuration of the following fields:
+
+- specReplicasPath
+- statusReplicasPath
+- labalSelectorPath
+
+
+The scale subresource will be enabled when the the `scalable` paramter in the `CustomResource` annotation is set to true, or when a value for any of the above has been explictly provided:
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1", scalable=@Scale(labalSelectorPath=".spec.selector"))
+    public class WebServer {
+       WebServerSpec spec;
+    }
+    
+    public class WebServerSpec {
+       int replicas;
+       LabelSelector selector;
+
+       int port;
+       String rootPath;
+       List<String> modules;
+ 
+    }
+```
+
+##### Status
+
+Similar to how scale is configured status also supports a pure annotation style of configration and a more traditional one.
+###### Status annotation
+Any field in the custom resource object graph that is marked using `@Spec` will be used as the subresource status.
+
+###### Status configuration
+To enable the `status` subresource, the user can use the `status` parameter on the `@CustomResource` annotation.
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1", status=WebServerStatus.class))
+    public class WebServer {
+       int port;
+       String rootPath;
+       List<String> modules;
+    }
+```
+
+#### related examples
+ - [POJO to CRD Karaf example](examples/pojo-to-custom-resource-karaf-example)
+
 ### Prometheus annotations
 
 The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.
@@ -1659,7 +1798,7 @@ items:
   spec:
     deploymentMode: "build"
   runtime: "spring-boot"
-  version: "2.1.13.RELEASE"
+  version: "2.3.6.RELEASE"
   exposeService: false
   envs:
     - name: "key_from_properties"  
@@ -1722,7 +1861,7 @@ items:
   spec:
     deploymentMode: "build"
   runtime: "spring-boot"
-  version: "2.1.13.RELEASE"
+  version: "2.3.6.RELEASE"
   exposeService: false
   buildConfig:
     type: "docker"
@@ -1732,6 +1871,84 @@ items:
     moduleDirName: "feat-229-override-annotationbased-config"
 
 ```
+### ServiceBinding CRD 
+[Service Binding Operator](https://github.com/redhat-developer/service-binding-operator) enables the application developers to bind the services that are backed by Kubernetes operators to an application that is deployed in kubernetes without having to perform manual configuration.
+Dekorate supports generation of ServiceBinding CR.
+
+The generation of ServiceBinding CR is triggered by annotating one of your classes with `@ServiceBinding` annotation and by adding the below dependency to the project and when the project gets compiled, the annotation will trigger the generation of ServiceBinding CR in both json and yml formats under the `target/classes/META-INF/dekorate`. The name of the ServiceBinding CR would be the name of the `applicationName + "-binding"`, for example if the application name is `sample-app`, the binding name would be `sample-app-binding`
+
+```
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>servicebinding-annotations</artifactId>
+</dependency>
+```
+
+Here is the simple example of using ServiceBinding annotations in SpringBoot application.
+
+```
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import io.dekorate.servicebinding.annotation.Service;
+import io.dekorate.servicebinding.annotation.ServiceBinding;
+import io.dekorate.servicebinding.annotation.BindingPath;
+
+@ServiceBinding(
+  services = {
+    @Service(group = "postgresql.dev", name = "demo-database", kind = "Database", version = "v1alpha1", id = "postgresDB") })
+@SpringBootApplication
+public class Main {
+
+  public static void main(String[] args) {
+    SpringApplication.run(Main.class, args);
+  }
+
+}
+```
+
+For someone who wants to configure the ServiceBinding CR using system properties, they can do it in the application.properties. The ServiceBinding CR can be customized either via annotation parameters or via system properties. The parameter values provided via annotations can be overrided by configuring the ServiceBinding CR in application.properties.
+
+```
+dekorate.servicebinding.services[0].name=demo-database
+dekorate.servicebinding.services[0].group=postgresql.dev
+dekorate.servicebinding.services[0].kind=Database
+dekorate.servicebinding.services[0].id=postgresDB
+```
+Generated ServiceBinding CR would look something like this:
+
+```
+apiVersion: operators.coreos.com/v1beta1
+kind: ServiceBinding
+metadata:
+  name: servicebinding-example-binding
+spec:
+  application:
+    group: apps
+    resource: Deployment
+    name: servicebinding-example
+    version: v1
+  services:
+  - group: postgresql.dev
+    kind: Database
+    name: demo-database
+    version: v1alpha1
+    id: postgresDB
+  detectBindingResources: false
+  bindAsFiles: false
+```
+
+If the application's `bindingPath` needs to configured, `@BindingPath` annotation can be used directly under `@ServicingBinding` annotation. For example:
+
+```
+@ServiceBinding(
+  bindingPath = @BindingPath(containerPath="spec.template.spec.containers")
+  services = {
+    @Service(group = "postgresql.dev", name = "demo-database", kind = "Database", version = "v1alpha1", id = "postgresDB") }, envVarPrefix = "postgresql")
+@SpringBootApplication
+```
+
+**Note** : `ServiceBinding` annotations are already usuable though still highly experimental. The Service Binding operator is still in flux and may change in the near future.
 
 #### External generator integration
 

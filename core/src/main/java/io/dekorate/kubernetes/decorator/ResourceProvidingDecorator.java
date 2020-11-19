@@ -62,8 +62,20 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
         .findFirst();
   }
 
+  public Optional<HasMetadata> getDeploymentHasMetadata(KubernetesListBuilder list) {
+    return list.getItems()
+      .stream()
+      .filter(h -> DEPLOYMENT_KINDS.contains(h.getKind()))
+      .findFirst();
+  }
+
   public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list) {
     return getDeploymentMetadata(list).orElseThrow(() -> new IllegalStateException(
         "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(",")) + " to be present."));
+  }
+
+  public HasMetadata getMandatoryDeploymentHasMetadata(KubernetesListBuilder list) {
+    return getDeploymentHasMetadata(list).orElseThrow(() -> new IllegalStateException(
+      "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(",")) + " to be present."));
   }
 }

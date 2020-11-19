@@ -20,14 +20,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import io.dekorate.crd.confg.Scope;
-import io.dekorate.kubernetes.config.Configuration;
-import io.sundr.builder.annotations.Adapter;
-import io.sundr.builder.annotations.Buildable;
-import io.sundr.builder.annotations.Pojo;
+import io.dekorate.crd.config.Scope;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "CustomResourceConfig", relativePath = "../config", mutable = true, superClass = Configuration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(name = "CustomResourceConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
+/**
+ * This indicates that the annotated classs represents a `CustomResource` from which a `CustomResourceDefinition` needs to be generated.
+ */
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface CustomResource {
@@ -80,5 +77,19 @@ public @interface CustomResource {
    * @return The scope, defaults to Namespaced.
    */
   Scope scope() default Scope.Namespaced;
+
+
+  /**
+   * The scale configuration.
+   * @return the scale configuration.
+   */
+  Scale scale() default @Scale();
+
+  /**
+   * The class that defines the status.
+   * When no status is present, autodetection will be attempted.
+   * @return The class or Autodetect.class if no class is specified.
+   */
+  Class status() default Autodetect.class;
 
 }

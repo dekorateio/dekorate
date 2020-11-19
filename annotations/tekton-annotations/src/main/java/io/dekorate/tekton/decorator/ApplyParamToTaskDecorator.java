@@ -21,7 +21,7 @@ import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 /**
- * Similar to {@link AddParamToTaskDecorator} but will replace existing values.
+ * Similar to {@link AddStringParamToTaskDecorator} but will replace existing values.
  */
 public class ApplyParamToTaskDecorator extends NamedTaskDecorator {
 
@@ -45,7 +45,7 @@ public class ApplyParamToTaskDecorator extends NamedTaskDecorator {
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, TaskProvidingDecorator.class, AddParamToTaskDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, TaskProvidingDecorator.class, AddStringParamToTaskDecorator.class };
   }
 
 }

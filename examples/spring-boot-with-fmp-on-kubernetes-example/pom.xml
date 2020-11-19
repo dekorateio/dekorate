@@ -3,7 +3,7 @@
   <parent>
     <artifactId>examples</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <version.spring-boot>2.1.13.RELEASE</version.spring-boot>
+    <version.spring-boot>2.3.6.RELEASE</version.spring-boot>
     <version.fabric8-maven-plugin>3.5.42</version.fabric8-maven-plugin>
   </properties>
 

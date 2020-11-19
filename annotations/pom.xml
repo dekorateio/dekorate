@@ -19,10 +19,10 @@ limitations under the License.
   <parent>
     <artifactId>dekorate-project</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  
+
   <artifactId>annotations</artifactId>
   <packaging>pom</packaging>
   <name>Dekorate :: Annotations</name>
@@ -34,6 +34,7 @@ limitations under the License.
     <module>knative-annotations</module>
     <module>tekton-annotations</module>
     <module>servicecatalog-annotations</module>
+    <module>servicebinding-annotations</module>
     <module>halkyon-annotations</module>
     <module>prometheus-annotations</module>
     <module>crd-annotations</module>

@@ -6,7 +6,7 @@
   <parent>
     <artifactId>dekorate-tests</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
 
@@ -61,6 +61,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${version.spring-boot}</version>
       </plugin>
     </plugins>
   </build>

@@ -3,7 +3,7 @@
   <parent>
     <artifactId>dekorate-project</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -32,7 +32,8 @@
     <module>spring-boot-with-jaeger-on-kubernetes-example</module>
     <module>spring-boot-with-tekton-example</module>
     <module>spring-boot-with-tekton-and-m2-pvc-example</module>
-    <module>pojo-to-custom-resource-example</module>
+    <module>pojo-to-crd-karaf-example</module>
+    <module>pojo-to-crd-zookeeper-example</module>
     <module>thorntail-on-kubernetes-example</module>
     <module>thorntail-on-openshift-example</module>
     <module>vertx-on-kubernetes-example</module>

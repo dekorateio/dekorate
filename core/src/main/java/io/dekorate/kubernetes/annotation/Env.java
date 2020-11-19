@@ -40,4 +40,6 @@ public @interface Env {
   String configmap() default "";
 
   String field() default "";
+
+  String resourceField() default "";
 }

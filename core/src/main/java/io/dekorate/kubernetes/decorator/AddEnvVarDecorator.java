@@ -75,6 +75,8 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
       populateFromField(builder);
     } else if (Strings.isNotNullOrEmpty(env.getName())) {
       builder.addNewEnv().withName(env.getName()).withValue(env.getValue()).endEnv();
+    } else if (Strings.isNotNullOrEmpty(env.getResourceField())) {
+      populateFromResourceField(builder);
     }
   }
 
@@ -117,6 +119,10 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
   private void populateFromField(ContainerBuilder builder) {
     builder.addNewEnv().withName(this.env.getName()).withNewValueFrom().withNewFieldRef().withFieldPath(this.env.getField())
         .endFieldRef().endValueFrom().endEnv();
+  }
+
+  private void populateFromResourceField(ContainerBuilder builder) {
+    builder.addNewEnv().withName(this.env.getName()).withNewValueFrom().withNewResourceFieldRef().withResource(this.env.getResourceField()).endResourceFieldRef().endValueFrom().endEnv();
   }
 
   @Override
