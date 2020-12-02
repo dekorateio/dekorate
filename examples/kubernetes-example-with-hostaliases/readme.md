@@ -37,7 +37,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kubernetes-example-with-hostaliases
-    app.kubernetes.io/version: 0.12-SNAPSHOT
+    app.kubernetes.io/version: 0.13-SNAPSHOT
   name: kubernetes-example-with-hostaliases
 spec:
   replicas: 1
@@ -45,7 +45,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: kubernetes-example-with-hostaliases
-        app.kubernetes.io/version: 0.12-SNAPSHOT
+        app.kubernetes.io/version: 0.13-SNAPSHOT
     spec:
       hostAliases:
       - hostnames:

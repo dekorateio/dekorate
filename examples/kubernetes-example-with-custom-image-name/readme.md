@@ -75,19 +75,19 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kubernetes-example-with-custom-image-name
-    app.kubernetes.io/version: 0.12-SNAPSHOT
+    app.kubernetes.io/version: 0.13-SNAPSHOT
   name: kubernetes-example-with-custom-image-name
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: kubernetes-example-with-custom-image-name
-      app.kubernetes.io/version: 0.12-SNAPSHOT
+      app.kubernetes.io/version: 0.13-SNAPSHOT
   template:
     metadata:
       labels:
         app.kubernetes.io/name: kubernetes-example-with-custom-image-name
-        app.kubernetes.io/version: 0.12-SNAPSHOT
+        app.kubernetes.io/version: 0.13-SNAPSHOT
     spec:
       containers:
         image: foo/bar:baz

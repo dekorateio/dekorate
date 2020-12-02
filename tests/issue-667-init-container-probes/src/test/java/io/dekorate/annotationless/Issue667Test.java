@@ -25,10 +25,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.utils.Serialization;
-import io.dekorate.kubernetes.deps.api.model.Container;
-import io.dekorate.kubernetes.deps.api.model.HasMetadata;
-import io.dekorate.kubernetes.deps.api.model.KubernetesList;
-import io.dekorate.kubernetes.deps.api.model.apps.Deployment;
+import io.dekorate.deps.kubernetes.api.model.Container;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.kubernetes.api.model.apps.Deployment;
 
 class Issue667Test {
 

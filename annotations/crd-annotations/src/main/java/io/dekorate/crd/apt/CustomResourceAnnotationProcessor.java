@@ -28,8 +28,21 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
-@SupportedAnnotationTypes({"io.dekorate.crd.annotation.CustomResource"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+import io.dekorate.config.AnnotationConfiguration;
+import io.dekorate.crd.adapter.CustomResourceConfigAdapter;
+import io.dekorate.crd.annotation.CustomResource;
+import io.dekorate.crd.config.Keys;
+import io.dekorate.crd.config.CustomResourceConfig;
+import io.dekorate.crd.config.CustomResourceConfigBuilder;
+import io.dekorate.crd.configurator.AddClassNameConfigurator;
+import io.dekorate.crd.generator.CustomResourceGenerator;
+import io.dekorate.processor.AbstractAnnotationProcessor;
+import io.sundr.codegen.CodegenContext;
+import io.sundr.codegen.functions.ElementTo;
+import io.sundr.codegen.model.TypeDef;
+import io.sundr.codegen.utils.ModelUtils;
+
+@SupportedAnnotationTypes({ "io.dekorate.crd.annotation.CustomResource" })
 public class CustomResourceAnnotationProcessor extends AbstractAnnotationProcessor implements CustomResourceGenerator {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

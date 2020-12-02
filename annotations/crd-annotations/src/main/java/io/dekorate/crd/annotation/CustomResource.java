@@ -16,11 +16,11 @@
 package io.dekorate.crd.annotation;
 
 
-import io.dekorate.crd.confg.Scope;
 import io.dekorate.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
+import io.dekorate.crd.config.Scope;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
