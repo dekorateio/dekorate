@@ -15,11 +15,21 @@
  * 
 **/
 
-package io.dekorate.crd.annotation;
+package io.dekorate.examples.pojo2crd;
 
-public @interface Scale {
+import io.dekorate.crd.annotation.CustomResource;
+import io.dekorate.crd.annotation.Status;
+import io.dekorate.crd.config.Scope;
 
-  String specReplicasPath() default "";
-  String statusReplicasPath() default "";
-  String labalSelectorPath() default "";
+import java.util.List;
+import java.util.Map;
+
+@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
+public class Karaf {
+    private String name;
+    private List<String> repoistory;
+    private List<String> features;
+    private List<String> bundles;
+    private Map<String, String> config;
 }
+

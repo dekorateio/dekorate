@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The original authors.
+* Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,16 @@
  * 
 **/
 
-package io.dekorate.crd.annotation;
+package io.dekorate.examples.pojo2crd;
 
-public @interface Scale {
+import io.dekorate.crd.annotation.CustomResource;
+import io.dekorate.crd.annotation.Status;
+import io.dekorate.crd.config.Scope;
 
-  String specReplicasPath() default "";
-  String statusReplicasPath() default "";
-  String labalSelectorPath() default "";
+@CustomResource(group = "io.zookeeper", version = "v1", scope = Scope.Namespaced)
+public class Zookeeper {
+  private ZookeeperSpec spec;
+  @Status
+  private ZookeeperStatus status;
 }
+

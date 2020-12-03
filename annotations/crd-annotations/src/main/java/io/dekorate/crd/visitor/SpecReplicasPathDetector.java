@@ -15,11 +15,18 @@
  * 
 **/
 
-package io.dekorate.crd.annotation;
+package io.dekorate.crd.visitor;
 
-public @interface Scale {
+import java.util.ArrayList;
 
-  String specReplicasPath() default "";
-  String statusReplicasPath() default "";
-  String labalSelectorPath() default "";
+import io.dekorate.crd.annotation.SpecReplicas;
+
+public class SpecReplicasPathDetector extends AnnotatedPropertyPathDetector {
+
+	public SpecReplicasPathDetector() {
+    this(DOT);
+  }
+	public SpecReplicasPathDetector(String prefix) {
+		super(prefix, SpecReplicas.class.getSimpleName(), new ArrayList<>());
+	}
 }

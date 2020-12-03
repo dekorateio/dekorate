@@ -15,11 +15,26 @@
  * 
 **/
 
-package io.dekorate.crd.annotation;
+package io.dekorate.examples.pojo2crd;
 
-public @interface Scale {
+public class KarafStatus {
 
-  String specReplicasPath() default "";
-  String statusReplicasPath() default "";
-  String labalSelectorPath() default "";
+  private boolean running;
+  private long uptime;
+
+  public long getUptime() {
+    return this.uptime;
+  }
+
+  public void setUptime(long uptime) {
+    this.uptime = uptime;
+  }
+
+  public boolean getRunning() {
+    return this.running;
+  }
+
+  public void setRunning(boolean running) {
+    this.running = running;
+  }
 }
