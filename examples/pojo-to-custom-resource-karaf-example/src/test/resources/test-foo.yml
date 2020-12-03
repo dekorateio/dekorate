@@ -1,0 +1,13 @@
+kind: Foo
+apiVersion: dekorate.io/v1
+metadata:
+  name: foo-1
+spec:
+  size: 1
+  enabled: true
+  baz:
+  - size: 1
+    enabled: true
+  - size: 2
+    enabled: true
+
