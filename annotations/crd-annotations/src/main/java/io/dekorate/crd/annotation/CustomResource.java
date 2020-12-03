@@ -16,11 +16,11 @@
 package io.dekorate.crd.annotation;
 
 
+import io.dekorate.crd.config.Scope;
 import io.dekorate.kubernetes.config.Configuration;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
-import io.dekorate.crd.config.Scope;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -78,5 +78,26 @@ public @interface CustomResource {
    * @return The scope, defaults to Namespaced.
    */
   Scope scope() default Scope.Namespaced;
+
+
+  /**
+   * Flag to specify wether the resource is scalable.
+   * When explicitly set to true, the scale subresource will be applied.
+   * If scale configuration is provided anyway, this field is ignored.
+   * @return true if resource is scalable.
+   */
+  boolean scalable() default false;
+
+  /**
+   * The scale configuration.
+   * @return the scale configuration.
+   */
+  Scale scale() default @Scale();
+
+  /**
+   * The class that defines the status.
+   * @return The class or Void.class if no class is specified.
+   */
+  Class status() default Void.class;
 
 }
