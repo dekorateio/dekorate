@@ -1478,6 +1478,11 @@ or using yaml:
 
 Dekorate allows the generation of Kubernetes CustomResourceDefinition resources from annotated POJOs.
 
+Pojos annotated with the `@CustomResource` annotation will trigger the generation of the CRD for the POJO.
+The main CRD attributes will be derived from the POJO class (e.g. the Schema) and the rest will be specified using the annotation parameters.
+
+The generated CRD will be added to the list of generated resources.
+
 For example a CustomResourceDefinition for an imaginary Github bot, could be generated from a POJO like:
 
 ```java
@@ -1503,13 +1508,60 @@ Also the plural and shortNames will be automatically calculated. Of course they 
 
 #### Subresources
 
+Dekorate does allow users to specify subresources. Subresources may be configured directly through the `CustomResource` anntotation or may be automatically detected with the use of annotations.
+The latter is more convinient as the user only need to mark the property that affects the subresource and the paths are calculated automatically. The former is there just to support cases where using annotations everywhere is not option (refering to 3rd party classes).
+
 ##### Scale
 
-To specify the scale subresource configration an additonal annotation is provided: `io.dekorate.crd.annotation.Scale` the annotation allows the configuration of the following fields:
+###### Scale annotations
 
-- scaleReplicasPath (defaults to ".spec.replicas")
-- statusReplicasPath (defaults to "status.replicas")
-- labelSelectorPath (defaults to ".status.labelSelector")
+To configure the scale subresources one needs to specify one or more paths for the the following fields:
+
+- spec replicas
+- status replicas
+- status label selector
+
+These paths may be automatically detected if the corresponding fields are annotated with: 
+
+- @SpecReplicas
+- @StatusReplicas
+- @LabelSelector
+
+For example, if in the previous example we make our bot scalable, it could look like:
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1")
+    public class GithubBot {
+       GithubBotSpec spec;
+   }
+   
+   public class GithubBotSpec {
+       @SpecReplicas
+       int replicas;
+       String token;
+       String organization;
+       List<String> repositories;
+
+       String warnMessage;
+       long warnDays;
+       
+       String closeMessage;
+       long closeDays;
+   }
+```
+
+In this example dekorate will detect that the path to spec replicas is `.spec.replicas`.
+
+
+###### Scale configuration
+To specify the scale subresource configration directly via `CustomResource` the `scale` property can be used. This property is of type: `io.dekorate.crd.annotation.Scale` which allows the configuration of the following fields:
+
+- specReplicasPath
+- statusReplicasPath
+- labalSelectorPath
 
 
 The scale subresource will be enabled when the the `scalable` paramter in the `CustomResource` annotation is set to true, or when a value for any of the above has been explictly provided:
@@ -1518,17 +1570,29 @@ The scale subresource will be enabled when the the `scalable` paramter in the `C
 
     import io.dekorate.crd.annotation.CustomResource
     
-    @CustomResource(group="my.group", version="v1beta1", scalable=@Scale(labelSelectorPath=".spec.selector"))
+    @CustomResource(group="my.group", version="v1beta1", scalable=@Scale(labalSelectorPath=".spec.selector"))
     public class WebServer {
+       WebServerSpec spec;
+    }
+    
+    public class WebServerSpec {
+       int replicas;
+       LabelSelector selector;
+
        int port;
        String rootPath;
        List<String> modules;
-       LabelSelector selector;
+ 
     }
 ```
 
 ##### Status
 
+Similar to how scale is configured status also supports a pure annotation style of configration and a more traditional one.
+###### Status annotation
+Any field in the custom resource object graph that is marked using `@Spec` will be used as the subresource status.
+
+###### Status configuration
 To enable the `status` subresource, the user can use the `status` parameter on the `@CustomResource` annotation.
 
 ```java
@@ -1543,6 +1607,8 @@ To enable the `status` subresource, the user can use the `status` parameter on t
     }
 ```
 
+#### related examples
+ - [POJO to CRD Karaf example](examples/pojo-to-custom-resource-karaf-example)
 
 ### Prometheus annotations
 

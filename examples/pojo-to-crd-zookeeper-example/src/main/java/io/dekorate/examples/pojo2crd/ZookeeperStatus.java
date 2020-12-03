@@ -19,10 +19,15 @@ package io.dekorate.examples.pojo2crd;
 
 import java.util.Map;
 
-import io.dekorate.crd.annotation.StatusLabelSelector;
+import io.dekorate.crd.annotation.LabelSelector;
 import io.dekorate.crd.annotation.StatusReplicas;
 
-public class KarafStatus {
+public class ZookeeperStatus {
+
+  @StatusReplicas
+  private int size;
+  @LabelSelector
+  private Map<String, String> selector;
 
   private boolean running;
   private long uptime;
@@ -41,5 +46,22 @@ public class KarafStatus {
 
   public void setRunning(boolean running) {
     this.running = running;
+  }
+
+  public int getSize() {
+    return this.size;
+  }
+
+  public void setSize(int size) {
+    this.size=size;
+  }
+
+
+  public Map<String, String> getSelector() {
+    return selector;
+  }
+
+  public void setSelector(Map<String, String> selector) {
+    this.selector = selector;
   }
 }

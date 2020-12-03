@@ -17,13 +17,11 @@
 
 package io.dekorate.examples.pojo2crd;
 
-import java.util.List;
-import java.util.Map;
-
 import io.dekorate.crd.annotation.CustomResource;
+import io.dekorate.crd.annotation.Status;
 import io.dekorate.crd.config.Scope;
 
-@CustomResource(group = "org.apache", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
+@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
 public class Karaf {
 
     private String name;
@@ -32,3 +30,4 @@ public class Karaf {
     private List<String> bundles;
     private Map<String, String> config;
 }
+
