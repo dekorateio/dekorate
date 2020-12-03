@@ -19,8 +19,9 @@ As the project now supports `decorating` of kubernetes manifests without the use
 - Generates manifest via annotation processing
   - [Kubernetes](#kubernetes)
   - [OpenShift](#openshift)
-  - [Tekton](#tekton)
   - [Knative](#knative)
+  - [Tekton](#tekton)
+  - [Pojo to CRD](#pojo-to-crd)
   - [Prometheus](#prometheus)
   - [Jaeger](#jaeger)
   - [Service Catalog](#service-catalog)
@@ -1471,6 +1472,77 @@ or using yaml:
 #### related examples
  - [Vert.x on kubernetes example](examples/vertx-on-kubernetes-example)
  - [Vert.x on openshift example](examples/vertx-on-openshift-example)
+
+
+### Pojo to CRD
+
+Dekorate allows the generation of Kubernetes CustomResourceDefinition resources from annotated POJOs.
+
+For example a CustomResourceDefinition for an imaginary Github bot, could be generated from a POJO like:
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1")
+    public class GithubBot {
+       String token;
+       String organization;
+       List<String> repositories;
+
+       String warnMessage;
+       long warnDays;
+       
+       String closeMessage;
+       long closeDays;
+    }
+```
+
+Out of the box the generated CRD will be considered `Namespaced`. To change that users can use the `scope` parameter on the annotation.
+Also the plural and shortNames will be automatically calculated. Of course they can be overriden using `plural` and `shortName` respectively.
+
+#### Subresources
+
+##### Scale
+
+To specify the scale subresource configration an additonal annotation is provided: `io.dekorate.crd.annotation.Scale` the annotation allows the configuration of the following fields:
+
+- scaleReplicasPath (defaults to ".spec.replicas")
+- statusReplicasPath (defaults to "status.replicas")
+- labelSelectorPath (defaults to ".status.labelSelector")
+
+
+The scale subresource will be enabled when the the `scalable` paramter in the `CustomResource` annotation is set to true, or when a value for any of the above has been explictly provided:
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1", scalable=@Scale(labelSelectorPath=".spec.selector"))
+    public class WebServer {
+       int port;
+       String rootPath;
+       List<String> modules;
+       LabelSelector selector;
+    }
+```
+
+##### Status
+
+To enable the `status` subresource, the user can use the `status` parameter on the `@CustomResource` annotation.
+
+```java
+
+    import io.dekorate.crd.annotation.CustomResource
+    
+    @CustomResource(group="my.group", version="v1beta1", status=WebServerStatus.class))
+    public class WebServer {
+       int port;
+       String rootPath;
+       List<String> modules;
+    }
+```
+
 
 ### Prometheus annotations
 

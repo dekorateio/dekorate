@@ -33,6 +33,7 @@
     <module>spring-boot-with-tekton-example</module>
     <module>spring-boot-with-tekton-and-m2-pvc-example</module>
     <module>pojo-to-custom-resource-example</module>
+    <module>pojo-to-custom-resource-karaf-example</module>
     <module>thorntail-on-kubernetes-example</module>
     <module>thorntail-on-openshift-example</module>
     <module>vertx-on-kubernetes-example</module>
