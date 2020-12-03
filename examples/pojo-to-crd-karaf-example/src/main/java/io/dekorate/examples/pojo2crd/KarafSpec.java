@@ -15,11 +15,15 @@
  * 
 **/
 
-package io.dekorate.crd.annotation;
+package io.dekorate.examples.pojo2crd;
 
-public @interface Scale {
+import java.util.List;
+import java.util.Map;
 
-  String specReplicasPath() default "";
-  String statusReplicasPath() default "";
-  String labalSelectorPath() default "";
+import io.dekorate.crd.annotation.SpecReplicas;
+
+public class KarafSpec {
+
+    @SpecReplicas
+    private int replicas;
 }

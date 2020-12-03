@@ -15,11 +15,14 @@
  * 
 **/
 
-package io.dekorate.crd.annotation;
+package io.dekorate.examples.pojo2crd;
 
-public @interface Scale {
+import io.dekorate.crd.annotation.SpecReplicas;
 
-  String specReplicasPath() default "";
-  String statusReplicasPath() default "";
-  String labalSelectorPath() default "";
+public class ZookeeperSpec {
+
+    @SpecReplicas
+    private int size;
+    private String version;
+    private boolean ephemeral;
 }
