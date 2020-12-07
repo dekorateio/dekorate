@@ -23,9 +23,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import io.sundr.builder.Predicate;
 import io.sundr.builder.TypedVisitor;
-import io.sundr.codegen.model.AnnotationRefBuilder;
 import io.sundr.codegen.model.Property;
 import io.sundr.codegen.model.ClassRef;
 import io.sundr.codegen.model.TypeDef;
@@ -42,13 +40,6 @@ public class AnnotatedPropertyPathDetector extends TypedVisitor<TypeDefBuilder> 
   private final List<String> parents;
   private final AtomicReference<Optional<String>> reference;
 
-  private final Predicate<AnnotationRefBuilder> predicate = new Predicate<>() {
-        @Override
-        public boolean apply(AnnotationRefBuilder ref) {
-         return ref.getClassRef().getName().equals(annotationName);
-        }
-    };
- 
   public AnnotatedPropertyPathDetector(String prefix, String annotationName) {
     this(prefix, annotationName, new ArrayList<>());
   }
