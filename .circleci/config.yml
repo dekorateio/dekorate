@@ -91,7 +91,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v8-dependencies-
 
-      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline -Dformat.skip=true
+      - run: mvn -DskipTests clean install -Presources -Pwith-examples -Pwith-tests dependency:resolve-plugins dependency:go-offline -Dformat.skip=true
       - save_cache:
           paths:
             - ~/.m2
@@ -105,7 +105,7 @@ jobs:
             oc new-project itests
             oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
             oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-            mvn -B clean install -Pbuild -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
+            mvn -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
 
   CLI_OPTIONS:
     machine: true
