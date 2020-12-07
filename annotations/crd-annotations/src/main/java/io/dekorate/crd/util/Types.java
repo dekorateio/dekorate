@@ -84,10 +84,9 @@ public class Types {
     return "status".equals(property.getName()) || property.getAnnotations().stream().anyMatch(a -> Status.class.getName().equals(a.getClassRef().getFullyQualifiedName()));
   }
 
-  private static final Predicate<AnnotationRefBuilder> predicate = new Predicate<>() {
+  private static final Predicate<AnnotationRefBuilder> predicate = new Predicate<AnnotationRefBuilder>() {
         @Override
         public boolean apply(AnnotationRefBuilder ref) {
-          System.out.println("Candidate annotation:" + ref.getClassRef().getName());
          return ref.getClassRef().getName().equals("SpecReplicas");
         }
     };

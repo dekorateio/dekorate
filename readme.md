@@ -1797,7 +1797,7 @@ items:
   spec:
     deploymentMode: "build"
   runtime: "spring-boot"
-  version: "2.1.13.RELEASE"
+  version: "2.3.6.RELEASE"
   exposeService: false
   envs:
     - name: "key_from_properties"  
@@ -1860,7 +1860,7 @@ items:
   spec:
     deploymentMode: "build"
   runtime: "spring-boot"
-  version: "2.1.13.RELEASE"
+  version: "2.3.6.RELEASE"
   exposeService: false
   buildConfig:
     type: "docker"
