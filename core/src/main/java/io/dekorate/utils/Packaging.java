@@ -78,19 +78,22 @@ public class Packaging {
                 return FileVisitResult.CONTINUE;
               }
 
-              final Path relativePath = root.relativize(file);
-              final boolean hasDestinationPath = Strings.isNotNullOrEmpty(destination);
-              final TarArchiveEntry entry = hasDestinationPath ? new TarArchiveEntry(destination + File.separator + file.toFile()) : new TarArchiveEntry(file.toFile());
-              entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString() : relativePath.toString());
-              if (file.toFile().canExecute()) {
-                entry.setMode(entry.getMode() | 0755);
-              }
-              entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
-              entry.setSize(attrs.size());
-              putTarEntry(tout, entry, file);
-              return FileVisitResult.CONTINUE;
+            final Path relativePath = root.relativize(file);
+            final boolean hasDestinationPath = Strings.isNotNullOrEmpty(destination);
+            final TarArchiveEntry entry = hasDestinationPath
+                ? new TarArchiveEntry(destination + File.separator + file.toFile())
+                : new TarArchiveEntry(file.toFile());
+            entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString()
+                : relativePath.toString());
+            entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
+            if (!file.toFile().isDirectory() && file.toFile().canExecute()) {
+              entry.setMode(entry.getMode() | 0755);
             }
-          });
+            entry.setSize(attrs.size());
+            putTarEntry(tout, entry, file);
+            return FileVisitResult.CONTINUE;
+          }
+        });
         tout.flush();
       }
       return tempFile;
