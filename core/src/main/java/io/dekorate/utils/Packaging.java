@@ -89,10 +89,10 @@ public class Packaging {
                 : new TarArchiveEntry(file.toFile());
             entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString()
                 : relativePath.toString());
-            if (file.toFile().canExecute()) {
+            entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
+            if (!file.toFile().isDirectory() && file.toFile().canExecute()) {
               entry.setMode(entry.getMode() | 0755);
             }
-            entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
             entry.setSize(attrs.size());
             putTarEntry(tout, entry, file);
             return FileVisitResult.CONTINUE;
