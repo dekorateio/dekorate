@@ -5,7 +5,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>dekorate-project</artifactId>
   <packaging>pom</packaging>
-  <version>0.14.1</version>
+  <version>0.14-SNAPSHOT</version>
   <name>Dekorate</name>
   <description>A collection of annotations and processors for Kubernetes</description>
 
@@ -40,7 +40,7 @@
     <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
     <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
     <url>http://github.com/dekorateio/dekorate</url>
-    <tag>0.14.1</tag>
+    <tag>${project.version}</tag>
   </scm>
 
   <distributionManagement>
