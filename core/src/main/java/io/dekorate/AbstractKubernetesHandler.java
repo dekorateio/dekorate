@@ -213,7 +213,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     resources.decorate(group,new RemoveProbesFromInitContainerDecorator());
   }
 
-  private static void validateVolume(SecretVolume volume) {
+  protected static void validateVolume(SecretVolume volume) {
     if (Strings.isNullOrEmpty(volume.getVolumeName())) {
       throw new IllegalArgumentException("Secret volume requires volumeName().");
     }
@@ -225,7 +225,7 @@ public abstract class AbstractKubernetesHandler<C extends BaseConfig> implements
     }
   }
 
-  private static void validateVolume(ConfigMapVolume volume) {
+  protected static void validateVolume(ConfigMapVolume volume) {
     if (Strings.isNullOrEmpty(volume.getVolumeName())) {
       throw new IllegalArgumentException("ConfigMap volume requires volumeName().");
     }

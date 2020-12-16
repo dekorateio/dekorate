@@ -36,6 +36,14 @@ import io.dekorate.knative.config.GlobalAutoScaling;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.knative.config.KnativeConfigBuilder;
 import io.dekorate.knative.config.Traffic;
+import io.dekorate.knative.decorator.AddAwsElasticBlockStoreVolumeToRevisionDecorator;
+import io.dekorate.knative.decorator.AddAzureDiskVolumeToRevisionDecorator;
+import io.dekorate.knative.decorator.AddAzureFileVolumeToRevisionDecorator;
+import io.dekorate.knative.decorator.AddConfigMapVolumeToRevisionDecorator;
+import io.dekorate.knative.decorator.AddHostAliasesToRevisionDecorator;
+import io.dekorate.knative.decorator.AddPvcVolumeToRevisionDecorator;
+import io.dekorate.knative.decorator.AddSecretVolumeToRevisionDecorator;
+import io.dekorate.knative.decorator.AddSidecarToRevisionDecorator;
 import io.dekorate.knative.decorator.ApplyGlobalAutoscalingClassDecorator;
 import io.dekorate.knative.decorator.ApplyGlobalContainerConcurrencyDecorator;
 import io.dekorate.knative.decorator.ApplyGlobalRequestsPerSecondTargetDecorator;
@@ -47,10 +55,18 @@ import io.dekorate.knative.decorator.ApplyMaxScaleDecorator;
 import io.dekorate.knative.decorator.ApplyMinScaleDecorator;
 import io.dekorate.knative.decorator.ApplyRevisionNameDecorator;
 import io.dekorate.knative.decorator.ApplyTrafficDecorator;
+import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
+import io.dekorate.kubernetes.config.AzureDiskVolume;
+import io.dekorate.kubernetes.config.AzureFileVolume;
+import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.config.Container;
+import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.LabelBuilder;
+import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
+import io.dekorate.kubernetes.config.SecretVolume;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddConfigMapDataDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapResourceProvidingDecorator;
@@ -176,6 +192,43 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
       long percentage = traffic.getPercentage();
       resources.decorate(KNATIVE, new ApplyTrafficDecorator(config.getName(), revisionName, latestRevision, percentage, tag));
     }
+
+
+    //Revision specific stuff
+    for (Container container : config.getSidecars()) {
+      resources.decorate(KNATIVE, new AddSidecarToRevisionDecorator(config.getName(), container));
+    }
+ 
+    for (SecretVolume volume : config.getSecretVolumes()) {
+      validateVolume(volume);
+      resources.decorate(KNATIVE, new AddSecretVolumeToRevisionDecorator(volume));
+    }
+
+    for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
+      validateVolume(volume);
+      resources.decorate(KNATIVE, new AddConfigMapVolumeToRevisionDecorator(volume));
+    }
+
+    for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
+      resources.decorate(KNATIVE, new AddPvcVolumeToRevisionDecorator(volume));
+    }
+
+    for (AzureFileVolume volume : config.getAzureFileVolumes()) {
+      resources.decorate(KNATIVE, new AddAzureFileVolumeToRevisionDecorator(volume));
+    }
+
+    for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
+      resources.decorate(KNATIVE, new AddAzureDiskVolumeToRevisionDecorator(volume));
+    }
+
+    for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
+      resources.decorate(KNATIVE, new AddAwsElasticBlockStoreVolumeToRevisionDecorator(volume));
+    }
+
+    for (HostAlias hostAlias : config.getHostAliases()) {
+      resources.decorate(KNATIVE, new AddHostAliasesToRevisionDecorator(hostAlias));
+    }
+    
   }
 
   @Override
