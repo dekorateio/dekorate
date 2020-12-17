@@ -51,6 +51,7 @@ public class Packaging {
    * @param path The path of the file or directory to package.
    * @return a file pointing to the generated tar.
    */
+  @Deprecated
   public static File packageFile(String path) {
     return packageFile(path, (String) null);
   }
@@ -61,46 +62,9 @@ public class Packaging {
    * @param destination The destination root in the tarball.
    * @return a file pointing to the generated tar.
    */
+  @Deprecated
   public static File packageFile(String path, String destination) {
-    try {
-      final Path root = Paths.get(path).getParent();
-      File tempFile = Files.createTempFile(Paths.get(DEFAULT_TEMP_DIR), DOCKER_PREFIX, BZIP2_SUFFIX).toFile();
-      try ( final TarArchiveOutputStream tout = buildTarStream(tempFile)) {
-        Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-              return FileVisitResult.CONTINUE;
-            }
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-              String absolutePath = file.toAbsolutePath().toString();
-              if (!path.equals(absolutePath)) {
-                return FileVisitResult.CONTINUE;
-              }
-
-            final Path relativePath = root.relativize(file);
-            final boolean hasDestinationPath = Strings.isNotNullOrEmpty(destination);
-            final TarArchiveEntry entry = hasDestinationPath
-                ? new TarArchiveEntry(destination + File.separator + file.toFile())
-                : new TarArchiveEntry(file.toFile());
-            entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString()
-                : relativePath.toString());
-            entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
-            if (!file.toFile().isDirectory() && file.toFile().canExecute()) {
-              entry.setMode(entry.getMode() | 0755);
-            }
-            entry.setSize(attrs.size());
-            putTarEntry(tout, entry, file);
-            return FileVisitResult.CONTINUE;
-          }
-        });
-        tout.flush();
-      }
-      return tempFile;
-
-    } catch (IOException e) {
-      throw DekorateException.launderThrowable(e);
-    }
+    return packageFile(Paths.get(path).getParent(), destination);
   }
 
   /**
@@ -134,7 +98,6 @@ public class Packaging {
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
               return FileVisitResult.CONTINUE;
             }
-
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
               String absolutePath = file.toAbsolutePath().toString();
@@ -143,12 +106,15 @@ public class Packaging {
               }
               final Path relativePath = root.relativize(file);
               final boolean hasDestinationPath = Strings.isNotNullOrEmpty(destination);
-              final TarArchiveEntry entry = hasDestinationPath ? new TarArchiveEntry(destination + File.separator + file.toFile()) : new TarArchiveEntry(file.toFile());
-              entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString() : relativePath.toString());
-              if (file.toFile().canExecute()) {
+              final TarArchiveEntry entry = hasDestinationPath
+                ? new TarArchiveEntry(destination + File.separator + file.toFile())
+                : new TarArchiveEntry(file.toFile());
+              entry.setName(hasDestinationPath ? destination + File.separator + relativePath.toString()
+                : relativePath.toString());
+              entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
+              if (!file.toFile().isDirectory() && file.toFile().canExecute()) {
                 entry.setMode(entry.getMode() | 0755);
               }
-              entry.setMode(TarArchiveEntry.DEFAULT_FILE_MODE);
               entry.setSize(attrs.size());
               Packaging.putTarEntry(tout, entry, file);
               return FileVisitResult.CONTINUE;
@@ -235,7 +201,7 @@ public class Packaging {
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
       TarArchiveEntry tarEntry = new TarArchiveEntry(basePath.relativize(file).toFile());
       tarEntry.setSize(attrs.size());
-      if (file.toFile().canExecute()) {
+      if (!file.toFile().isDirectory() && file.toFile().canExecute()) {
         tarEntry.setMode(tarEntry.getMode() | 0755);
       }
       Packaging.putTarEntry(tarArchiveOutputStream, tarEntry, file);
