@@ -58,8 +58,7 @@ public class JsonSchema {
   private static final  TypeRef P_BOOLEAN_REF = new PrimitiveRefBuilder().withName("boolean").build();
   private static final TypeRef OPTIONAL_REF = OPTIONAL.toReference();
 
-  private static final  Map<TypeRef, String> TYPE_MAP = new HashMap<TypeRef, String>()  {{
-
+  public static final  Map<TypeRef, String> TYPE_MAP = new HashMap<TypeRef, String>()  {{
     put(STRING_REF, "string");
     put(DATE_REF, "string");
     put(INT_REF, "int");

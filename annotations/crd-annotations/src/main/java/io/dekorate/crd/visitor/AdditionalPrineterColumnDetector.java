@@ -15,31 +15,20 @@
  * 
 **/
 
-package io.dekorate.examples.pojo2crd;
+package io.dekorate.crd.visitor;
+
+import java.util.ArrayList;
 
 import io.dekorate.crd.annotation.PrinterColumn;
 
-public class KarafStatus {
+public class AdditionalPrineterColumnDetector extends AnnotatedMultiPropertyPathDetector {
 
-  @PrinterColumn
-  private boolean running;
-
-  @PrinterColumn
-  private long uptime;
-
-  public long getUptime() {
-    return this.uptime;
+	public AdditionalPrineterColumnDetector() {
+    this(DOT);
   }
 
-  public void setUptime(long uptime) {
-    this.uptime = uptime;
-  }
-
-  public boolean getRunning() {
-    return this.running;
-  }
-
-  public void setRunning(boolean running) {
-    this.running = running;
-  }
+	public AdditionalPrineterColumnDetector(String prefix) {
+		super(prefix, PrinterColumn.class.getSimpleName(), new ArrayList<>());
+	}
 }
+
