@@ -1607,6 +1607,17 @@ To enable the `status` subresource, the user can use the `status` parameter on t
     }
 ```
 
+
+#### Additional printer columns
+In a manner similar to how subresources are specified users are able to specify additional printer columns via annotations, by adding `@PrinterColumn` on the pojo fields.
+For each annotated fields a new addtional printer column will be added to crd, using the following conventions:
+
+- `name` as specified by the annotation parameter `name` or the annotated property in uppercase if no `name` is specified.
+- `type` the type. Inferred automatically, by converting the annotated property type.
+- `path` the JSON path. Detected automatically.
+- `description` From the annotated properted javadoc comments by filtering out lines starting with `@` (e.g. `@param`, `@return` and so on).
+- `format` as specified by the annotation parameter `format`.
+
 #### related examples
  - [POJO to CRD Karaf example](examples/pojo-to-custom-resource-karaf-example)
 
