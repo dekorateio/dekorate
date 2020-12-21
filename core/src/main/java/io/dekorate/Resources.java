@@ -55,6 +55,16 @@ public class Resources {
     return this.groups;
   }
 
+
+  /**
+   * Get the global builder
+   * 
+   * @return The groups map.
+   */
+  public KubernetesListBuilder global() {
+    return this.global;
+  }
+
   /**
    * Add a {@link Decorator}.
    * 

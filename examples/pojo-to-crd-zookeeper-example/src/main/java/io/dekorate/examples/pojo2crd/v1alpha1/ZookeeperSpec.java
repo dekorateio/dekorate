@@ -15,20 +15,14 @@
  * 
 **/
 
-package io.dekorate.examples.pojo2crd;
+package io.dekorate.examples.pojo2crd.v1alpha1;
 
-import io.dekorate.crd.annotation.CustomResource;
-import io.dekorate.crd.config.Scope;
+import io.dekorate.crd.annotation.SpecReplicas;
 
-import java.util.List;
-import java.util.Map;
+public class ZookeeperSpec {
 
-@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
-public class Karaf {
-    private String name;
-    private List<String> repoistory;
-    private List<String> features;
-    private List<String> bundles;
-    private Map<String, String> config;
+    @SpecReplicas
+    private int size;
+    private String version;
+    private boolean ephemeral;
 }
-
