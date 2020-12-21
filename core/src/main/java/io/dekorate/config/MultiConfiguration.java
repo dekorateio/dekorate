@@ -13,25 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.crd.generator;
 
-import java.util.Map;
+package io.dekorate.config;
 
-import io.dekorate.Generator;
-import io.dekorate.Session;
-import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.crd.config.CustomResourceConfig;
-import io.dekorate.crd.handler.CustomResourceHandler;
+import io.dekorate.deps.kubernetes.api.builder.VisitableBuilder;
 
-public interface CustomResourceGenerator extends Generator  {
+public class MultiConfiguration<C> extends ConfigurationSupplier<C> {
+
+  public MultiConfiguration() {
+    super(null, true);
+  }
+
+  public MultiConfiguration(VisitableBuilder<C, ?> builder) {
+    super(builder, true);
+  }
 
   @Override
-  default void add(Map map) {
+  public int compareTo(ConfigurationSupplier<C> o) {
+    if (o instanceof DefaultConfiguration) {
+      return 1;
+    }
+    if (o instanceof PropertyConfiguration) {
+      return -1;
+    }
+    return super.compareTo(o);
   }
 
-  default void on(ConfigurationSupplier<CustomResourceConfig> config) {
-    Session session = getSession();
-    session.configurators().add(config);
-    session.handlers().add(new CustomResourceHandler(session.resources()));
-  }
 }

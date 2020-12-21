@@ -1617,7 +1617,17 @@ For each annotated fields a new addtional printer column will be added to crd, u
 - `description` From the annotated properted javadoc comments by filtering out lines starting with `@` (e.g. `@param`, `@return` and so on).
 - `format` as specified by the annotation parameter `format`.
 
+#### Mutliple version
+
+If multiple POJOs are foundd in the compilation unit, that have the same name and different versions, they will be added as multiple versions of a signle CRD.
+Currently each version can have:
+
+- its own schema
+- its own subresources
+- its own addtional list of printer columns
+
 #### related examples
+ - [POJO to CRD Zookeepr example](examples/pojo-to-custom-resource-zookeeper-example)
  - [POJO to CRD Karaf example](examples/pojo-to-custom-resource-karaf-example)
 
 ### Prometheus annotations

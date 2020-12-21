@@ -15,7 +15,7 @@
  * 
 **/
 
-package io.dekorate.examples.pojo2crd;
+package io.dekorate.examples.pojo2crd.v1;
 
 import java.util.Map;
 

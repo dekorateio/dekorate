@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The original authors.
+* Copyright 2018 The original authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,16 @@
  * 
 **/
 
-package io.dekorate.examples.pojo2crd;
+package io.dekorate.examples.pojo2crd.v1;
 
 import io.dekorate.crd.annotation.CustomResource;
+import io.dekorate.crd.annotation.Status;
 import io.dekorate.crd.config.Scope;
 
-import java.util.List;
-import java.util.Map;
-
-@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
-public class Karaf {
-    private String name;
-    private List<String> repoistory;
-    private List<String> features;
-    private List<String> bundles;
-    private Map<String, String> config;
+@CustomResource(group = "io.zookeeper", version = "v1", scope = Scope.Namespaced)
+public class Zookeeper {
+  private ZookeeperSpec spec;
+  @Status
+  private ZookeeperStatus status;
 }
 

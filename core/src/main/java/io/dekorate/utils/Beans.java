@@ -18,7 +18,9 @@
 package io.dekorate.utils;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -97,14 +99,24 @@ public class Beans {
       return override;
     }
 
+
+    Constructor constructor = null;
+    try {
+      constructor = originClass.getConstructor();
+    } catch (NoSuchMethodException e) {
+      return origin;
+    }
+
     try {
       final C result = originClass.newInstance();
       for (Field f : getAllFields(originClass)) {
         try {
-          String name = f.getName();
-          f.setAccessible(true);
-          Object value = combine(f.get(origin), f.get(override));
-          f.set(result, value);
+          if (!Modifier.isStatic(f.getModifiers())) {
+            String name = f.getName();
+            f.setAccessible(true);
+            Object value = combine(f.get(origin), f.get(override));
+            f.set(result, value);
+          }
         } catch (Exception e) {
           throw DekorateException.launderThrowable(e);
         }

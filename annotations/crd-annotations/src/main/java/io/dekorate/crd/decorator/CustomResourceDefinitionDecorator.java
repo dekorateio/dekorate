@@ -15,20 +15,18 @@
  * 
 **/
 
-package io.dekorate.examples.pojo2crd;
+package io.dekorate.crd.decorator;
 
-import io.dekorate.crd.annotation.CustomResource;
-import io.dekorate.crd.config.Scope;
+import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
+import io.dekorate.deps.kubernetes.api.model.ObjectMeta;
 
-import java.util.List;
-import java.util.Map;
+public class CustomResourceDefinitionDecorator<T> extends NamedResourceDecorator<T> {
 
-@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
-public class Karaf {
-    private String name;
-    private List<String> repoistory;
-    private List<String> features;
-    private List<String> bundles;
-    private Map<String, String> config;
+	public CustomResourceDefinitionDecorator(String name) {
+		super("CustomResourceDefinition", name);
+	}
+
+	@Override
+	public void andThenVisit(T item, ObjectMeta resourceMeta) {
+	}
 }
-
