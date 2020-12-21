@@ -15,14 +15,21 @@
  * 
 **/
 
-package io.dekorate.examples.pojo2crd;
+package io.dekorate.crd.decorator;
 
-import io.dekorate.crd.annotation.SpecReplicas;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionVersionFluent;
 
-public class ZookeeperSpec {
+public class SetStorageVersionDecorator extends CustomResourceDefinitionVersionDecorator<CustomResourceDefinitionVersionFluent<?>> {
 
-    @SpecReplicas
-    private int size;
-    private String version;
-    private boolean ephemeral;
+  private final boolean storage;
+
+	public SetStorageVersionDecorator(String name, String version, boolean storage) {
+		super(name, version);
+		this.storage = storage;
+	}
+
+	@Override
+	public void andThenVisit(CustomResourceDefinitionVersionFluent<?> version) {
+    version.withStorage(storage);
+	}
 }

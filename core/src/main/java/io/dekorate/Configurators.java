@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.dekorate.config.MultiConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Configurator;
@@ -63,8 +64,7 @@ public class Configurators {
   public Stream<? extends Configuration> stream() {
     return suppliers.values()
         .stream()
-        .map(l -> combine(l.stream()
-            .map(s -> s.configure(configurators)).collect(Collectors.toList())));
+        .flatMap(l -> combineMulti(l.stream().map(s -> s.configure(configurators)).collect(Collectors.toList())).stream());
   }
 
   public boolean isEmpty() {
@@ -154,6 +154,18 @@ public class Configurators {
 
   private static <C extends Configuration> C combine(ConfigurationSupplier<C> origin, ConfigurationSupplier<C> override) {
     return Beans.combine(origin.get(), override.get());
+  }
+
+  private static <C extends Configuration> List<C> combineMulti(List<ConfigurationSupplier<C>> suppliers) {
+    Stream<ConfigurationSupplier<C>> multis = suppliers.stream().filter(s -> s instanceof MultiConfiguration);
+    List<ConfigurationSupplier<C>> singles = suppliers.stream().filter(s -> !(s instanceof MultiConfiguration)).collect(Collectors.toList());
+    List<C> result = new ArrayList<>();
+    if (!singles.isEmpty()) {
+      result.add(combine(singles));
+    }
+    result.addAll(multis.map(ConfigurationSupplier::get).collect(Collectors.toList()));
+    System.out.println(result);
+    return result;
   }
 
   private static <C extends Configuration> C combine(List<ConfigurationSupplier<C>> suppliers) {

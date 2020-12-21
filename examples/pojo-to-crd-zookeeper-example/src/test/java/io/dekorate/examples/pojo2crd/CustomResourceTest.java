@@ -27,6 +27,7 @@ import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionVersion;
 
 class CustomResourceTest {
 
@@ -39,10 +40,13 @@ class CustomResourceTest {
     assertEquals("Zookeeper", d.getSpec().getNames().getKind());
     assertEquals("zookeepers", d.getSpec().getNames().getPlural());
     assertEquals("Namespaced", d.getSpec().getScope());
-    assertNotNull(d.getSpec().getSubresources().getScale());
-    assertEquals(".spec.size", d.getSpec().getSubresources().getScale().getSpecReplicasPath());
-    assertEquals(".status.size", d.getSpec().getSubresources().getScale().getStatusReplicasPath());
-    assertNotNull(d.getSpec().getSubresources().getStatus());
+    Optional<CustomResourceDefinitionVersion> v1 = d.getSpec().getVersions().stream().filter(v -> v.getName().equals("v1")).findFirst();
+    v1.ifPresent(v -> {
+        assertNotNull(v.getSubresources().getScale());
+        assertEquals(".spec.size", v.getSubresources().getScale().getSpecReplicasPath());
+        assertEquals(".status.size", v.getSubresources().getScale().getStatusReplicasPath());
+        assertNotNull(v.getSubresources().getStatus());
+      });
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
