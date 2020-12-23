@@ -93,7 +93,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -138,7 +138,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>thorntail-spring-starter</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -163,7 +163,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -240,7 +240,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -507,7 +507,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>option-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -638,7 +638,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 ### OpenShift 
@@ -658,7 +658,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ``` 
 #### Integrating with S2i
@@ -714,7 +714,7 @@ When the `tekton` module is added to the project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>tekton-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -853,7 +853,7 @@ Dekorate also supports generating manifests for `knative`. To make use of
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>knative-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -947,7 +947,7 @@ With spring boot, we suggest you start with one of the provided starters:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -957,7 +957,7 @@ Or if you are on [OpenShift](https://openshift.com):
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshfit-spring-starter</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -1105,7 +1105,7 @@ With Thorntail, it is recommended to add a dependency on one of the provided sta
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-thorntail-starter</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -1116,7 +1116,7 @@ Or, if you use [OpenShift](https://openshift.com):
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshfit-thorntail-starter</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -1256,7 +1256,7 @@ The kubernetes extension can be used by adding the following dependency:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-junit</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```    
 This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
@@ -1328,7 +1328,7 @@ To use that you need to add:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-junit</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```    
 By adding the annotation to your test class the following things will happen:
@@ -1741,7 +1741,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>servicecatalog-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -1765,7 +1765,7 @@ annotate one of your classes with `@HalkyonComponent`. Note that in the case of 
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>halkyon-annotations</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3</version>
 </dependency>
 ```
 
@@ -1949,7 +1949,7 @@ The example below configures the Mapstruct, Lombok and Dekorate annotation proce
                         <path>
                             <groupId>io.dekorate</groupId>
                             <artifactId>kubernetes-annotations</artifactId>
-                            <version>0.14.2</version>
+                            <version>0.14.3</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -1968,7 +1968,7 @@ The bom can be imported like:
             <dependency>
                <groupId>io.dekorate</groupId>
                <artifactId>dekorate-bom</artifactId>
-               <version>0.14.2</version>
+               <version>0.14.3</version>
                <type>pom</type>
                <scope>import</scope>
             </dependency>
