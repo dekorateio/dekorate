@@ -21,15 +21,20 @@ import java.util.Map;
 
 import io.dekorate.crd.annotation.LabelSelector;
 import io.dekorate.crd.annotation.StatusReplicas;
+import io.dekorate.crd.annotation.PrinterColumn;
 
 public class ZookeeperStatus {
 
+  @PrinterColumn
   @StatusReplicas
   private int size;
+
   @LabelSelector
   private Map<String, String> selector;
 
   private boolean running;
+
+  @PrinterColumn
   private long uptime;
 
   public long getUptime() {

@@ -1479,7 +1479,7 @@ or using yaml:
 Dekorate allows the generation of Kubernetes CustomResourceDefinition resources from annotated POJOs.
 
 Pojos annotated with the `@CustomResource` annotation will trigger the generation of the CRD for the POJO.
-The main CRD attributes will be derived from the POJO class (e.g. the Schema) and the rest will be specified using the annotation parameters.
+The main CRD attributes will be derived from the POJO class (e.g. the openapi schema) and the rest will be specified using the annotation parameters.
 
 The generated CRD will be added to the list of generated resources.
 
@@ -1505,6 +1505,12 @@ For example a CustomResourceDefinition for an imaginary Github bot, could be gen
 
 Out of the box the generated CRD will be considered `Namespaced`. To change that users can use the `scope` parameter on the annotation.
 Also the plural and shortNames will be automatically calculated. Of course they can be overriden using `plural` and `shortName` respectively.
+
+#### Required fields
+
+The openapi schema for each version, will be automatically generated. To mark fields of the schema as required, you can annotate them with `@javax.validation.constraints.NotNull`.
+
+#### Subresources
 
 #### Subresources
 

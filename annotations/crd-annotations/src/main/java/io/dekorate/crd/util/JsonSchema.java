@@ -15,6 +15,17 @@
  */
 package io.dekorate.crd.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import io.dekorate.deps.kubernetes.api.model.apiextensions.JSONSchemaProps;
 import io.dekorate.deps.kubernetes.api.model.apiextensions.JSONSchemaPropsBuilder;
 import io.sundr.builder.internal.functions.TypeAs;
@@ -27,13 +38,6 @@ import io.sundr.codegen.model.TypeDef;
 import io.sundr.codegen.model.TypeRef;
 import io.sundr.codegen.utils.ModelUtils;
 import io.sundr.codegen.utils.TypeUtils;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public class JsonSchema {
 
@@ -77,11 +81,17 @@ public class JsonSchema {
    * @param definition  The definition.
    * @return            The schema.
    */
-  public static JSONSchemaProps from(TypeDef definition) {
+  public static JSONSchemaProps from(TypeDef definition, String ... ignore) {
     JSONSchemaPropsBuilder builder = new JSONSchemaPropsBuilder();
     builder.withType("object");
-    List<String> required =  new ArrayList<>();
+    Set<String> ignores  = ignore.length > 0 ? new LinkedHashSet<>(Arrays.asList(ignore)) : Collections.emptySet();
+    List<String> required = new ArrayList<>();
+
     for (Property property : TypeUtils.allProperties(definition)) {
+      if (ignores.contains(property.getName())) {
+        continue;
+      }
+
       JSONSchemaProps schema = from(property.getTypeRef());
       if (property.getAnnotations()
         .stream()

@@ -19,6 +19,8 @@ package io.dekorate.examples.pojo2crd;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,7 @@ import io.dekorate.deps.kubernetes.api.model.HasMetadata;
 import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 import io.dekorate.deps.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.dekorate.deps.kubernetes.api.model.apiextensions.CustomResourceDefinitionVersion;
+import io.dekorate.deps.kubernetes.api.model.apiextensions.JSONSchemaProps;
 
 class CustomResourceTest {
 
@@ -46,6 +49,13 @@ class CustomResourceTest {
         assertEquals(".spec.size", v.getSubresources().getScale().getSpecReplicasPath());
         assertEquals(".status.size", v.getSubresources().getScale().getStatusReplicasPath());
         assertNotNull(v.getSubresources().getStatus());
+
+        //Let's version that version is marekd as reqired
+        Object spec = v.getSchema().getOpenAPIV3Schema().getProperties().get("spec");
+        assertNotNull(spec);
+        JSONSchemaProps props = (JSONSchemaProps) spec;
+        List<String> required = props.getRequired();
+        assertTrue(required.contains("version"));
       });
   }
 

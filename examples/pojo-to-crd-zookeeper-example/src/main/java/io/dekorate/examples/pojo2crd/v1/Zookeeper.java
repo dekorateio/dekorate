@@ -20,9 +20,15 @@ package io.dekorate.examples.pojo2crd.v1;
 import io.dekorate.crd.annotation.CustomResource;
 import io.dekorate.crd.annotation.Status;
 import io.dekorate.crd.config.Scope;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 @CustomResource(group = "io.zookeeper", version = "v1", scope = Scope.Namespaced)
 public class Zookeeper {
+
+  private String kind = "Zookeeper";
+  private String apiVersion = "io.zookeeper/v1";
+  private ObjectMeta metadata;
+
   private ZookeeperSpec spec;
   @Status
   private ZookeeperStatus status;
