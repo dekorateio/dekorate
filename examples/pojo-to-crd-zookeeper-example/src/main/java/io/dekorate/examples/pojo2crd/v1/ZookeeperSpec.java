@@ -17,12 +17,15 @@
 
 package io.dekorate.examples.pojo2crd.v1;
 
+import javax.validation.constraints.NotNull;
+
 import io.dekorate.crd.annotation.SpecReplicas;
 
 public class ZookeeperSpec {
 
     @SpecReplicas
     private int size;
+    @NotNull
     private String version;
     private boolean ephemeral;
 }
