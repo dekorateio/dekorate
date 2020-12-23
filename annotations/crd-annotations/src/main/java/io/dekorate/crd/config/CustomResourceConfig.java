@@ -31,8 +31,8 @@ public class CustomResourceConfig extends Configuration {
   }
 
   public CustomResourceConfig(Project project, Map<ConfigKey, Object> attributes, String group, String kind,
-                              String name, String plural, String shortName, String version, boolean served, boolean storage, Scope scope,
-                              Scale scale, String statusClassName) {
+      String name, String plural, String shortName, String version, boolean served, boolean storage, Scope scope,
+      Scale scale, String statusClassName) {
     super(project, attributes);
     this.group = group != null ? group : "";
     this.kind = kind != null ? kind : "";

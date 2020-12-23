@@ -20,27 +20,27 @@ package io.dekorate.crd.decorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceSubresourcesFluent;
 
-public class AddLabelSelectorPathDecorator extends CustomResourceDefinitionVersionDecorator<CustomResourceSubresourcesFluent<?>> {
+public class AddLabelSelectorPathDecorator
+    extends CustomResourceDefinitionVersionDecorator<CustomResourceSubresourcesFluent<?>> {
 
   private final String path;
- 
-	public AddLabelSelectorPathDecorator(String name, String version, String path) {
-		super(name, version);
-		this.path = path;
-	}
- 
-	@Override
 
-	public void andThenVisit(CustomResourceSubresourcesFluent<?> subresources) {
-    if (subresources.hasScale())  {
+  public AddLabelSelectorPathDecorator(String name, String version, String path) {
+    super(name, version);
+    this.path = path;
+  }
+
+  @Override
+  public void andThenVisit(CustomResourceSubresourcesFluent<?> subresources) {
+    if (subresources.hasScale()) {
       subresources.editScale().withLabelSelectorPath(path).endScale();
     } else {
       subresources.withNewScale().withLabelSelectorPath(path).endScale();
     }
-	}
+  }
 
-	@Override
-	public Class<? extends Decorator>[] after() {
-		return new Class[] { AddCustomResourceDefintionVersionDecorator.class, AddSubresourcesDecorator.class };
-	}
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { AddCustomResourceDefintionVersionDecorator.class, AddSubresourcesDecorator.class };
+  }
 }

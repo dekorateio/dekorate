@@ -2,8 +2,6 @@ package io.dekorate.servicebinding.decorator;
 
 import java.util.Arrays;
 
-import io.dekorate.Logger;
-import io.dekorate.LoggerFactory;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
@@ -34,8 +32,6 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final ServiceBindingConfig config;
-
-  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public AddServiceBindingResourceDecorator(ServiceBindingConfig config) {
     this.config = config;
@@ -163,8 +159,6 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
   }
 
   private ResourceFieldRef getResourceFieldRef(Env envConfig) {
-    LOGGER.info("------->>>>");
-    LOGGER.info(envConfig.getResourceField());
     if (Strings.isNullOrEmpty(envConfig.getResourceField())) {
       return null;
     }
