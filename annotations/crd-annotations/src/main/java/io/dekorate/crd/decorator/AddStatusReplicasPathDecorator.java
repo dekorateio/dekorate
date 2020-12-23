@@ -18,36 +18,27 @@
 package io.dekorate.crd.decorator;
 
 import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceSubresourcesFluent;
 
-public class AddStatusReplicasPathDecorator extends NamedResourceDecorator<CustomResourceSubresourcesFluent<?>> {
+public class AddStatusReplicasPathDecorator extends CustomResourceDefinitionVersionDecorator<CustomResourceSubresourcesFluent<?>> {
 
   private final String path;
  
-	public AddStatusReplicasPathDecorator(String path) {
-    this(ANY, path);
-	}
-
-	public AddStatusReplicasPathDecorator(String name, String path) {
-		super(name);
+	public AddStatusReplicasPathDecorator(String name, String version, String path) {
+		super(name, version);
 		this.path = path;
 	}
  
-	@Override
-	public void andThenVisit(CustomResourceSubresourcesFluent<?> subresources, ObjectMeta resourceMeta) {
+	public void andThenVisit(CustomResourceSubresourcesFluent<?> subresources) {
     if (subresources.hasScale())  {
-      System.out.println("Status replicas has scale!");
       subresources.editScale().withStatusReplicasPath(path).endScale();
     } else {
-      System.out.println("Status replicas does not have scale!");
       subresources.withNewScale().withStatusReplicasPath(path).endScale();
     }
 	}
 
-	@Override
-	public Class<? extends Decorator>[] after() {
-		return new Class[] { AddSubresourcesDecorator.class };
-	}
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { AddSubresourcesDecorator.class };
+  }
 }

@@ -63,6 +63,7 @@
       <module>feat-553-ingress-annotations</module>
       <module>feat-642-knative-traffic-splitting</module>
       <module>issue-667-init-container-probes</module>
+      <module>issue-687-knative-volumes</module>
     </modules>
 
 </project>

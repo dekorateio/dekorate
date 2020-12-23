@@ -17,9 +17,14 @@
 
 package io.dekorate.examples.pojo2crd;
 
+import io.dekorate.crd.annotation.PrinterColumn;
+
 public class KarafStatus {
 
+  @PrinterColumn
   private boolean running;
+
+  @PrinterColumn
   private long uptime;
 
   public long getUptime() {

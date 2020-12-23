@@ -18,7 +18,6 @@
 package io.dekorate.examples.pojo2crd;
 
 import io.dekorate.crd.annotation.CustomResource;
-import io.dekorate.crd.annotation.Status;
 import io.dekorate.crd.config.Scope;
 
 import java.util.List;

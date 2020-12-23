@@ -1507,6 +1507,10 @@ For example a CustomResourceDefinition for an imaginary Github bot, could be gen
 Out of the box the generated CRD will be considered `Namespaced`. To change that users can use the `scope` parameter on the annotation.
 Also the plural and shortNames will be automatically calculated. Of course they can be overriden using `plural` and `shortName` respectively.
 
+#### Required fields
+
+The openapi schema for each version, will be automatically generated. To mark fields of the schema as required, you can annotate them with `@javax.validation.constraints.NotNull`.
+
 #### Subresources
 
 Dekorate does allow users to specify subresources. Subresources may be configured directly through the `CustomResource` anntotation or may be automatically detected with the use of annotations.
@@ -1608,7 +1612,27 @@ To enable the `status` subresource, the user can use the `status` parameter on t
     }
 ```
 
+#### Additional printer columns
+In a manner similar to how subresources are specified users are able to specify additional printer columns via annotations, by adding `@PrinterColumn` on the pojo fields.
+For each annotated fields a new addtional printer column will be added to crd, using the following conventions:
+
+- `name` as specified by the annotation parameter `name` or the annotated property in uppercase if no `name` is specified.
+- `type` the type. Inferred automatically, by converting the annotated property type.
+- `path` the JSON path. Detected automatically.
+- `description` From the annotated properted javadoc comments by filtering out lines starting with `@` (e.g. `@param`, `@return` and so on).
+- `format` as specified by the annotation parameter `format`.
+
+#### Mutliple version
+
+If multiple POJOs are foundd in the compilation unit, that have the same name and different versions, they will be added as multiple versions of a signle CRD.
+Currently each version can have:
+
+- its own schema
+- its own subresources
+- its own addtional list of printer columns
+
 #### related examples
+ - [POJO to CRD Zookeepr example](examples/pojo-to-custom-resource-zookeeper-example)
  - [POJO to CRD Karaf example](examples/pojo-to-custom-resource-karaf-example)
 
 ### Prometheus annotations
@@ -2048,8 +2072,8 @@ At the moment dekorate is using 3 branches in parallel and two major versions ar
 - master (active development, pull requests should point here)
 - 2.0.x  (not released yet)
 - 1.0.x  (important bug fixes)
-- 0.13.x (new features + bug fixes)
-- 0.12.x (old branch, no longer maintained, will soon be removed)
+- 0.14.x (new features + bug fixes)
+- 0.13.x (old branch, no longer maintained, will soon be removed)
 
 ### Pull request guidelines
 
@@ -2060,13 +2084,13 @@ All pull requests should target the `master` branch and from there things are ba
 The current release branches are:
 
 - 1.0.x  (stable)
-- 0.12.x (volatile)
+- 0.14.x (volatile)
 
 #### Fast vs slow paced branches
 
-The idea is that `1.0.x` is the stable branch (slow paced) that doesn't change that often, while `0.12.x` is the volatile one (fast paced) that changes more often.
+The idea is that `1.0.x` is the stable branch (slow paced) that doesn't change that often, while `0.14.x` is the volatile one (fast paced) that changes more often.
 
-It's a bit strange to have a lower major version being more volatile (e.g. `0.12.x` being more volatile than `1.0.x`). 
+It's a bit strange to have a lower major version being more volatile (e.g. `0.14.x` being more volatile than `1.0.x`). 
 This paradox exists for various reasons, most evolving around the fact that we are not ready yet for a `2.0.0` release and we don't want to slow down releases on our fast paced branch.
 This paradox will be eliminated soon, once our fast paced branch will be `2.0.x`.
 

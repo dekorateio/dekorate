@@ -17,9 +17,6 @@
 
 package io.dekorate.examples.pojo2crd;
 
-import java.util.List;
-import java.util.Map;
-
 import io.dekorate.crd.annotation.SpecReplicas;
 
 public class KarafSpec {

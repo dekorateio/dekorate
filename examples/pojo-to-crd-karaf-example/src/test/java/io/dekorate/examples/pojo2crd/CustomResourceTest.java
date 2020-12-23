@@ -27,6 +27,7 @@ import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionVersion;
 
 class CustomResourceTest {
 
@@ -39,7 +40,11 @@ class CustomResourceTest {
     assertEquals("Karaf", d.getSpec().getNames().getKind());
     assertEquals("karafs", d.getSpec().getNames().getPlural());
     assertEquals("Namespaced", d.getSpec().getScope());
-    assertNotNull(d.getSpec().getSubresources().getStatus());
+    Optional<CustomResourceDefinitionVersion> v1 = d.getSpec().getVersions().stream().filter(v -> v.getName().equals("v1")).findFirst();
+    v1.ifPresent(v -> {
+        assertNotNull(v.getSubresources());
+        assertNotNull(v.getSubresources().getStatus());
+      });
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

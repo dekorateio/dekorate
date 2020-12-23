@@ -15,9 +15,22 @@
  * 
 **/
 
+<<<<<<< HEAD
+<<<<<<< HEAD:annotations/tekton-annotations/src/main/java/io/dekorate/tekton/step/ImageBuildStepProvider.java
+=======
+>>>>>>> a958a8bb7c032b0e6ac15e5cf08426943c78a4c6
 package io.dekorate.tekton.step;
 
 public interface ImageBuildStepProvider<T extends ImageBuildStep<T>>  {
 
   T getStep();
+<<<<<<< HEAD
+=======
+package io.dekorate.crd.annotation;
+
+public @interface Autodetect {
+  
+>>>>>>> a958a8bb7c032b0e6ac15e5cf08426943c78a4c6:annotations/crd-annotations/src/main/java/io/dekorate/crd/annotation/Autodetect.java
+=======
+>>>>>>> a958a8bb7c032b0e6ac15e5cf08426943c78a4c6
 }
