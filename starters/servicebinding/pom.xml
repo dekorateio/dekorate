@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>dekorate-project</artifactId>
+    <artifactId>starters</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>0.15-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>starters</artifactId>
+  <artifactId>servicebinding-starters</artifactId>
   <packaging>pom</packaging>
-  <name>Dekorate :: Starters</name>
+  <name>Dekorate :: Starters :: Halkyon</name>
   <modules>
-    <module>kubernetes</module>
-    <module>openshift</module>
-    <module>halkyon</module>
-    <module>knative</module>
-    <module>servicebinding</module>
+    <module>servicebinding-spring-starter</module>
   </modules>
-
 
 </project>

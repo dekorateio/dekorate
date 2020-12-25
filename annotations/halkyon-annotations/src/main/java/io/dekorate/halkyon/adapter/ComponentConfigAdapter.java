@@ -52,7 +52,7 @@ public class ComponentConfigAdapter {
             i.value(),
             i.secret(),
             i.configmap(),
-            i.field())).collect(Collectors.toList()).toArray(new io.dekorate.kubernetes.config.Env[0]),
+            i.field(), i.resourceField())).collect(Collectors.toList()).toArray(new io.dekorate.kubernetes.config.Env[0]),
                                                                                      Arrays.asList(instance.labels()).stream().map(i -> new io.dekorate.kubernetes.config.Label(i.key(), i.value(),
                                                                                                                                                                                 i.kinds())).collect(Collectors.toList()).toArray(new io.dekorate.kubernetes.config.Label[0]),
         instance.buildType(),
@@ -131,7 +131,8 @@ public class ComponentConfigAdapter {
         (String) i.getOrDefault("value", ""),
         (String) i.getOrDefault("secret", ""),
         (String) i.getOrDefault("configmap", ""),
-        (String) i.getOrDefault("field", ""));
+        (String) i.getOrDefault("field", ""),
+        (String) i.getOrDefault("resourceField", ""));
   }
 
   public static ComponentConfigBuilder newBuilder(Map map) {

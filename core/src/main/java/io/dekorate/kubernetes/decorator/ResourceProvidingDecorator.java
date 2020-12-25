@@ -29,15 +29,13 @@ import io.dekorate.utils.Strings;
 
 public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
 
-  private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service", "Pipeline", "Task");
+  private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service",
+      "Pipeline", "Task");
 
   protected static final String ANY = null;
 
   public boolean contains(KubernetesListBuilder list, String apiVersion, String kind, String name) {
-    return list.getItems().stream()
-      .filter(i -> match(i, apiVersion, kind, name))
-      .findAny()
-      .isPresent();
+    return list.getItems().stream().filter(i -> match(i, apiVersion, kind, name)).findAny().isPresent();
   }
 
   public boolean match(HasMetadata h, String apiVersion, String kind, String name) {
@@ -61,7 +59,16 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
       .findFirst();
   }
 
+  public Optional<HasMetadata> getDeploymentHasMetadata(KubernetesListBuilder list) {
+    return list.getItems().stream().filter(h -> DEPLOYMENT_KINDS.contains(h.getKind())).findFirst();
+  }
+
   public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list) {
     return getDeploymentMetadata(list).orElseThrow(() -> new IllegalStateException("Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))+" to be present."));
+  }
+
+  public HasMetadata getMandatoryDeploymentHasMetadata(KubernetesListBuilder list) {
+    return getDeploymentHasMetadata(list).orElseThrow(() -> new IllegalStateException(
+        "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(",")) + " to be present."));
   }
 }
