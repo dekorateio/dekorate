@@ -25,13 +25,13 @@ public @interface Env {
   String name();
 
   /**
-   * The value of the environment variable.
-   * When no other fields are used (just name/value), this value will be assigned to the environment variable.
-   * If used with other fields, like secret, configmap, or field, it will indicate the key from with the value should be
-   * drawn.
+   * The value of the environment variable. When no other fields are used (just
+   * name/value), this value will be assigned to the environment variable. If used
+   * with other fields, like secret, configmap, or field, it will indicate the key
+   * from with the value should be drawn.
    * 
-   * @return The value of the variable, or the property/key from which the value will be pulled (in case of secret, configmap
-   *         or field).
+   * @return The value of the variable, or the property/key from which the value
+   *         will be pulled (in case of secret, configmap or field).
    */
   String value() default "";
 
@@ -40,4 +40,6 @@ public @interface Env {
   String configmap() default "";
 
   String field() default "";
+
+  String resourceField() default "";
 }
