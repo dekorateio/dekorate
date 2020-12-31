@@ -5,7 +5,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>dekorate-project</artifactId>
   <packaging>pom</packaging>
-  <version>0.14-SNAPSHOT</version>
+  <version>0.15-SNAPSHOT</version>
   <name>Dekorate</name>
   <description>A collection of annotations and processors for Kubernetes</description>
 
