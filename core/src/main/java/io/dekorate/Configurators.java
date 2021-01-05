@@ -171,7 +171,6 @@ public class Configurators {
       result.add(combine(singles));
     }
     result.addAll(multis.map(ConfigurationSupplier::get).collect(Collectors.toList()));
-    System.out.println(result);
     return result;
   }
 
