@@ -193,7 +193,7 @@ public class CustomResourceHandler implements Handler<CustomResourceConfig> {
 
     additionalPrinterColumns.forEach((path, property) -> {
         Map<String, Object> parameters = property.getAnnotations().stream().filter(a -> a.getClassRef().getName().equals("PrinterColumn")).map(a -> a.getParameters()).findFirst().orElse(Collections.emptyMap());
-        String type =  JsonSchema.TYPE_MAP.getOrDefault(property.getTypeRef(), "object");
+        String type =  JsonSchema.TYPE_MAP.getOrDefault(property.getTypeRef(), "string");
         String column = (String) parameters.get("name");
         if (Strings.isNullOrEmpty(column)) {
           column = property.getName().toUpperCase();
