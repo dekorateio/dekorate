@@ -32,7 +32,7 @@ import io.dekorate.deps.kubernetes.api.model.apiextensions.CustomResourceDefinit
 class CustomResourceTest {
 
   @Test
-  public void shouldContainUserProvidedProbeConfiguration() {
+  public void testCrd() {
     KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     CustomResourceDefinition d = findFirst(list, CustomResourceDefinition.class).orElseThrow(() -> new IllegalStateException());
@@ -42,9 +42,11 @@ class CustomResourceTest {
     assertEquals("Namespaced", d.getSpec().getScope());
     Optional<CustomResourceDefinitionVersion> v1 = d.getSpec().getVersions().stream().filter(v -> v.getName().equals("v1")).findFirst();
     v1.ifPresent(v -> {
-        assertNotNull(v.getSubresources());
-        assertNotNull(v.getSubresources().getStatus());
+        assertNull(v.getSubresources());
       });
+
+    assertNotNull(d.getSpec().getSubresources());
+    assertNotNull(d.getSpec().getSubresources().getStatus());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
