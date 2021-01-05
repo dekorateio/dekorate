@@ -24,7 +24,6 @@ import javax.lang.model.element.TypeElement;
 
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.servicebinding.annotation.ServiceBinding;
 import io.dekorate.servicebinding.generator.ServiceBindingConfigGenerator;
 
 @Description("Generate ServiceBinding custom resources.")
@@ -39,7 +38,7 @@ public class ServiceBindingAnnotationProcessor extends AbstractAnnotationProcess
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        process("servicebinding", mainClass, ServiceBinding.class);
+        add(mainClass);
       }
     }
     return false;

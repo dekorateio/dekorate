@@ -15,9 +15,9 @@
  */
 package io.dekorate.servicebinding.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.dekorate.deps.jackson.annotation.JsonInclude;
+import io.dekorate.deps.jackson.annotation.JsonPropertyOrder;
+import io.dekorate.deps.jackson.databind.annotation.JsonDeserialize;
 
 import io.dekorate.crd.annotation.CustomResource;
 import io.sundr.builder.Doneable;
@@ -32,8 +32,8 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "application", "services", "envVarPrefix", "detectBindingResources", "bindAsFiles", "mountPath",
     "customEnvVar" })
-@JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+@JsonDeserialize(using = io.dekorate.deps.jackson.databind.JsonDeserializer.None.class)
+@Buildable(editableEnabled = false, builderPackage = "io.dekorate.deps.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
 @VelocityTransformations({ @VelocityTransformation(value = "/servicebinding-resource.vm"), })
 @CustomResource(group = "operators.coreos.com", version = "v1beta1", kind = "ServiceBinding")
 public class ServiceBindingSpec {

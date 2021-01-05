@@ -40,11 +40,6 @@ public class ServiceBindingHandler implements HandlerFactory, Handler<ServiceBin
     return 310;
   }
 
-  @Override
-  public String getKey() {
-    return SERVICEBINDING;
-  }
-
   public boolean canHandle(Class<? extends Configuration> type) {
     return type.equals(ServiceBindingConfig.class) || type.equals(EditableServiceBindingConfig.class);
   }

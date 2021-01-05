@@ -18,7 +18,7 @@ import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
 import io.dekorate.servicebinding.config.ServiceBindingConfig;
 import io.dekorate.servicebinding.model.ServiceBinding;
-import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.dekorate.deps.kubernetes.api.model.KubernetesList;
 
 public class ServiceBindingConfigGeneratorTest {
   @Test
@@ -69,7 +69,7 @@ public class ServiceBindingConfigGeneratorTest {
 
     Map<String, Object> map = new HashMap<String, Object>() {
       {
-        put(ServiceBindingConfig.class.getName(), new HashMap<String, Object>() {
+        put(io.dekorate.servicebinding.annotation.ServiceBinding.class.getName(), new HashMap<String, Object>() {
           {
             put("name", "servicebinding-test-binding");
             put("application", application);
@@ -82,7 +82,7 @@ public class ServiceBindingConfigGeneratorTest {
       }
     };
 
-    generator.addPropertyConfiguration(map);
+    generator.add(map);
     final Map<String, String> result = session.close();
     KubernetesList list = session.getGeneratedResources().get("kubernetes");
     assertThat(list).isNotNull();

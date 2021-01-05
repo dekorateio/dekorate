@@ -17,6 +17,8 @@ package io.dekorate.servicebinding.generator;
 
 import java.util.Map;
 
+import javax.lang.model.element.Element;
+
 import io.dekorate.Generator;
 import io.dekorate.Session;
 import io.dekorate.WithProject;
@@ -25,6 +27,7 @@ import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.servicebinding.adapter.ServiceBindingConfigAdapter;
+import io.dekorate.servicebinding.annotation.ServiceBinding;
 import io.dekorate.servicebinding.config.ServiceBindingConfig;
 import io.dekorate.servicebinding.configurator.ApplyProjectInfo;
 import io.dekorate.servicebinding.handler.ServiceBindingHandler;
@@ -42,15 +45,16 @@ public interface ServiceBindingConfigGenerator extends Generator, WithProject {
   }
 
   @Override
-  default void addAnnotationConfiguration(Map map) {
-    add(new AnnotationConfiguration<>(ServiceBindingConfigAdapter
-        .newBuilder(propertiesMap(map, ServiceBindingConfig.class)).accept(new ApplyProjectInfo(getProject()))));
+  default void add(Element element) {
+    ServiceBinding serviceBinding = element.getAnnotation(ServiceBinding.class);
+    add(serviceBinding != null
+        ? new AnnotationConfiguration<>(ServiceBindingConfigAdapter.newBuilder(serviceBinding).accept(new ApplyProjectInfo(getProject())))
+        : new AnnotationConfiguration<>(ServiceBindingConfig.newServiceBindingConfigBuilder().accept(new ApplyProjectInfo(getProject()))));
   }
 
   @Override
-  default void addPropertyConfiguration(Map map) {
-    add(new PropertyConfiguration<>(ServiceBindingConfigAdapter
-        .newBuilder(propertiesMap(map, ServiceBindingConfig.class)).accept(new ApplyProjectInfo(getProject()))));
+  default void add(Map map) {
+    add(new PropertyConfiguration<>(ServiceBindingConfigAdapter.newBuilder(propertiesMap(map, ServiceBinding.class)).accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void add(ConfigurationSupplier<ServiceBindingConfig> config) {

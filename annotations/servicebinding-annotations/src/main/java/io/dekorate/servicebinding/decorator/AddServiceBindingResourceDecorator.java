@@ -28,8 +28,8 @@ import io.dekorate.servicebinding.model.ServiceBindingBuilder;
 import io.dekorate.servicebinding.model.ValueFrom;
 import io.dekorate.utils.Strings;
 
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.dekorate.deps.kubernetes.api.model.HasMetadata;
+import io.dekorate.deps.kubernetes.api.model.KubernetesListBuilder;
 
 public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
