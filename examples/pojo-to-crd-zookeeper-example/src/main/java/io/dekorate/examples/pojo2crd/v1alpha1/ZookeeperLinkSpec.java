@@ -21,7 +21,7 @@ import io.dekorate.crd.annotation.SpecReplicas;
 
 public class ZookeeperLinkSpec {
 
-    // @SpecReplicas
+    @SpecReplicas
     private int size;
     private String version;
     private boolean ephemeral;

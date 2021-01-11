@@ -24,9 +24,9 @@ import io.dekorate.crd.annotation.StatusReplicas;
 
 public class ZookeeperLinkStatus {
 
-  //@StatusReplicas
+  @StatusReplicas
   private int size;
-  //@LabelSelector
+  @LabelSelector
   private Map<String, String> selector;
 
   private boolean running;
