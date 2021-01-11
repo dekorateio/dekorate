@@ -23,7 +23,7 @@
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>crd-annotations</artifactId>
-      <version>${project.version}</version>
+      <version>0.15.0</version>
     </dependency>
 
     <dependency>
@@ -38,35 +38,17 @@
       <version>1.7.12</version>
     </dependency>
 
-    <dependency>
+    <!-- <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-junit-starter</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
-    </dependency>
+    </dependency> -->
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${version.maven-failsafe-plugin}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-            <phase>integration-test</phase>
-            <configuration>
-              <includes>
-                <include>**/*IT.class</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+ 
     </plugins>
   </build>
 </project>
