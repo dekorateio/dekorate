@@ -57,7 +57,6 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.VersionInfo;
-import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.BuildConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
@@ -143,14 +142,14 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
           i instanceof ReplicationController).collect(Collectors.toList());
       long started = System.currentTimeMillis();
       LOGGER.info("Waiting until ready (" + config.getReadinessTimeout() + " ms)...");
-      waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(),
+      waitUntilCondition(context, waitables, i -> OpenshiftReadiness.isReady(i), config.getReadinessTimeout(),
           TimeUnit.MILLISECONDS);
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
       waitables.stream().map(r -> client.resource(r).fromServer().get())
           .forEach(i -> {
-            if (!Readiness.isReady(i)) {
+            if (!OpenshiftReadiness.isReady(i)) {
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             }
           });
