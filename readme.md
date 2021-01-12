@@ -87,6 +87,9 @@ Annotation processing has quite a few advantages over external tools or build to
 
 This section provides examples on how to get started based on the framework you are using.
 
+> NOTE: All examples in README using latest stable version that is maintained on separate branch. 
+If you want to consume Dekorate with latest features please consider using latest 2.x release instead. 
+
 ### Hello Spring Boot
 
 Add the following dependency to your project:
