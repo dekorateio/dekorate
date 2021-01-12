@@ -36,24 +36,24 @@ public class Predicates {
 
 
   /**
-   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
+   * Creates a {@link java.util.function.Predicate} for {@link ContainerBuilder}.
    */
-  public static io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(io.dekorate.kubernetes.config.Container container) {
-    return new io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder>() {
+  public static java.util.function.Predicate<ContainerBuilder> builderMatches(io.dekorate.kubernetes.config.Container container) {
+    return new java.util.function.Predicate<ContainerBuilder>() {
       @Override
-      public Boolean apply(ContainerBuilder builder) {
+      public boolean test(ContainerBuilder builder) {
         return matches(container).test(builder.build());
       }
     };
   }
 
   /**
-   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerBuilder}.
+   * Creates a {@link java.util.function.Predicate} for {@link ContainerBuilder}.
    */
-  public static io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder> builderMatches(Container container) {
-    return new io.fabric8.kubernetes.api.builder.Predicate<ContainerBuilder>() {
+  public static java.util.function.Predicate<ContainerBuilder> builderMatches(Container container) {
+    return new java.util.function.Predicate<ContainerBuilder>() {
       @Override
-      public Boolean apply(ContainerBuilder builder) {
+      public boolean test(ContainerBuilder builder) {
         return matches(container).test(builder.build());
       }
     };
@@ -75,12 +75,12 @@ public class Predicates {
   }
 
   /**
-   * Creates a {@link io.fabric8.kubernetes.api.builder.Predicate} for {@link ContainerPortBuilder}.
+   * Creates a {@link java.util.function.Predicate} for {@link ContainerPortBuilder}.
    */
-  public static io.fabric8.kubernetes.api.builder.Predicate<ContainerPortBuilder> builderMatches(io.dekorate.kubernetes.config.Port port) {
-     return new io.fabric8.kubernetes.api.builder.Predicate<ContainerPortBuilder> () {
+  public static java.util.function.Predicate<ContainerPortBuilder> builderMatches(io.dekorate.kubernetes.config.Port port) {
+     return new java.util.function.Predicate<ContainerPortBuilder> () {
       @Override
-      public Boolean apply(ContainerPortBuilder builder) {
+      public boolean test(ContainerPortBuilder builder) {
         return matches(port).test(builder.build());
       }
     };

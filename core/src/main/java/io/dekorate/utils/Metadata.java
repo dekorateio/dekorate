@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import io.fabric8.kubernetes.api.builder.Builder;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
@@ -108,7 +108,7 @@ public class Metadata {
   public static Predicate<VisitableBuilder<? extends HasMetadata, ?>> matching(String apiVersion, String kind, String name) {
     return new Predicate<VisitableBuilder<? extends HasMetadata, ?>>() {
       @Override
-      public Boolean apply(VisitableBuilder<? extends HasMetadata, ?> builder) {
+      public boolean test(VisitableBuilder<? extends HasMetadata, ?> builder) {
         HasMetadata item = builder.build();
         ObjectMeta metadata = item.getMetadata();
         return apiVersion.equals(item.getApiVersion()) &&

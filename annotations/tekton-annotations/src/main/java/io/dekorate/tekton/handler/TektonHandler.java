@@ -32,6 +32,7 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Resources;
 import io.dekorate.WithProject;
+import io.dekorate.DekorateException;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -82,6 +83,7 @@ import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import io.fabric8.kubernetes.api.model.PersistentVolumeClaim;
 import io.fabric8.kubernetes.api.model.PersistentVolumeClaimBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.api.model.Duration;
 import io.fabric8.kubernetes.api.model.QuantityBuilder;
 import io.fabric8.kubernetes.api.model.rbac.Role;
 import io.fabric8.kubernetes.api.model.rbac.RoleBuilder;
@@ -512,6 +514,7 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
   }
 
   public PipelineRun createPipelineRun(TektonConfig config) {
+    try {
     return new PipelineRunBuilder()
         .withNewMetadata()
         .withName(config.getName() + DASH + RUN + DASH + NOW)
@@ -526,12 +529,16 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .endResource()
         .addNewResource().withName(OUTPUT_IMAGE).withNewResourceRef().withName(outputImageResourceName(config))
         .endResourceRef().endResource()
-        .withTimeout(DEFAULT_TIMEOUT)
+        .withTimeout(Duration.parse(DEFAULT_TIMEOUT))
         .endSpec()
         .build();
+    } catch (Exception e) {
+      throw DekorateException.launderThrowable(e);
+    }
   }
 
   public TaskRun createTaskRun(TektonConfig config) {
+    try {
     return new TaskRunBuilder()
         .withNewMetadata()
         .withName(config.getName() + DASH + RUN + DASH + NOW)
@@ -547,9 +554,12 @@ public class TektonHandler implements Handler<TektonConfig>, HandlerFactory, Wit
         .addNewOutput().withName(IMAGE).withNewResourceRef().withName(outputImageResourceName(config)).endResourceRef()
         .endOutput()
         .endResources()
-        .withTimeout(DEFAULT_TIMEOUT)
+        .withTimeout(Duration.parse(DEFAULT_TIMEOUT))
         .endSpec()
         .build();
+    } catch (Exception e) {
+      throw DekorateException.launderThrowable(e);
+    }
   }
 
   public PersistentVolumeClaim createSourceWorkspacePvc(TektonConfig config) {

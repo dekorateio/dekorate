@@ -22,7 +22,7 @@ import java.util.Objects;
 
 import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.model.HostAliasBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodSpecFluent;

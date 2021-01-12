@@ -25,7 +25,7 @@ import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 
 public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
 

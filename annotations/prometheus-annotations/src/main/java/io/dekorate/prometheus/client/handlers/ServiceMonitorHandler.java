@@ -21,6 +21,8 @@ import java.util.function.Predicate;
 import io.dekorate.prometheus.client.dsl.internal.ServiceMonitorOperationsImpl;
 import io.dekorate.prometheus.model.ServiceMonitor;
 import io.dekorate.prometheus.model.ServiceMonitorBuilder;
+import io.fabric8.kubernetes.api.model.DeletionPropagation;
+import io.fabric8.kubernetes.api.model.ListOptions;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ResourceHandler;
 import io.fabric8.kubernetes.client.Watch;
@@ -62,12 +64,8 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   }
 
   @Override
-  public Boolean delete(OkHttpClient client, Config config, String namespace, Boolean cascading, ServiceMonitor item) {
-    if (cascading) {
-      return new ServiceMonitorOperationsImpl(client, config).withItem(item).cascading(cascading).delete();
-    } else {
-      return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).delete(item);
-    }
+  public Boolean delete(OkHttpClient client, Config config, String namespace, DeletionPropagation propagationPolicy, ServiceMonitor item) {
+      return new ServiceMonitorOperationsImpl(client, config).withItem(item).withPropagationPolicy(propagationPolicy).delete();
   }
 
   @Override
@@ -80,9 +78,13 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   @Override
   public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, String resourceVersion,
       Watcher<ServiceMonitor> watcher) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
-        .withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
   }
+
+ @Override
+ public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, ListOptions listOptions, Watcher<ServiceMonitor> watcher) {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(listOptions, watcher);
+ }
 
   @Override
   public ServiceMonitor waitUntilReady(OkHttpClient client, Config config, String namespace, ServiceMonitor item, long amount,
@@ -97,4 +99,6 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
     return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
         .withName(item.getMetadata().getName()).waitUntilCondition(condition, amount, timeUnit);
   }
+
+
 }

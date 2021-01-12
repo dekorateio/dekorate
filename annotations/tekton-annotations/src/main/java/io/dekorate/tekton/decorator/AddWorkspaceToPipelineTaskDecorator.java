@@ -18,7 +18,7 @@
 package io.dekorate.tekton.decorator;
 
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
 import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskBuilder;
 
@@ -39,7 +39,7 @@ public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator 
   public void andThenVisit(PipelineSpecFluent<?> spec) {
     Predicate<PipelineTaskBuilder> predicate = new Predicate<PipelineTaskBuilder>() {
         @Override
-        public Boolean apply(PipelineTaskBuilder task) {
+        public boolean test(PipelineTaskBuilder task) {
           return Strings.isNullOrEmpty(taskName) || taskName.equals(task.getName());
         }
       };

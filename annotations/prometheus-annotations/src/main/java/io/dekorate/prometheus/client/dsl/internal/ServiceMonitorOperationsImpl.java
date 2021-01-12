@@ -15,7 +15,6 @@
 */
 package io.dekorate.prometheus.client.dsl.internal;
 
-import io.dekorate.prometheus.model.DoneableServiceMonitor;
 import io.dekorate.prometheus.model.ServiceMonitor;
 import io.dekorate.prometheus.model.ServiceMonitorList;
 import io.fabric8.kubernetes.client.Config;
@@ -25,7 +24,7 @@ import io.fabric8.kubernetes.client.dsl.base.OperationContext;
 import okhttp3.OkHttpClient;
 
 public class ServiceMonitorOperationsImpl extends
-    HasMetadataOperation<ServiceMonitor, ServiceMonitorList, DoneableServiceMonitor, Resource<ServiceMonitor, DoneableServiceMonitor>> {
+    HasMetadataOperation<ServiceMonitor, ServiceMonitorList, Resource<ServiceMonitor>> {
 
   public ServiceMonitorOperationsImpl(OkHttpClient client, Config config) {
     this(new OperationContext().withOkhttpClient(client).withConfig(config));
@@ -37,7 +36,6 @@ public class ServiceMonitorOperationsImpl extends
         .withPlural("servicemonitors"));
     this.type = ServiceMonitor.class;
     this.listType = ServiceMonitorList.class;
-    this.doneableType = DoneableServiceMonitor.class;
   }
 
   public ServiceMonitorOperationsImpl newInstance(OperationContext context) {

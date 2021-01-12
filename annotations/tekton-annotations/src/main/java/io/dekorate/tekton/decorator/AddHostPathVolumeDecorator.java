@@ -17,7 +17,7 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.model.Volume;
 import io.fabric8.kubernetes.api.model.VolumeBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
@@ -38,10 +38,9 @@ public class AddHostPathVolumeDecorator extends NamedTaskDecorator {
 
   @Override
   public void andThenVisit(TaskSpecFluent<?> spec) {
-      Predicate<Volume> predicate = matchingVolume(name);
+      Predicate<VolumeBuilder> predicate = matchingVolume(name);
       if (spec.hasMatchingVolume(predicate)) {
-          Volume toRemove = spec.getMatchingVolume(predicate);
-          spec.removeFromVolumes(toRemove);
+          spec.removeMatchingFromVolumes(predicate);
       }
 
       spec.addToVolumes(new VolumeBuilder()
@@ -53,11 +52,10 @@ public class AddHostPathVolumeDecorator extends NamedTaskDecorator {
                       .build());
   }
 
-    private static Predicate<Volume> matchingVolume(String name) {
-        return new Predicate<Volume>() {
-
+    private static Predicate<VolumeBuilder> matchingVolume(String name) {
+        return new Predicate<VolumeBuilder>() {
             @Override
-            public Boolean apply(Volume volume) {
+            public boolean test(VolumeBuilder volume) {
                 return Strings.isNullOrEmpty(name) || volume.getName().equals(name);
             }
         };

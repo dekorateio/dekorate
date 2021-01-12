@@ -16,12 +16,12 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.Port;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.extensions.HTTPIngressPathBuilder;
-import io.fabric8.kubernetes.api.model.extensions.IngressRuleBuilder;
-import io.fabric8.kubernetes.api.model.extensions.IngressSpecBuilder;
+import io.fabric8.kubernetes.api.model.networking.v1.HTTPIngressPathBuilder;
+import io.fabric8.kubernetes.api.model.networking.v1.IngressRuleBuilder;
+import io.fabric8.kubernetes.api.model.networking.v1.IngressSpecBuilder;
 
 public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecBuilder> {
 
@@ -40,9 +40,14 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
     if (!spec.hasMatchingRule(matchingHost)) {
       spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPath(port.getPath()).withNewBackend()
-          .withServiceName(meta.getName()).withNewServicePort(port.getContainerPort()).endBackend().endPath()
-          .endHttp()
-          .endRule();
+        .withNewService()
+        .withName(name)
+        .withNewPort().withName(port.getName()).withNumber(port.getContainerPort()).endPort()
+        .endService()
+        .endBackend()
+        .endPath()
+        .endHttp()
+        .endRule();
     } else {
       spec.accept(new HostVisitor(meta));
     }
@@ -61,9 +66,13 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
       Predicate<HTTPIngressPathBuilder> mathcingPath = r -> r.getPath().equals(port.getPath());
       if (rule.getHost().equals(host)) {
         if (!rule.editOrNewHttp().hasMatchingPath(mathcingPath)) {
-          rule.editHttp().addNewPath().withNewBackend().withServiceName(meta.getName())
-              .withNewServicePort(port.getContainerPort()).endBackend()
-              .endPath().endHttp();
+          rule.editHttp().addNewPath().withNewBackend()
+            .withNewService()
+            .withName(name)
+            .withNewPort().withName(port.getName()).withNumber(port.getContainerPort()).endPort()
+            .endService()
+            .endBackend()
+            .endPath().endHttp();
         } else {
           rule.accept(new PathVisitor(meta));
         }
@@ -80,7 +89,12 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
     }
 
     public void visit(HTTPIngressPathBuilder path) {
-      path.withNewBackend().withServiceName(meta.getName()).withNewServicePort(port.getContainerPort()).endBackend();
+      path.withNewBackend()
+        .withNewService()
+        .withName(name)
+        .withNewPort().withName(port.getName()).withNumber(port.getContainerPort()).endPort()
+        .endService()
+        .endBackend();
     }
   }
 }
