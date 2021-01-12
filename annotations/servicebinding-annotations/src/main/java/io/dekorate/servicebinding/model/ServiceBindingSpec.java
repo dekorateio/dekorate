@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.dekorate.crd.annotation.CustomResource;
-import io.sundr.builder.Doneable;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Inline;
 import io.sundr.transform.annotations.VelocityTransformation;
@@ -33,7 +32,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
 @JsonPropertyOrder({ "application", "services", "envVarPrefix", "detectBindingResources", "bindAsFiles", "mountPath",
     "customEnvVar" })
 @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder", inline = @Inline(type = Doneable.class, prefix = "Doneable", value = "done"))
+@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder" )
 @VelocityTransformations({ @VelocityTransformation(value = "/servicebinding-resource.vm"), })
 @CustomResource(group = "operators.coreos.com", version = "v1beta1", kind = "ServiceBinding")
 public class ServiceBindingSpec {

@@ -20,7 +20,7 @@ import java.util.Objects;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.EnvFromSourceBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
@@ -45,7 +45,7 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
   @Override
   public void andThenVisit(ContainerBuilder builder) {
     Predicate<EnvVarBuilder> matchingEnv = new Predicate<EnvVarBuilder>() {
-      public Boolean apply(EnvVarBuilder e) {
+      public boolean test(EnvVarBuilder e) {
         if (e.getName() != null) {
           return e.getName().equals(env.getName());
         }
@@ -54,7 +54,7 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
     };
 
     Predicate<EnvFromSourceBuilder> matchingEnvFrom = new Predicate<EnvFromSourceBuilder>() {
-      public Boolean apply(EnvFromSourceBuilder e) {
+      public boolean test(EnvFromSourceBuilder e) {
         if (e.getSecretRef() != null && e.getSecretRef().getName() != null) {
           return e.getSecretRef().getName().equals(env.getSecret());
         } else if (e.getConfigMapRef() != null && e.editConfigMapRef().getName() != null) {

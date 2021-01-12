@@ -52,7 +52,6 @@ import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.VersionInfo;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
-import io.fabric8.openshift.api.model.DeploymentConfig;
 
 public class KubernetesExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
     WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject,
@@ -118,7 +117,6 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
           });
 
       List<HasMetadata> waitables = list.getItems().stream().filter(i -> i instanceof Deployment ||
-          i instanceof DeploymentConfig ||
           i instanceof Pod ||
           i instanceof ReplicaSet ||
           i instanceof ReplicationController).collect(Collectors.toList());
@@ -151,8 +149,6 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
   @Override
   public void afterAll(ExtensionContext context) {
     try {
-      KubernetesClient client = getKubernetesClient(context);
-      final Diagnostics diagnostics = new Diagnostics(client);
       boolean failed = context.getExecutionException().isPresent();
       if (failed) {
         displayDiagnostics(context);

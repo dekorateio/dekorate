@@ -27,7 +27,6 @@ import java.util.TreeSet;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Metadata;
-import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -85,15 +84,6 @@ public class Resources {
       groupDecorators.put(group, new TreeSet<>());
     }
     groupDecorators.get(group).add(decorator);
-  }
-
-  /**
-   * Add a {@link Decorator}.
-   * 
-   * @param decorator The decorator.
-   */
-  public void decorate(Doneable<? extends Decorator> decorator) {
-    globalDecorators.add(decorator.done());
   }
 
   /**

@@ -38,7 +38,7 @@ import io.fabric8.kubernetes.api.model.ListMeta;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "apiVersion", "items", "kind", "metadata" })
 @JsonDeserialize(using = JsonDeserializer.None.class)
-public class ServiceMonitorList implements KubernetesResource, KubernetesResourceList {
+public class ServiceMonitorList implements KubernetesResource, KubernetesResourceList<ServiceMonitor> {
 
   @NotNull
   @JsonProperty("apiVersion")

@@ -19,7 +19,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.adapter.ContainerAdapter;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.utils.Predicates;
-import io.fabric8.kubernetes.api.builder.Predicate;
+import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
