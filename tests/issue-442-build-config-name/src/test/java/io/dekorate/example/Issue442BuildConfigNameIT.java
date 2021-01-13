@@ -1,0 +1,14 @@
+package io.dekorate.example;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
+
+@OpenshiftIntegrationTest
+public class Issue442BuildConfigNameIT {
+
+  @Test
+  void shouldBeUpAndRunning() {
+    //We just want to check that the image is build. An empty test is good enough for this.
+  }
+}
