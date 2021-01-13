@@ -87,8 +87,8 @@ Annotation processing has quite a few advantages over external tools or build to
 
 This section provides examples on how to get started based on the framework you are using.
 
-> NOTE: All examples in README using latest stable version that is maintained on separate branch. 
-If you want to consume Dekorate with latest features please consider using latest 2.x release instead. 
+> NOTE: All examples in README using the version that corresponds to the target branch.
+> On github master that is the latest 2.x release.
 
 ### Hello Spring Boot
 
@@ -2065,9 +2065,8 @@ At the moment dekorate is using 3 branches in parallel and two major versions ar
 
 - master (active development, pull requests should point here)
 - 2.0.x  (not released yet)
-- 1.0.x  (important bug fixes)
-- 0.14.x (new features + bug fixes)
-- 0.13.x (old branch, no longer maintained, will soon be removed)
+- 1.0.x  (bug fixes, only)
+- 0.15.x (old branch, former cuting edge branch)
 
 ### Pull request guidelines
 
@@ -2077,20 +2076,9 @@ All pull requests should target the `master` branch and from there things are ba
 
 The current release branches are:
 
-- 1.0.x  (stable)
-- 0.14.x (volatile)
-
-#### Fast vs slow paced branches
-
-The idea is that `1.0.x` is the stable branch (slow paced) that doesn't change that often, while `0.14.x` is the volatile one (fast paced) that changes more often.
-
-It's a bit strange to have a lower major version being more volatile (e.g. `0.14.x` being more volatile than `1.0.x`). 
-This paradox exists for various reasons, most evolving around the fact that we are not ready yet for a `2.0.0` release and we don't want to slow down releases on our fast paced branch.
-This paradox will be eliminated soon, once our fast paced branch will be `2.0.x`.
-
-### Which version should you use?
-
-Depends on what your goal is. If you need all the latest features use the volatile branch. If you need something that more slower paced that is in bug fixing mode, then use the stable branch.
+- 2.0.x  (current)
+- 1.0.x  (stable, bug fixes only)
+- 0.15.x (maintainance mode)
 
 ## Frequently asked questions
 
