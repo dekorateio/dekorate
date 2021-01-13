@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>examples</artifactId>
-    <groupId>io.dekorate</groupId>
-    <version>0.14-SNAPSHOT</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-with-prometheus-on-kubernetes-example</artifactId>
+  <version>0.14-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot with Prometheus on Kubernetes</name>
 
   <properties>
@@ -18,7 +14,7 @@
 
     <version.spring-boot>2.3.6.RELEASE</version.spring-boot>
     <version.micrometer>1.0.9</version.micrometer>
-    <version.fabric8-maven-plugin>3.5.42</version.fabric8-maven-plugin>
+    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
   </properties>
 
  <dependencies>
@@ -61,6 +57,14 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${version.spring-boot}</version>
@@ -72,57 +76,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${version.maven-failsafe-plugin}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-            <phase>integration-test</phase>
-            <configuration>
-              <includes>
-                <include>**/*IT.class</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>build</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
-            <version>${version.fabric8-maven-plugin}</version>
-            <executions>
-              <execution>
-                <id>resources</id>
-                <phase>process-resources</phase>
-                <goals>
-                  <goal>resource</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>build</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
 </project>

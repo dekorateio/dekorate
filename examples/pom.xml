@@ -12,12 +12,15 @@
   <name>Dekorate :: Examples</name>
 
   <modules>
-    <module>kubernetes-example-with-configmap-volume</module>
-    <module>kubernetes-example-with-custom-image-name</module>
+    <module>kubernetes-with-configmap-volume-example</module>
+    <module>kubernetes-with-custom-image-name-example</module>
+    <module>kubernetes-with-hostaliases-example</module>
     <module>knative-example</module>
+    <module>servicebinding-example</module>
+    <module>servicebinding-annotationless-example</module>
     <module>service-catalog-example</module>
     <module>halkyon-example</module>
-    <module>halkyon-example-annotationless-properties</module>
+    <module>halkyon-annotationless-example</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-kubernetes-without-annotations</module>
     <module>spring-boot-on-kubernetes-with-jib-example</module>

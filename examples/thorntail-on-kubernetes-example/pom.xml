@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>examples</artifactId>
-    <groupId>io.dekorate</groupId>
-    <version>0.14-SNAPSHOT</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
   <artifactId>thorntail-on-kubernetes-example</artifactId>
+  <version>0.14-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Thorntail on Kubernetes</name>
   <packaging>war</packaging>
 
@@ -18,12 +14,24 @@
     <java.version>1.8</java.version>
 
     <version.thorntail>2.5.0.Final</version.thorntail>
+    <version.jackson>2.10.3</version.jackson>
+    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
+    <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
+    <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
 
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${version.jackson}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
       <dependency>
         <groupId>io.thorntail</groupId>
         <artifactId>bom</artifactId>
@@ -45,12 +53,14 @@
     <dependency>
       <groupId>io.thorntail</groupId>
       <artifactId>jaxrs</artifactId>
+      <version>${version.thorntail}</version>
     </dependency>
     <dependency>
       <groupId>io.thorntail</groupId>
       <artifactId>microprofile-health</artifactId>
+      <version>${version.thorntail}</version>
     </dependency>
-
+ 
     <!-- Testing -->
     <dependency>
       <groupId>io.dekorate</groupId>
@@ -63,6 +73,14 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>io.thorntail</groupId>
         <artifactId>thorntail-maven-plugin</artifactId>
         <version>${version.thorntail}</version>
@@ -73,6 +91,16 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire-plugin}</version>
+        <inherited>true</inherited>
+        <configuration>
+          <trimStackTrace>false</trimStackTrace>
+          <useSystemClassLoader>false</useSystemClassLoader>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

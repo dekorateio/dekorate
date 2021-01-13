@@ -1790,7 +1790,7 @@ The content of the halkyon descriptor will be determined by the existing config 
 Here a simple example of how to use the annotation-less mode. We have a simple `@SpringBootApplication` annotated class:
 
 ```java
-package io.dekorate.examples.component;  
+package io.dekorate.example;  
   
 import org.springframework.boot.SpringApplication;  
 import org.springframework.boot.autoconfigure.SpringBootApplication;  
@@ -1838,18 +1838,18 @@ items:
       url: "https://github.com/dekorateio/dekorate.git"
       ref: "master"
       contextPath: "examples/"
-      moduleDirName: "halkyon-example-annotationless-properties"
+      moduleDirName: "halkyon-annotationless-example"
 ```
 
 As explained before, you can note, for example, that `deploymentMode` does not appear at the same hierarchical level as 
 configured in the properties: an additional level `spec` has been introduced.
 
-You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-example-annotationless-properties/src/main/resources/application.properties) the code of this example.
+You can find [here](https://github.com/dekorateio/dekorate/blob/master/examples/halkyon-annotationless-example/src/main/resources/application.properties) the code of this example.
 
 Let's now consider the following Spring Boot application class annotated with `@HalkyonComponent` as well:
 
 ```java
-package io.dekorate.examples.component;
+package io.dekorate.example;
   
 import io.dekorate.halkyon.annotation.HalkyonComponent;
 import io.dekorate.kubernetes.annotation.Env;
@@ -1941,7 +1941,7 @@ Generated ServiceBinding CR would look something like this:
 apiVersion: operators.coreos.com/v1beta1
 kind: ServiceBinding
 metadata:
-  name: servicebinding-example-binding
+  name: servicebinding-binding-example
 spec:
   application:
     group: apps
@@ -2122,7 +2122,7 @@ dekorate:
 ```
 
 #### related examples
- - [kubernetes with custom image name example](examples/kubernetes-example-with-custom-image-name)
+ - [kubernetes with custom image name example](examples/kubernetes-with-custom-image-name-example)
 
 
 ## Want to get involved?
