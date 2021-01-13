@@ -16,13 +16,10 @@ limitations under the License.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>examples</artifactId>
-    <groupId>io.dekorate</groupId>
-    <version>0.14-SNAPSHOT</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>io.dekorate</groupId>
+  <version>0.14-SNAPSHOT</version>
   <artifactId>servicebinding-example</artifactId>
   <name>Dekorate :: Examples :: ServiceBinding</name>
 
@@ -32,6 +29,7 @@ limitations under the License.
     <java.version>1.8</java.version>
 
     <version.spring-boot>2.1.13.RELEASE</version.spring-boot>
+    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
   </properties>
 
   <dependencies>
@@ -64,29 +62,12 @@ limitations under the License.
 
     <!-- Testing -->
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${version.junit-jupiter}</version>
+      <groupId>io.dekorate</groupId>
+      <artifactId>kubernetes-junit-starter</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${version.junit-jupiter}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-launcher</artifactId>
-      <version>${version.junit-platform}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-runner</artifactId>
-      <version>${version.junit-platform}</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -97,6 +78,14 @@ limitations under the License.
 
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

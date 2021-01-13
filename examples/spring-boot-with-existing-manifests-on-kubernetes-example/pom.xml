@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>examples</artifactId>
-    <groupId>io.dekorate</groupId>
-    <version>0.14-SNAPSHOT</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-with-existing-manifests-example</artifactId>
+  <version>0.14-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot with existing manifests on Kubernetes</name>
 
   <properties>
@@ -17,6 +13,8 @@
     <java.version>1.8</java.version>
 
     <version.spring-boot>2.3.6.RELEASE</version.spring-boot>
+    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
+    <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
   </properties>
 
   <dependencies>
@@ -48,6 +46,14 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${version.spring-boot}</version>
@@ -61,22 +67,13 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${version.maven-failsafe-plugin}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-            <phase>integration-test</phase>
-            <configuration>
-              <includes>
-                <include>**/*IT.class</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire-plugin}</version>
+        <inherited>true</inherited>
+        <configuration>
+          <trimStackTrace>false</trimStackTrace>
+          <useSystemClassLoader>false</useSystemClassLoader>
+        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>examples</artifactId>
-    <groupId>io.dekorate</groupId>
-    <version>0.14-SNAPSHOT</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
@@ -16,6 +11,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
+
+    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
+    <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
+    <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
   </properties>
 
   <!-- we need to express the dependencies here as they affect build order -->
@@ -41,6 +40,7 @@
        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
         <executions>
           <execution>
             <id>default-compile</id>

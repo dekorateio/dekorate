@@ -16,16 +16,12 @@ limitations under the License.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>examples</artifactId>
-    <groupId>io.dekorate</groupId>
-    <version>0.14-SNAPSHOT</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
   <artifactId>service-catalog-example</artifactId>
   <packaging>jar</packaging>
+  <version>0.14-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Service Catalog</name>
 
   <properties>
@@ -34,6 +30,9 @@ limitations under the License.
     <java.version>1.8</java.version>
 
     <version.spring-boot>2.3.6.RELEASE</version.spring-boot>
+    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
+    <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
+    <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
   </properties>
 
   <dependencies>
@@ -78,6 +77,14 @@ limitations under the License.
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${version.spring-boot}</version>
@@ -88,6 +95,16 @@ limitations under the License.
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire-plugin}</version>
+        <inherited>true</inherited>
+        <configuration>
+          <trimStackTrace>false</trimStackTrace>
+          <useSystemClassLoader>false</useSystemClassLoader>
+        </configuration>
       </plugin>
     </plugins>
   </build>
