@@ -1638,8 +1638,8 @@ Currently each version can have:
 - its own addtional list of printer columns
 
 #### related examples
- - [POJO to CRD Zookeepr example](examples/pojo-to-custom-resource-zookeeper-example)
- - [POJO to CRD Karaf example](examples/pojo-to-custom-resource-karaf-example)
+ - [POJO to CRD Zookeepr example](examples/pojo-to-crd-zookeeper-example)
+ - [POJO to CRD Karaf example](examples/pojo-to-crd-karaf-example)
 
 ### Prometheus annotations
 
