@@ -5,6 +5,7 @@ The example emphasizes on demonstrating the following features.
 
 - Use of scalable resources
 - Use mutliple versions
+- Using kubernetes-client annotations to specify things like, kind, group & version.
 - Using `javax.validation.constraints.NotNul` to mark required fields.
 - Specifying status subresource via annotations.
 - Specifying scale attributes via annotations.
@@ -15,13 +16,14 @@ The example emphasizes on demonstrating the following features.
 The `Zookeeper` pojo is annotated using the `CustomResource` annotation.
 
 ```java
-@CustomResource(group = "io.zookeeper", version = "v1", storage=true, scope = Scope.Namespaced)
+@Crd(group = "io.zookeeper", version = "v1alpha1", scope = Scope.Namespaced)
 public class Zookeeper {
   private ZookeeperSpec spec;
   @Status
   private ZookeeperStatus status;
 }
 ```
+
 
 Using that annotation, the following property of the CRD are confugred:
 - group
@@ -29,16 +31,21 @@ Using that annotation, the following property of the CRD are confugred:
 - scope
 
 
-A second instance of the `Zookeeper` pojo is also provided and marked as version `v1alpha1`.
+A second instance of the `Zookeeper` pojo is also provided and marked as version `v1`.
+
+For the `v1` version we are using the kubernetes-client annotations `@Group` and `@Version` instead of `@Crd`.
+To specify that the resource is namespaced we also implment the `io.fabric8.kubernetes.api.model.Namespaced`.
 
 ```java
-@CustomResource(group = "io.zookeeper", version = "v1alpha1", scope = Scope.Namespaced)
-public class Zookeeper {
+@Group("io.zookeeper")
+@Version("v1")
+public class Zookeeper implements Namespaced {
   private ZookeeperSpec spec;
   @Status
   private ZookeeperStatus status;
 }
 ```
+
 
 Since two versions are present in the module, the crd generator will use them both.
 

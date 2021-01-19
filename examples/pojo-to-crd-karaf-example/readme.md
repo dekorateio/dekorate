@@ -9,7 +9,7 @@ The example emphasizes on demonstrating the following features.
 The `Karaf` pojo is annotated using the `CustomResource` annotation.
 
 ```java
-@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced)
+@Crd(group = "io.karaf", version = "v1", scope = Scope.Namespaced)
 public class Karaf {
 ...
 }
@@ -22,14 +22,14 @@ Using that annotation, the following property of the CRD are confugred:
 
 ## Subresources
 
-The subresources in the example are controlled directly through the `@CustomResource` annotation.
+The subresources in the example are controlled directly through the `@Crd` annotation.
 
 ### Status
 
-The status class `KarafStatus` even though it's not part of the `Karaf` object graph is specified as status in the `@CustomResource` annotation.
+The status class `KarafStatus` even though it's not part of the `Karaf` object graph is specified as status in the `@Crd` annotation.
 
 ```java
-@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
+@Crd(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
 public class Karaf {
 ...
 }

@@ -1480,20 +1480,20 @@ or using yaml:
 
 ### Pojo to CRD
 
-Dekorate allows the generation of Kubernetes CustomResourceDefinition resources from annotated POJOs.
+Dekorate allows the generation of Kubernetes CrdDefinition resources from annotated POJOs.
 
-Pojos annotated with the `@CustomResource` annotation will trigger the generation of the CRD for the POJO.
+Pojos annotated with the `@Crd` annotation will trigger the generation of the CRD for the POJO.
 The main CRD attributes will be derived from the POJO class (e.g. the openapi schema) and the rest will be specified using the annotation parameters.
 
 The generated CRD will be added to the list of generated resources.
 
-For example a CustomResourceDefinition for an imaginary Github bot, could be generated from a POJO like:
+For example a CrdDefinition for an imaginary Github bot, could be generated from a POJO like:
 
 ```java
 
-    import io.dekorate.crd.annotation.CustomResource
+    import io.dekorate.crd.annotation.Crd
     
-    @CustomResource(group="my.group", version="v1beta1")
+    @Crd(group="my.group", version="v1beta1")
     public class GithubBot {
        String token;
        String organization;
@@ -1510,6 +1510,7 @@ For example a CustomResourceDefinition for an imaginary Github bot, could be gen
 Out of the box the generated CRD will be considered `Namespaced`. To change that users can use the `scope` parameter on the annotation.
 Also the plural and shortNames will be automatically calculated. Of course they can be overriden using `plural` and `shortName` respectively.
 
+
 #### Required fields
 
 The openapi schema for each version, will be automatically generated. To mark fields of the schema as required, you can annotate them with `@javax.validation.constraints.NotNull`.
@@ -1518,7 +1519,7 @@ The openapi schema for each version, will be automatically generated. To mark fi
 
 #### Subresources
 
-Dekorate does allow users to specify subresources. Subresources may be configured directly through the `CustomResource` anntotation or may be automatically detected with the use of annotations.
+Dekorate does allow users to specify subresources. Subresources may be configured directly through the `Crd` anntotation or may be automatically detected with the use of annotations.
 The latter is more convinient as the user only need to mark the property that affects the subresource and the paths are calculated automatically. The former is there just to support cases where using annotations everywhere is not option (refering to 3rd party classes).
 
 ##### Scale
@@ -1541,9 +1542,9 @@ For example, if in the previous example we make our bot scalable, it could look 
 
 ```java
 
-    import io.dekorate.crd.annotation.CustomResource
+    import io.dekorate.crd.annotation.Crd
     
-    @CustomResource(group="my.group", version="v1beta1")
+    @Crd(group="my.group", version="v1beta1")
     public class GithubBot {
        GithubBotSpec spec;
    }
@@ -1567,20 +1568,20 @@ In this example dekorate will detect that the path to spec replicas is `.spec.re
 
 
 ###### Scale configuration
-To specify the scale subresource configration directly via `CustomResource` the `scale` property can be used. This property is of type: `io.dekorate.crd.annotation.Scale` which allows the configuration of the following fields:
+To specify the scale subresource configration directly via `Crd` the `scale` property can be used. This property is of type: `io.dekorate.crd.annotation.Scale` which allows the configuration of the following fields:
 
 - specReplicasPath
 - statusReplicasPath
 - labalSelectorPath
 
 
-The scale subresource will be enabled when the the `scalable` paramter in the `CustomResource` annotation is set to true, or when a value for any of the above has been explictly provided:
+The scale subresource will be enabled when the the `scalable` paramter in the `Crd` annotation is set to true, or when a value for any of the above has been explictly provided:
 
 ```java
 
-    import io.dekorate.crd.annotation.CustomResource
+    import io.dekorate.crd.annotation.Crd
     
-    @CustomResource(group="my.group", version="v1beta1", scalable=@Scale(labalSelectorPath=".spec.selector"))
+    @Crd(group="my.group", version="v1beta1", scalable=@Scale(labalSelectorPath=".spec.selector"))
     public class WebServer {
        WebServerSpec spec;
     }
@@ -1603,13 +1604,13 @@ Similar to how scale is configured status also supports a pure annotation style 
 Any field in the custom resource object graph that is marked using `@Spec` will be used as the subresource status.
 
 ###### Status configuration
-To enable the `status` subresource, the user can use the `status` parameter on the `@CustomResource` annotation.
+To enable the `status` subresource, the user can use the `status` parameter on the `@Crd` annotation.
 
 ```java
 
-    import io.dekorate.crd.annotation.CustomResource
+    import io.dekorate.crd.annotation.Crd
     
-    @CustomResource(group="my.group", version="v1beta1", status=WebServerStatus.class))
+    @Crd(group="my.group", version="v1beta1", status=WebServerStatus.class))
     public class WebServer {
        int port;
        String rootPath;
@@ -1636,6 +1637,41 @@ Currently each version can have:
 - its own schema
 - its own subresources
 - its own addtional list of printer columns
+
+#### Kubernetes client annotations
+
+*Note* Recent version of the `kubernetes-client` provides their own set of annotations for specifying crd related information. We are currently trying to support both styles, till we eventually fully migrate to `kubernetes-client` annotations.
+
+The annotations provided by the client are under the package `io.fabric8.kubernetes.model.annotation`:
+
+- @Group
+- @Kind
+- @Version
+- @Plural
+- @Singular
+
+These annotations can replace or be combined with the `@Crd` annotation.
+The following example shows how we can define the `WebServer` custom resource defintion using the client annotations instead.
+
+
+```java
+
+    import io.fabric8.kubernetes.model.annotation.Version;
+    import io.fabric8.kubernetes.model.annotation.Group;
+    import io.fabric8.kubernetes.api.model.Namespaced;
+    
+    @Group("my.group")
+    @Version("v1")
+    public class WebServer implements Namespaced {
+       int port;
+       String rootPath;
+       List<String> modules;
+    }
+```
+
+In the example above we also see that `WebServer` implements `Namespaced` which is the client way of specifying that a resource scope.
+
+It's important to remember that for subresources, printer columns, scaling etc, the corresponding dekorate annotations with work even when you use the client annotation set.
 
 #### related examples
  - [POJO to CRD Zookeepr example](examples/pojo-to-crd-zookeeper-example)

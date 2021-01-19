@@ -21,7 +21,7 @@ import io.dekorate.crd.annotation.CustomResource;
 import io.dekorate.crd.annotation.Status;
 import io.dekorate.crd.config.Scope;
 
-@CustomResource(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
+@Crd(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
 public class Karaf {
 
     private String name;
