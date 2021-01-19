@@ -20,10 +20,14 @@ package io.dekorate.example.v1;
 import io.dekorate.crd.annotation.Crd;
 import io.dekorate.crd.annotation.Status;
 import io.dekorate.crd.config.Scope;
+import io.fabric8.kubernetes.api.model.Namespaced;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.model.annotation.Group;
+import io.fabric8.kubernetes.model.annotation.Version;
 
-@Crd(group = "io.zookeeper", version = "v1", scope = Scope.Namespaced)
-public class Zookeeper {
+@Version("v1")
+@Group("io.zookeeper")
+public class Zookeeper implements Namespaced {
 
   private String kind = "Zookeeper";
   private String apiVersion = "io.zookeeper/v1";
