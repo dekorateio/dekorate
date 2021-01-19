@@ -18,7 +18,7 @@ package io.dekorate.halkyon.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import io.dekorate.crd.annotation.CustomResource;
+import io.dekorate.crd.annotation.Crd;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.transform.annotations.VelocityTransformation;
 import io.sundr.transform.annotations.VelocityTransformations;
@@ -43,7 +43,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
     @VelocityTransformation(value = "/halkyon-resource-list.vm"),
     @VelocityTransformation(value = "/halkyon-status.vm"),
 })
-@CustomResource(group = "halkyon.io", version = "v1beta1")
+@Crd(group = "halkyon.io", version = "v1beta1")
 public class ComponentSpec {
 
   private DeploymentMode deploymentMode;

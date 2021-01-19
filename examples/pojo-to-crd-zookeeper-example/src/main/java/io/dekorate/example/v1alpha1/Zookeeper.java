@@ -17,11 +17,11 @@
 
 package io.dekorate.example.v1alpha1;
 
-import io.dekorate.crd.annotation.CustomResource;
+import io.dekorate.crd.annotation.Crd;
 import io.dekorate.crd.annotation.Status;
 import io.dekorate.crd.config.Scope;
 
-@CustomResource(group = "io.zookeeper", version = "v1alpha1", scope = Scope.Namespaced)
+@Crd(group = "io.zookeeper", version = "v1alpha1", scope = Scope.Namespaced)
 public class Zookeeper {
   private ZookeeperSpec spec;
   @Status
