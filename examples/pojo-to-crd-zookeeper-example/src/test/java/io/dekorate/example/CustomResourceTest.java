@@ -42,13 +42,13 @@ class CustomResourceTest {
     assertEquals("Zookeeper", d.getSpec().getNames().getKind());
     assertEquals("zookeepers", d.getSpec().getNames().getPlural());
     assertEquals("Namespaced", d.getSpec().getScope());
+    assertNotNull(d.getSpec().getSubresources().getScale());
+    assertEquals(".status.size", d.getSpec().getSubresources().getScale().getStatusReplicasPath());
+    assertEquals(".spec.size", d.getSpec().getSubresources().getScale().getSpecReplicasPath());
+    assertNotNull(d.getSpec().getSubresources().getStatus());
+
     Optional<CustomResourceDefinitionVersion> v1 = d.getSpec().getVersions().stream().filter(v -> v.getName().equals("v1")).findFirst();
     v1.ifPresent(v -> {
-        assertNotNull(v.getSubresources().getScale());
-        assertEquals(".spec.size", v.getSubresources().getScale().getSpecReplicasPath());
-        assertEquals(".status.size", v.getSubresources().getScale().getStatusReplicasPath());
-        assertNotNull(v.getSubresources().getStatus());
-
         //Let's version that version is marekd as reqired
         Object spec = v.getSchema().getOpenAPIV3Schema().getProperties().get("spec");
         assertNotNull(spec);
