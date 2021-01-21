@@ -19,7 +19,7 @@ import io.sundr.builder.annotations.Buildable;
 #set ($version = "unknown")
 #set ($annotations = $model.annotations)
 #foreach ($annotation in $annotations)
-  #if ($annotation.getClassRef().getName().equals("CustomResource"))
+  #if ($annotation.getClassRef().getName().equals("Crd"))
     #set ($version =  $annotation.getParameters().get("group") + "/" + $annotation.getParameters().get("version"))
   #end
 #end

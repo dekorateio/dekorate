@@ -27,9 +27,10 @@ import io.sundr.builder.annotations.BuildableReference;
 #set ($kind = "$resource")
 #set ($plural = "$kind" + "s")
 #foreach ($annotation in $annotations)
-  #if ($annotation.getClassRef().getName().equals("CustomResource"))
+  #if ($annotation.getClassRef().getName().equals("Crd"))
     #set ($group =  $annotation.getParameters().get("group"))
-    #set ($version =  $annotation.getParameters().get("group") + "/" + $annotation.getParameters().get("version"))
+    #set ($version =  $annotation.getParameters().get("version"))
+    #set ($apiVersion =  $group + "/" + $version)
     #set( $kindFromAnn = $annotation.getParameters().get("kind"))
     #set( $pluralFromAnn = $annotation.getParameters().get("plural"))
     #if( !$kindFromAnn.isEmpty())
@@ -59,7 +60,7 @@ public class $resource implements HasMetadata {
 * (Required)
 */
 @JsonProperty("apiVersion")
-private String apiVersion = "$version";
+private String apiVersion = "$apiVersion";
 /**
 * (Required)
 */
