@@ -17,10 +17,20 @@
 
 package io.dekorate.example;
 
+import java.util.List;
+import java.util.Map;
+
 import io.dekorate.crd.annotation.SpecReplicas;
 
 public class KarafSpec {
 
     @SpecReplicas
     private int replicas;
+
+    private String name;
+    private List<String> repoistory;
+    private List<String> features;
+    private List<String> bundles;
+    private Map<String, String> config;
+
 }

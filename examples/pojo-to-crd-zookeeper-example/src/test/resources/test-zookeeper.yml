@@ -3,4 +3,5 @@ apiVersion: io.zookeeper/v1
 metadata:
   name: my-zoo
 spec:
-  replicas: 1
+  size: 1
+  version: 3.5.0

@@ -20,15 +20,8 @@ package io.dekorate.example;
 import io.dekorate.crd.annotation.Crd;
 import io.dekorate.crd.config.Scope;
 
-import java.util.List;
-import java.util.Map;
-
 @Crd(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
 public class Karaf {
-    private String name;
-    private List<String> repoistory;
-    private List<String> features;
-    private List<String> bundles;
-    private Map<String, String> config;
+  private KarafSpec spec;
 }
 
