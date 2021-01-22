@@ -16,11 +16,11 @@ import io.fabric8.kubernetes.api.model.ListMeta;
 
 import io.sundr.builder.annotations.Buildable;
 
-#set ($version = "unknown")
+#set ($apiVersion = "unknown")
 #set ($annotations = $model.annotations)
 #foreach ($annotation in $annotations)
   #if ($annotation.getClassRef().getName().equals("Crd"))
-    #set ($version =  $annotation.getParameters().get("group") + "/" + $annotation.getParameters().get("version"))
+    #set ($apiVersion =  $annotation.getParameters().get("group") + "/" + $annotation.getParameters().get("version"))
   #end
 #end
 
@@ -46,7 +46,7 @@ public class ${resource}List implements KubernetesResource, KubernetesResourceLi
 *
 */
 @JsonProperty("apiVersion")
-private String apiVersion = "$version";
+private String apiVersion = "$apiVersion";
 /**
 *
 *
