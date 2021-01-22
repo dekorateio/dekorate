@@ -26,8 +26,5 @@ A collection of examples used for showcasing and testing `dekorate`.
 - [Spring Boot with Prometheus on Kubernetes Example](spring-boot-with-prometheus-on-kubernetes)
 - [Spring Boot with Service Catalog on Kubernetes Example](spring-boot-with-svcat-on-kubernetes)
 
-# Experimental
-- [Halkyon CRD](halkyon-example)
-
 # Incubating
 - [Istio Example](../incubaotr/istio-example)
