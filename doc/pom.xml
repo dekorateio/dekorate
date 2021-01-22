@@ -51,12 +51,6 @@
 
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>halkyon-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.dekorate</groupId>
       <artifactId>dekorate-spring-boot</artifactId>
       <version>${project.version}</version>
     </dependency>
