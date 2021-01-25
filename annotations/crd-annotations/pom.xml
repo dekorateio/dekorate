@@ -70,6 +70,18 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-model-common</artifactId>
+      <version>5.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-model</artifactId>
+      <version>5.0.0</version>
+    </dependency>
+
 
     <!-- Testing -->
     <dependency>
