@@ -13,7 +13,6 @@
   <modules>
     <module>kubernetes</module>
     <module>openshift</module>
-    <module>halkyon</module>
     <module>knative</module>
     <module>servicebinding</module>
   </modules>
