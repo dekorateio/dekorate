@@ -1,14 +1,12 @@
 package io.dekorate.crd.config;
 
-import io.dekorate.project.Project;
 import io.dekorate.crd.annotation.Autodetect;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
-import java.lang.Object;
-import java.lang.String;
-import java.util.Map;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
+import java.util.Map;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = { @BuildableReference(Configuration.class) })
 public class CustomResourceConfig extends Configuration {
@@ -43,7 +41,7 @@ public class CustomResourceConfig extends Configuration {
     this.storage = storage;
     this.served = served;
     this.scope = scope != null ? scope : Scope.Namespaced;
-    this.scale = scale != null ? scale : null;
+    this.scale = scale;
     this.statusClassName = statusClassName != null ? statusClassName : AUTODETECT;
   }
 
