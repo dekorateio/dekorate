@@ -24,6 +24,7 @@ import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
+import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 import java.util.function.Predicate;
 
@@ -61,6 +62,10 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
       if (port.getHostPort() != 0) {
         config.editMatchingPort(predicate)
             .withHostPort(port.getHostPort())
+            .endPort();
+      } else if (Ports.isWebPort(port)) {
+        config.editMatchingPort(predicate)
+            .withHostPort(80)
             .endPort();
       }
     } else {

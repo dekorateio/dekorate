@@ -24,6 +24,7 @@ import java.util.Optional;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.Port;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.networking.v1.IngressBuilder;
 
@@ -58,11 +59,14 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
         .withHost(config.getHost())
         .withNewHttp()
         .addNewPath()
+        .withNewPathType("Prefix")
         .withPath(port.getPath())
         .withNewBackend()
         .withNewService()
         .withName(config.getName())
-        .withNewPort().withName(port.getName()).withNumber(port.getContainerPort()).endPort()
+        .withNewPort()
+        .withName(port.getName())
+        .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
         .endService()
         .endBackend()
         .endPath()

@@ -45,12 +45,13 @@ public interface SpringBootWebAnnotationGenerator extends Generator, SpringPrope
   default void addConfiguration(Map map) {
     Session session = getSession();
     Port port = detectHttpPort(map);
-    session.configurators().add(new ApplyPort(port, Ports.HTTP_PORT_NAMES));
+    session.configurators().add(new ApplyPort(port, Ports.webPortNames()));
   }
 
   default Port detectHttpPort(Map map) {
     return new PortBuilder()
         .withName("http")
+        .withHostPort(80)
         .withContainerPort(extractPortFromProperties())
         .withPath(String.valueOf(map.getOrDefault(DEKORATE_SPRING_WEB_PATH, Ports.DEFAULT_HTTP_PORT_PATH)))
         .build();

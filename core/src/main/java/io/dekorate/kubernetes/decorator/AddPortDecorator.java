@@ -45,14 +45,14 @@ public class AddPortDecorator extends ApplicationContainerDecorator<ContainerBui
     if (container.buildPorts().stream().anyMatch(Predicates.matches(port))) {
       container.editMatchingPort(Predicates.builderMatches(port))
           .withName(port.getName())
-          .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
+          .withHostPort(null)
           .withContainerPort(port.getContainerPort())
           .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
           .endPort();
     } else {
       container.addNewPort()
           .withName(port.getName())
-          .withHostPort(port.getHostPort() > 0 ? port.getHostPort() : null)
+          .withHostPort(null)
           .withContainerPort(port.getContainerPort())
           .withProtocol(port.getProtocol() != null ? port.getProtocol().name() : Protocol.TCP.name())
           .endPort();

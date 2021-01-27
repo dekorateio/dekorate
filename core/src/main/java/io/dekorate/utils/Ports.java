@@ -16,20 +16,56 @@
 package io.dekorate.utils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Port;
+import io.dekorate.kubernetes.config.PortFluent;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.ContainerPort;
 
 public class Ports {
 
-  public static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[] { "http", "https", "web", "http1", "h2c" });
-  public static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[] { 80, 443, 8080, 8443 });
+  private static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[] { "http", "web", "http1", "h2c" });
+  private static final List<String> HTTPS_PORT_NAMES = Arrays.asList(new String[] { "https" });
+
+  private static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[] { 80, 8080 });
+  private static final List<Integer> HTTPS_PORT_NUMBERS = Arrays.asList(new Integer[] { 443, 8443 });
+
   public static final String DEFAULT_HTTP_PORT_PATH = "/";
+
+  public static final List<String> webPortNames() {
+    return Stream.of(HTTP_PORT_NAMES, HTTPS_PORT_NAMES).flatMap(Collection::stream).collect(Collectors.toList());
+  }
+
+  public static final List<Integer> webPortNumbers() {
+    return Stream.of(HTTP_PORT_NUMBERS, HTTPS_PORT_NUMBERS).flatMap(Collection::stream).collect(Collectors.toList());
+  }
+
+  public static boolean isWebPort(Port port) {
+    if (webPortNames().contains(port.getName())) {
+      return true;
+    }
+    if (webPortNumbers().contains(port.getContainerPort())) {
+      return true;
+    }
+    return false;
+  }
+
+  public static boolean isWebPort(PortFluent port) {
+    if (webPortNames().contains(port.getName())) {
+      return true;
+    }
+    if (webPortNumbers().contains(port.getContainerPort())) {
+      return true;
+    }
+    return false;
+  }
 
   public static Optional<ContainerPort> getHttpPort(ContainerFluent<?> container) {
     //If we have a single port, return that no matter what.
