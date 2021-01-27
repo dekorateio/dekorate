@@ -17,6 +17,7 @@ package io.dekorate.thorntail.it;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -39,7 +40,8 @@ class ThorntailAnnotationlessTest {
 
     Optional<Ingress> ingress = findFirst(list, Ingress.class);
     assertTrue(ingress.isPresent());
-    assertEquals(9090, ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getService().getPort().getNumber());
+    assertNotNull(ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getService().getPort().getName());
+    assertNull(ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getService().getPort().getNumber());
   }
 
   @Test
@@ -50,7 +52,7 @@ class ThorntailAnnotationlessTest {
 
     Optional<Route> route = findFirst(list, Route.class);
     assertTrue(route.isPresent());
-    assertEquals(9090, route.get().getSpec().getPort().getTargetPort().getIntVal().intValue());
+    assertEquals(80, route.get().getSpec().getPort().getTargetPort().getIntVal().intValue());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> type) {

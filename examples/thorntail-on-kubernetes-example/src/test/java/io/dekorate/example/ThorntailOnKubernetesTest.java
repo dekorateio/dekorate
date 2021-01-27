@@ -68,7 +68,7 @@ class ThorntailOnKubernetesTest {
     assertEquals(1, s.getPorts().size());
     assertEquals("http", s.getPorts().get(0).getName());
     assertEquals(9090, s.getPorts().get(0).getPort());
-    assertEquals(9090, s.getPorts().get(0).getTargetPort().getIntVal());
+    assertEquals(80, s.getPorts().get(0).getTargetPort().getIntVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> type) {

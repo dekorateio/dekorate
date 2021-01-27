@@ -81,7 +81,7 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
   }
 
   default Port detectHttpPort() {
-    return new PortBuilder().withContainerPort(extractPortFromConfig()).withName("http").build();
+    return new PortBuilder().withContainerPort(extractPortFromConfig()).withName("http").withHostPort(80).build();
   }
 
   @SuppressWarnings("unchecked")

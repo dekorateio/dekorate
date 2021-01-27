@@ -29,6 +29,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.utils.Labels;
+import io.dekorate.utils.Ports;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.ServicePort;
@@ -69,7 +70,9 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
     return new ServicePortBuilder()
         .withName(port.getName())
         .withPort(port.getContainerPort())
-        .withTargetPort(new IntOrString(port.getHostPort() > 0 ? port.getHostPort() : port.getContainerPort()))
+        .withTargetPort(new IntOrString(port.getHostPort() > 0
+                                        ? port.getHostPort()
+                                        : (Ports.isWebPort(port) ? 80 : port.getContainerPort()))) 
         .build();
   }
 

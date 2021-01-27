@@ -122,7 +122,7 @@ public class KnativeHandler extends AbstractKubernetesHandler<KnativeConfig> imp
 
     resources.decorate(KNATIVE,
         new ApplyPortNameDecorator(null, null, config.getHttpTransportVersion().name().toLowerCase(),
-            Ports.HTTP_PORT_NAMES.toArray(new String[Ports.HTTP_PORT_NAMES.size()])));
+                                   Ports.webPortNames().toArray(new String[Ports.webPortNames().size()])));
     addDecorators(KNATIVE, config);
 
     if (config.getRevisionAutoScaling().getMetric() != AutoscalingMetric.concurrency) {

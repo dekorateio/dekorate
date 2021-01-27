@@ -20,6 +20,7 @@ import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
+import io.dekorate.kubernetes.configurator.PopulateWebPort;
 import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultKubernetesApplicationGenerator implements KubernetesApplicationGenerator {
@@ -28,6 +29,7 @@ public class DefaultKubernetesApplicationGenerator implements KubernetesApplicat
     add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()
         .accept(new ApplyProjectInfo(getProject()))
         .accept(new ApplyImagePullSecretConfiguration())
+        .accept(new PopulateWebPort())
         .accept(new ApplyDeployToApplicationConfiguration())));
   }
 }

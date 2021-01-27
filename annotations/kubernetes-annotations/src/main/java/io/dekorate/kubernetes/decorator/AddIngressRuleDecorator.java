@@ -16,6 +16,8 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.Port;
+import io.dekorate.utils.Strings;
+
 import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
@@ -39,10 +41,11 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
     Predicate<IngressRuleBuilder> matchingHost = r -> r.getHost().equals(host);
 
     if (!spec.hasMatchingRule(matchingHost)) {
-      spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPath(port.getPath()).withNewBackend()
+      spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPathType("Prefix").withPath(port.getPath()).withNewBackend()
         .withNewService()
         .withName(name)
-        .withNewPort().withName(port.getName()).withNumber(port.getContainerPort()).endPort()
+        .withNewPort().withName(port.getName())
+        .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
         .endService()
         .endBackend()
         .endPath()
@@ -69,7 +72,8 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
           rule.editHttp().addNewPath().withNewBackend()
             .withNewService()
             .withName(name)
-            .withNewPort().withName(port.getName()).withNumber(port.getContainerPort()).endPort()
+            .withNewPort().withName(port.getName())
+            .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
             .endService()
             .endBackend()
             .endPath().endHttp();
@@ -92,7 +96,8 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
       path.withNewBackend()
         .withNewService()
         .withName(name)
-        .withNewPort().withName(port.getName()).withNumber(port.getContainerPort()).endPort()
+        .withNewPort().withName(port.getName())
+        .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
         .endService()
         .endBackend();
     }
