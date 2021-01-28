@@ -128,7 +128,7 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
       waitables.stream().map(r -> client.resource(r).fromServer().get())
-          .forEach(i -> {
+        .forEach(i -> {
             if (!Readiness.isReady(i)) {
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             }
@@ -149,10 +149,13 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
   @Override
   public void afterAll(ExtensionContext context) {
     try {
+      LOGGER.info("Cleaning up...");
       boolean failed = context.getExecutionException().isPresent();
       if (failed) {
+        LOGGER.error("Detected failure!");
         displayDiagnostics(context);
       }
+
       getKubernetesResources(context).getItems().stream().forEach(r -> {
         LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
             + getKubernetesClient(context).resource(r).cascading(true).delete());
@@ -163,17 +166,16 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
   }
 
   public void displayDiagnostics(ExtensionContext context) {
+    LOGGER.info("Diagnostics");
+    LOGGER.info("--");
     KubernetesClient client = getKubernetesClient(context);
+    KubernetesList resources = getKubernetesResources(context);
     Pods pods = new Pods(client);
-    PodList podList = pods.list(pods);
-
     final Diagnostics diagnostics = new Diagnostics(client, pods);
-    if (podList == null || podList.getItems().isEmpty()) {
-      diagnostics.displayAll();
-    } else {
-      getKubernetesResources(context).getItems().stream().forEach(r -> diagnostics.display(r));
-    }
+    resources.getItems().stream().forEach(r -> diagnostics.display(r));
+    diagnostics.displayAll();
   }
+
 
   /**
    * Returns the configured name.
@@ -183,4 +185,6 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
   public String getName() {
     return getKubernetesConfig().getName();
   }
+
+
 }

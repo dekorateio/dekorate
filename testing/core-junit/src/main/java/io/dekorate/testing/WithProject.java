@@ -36,7 +36,6 @@ public interface WithProject {
   }
 
   default Project getProject(String projectDescriptorPath) {
-    System.err.println("Getting project from:" + projectDescriptorPath);
     if (projectDescriptorPath != null) {
       try (InputStream is = new FileInputStream(new File(projectDescriptorPath))) {
         return Serialization.unmarshal(is, Project.class);

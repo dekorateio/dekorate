@@ -19,6 +19,7 @@ package io.dekorate.testing;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
@@ -56,27 +57,15 @@ public class Diagnostics {
   }
 
   public <T extends HasMetadata> void display(T resource) {
-    logger.info(
-        "Diagnostics for kind: [" + resource.getKind() + "] with name : [" + resource.getMetadata().getName() + "].");
-    try {
-      PodList podList = pods.list(resource);
-      if (podList == null) {
-        return;
-      }
-      for (Pod pod : podList.getItems()) {
-        // That should only happen in tests.
-        if (pod.getSpec() == null || pod.getSpec().getContainers() == null) {
-          continue;
+    Optional<DiagnosticsService<T>> service = DiagnosticsFactory.create(client, (Class<T>) resource.getClass());
+    service.ifPresent(s -> {
+        try {
+          s.display(resource);
+        } catch (Exception e) {
+          logger.error("Error displaying diagnostics for resource:" + resource.getKind() + " " + resource.getMetadata().getName());
+          e.printStackTrace();
         }
-
-        events(pod);
-        for (Container container : pod.getSpec().getContainers()) {
-          log(pod, container);
-        }
-      }
-    } catch (Throwable t) {
-      // ignore
-    }
+     });
   }
 
   protected void log(Pod pod, Container container) {
@@ -87,7 +76,7 @@ public class Diagnostics {
     } catch (Throwable t) {
       logger.error("Failed to read logs, due to:" + t.getMessage());
     } finally {
-      logger.warning("---");
+      logger.info("---");
     }
   }
 
@@ -98,18 +87,18 @@ public class Diagnostics {
       fields.put("involvedObject.name", pod.getMetadata().getName());
       fields.put("involvedObject.namespace", pod.getMetadata().getNamespace());
 
-      EventList eventList = client.events().inNamespace(pod.getMetadata().getNamespace()).withFields(fields).list();
+      EventList eventList = client.v1().events().inNamespace(pod.getMetadata().getNamespace()).withFields(fields).list();
       if (eventList == null) {
         return;
       }
-      logger.warning("Events of pod: [" + pod.getMetadata().getName() + "]");
+      logger.info("Events of pod: [" + pod.getMetadata().getName() + "]");
       for (Event event : eventList.getItems()) {
         logger.info(String.format("%s\t\t%s", event.getReason(), event.getMessage()));
       }
     } catch (Throwable t) {
       logger.error("Failed to read events, due to:" + t.getMessage());
     } finally {
-      logger.warning("\t---");
+      logger.info("\t---");
     }
   }
 }
