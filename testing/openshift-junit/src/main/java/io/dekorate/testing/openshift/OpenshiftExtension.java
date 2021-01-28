@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -170,11 +171,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
   public void afterAll(ExtensionContext context) {
     OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
     try {
-      boolean failed = context.getExecutionException().isPresent();
-      final Diagnostics diagnostics = new Diagnostics(client);
-      if (failed) {
-        displayDiagnostics(context);
-      }
+      displayDiagnostics(context);
       getOpenshiftResources(context).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
         try {
           LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
