@@ -20,7 +20,6 @@ import static io.dekorate.crd.util.Types.findStatusProperty;
 import io.dekorate.Resources;
 import io.dekorate.crd.annotation.Autodetect;
 import io.dekorate.crd.apt.CustomResourceAnnotationProcessor.CRInfo;
-import io.dekorate.crd.config.Scale;
 import io.dekorate.crd.decorator.AddAdditionPrinterColumnDecorator;
 import io.dekorate.crd.decorator.AddCustomResourceDefinitionResourceDecorator;
 import io.dekorate.crd.decorator.AddCustomResourceDefintionVersionDecorator;
@@ -210,11 +209,5 @@ public class CustomResourceHandler {
     });
 
     return resources.generate();
-  }
-
-  protected static boolean hasNonDefaultScaleConfig(Scale scale) {
-    return Strings.isNotNullOrEmpty(scale.getSpecReplicasPath())
-      || Strings.isNotNullOrEmpty(scale.getStatusReplicasPath())
-      || Strings.isNotNullOrEmpty(scale.getLabelSelectorPath());
   }
 }
