@@ -1,17 +1,15 @@
 /**
  * Copyright 2018 The original authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package io.dekorate.crd.handler;
 
@@ -38,7 +36,6 @@ import io.dekorate.crd.visitor.AdditionalPrineterColumnDetector;
 import io.dekorate.crd.visitor.LabelSelectorPathDetector;
 import io.dekorate.crd.visitor.SpecReplicasPathDetector;
 import io.dekorate.crd.visitor.StatusReplicasPathDetector;
-import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinitionBuilder;
 import io.sundr.codegen.functions.ElementTo;
@@ -48,20 +45,12 @@ import io.sundr.codegen.model.TypeDef;
 import io.sundr.codegen.model.TypeDefBuilder;
 import io.sundr.codegen.model.TypeRef;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class CustomResourceHandler {
-
-  private final Set<Decorator> decorators = new TreeSet<>(DECORATOR_COMPARATOR);
-  private static final Comparator<Decorator> DECORATOR_COMPARATOR = (a, b) -> a.compareTo(b) == 0
-    ? b.compareTo(a)
-    : a.equals(b) ? 0 : 1;
 
   private final Resources resources;
 
@@ -121,7 +110,7 @@ public class CustomResourceHandler {
               .accept(externalAdditionalPrineterColumnDetector)
               .build();
           }
-          }
+        }
       }
     }
 
@@ -156,7 +145,8 @@ public class CustomResourceHandler {
 
     resources.decorate(new AddCustomResourceDefintionVersionDecorator(name, version));
     // Let's ignore the parts that are mandatory in the examples
-    resources.decorate(new AddSchemaToCustomResourceDefinitionVersionDecorator(name, version, JsonSchema.from(def, "kind", "apiVersion", "metadata")));
+    resources.decorate(new AddSchemaToCustomResourceDefinitionVersionDecorator(name, version,
+      JsonSchema.from(def, "kind", "apiVersion", "metadata")));
 
     Map<String, Property> additionalPrinterColumns = new HashMap<>();
     additionalPrinterColumns.putAll(additionalPrineterColumnDetector.getProperties());
@@ -200,11 +190,14 @@ public class CustomResourceHandler {
       String column = (String) parameters.get("name");
       if (Strings.isNullOrEmpty(column)) {
         column = property.getName().toUpperCase();
-        }
-        String description = property.getComments().stream().filter(l -> !l.trim().startsWith("@")).collect(Collectors.joining(" ")).trim();
-        String format = (String) parameters.get("format");
+      }
+      String description = property.getComments().stream().filter(l -> !l.trim().startsWith("@"))
+        .collect(Collectors.joining(" ")).trim();
+      String format = (String) parameters.get("format");
 
-        resources.decorate(new AddAdditionPrinterColumnDecorator(name, version, type, column, path, format, description));
+      resources.decorate(
+        new AddAdditionPrinterColumnDecorator(name, version, type, column, path, format,
+          description));
     });
   }
 }
