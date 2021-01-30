@@ -24,7 +24,6 @@ import io.sundr.transform.annotations.VelocityTransformations;
     @PackageSelector(value = "io.dekorate.kubernetes.processor"),
     @PackageSelector(value = "io.dekorate.openshift.processor"),
     @PackageSelector(value = "io.dekorate.servicecatalog.processor"),
-    @PackageSelector(value = "io.dekorate.halkyon.processor"),
     @PackageSelector(value = "io.dekorate.spring.processor"),
     @PackageSelector(value = "io.dekorate.thorntail"),
     @PackageSelector(value = "io.dekorate.micronaut")

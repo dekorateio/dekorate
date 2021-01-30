@@ -158,7 +158,6 @@ A processor may register more than one `config` `handlers` with no restriction o
 
 | Processor                         | Config               | Supported Annotations                                                                                        | Description                                                       |
 |-----------------------------------|----------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| ComponentAnnotationProcessor      | CompositeConfig      | [io.dekorate.halkyon.annotation.HalkyonComponent]                                                          | Generate component custom resources.                              |
 | SpringBootApplicationProcessor    | none                 | [org.springframework.boot.autoconfigure.SpringBootApplication]                                               | Detects Spring Boot and set the runtime attribute to Spring Boot. |
 | KubernetesAnnotationProcessor     | KubernetesConfig     | [io.dekorate.kubernetes.annotation.KubernetesApplication]                                                        | Generates kubernetes manifests.                                   |
 | ThorntailProcessor                | none                 | [javax.ws.rs.ApplicationPath, javax.jws.WebService]                                                          | Detects JAX-RS and JAX-WS annotations and registers the http port.  |

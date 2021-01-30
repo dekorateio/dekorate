@@ -73,8 +73,7 @@ class GitTest {
   }
 
   @ParameterizedTest(name = "{0} should have \"{1}\" as remote url")
-  @CsvSource({ GIT_SIMPLE + ", git@github.com:myorg/myproject.git",
-      GIT_SSH + ", git+ssh://git@github.com/halkyonio/operator" })
+  @CsvSource({ GIT_SIMPLE + ", git@github.com:myorg/myproject.git" })
   void shouldGetRemoteUrl(String configFile, String expected) throws Exception {
     final Path root = getRootFor(configFile);
     Optional<String> repoUrl = Git.getRemoteUrl(root, Git.ORIGIN);
@@ -95,7 +94,6 @@ class GitTest {
   @ParameterizedTest(name = "{0} should have \"{1}\" as safe remote url")
   @CsvSource({
       GIT_SIMPLE + ", https://github.com/myorg/myproject.git",
-      GIT_SSH + ", https://github.com/halkyonio/operator.git",
       GIT_GITLAB + ", https://gitlab.com/foo/bar.git"
   })
   void shouldGetSafeRemoteUrl(String configFile, String expected) throws Exception {

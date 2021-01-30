@@ -1078,7 +1078,6 @@ When no annotations are used, the kind of resources to be generated is determine
 |---------------------|------------------------------------|
 | kubernetes.json/yml | io.dekorate:kubernetes-annotations |
 | openshift.json/yml  | io.dekorate:openshift-annotations  |
-| halkyon.json/yml    | io.dekorate:halkyon-annotations    |
 
 
 Note: that starter modules for `kubernetes` and `openshift` do transitively add `kubernetes-annotations` and `openshift-annotations` respectively.

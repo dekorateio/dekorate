@@ -21,8 +21,7 @@ import io.sundr.transform.annotations.VelocityTransformations;
 
 @VelocityTransformations(value = @VelocityTransformation(value = "/configurator-doc.vm", outputPath = "configurators-table.org", gather = true), packages = {
     @PackageSelector(value = "io.dekorate.kubernetes.configurator"),
-    @PackageSelector(value = "io.dekorate.openshift.configurator"),
-    @PackageSelector(value = "io.dekorate.halkyon.configurator")
+    @PackageSelector(value = "io.dekorate.openshift.configurator")
 })
 public class DocumentConfigurators {
 

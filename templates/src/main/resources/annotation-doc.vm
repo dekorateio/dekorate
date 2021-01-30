@@ -9,10 +9,6 @@
   #set ($label = $anme.replaceAll("Build", ""))
   #set ($key = $key.toLowerCase().replaceAll("build", ""))
 #end
-#if ($key.contains("Halkyon"))
-  #set ($label = $anme.replaceAll("Halkyon", ""))
-  #set ($key = $key.toLowerCase().replaceAll("halkyon", ""))
-#end
 #foreach ($method in ${m.getMethods()})
 #set ($name = $method.getName())
 ##
@@ -80,7 +76,7 @@ $label
 ##
 ## Line
 ## 
-#if ($m.name.contains("Application") || $m.name.contains("Halkyon") || $m.name.contains("Build"))
+#if ($m.name.contains("Application") || $m.name.contains("Build"))
 | dekorate.${key}.$name | $type | $description | $default |
 #else
 | $name | $type | $description | $default |
