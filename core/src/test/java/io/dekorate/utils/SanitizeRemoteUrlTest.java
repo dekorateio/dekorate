@@ -29,7 +29,6 @@ public class SanitizeRemoteUrlTest {
   @CsvSource({
       "git@github.com:myorg/myproject.git, https://github.com/myorg/myproject.git",
       "https://github.com/myorg/myproject.git, https://github.com/myorg/myproject.git",
-      "git+ssh://git@github.com/halkyonio/operator, https://github.com/halkyonio/operator.git",
       "https://gitlab.com/foo/bar.git, https://gitlab.com/foo/bar.git",
       "git@gitlab.com:foo/bar.git, https://gitlab.com/foo/bar.git",
       "git+ssh://git@gitlab.com/foo/bar.git, https://gitlab.com/foo/bar.git",

@@ -9,7 +9,7 @@
 
   <artifactId>servicebinding-starters</artifactId>
   <packaging>pom</packaging>
-  <name>Dekorate :: Starters :: Halkyon</name>
+  <name>Dekorate :: Starters :: Service Binding</name>
   <modules>
     <module>servicebinding-spring-starter</module>
   </modules>

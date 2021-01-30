@@ -49,7 +49,6 @@ The document is structured as follows.
   - [mounts and voulumes](#mounts-and-volumes)
 - [openshift](#openshift)
 - [knative](#knative)
-- [halkyon](#halkyon-types)
 
 ## Kubernetes
 
@@ -393,45 +392,4 @@ The section below describes all the available subtypes.
 | dekorate.tekton.registry                        | String                |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | docker.io                          |
 | dekorate.tekton.registry-username               | String                |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |                                    |
 | dekorate.tekton.registry-password               | String                |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |                                    |
-
-## Halkyon types
-
-This section describes all halkyon related types.
-
-### HalkyonComponent
-
-| Property                           | Type                        | Description   | Default Value   |
-|------------------------------------|-----------------------------| --------------|-----------------|
-| dekorate.component.part-of         | String                      |               |                 |
-| dekorate.component.name            | String                      |               |                 |
-| dekorate.component.version         | String                      |               |                 |
-| dekorate.component.deployment-mode | DeploymentMode              |               | dev             |
-| dekorate.component.expose-service  | boolean                     |               | false           |
-| dekorate.component.envs            | Env[]                       |               |                 |
-| dekorate.component.labels          | Label[]                     |               |                 |
-| dekorate.component.build-type      | String                      |               | s2i             |
-| dekorate.component.remote          | String                      |               | origin          |
-| dekorate.component.provides        | HalkyonCapability[]         |               |                 |
-| dekorate.component.requires        | HalkyonRequiredCapability[] |               |                 |
-
-#### HalkyonCapability
-
-| Property                       | Type        | Description | Default Value |
-|--------------------------------|-------------|-------------|---------------|
-| dekorate.capability.category   | String      |             |               |
-| dekorate.capability.type       | String      |             |               |
-| dekorate.capability.name       | String      |             |               |
-| dekorate.capability.version    | String      |             |               |
-| dekorate.capability.parameters | Parameter[] |             |               |
-
-#### HalkyonRequiredCapability 
-
-| Property                                  | Type          | Description   | Default Value   |
-|-------------------------------------------|---------------|---------------|-----------------|
-| dekorate.requiredcapability.name          | String        |               |                 |
-| dekorate.requiredcapability.category      | String        |               |                 |
-| dekorate.requiredcapability.type          | String        |               |                 |
-| dekorate.requiredcapability.bound-to      | String        |               |                 |
-| dekorate.requiredcapability.auto-bindable | boolean       |               | false           |
-| dekorate.requiredcapability.parameters    | Parameter[]   |               |                 |
 

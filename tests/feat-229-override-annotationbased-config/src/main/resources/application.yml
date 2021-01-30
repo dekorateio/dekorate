@@ -1,9 +1,0 @@
-dekorate:
-  component:
-    name: "hello-world"
-    labels:
-      - key: key1-from-properties
-        value: val1-from-properties
-    buildType: "docker"
-    deploymentMode : build
-
