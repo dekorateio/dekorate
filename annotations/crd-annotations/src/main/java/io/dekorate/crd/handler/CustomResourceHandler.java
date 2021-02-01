@@ -20,7 +20,7 @@ import io.dekorate.crd.annotation.Autodetect;
 import io.dekorate.crd.apt.CustomResourceAnnotationProcessor.CRInfo;
 import io.dekorate.crd.decorator.AddAdditionPrinterColumnDecorator;
 import io.dekorate.crd.decorator.AddCustomResourceDefinitionResourceDecorator;
-import io.dekorate.crd.decorator.AddCustomResourceDefintionVersionDecorator;
+import io.dekorate.crd.decorator.AddCustomResourceDefinitionVersionDecorator;
 import io.dekorate.crd.decorator.AddLabelSelectorPathDecorator;
 import io.dekorate.crd.decorator.AddSchemaToCustomResourceDefinitionVersionDecorator;
 import io.dekorate.crd.decorator.AddSpecReplicasPathDecorator;
@@ -124,7 +124,7 @@ public class CustomResourceHandler {
       new AddCustomResourceDefinitionResourceDecorator(name, config.group(), config.kind(),
         config.scope().name(), config.shortNames(), config.plural(), config.singular()));
 
-    resources.decorate(new AddCustomResourceDefintionVersionDecorator(name, version));
+    resources.decorate(new AddCustomResourceDefinitionVersionDecorator(name, version));
     // Let's ignore the parts that are mandatory in the examples
     resources.decorate(new AddSchemaToCustomResourceDefinitionVersionDecorator(name, version,
       JsonSchema.from(def, "kind", "apiVersion", "metadata")));
