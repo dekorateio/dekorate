@@ -17,18 +17,17 @@
 
 package io.dekorate.crd.visitor;
 
+import io.dekorate.crd.annotation.PrinterColumn;
 import java.util.ArrayList;
 
-import io.dekorate.crd.annotation.PrinterColumn;
+public class AdditionalPrinterColumnDetector extends AnnotatedMultiPropertyPathDetector {
 
-public class AdditionalPrineterColumnDetector extends AnnotatedMultiPropertyPathDetector {
-
-	public AdditionalPrineterColumnDetector() {
+  public AdditionalPrinterColumnDetector() {
     this(DOT);
   }
 
-	public AdditionalPrineterColumnDetector(String prefix) {
-		super(prefix, PrinterColumn.class.getSimpleName(), new ArrayList<>());
-	}
+  public AdditionalPrinterColumnDetector(String prefix) {
+    super(prefix, PrinterColumn.class.getSimpleName(), new ArrayList<>());
+  }
 }
 

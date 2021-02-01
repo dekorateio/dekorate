@@ -32,7 +32,7 @@ import io.dekorate.crd.decorator.PromoteSingleVersionAttributesDecorator;
 import io.dekorate.crd.decorator.SetServedVersionDecorator;
 import io.dekorate.crd.decorator.SetStorageVersionDecorator;
 import io.dekorate.crd.util.JsonSchema;
-import io.dekorate.crd.visitor.AdditionalPrineterColumnDetector;
+import io.dekorate.crd.visitor.AdditionalPrinterColumnDetector;
 import io.dekorate.crd.visitor.LabelSelectorPathDetector;
 import io.dekorate.crd.visitor.SpecReplicasPathDetector;
 import io.dekorate.crd.visitor.StatusReplicasPathDetector;
@@ -72,14 +72,14 @@ public class CustomResourceHandler {
     SpecReplicasPathDetector specReplicasPathDetector = new SpecReplicasPathDetector();
     StatusReplicasPathDetector statusReplicasPathDetector = new StatusReplicasPathDetector();
     LabelSelectorPathDetector labelSelectorPathDetector = new LabelSelectorPathDetector();
-    AdditionalPrineterColumnDetector additionalPrineterColumnDetector = new AdditionalPrineterColumnDetector();
+    AdditionalPrinterColumnDetector additionalPrinterColumnDetector = new AdditionalPrinterColumnDetector();
 
     //This is going to be used in order to scan the status provided as `@Crd(status = MyStatus.class)`.
     StatusReplicasPathDetector externalStatusReplicasPathDetector = new StatusReplicasPathDetector(
       ".spec.");
     LabelSelectorPathDetector externalLabelSelectorPathDetector = new LabelSelectorPathDetector(
       ".spec.");
-    AdditionalPrineterColumnDetector externalAdditionalPrineterColumnDetector = new AdditionalPrineterColumnDetector(
+    AdditionalPrinterColumnDetector externalAdditionalPrinterColumnDetector = new AdditionalPrinterColumnDetector(
       ".spec.");
 
     if (statusType.isPresent()) {
@@ -106,7 +106,7 @@ public class CustomResourceHandler {
             new TypeDefBuilder(externalStatusDef)
               .accept(externalStatusReplicasPathDetector)
               .accept(externalLabelSelectorPathDetector)
-              .accept(externalAdditionalPrineterColumnDetector)
+              .accept(externalAdditionalPrinterColumnDetector)
               .build();
           }
         }
@@ -117,7 +117,7 @@ public class CustomResourceHandler {
       .accept(specReplicasPathDetector)
       .accept(statusReplicasPathDetector)
       .accept(labelSelectorPathDetector)
-      .accept(additionalPrineterColumnDetector)
+      .accept(additionalPrinterColumnDetector)
       .build();
 
     resources.decorate(
@@ -130,8 +130,8 @@ public class CustomResourceHandler {
       JsonSchema.from(def, "kind", "apiVersion", "metadata")));
 
     Map<String, Property> additionalPrinterColumns = new HashMap<>();
-    additionalPrinterColumns.putAll(additionalPrineterColumnDetector.getProperties());
-    additionalPrinterColumns.putAll(externalAdditionalPrineterColumnDetector.getProperties());
+    additionalPrinterColumns.putAll(additionalPrinterColumnDetector.getProperties());
+    additionalPrinterColumns.putAll(externalAdditionalPrinterColumnDetector.getProperties());
 
     specReplicasPathDetector.getPath().ifPresent(specReplicasPath -> {
       resources.decorate(new AddSubresourcesDecorator(name, version));
