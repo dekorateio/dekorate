@@ -21,7 +21,6 @@ import io.fabric8.kubernetes.api.model.Namespaced;
 import io.fabric8.kubernetes.client.CustomResource;
 import io.sundr.builder.TypedVisitor;
 import io.sundr.codegen.functions.ClassTo;
-import io.sundr.codegen.model.AnnotationRefBuilder;
 import io.sundr.codegen.model.ClassRef;
 import io.sundr.codegen.model.Property;
 import io.sundr.codegen.model.PropertyBuilder;
@@ -35,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -160,20 +158,5 @@ public class Types {
    */
   public static boolean isStatusProperty(Property property)  {
     return "status".equals(property.getName());
-  }
-
-  private static final Predicate<AnnotationRefBuilder> predicate = new Predicate<AnnotationRefBuilder>() {
-        @Override
-        public boolean test(AnnotationRefBuilder ref) {
-         return ref.getClassRef().getName().equals("SpecReplicas");
-        }
-    };
- 
-  public void getSpecReplicasPath(TypeDef def, List<String> path, List<String> visited) {
-    for (Property p : def.getProperties()) {
-      if (p.getAnnotations().stream().anyMatch(a -> a.getClassRef().getName().equals("SpecReplicas"))) {
-        
-      }
-    }
   }
 }
