@@ -91,7 +91,7 @@ public class CustomResourceAnnotationProcessor extends AbstractProcessor {
       .orElse(null);
   }
 
-  private CRInfo add(TypeElement element) {
+  private CustomResourceInfo add(TypeElement element) {
 
     final var superclass = (DeclaredType) element.getSuperclass();
     final var crClassName = element.getQualifiedName();
@@ -103,7 +103,7 @@ public class CustomResourceAnnotationProcessor extends AbstractProcessor {
       }
       var spec = ((TypeElement) ((DeclaredType) typeArguments.get(0)).asElement());
       var status = ((TypeElement) ((DeclaredType) typeArguments.get(1)).asElement());
-      final var info = new CRInfo(element, spec, status, processingEnv);
+      final var info = new CustomResourceInfo(element, spec, status, processingEnv);
       System.out.println(
         "Generating '"
           + info.crdName()
