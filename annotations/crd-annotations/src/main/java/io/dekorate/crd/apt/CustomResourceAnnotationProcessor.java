@@ -14,7 +14,7 @@
 package io.dekorate.crd.apt;
 
 import io.dekorate.Resources;
-import io.dekorate.crd.handler.CustomResourceHandler;
+import io.dekorate.crd.v1.CustomResourceHandler;
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.client.CustomResource;
 import io.sundr.codegen.CodegenContext;
