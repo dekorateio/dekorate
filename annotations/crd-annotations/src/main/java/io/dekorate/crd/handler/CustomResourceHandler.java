@@ -74,14 +74,6 @@ public class CustomResourceHandler {
     LabelSelectorPathDetector labelSelectorPathDetector = new LabelSelectorPathDetector();
     AdditionalPrinterColumnDetector additionalPrinterColumnDetector = new AdditionalPrinterColumnDetector();
 
-    //This is going to be used in order to scan the status provided as `@Crd(status = MyStatus.class)`.
-    StatusReplicasPathDetector externalStatusReplicasPathDetector = new StatusReplicasPathDetector(
-      ".spec.");
-    LabelSelectorPathDetector externalLabelSelectorPathDetector = new LabelSelectorPathDetector(
-      ".spec.");
-    AdditionalPrinterColumnDetector externalAdditionalPrinterColumnDetector = new AdditionalPrinterColumnDetector(
-      ".spec.");
-
     if (statusType.isPresent()) {
       TypeDefBuilder builder = new TypeDefBuilder(def);
       Optional<Property> statusProperty = findStatusProperty(def);
@@ -96,22 +88,7 @@ public class CustomResourceHandler {
         .withTypeRef(statusType.get())
         .endProperty()
         .build();
-
-      if (statusType.isPresent()) {
-        TypeRef externalStatusRef = ElementTo.TYPEDEF.apply(config.status()).toReference();
-        if (externalStatusRef instanceof ClassRef) {
-          TypeDef externalStatusDef = ((ClassRef) externalStatusRef).getDefinition();
-
-          if (externalStatusDef.getName().equals(Autodetect.class.getSimpleName())) {
-            new TypeDefBuilder(externalStatusDef)
-              .accept(externalStatusReplicasPathDetector)
-              .accept(externalLabelSelectorPathDetector)
-              .accept(externalAdditionalPrinterColumnDetector)
-              .build();
-          }
-        }
-      }
-    }
+    } 
 
     def = new TypeDefBuilder(def)
       .accept(specReplicasPathDetector)
@@ -131,22 +108,17 @@ public class CustomResourceHandler {
 
     Map<String, Property> additionalPrinterColumns = new HashMap<>();
     additionalPrinterColumns.putAll(additionalPrinterColumnDetector.getProperties());
-    additionalPrinterColumns.putAll(externalAdditionalPrinterColumnDetector.getProperties());
 
     specReplicasPathDetector.getPath().ifPresent(specReplicasPath -> {
       resources.decorate(new AddSubresourcesDecorator(name, version));
       resources.decorate(new AddSpecReplicasPathDecorator(name, version, specReplicasPath));
     });
 
-    // todo: deal with external status?
-    // statusReplicasPathDetector.getPath().orElse(externalStatusReplicasPathDetector.getPath().orElse(null))
     statusReplicasPathDetector.getPath().ifPresent(statusReplicasPath -> {
       resources.decorate(new AddSubresourcesDecorator(name, version));
       resources.decorate(new AddStatusReplicasPathDecorator(name, version, statusReplicasPath));
     });
 
-    // todo: deal with external label?
-    // labelSelectorPathDetector.getPath().orElse(externalLabelSelectorPathDetector.getPath().orElse(null))
     labelSelectorPathDetector.getPath().ifPresent(labelSelectorPath -> {
       resources.decorate(new AddSubresourcesDecorator(name, version));
       resources.decorate(new AddLabelSelectorPathDecorator(name, version, labelSelectorPath));
