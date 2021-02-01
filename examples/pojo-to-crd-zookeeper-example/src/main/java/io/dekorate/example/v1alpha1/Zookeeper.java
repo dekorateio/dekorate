@@ -17,14 +17,13 @@
 
 package io.dekorate.example.v1alpha1;
 
-import io.dekorate.crd.annotation.Crd;
-import io.dekorate.crd.annotation.Status;
-import io.dekorate.crd.config.Scope;
+import io.fabric8.kubernetes.api.model.Namespaced;
+import io.fabric8.kubernetes.client.CustomResource;
+import io.fabric8.kubernetes.model.annotation.Group;
+import io.fabric8.kubernetes.model.annotation.Version;
 
-@Crd(group = "io.zookeeper", version = "v1alpha1", scope = Scope.Namespaced)
-public class Zookeeper {
-  private ZookeeperSpec spec;
-  @Status
-  private ZookeeperStatus status;
+@Group("io.zookeeper")
+@Version("v1alpha1")
+public class Zookeeper extends CustomResource<ZookeeperSpec, ZookeeperStatus> implements Namespaced {
 }
 

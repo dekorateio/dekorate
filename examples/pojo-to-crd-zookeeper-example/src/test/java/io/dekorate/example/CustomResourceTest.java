@@ -35,7 +35,7 @@ class CustomResourceTest {
 
   @Test
   public void testCrd() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/zookeepers.io.zookeeper.yml"));
     assertNotNull(list);
     CustomResourceDefinition d = findFirst(list, CustomResourceDefinition.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);

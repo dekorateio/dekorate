@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CustomResourceIT implements WithProject {
 
   Path testResources = getProject().getRoot().resolve("src").resolve("test").resolve("resources");
-  Path crdPath =getProject().getBuildInfo().getClassOutputDir().resolve(getProject().getDekorateOutputDir()).resolve("kubernetes.yml");
+  Path crdPath =getProject().getBuildInfo().getClassOutputDir().resolve(getProject().getDekorateOutputDir()).resolve("zookeepers.io.zookeeper.yml");
 
   @Test
   void shouldApplyZookeeper() {

@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CustomResourceIT implements WithProject {
 
   Path testResources = getProject().getRoot().resolve("src").resolve("test").resolve("resources");
-  Path crdPath = getProject().getBuildInfo().getClassOutputDir().resolve(getProject().getDekorateOutputDir()).resolve("kubernetes.yml");
+  Path crdPath = getProject().getBuildInfo().getClassOutputDir().resolve(getProject().getDekorateOutputDir()).resolve("karafs.io.karaf.yml");
 
   @Test
   void shouldApplyKaraf() {

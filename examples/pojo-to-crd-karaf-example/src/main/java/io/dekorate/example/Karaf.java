@@ -17,11 +17,13 @@
 
 package io.dekorate.example;
 
-import io.dekorate.crd.annotation.Crd;
-import io.dekorate.crd.config.Scope;
+import io.fabric8.kubernetes.api.model.Namespaced;
+import io.fabric8.kubernetes.client.CustomResource;
+import io.fabric8.kubernetes.model.annotation.Group;
+import io.fabric8.kubernetes.model.annotation.Version;
 
-@Crd(group = "io.karaf", version = "v1", scope = Scope.Namespaced, status = KarafStatus.class)
-public class Karaf {
-  private KarafSpec spec;
+@Group("io.karaf")
+@Version("v1")
+public class Karaf extends CustomResource<KarafSpec, KarafStatus> implements Namespaced {
 }
 
