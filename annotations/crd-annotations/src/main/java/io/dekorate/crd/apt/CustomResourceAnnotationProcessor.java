@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
-import io.dekorate.DekorateException;
 import io.dekorate.Resources;
 import io.dekorate.crd.v1.CustomResourceHandler;
 import io.fabric8.kubernetes.client.CustomResource;
@@ -80,7 +79,7 @@ public class CustomResourceAnnotationProcessor extends AbstractProcessor {
             System.out.println("Created " + yml.toUri());
           }
         } catch (IOException e) {
-          DekorateException.launderThrowable(e);
+          throw new RuntimeException(e);
           }
       });
       return true;
