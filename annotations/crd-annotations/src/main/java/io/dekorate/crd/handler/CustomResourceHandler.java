@@ -64,7 +64,7 @@ public class CustomResourceHandler {
 
     Optional<TypeRef> statusType;
     final var status = config.status();
-    if (!status.getQualifiedName().contentEquals(Void.TYPE.getCanonicalName())) {
+    if (!status.getQualifiedName().contentEquals(Void.class.getCanonicalName())) {
       statusType = Optional.of(ElementTo.TYPEDEF.apply(status).toReference());
     } else {
       statusType = Optional.empty();
@@ -98,7 +98,7 @@ public class CustomResourceHandler {
         .endProperty()
         .build();
 
-      if (!status.getQualifiedName().contentEquals(Void.TYPE.getCanonicalName())) {
+      if (statusType.isPresent()) {
         TypeRef externalStatusRef = ElementTo.TYPEDEF.apply(config.status()).toReference();
         if (externalStatusRef instanceof ClassRef) {
           TypeDef externalStatusDef = ((ClassRef) externalStatusRef).getDefinition();
