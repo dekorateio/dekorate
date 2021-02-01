@@ -37,7 +37,6 @@ import io.dekorate.crd.visitor.LabelSelectorPathDetector;
 import io.dekorate.crd.visitor.SpecReplicasPathDetector;
 import io.dekorate.crd.visitor.StatusReplicasPathDetector;
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinitionBuilder;
 import io.sundr.codegen.functions.ElementTo;
 import io.sundr.codegen.model.ClassRef;
 import io.sundr.codegen.model.Property;
@@ -121,27 +120,9 @@ public class CustomResourceHandler {
       .accept(additionalPrineterColumnDetector)
       .build();
 
-    if (resources.global().getItems().isEmpty()) {
-      resources.add(new CustomResourceDefinitionBuilder()
-        .withNewMetadata()
-        .withName(name)
-        .endMetadata()
-        .withNewSpec()
-        .withScope(config.scope().name())
-        .withGroup(config.group())
-        .withNewNames()
-        .withKind(config.kind())
-        .withShortNames(config.shortNames())
-        .withPlural(config.plural())
-        .withSingular(config.singular())
-        .endNames()
-        .endSpec()
-        .build());
-    } else {
-      resources.decorate(
-        new AddCustomResourceDefinitionResourceDecorator(name, config.group(), config.kind(),
-          config.scope().name(), config.shortNames(), config.plural(), config.singular()));
-    }
+    resources.decorate(
+      new AddCustomResourceDefinitionResourceDecorator(name, config.group(), config.kind(),
+        config.scope().name(), config.shortNames(), config.plural(), config.singular()));
 
     resources.decorate(new AddCustomResourceDefintionVersionDecorator(name, version));
     // Let's ignore the parts that are mandatory in the examples
