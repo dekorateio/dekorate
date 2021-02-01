@@ -22,10 +22,8 @@ import io.sundr.codegen.functions.ElementTo;
 import io.sundr.codegen.model.TypeDef;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -83,12 +81,6 @@ public class CustomResourceAnnotationProcessor extends AbstractProcessor {
       add(type);
     }
     return false;
-  }
-
-
-  public static <T> T firstOf(Optional<T>... optionals) {
-    return Arrays.stream(optionals).filter(Optional::isPresent).map(Optional::get).findFirst()
-      .orElse(null);
   }
 
   private CustomResourceInfo add(TypeElement element) {
