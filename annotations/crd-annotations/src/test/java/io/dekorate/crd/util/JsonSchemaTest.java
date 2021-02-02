@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.crd.example.person.Person;
+import io.dekorate.crd.example.recipe.Recipe;
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.JSONSchemaProps;
 import io.sundr.codegen.functions.ClassTo;
@@ -35,4 +36,14 @@ class JsonSchemaTest {
     assertNotNull(schema);
   }
 
+  @Test
+  void shouldMapQuantityToObject() {
+    TypeDef recipe = ClassTo.TYPEDEF.apply(Recipe.class);
+    JSONSchemaProps schema = JsonSchema.from(recipe);
+    assertNotNull(schema);
+    assertTrue(schema.getProperties().containsKey("quantity"));
+    JSONSchemaProps quantity = schema.getProperties().get("quantity");
+    assertEquals("object", quantity.getType());
+    assertNull(quantity.getProperties());
+  }
 }

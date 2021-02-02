@@ -26,6 +26,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.fabric8.kubernetes.api.model.Duration;
+import io.fabric8.kubernetes.api.model.IntOrString;
+import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.JSONSchemaProps;
 import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.JSONSchemaPropsBuilder;
 import io.fabric8.kubernetes.client.CustomResource;
@@ -41,6 +44,10 @@ import io.sundr.codegen.utils.TypeUtils;
 public class JsonSchema {
 
   private static final TypeDef CUSTOM_RESOURCE = ClassTo.TYPEDEF.apply(CustomResource.class);
+  private static final TypeDef QUANTITY = ClassTo.TYPEDEF.apply(Quantity.class);
+  private static final TypeDef DURATION = ClassTo.TYPEDEF.apply(Duration.class);
+  private static final TypeDef INT_OR_STRING = ClassTo.TYPEDEF.apply(IntOrString.class);
+
   private static final TypeDef BOOLEAN = ClassTo.TYPEDEF.apply(Boolean.class);
   private static final TypeDef STRING = ClassTo.TYPEDEF.apply(String.class);
   private static final TypeDef INT = ClassTo.TYPEDEF.apply(Integer.class);
@@ -55,6 +62,9 @@ public class JsonSchema {
   private static final TypeRef LONG_REF = LONG.toReference();
   private static final TypeRef DOUBLE_REF = DOUBLE.toReference();
   private static final TypeRef DATE_REF = DATE.toReference();
+  private static final TypeRef QUANTITY_REF = QUANTITY.toReference();
+  private static final TypeRef DURATION_REF = DURATION.toReference();
+  private static final TypeRef INT_OR_STRING_REF = INT_OR_STRING.toReference();
 
   private static final TypeRef P_INT_REF = new PrimitiveRefBuilder().withName("int").build();
   private static final TypeRef P_LONG_REF = new PrimitiveRefBuilder().withName("long").build();
@@ -75,6 +85,10 @@ public class JsonSchema {
       put(P_DOUBLE_REF, "number");
       put(BOOLEAN_REF, "boolean");
       put(P_BOOLEAN_REF, "boolean");
+
+      put(QUANTITY_REF, "object");
+      put(DURATION_REF, "string");
+      put(INT_OR_STRING_REF, "string");
     }
   };
 
