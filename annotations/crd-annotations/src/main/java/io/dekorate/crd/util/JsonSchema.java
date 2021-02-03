@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -72,23 +73,29 @@ public class JsonSchema {
   private static final TypeRef P_BOOLEAN_REF = new PrimitiveRefBuilder().withName("boolean").build();
   private static final TypeRef OPTIONAL_REF = OPTIONAL.toReference();
 
-  public static final Map<TypeRef, String> TYPE_MAP = new HashMap<TypeRef, String>() {
+  public static final JSONSchemaProps JSON_SCHEMA_STRING = new JSONSchemaPropsBuilder().withType("string").build();
+  public static final JSONSchemaProps JSON_SCHEMA_INTEGER = new JSONSchemaPropsBuilder().withType("ineger").build();
+  public static final JSONSchemaProps JSON_SCHEMA_NUMBER = new JSONSchemaPropsBuilder().withType("number").build();
+  public static final JSONSchemaProps JSON_SCHEMA_BOOLEAN = new JSONSchemaPropsBuilder().withType("boolean").build();
+  public static final JSONSchemaProps JSON_SCHEMA_OBJECT = new JSONSchemaPropsBuilder().withType("object").build();
+  public static final JSONSchemaProps JSON_SCHEMA_INT_OR_STRING = new JSONSchemaPropsBuilder().withAnyOf(JSON_SCHEMA_INTEGER, JSON_SCHEMA_STRING).build();
+
+  public static final Map<TypeRef, JSONSchemaProps> TYPE_MAP = new HashMap<TypeRef, JSONSchemaProps>() {
     {
+      put(STRING_REF, JSON_SCHEMA_STRING);
+      put(DATE_REF, JSON_SCHEMA_STRING);
+      put(INT_REF, JSON_SCHEMA_INTEGER);
+      put(P_INT_REF, JSON_SCHEMA_INTEGER);
+      put(LONG_REF, JSON_SCHEMA_NUMBER);
+      put(P_LONG_REF, JSON_SCHEMA_NUMBER);
+      put(DOUBLE_REF, JSON_SCHEMA_NUMBER);
+      put(P_DOUBLE_REF, JSON_SCHEMA_NUMBER);
+      put(BOOLEAN_REF, JSON_SCHEMA_BOOLEAN);
+      put(P_BOOLEAN_REF, JSON_SCHEMA_BOOLEAN);
 
-      put(STRING_REF, "string");
-      put(DATE_REF, "string");
-      put(INT_REF, "integer");
-      put(P_INT_REF, "integer");
-      put(LONG_REF, "number");
-      put(P_LONG_REF, "number");
-      put(DOUBLE_REF, "number");
-      put(P_DOUBLE_REF, "number");
-      put(BOOLEAN_REF, "boolean");
-      put(P_BOOLEAN_REF, "boolean");
-
-      put(QUANTITY_REF, "object");
-      put(DURATION_REF, "string");
-      put(INT_OR_STRING_REF, "string");
+      put(QUANTITY_REF, JSON_SCHEMA_INT_OR_STRING);
+      put(INT_OR_STRING_REF, JSON_SCHEMA_INT_OR_STRING);
+      put(DURATION_REF, JSON_SCHEMA_STRING);
     }
   };
 
@@ -140,9 +147,7 @@ public class JsonSchema {
           .build();
       //2. Handle Standard Types
     } else if (TYPE_MAP.containsKey(typeRef)) {
-      return new JSONSchemaPropsBuilder()
-          .withType(TYPE_MAP.get(typeRef))
-          .build();
+      return TYPE_MAP.get(typeRef);
       //3. Handle Optionals
     } else if (TypeUtils.isOptional(typeRef)) {
       return from(TypeAs.UNWRAP_OPTIONAL_OF.apply(typeRef));
