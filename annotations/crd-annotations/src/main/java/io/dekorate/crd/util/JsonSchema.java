@@ -74,7 +74,7 @@ public class JsonSchema {
   private static final TypeRef OPTIONAL_REF = OPTIONAL.toReference();
 
   public static final JSONSchemaProps JSON_SCHEMA_STRING = new JSONSchemaPropsBuilder().withType("string").build();
-  public static final JSONSchemaProps JSON_SCHEMA_INTEGER = new JSONSchemaPropsBuilder().withType("ineger").build();
+  public static final JSONSchemaProps JSON_SCHEMA_INTEGER = new JSONSchemaPropsBuilder().withType("integer").build();
   public static final JSONSchemaProps JSON_SCHEMA_NUMBER = new JSONSchemaPropsBuilder().withType("number").build();
   public static final JSONSchemaProps JSON_SCHEMA_BOOLEAN = new JSONSchemaPropsBuilder().withType("boolean").build();
   public static final JSONSchemaProps JSON_SCHEMA_OBJECT = new JSONSchemaPropsBuilder().withType("object").build();
