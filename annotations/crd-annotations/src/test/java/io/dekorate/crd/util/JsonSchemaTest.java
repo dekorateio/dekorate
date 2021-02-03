@@ -43,7 +43,7 @@ class JsonSchemaTest {
     assertNotNull(schema);
     assertTrue(schema.getProperties().containsKey("quantity"));
     JSONSchemaProps quantity = schema.getProperties().get("quantity");
-    assertEquals("object", quantity.getType());
-    assertNull(quantity.getProperties());
+    assertNotNull(quantity.getAnyOf());
+    assertTrue(quantity.getAllOf().stream().map(JSONSchemaProps::getType).allMatch(s -> s.equals("string") || s.equals("integer")));
   }
 }

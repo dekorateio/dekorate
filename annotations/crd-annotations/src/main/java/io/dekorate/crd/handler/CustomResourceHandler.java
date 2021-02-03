@@ -53,6 +53,7 @@ import io.dekorate.crd.visitor.SpecReplicasPathDetector;
 import io.dekorate.crd.visitor.StatusReplicasPathDetector;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.JSONSchemaProps;
 import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinitionBuilder;
 import io.sundr.codegen.CodegenContext;
 import io.sundr.codegen.functions.ElementTo;
@@ -198,7 +199,8 @@ public class CustomResourceHandler implements Handler<CustomResourceConfig> {
 
     additionalPrinterColumns.forEach((path, property) -> {
         Map<String, Object> parameters = property.getAnnotations().stream().filter(a -> a.getClassRef().getName().equals("PrinterColumn")).map(a -> a.getParameters()).findFirst().orElse(Collections.emptyMap());
-        String type =  JsonSchema.TYPE_MAP.getOrDefault(property.getTypeRef(), "object");
+        JSONSchemaProps prop = JsonSchema.TYPE_MAP.get(property.getTypeRef());
+        String type =  prop != null ? prop.getType() : "object";
         String column = (String) parameters.get("name");
         if (Strings.isNullOrEmpty(column)) {
           column = property.getName().toUpperCase();
