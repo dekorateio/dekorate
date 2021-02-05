@@ -16,9 +16,10 @@
 
 package io.dekorate.config;
 
+import io.dekorate.kubernetes.config.Configuration;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
-public class MultiConfiguration<C> extends ConfigurationSupplier<C> {
+public class MultiConfiguration<C extends Configuration> extends ConfigurationSupplier<C> {
 
   public MultiConfiguration() {
     super(null, true);

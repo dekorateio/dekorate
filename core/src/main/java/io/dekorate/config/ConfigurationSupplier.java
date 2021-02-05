@@ -20,22 +20,25 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
 
+import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Configurator;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
 /**
+ * A {@link Supplier} of {@link Configuration} objects.
+ * There may be multiple such suppliers, supplying {@link Configuration} found in annotations, property files, or inferred by the actual code.
  * This is a Facade around configuration builders, which hide the builder specifics and only allows the use of
  * {@link Configurator} as visitors.
  * 
  * @param <C> The configuration class.
  */
-public class ConfigurationSupplier<C> implements Supplier<C>, Comparable<ConfigurationSupplier<C>> {
+public class ConfigurationSupplier<C extends Configuration> implements Supplier<C>, Comparable<ConfigurationSupplier<C>> {
 
   private final VisitableBuilder<C, ?> builder;
   private final boolean explicit;
 
   public static ConfigurationSupplier<?> empty() {
-    return new ConfigurationSupplier<>(null);
+    return new ConfigurationSupplier(null);
   }
 
   public ConfigurationSupplier(VisitableBuilder<C, ?> builder) {

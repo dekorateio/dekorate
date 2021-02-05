@@ -16,13 +16,14 @@
 
 package io.dekorate.config;
 
+import io.dekorate.kubernetes.config.Configuration;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
 /**
  * This is a {@link ConfigurationSupplier} that is used to wrap property files config.
  * This kind of configuration takes precedence over {@link AnnotationConfiguration} and {@link DefaultConfiguration}.
  */
-public class PropertyConfiguration<C> extends ConfigurationSupplier<C> {
+public class PropertyConfiguration<C extends Configuration> extends ConfigurationSupplier<C> {
 
   public PropertyConfiguration() {
     super(null, true);
