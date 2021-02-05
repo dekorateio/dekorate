@@ -20,6 +20,10 @@ package io.dekorate.config;
 import io.dekorate.kubernetes.config.Configuration;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
+/**
+ * A {@link Configuration} {@link Supplier} for capturing framework defaults.
+ * Has the lowest priority of {@link Suppplier} implementations.
+ */
 public class DefaultConfiguration<C extends Configuration> extends ConfigurationSupplier<C> {
 
   public DefaultConfiguration() {
