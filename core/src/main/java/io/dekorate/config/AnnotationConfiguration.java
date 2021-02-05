@@ -16,9 +16,10 @@
 
 package io.dekorate.config;
 
+import io.dekorate.kubernetes.config.Configuration;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
-public class AnnotationConfiguration<C> extends ConfigurationSupplier<C> {
+public class AnnotationConfiguration<C extends Configuration> extends ConfigurationSupplier<C> {
 
   public AnnotationConfiguration() {
     super(null, true);
