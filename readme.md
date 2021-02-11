@@ -24,7 +24,6 @@ As the project now supports `decorating` of kubernetes manifests without the use
   - [Pojo to CRD](#pojo-to-crd)
   - [Prometheus](#prometheus)
   - [Jaeger](#jaeger)
-  - [Service Catalog](#service-catalog)
   - [ServiceBinding CRD](#servicebinding-crd)
 - Customize manifests using annotations
   - Kubernetes
@@ -40,7 +39,6 @@ As the project now supports `decorating` of kubernetes manifests without the use
     - [image streams](#integrating-with-s2i)
     - build configurations
   - Prometheus
-  - Service Catalog
     - service instances
     - inject bindings into pods
 - Build tool independent (works with maven, gradle, bazel and so on)
@@ -1745,53 +1743,6 @@ public class Main {
 #### related examples
 - [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
 
-### Service Catalog
-The [service catalog](https://svc-cat.io) annotation processor is can be used in order to create [service catalog](https://svc-cat.io) resources for:
-
-- creating service instances
-- binding to services
-- injecting binding info into the container 
-
-Here's an example:
-```java
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.servicecatalog.annotation.ServiceCatalogInstance;
-import io.dekorate.servicecatalog.annotation.ServiceCatalog;
-
-@KubernetesApplication
-@ServiceCatalog(instances =
-    @ServiceCatalogInstance(name = "mysql-instance", serviceClass = "apb-mysql", servicePlan = "default")
-)
-public class Main {
-    public static void main(String[] args) {
-      //Your code goes here
-    }
-}
-```
-
-The same via `application.properties`:
-
-     dekorate.svcat.instances[0].name=mysql-instance
-     dekorate.svcat.instances[0].service-class=apb-mysql
-     dekorate.svcat.instances[0].service-plan=default
-
-The `@ServiceCatalogInstance` annotation will trigger the generation of a `ServiceInstance` and a `ServiceBinding`resource.
-It will also decorate any `Pod`, `Deployment`, `DeploymentConfig` and so on with additional environment variables containing the binding information.
-
-#### Adding the service catalog annotation processor to the classpath
-
-This module can be added to the project using:
-```xml
-<dependency>
-  <groupId>io.dekorate</groupId>
-  <artifactId>servicecatalog-annotations</artifactId>
-  <version>2.0.0.beta8</version>
-</dependency>
-```
-
-#### related examples
- - [service catalog example](examples/service-catalog-example)  
- 
 ### ServiceBinding CRD 
 [Service Binding Operator](https://github.com/redhat-developer/service-binding-operator) enables the application developers to bind the services that are backed by Kubernetes operators to an application that is deployed in kubernetes without having to perform manual configuration.
 Dekorate supports generation of ServiceBinding CR.

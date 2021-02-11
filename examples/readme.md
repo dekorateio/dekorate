@@ -24,7 +24,3 @@ A collection of examples used for showcasing and testing `dekorate`.
 # Extensions and Operators
 - [Spring Boot with Jaeger on Kubernetes Example](spring-boot-with-jaeger-on-kubernetes)
 - [Spring Boot with Prometheus on Kubernetes Example](spring-boot-with-prometheus-on-kubernetes)
-- [Spring Boot with Service Catalog on Kubernetes Example](spring-boot-with-svcat-on-kubernetes)
-
-# Incubating
-- [Istio Example](../incubaotr/istio-example)

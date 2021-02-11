@@ -45,12 +45,6 @@
 
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>servicecatalog-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.dekorate</groupId>
       <artifactId>dekorate-spring-boot</artifactId>
       <version>${project.version}</version>
     </dependency>

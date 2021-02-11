@@ -33,11 +33,9 @@ limitations under the License.
     <module>openshift-annotations</module>
     <module>knative-annotations</module>
     <module>tekton-annotations</module>
-    <module>servicecatalog-annotations</module>
     <module>servicebinding-annotations</module>
     <module>prometheus-annotations</module>
     <module>crd-annotations</module>
-    <module>application-annotations</module>
     <module>jaeger-annotations</module>
     <module>docker-annotations</module>
     <module>s2i-annotations</module>
