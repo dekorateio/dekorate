@@ -117,8 +117,6 @@ limitations under the License.
                     <include>io/dekorate/jib/config/**</include>
                     <include>io/dekorate/jib/configurator/**</include>
                     <include>io/dekorate/jib/decorator/**</include>
-                    <include>io/dekorate/jib/generator/**</include>
-                    <include>io/dekorate/jib/handler/**</include>
                     <include>io/dekorate/jib/apt/**</include>
                     <include>META-INF/services/**</include>
                     <include>META-INF/MANIFEST.MF</include>

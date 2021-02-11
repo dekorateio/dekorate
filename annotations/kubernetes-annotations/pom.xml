@@ -152,10 +152,9 @@ limitations under the License.
                     <include>io/dekorate/kubernetes/config/**</include>
                     <include>io/dekorate/kubernetes/configurator/**</include>
                     <include>io/dekorate/kubernetes/decorator/**</include>
-                    <include>io/dekorate/kubernetes/handler/**</include>
+                    <include>io/dekorate/kubernetes/manifest/**</include>
                     <include>io/dekorate/kubernetes/hook/**</include>
                     <include>io/dekorate/kubernetes/listener/**</include>
-                    <include>io/dekorate/kubernetes/generator/**</include>
                     <include>META-INF/services/*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
@@ -181,9 +180,8 @@ limitations under the License.
                     <include>io/dekorate/kubernetes/config/**</include>
                     <include>io/dekorate/kubernetes/configurator/**</include>
                     <include>io/dekorate/kubernetes/decorator/**</include>
-                    <include>io/dekorate/kubernetes/handler/**</include>
+                    <include>io/dekorate/kubernetes/manifest/**</include>
                     <include>io/dekorate/kubernetes/hook/**</include>
-                    <include>io/dekorate/kubernetes/generator/**</include>
                     <include>io/dekorate/kubernetes/listener/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>

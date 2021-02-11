@@ -23,12 +23,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import io.dekorate.WithSession;
-import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.doc.Description;
-import io.dekorate.option.adapter.GeneratorConfigAdapter;
 import io.dekorate.option.annotation.GeneratorOptions;
-import io.dekorate.option.config.GeneratorConfig;
-import io.dekorate.option.generator.OptionsGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Processing generator options, which are used for customizing the generation process")
@@ -39,7 +35,7 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
     "io.dekorate.knative.annotation.KnativeApplication",
     "io.dekorate.option.annotation.GeneratorOptions"
 })
-public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements OptionsGenerator, WithSession {
+public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
   private static final String INPUT_DIR = "dekorate.input.dir";
   private static final String OUTPUT_DIR = "dekorate.output.dir";
@@ -60,19 +56,10 @@ public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor imple
           continue;
         }
 
-        configurePaths(options.inputPath(), options.outputPath());
+        process("options", mainClass, GeneratorOptions.class);
         return false;
       }
     }
     return false;
-  }
-
-  public void add(Element element) {
-    GeneratorOptions options = element.getAnnotation(GeneratorOptions.class);
-    if (options != null) {
-      AnnotationConfiguration<GeneratorConfig> config = new AnnotationConfiguration<>(
-          GeneratorConfigAdapter.newBuilder(options));
-      on(config);
-    }
   }
 }

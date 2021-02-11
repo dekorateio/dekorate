@@ -76,7 +76,7 @@ public class AptReader implements SessionReader, WithProject {
   public void read(Session session) {
     if (canRead()) {
       listInputFiles().stream().map(this::read).filter(Objects::nonNull).map(Map::entrySet).flatMap(Set::stream)
-          .forEach(e -> e.getValue().getItems().forEach(item -> session.resources().add(e.getKey(), item)));
+          .forEach(e -> e.getValue().getItems().forEach(item -> session.getResourceRegistry().add(e.getKey(), item)));
     }
   }
 

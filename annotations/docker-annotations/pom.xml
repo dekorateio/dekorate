@@ -123,10 +123,8 @@
                     <include>io/dekorate/docker/apt/**</include>
                     <include>io/dekorate/docker/buildservice/**</include>
                     <include>io/dekorate/docker/config/**</include>
-                    <include>io/dekorate/docker/generator/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
-                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
-                    <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
@@ -149,9 +147,7 @@
                     <include>io/dekorate/docker/adapter/**</include>
                     <include>io/dekorate/docker/buildservice/**</include>
                     <include>io/dekorate/docker/config/**</include>
-                    <include>io/dekorate/docker/generator/**</include>
-                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
-                    <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>

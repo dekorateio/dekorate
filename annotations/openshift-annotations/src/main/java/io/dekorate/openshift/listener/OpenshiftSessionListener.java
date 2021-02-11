@@ -56,8 +56,8 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
 
     try {
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-      Optional<OpenshiftConfig> optionalAppConfig = session.configurators().get(OpenshiftConfig.class);
-      Optional<ImageConfiguration> optionalImageConfig = session.configurators()
+      Optional<OpenshiftConfig> optionalAppConfig = session.getConfigurationRegistry().get(OpenshiftConfig.class);
+      Optional<ImageConfiguration> optionalImageConfig = session.getConfigurationRegistry()
           .getImageConfig(BuildServiceFactories.supplierMatches(project));
 
       if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
@@ -67,7 +67,7 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
       OpenshiftConfig openshiftConfig = optionalAppConfig.get();
       ImageConfiguration imageConfig = optionalImageConfig.get();
 
-      String name = session.configurators().get(OpenshiftConfig.class).map(c -> c.getName())
+      String name = session.getConfigurationRegistry().get(OpenshiftConfig.class).map(c -> c.getName())
           .orElse(getProject().getBuildInfo().getName());
 
       BuildService buildService = null;
@@ -81,7 +81,7 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
           buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated))
               .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
         } catch (Exception e) {
-          BuildServiceFactories.log(project, session.configurators().getAll(ImageConfiguration.class));
+          BuildServiceFactories.log(project, session.getConfigurationRegistry().getAll(ImageConfiguration.class));
           throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
         }
 

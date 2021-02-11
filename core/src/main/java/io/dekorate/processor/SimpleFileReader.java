@@ -52,7 +52,7 @@ public class SimpleFileReader implements SessionReader {
     findApplicableResources().forEach((k, v) -> {
       v.getItems().forEach(i -> {
         LOGGER.info("Adding existing " + i.getKind() + " with name: " + i.getMetadata().getName() + ".");
-        session.resources().add(k, i);
+        session.getResourceRegistry().add(k, i);
       });
     });
   }

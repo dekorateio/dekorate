@@ -86,8 +86,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   }
 
   public <A extends Annotation> void process(String key, Element element, Class<A> annotationClass) {
-    getSession()
-        .addAnnotationConfiguration(Maps.fromAnnotation(key, element.getAnnotation(annotationClass), annotationClass));
+    getSession().addAnnotationConfiguration(Maps.fromAnnotation(key, element.getAnnotation(annotationClass), annotationClass));
   }
 
   /**

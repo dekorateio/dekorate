@@ -17,6 +17,8 @@
 
 package io.dekorate.spring.listener;
 
+import io.dekorate.ConfigurationRegistry;
+import io.dekorate.Session;
 import io.dekorate.spring.BeanListener;
 import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
 
@@ -30,5 +32,10 @@ public class RouterFunctionListener implements BeanListener, SpringBootWebAnnota
   @Override
   public void onBean() {
     addPropertyConfiguration(WEB_ANNOTATIONS);
+  }
+
+  @Override
+  public ConfigurationRegistry getConfigurationRegistry() {
+    return Session.getSession().getConfigurationRegistry();
   }
 }

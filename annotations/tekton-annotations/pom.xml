@@ -144,12 +144,11 @@ limitations under the License.
                   <includes>
                     <include>io/dekorate/tekton/adapter/**</include>
                     <include>io/dekorate/tekton/apt/**</include>
-                    <include>io/dekorate/kubernetes/config/**</include>
                     <include>io/dekorate/tekton/config/**</include>
                     <include>io/dekorate/tekton/configurator/**</include>
-                    <include>io/dekorate/tekton/generator/**</include>
-                    <include>io/dekorate/tekton/handler/**</include>
                     <include>io/dekorate/tekton/decorator/**</include>
+                    <include>io/dekorate/tekton/generator/**</include>
+                    <include>io/dekorate/tekton/manifest/**</include>
                     <include>io/dekorate/tekton/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                   </includes>
@@ -172,15 +171,12 @@ limitations under the License.
                   <includes>
                     <include>io/dekorate/tekton/adapter/**</include>
                     <include>io/dekorate/tekton/annotation/**</include>
-                    <include>io/dekorate/kubernetes/config/**</include>
                     <include>io/dekorate/tekton/config/**</include>
                     <include>io/dekorate/tekton/configurator/**</include>
-                    <include>io/dekorate/tekton/generator/**</include>
-                    <include>io/dekorate/tekton/handler/**</include>
                     <include>io/dekorate/tekton/decorator/**</include>
+                    <include>io/dekorate/tekton/manifest/**</include>
                     <include>io/dekorate/tekton/util/**</include>
-                    <include>META-INF/services/io.dekorate.Generator</include>
-                    <include>META-INF/services/io.dekorate.HandlerFactory</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                   </includes>
                 </filter>
               </filters>

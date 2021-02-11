@@ -26,10 +26,9 @@ import javax.lang.model.element.TypeElement;
 
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.s2i.annotation.S2iBuild;
-import io.dekorate.s2i.generator.S2iBuildGenerator;
 
 @SupportedAnnotationTypes({ "io.dekorate.s2i.annotation.S2iBuild" })
-public class S2iAnnotationProcessor extends AbstractAnnotationProcessor implements S2iBuildGenerator {
+public class S2iAnnotationProcessor extends AbstractAnnotationProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

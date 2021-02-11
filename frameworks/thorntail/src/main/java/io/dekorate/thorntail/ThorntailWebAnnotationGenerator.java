@@ -24,7 +24,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
 
-import io.dekorate.Generator;
+import io.dekorate.ConfigurationGenerator;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.kubernetes.config.Port;
@@ -32,7 +32,8 @@ import io.dekorate.kubernetes.config.PortBuilder;
 import io.dekorate.kubernetes.configurator.AddPort;
 import io.dekorate.kubernetes.configurator.SetPortPath;
 
-public interface ThorntailWebAnnotationGenerator extends Generator, WithSession, ThorntailConfigHolder {
+public interface ThorntailWebAnnotationGenerator extends ConfigurationGenerator, WithSession, ThorntailConfigHolder {
+
   @Override
   default void add(Element element) {
     // JAX-RS
@@ -65,7 +66,7 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
   default void addPropertyConfiguration(Map map) {
     Session session = getSession();
     Port port = detectHttpPort();
-    session.configurators().add(new AddPort(port));
+    session.getConfigurationRegistry().add(new AddPort(port));
     //TODO add support for detecting microprofile-health and setting the liveness/readiness probes
 
     if (map.containsKey(ApplicationPath.class.getName())) {
@@ -74,7 +75,7 @@ public interface ThorntailWebAnnotationGenerator extends Generator, WithSession,
         Map<String, Object> applicationPath = (Map) o;
         if (applicationPath != null && applicationPath.containsKey("value")) {
           String path = String.valueOf(applicationPath.get("value"));
-          session.configurators().add(new SetPortPath(port.getName(), path));
+          session.getConfigurationRegistry().add(new SetPortPath(port.getName(), path));
         }
       }
     }

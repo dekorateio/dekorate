@@ -15,15 +15,28 @@
  */
 package io.dekorate.crd.apt;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
+
+import io.dekorate.ConfigurationRegistry;
+import io.dekorate.Session;
 import io.dekorate.config.MultiConfiguration;
 import io.dekorate.crd.annotation.Autodetect;
 import io.dekorate.crd.annotation.Crd;
 import io.dekorate.crd.config.CustomResourceConfig;
 import io.dekorate.crd.config.CustomResourceConfigBuilder;
+import io.dekorate.crd.config.CustomResourceGenerator;
 import io.dekorate.crd.config.Keys;
 import io.dekorate.crd.config.Scope;
 import io.dekorate.crd.configurator.AddClassNameConfigurator;
-import io.dekorate.crd.generator.CustomResourceGenerator;
 import io.dekorate.crd.util.Types;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.fabric8.kubernetes.model.annotation.Group;
@@ -35,15 +48,6 @@ import io.sundr.codegen.CodegenContext;
 import io.sundr.codegen.functions.ElementTo;
 import io.sundr.codegen.model.TypeDef;
 import io.sundr.codegen.utils.ModelUtils;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 
 @SupportedAnnotationTypes({
     "io.fabric8.kubernetes.model.annotation.Group",
@@ -124,4 +128,8 @@ public class CustomResourceAnnotationProcessor extends AbstractAnnotationProcess
   }
 
 
+  @Override
+  public ConfigurationRegistry getConfigurationRegistry() {
+    return Session.getSession().getConfigurationRegistry();
+  }
 }

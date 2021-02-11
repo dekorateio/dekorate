@@ -18,7 +18,7 @@ package io.dekorate.spring.generator;
 import java.util.Collections;
 import java.util.Map;
 
-import io.dekorate.Generator;
+import io.dekorate.ConfigurationGenerator;
 import io.dekorate.Session;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
@@ -26,7 +26,7 @@ import io.dekorate.kubernetes.configurator.ApplyPort;
 import io.dekorate.spring.SpringPropertiesHolder;
 import io.dekorate.utils.Ports;
 
-public interface SpringBootWebAnnotationGenerator extends Generator, SpringPropertiesHolder {
+public interface SpringBootWebAnnotationGenerator extends ConfigurationGenerator, SpringPropertiesHolder {
 
   String DEKORATE_SPRING_WEB_PATH = "dekorate.spring.web.path";
 
@@ -45,7 +45,7 @@ public interface SpringBootWebAnnotationGenerator extends Generator, SpringPrope
   default void addConfiguration(Map map) {
     Session session = getSession();
     Port port = detectHttpPort(map);
-    session.configurators().add(new ApplyPort(port, Ports.webPortNames()));
+    session.getConfigurationRegistry().add(new ApplyPort(port, Ports.webPortNames()));
   }
 
   default Port detectHttpPort(Map map) {

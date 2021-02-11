@@ -150,9 +150,9 @@ limitations under the License.
                     <include>io/dekorate/knative/apt/**</include>
                     <include>io/dekorate/knative/config/**</include>
                     <include>io/dekorate/knative/configurator/**</include>
-                    <include>io/dekorate/knative/generator/**</include>
-                    <include>io/dekorate/knative/handler/**</include>
                     <include>io/dekorate/knative/decorator/**</include>
+                    <include>io/dekorate/knative/listener/**</include>
+                    <include>io/dekorate/knative/manifest/**</include>
                     <include>io/dekorate/knative/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
@@ -178,12 +178,11 @@ limitations under the License.
                     <include>io/dekorate/knative/annotation/**</include>
                     <include>io/dekorate/knative/config/**</include>
                     <include>io/dekorate/knative/configurator/**</include>
-                    <include>io/dekorate/knative/generator/**</include>
-                    <include>io/dekorate/knative/handler/**</include>
                     <include>io/dekorate/knative/decorator/**</include>
+                    <include>io/dekorate/knative/listener/**</include>
+                    <include>io/dekorate/knative/manifest/**</include>
                     <include>io/dekorate/knative/util/**</include>
-                    <include>META-INF/services/io.dekorate.Generator</include>
-                    <include>META-INF/services/io.dekorate.HandlerFactory</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
