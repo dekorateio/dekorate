@@ -127,11 +127,9 @@
                     <include>io/dekorate/s2i/buildservice/**</include>
                     <include>io/dekorate/s2i/config/**</include>
                     <include>io/dekorate/s2i/configurator/**</include>
-                    <include>io/dekorate/s2i/generator/**</include>
-                    <include>io/dekorate/s2i/handler/**</include>
+                    <include>io/dekorate/s2i/resource/**</include>
                     <include>io/dekorate/s2i/util/**</include>
-                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
-                    <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
@@ -156,11 +154,9 @@
                     <include>io/dekorate/s2i/buildservice/**</include>
                     <include>io/dekorate/s2i/config/**</include>
                     <include>io/dekorate/s2i/configurator/**</include>
-                    <include>io/dekorate/s2i/generator/**</include>
-                    <include>io/dekorate/s2i/handler/**</include>
+                    <include>io/dekorate/s2i/manifest/**</include>
                     <include>io/dekorate/s2i/util/**</include>
-                    <include>META-INF/services/io.dekorate.BuildServiceFactory</include>
-                    <include>META-INF/services/io.dekorate.Generator</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>

@@ -22,8 +22,10 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import io.dekorate.ConfigurationRegistry;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.generator.SpringBootApplicationGenerator;
@@ -54,5 +56,10 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
         "application-kubernetes.yml"));
     addPropertyConfiguration(SPRING_BOOT_APPLICATION);
     return false;
+  }
+
+  @Override
+  public ConfigurationRegistry getConfigurationRegistry() {
+    return Session.getSession().getConfigurationRegistry();
   }
 }

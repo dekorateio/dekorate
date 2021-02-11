@@ -18,8 +18,8 @@ package io.dekorate.spring.generator;
 import java.util.Collections;
 import java.util.Map;
 
-import io.dekorate.Generator;
-import io.dekorate.Handler;
+import io.dekorate.ConfigurationGenerator;
+import io.dekorate.ManifestGenerator;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
@@ -39,7 +39,7 @@ import io.dekorate.spring.config.SpringApplicationConfigBuilder;
 import io.dekorate.spring.configurator.SetSpringBootRuntime;
 import io.dekorate.spring.configurator.SetSpringBootVersion;
 
-public interface SpringBootApplicationGenerator extends Generator, WithSession {
+public interface SpringBootApplicationGenerator extends ConfigurationGenerator, WithSession {
 
   Map<String, Object> SPRING_BOOT_APPLICATION = Collections.emptyMap();
   Logger LOGGER = LoggerFactory.getLogger();
@@ -56,11 +56,11 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
   default void addConfiguration(Map map) {
     Session session = getSession();
-    session.configurators().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
-    session.configurators().add(new SetSpringBootRuntime());
-    session.configurators().add(new SetSpringBootVersion());
+    session.getConfigurationRegistry().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
+    session.getConfigurationRegistry().add(new SetSpringBootRuntime());
+    session.getConfigurationRegistry().add(new SetSpringBootVersion());
 
-    session.handlers().add(new Handler() {
+    session.getHandlers().add(new ManifestGenerator() {
 
       @Override
       public int order() {
@@ -75,7 +75,7 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
       @Override
       public void handle(Configuration config) {
         LOGGER.info("Processing service monitor config.");
-        session.resources().decorate(new EndpointPathDecorator("http", "/actuator/prometheus"));
+        session.getResourceRegistry().decorate(new EndpointPathDecorator("http", "/actuator/prometheus"));
       }
 
       @Override
@@ -86,14 +86,14 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
 
     if (isActuatorAvailable()) {
       //Users configuration should take priority, so add but don't overwrite.
-      session.configurators().add(
+      session.getConfigurationRegistry().add(
           new AddLivenessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/info").build(), false));
-      session.configurators().add(new AddReadinessProbeConfigurator(
+      session.getConfigurationRegistry().add(new AddReadinessProbeConfigurator(
           new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
     }
 
     if (isSpringCloudKubernetesAvailable()) {
-      session.handlers().add(new Handler() {
+      session.getHandlers().add(new ManifestGenerator() {
         @Override
         public int order() {
           return 310; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
@@ -107,9 +107,9 @@ public interface SpringBootApplicationGenerator extends Generator, WithSession {
         @Override
         public void handle(Configuration config) {
           LOGGER.info("Detected spring cloud kubernetes.");
-          session.resources().decorate(new ApplyServiceAccountNamedDecorator());
-          session.resources().decorate(new AddServiceAccountResourceDecorator());
-          session.resources().decorate(new AddRoleBindingResourceDecorator("view"));
+          session.getResourceRegistry().decorate(new ApplyServiceAccountNamedDecorator());
+          session.getResourceRegistry().decorate(new AddServiceAccountResourceDecorator());
+          session.getResourceRegistry().decorate(new AddRoleBindingResourceDecorator("view"));
         }
 
         @Override

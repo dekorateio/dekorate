@@ -22,6 +22,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import io.dekorate.ConfigurationRegistry;
 import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
@@ -34,7 +35,7 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Session session = getSession();
-    session.configurators().add(new ThorntailPrometheusAgentConfigurator());
+    session.getConfigurationRegistry().add(new ThorntailPrometheusAgentConfigurator());
 
     if (roundEnv.processingOver()) {
       session.close();
@@ -48,5 +49,10 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
       }
     }
     return false;
+  }
+
+  @Override
+  public ConfigurationRegistry getConfigurationRegistry() {
+    return Session.getSession().getConfigurationRegistry();
   }
 }

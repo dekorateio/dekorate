@@ -27,8 +27,10 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import io.dekorate.ConfigurationRegistry;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
@@ -111,4 +113,8 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
     return shortedPath;
   }
 
+  @Override
+  public ConfigurationRegistry getConfigurationRegistry() {
+    return Session.getSession().getConfigurationRegistry();
+  }
 }

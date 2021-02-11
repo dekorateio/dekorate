@@ -62,6 +62,17 @@ An example configuration is the `KubernetesConfig` class:
         ...
     }
 
+
+### ConfigurationGenerator
+
+A service that given properties extracted from sources like:
+
+- annotations 
+- local configurations
+- framework 
+
+will convert them into a `Config` using a mapper and by applying various `Configurators` (see below).
+
 ### Configurator
 
 A `configurator` is a visitor that visits parts of the `config` with the purpose of performing minor changes / updates.
@@ -84,12 +95,13 @@ For example a configurator that can be used to add a label to `KubernetesConfig`
 | ApplySourceToImageHook | SourceToImageConfig | Apply source to image build hook.                                             |
 
 
-### Handler 
+### ManifestGenerator 
 
-An object that can handle certain types of `config`. A `handler` may create `model` resources and register `decorators`.
-The handler is the object that does most of the creation of the `model` resources.
+An object that processes a certain type of `config` with the purpose of generating a manifest.
+In some cases a `ManifestGenerator` may not generate the whole manifest, but influence parts of it.
+Usually such generators create `model` resources and register `decorators`.
 
-     public class KubernetesHandler extends AbstractKubernetesHandler<KubernetesConfig> {
+     public class KubernetesManifestGenerator extends AbstractKubernetesHandler<KubernetesConfig> implements ManifestGenerator {
 
         public void handle(KubernetesConfig config) {
             resources.add("kubernetes", createDeployment(config));
@@ -130,7 +142,6 @@ The `decorator` looks pretty similar to the `configurator` the only difference b
 | AddAzureDiskVolume            | PodSpec        | Add an Azure disk volume to the pod spec.              |
 | AddAnnotation                 | ObjectMeta     | A decorator that adds an annotation to all resources.  |
 | AddMount                      | Container      | Add mount to all containers.                           |
-| AddServiceInstanceToComponent | ComponentSpec  | Add the service instance information to the component. |
 | AddPort                       | Container      | Add port to all containers.                            |
 | AddPvcVolume                  | PodSpec        | Add a persistent volume claim volume to all pod specs. |
 | AddAwsElasticBlockStoreVolume | PodSpec        | Add an elastic block store volume to the pod spec.     |
@@ -139,6 +150,31 @@ The `decorator` looks pretty similar to the `configurator` the only difference b
 | AddAzureFileVolume            | PodSpec        | Add an Azure File volume to the Pod spec.              |
 
 #### Why do we need both Configurators and Decorators?
+
+There are two main reasons:
+
+- decoupling configuration sources from manifest generation logic
+- working on a simplified representation of the model
+
+##### Decoupling configuration sources from manifest generator logic
+
+There are multiple configuration sources that contribute to the actual configuration that will be used for manifest generation:
+
+- Annotations
+- Property configuration
+- Framework artifacts
+- Defaults
+
+Instead of coupling all those sources with the manifest generation logic, it is preferable to limit their scope to the creation of the config object.
+So pratctically we are having two main processing phases:
+
+- configuration creation
+- manifest generation
+
+Since, the config objects themselves are fluent buildable objects, that support the visitor pattern it felt natural to use it.
+To distinguish between visitors that are acting on configuration vs visitors that are acting on the generated manifests we have `Configurator` and `Decorator` classes respectively.
+
+##### Using a simplified model representation where it makes sense
 
 The kubernetes `model` is very complex and deeply nested object structure and for a good reason: `It needs to fit to every signle deployment use case out there.`
 The deployment of a java application though is something more concrete and can be described by something simpler than the actual model.
@@ -158,14 +194,15 @@ A processor may register more than one `config` `handlers` with no restriction o
 
 | Processor                         | Config               | Supported Annotations                                                                                        | Description                                                       |
 |-----------------------------------|----------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| SpringBootApplicationProcessor    | none                 | [org.springframework.boot.autoconfigure.SpringBootApplication]                                               | Detects Spring Boot and set the runtime attribute to Spring Boot. |
 | KubernetesAnnotationProcessor     | KubernetesConfig     | [io.dekorate.kubernetes.annotation.KubernetesApplication]                                                        | Generates kubernetes manifests.                                   |
+| OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.dekorate.kubernetes.annotation.KubernetesApplication, io.dekorate.openshift.annotation.OpenshiftApplication]     | Generates openshift manifests.                                    |
+| SpringBootApplicationProcessor    | none                 | [org.springframework.boot.autoconfigure.SpringBootApplication]                                               | Detects Spring Boot and set the runtime attribute to Spring Boot. |
 | ThorntailProcessor                | none                 | [javax.ws.rs.ApplicationPath, javax.jws.WebService]                                                          | Detects JAX-RS and JAX-WS annotations and registers the http port.  |
 | SpringBootMappingProcessor        | none                 | [org.springframework.web.bind.annotation.RequestMapping, org.springframework.web.bind.annotation.GetMapping] | Detects Spring Boot web endpoints and registers the http port.    |
-| ServiceCatalogAnnotationProcessor | ServiceCatalogConfig | [io.dekorate.servicecatalog.annotation.ServiceCatalog, io.dekorate.servicecatalog.annotation.ServiceCatalogInstance] |                                                                   |
-| OpenshiftAnnotationProcessor      | OpenshiftConfig      | [io.dekorate.kubernetes.annotation.KubernetesApplication, io.dekorate.openshift.annotation.OpenshiftApplication]     | Generates openshift manifests.                                    |
-| MicronautProcessor                | none                 | [io.micronaut.http.annotation.Controller]                                                                    | Detects the micronaut controller and registers the http port.     |
 
 ### Session
-A shared repository between `annotation processors`. This repository holds `config`, `configurators`, `handlers`, `model` and `decorators`. When the session is closed, All `configurator` are applied, the final `config` is passed to the `handlers`.
-The `handlers` generate and decorate the `model`. The resulting model is passed back to the `processor`.
+A shared repository between `annotation processors`. 
+This repository holds `ConfigurationGenerators` and `ManifestGenerators`.
+When the session is closed, All `ConfigurationGenerators` will be used to populate the `config` that is passed to the `ManifestGenerators`.
+The `ManifestGenrators` generate and decorate the `model`. 
+The resulting model is passed back to the `processor`.

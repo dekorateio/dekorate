@@ -23,17 +23,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import io.dekorate.WithSession;
-import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.doc.Description;
-import io.dekorate.option.adapter.JvmConfigAdapter;
 import io.dekorate.option.annotation.JvmOptions;
-import io.dekorate.option.config.JvmConfig;
-import io.dekorate.option.generator.JvmOptionsGenerator;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Jvm options, which are used for the target deployment.")
 @SupportedAnnotationTypes("io.dekorate.option.annotation.JvmOptions")
-public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements JvmOptionsGenerator, WithSession {
+public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements  WithSession {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
@@ -45,20 +41,10 @@ public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements 
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         JvmOptions options = mainClass.getAnnotation(JvmOptions.class);
         if (options != null) {
-          add(mainClass);
+          process("jvm", mainClass, JvmOptions.class);
         }
       }
     }
     return false;
-  }
-
-  @Override
-  public void add(Element element) {
-    JvmOptions jvmOptions = element.getAnnotation(JvmOptions.class);
-    if (jvmOptions != null) {
-      AnnotationConfiguration<JvmConfig> config = new AnnotationConfiguration<JvmConfig>(
-          JvmConfigAdapter.newBuilder(jvmOptions));
-      on(config);
-    }
   }
 }

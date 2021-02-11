@@ -24,7 +24,7 @@ import java.util.Optional;
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.DekorateException;
-import io.dekorate.Resources;
+import io.dekorate.ResourceRegistry;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
@@ -48,15 +48,15 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
   public void onClosed() {
     Session session = getSession();
     Project project = getProject();
-    Optional<KubernetesConfig> optionalAppConfig = session.configurators().get(KubernetesConfig.class);
-    Optional<ImageConfiguration> optionalImageConfig = session.configurators()
+    Optional<KubernetesConfig> optionalAppConfig = session.getConfigurationRegistry().get(KubernetesConfig.class);
+    Optional<ImageConfiguration> optionalImageConfig = session.getConfigurationRegistry()
         .getImageConfig(BuildServiceFactories.supplierMatches(project));
     if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
       return;
     }
 
     KubernetesConfig kubernetesConfig = optionalAppConfig.get();
-    Resources resources = session.resources();
+    ResourceRegistry resources = session.getResourceRegistry();
     KubernetesList generated = session.getGeneratedResources().getOrDefault(KUBERNETES, new KubernetesList());
 
     BuildService buildService = null;
@@ -66,7 +66,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
         buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems()))
             .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
       } catch (Exception e) {
-        BuildServiceFactories.log(project, session.configurators().getAll(ImageConfiguration.class));
+        BuildServiceFactories.log(project, session.getConfigurationRegistry().getAll(ImageConfiguration.class));
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
       }
     }

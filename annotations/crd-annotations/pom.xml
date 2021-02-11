@@ -115,8 +115,7 @@
                     <include>io/dekorate/crd/apt/**</include>
                     <include>io/dekorate/crd/config/**</include>
                     <include>io/dekorate/crd/configurator/**</include>
-                    <include>io/dekorate/crd/generator/**</include>
-                    <include>io/dekorate/crd/handler/**</include>
+                    <include>io/dekorate/crd/manifest/**</include>
                     <include>io/dekorate/crd/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
@@ -141,10 +140,10 @@
                     <include>io/dekorate/crd/adapter/**</include>
                     <include>io/dekorate/crd/config/**</include>
                     <include>io/dekorate/crd/configurator/**</include>
-                    <include>io/dekorate/crd/generator/**</include>
-                    <include>io/dekorate/crd/handler/**</include>
+                    <include>io/dekorate/crd/manifest/**</include>
                     <include>io/dekorate/crd/util/**</include>
                     <include>META-INF/MANIFEST.MF</include>
+                    <include>META-INF/services/io.dekorate.*</include>
                   </includes>
                 </filter>
               </filters>

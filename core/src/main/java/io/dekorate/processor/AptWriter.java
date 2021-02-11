@@ -64,7 +64,7 @@ public class AptWriter extends SimpleFileWriter implements SessionWriter, WithPr
   public Map<String, String> write(Session session) {
     session.close();
     Map<String, KubernetesList> resources = session.getGeneratedResources();
-    Set<? extends Configuration> configurations = session.configurators().toSet();
+    Set<? extends Configuration> configurations = session.getConfigurationRegistry().toSet();
     resources.forEach((g, l) -> write(g, l));
     configurations.forEach(c -> write(c));
     write(getProject());

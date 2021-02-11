@@ -56,13 +56,13 @@ public class Session {
   private Set<String> enabledGroups = new HashSet<>();
   private Set<String> disabledGroups = new HashSet<>();
 
-  private final Set<Handler> handlers = new TreeSet<>(Comparator.comparing(Handler::order));
+  private final Set<ManifestGenerator> manifestGenerators = new TreeSet<>(Comparator.comparing(ManifestGenerator::order));
 
-  private final Map<String, Generator> generators = new HashMap<>();
+  private final Map<String, ConfigurationGenerator> configurationGenerators = new HashMap<>();
   private final Map<String, Class<? extends Configuration>> configtypes = new HashMap<>();
 
-  private final Configurators configurators = new Configurators();
-  private final Resources resources = new Resources();
+  private final ConfigurationRegistry configurationRegistry = new ConfigurationRegistry();
+  private final ResourceRegistry resourceRegistry = new ResourceRegistry();
 
   private final Map<String, KubernetesList> generatedResources = new HashMap<>();
   private final AtomicReference<SessionReader> reader = new AtomicReference<>();
@@ -92,8 +92,9 @@ public class Session {
     synchronized (Session.class) {
       if (INSTANCE == null) {
         INSTANCE = new Session(logger);
-        INSTANCE.loadHandlers();
-        INSTANCE.loadGenerators();
+        INSTANCE.loadManifestGenerators();
+        INSTANCE.loadConfigurationGenerators();
+        INSTANCE.loadListeners();
       }
     }
     return INSTANCE;
@@ -105,25 +106,34 @@ public class Session {
     LOGGER.info("Initializing dekorate session.");
   }
 
-  public void loadHandlers() {
-    Iterator<HandlerFactory> iterator = ServiceLoader.load(HandlerFactory.class, Session.class.getClassLoader()).iterator();
+  public void loadManifestGenerators() {
+    Iterator<ManifestGeneratorFactory> iterator = ServiceLoader.load(ManifestGeneratorFactory.class, Session.class.getClassLoader()).iterator();
     while (iterator.hasNext()) {
-      this.handlers.add(iterator.next().create(this.resources, this.configurators));
+      this.manifestGenerators.add(iterator.next().create(this.resourceRegistry, this.configurationRegistry));
     }
   }
 
-  public void loadGenerators() {
-    Iterator<Generator> iterator = ServiceLoader.load(Generator.class, Session.class.getClassLoader()).iterator();
+  public void loadConfigurationGenerators() {
+    Iterator<ConfigurationGeneratorFactory> iterator = ServiceLoader.load(ConfigurationGeneratorFactory.class, Session.class.getClassLoader()).iterator();
     while (iterator.hasNext()) {
-      Generator g = iterator.next();
+      ConfigurationGenerator g = iterator.next().create(this.configurationRegistry);
       if (g.getKey() != null) {
-        this.generators.put(g.getKey(), g);
+        this.configurationGenerators.put(g.getKey(), g);
         if (g.getConfigType() != null) {
           this.configtypes.put(g.getKey(), g.getConfigType());
         }
       }
     }
   }
+
+  public void loadListeners() {
+    Iterator<SessionListener> iterator = ServiceLoader.load(SessionListener.class, Session.class.getClassLoader()).iterator();
+    while (iterator.hasNext()) {
+      addListener(iterator.next());
+    }
+  }
+
+
 
   public void enable(String... groups) {
     for (String group : groups) {
@@ -145,14 +155,14 @@ public class Session {
     addConfiguration(map, (g, m) -> g.addPropertyConfiguration(m));
   }
 
-  public void addConfiguration(Map<String, Object> map, BiConsumer<Generator, Map<String, Object>> consumer) {
+  public void addConfiguration(Map<String, Object> map, BiConsumer<ConfigurationGenerator, Map<String, Object>> consumer) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
-      Generator generator = generators.get(key);
+      ConfigurationGenerator generator = configurationGenerators.get(key);
       if (generator == null) {
         throw new IllegalArgumentException(
-            "Unknown generator '" + key + "'. Known generators are: " + generators.keySet());
+            "Unknown generator '" + key + "'. Known generators are: " + configurationGenerators.keySet());
       }
 
       if (value instanceof Map) {
@@ -181,7 +191,7 @@ public class Session {
   }
 
   public void disable(String group) {
-    generators.remove(group);
+    configurationGenerators.remove(group);
   }
 
   //should be used only for testing
@@ -189,16 +199,16 @@ public class Session {
     INSTANCE = null;
   }
 
-  public Configurators configurators() {
-    return configurators;
+  public ConfigurationRegistry getConfigurationRegistry() {
+    return configurationRegistry;
   }
 
-  public Resources resources() {
-    return resources;
+  public ResourceRegistry getResourceRegistry() {
+    return resourceRegistry;
   }
 
-  public Set<Handler> handlers() {
-    return handlers;
+  public Set<ManifestGenerator> getHandlers() {
+    return manifestGenerators;
   }
 
   public Map<String, KubernetesList> getGeneratedResources() {
@@ -250,23 +260,23 @@ public class Session {
    * @return A map of {@link KubernetesList} by group name.
    */
   private Map<String, KubernetesList> generate() {
-    Set<Handler> handlersToRemove = handlers.stream().filter(
+    Set<ManifestGenerator> handlersToRemove = manifestGenerators.stream().filter(
         h -> disabledGroups.contains(h.getKey()) || (!enabledGroups.isEmpty() && !enabledGroups.contains(h.getKey())))
         .collect(Collectors.toSet());
-    this.handlers.removeAll(handlersToRemove);
+    this.manifestGenerators.removeAll(handlersToRemove);
 
-    Set<String> generatorsToRemove = generators.keySet().stream()
+    Set<String> generatorsToRemove = configurationGenerators.keySet().stream()
         .filter(g -> disabledGroups.contains(g) || (!enabledGroups.isEmpty() && !enabledGroups.contains(g)))
         .collect(Collectors.toSet());
-    generatorsToRemove.forEach(g -> generators.remove(g));
+    generatorsToRemove.forEach(g -> configurationGenerators.remove(g));
 
     if (generated.compareAndSet(false, true)) {
       LOGGER.info("Generating manifests.");
       closed.set(true);
       readExistingResources();
       populateFallbackConfig();
-      handlers.forEach(h -> handle(h, configurators));
-      this.generatedResources.putAll(resources.generate());
+      manifestGenerators.forEach(h -> handle(h, configurationRegistry));
+      this.generatedResources.putAll(resourceRegistry.generate());
     }
     return Collections.unmodifiableMap(generatedResources);
   }
@@ -276,19 +286,19 @@ public class Session {
   }
 
   private void populateFallbackConfig() {
-    if (!hasApplicationConfiguration(configurators)) {
-      handlers.stream().forEach(h -> {
-        if (!hasMatchingConfiguration(h, configurators)) {
+    if (!hasApplicationConfiguration(configurationRegistry)) {
+      manifestGenerators.stream().forEach(h -> {
+        if (!hasMatchingConfiguration(h, configurationRegistry)) {
           ConfigurationSupplier<? extends Configuration> supplier = h.getFallbackConfig();
           if (supplier.hasConfiguration()) {
-            configurators.add(supplier);
+            configurationRegistry.add(supplier);
           }
         }
       });
     }
   }
 
-  private static void handle(Handler h, Configurators configurators) {
+  private static void handle(ManifestGenerator h, ConfigurationRegistry configurators) {
     configurators.stream().forEach(c -> {
       if (h.canHandle(c.getClass())) {
         h.handle(c);
@@ -296,11 +306,11 @@ public class Session {
     });
   }
 
-  private static boolean hasApplicationConfiguration(Configurators configurators) {
+  private static boolean hasApplicationConfiguration(ConfigurationRegistry configurators) {
     return configurators.stream().anyMatch(c -> ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
   }
 
-  private static boolean hasMatchingConfiguration(Handler h, Configurators configurators) {
+  private static boolean hasMatchingConfiguration(ManifestGenerator h, ConfigurationRegistry configurators) {
     return configurators.stream().anyMatch(c -> h.canHandle(c.getClass()));
   }
 

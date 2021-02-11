@@ -51,7 +51,7 @@ public interface SessionWriter extends WithProject {
     final Map<String, String> result = new HashMap<>();
     session.close();
     Map<String, KubernetesList> resources = session.getGeneratedResources();
-    Set<? extends Configuration> configurations = session.configurators().toSet();
+    Set<? extends Configuration> configurations = session.getConfigurationRegistry().toSet();
     Set<String> whitelist = getWhitelistedGroups();
     resources.entrySet().stream().filter(e -> whitelist.isEmpty() || whitelist.contains(e.getKey())).forEach(e -> {
       result.putAll(write(e.getKey(), e.getValue()));

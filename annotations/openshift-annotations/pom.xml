@@ -152,7 +152,7 @@ limitations under the License.
                     <include>io/dekorate/openshift/configurator/**</include>
                     <include>io/dekorate/openshift/decorator/**</include>
                     <include>io/dekorate/openshift/generator/**</include>
-                    <include>io/dekorate/openshift/handler/**</include>
+                    <include>io/dekorate/openshift/manifest/**</include>
                     <include>io/dekorate/openshift/listener/**</include>
                     <include>io/dekorate/openshift/util/**</include>
                     <include>io/dekorate/openshift/*</include>
@@ -182,7 +182,7 @@ limitations under the License.
                     <include>io/dekorate/openshift/configurator/**</include>
                     <include>io/dekorate/openshift/generator/**</include>
                     <include>io/dekorate/openshift/decorator/**</include>
-                    <include>io/dekorate/openshift/handler/**</include>
+                    <include>io/dekorate/openshift/manifest/**</include>
                     <include>io/dekorate/openshift/listener/**</include>
                     <include>io/dekorate/openshift/util/**</include>
                     <include>io/dekorate/openshift/*</include>
