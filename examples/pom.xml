@@ -18,7 +18,6 @@
     <module>knative-example</module>
     <module>servicebinding-example</module>
     <module>servicebinding-annotationless-example</module>
-    <module>service-catalog-example</module>
     <module>spring-boot-on-kubernetes-example</module>
     <module>spring-boot-on-kubernetes-without-annotations</module>
     <module>spring-boot-on-kubernetes-with-jib-example</module>
@@ -28,7 +27,6 @@
     <module>spring-boot-with-groovy-on-openshift-example</module>
     <module>spring-boot-with-existing-manifests-on-kubernetes-example</module>
     <module>spring-boot-with-fmp-on-kubernetes-example</module>
-    <module>spring-boot-with-svcat-on-openshift-example</module>
     <module>spring-boot-with-prometheus-on-kubernetes-example</module>
     <module>spring-boot-with-jaeger-on-kubernetes-example</module>
     <module>spring-boot-with-tekton-example</module>

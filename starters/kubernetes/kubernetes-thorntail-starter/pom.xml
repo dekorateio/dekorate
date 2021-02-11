@@ -25,12 +25,6 @@
       <version>${project.version}</version>
       <classifier>annotations</classifier>
     </dependency>
-    <dependency>
-      <groupId>io.dekorate</groupId>
-      <artifactId>servicecatalog-annotations</artifactId>
-      <version>${project.version}</version>
-      <classifier>annotations</classifier>
-    </dependency>
 
     <!-- Processors -->
     <!-- Are handled separately from annotations, because there are build tools that exclude artifacts containing
@@ -44,12 +38,6 @@
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-annotations</artifactId>
-      <version>${project.version}</version>
-      <classifier>processors</classifier>
-    </dependency>
-    <dependency>
-      <groupId>io.dekorate</groupId>
-      <artifactId>servicecatalog-annotations</artifactId>
       <version>${project.version}</version>
       <classifier>processors</classifier>
     </dependency>
