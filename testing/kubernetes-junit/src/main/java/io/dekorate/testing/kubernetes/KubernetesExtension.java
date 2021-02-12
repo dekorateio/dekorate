@@ -18,6 +18,7 @@ package io.dekorate.testing.kubernetes;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -127,12 +128,18 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
+      AtomicBoolean notReady = new AtomicBoolean(false);
       waitables.stream().map(r -> client.resource(r).fromServer().get())
         .forEach(i -> {
             if (!Readiness.isReady(i)) {
+              notReady.set(true);
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             }
           });
+      //We print the diagnostics here, as failing the readiness check in many cases is causing internal error instead of a failre.
+      if (notReady.get()) {
+        displayDiagnostics(context);
+      }
     }
   }
 
@@ -185,6 +192,4 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
   public String getName() {
     return getKubernetesConfig().getName();
   }
-
-
 }

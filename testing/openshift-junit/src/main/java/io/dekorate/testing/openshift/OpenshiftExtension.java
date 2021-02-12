@@ -148,12 +148,18 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
+      AtomicBoolean notReady = new AtomicBoolean(false);
       waitables.stream().map(r -> client.resource(r).fromServer().get())
           .forEach(i -> {
             if (!OpenshiftReadiness.isReady(i)) {
+              notReady.set(true);
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             }
           });
+      //We print the diagnostics here, as failing the readiness check in many cases is causing internal error instead of a failre.
+      if (notReady.get()) {
+        displayDiagnostics(context);
+      }
     }
   }
 
