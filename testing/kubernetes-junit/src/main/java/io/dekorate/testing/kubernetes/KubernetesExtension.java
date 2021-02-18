@@ -128,17 +128,16 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
-      AtomicBoolean notReady = new AtomicBoolean(false);
       waitables.stream().map(r -> client.resource(r).fromServer().get())
         .forEach(i -> {
             if (!Readiness.isReady(i)) {
-              notReady.set(true);
+              readinessFailed(context);
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             }
           });
-      //We print the diagnostics here, as failing the readiness check in many cases is causing internal error instead of a failre.
-      if (notReady.get()) {
-        displayDiagnostics(context);
+
+      if (hasReadinessFailed(context)) {
+        throw new IllegalStateException("Readiness Failed");
       }
     }
   }
@@ -151,15 +150,17 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
           injectKubernetesResources(context, testInstance, f);
           injectPod(context, testInstance, f);
         });
+
+    if (hasExtensionError(context)) {
+      displayDiagnostics(context);
+    }
   }
 
   @Override
   public void afterAll(ExtensionContext context) {
     try {
       LOGGER.info("Cleaning up...");
-      boolean failed = context.getExecutionException().isPresent();
-      if (failed) {
-        LOGGER.error("Detected failure!");
+      if (shouldDisplayDiagnostics(context)) {
         displayDiagnostics(context);
       }
 
@@ -171,18 +172,6 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       closeKubernetesClient(context);
     }
   }
-
-  public void displayDiagnostics(ExtensionContext context) {
-    LOGGER.info("Diagnostics");
-    LOGGER.info("--");
-    KubernetesClient client = getKubernetesClient(context);
-    KubernetesList resources = getKubernetesResources(context);
-    Pods pods = new Pods(client);
-    final Diagnostics diagnostics = new Diagnostics(client, pods);
-    resources.getItems().stream().forEach(r -> diagnostics.display(r));
-    diagnostics.displayAll();
-  }
-
 
   /**
    * Returns the configured name.

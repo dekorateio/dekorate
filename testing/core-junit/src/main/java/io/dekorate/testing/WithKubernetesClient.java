@@ -15,7 +15,7 @@
  */
 package io.dekorate.testing;
 
-import static io.dekorate.testing.Testing.Dekorate_STORE;
+import static io.dekorate.testing.Testing.DEKORATE_STORE;
 import static java.util.Arrays.stream;
 
 import java.lang.reflect.Field;
@@ -83,18 +83,18 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
    * @return An instance of the client.
    */
   default KubernetesClient getKubernetesClient(ExtensionContext context) {
-    Object client = context.getStore(Dekorate_STORE).get(KUBERNETES_CLIENT);
+    Object client = context.getStore(DEKORATE_STORE).get(KUBERNETES_CLIENT);
     if (client instanceof KubernetesClient) {
       return (KubernetesClient) client;
     }
 
     client = new DefaultKubernetesClient();
-    context.getStore(Dekorate_STORE).put(KUBERNETES_CLIENT, client);
+    context.getStore(DEKORATE_STORE).put(KUBERNETES_CLIENT, client);
     return (KubernetesClient) client;
   }
 
   default void closeKubernetesClient(ExtensionContext context) {
-    Object client = context.getStore(Dekorate_STORE).remove(KUBERNETES_CLIENT);
+    Object client = context.getStore(DEKORATE_STORE).remove(KUBERNETES_CLIENT);
     if (client instanceof KubernetesClient) {
       ((BaseClient) client).close();
     }

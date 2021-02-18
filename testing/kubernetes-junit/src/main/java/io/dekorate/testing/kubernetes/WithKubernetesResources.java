@@ -15,7 +15,8 @@
  */
 package io.dekorate.testing.kubernetes;
 
-import static io.dekorate.testing.Testing.Dekorate_STORE;
+import static io.dekorate.testing.Testing.DEKORATE_STORE;
+import static io.dekorate.testing.Testing.KUBERNETES_LIST;
 import static java.util.Arrays.stream;
 
 import java.io.File;
@@ -39,7 +40,6 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 public interface WithKubernetesResources extends TestInstancePostProcessor, WithProject {
 
   String MANIFEST_PATH = "kubernetes.yml";
-  String KUBERNETES_LIST = "KUBERNETES_LIST";
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
     stream(testInstance.getClass().getDeclaredFields())
@@ -80,13 +80,13 @@ public interface WithKubernetesResources extends TestInstancePostProcessor, With
    * @return An instance of the list.
    */
   default KubernetesList getKubernetesResources(ExtensionContext context) {
-    Object list = context.getStore(Dekorate_STORE).get(KUBERNETES_LIST);
+    Object list = context.getStore(DEKORATE_STORE).get(KUBERNETES_LIST);
     if (list instanceof KubernetesList) {
       return (KubernetesList) list;
     }
 
     list = fromManifest();
-    context.getStore(Dekorate_STORE).put(KUBERNETES_LIST, list);
+    context.getStore(DEKORATE_STORE).put(KUBERNETES_LIST, list);
     return (KubernetesList) list;
   }
 
