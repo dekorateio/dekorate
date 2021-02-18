@@ -23,7 +23,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 public class DeploymentDiagnostics extends AbstractDiagonsticsService<Deployment> {
 
   private static final String DEPLOYMENT_STATUS_HEADER_FORMAT = "Deployment: %s [%d/%d]";
-  private static final String DEPLOYMENT_STATUS_CONDITIONS_FORMAT = "%-20s %-10s %-40s";
+  private static final String DEPLOYMENT_STATUS_CONDITIONS_FORMAT = "\t%-20s %-10s %-40s";
 
   public DeploymentDiagnostics(KubernetesClient client) {
     super(client);

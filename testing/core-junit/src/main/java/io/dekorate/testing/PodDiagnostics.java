@@ -23,7 +23,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 
 public class PodDiagnostics extends AbstractDiagonsticsService<Pod> {
 
-  private static final String CONTAINER_STATUS_FORMAT = "%-40s %-7s %-7s %s";
+  private static final String CONTAINER_STATUS_FORMAT = "\t%-40s %-7s %-7s %s";
 
   public PodDiagnostics(KubernetesClient client) {
 		super(client);
