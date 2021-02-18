@@ -63,10 +63,13 @@ public class Exec {
     public boolean commands(String... commands) {
       Process process = null;
       try {
-        process = new ProcessBuilder()
-            .directory(path.toFile())
-            .command(commands)
-            .redirectErrorStream(true)
+        ProcessBuilder processBuilder = new ProcessBuilder()
+          .directory(path.toFile())
+          .command(commands)
+          .redirectErrorStream(true);
+        //we need to strip the new process of the MAVEN_DEBUG_OPTS in case of debugging mvnDebug, otherwise it is locked
+        processBuilder.environment().keySet().removeIf(key -> key.equals("MAVEN_DEBUG_OPTS"));
+        process = processBuilder
             .start();
 
         try (InputStreamReader isr = new InputStreamReader(process.getInputStream());
