@@ -24,6 +24,8 @@ public class Testing {
    * related state.
    * Note: Not to be confused with KubernetesExtension namespaces, this is a junit5 construct.
    */
-  public static Namespace Dekorate_STORE = Namespace.create("Dekorate_STORE");
+  public static Namespace DEKORATE_STORE = Namespace.create("DEKORATE_STORE");
+
+  public static String KUBERNETES_LIST = "KUBERNETES_LIST";
 
 }

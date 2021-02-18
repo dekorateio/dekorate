@@ -44,7 +44,7 @@ public class DeploymentConfigDiagnostics extends AbstractDiagonsticsService<Depl
     DeploymentConfig updated = getKubernetesClient().adapt(OpenShiftClient.class).deploymentConfigs().withName(name).get();
 
     if (updated != null)  {
-      int readyReplicas = updated.getStatus() != null ? updated.getStatus().getReadyReplicas() : 0;
+      int readyReplicas = updated.getStatus() != null && updated.getStatus().getReadyReplicas() != null ? updated.getStatus().getReadyReplicas() : 0;
       LOGGER.info(String.format(DEPLOYMENT_STATUS_HEADER_FORMAT, name, readyReplicas, updated.getSpec().getReplicas()));
       if (updated.getStatus() != null) {
         LOGGER.info(String.format(DEPLOYMENT_STATUS_CONDITIONS_FORMAT,  "Type", "Status", "Message"));

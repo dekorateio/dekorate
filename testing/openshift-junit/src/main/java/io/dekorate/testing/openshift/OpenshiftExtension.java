@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -41,8 +40,6 @@ import io.dekorate.kubernetes.annotation.Internal;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.project.Project;
-import io.dekorate.testing.Diagnostics;
-import io.dekorate.testing.Pods;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
@@ -52,7 +49,6 @@ import io.dekorate.utils.Packaging;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.ReplicationController;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
@@ -148,18 +144,17 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
-      AtomicBoolean notReady = new AtomicBoolean(false);
       waitables.stream().map(r -> client.resource(r).fromServer().get())
           .forEach(i -> {
             if (!OpenshiftReadiness.isReady(i)) {
-              notReady.set(true);
+              readinessFailed(context);
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             }
           });
-      //We print the diagnostics here, as failing the readiness check in many cases is causing internal error instead of a failre.
-      if (notReady.get()) {
-        displayDiagnostics(context);
-      }
+
+      if (hasReadinessFailed(context)) {
+        throw new IllegalStateException("Readiness Failed");
+      } 
     }
   }
 
@@ -171,13 +166,19 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
           injectOpenshiftResources(context, testInstance, f);
           injectPod(context, testInstance, f);
         });
+
+    if (hasExtensionError(context)) {
+      displayDiagnostics(context);
+    }
   }
 
   @Override
   public void afterAll(ExtensionContext context) {
     OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
     try {
-      displayDiagnostics(context);
+      if (shouldDisplayDiagnostics(context)) {
+        displayDiagnostics(context);
+      }
       getOpenshiftResources(context).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
         try {
           LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
@@ -198,20 +199,6 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       }
     } finally {
       closeKubernetesClient(context);
-    }
-  }
-
-  public void displayDiagnostics(ExtensionContext context) {
-    KubernetesClient client = getKubernetesClient(context);
-    List<? extends HasMetadata> resources = getOpenshiftResources(context).getItems();
-    Pods pods = new Pods(client);
-    PodList podList = pods.list(resources);
-
-    final Diagnostics diagnostics = new Diagnostics(client, pods);
-    if (podList == null || podList.getItems().isEmpty()) {
-      diagnostics.displayAll();
-    } else {
-      getOpenshiftResources(context).getItems().stream().forEach(r -> diagnostics.display(r));
     }
   }
 

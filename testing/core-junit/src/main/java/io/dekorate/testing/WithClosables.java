@@ -15,7 +15,7 @@
  */
 package io.dekorate.testing;
 
-import static io.dekorate.testing.Testing.Dekorate_STORE;
+import static io.dekorate.testing.Testing.DEKORATE_STORE;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -31,13 +31,13 @@ public interface WithClosables {
   String CLOSABLES = "CLOSEABLES";
 
   default List<Closeable> getCloseables(ExtensionContext context) {
-    Object closables = context.getStore(Dekorate_STORE).get(CLOSABLES);
+    Object closables = context.getStore(DEKORATE_STORE).get(CLOSABLES);
     if (closables instanceof List) {
       return (List<Closeable>) closables;
     }
 
     closables = new ArrayList<>();
-    context.getStore(Dekorate_STORE).put(CLOSABLES, closables);
+    context.getStore(DEKORATE_STORE).put(CLOSABLES, closables);
     return (List<Closeable>) closables;
   }
 
