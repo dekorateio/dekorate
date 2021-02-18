@@ -1,1 +1,2 @@
 io.dekorate.testing.openshift.DeploymentConfigDiagnosticsFactory
+io.dekorate.testing.openshift.ImageStreamDiagnosticsFactory

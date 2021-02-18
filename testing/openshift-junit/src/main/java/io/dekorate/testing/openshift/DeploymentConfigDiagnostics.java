@@ -25,7 +25,7 @@ import io.fabric8.openshift.client.OpenShiftClient;
 public class DeploymentConfigDiagnostics extends AbstractDiagonsticsService<DeploymentConfig> {
 
   private static final String DEPLOYMENT_STATUS_HEADER_FORMAT = "Deployment: %s [%d/%d]";
-  private static final String DEPLOYMENT_STATUS_CONDITIONS_FORMAT = "%-20s %-10s %-40s";
+  private static final String DEPLOYMENT_STATUS_CONDITIONS_FORMAT = "\t%-20s %-10s %-40s";
 
   public DeploymentConfigDiagnostics(KubernetesClient client) {
     super(client);
