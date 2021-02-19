@@ -15,10 +15,8 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.WithProject;
 import io.dekorate.doc.Description;
-import io.dekorate.project.Project;
-import io.dekorate.utils.Annotations;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 
@@ -26,29 +24,21 @@ import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
  * A decorator that adds a label to resources.
  */
 @Description("Add a vcs url label to the all metadata.")
-public class AddVcsUrlAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> implements WithProject {
+public class AddVcsUrlAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBuilder> {
 
   private final String annotationKey;
+  private final String url;
 
-  public AddVcsUrlAnnotationDecorator() {
-    this(ANY);
-  }
-
-  public AddVcsUrlAnnotationDecorator(String name) {
-    this(name, Annotations.VCS_URL);
-  }
-
-  public AddVcsUrlAnnotationDecorator(String name, String annotationKey) {
+  public AddVcsUrlAnnotationDecorator(String name, String annotationKey, String url) {
     super(name);
+    this.url = url;
     this.annotationKey = annotationKey;
   }
 
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
-    Project p = getProject();
-    boolean hasVcsUrl = p.getScmInfo() != null && p.getScmInfo().getUrl() != null;
-    if (hasVcsUrl) {
-      builder.addToAnnotations(annotationKey, getProject().getScmInfo().getUrl());
+    if (Strings.isNotNullOrEmpty(url)) {
+      builder.addToAnnotations(annotationKey, url);
     }
   }
 

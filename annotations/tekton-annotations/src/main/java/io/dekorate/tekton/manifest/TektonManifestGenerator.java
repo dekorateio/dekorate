@@ -73,6 +73,7 @@ import io.dekorate.tekton.step.DeployStep;
 import io.dekorate.tekton.step.ImageBuildStep;
 import io.dekorate.tekton.step.ImagePushStep;
 import io.dekorate.tekton.step.ProjectBuildStep;
+import io.dekorate.utils.Git;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Jvm;
 import io.dekorate.utils.Strings;
@@ -385,6 +386,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   public PipelineResource createGitResource(TektonConfig config) {
     ScmInfo scm = Optional.ofNullable(config.getProject().getScmInfo())
         .orElseThrow(() -> new IllegalStateException("No scm info found!"));
+
     return new PipelineResourceBuilder()
         .withNewMetadata()
         .withName(gitResourceName(config))
@@ -393,7 +395,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withType(GIT)
         .addNewParam()
         .withName(URL)
-        .withValue(scm.getUrl())
+        .withValue(scm.getRemote().get(Git.ORIGIN))
         .endParam()
         .addNewParam()
         .withName(REVISION)

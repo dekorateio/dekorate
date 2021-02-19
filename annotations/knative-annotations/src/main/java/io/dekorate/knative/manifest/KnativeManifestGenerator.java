@@ -64,13 +64,18 @@ import io.dekorate.kubernetes.config.LabelBuilder;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.config.SecretVolume;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapDataDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapResourceProvidingDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
+import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Annotations;
+import io.dekorate.utils.Git;
 import io.dekorate.utils.Images;
+import io.dekorate.utils.Labels;
 import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 import io.fabric8.knative.serving.v1.Service;
@@ -114,6 +119,14 @@ public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHan
     if (!existingService.isPresent()) {
       resources.add(KNATIVE, createService(config));
     }
+
+    Project project = getProject();
+    String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
+        ? project.getScmInfo().getRemote().get(Git.ORIGIN)
+        : Labels.UNKNOWN;
+
+    resources.decorate(KNATIVE, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
+    resources.decorate(KNATIVE, new AddCommitIdAnnotationDecorator());
 
     resources.decorate(KNATIVE,
         new ApplyPortNameDecorator(null, null, config.getHttpTransportVersion().name().toLowerCase(),

@@ -38,10 +38,12 @@ import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddIngressRuleDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
+import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyApplicationContainerDecorator;
 import io.dekorate.kubernetes.decorator.ApplyDeploymentStrategyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
@@ -49,6 +51,8 @@ import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Annotations;
+import io.dekorate.utils.Git;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Ports;
@@ -143,6 +147,14 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
             .withField(METADATA_NAMESPACE)
           .endEnvVar()
           .build();
+
+    Project project = getProject();
+    String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
+        ? project.getScmInfo().getRemote().get(Git.ORIGIN)
+        : Labels.UNKNOWN;
+
+    resources.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
+    resources.decorate(group, new AddCommitIdAnnotationDecorator());
 
     resources.decorate(group, new ApplyApplicationContainerDecorator(config.getName(), appContainer));
     resources.decorate(group, new ApplyImageDecorator(config.getName(), image));

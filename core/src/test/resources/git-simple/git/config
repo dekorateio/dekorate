@@ -7,5 +7,9 @@
         url = git@github.com:myorg/myproject.git
         fetch = +refs/heads/*:refs/remotes/origin/*
         fetch = +refs/pull/*/head:refs/pullreqs/*
+[remote "fork"]
+        url = git@github.com:myfork/myproject.git
+        fetch = +refs/heads/*:refs/remotes/fork/*
+        fetch = +refs/pull/*/head:refs/pullreqs/*
 [branch "master"]
         pushRemote = origin
