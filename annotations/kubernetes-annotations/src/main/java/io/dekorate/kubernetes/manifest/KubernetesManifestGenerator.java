@@ -49,6 +49,7 @@ import io.dekorate.kubernetes.decorator.ApplyDeploymentStrategyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImageDecorator;
 import io.dekorate.kubernetes.decorator.ApplyReplicasDecorator;
+import io.dekorate.option.config.VcsConfig;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Annotations;
@@ -149,9 +150,13 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
           .build();
 
     Project project = getProject();
+    Optional<VcsConfig> vcsConfig = configurators.get(VcsConfig.class);
+    String remote = vcsConfig.map(VcsConfig::getRemote).orElse(Git.ORIGIN);
+    boolean httpsPrefered = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
+
     String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
-        ? project.getScmInfo().getRemote().get(Git.ORIGIN)
-        : Labels.UNKNOWN;
+      ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
+      : Labels.UNKNOWN;
 
     resources.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
     resources.decorate(group, new AddCommitIdAnnotationDecorator());

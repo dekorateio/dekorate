@@ -1,3 +1,4 @@
 io.dekorate.option.apt.GeneratorOptionsProcessor
 io.dekorate.option.apt.JvmOptionsProcessor
+io.dekorate.option.apt.VcsOptionsProcessor
 

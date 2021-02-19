@@ -70,6 +70,7 @@ import io.dekorate.kubernetes.decorator.AddConfigMapResourceProvidingDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
+import io.dekorate.option.config.VcsConfig;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Annotations;
@@ -121,9 +122,13 @@ public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHan
     }
 
     Project project = getProject();
+    Optional<VcsConfig> vcsConfig = configurationRegistry.get(VcsConfig.class);
+    String remote = vcsConfig.map(VcsConfig::getRemote).orElse(Git.ORIGIN);
+    boolean httpsPrefered = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
+
     String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
-        ? project.getScmInfo().getRemote().get(Git.ORIGIN)
-        : Labels.UNKNOWN;
+      ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
+      : Labels.UNKNOWN;
 
     resources.decorate(KNATIVE, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
     resources.decorate(KNATIVE, new AddCommitIdAnnotationDecorator());

@@ -472,6 +472,52 @@ Currently, the supported annotations for specifying volumes are:
 - @AzureDiskVolume
 - @AzureFileVolume
    
+#### Vcs Options
+Most of the generated resources contain the kubernetes recommended annotations for specifying things like:
+
+- vcs url
+- commit id
+
+These are extracted from the project `.git/config` file (Currently only git is supported).
+Out of the box, the url of the `origin` remote will be used verbatim.
+
+##### Specifying remote
+
+In some cases users may prefer to use another remote.
+This can be done with the use of `@VcsOptions` annotation:
+
+```java
+import io.dekorate.options.annotation.JvmOptions;
+import io.dekorate.options.annotation.GarbageCollector;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+
+@KubernetesApplication
+@VcsOptions(remote="myfork")
+public class Main {
+
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```
+In the example above `myfork` will be used as the remote. So, generated resources will be annotated with the url of the `myfork` remote.
+
+For users that prefer using `application.properties`:
+
+
+    dekorate.vcs.remote=myfork
+
+
+##### Converting vcs urls to https
+
+The vcs related annotations are mostly used by tools. For public repositories its often simpler for tools, to access the repository anonymous access.
+This is possible when using git over https, but not possible when using git over ssh. So, there are cases where users would rather develop using `git+ssh` 
+but have 3d-party tools use `https` instead. To force dekorate covnert vcs urls to `https` one case use the `httpsPreferred` parameter of `@VcsOptions`.
+Or using properties:
+
+    dekoarate.vcs.https-preferred=true
+
+
 #### Jvm Options
 It's common to pass the JVM options in the manifests using the `JAVA_OPTS` or `JAVA_OPTIONS` environment variable of the application container.
 This is something complex as it usually difficult to remember all options by heart and thus its error prone.

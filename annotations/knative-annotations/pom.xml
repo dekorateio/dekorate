@@ -35,6 +35,11 @@ limitations under the License.
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>option-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>knative-client</artifactId>
     </dependency>
