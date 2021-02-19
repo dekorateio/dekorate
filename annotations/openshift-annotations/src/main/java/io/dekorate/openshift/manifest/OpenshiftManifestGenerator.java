@@ -47,6 +47,7 @@ import io.dekorate.openshift.config.OpenshiftConfigBuilder;
 import io.dekorate.openshift.decorator.AddRouteDecorator;
 import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
+import io.dekorate.option.config.VcsConfig;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Annotations;
@@ -143,9 +144,13 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
     resources.decorate(group, new RemoveAnnotationDecorator(config.getName(), Annotations.VCS_URL));
 
     Project project = getProject();
+    Optional<VcsConfig> vcsConfig = configurationRegistry.get(VcsConfig.class);
+    String remote = vcsConfig.map(VcsConfig::getRemote).orElse(Git.ORIGIN);
+    boolean httpsPrefered = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
+
     String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
-        ? project.getScmInfo().getRemote().get(Git.ORIGIN)
-        : Labels.UNKNOWN;
+      ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
+      : Labels.UNKNOWN;
 
     resources.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), OpenshiftAnnotations.VCS_URL, vcsUrl));
     resources.decorate(group, new AddCommitIdAnnotationDecorator());

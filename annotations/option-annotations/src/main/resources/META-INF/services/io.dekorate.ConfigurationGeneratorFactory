@@ -1,2 +1,3 @@
 io.dekorate.option.config.DefaultGeneratorConfigGeneratorFactory
 io.dekorate.option.config.DefaultJvmConfigGeneratorFactory
+io.dekorate.option.config.DefaultVcsConfigGeneratorFactory

@@ -108,21 +108,26 @@ public class Git {
    * @return The an {@link Optional} String with the URL of the specified remote.
    */
   public static Optional<String> getRemoteUrl(Path path, String remote) {
+    return getRemoteUrl(path, remote, false);
+  }
+
+  public static Optional<String> getSafeRemoteUrl(Path path, String remote) {
+    return getRemoteUrl(path, remote, true);
+  }
+
+  public static Optional<String> getRemoteUrl(Path path, String remote, boolean httpsPreferred) {
     try {
-      return Files.lines(getConfig(path)).map(String::trim)
+      Optional<String> url = Files.lines(getConfig(path)).map(String::trim)
           .filter(inRemote(remote, new AtomicBoolean()))
           .filter(l -> l.startsWith(URL) && l.contains(EQUALS))
           .map(s -> s.split(EQUALS)[1].trim())
           .findAny();
+      return httpsPreferred ? url.map(Git::sanitizeRemoteUrl) : url;
     } catch (Exception e) {
       return Optional.empty();
     }
   }
 
-  public static Optional<String> getSafeRemoteUrl(Path path, String remote) {
-    final Optional<String> remoteUrl = getRemoteUrl(path, remote);
-    return remoteUrl.map(Git::sanitizeRemoteUrl);
-  }
 
   static String sanitizeRemoteUrl(String remoteUrl) {
     final int atSign = remoteUrl.indexOf('@');
