@@ -18,6 +18,7 @@ package io.dekorate.project;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.StreamSupport;
@@ -91,9 +92,10 @@ public class FileProjectFactory {
     }
     try {
       String url = Git.getSafeRemoteUrl(path, Git.ORIGIN).orElse(null);
+      Map<String, String> remotes = Git.getRemotes(path);
       String branch = Git.getBranch(path).orElse(null);
       String sha = Git.getCommitSHA(path).orElse(null);
-      scmInfo = Optional.of(new ScmInfo(path, url, branch, sha));
+      scmInfo = Optional.of(new ScmInfo(path, remotes, branch, sha));
       return scmInfo;
     } catch (Exception e) {
       return Optional.empty();

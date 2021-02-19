@@ -22,9 +22,14 @@ package io.dekorate.utils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Git {
 
@@ -40,6 +45,8 @@ public class Git {
   public static final String HEAD = "HEAD";
   public static final String URL = "url";
   public static final String REF = "ref";
+
+  public static final String REMOTE_PATTERN = "^\\[remote \"([a-zA-Z0-9_-]+)\"\\]";
 
   /**
    * Get the git root.
@@ -68,6 +75,30 @@ public class Git {
   public static Path getHead(Path root) {
     return root.resolve(DOT_GIT).resolve(HEAD);
   }
+
+  /**
+   * Get the git remote urls as a map.
+   * 
+   * @param path the path to the git config.
+   * @return A {@link Map} of urls per remote.
+   */
+  public static Map<String, String> getRemotes(Path path) {
+    Map<String, String> result = new HashMap<String, String>();
+    try {
+      final AtomicReference<String> currentRemote = new AtomicReference<>();
+      Files.lines(getConfig(path)).map(String::trim).forEach(l -> {
+          remoteValue(l).ifPresent(r -> currentRemote.set(r));
+          if (l.startsWith(URL)  && l.contains(EQUALS)) {
+            result.put(currentRemote.get(), l.split(EQUALS)[1].trim());
+          }
+        });
+      return result;
+    } catch (Exception e) {
+      return result;
+    }
+  }
+  
+
 
   /**
    * Get the git remote url.
@@ -162,4 +193,14 @@ public class Git {
     };
   }
 
+
+  public static Optional<String> remoteValue(String line) {
+    Pattern p = Pattern.compile(REMOTE_PATTERN);
+    Matcher m = p.matcher(line);
+    if (m.matches()) {
+      return Optional.of(m.group());
+    } else {
+      return Optional.empty();
+    }
+  }
 }

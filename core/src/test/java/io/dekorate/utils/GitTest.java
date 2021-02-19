@@ -17,6 +17,7 @@
 package io.dekorate.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -122,5 +123,14 @@ class GitTest {
     assertNotNull(sha);
     assertTrue(sha.isPresent());
     assertEquals(expected, sha.get());
+  }
+
+  @ParameterizedTest(name = "should read remotes map from \"{0}\"")
+  @ValueSource(strings = { GIT_SIMPLE })
+  void shouldGetCommitSHA(String configFile) throws Exception {
+    final Path root = getRootFor(configFile);
+    Map<String, String> remotes = Git.getRemotes(root);
+    assertNotNull(remotes);
+    assertFalse(remotes.isEmpty());
   }
 }

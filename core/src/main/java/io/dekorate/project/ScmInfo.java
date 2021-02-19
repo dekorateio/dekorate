@@ -17,24 +17,25 @@
 package io.dekorate.project;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 import io.sundr.builder.annotations.Buildable;
 
 public class ScmInfo {
 
   private final Path root;
-  private final String url;
   private final String branch;
   private final String commit;
+  private final Map<String, String> remote;
 
   public ScmInfo() {
     this(null, null, null, null);
   }
 
   @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-  public ScmInfo(Path root, String url, String branch, String commit) {
+  public ScmInfo(Path root, Map<String, String> remote, String branch, String commit) {
     this.root = root;
-    this.url = url;
+    this.remote = remote;
     this.branch = branch;
     this.commit = commit;
   }
@@ -43,15 +44,15 @@ public class ScmInfo {
     return new ScmInfoBuilder(this);
   }
 
+  public Map<String, String> getRemote() {
+    return remote;
+  }
+
   /**
    * @return the root
    */
   public Path getRoot() {
     return root;
-  }
-
-  public String getUrl() {
-    return url;
   }
 
   public String getBranch() {

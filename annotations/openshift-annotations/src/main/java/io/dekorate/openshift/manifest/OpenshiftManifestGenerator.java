@@ -25,7 +25,6 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.ResourceRegistry;
 import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.kubernetes.config.Annotation;
 import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
@@ -33,10 +32,11 @@ import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.Label;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
-import io.dekorate.kubernetes.decorator.AddAnnotationDecorator;
+import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
+import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.RemoveAnnotationDecorator;
 import io.dekorate.openshift.OpenshiftAnnotations;
@@ -50,6 +50,7 @@ import io.dekorate.openshift.decorator.ApplyReplicasDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Annotations;
+import io.dekorate.utils.Git;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Strings;
@@ -140,11 +141,14 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
       resources.decorate(group, new AddLabelDecorator(config.getName(), new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE), new String[0])));
     }
     resources.decorate(group, new RemoveAnnotationDecorator(config.getName(), Annotations.VCS_URL));
-    Project p = getProject();
-    String vcsUrl = p.getScmInfo() != null && Strings.isNotNullOrEmpty(p.getScmInfo().getUrl())
-        ? p.getScmInfo().getUrl()
+
+    Project project = getProject();
+    String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
+        ? project.getScmInfo().getRemote().get(Git.ORIGIN)
         : Labels.UNKNOWN;
-    resources.decorate(group, new AddAnnotationDecorator(config.getName(), new Annotation(OpenshiftAnnotations.VCS_URL, vcsUrl, new String[0])));
+
+    resources.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), OpenshiftAnnotations.VCS_URL, vcsUrl));
+    resources.decorate(group, new AddCommitIdAnnotationDecorator());
   }
 
   public boolean canHandle(Class<? extends Configuration> type) {

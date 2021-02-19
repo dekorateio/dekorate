@@ -58,6 +58,7 @@ import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.kubernetes.decorator.RemoveProbesFromInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
+import io.dekorate.utils.Annotations;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
@@ -105,9 +106,6 @@ public abstract class AbstractKubernetesConfigurationHandler<C extends BaseConfi
     }
 
     //Metadata handling
-    resources.decorate(new AddVcsUrlAnnotationDecorator());
-    resources.decorate(new AddCommitIdAnnotationDecorator());
-
     Labels.createLabels(config).forEach(l -> {
         resources.decorate(group, new AddLabelDecorator(config.getName(), l));
         resources.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
