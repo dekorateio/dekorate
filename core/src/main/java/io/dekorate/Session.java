@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -28,13 +29,19 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.kubernetes.config.Configurator;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationFluent;
 import io.dekorate.utils.Generators;
 import io.dekorate.utils.Maps;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 
 /**
@@ -275,6 +282,7 @@ public class Session {
       closed.set(true);
       readExistingResources();
       populateFallbackConfig();
+      checkConfigurationConsistency();
       manifestGenerators.forEach(h -> handle(h, configurationRegistry));
       this.generatedResources.putAll(resourceRegistry.generate());
     }
@@ -298,6 +306,51 @@ public class Session {
     }
   }
 
+  private void checkConfigurationConsistency() {
+    Set<Coordinates> applicationConfigurations = configurationRegistry.stream()
+      .filter(c -> (c instanceof ApplicationConfiguration) && !(c instanceof ImageConfiguration))
+      .map(c -> (ApplicationConfiguration) c)
+      .map(a -> new DefaultCoordinates(a.getPartOf(), a.getName(), a.getVersion()))
+      .collect(Collectors.toSet());
+
+    //If we have a single appliction configuration, we should apply it to ImageConfiguration using defaults.
+    if (applicationConfigurations.size() == 1) {
+      final Coordinates coords = applicationConfigurations.iterator().next();
+      configurationRegistry.add(new Configurator<ImageConfigurationFluent>() {
+          @Override
+          public void visit(ImageConfigurationFluent imageConfiguration) {
+            if (Strings.isNullOrEmpty(imageConfiguration.getGroup())) {
+              imageConfiguration.withGroup(coords.getPartOf());
+            }
+
+            if (Strings.isNullOrEmpty(imageConfiguration.getName())) {
+              imageConfiguration.withName(coords.getName());
+            }
+            if (Strings.isNullOrEmpty(imageConfiguration.getVersion())) {
+              imageConfiguration.withName(coords.getName());
+            }
+          }
+      });
+    }
+    
+    configurationRegistry.imageConfigurationStream()
+      .filter(i -> i != null)
+      .forEach(i -> {
+          Set<ApplicationConfiguration> matched = configurationRegistry.stream()
+              .filter(c -> (c instanceof ApplicationConfiguration) && !(c instanceof ImageConfiguration))
+              .map(c -> (ApplicationConfiguration) c)
+              .peek(a -> {LOGGER.info("App config " +a.getClass().getSimpleName()+" part-of:" + a.getPartOf() + " name:" + a.getName() + " version:"+ a.getVersion());})
+              .filter(a -> a != null 
+                        && ( !Strings.equals(i.getGroup(), a.getPartOf()) 
+                             || !Strings.equals(i.getName(), a.getName())
+                             || !Strings.equals(i.getVersion(), a.getVersion()))).collect(Collectors.toSet());
+
+          if (matched.isEmpty()) {
+            throw new IllegalStateException(String.format("No matching Application configuration found for Image configuration (group=%s,name=%s,version=%s). Please make sure that there is a matching application per image configuration!", i.getGroup(), i.getName(), i.getVersion()));
+          } 
+    });
+  }
+
   private static void handle(ManifestGenerator h, ConfigurationRegistry configurators) {
     configurators.stream().forEach(c -> {
       if (h.canHandle(c.getClass())) {
@@ -313,5 +366,4 @@ public class Session {
   private static boolean hasMatchingConfiguration(ManifestGenerator h, ConfigurationRegistry configurators) {
     return configurators.stream().anyMatch(c -> h.canHandle(c.getClass()));
   }
-
 }

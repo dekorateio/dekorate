@@ -250,9 +250,50 @@ This module can be added to the project using:
 
 So where did the generated `Deployment` gets its name, docker image etc from?
 
-Everything can be customized via annotation parameters and system properties.
-On top of that, lightweight integration with build tools is provided in order
- to reduce duplication.
+Everything can be customized via annotation parameters, application configuration and system properties.
+On top of that, lightweight integration with build tools is provided in order to reduce duplication.
+
+Note, that part-of, name and version are part of multiple annotations / configuration groups etc.
+
+While, it is valid to use different values for different configuration groups (e.g. differnent names between kubernetes and knative manifests), there should be a match between application configuration and image configuration.
+Specifically, for each image configuration (e.g. docker configuration) found there should be matching application configuration (e.g. kubernetes, knative, openshift). If not, an error will be thrown.
+
+When a single application configuration is found and no explict image configuration value has been used for (group, name & version), values from the application configuration will be used.
+
+For example:
+
+```java
+@KubernetesApplication(name="my-app")
+@EnableDockerBuild(registry="quay.io")
+public class Main {
+}
+```
+
+In the example above, docker is configured with no explicit value on `name`. In this case that name from `@KubernetesApplication(name="my-app")` will be used.
+
+The same applies when property configuratin is used:
+
+```
+io.dekorate.kubernetes.name=my-app
+io.dekorate.docker.registry=quay.io
+```
+
+However, when both application and image configuration has been explicitly configured and are conflicting an error will be thrown. for example:
+
+```
+io.dekorate.kubernetes.name=my-app
+io.dekorate.docker.name=some-app
+io.dekorate.docker.registry=quay.io
+```
+
+Note: Application configuration `part-of` corresponds to image configuration `group`. So the following will also cause an error:
+
+
+```
+io.dekorate.kubernetes.part-of=my-group
+io.dekorate.docker.test=some-group
+io.dekorate.docker.registry=quay.io
+```
 
 ##### Lightweight build tool integration
 
