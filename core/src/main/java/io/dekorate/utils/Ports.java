@@ -19,12 +19,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Port;
+import io.dekorate.kubernetes.config.PortBuilder;
 import io.dekorate.kubernetes.config.PortFluent;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.ContainerPort;
@@ -38,6 +40,11 @@ public class Ports {
   private static final List<Integer> HTTPS_PORT_NUMBERS = Arrays.asList(new Integer[] { 443, 8443 });
 
   public static final String DEFAULT_HTTP_PORT_PATH = "/";
+
+  public static final Predicate<PortBuilder> PORT_PREDICATE = p -> HTTP_PORT_NAMES.contains(p.getName())
+    || HTTPS_PORT_NAMES.contains(p.getName())
+    || HTTP_PORT_NUMBERS.contains(p.getContainerPort())
+    || HTTPS_PORT_NUMBERS.contains(p.getContainerPort());
 
   public static final List<String> webPortNames() {
     return Stream.of(HTTP_PORT_NAMES, HTTPS_PORT_NAMES).flatMap(Collection::stream).collect(Collectors.toList());
