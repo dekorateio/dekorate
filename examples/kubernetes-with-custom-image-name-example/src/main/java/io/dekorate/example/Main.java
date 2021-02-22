@@ -18,7 +18,7 @@ package io.dekorate.example;
 import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
-@KubernetesApplication
+@KubernetesApplication(partOf="mygroup")
 @DockerBuild(image="foo/bar:baz")
 public class Main {
 

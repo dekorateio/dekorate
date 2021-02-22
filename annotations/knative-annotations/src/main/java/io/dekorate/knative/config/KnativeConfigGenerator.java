@@ -18,17 +18,13 @@ package io.dekorate.knative.config;
 import java.util.Map;
 
 import io.dekorate.ConfigurationGenerator;
-import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.knative.adapter.KnativeConfigAdapter;
 import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
-import io.dekorate.project.ApplyProjectInfo;
 
-public interface KnativeConfigGenerator extends ConfigurationGenerator, WithProject {
+public interface KnativeConfigGenerator extends ConfigurationGenerator {
 
   String KNATIVE = "knative";
 
@@ -41,17 +37,11 @@ public interface KnativeConfigGenerator extends ConfigurationGenerator, WithProj
   }
 
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))
-        .accept(new ApplyImagePullSecretConfiguration())
-        .accept(new ApplyBuildToImageConfiguration())
-        .accept(new ApplyProjectInfo(getProject()))));
+    on(new AnnotationConfiguration<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))));
   }
 
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))
-        .accept(new ApplyImagePullSecretConfiguration())
-        .accept(new ApplyBuildToImageConfiguration())
-        .accept(new ApplyProjectInfo(getProject()))));
+    on(new PropertyConfiguration<>(KnativeConfigAdapter.newBuilder(propertiesMap(map, KnativeConfig.class))));
   }
 
   default void on(ConfigurationSupplier<KnativeConfig> config) {

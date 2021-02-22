@@ -20,18 +20,14 @@ package io.dekorate.docker.config;
 import java.util.Map;
 
 import io.dekorate.ConfigurationGenerator;
-import io.dekorate.Session;
 import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.docker.adapter.DockerBuildConfigAdapter;
-import io.dekorate.docker.config.DockerBuildConfig;
 import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.project.ApplyProjectInfo;
 
-public interface DockerBuildConfigGenerator extends ConfigurationGenerator,  WithProject {
+public interface DockerBuildConfigGenerator extends ConfigurationGenerator {
 
   default String getKey() {
     return "docker";
@@ -43,18 +39,12 @@ public interface DockerBuildConfigGenerator extends ConfigurationGenerator,  Wit
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<DockerBuildConfig>(
-        DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))
-            .accept(new ApplyProjectInfo(getProject()))
-            .accept(new ApplyBuildToImageConfiguration())));
+    on(new AnnotationConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<DockerBuildConfig>(
-        DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))
-            .accept(new ApplyProjectInfo(getProject()))
-            .accept(new ApplyBuildToImageConfiguration())));
+    on(new PropertyConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))));
   }
 
   default void on(ConfigurationSupplier<DockerBuildConfig> config) {

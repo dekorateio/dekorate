@@ -18,15 +18,13 @@ package io.dekorate.servicebinding.config;
 import java.util.Map;
 
 import io.dekorate.ConfigurationGenerator;
-import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.servicebinding.adapter.ServiceBindingConfigAdapter;
-import io.dekorate.servicebinding.configurator.ApplyProjectInfo;
 
-public interface ServiceBindingConfigGenerator extends ConfigurationGenerator, WithProject {
+public interface ServiceBindingConfigGenerator extends ConfigurationGenerator {
 
   String SERVICEBINDING = "servicebinding";
 
@@ -40,14 +38,12 @@ public interface ServiceBindingConfigGenerator extends ConfigurationGenerator, W
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    add(new AnnotationConfiguration<>(ServiceBindingConfigAdapter
-        .newBuilder(propertiesMap(map, ServiceBindingConfig.class)).accept(new ApplyProjectInfo(getProject()))));
+    add(new AnnotationConfiguration<>(ServiceBindingConfigAdapter.newBuilder(propertiesMap(map, ServiceBindingConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    add(new PropertyConfiguration<>(ServiceBindingConfigAdapter
-        .newBuilder(propertiesMap(map, ServiceBindingConfig.class)).accept(new ApplyProjectInfo(getProject()))));
+    add(new PropertyConfiguration<>(ServiceBindingConfigAdapter.newBuilder(propertiesMap(map, ServiceBindingConfig.class))));
   }
 
   default void add(ConfigurationSupplier<ServiceBindingConfig> config) {

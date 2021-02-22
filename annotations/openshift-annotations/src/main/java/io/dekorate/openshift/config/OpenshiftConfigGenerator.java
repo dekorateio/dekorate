@@ -18,22 +18,14 @@ package io.dekorate.openshift.config;
 import java.util.Map;
 
 import io.dekorate.ConfigurationGenerator;
-import io.dekorate.Session;
-import io.dekorate.WithProject;
-import io.dekorate.WithSession;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
-import io.dekorate.kubernetes.configurator.PopulateWebPort;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
 import io.dekorate.openshift.listener.OpenshiftSessionListener;
-import io.dekorate.project.ApplyProjectInfo;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
-public interface OpenshiftConfigGenerator extends ConfigurationGenerator, WithSession, WithProject {
+public interface OpenshiftConfigGenerator extends ConfigurationGenerator {
 
   String OPENSHIFT = "openshift";
   OpenshiftSessionListener LISTENER = new OpenshiftSessionListener();
@@ -47,19 +39,11 @@ public interface OpenshiftConfigGenerator extends ConfigurationGenerator, WithSe
   }
 
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftConfig.class))
-        .accept(new ApplyImagePullSecretConfiguration())
-        .accept(new ApplyDeployToApplicationConfiguration())
-        .accept(new PopulateWebPort())
-        .accept(new ApplyProjectInfo(getProject()))));
+    on(new AnnotationConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftConfig.class))));
   }
 
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftConfig.class))
-        .accept(new ApplyImagePullSecretConfiguration())
-        .accept(new ApplyDeployToApplicationConfiguration())
-        .accept(new PopulateWebPort())
-        .accept(new ApplyProjectInfo(getProject()))));
+    on(new PropertyConfiguration<>(OpenshiftConfigAdapter.newBuilder(propertiesMap(map, OpenshiftConfig.class))));
   }
 
   default void on(ConfigurationSupplier<OpenshiftConfig> config) {

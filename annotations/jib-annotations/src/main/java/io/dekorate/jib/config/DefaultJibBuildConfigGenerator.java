@@ -28,9 +28,9 @@ public class DefaultJibBuildConfigGenerator implements JibBuildConifgGenerator {
   
   public DefaultJibBuildConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
-    on(new DefaultConfiguration<JibBuildConfig>(new JibBuildConfigBuilder()
-        .accept(new ApplyProjectInfo(getProject()))
-        .accept(new ApplyBuildToImageConfiguration())));
+    this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
+    this.configurationRegistry.add(new ApplyBuildToImageConfiguration());
+    on(new DefaultConfiguration<JibBuildConfig>(new JibBuildConfigBuilder()));
   }
 
   public ConfigurationRegistry getConfigurationRegistry() {

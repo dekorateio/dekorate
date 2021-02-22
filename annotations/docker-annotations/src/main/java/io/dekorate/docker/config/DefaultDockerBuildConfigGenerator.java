@@ -18,19 +18,20 @@
 package io.dekorate.docker.config;
 
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.WithProject;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
 
-public class DefaultDockerBuildConfigGenerator implements DockerBuildConfigGenerator {
+public class DefaultDockerBuildConfigGenerator implements DockerBuildConfigGenerator, WithProject {
 
   private final ConfigurationRegistry configurationRegistry;
 
   public DefaultDockerBuildConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
-    on(new DefaultConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()
-        .accept(new ApplyProjectInfo(getProject()))
-        .accept(new ApplyBuildToImageConfiguration())));
+    this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
+    this.configurationRegistry.add(new ApplyBuildToImageConfiguration());
+    on(new DefaultConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()));
   }
 
   @Override

@@ -30,7 +30,6 @@ import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
-import io.dekorate.tekton.config.TektonConfig;
 
 class TektonConfigGeneratorTest {
   static Path tempDir;
@@ -48,7 +47,7 @@ class TektonConfigGeneratorTest {
     Session session = Session.getSession();
     session.setWriter(writer);
 
-    TektonConfigGenerator generator = new DefaultTektonConfigGenerator(session.getConfigurationRegistry());
+    DefaultTektonConfigGenerator generator = new DefaultTektonConfigGenerator(session.getConfigurationRegistry());
     generator.setProject(FileProjectFactory.create(new File(".")));
     System.out.println("Project root:" + generator.getProject());
 

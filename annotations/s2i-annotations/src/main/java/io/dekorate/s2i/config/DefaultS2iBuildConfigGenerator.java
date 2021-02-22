@@ -29,9 +29,9 @@ public class DefaultS2iBuildConfigGenerator implements S2iBuildConfigGenerator, 
   
   public DefaultS2iBuildConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
-    on(new DefaultConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()
-        .accept(new ApplyProjectInfo(getProject()))
-        .accept(new ApplyBuildToImageConfiguration())));
+    this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
+    this.configurationRegistry.add(new ApplyBuildToImageConfiguration());
+    on(new DefaultConfiguration<S2iBuildConfig>(new S2iBuildConfigBuilder()));
   }
 
   public ConfigurationRegistry getConfigurationRegistry() {

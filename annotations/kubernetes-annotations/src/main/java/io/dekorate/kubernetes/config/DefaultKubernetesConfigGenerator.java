@@ -28,11 +28,11 @@ public class DefaultKubernetesConfigGenerator implements KubernetesConfigGenerat
   
   public DefaultKubernetesConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
-    add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()
-        .accept(new ApplyProjectInfo(getProject()))
-        .accept(new ApplyImagePullSecretConfiguration())
-        .accept(new PopulateWebPort())
-        .accept(new ApplyDeployToApplicationConfiguration())));
+    this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
+    this.configurationRegistry.add(new ApplyImagePullSecretConfiguration());
+    this.configurationRegistry.add(new PopulateWebPort());
+    this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
+    add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()));
   }
 
   @Override
