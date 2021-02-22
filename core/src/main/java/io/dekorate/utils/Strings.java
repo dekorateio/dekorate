@@ -144,4 +144,16 @@ public class Strings {
       throw DekorateException.launderThrowable(e);
     }
   }
+
+  public static boolean equals(String left, String right) {
+    if (left == null && right == null) {
+      return true;
+    } else if (left == null) {
+      return false;
+    } else if (right == null) {
+      return false;
+    } else {
+      return left.equals(right);
+    }
+  }
 }
