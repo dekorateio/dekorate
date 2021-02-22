@@ -54,7 +54,7 @@ class KnativeConfigGeneratorTest {
     Session session = Session.getSession();
     session.setWriter(writer);
 
-    KnativeConfigGenerator generator = new DefaultKnativeConfigGenerator(session.getConfigurationRegistry());
+    DefaultKnativeConfigGenerator generator = new DefaultKnativeConfigGenerator(session.getConfigurationRegistry());
     generator.setProject(FileProjectFactory.create(new File(".")));
 
     Map<String, Object> map = new HashMap<String, Object>() {

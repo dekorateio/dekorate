@@ -23,11 +23,6 @@ import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
-import io.dekorate.kubernetes.configurator.PopulateWebPort;
-import io.dekorate.project.ApplyProjectInfo;
 
 public interface KubernetesConfigGenerator extends ConfigurationGenerator, WithProject {
 
@@ -42,26 +37,12 @@ public interface KubernetesConfigGenerator extends ConfigurationGenerator, WithP
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    add(new AnnotationConfiguration<>(
-        KubernetesConfigAdapter
-            .newBuilder(propertiesMap(map, KubernetesConfig.class))
-            .accept(new ApplyBuildToImageConfiguration())
-            .accept(new ApplyImagePullSecretConfiguration())
-            .accept(new ApplyDeployToApplicationConfiguration())
-            .accept(new PopulateWebPort())
-            .accept(new ApplyProjectInfo(getProject()))));
+    add(new AnnotationConfiguration<>(KubernetesConfigAdapter.newBuilder(propertiesMap(map, KubernetesConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    add(new PropertyConfiguration<>(
-        KubernetesConfigAdapter
-            .newBuilder(propertiesMap(map, KubernetesConfig.class))
-            .accept(new ApplyBuildToImageConfiguration())
-            .accept(new ApplyImagePullSecretConfiguration())
-            .accept(new ApplyDeployToApplicationConfiguration())
-            .accept(new PopulateWebPort())
-            .accept(new ApplyProjectInfo(getProject()))));
+    add(new PropertyConfiguration<>(KubernetesConfigAdapter.newBuilder(propertiesMap(map, KubernetesConfig.class))));
   }
 
   default void add(ConfigurationSupplier<KubernetesConfig> config) {

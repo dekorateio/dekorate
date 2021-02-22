@@ -16,19 +16,20 @@
 package io.dekorate.tekton.config;
 
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.WithProject;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 
-public class DefaultTektonConfigGenerator implements TektonConfigGenerator {
+public class DefaultTektonConfigGenerator implements TektonConfigGenerator, WithProject{
 
   private final ConfigurationRegistry configurationRegistry;
 
   public DefaultTektonConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
-    on(new DefaultConfiguration<TektonConfig>(new TektonConfigBuilder()
-        .accept(new ApplyProjectInfo(getProject()))
-        .accept(new ApplyDeployToApplicationConfiguration())));
+    this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
+    this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
+    on(new DefaultConfiguration<TektonConfig>(new TektonConfigBuilder()));
   }
 
   public ConfigurationRegistry getConfigurationRegistry() {

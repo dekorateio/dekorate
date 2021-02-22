@@ -18,15 +18,12 @@ package io.dekorate.tekton.config;
 import java.util.Map;
 
 import io.dekorate.ConfigurationGenerator;
-import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.tekton.adapter.TektonConfigAdapter;
 
-public interface TektonConfigGenerator extends ConfigurationGenerator, WithProject  {
+public interface TektonConfigGenerator extends ConfigurationGenerator {
 
   String TEKTON = "tekton";
 
@@ -39,15 +36,11 @@ public interface TektonConfigGenerator extends ConfigurationGenerator, WithProje
   }
 
   default void addAnnotationConfiguration(Map map) {
-    on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonConfig.class))
-        .accept(new ApplyBuildToImageConfiguration())
-        .accept(new ApplyProjectInfo(getProject()))));
+    on(new ConfigurationSupplier<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonConfig.class))));
   }
 
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonConfig.class))
-        .accept(new ApplyBuildToImageConfiguration())
-        .accept(new ApplyProjectInfo(getProject()))));
+    on(new PropertyConfiguration<>(TektonConfigAdapter.newBuilder(propertiesMap(map, TektonConfig.class))));
   }
 
   default void on(ConfigurationSupplier<TektonConfig> config) {

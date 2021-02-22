@@ -58,7 +58,7 @@ class KubernetesConfigGeneratorTest {
         put(KubernetesConfig.class.getName(), new HashMap<String, Object>() {
           {
             put("name", "generator-test");
-            put("group", "generator-test-group");
+            put("partOf", "generator-test-group");
             put("version", "latest");
             put("replicas", 2);
             put("ports", new Map[] { new HashMap<String, Object>() {

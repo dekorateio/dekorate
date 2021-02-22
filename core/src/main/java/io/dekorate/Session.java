@@ -327,7 +327,7 @@ public class Session {
               imageConfiguration.withName(coords.getName());
             }
             if (Strings.isNullOrEmpty(imageConfiguration.getVersion())) {
-              imageConfiguration.withName(coords.getName());
+              imageConfiguration.withVersion(coords.getVersion());
             }
           }
       });
@@ -339,14 +339,13 @@ public class Session {
           Set<ApplicationConfiguration> matched = configurationRegistry.stream()
               .filter(c -> (c instanceof ApplicationConfiguration) && !(c instanceof ImageConfiguration))
               .map(c -> (ApplicationConfiguration) c)
-              .peek(a -> {LOGGER.info("App config " +a.getClass().getSimpleName()+" part-of:" + a.getPartOf() + " name:" + a.getName() + " version:"+ a.getVersion());})
               .filter(a -> a != null 
                         && ( !Strings.equals(i.getGroup(), a.getPartOf()) 
                              || !Strings.equals(i.getName(), a.getName())
                              || !Strings.equals(i.getVersion(), a.getVersion()))).collect(Collectors.toSet());
 
           if (matched.isEmpty()) {
-            throw new IllegalStateException(String.format("No matching Application configuration found for Image configuration (group=%s,name=%s,version=%s). Please make sure that there is a matching application per image configuration!", i.getGroup(), i.getName(), i.getVersion()));
+            LOGGER.debug(String.format("No matching Application configuration found for Image configuration (group=%s,name=%s,version=%s). This is often leads to confusion!", i.getGroup(), i.getName(), i.getVersion()));
           } 
     });
   }

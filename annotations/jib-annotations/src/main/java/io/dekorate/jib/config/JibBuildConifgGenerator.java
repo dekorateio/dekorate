@@ -24,10 +24,7 @@ import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.jib.adapter.JibBuildConfigAdapter;
-import io.dekorate.jib.config.JibBuildConfig;
 import io.dekorate.kubernetes.config.Configuration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.project.ApplyProjectInfo;
 
 public interface JibBuildConifgGenerator extends ConfigurationGenerator, WithProject {
 
@@ -44,20 +41,12 @@ public interface JibBuildConifgGenerator extends ConfigurationGenerator, WithPro
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<>(
-        JibBuildConfigAdapter
-            .newBuilder(propertiesMap(map, JibBuildConfig.class))
-            .accept(new ApplyProjectInfo(getProject()))
-            .accept(new ApplyBuildToImageConfiguration())));
+    on(new AnnotationConfiguration<>(JibBuildConfigAdapter.newBuilder(propertiesMap(map, JibBuildConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<>(
-        JibBuildConfigAdapter
-            .newBuilder(propertiesMap(map, JibBuildConfig.class))
-            .accept(new ApplyProjectInfo(getProject()))
-            .accept(new ApplyBuildToImageConfiguration())));
+    on(new PropertyConfiguration<>(JibBuildConfigAdapter.newBuilder(propertiesMap(map, JibBuildConfig.class))));
   }
 
   default void on(ConfigurationSupplier<JibBuildConfig> config) {
