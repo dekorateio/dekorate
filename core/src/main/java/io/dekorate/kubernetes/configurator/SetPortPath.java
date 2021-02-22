@@ -28,7 +28,11 @@ public class SetPortPath extends Configurator<BaseConfigFluent<?>> {
   private final String path;
 
   public SetPortPath(String name, String path) {
-    this.predicate = p -> p.getName().equals(name);
+    this((Predicate<PortBuilder>) p -> p.getName().equals(name), path);
+  }
+
+  public SetPortPath(Predicate<PortBuilder> predicate, String path) {
+    this.predicate = predicate;
     this.path = path;
   }
 
