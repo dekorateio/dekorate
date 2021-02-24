@@ -47,26 +47,34 @@ public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
 
   @Override
   public void debug(String message) {
-    check();
-    stream.println(ansi().a("[").fg(CYAN).bold().a(DEBUG).reset().a("] ").a(message));
+    if (isDebugEnabled()) {
+      check();
+      stream.println(ansi().a("[").fg(CYAN).bold().a(Level.DEBUG.name()).reset().a("] ").a(message));
+    }
   }
 
   @Override
   public void info(String message) {
-    check();
-    stream.println(ansi().a("[").fg(BLUE).bold().a(INFO).reset().a("] ").a(message));
+    if (isInfoEnabled()) {
+      check();
+      stream.println(ansi().a("[").fg(BLUE).bold().a(Level.INFO.name()).reset().a("] ").a(message));
+    }
   }
 
   @Override
   public void warning(String message) {
-    check();
-    stream.println(ansi().a("[").fg(MAGENTA).bold().a(WARN).reset().a("] ").a(message));
+    if (isWarnEnabled()) {
+      check();
+      stream.println(ansi().a("[").fg(MAGENTA).bold().a(Level.WARN.name()).reset().a("] ").a(message));
+    }
   }
 
   @Override
   public void error(String message) {
-    check();
-    stream.println(ansi().a("[").fg(RED).bold().a(ERROR).reset().a("] ").a(message));
+    if (isErrorEnabled()) {
+      check();
+      stream.println(ansi().a("[").fg(RED).bold().a(Level.ERROR.name()).reset().a("] ").a(message));
+    }
   }
 
   private void check() {

@@ -25,6 +25,7 @@ import io.dekorate.LoggerFactory;
 
 public class AptLogger extends LoggerFactory<Messager> implements Logger {
 
+  private final String FORMAT = "[%s] %s";
   private final Messager messager;
 
   public Logger create(Messager messager) {
@@ -43,26 +44,34 @@ public class AptLogger extends LoggerFactory<Messager> implements Logger {
 
   @Override
   public void debug(String message) {
-    check();
-    messager.printMessage(Kind.NOTE, String.format(DEBUG, message));
+    if (isDebugEnabled()) {
+      check();
+      messager.printMessage(Kind.NOTE, String.format(FORMAT, Level.DEBUG.name(), message));
+    }
   }
 
   @Override
   public void info(String message) {
-    check();
-    messager.printMessage(Kind.NOTE, String.format(INFO, message));
+    if (isInfoEnabled()) {
+      check();
+      messager.printMessage(Kind.NOTE, String.format(FORMAT, Level.INFO.name(), message));
+    }
   }
 
   @Override
   public void warning(String message) {
-    check();
-    messager.printMessage(Kind.WARNING, String.format(WARN, message));
+    if (isErrorEnabled()) {
+      check();
+      messager.printMessage(Kind.WARNING, String.format(FORMAT, Level.WARN.name(), message));
+    }
   }
 
   @Override
   public void error(String message) {
-    check();
-    messager.printMessage(Kind.ERROR, String.format(ERROR, message));
+    if (isErrorEnabled()) {
+      check();
+      messager.printMessage(Kind.ERROR, String.format(FORMAT, Level.ERROR.name(), message));
+    }
   }
 
   private void check() {

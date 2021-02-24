@@ -1907,6 +1907,19 @@ public class Main {
 #### related examples
  - [spring boot with fmp on openshift example](examples/spring-boot-with-fmp-on-kubernetes-example)
 
+
+#### Debugging and Logging
+
+To control how verbose the dekorate output is going to be you can set the log level level threshold, using the `io.dekorate.log.level` system property-drawer.
+
+Allowed values are:
+
+- OFF
+- ERROR
+- WARN
+- INFO (default)
+- DEBUG
+
 #### Explicit configuration of annotation processors
 
 By default, Dekorate doesn't require any specific configuration of its annotation processors. 
