@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The original authors.
+ * Copyright 2018 The ordinal authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,40 @@ package io.dekorate;
 
 public interface Logger {
 
-  String DEBUG = "DEBUG";
-  String INFO = "INFO";
-  String WARN = "WARN";
-  String ERROR = "ERROR";
+  static enum Level {
+    OFF,
+    ERROR,
+    WARN,
+    INFO,
+    DEBUG;
+  }
+
+  String THRESHOLD = "io.dekorate.log.level";
+
+  default Level getLogLevel() {
+   String threshold = System.getProperty(THRESHOLD, "INFO");
+   try {
+     return Enum.valueOf(Level.class, threshold.toUpperCase());
+   } catch (IllegalArgumentException e) {
+     return Level.INFO;
+   }
+  }
+
+  default boolean isDebugEnabled() {
+    return getLogLevel().ordinal() >= Level.DEBUG.ordinal();
+  }
+
+  default boolean isInfoEnabled() {
+    return getLogLevel().ordinal() >= Level.INFO.ordinal();
+  }
+    
+  default boolean isWarnEnabled() {
+    return getLogLevel().ordinal() >= Level.WARN.ordinal();
+  }
+
+  default boolean isErrorEnabled() {
+    return getLogLevel().ordinal() >= Level.ERROR.ordinal();
+  }
 
   void debug(String message);
 
