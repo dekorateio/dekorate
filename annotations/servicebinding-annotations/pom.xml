@@ -35,12 +35,6 @@ limitations under the License.
     </dependency>
 
     <dependency>
-      <groupId>io.dekorate</groupId>
-      <artifactId>crd-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
       <scope>compile</scope>
@@ -50,12 +44,6 @@ limitations under the License.
       <groupId>io.dekorate</groupId>
       <artifactId>dekorate-templates</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>io.sundr</groupId>
-      <artifactId>transform-annotations</artifactId>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -123,7 +111,6 @@ limitations under the License.
           <source>${java.source}</source>
           <target>${java.target}</target>
           <annotationProcessors>
-            <processor>io.sundr.transform.internal.VelocityTransformationProcessor</processor>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
           </annotationProcessors>
         </configuration>
