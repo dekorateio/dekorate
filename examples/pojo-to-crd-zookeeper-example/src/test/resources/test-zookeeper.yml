@@ -1,7 +1,0 @@
-kind: Zookeeper
-apiVersion: io.zookeeper/v1
-metadata:
-  name: my-zoo
-spec:
-  size: 1
-  version: 3.5.0

@@ -35,7 +35,6 @@ limitations under the License.
     <module>tekton-annotations</module>
     <module>servicebinding-annotations</module>
     <module>prometheus-annotations</module>
-    <module>crd-annotations</module>
     <module>jaeger-annotations</module>
     <module>docker-annotations</module>
     <module>s2i-annotations</module>
