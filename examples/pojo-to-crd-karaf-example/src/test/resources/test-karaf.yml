@@ -1,9 +1,0 @@
-kind: Karaf
-apiVersion: io.karaf/v1
-metadata:
-  name: my-karaf
-features:
-  - ssh
-  - http
-bundles:
-  - mvn:my.group:my-application:0.1
