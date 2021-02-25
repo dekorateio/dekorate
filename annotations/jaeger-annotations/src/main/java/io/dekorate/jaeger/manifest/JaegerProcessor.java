@@ -35,10 +35,10 @@ import io.dekorate.utils.Strings;
 
 public class JaegerProcessor implements ManifestGenerator<JaegerAgentConfig> {
 
-  private final ResourceRegistry resources;
+  private final ResourceRegistry resourceRegistry;
 
-  public JaegerProcessor(ResourceRegistry resources, ConfigurationRegistry configurationRegistry) {
-    this.resources = resources;
+  public JaegerProcessor(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry) {
+    this.resourceRegistry = resourceRegistry;
   }
 
   @Override
@@ -52,9 +52,9 @@ public class JaegerProcessor implements ManifestGenerator<JaegerAgentConfig> {
   }
 
   @Override
-  public void handle(JaegerAgentConfig config) {
+  public void generate(JaegerAgentConfig config) {
     if (config.isOperatorEnabled()) {
-      resources.decorate(new AddAnnotationDecorator(new AnnotationBuilder()
+      resourceRegistry.decorate(new AddAnnotationDecorator(new AnnotationBuilder()
           .withKey("sidecar.jaegertracing.io/inject")
           .withValue("true")
           .build()));
@@ -73,7 +73,7 @@ public class JaegerProcessor implements ManifestGenerator<JaegerAgentConfig> {
             .withProtocol(port.getProtocol() != null ? port.getProtocol() : Protocol.TCP)
             .endPort();
       }
-      resources.decorate(new AddSidecarDecorator(builder.build()));
+      resourceRegistry.decorate(new AddSidecarDecorator(builder.build()));
     }
   }
 
@@ -101,7 +101,7 @@ public class JaegerProcessor implements ManifestGenerator<JaegerAgentConfig> {
   }
 
   @Override
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(JaegerAgentConfig.class) || type.equals(EditableJaegerAgentConfig.class);
   }
 

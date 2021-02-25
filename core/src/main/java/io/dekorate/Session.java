@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -29,7 +28,6 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -214,7 +212,7 @@ public class Session {
     return resourceRegistry;
   }
 
-  public Set<ManifestGenerator> getHandlers() {
+  public Set<ManifestGenerator> getManifestGenerators() {
     return manifestGenerators;
   }
 
@@ -267,10 +265,10 @@ public class Session {
    * @return A map of {@link KubernetesList} by group name.
    */
   private Map<String, KubernetesList> generate() {
-    Set<ManifestGenerator> handlersToRemove = manifestGenerators.stream().filter(
+    Set<ManifestGenerator> manifestGeneratorsToRemove = manifestGenerators.stream().filter(
         h -> disabledGroups.contains(h.getKey()) || (!enabledGroups.isEmpty() && !enabledGroups.contains(h.getKey())))
         .collect(Collectors.toSet());
-    this.manifestGenerators.removeAll(handlersToRemove);
+    this.manifestGenerators.removeAll(manifestGeneratorsToRemove);
 
     Set<String> generatorsToRemove = configurationGenerators.keySet().stream()
         .filter(g -> disabledGroups.contains(g) || (!enabledGroups.isEmpty() && !enabledGroups.contains(g)))
@@ -283,7 +281,7 @@ public class Session {
       readExistingResources();
       populateFallbackConfig();
       checkConfigurationConsistency();
-      manifestGenerators.forEach(h -> handle(h, configurationRegistry));
+      manifestGenerators.forEach(m -> generate(m, configurationRegistry));
       this.generatedResources.putAll(resourceRegistry.generate());
     }
     return Collections.unmodifiableMap(generatedResources);
@@ -350,19 +348,19 @@ public class Session {
     });
   }
 
-  private static void handle(ManifestGenerator h, ConfigurationRegistry configurators) {
-    configurators.stream().forEach(c -> {
-      if (h.canHandle(c.getClass())) {
-        h.handle(c);
+  private static void generate(ManifestGenerator h, ConfigurationRegistry configurationRegistry) {
+    configurationRegistry.stream().forEach(c -> {
+      if (h.accepts(c.getClass())) {
+        h.generate(c);
       }
     });
   }
 
-  private static boolean hasApplicationConfiguration(ConfigurationRegistry configurators) {
-    return configurators.stream().anyMatch(c -> ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
+  private static boolean hasApplicationConfiguration(ConfigurationRegistry configurationRegistry) {
+    return configurationRegistry.stream().anyMatch(c -> ApplicationConfiguration.class.isAssignableFrom(c.getClass()));
   }
 
-  private static boolean hasMatchingConfiguration(ManifestGenerator h, ConfigurationRegistry configurators) {
-    return configurators.stream().anyMatch(c -> h.canHandle(c.getClass()));
+  private static boolean hasMatchingConfiguration(ManifestGenerator h, ConfigurationRegistry configurationRegistry) {
+    return configurationRegistry.stream().anyMatch(c -> h.accepts(c.getClass()));
   }
 }

@@ -46,12 +46,12 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
   private static final String JAVA_APP_JAR = "JAVA_APP_JAR";
 
   private final Logger LOGGER = LoggerFactory.getLogger();
-  private final ResourceRegistry resources;
-  private final ConfigurationRegistry configurators;
+  private final ResourceRegistry resourceRegistry;
+  private final ConfigurationRegistry configurationRegistry;
 
-  public S2iManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurators) {
-    this.resources = resources;
-    this.configurators = configurators;
+  public S2iManifestGenerator(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry) {
+    this.resourceRegistry = resourceRegistry;
+    this.configurationRegistry = configurationRegistry;
   }
 
   @Override
@@ -64,22 +64,22 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
     return OPENSHIFT;
   }
 
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(S2iBuildConfig.class) ||
         type.equals(EditableS2iBuildConfig.class);
   }
 
-  public void handle(S2iBuildConfig config) {
+  public void generate(S2iBuildConfig config) {
     if (config.isEnabled()) {
       LOGGER.info("Processing s2i configuration.");
       //TODO: We are temporarily limit S2i to openshift until we find a better way to handle this (#367).
-      resources.decorate(OPENSHIFT, new AddBuilderImageStreamResourceDecorator(config));
-      resources.decorate(OPENSHIFT, new AddOutputImageStreamResourceDecorator(config));
-      resources.decorate(OPENSHIFT, new AddBuildConfigResourceDecorator(config));
+      resourceRegistry.decorate(OPENSHIFT, new AddBuilderImageStreamResourceDecorator(config));
+      resourceRegistry.decorate(OPENSHIFT, new AddOutputImageStreamResourceDecorator(config));
+      resourceRegistry.decorate(OPENSHIFT, new AddBuildConfigResourceDecorator(config));
       for (Env env : config.getBuildEnvVars()) {
-        resources.decorate(new AddBuildEnvDecorator(env));
+        resourceRegistry.decorate(new AddBuildEnvDecorator(env));
       }
-      resources.decorate(OPENSHIFT, new AddEnvVarDecorator(config.getName(), config.getName(),
+      resourceRegistry.decorate(OPENSHIFT, new AddEnvVarDecorator(config.getName(), config.getName(),
           new EnvBuilder()
               .withName(JAVA_APP_JAR)
               .withValue("/deployments/" + config.getProject()
@@ -89,7 +89,7 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
               .build()));
     } else {
       //If S2i is disabled, check if other build configs are available and check it makes sense to create an ImageStream
-      ImageConfiguration imageConfig = configurators
+      ImageConfiguration imageConfig = configurationRegistry
           .getImageConfig(BuildServiceFactories.supplierMatches(getProject())
               .and(i -> Strings.isNotNullOrEmpty(i.get().getRegistry())))
           .orElse(null);
@@ -98,7 +98,7 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
         String image = Images.getImage(imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(),
             imageConfig.getVersion());
         String repository = imageConfig.getRegistry() + "/" + Images.getRepository(image);
-        resources.decorate(OPENSHIFT, new AddDockerImageStreamResourceDecorator(imageConfig, repository));
+        resourceRegistry.decorate(OPENSHIFT, new AddDockerImageStreamResourceDecorator(imageConfig, repository));
       }
     }
   }

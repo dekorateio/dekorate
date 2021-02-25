@@ -48,20 +48,20 @@ class KnativeManifestGeneratorTest {
   public void shouldAcceptKnativeConfig() {
     Session session = Session.getSession();
     KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(generator.canHandle(KnativeConfig.class));
+    assertTrue(generator.accepts(KnativeConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableKnativeConfig() {
     Session session = Session.getSession();
     KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(generator.canHandle(EditableKnativeConfig.class));
+    assertTrue(generator.accepts(EditableKnativeConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfig() {
     Session session = Session.getSession();
     KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertFalse(generator.canHandle(BaseConfig.class));
+    assertFalse(generator.accepts(BaseConfig.class));
   }
 }

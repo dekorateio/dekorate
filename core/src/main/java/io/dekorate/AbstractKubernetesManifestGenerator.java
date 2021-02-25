@@ -47,7 +47,6 @@ import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
-import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
@@ -58,7 +57,6 @@ import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.kubernetes.decorator.RemoveProbesFromInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
-import io.dekorate.utils.Annotations;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
@@ -69,12 +67,12 @@ import io.dekorate.utils.Strings;
  * 
  * @param <C> The config type (its expected to vary between processors).
  */
-public abstract class AbstractKubernetesConfigurationHandler<C extends BaseConfig> implements ManifestGenerator<C> {
+public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> implements ManifestGenerator<C> {
 
-  protected final ResourceRegistry resources;
+  protected final ResourceRegistry resourceRegistry;
 
-  public AbstractKubernetesConfigurationHandler(ResourceRegistry resources) {
-    this.resources = resources;
+  public AbstractKubernetesManifestGenerator(ResourceRegistry resources) {
+    this.resourceRegistry = resources;
   }
 
   /**
@@ -82,7 +80,7 @@ public abstract class AbstractKubernetesConfigurationHandler<C extends BaseConfi
    * 
    * @param config
    */
-  public abstract void handle(C config);
+  public abstract void generate(C config);
 
   /**
    * Add all decorator to the resources.
@@ -94,123 +92,123 @@ public abstract class AbstractKubernetesConfigurationHandler<C extends BaseConfi
    */
   protected void addDecorators(String group, C config) {
     if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
-      resources.decorate(new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
+      resourceRegistry.decorate(new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
     }
 
     if (config.getImagePullPolicy() != ImagePullPolicy.IfNotPresent) {
-      resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
+      resourceRegistry.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
     }
 
     for (String imagePullSecret : config.getImagePullSecrets()) {
-      resources.decorate(new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
+      resourceRegistry.decorate(new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
     }
 
     //Metadata handling
     Labels.createLabels(config).forEach(l -> {
-        resources.decorate(group, new AddLabelDecorator(config.getName(), l));
-        resources.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
-        resources.decorate(group, new AddToMatchingLabelsDecorator(config.getName(), l.getKey(), l.getValue()));
+        resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), l));
+        resourceRegistry.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
+        resourceRegistry.decorate(group, new AddToMatchingLabelsDecorator(config.getName(), l.getKey(), l.getValue()));
     });
 
     for (Annotation annotation : config.getAnnotations()) {
-      resources.decorate(new AddAnnotationDecorator(config.getName(), annotation));
+      resourceRegistry.decorate(new AddAnnotationDecorator(config.getName(), annotation));
     }
 
     if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
-      resources.decorate(group, new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
+      resourceRegistry.decorate(group, new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
     }
 
     if (config.getImagePullPolicy() != ImagePullPolicy.IfNotPresent) {
-      resources.decorate(group, new ApplyImagePullPolicyDecorator(config.getName(), config.getImagePullPolicy()));
+      resourceRegistry.decorate(group, new ApplyImagePullPolicyDecorator(config.getName(), config.getImagePullPolicy()));
     }
 
     for (String imagePullSecret : config.getImagePullSecrets()) {
-      resources.decorate(group, new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
+      resourceRegistry.decorate(group, new AddImagePullSecretDecorator(config.getName(), imagePullSecret));
     }
 
     for (HostAlias hostAlias : config.getHostAliases()) {
-      resources.decorate(new AddHostAliasesDecorator(config.getName(), hostAlias));
+      resourceRegistry.decorate(new AddHostAliasesDecorator(config.getName(), hostAlias));
     }
 
     for (Container container : config.getSidecars()) {
-      resources.decorate(group, new AddSidecarDecorator(config.getName(), container));
+      resourceRegistry.decorate(group, new AddSidecarDecorator(config.getName(), container));
     }
     for (Env env : config.getEnvVars()) {
-      resources.decorate(group, new AddEnvVarDecorator(config.getName(), config.getName(), env));
+      resourceRegistry.decorate(group, new AddEnvVarDecorator(config.getName(), config.getName(), env));
     }
     for (Port port : config.getPorts()) {
-      resources.decorate(group, new AddPortDecorator(config.getName(), config.getName(), port));
+      resourceRegistry.decorate(group, new AddPortDecorator(config.getName(), config.getName(), port));
     }
     for (Mount mount : config.getMounts()) {
-      resources.decorate(group, new AddMountDecorator(mount));
+      resourceRegistry.decorate(group, new AddMountDecorator(mount));
     }
 
     for (SecretVolume volume : config.getSecretVolumes()) {
       validateVolume(volume);
-      resources.decorate(group, new AddSecretVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddSecretVolumeDecorator(volume));
     }
 
     for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
       validateVolume(volume);
-      resources.decorate(group, new AddConfigMapVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(volume));
     }
 
     for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
-      resources.decorate(group, new AddPvcVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddPvcVolumeDecorator(volume));
     }
 
     for (AzureFileVolume volume : config.getAzureFileVolumes()) {
-      resources.decorate(group, new AddAzureFileVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddAzureFileVolumeDecorator(volume));
     }
 
     for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
-      resources.decorate(group, new AddAzureDiskVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddAzureDiskVolumeDecorator(volume));
     }
 
     for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
-      resources.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(volume));
     }
 
     if (config.getCommand().length > 0) {
-      resources.decorate(group, new ApplyCommandDecorator(config.getName(), config.getName(), config.getCommand()));
+      resourceRegistry.decorate(group, new ApplyCommandDecorator(config.getName(), config.getName(), config.getCommand()));
     }
 
     if (config.getArguments().length > 0) {
-      resources.decorate(group, new ApplyArgsDecorator(config.getName(), config.getName(), config.getArguments()));
+      resourceRegistry.decorate(group, new ApplyArgsDecorator(config.getName(), config.getName(), config.getArguments()));
     }
 
     if (Probes.isConfigured(config.getLivenessProbe())) {
-      resources.decorate(group,
+      resourceRegistry.decorate(group,
           new AddLivenessProbeDecorator(config.getName(), config.getName(), config.getLivenessProbe()));
     }
 
     if (Probes.isConfigured(config.getReadinessProbe())) {
-      resources.decorate(group,
+      resourceRegistry.decorate(group,
           new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
     }
 
     //Container resources
     if (Strings.isNotNullOrEmpty(config.getLimitResources().getCpu())) {
-      resources.decorate(group,
+      resourceRegistry.decorate(group,
           new ApplyLimitsCpuDecorator(config.getName(), config.getName(), config.getLimitResources().getCpu()));
     }
 
     if (Strings.isNotNullOrEmpty(config.getLimitResources().getMemory())) {
-      resources.decorate(group,
+      resourceRegistry.decorate(group,
           new ApplyLimitsMemoryDecorator(config.getName(), config.getName(), config.getLimitResources().getMemory()));
     }
 
     if (Strings.isNotNullOrEmpty(config.getRequestResources().getCpu())) {
-      resources.decorate(group,
+      resourceRegistry.decorate(group,
           new ApplyRequestsCpuDecorator(config.getName(), config.getName(), config.getRequestResources().getCpu()));
     }
 
     if (Strings.isNotNullOrEmpty(config.getRequestResources().getMemory())) {
-      resources.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(),
+      resourceRegistry.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(),
           config.getRequestResources().getMemory()));
     }
 
-    resources.decorate(group,new RemoveProbesFromInitContainerDecorator());
+    resourceRegistry.decorate(group,new RemoveProbesFromInitContainerDecorator());
   }
 
   protected static void validateVolume(SecretVolume volume) {

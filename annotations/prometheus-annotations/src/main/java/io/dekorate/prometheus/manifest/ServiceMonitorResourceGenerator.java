@@ -25,10 +25,10 @@ import io.dekorate.prometheus.decorator.AddServiceMonitorResourceDecorator;
 
 public class ServiceMonitorResourceGenerator implements ManifestGenerator<ServiceMonitorConfig> {
 
-  private final ResourceRegistry resources;
+  private final ResourceRegistry resourceRegistry;
 
-  public ServiceMonitorResourceGenerator(ResourceRegistry resources, ConfigurationRegistry configurationRegistry) {
-    this.resources = resources;
+  public ServiceMonitorResourceGenerator(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry) {
+    this.resourceRegistry = resourceRegistry;
   }
 
   @Override
@@ -42,12 +42,12 @@ public class ServiceMonitorResourceGenerator implements ManifestGenerator<Servic
   }
 
   @Override
-  public void handle(ServiceMonitorConfig config) {
-    resources.decorate(new AddServiceMonitorResourceDecorator(config));
+  public void generate(ServiceMonitorConfig config) {
+    resourceRegistry.decorate(new AddServiceMonitorResourceDecorator(config));
   }
 
   @Override
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(ServiceMonitorConfig.class) || type.equals(EditableServiceMonitorConfig.class);
   }
 }

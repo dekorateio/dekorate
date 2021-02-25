@@ -47,19 +47,19 @@ class KubernetesManifestGeneratorTest {
   @Test
   public void shouldAcceptKubernetesConfig() {
     KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(), new ConfigurationRegistry());
-    assertTrue(generator.canHandle(KubernetesConfig.class));
+    assertTrue(generator.accepts(KubernetesConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableKubernetesConfig() {
     KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(), new ConfigurationRegistry());
-    assertTrue(generator.canHandle(EditableKubernetesConfig.class));
+    assertTrue(generator.accepts(EditableKubernetesConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfigSubclasses() {
     KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(), new ConfigurationRegistry());
-    assertFalse(generator.canHandle(KubernetesConfigSubclass.class));
+    assertFalse(generator.accepts(KubernetesConfigSubclass.class));
   }
 
   private abstract class KubernetesConfigSubclass extends KubernetesConfig {

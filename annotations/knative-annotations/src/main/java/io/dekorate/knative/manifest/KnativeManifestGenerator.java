@@ -17,7 +17,7 @@ package io.dekorate.knative.manifest;
 
 import java.util.Optional;
 
-import io.dekorate.AbstractKubernetesConfigurationHandler;
+import io.dekorate.AbstractKubernetesManifestGenerator;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.ManifestGenerator;
@@ -83,7 +83,7 @@ import io.fabric8.knative.serving.v1.Service;
 import io.fabric8.knative.serving.v1.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
-public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHandler<KnativeConfig> implements WithProject {
+public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerator<KnativeConfig> implements WithProject {
 
   private static final String KNATIVE = "knative";
   private static final String DEFAULT_REGISTRY = "dev.local/";
@@ -112,13 +112,13 @@ public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHan
     return KNATIVE;
   }
 
-  public void handle(KnativeConfig config) {
-    Optional<Service> existingService = resources.groups().getOrDefault(KNATIVE, new KubernetesListBuilder())
+  public void generate(KnativeConfig config) {
+    Optional<Service> existingService = resourceRegistry.groups().getOrDefault(KNATIVE, new KubernetesListBuilder())
         .buildItems().stream().filter(i -> i instanceof Service).map(i -> (Service) i)
         .filter(i -> i.getMetadata().getName().equals(config.getName())).findAny();
 
     if (!existingService.isPresent()) {
-      resources.add(KNATIVE, createService(config));
+      resourceRegistry.add(KNATIVE, createService(config));
     }
 
     Project project = getProject();
@@ -130,84 +130,84 @@ public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHan
       ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
       : Labels.UNKNOWN;
 
-    resources.decorate(KNATIVE, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
-    resources.decorate(KNATIVE, new AddCommitIdAnnotationDecorator());
+    resourceRegistry.decorate(KNATIVE, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
+    resourceRegistry.decorate(KNATIVE, new AddCommitIdAnnotationDecorator());
 
-    resources.decorate(KNATIVE,
+    resourceRegistry.decorate(KNATIVE,
         new ApplyPortNameDecorator(null, null, config.getHttpTransportVersion().name().toLowerCase(),
                                    Ports.webPortNames().toArray(new String[Ports.webPortNames().size()])));
     addDecorators(KNATIVE, config);
 
     if (config.getRevisionAutoScaling().getMetric() != AutoscalingMetric.concurrency) {
-      resources.decorate(KNATIVE,
+      resourceRegistry.decorate(KNATIVE,
           new ApplyLocalAutoscalingMetricDecorator(config.getName(), config.getRevisionAutoScaling().getMetric()));
     }
 
     if (config.getRevisionAutoScaling().getContainerConcurrency() != 0) {
-      resources.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
+      resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
           config.getRevisionAutoScaling().getContainerConcurrency()));
     }
 
     // Local autoscaling configuration
     if (config.getRevisionAutoScaling().getAutoScalerClass() != AutoScalerClass.kpa) {
-      resources.decorate(KNATIVE, new ApplyLocalAutoscalingClassDecorator(config.getName(),
+      resourceRegistry.decorate(KNATIVE, new ApplyLocalAutoscalingClassDecorator(config.getName(),
           config.getRevisionAutoScaling().getAutoScalerClass()));
     }
     if (config.getRevisionAutoScaling().getTarget() != 0) {
-      resources.decorate(KNATIVE,
+      resourceRegistry.decorate(KNATIVE,
           new ApplyLocalAutoscalingTargetDecorator(config.getName(), config.getRevisionAutoScaling().getTarget()));
     }
     if (config.getRevisionAutoScaling().getTarget() != 200
         && config.getRevisionAutoScaling().getMetric() == AutoscalingMetric.rps) {
-      resources.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
+      resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
           config.getRevisionAutoScaling().getTarget()));
     }
     if (config.getRevisionAutoScaling().getTargetUtilizationPercentage() != 70) {
-      resources.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
+      resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
           config.getRevisionAutoScaling().getTargetUtilizationPercentage()));
     }
 
     if (config.getMinScale() != 0) {
-      resources.decorate(KNATIVE, new ApplyMinScaleDecorator(config.getName(), config.getMinScale()));
+      resourceRegistry.decorate(KNATIVE, new ApplyMinScaleDecorator(config.getName(), config.getMinScale()));
     }
 
     if (config.getMaxScale() != 0) {
-      resources.decorate(KNATIVE, new ApplyMaxScaleDecorator(config.getName(), config.getMaxScale()));
+      resourceRegistry.decorate(KNATIVE, new ApplyMaxScaleDecorator(config.getName(), config.getMaxScale()));
     }
 
     // Global autoscaling configuration
     if (!isDefault(config.getGlobalAutoScaling())) {
-      resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
+      resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
       if (config.getGlobalAutoScaling().getAutoScalerClass() != AutoScalerClass.kpa) {
-        resources.decorate(KNATIVE,
+        resourceRegistry.decorate(KNATIVE,
             new ApplyGlobalAutoscalingClassDecorator(config.getGlobalAutoScaling().getAutoScalerClass()));
       }
 
       if (config.getGlobalAutoScaling().getRequestsPerSecond() != 200) {
-        resources.decorate(KNATIVE,
+        resourceRegistry.decorate(KNATIVE,
             new ApplyGlobalRequestsPerSecondTargetDecorator(config.getGlobalAutoScaling().getRequestsPerSecond()));
       }
       if (config.getGlobalAutoScaling().getTargetUtilizationPercentage() != 70) {
-        resources.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(
+        resourceRegistry.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(
             config.getGlobalAutoScaling().getTargetUtilizationPercentage()));
       }
 
     }
 
     if (config.getGlobalAutoScaling().getContainerConcurrency() != 0) {
-      resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-defaults"));
-      resources.decorate(KNATIVE,
+      resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-defaults"));
+      resourceRegistry.decorate(KNATIVE,
           new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getContainerConcurrency()));
     }
 
     if (!config.isScaleToZeroEnabled()) {
-      resources.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
-      resources.decorate(KNATIVE, new AddConfigMapDataDecorator("config-autoscaler", "enable-scale-to-zero",
+      resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
+      resourceRegistry.decorate(KNATIVE, new AddConfigMapDataDecorator("config-autoscaler", "enable-scale-to-zero",
           String.valueOf(config.isAutoDeployEnabled())));
     }
 
     if (Strings.isNotNullOrEmpty(config.getRevisionName())) {
-      resources.decorate(KNATIVE, new ApplyRevisionNameDecorator(config.getName(), config.getRevisionName()));
+      resourceRegistry.decorate(KNATIVE, new ApplyRevisionNameDecorator(config.getName(), config.getRevisionName()));
     }
 
     for (Traffic traffic: config.getTraffic()) {
@@ -215,43 +215,43 @@ public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHan
       String tag = Strings.isNotNullOrEmpty(traffic.getTag()) ? traffic.getTag() : null;
       boolean latestRevision =  revisionName == null ? true : traffic.isLatestRevision();
       long percentage = traffic.getPercentage();
-      resources.decorate(KNATIVE, new ApplyTrafficDecorator(config.getName(), revisionName, latestRevision, percentage, tag));
+      resourceRegistry.decorate(KNATIVE, new ApplyTrafficDecorator(config.getName(), revisionName, latestRevision, percentage, tag));
     }
 
 
     //Revision specific stuff
     for (Container container : config.getSidecars()) {
-      resources.decorate(KNATIVE, new AddSidecarToRevisionDecorator(config.getName(), container));
+      resourceRegistry.decorate(KNATIVE, new AddSidecarToRevisionDecorator(config.getName(), container));
     }
  
     for (SecretVolume volume : config.getSecretVolumes()) {
       validateVolume(volume);
-      resources.decorate(KNATIVE, new AddSecretVolumeToRevisionDecorator(volume));
+      resourceRegistry.decorate(KNATIVE, new AddSecretVolumeToRevisionDecorator(volume));
     }
 
     for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
       validateVolume(volume);
-      resources.decorate(KNATIVE, new AddConfigMapVolumeToRevisionDecorator(volume));
+      resourceRegistry.decorate(KNATIVE, new AddConfigMapVolumeToRevisionDecorator(volume));
     }
 
     for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
-      resources.decorate(KNATIVE, new AddPvcVolumeToRevisionDecorator(volume));
+      resourceRegistry.decorate(KNATIVE, new AddPvcVolumeToRevisionDecorator(volume));
     }
 
     for (AzureFileVolume volume : config.getAzureFileVolumes()) {
-      resources.decorate(KNATIVE, new AddAzureFileVolumeToRevisionDecorator(volume));
+      resourceRegistry.decorate(KNATIVE, new AddAzureFileVolumeToRevisionDecorator(volume));
     }
 
     for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
-      resources.decorate(KNATIVE, new AddAzureDiskVolumeToRevisionDecorator(volume));
+      resourceRegistry.decorate(KNATIVE, new AddAzureDiskVolumeToRevisionDecorator(volume));
     }
 
     for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
-      resources.decorate(KNATIVE, new AddAwsElasticBlockStoreVolumeToRevisionDecorator(volume));
+      resourceRegistry.decorate(KNATIVE, new AddAwsElasticBlockStoreVolumeToRevisionDecorator(volume));
     }
 
     for (HostAlias hostAlias : config.getHostAliases()) {
-      resources.decorate(KNATIVE, new AddHostAliasesToRevisionDecorator(hostAlias));
+      resourceRegistry.decorate(KNATIVE, new AddHostAliasesToRevisionDecorator(hostAlias));
     }
     
   }
@@ -267,14 +267,14 @@ public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHan
   protected void addDecorators(String group, KnativeConfig config) {
     super.addDecorators(group, config);
     if (!config.isExpose()) {
-      resources.decorate(group, new AddLabelDecorator(config.getName(), new LabelBuilder()
+      resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), new LabelBuilder()
           .withKey(KNATIVE_VISIBILITY)
           .withValue(CLUSTER_LOCAL)
           .build()));
     }
   }
 
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(KnativeConfig.class) || type.equals(EditableKnativeConfig.class);
   }
 
@@ -320,8 +320,8 @@ public class KnativeManifestGenerator extends AbstractKubernetesConfigurationHan
   }
 
   private static ImageConfiguration getImageConfiguration(Project project, KnativeConfig config,
-      ConfigurationRegistry configurators) {
-    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(config, i))
+      ConfigurationRegistry configurationRegistry) {
+    return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(config, i))
         .orElse(ImageConfiguration.from(config));
   }
 

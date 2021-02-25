@@ -48,20 +48,20 @@ class OpenshiftManifestGeneratorTest {
   public void shouldAcceptOpenshiftConfig() {
     Session session = Session.getSession();
     OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(generator.canHandle(OpenshiftConfig.class));
+    assertTrue(generator.accepts(OpenshiftConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableOpenshiftConfig() {
     Session session = Session.getSession();
     OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(generator.canHandle(EditableOpenshiftConfig.class));
+    assertTrue(generator.accepts(EditableOpenshiftConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfig() {
     Session session = Session.getSession();
     OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertFalse(generator.canHandle(BaseConfig.class));
+    assertFalse(generator.accepts(BaseConfig.class));
   }
 }

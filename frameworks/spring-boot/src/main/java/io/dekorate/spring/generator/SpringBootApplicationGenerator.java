@@ -60,7 +60,7 @@ public interface SpringBootApplicationGenerator extends ConfigurationGenerator, 
     session.getConfigurationRegistry().add(new SetSpringBootRuntime());
     session.getConfigurationRegistry().add(new SetSpringBootVersion());
 
-    session.getHandlers().add(new ManifestGenerator() {
+    session.getManifestGenerators().add(new ManifestGenerator() {
 
       @Override
       public int order() {
@@ -73,13 +73,13 @@ public interface SpringBootApplicationGenerator extends ConfigurationGenerator, 
       }
 
       @Override
-      public void handle(Configuration config) {
+      public void generate(Configuration config) {
         LOGGER.info("Processing service monitor config.");
         session.getResourceRegistry().decorate(new EndpointPathDecorator("http", "/actuator/prometheus"));
       }
 
       @Override
-      public boolean canHandle(Class config) {
+      public boolean accepts(Class config) {
         return SpringApplicationConfig.class.equals(config) || EditableServiceMonitorConfig.class.equals(config);
       }
     });
@@ -93,10 +93,10 @@ public interface SpringBootApplicationGenerator extends ConfigurationGenerator, 
     }
 
     if (isSpringCloudKubernetesAvailable()) {
-      session.getHandlers().add(new ManifestGenerator() {
+      session.getManifestGenerators().add(new ManifestGenerator() {
         @Override
         public int order() {
-          return 310; //We just want to run right after KubernetesHandler or OpenshiftHanlder.
+          return 310; //We just want to run right after KubernetesManifestGenerator or OpenshiftManifestGenerator.
         }
 
         @Override
@@ -105,7 +105,7 @@ public interface SpringBootApplicationGenerator extends ConfigurationGenerator, 
         }
 
         @Override
-        public void handle(Configuration config) {
+        public void generate(Configuration config) {
           LOGGER.info("Detected spring cloud kubernetes.");
           session.getResourceRegistry().decorate(new ApplyServiceAccountNamedDecorator());
           session.getResourceRegistry().decorate(new AddServiceAccountResourceDecorator());
@@ -113,7 +113,7 @@ public interface SpringBootApplicationGenerator extends ConfigurationGenerator, 
         }
 
         @Override
-        public boolean canHandle(Class config) {
+        public boolean accepts(Class config) {
           return SpringApplicationConfig.class.isAssignableFrom(config);
         }
       });
