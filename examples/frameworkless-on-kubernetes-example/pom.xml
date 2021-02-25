@@ -47,7 +47,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>App</mainClass>
+              <mainClass>io.dekorate.example.App</mainClass>
             </manifest>
           </archive>
         </configuration>
