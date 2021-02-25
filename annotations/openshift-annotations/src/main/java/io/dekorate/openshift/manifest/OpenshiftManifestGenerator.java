@@ -17,7 +17,7 @@ package io.dekorate.openshift.manifest;
 
 import java.util.Optional;
 
-import io.dekorate.AbstractKubernetesConfigurationHandler;
+import io.dekorate.AbstractKubernetesManifestGenerator;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.Logger;
@@ -63,7 +63,7 @@ import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 
-public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationHandler<OpenshiftConfig> implements WithProject {
+public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenerator<OpenshiftConfig> implements WithProject {
 
   private static final String OPENSHIFT = "openshift";
   private static final String DEFAULT_REGISTRY = "docker.io";
@@ -77,10 +77,10 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
   private final Logger LOGGER = LoggerFactory.getLogger();
   private final ConfigurationRegistry configurationRegistry;
 
-  public OpenshiftManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurationRegistry) {
-    super(resources);
+  public OpenshiftManifestGenerator(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry) {
+    super(resourceRegistry);
     this.configurationRegistry = configurationRegistry;
-    resources.groups().putIfAbsent(OPENSHIFT, new KubernetesListBuilder());
+    resourceRegistry.groups().putIfAbsent(OPENSHIFT, new KubernetesListBuilder());
   }
 
   @Override
@@ -93,10 +93,10 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
     return OPENSHIFT;
   }
 
-  public void handle(OpenshiftConfig config) {
+  public void generate(OpenshiftConfig config) {
     LOGGER.info("Processing openshift configuration.");
     ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurationRegistry);
-    Optional<DeploymentConfig> existingDeploymentConfig = resources.groups()
+    Optional<DeploymentConfig> existingDeploymentConfig = resourceRegistry.groups()
         .getOrDefault(OPENSHIFT, new KubernetesListBuilder()).buildItems().stream()
         .filter(i -> i instanceof DeploymentConfig)
         .map(i -> (DeploymentConfig) i)
@@ -104,19 +104,19 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
         .findAny();
 
     if (!existingDeploymentConfig.isPresent()) {
-      resources.add(OPENSHIFT, createDeploymentConfig(config, imageConfig));
+      resourceRegistry.add(OPENSHIFT, createDeploymentConfig(config, imageConfig));
     }
 
     if (config.isHeadless()) {
-      resources.decorate(OPENSHIFT, new ApplyHeadlessDecorator(config.getName()));
+      resourceRegistry.decorate(OPENSHIFT, new ApplyHeadlessDecorator(config.getName()));
     }
 
     for (Container container : config.getInitContainers()) {
-      resources.decorate(OPENSHIFT, new AddInitContainerDecorator(config.getName(), container));
+      resourceRegistry.decorate(OPENSHIFT, new AddInitContainerDecorator(config.getName(), container));
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(OPENSHIFT, new AddServiceResourceDecorator(config));
+      resourceRegistry.decorate(OPENSHIFT, new AddServiceResourceDecorator(config));
     }
 
     addDecorators(OPENSHIFT, config, imageConfig);
@@ -132,16 +132,16 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
   protected void addDecorators(String group, OpenshiftConfig config, ImageConfiguration imageConfig) {
     super.addDecorators(group, config);
     if (config.getReplicas() != 1) {
-      resources.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+      resourceRegistry.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     }
-    resources.decorate(group,
+    resourceRegistry.decorate(group,
         new ApplyDeploymentTriggerDecorator(config.getName(), imageConfig.getName() + ":" + imageConfig.getVersion()));
-    resources.decorate(group, new AddRouteDecorator(config));
+    resourceRegistry.decorate(group, new AddRouteDecorator(config));
 
     if (config.hasAttribute(RUNTIME_TYPE)) {
-      resources.decorate(group, new AddLabelDecorator(config.getName(), new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE), new String[0])));
+      resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE), new String[0])));
     }
-    resources.decorate(group, new RemoveAnnotationDecorator(config.getName(), Annotations.VCS_URL));
+    resourceRegistry.decorate(group, new RemoveAnnotationDecorator(config.getName(), Annotations.VCS_URL));
 
     Project project = getProject();
     Optional<VcsConfig> vcsConfig = configurationRegistry.get(VcsConfig.class);
@@ -152,11 +152,11 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
       ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
       : Labels.UNKNOWN;
 
-    resources.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), OpenshiftAnnotations.VCS_URL, vcsUrl));
-    resources.decorate(group, new AddCommitIdAnnotationDecorator());
+    resourceRegistry.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), OpenshiftAnnotations.VCS_URL, vcsUrl));
+    resourceRegistry.decorate(group, new AddCommitIdAnnotationDecorator());
   }
 
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(OpenshiftConfig.class) ||
         type.equals(EditableOpenshiftConfig.class);
   }
@@ -219,8 +219,8 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesConfigurationH
   }
 
   private static ImageConfiguration getImageConfiguration(Project project, OpenshiftConfig config,
-      ConfigurationRegistry configurators) {
-    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project))
+      ConfigurationRegistry configurationRegistry) {
+    return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(project))
         .map(i -> merge(config, i))
         .orElse(ImageConfiguration.from(config));
   }

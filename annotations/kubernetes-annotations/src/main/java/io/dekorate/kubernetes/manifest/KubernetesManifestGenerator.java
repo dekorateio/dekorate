@@ -18,7 +18,7 @@ package io.dekorate.kubernetes.manifest;
 import java.util.HashMap;
 import java.util.Optional;
 
-import io.dekorate.AbstractKubernetesConfigurationHandler;
+import io.dekorate.AbstractKubernetesManifestGenerator;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.ManifestGenerator;
@@ -66,7 +66,7 @@ import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 
-public class KubernetesManifestGenerator extends AbstractKubernetesConfigurationHandler<KubernetesConfig> implements ManifestGeneratorFactory, WithProject {
+public class KubernetesManifestGenerator extends AbstractKubernetesManifestGenerator<KubernetesConfig> implements WithProject {
 
   private static final String KUBERNETES = "kubernetes";
   private static final String DEFAULT_REGISTRY = "docker.io";
@@ -76,21 +76,12 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
   private static final String METADATA_NAMESPACE = "metadata.namespace";
 
   private final Logger LOGGER = LoggerFactory.getLogger();
-  private final ConfigurationRegistry configurators;
-
-  public KubernetesManifestGenerator() {
-    this(new ResourceRegistry(), new ConfigurationRegistry());
-  }
+  private final ConfigurationRegistry configurationRegistry;
 
   public KubernetesManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurators) {
     super(resources);
-    this.configurators = configurators;
+    this.configurationRegistry = configurators;
     resources.groups().putIfAbsent(KUBERNETES, new KubernetesListBuilder());
-  }
-
-  @Override
-  public ManifestGenerator create(ResourceRegistry resources, ConfigurationRegistry configurators) {
-    return new KubernetesManifestGenerator(resources, configurators);
   }
 
   @Override
@@ -103,11 +94,11 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
     return 200;
   }
 
-  public void handle(KubernetesConfig config) {
+  public void generate(KubernetesConfig config) {
     LOGGER.info("Processing kubernetes configuration.");
-    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
+    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurationRegistry);
 
-    Optional<Deployment> existingDeployment = resources.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder())
+    Optional<Deployment> existingDeployment = resourceRegistry.groups().getOrDefault(KUBERNETES, new KubernetesListBuilder())
         .buildItems().stream()
         .filter(i -> i instanceof Deployment)
         .map(i -> (Deployment) i)
@@ -115,14 +106,14 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
         .findAny();
 
     if (!existingDeployment.isPresent()) {
-      resources.add(KUBERNETES, createDeployment(config, imageConfig));
+      resourceRegistry.add(KUBERNETES, createDeployment(config, imageConfig));
     }
 
     addDecorators(KUBERNETES, config);
 
   }
 
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(KubernetesConfig.class) ||
         type.equals(EditableKubernetesConfig.class);
   }
@@ -131,7 +122,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
   protected void addDecorators(String group, KubernetesConfig config) {
     super.addDecorators(group, config);
 
-    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurators);
+    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurationRegistry);
     String image = Strings.isNotNullOrEmpty(imageConfig.getImage())
         ? imageConfig.getImage()
         : Images.getImage(imageConfig.isAutoPushEnabled()
@@ -150,7 +141,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
           .build();
 
     Project project = getProject();
-    Optional<VcsConfig> vcsConfig = configurators.get(VcsConfig.class);
+    Optional<VcsConfig> vcsConfig = configurationRegistry.get(VcsConfig.class);
     String remote = vcsConfig.map(VcsConfig::getRemote).orElse(Git.ORIGIN);
     boolean httpsPrefered = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
 
@@ -158,34 +149,34 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
       ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
       : Labels.UNKNOWN;
 
-    resources.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
-    resources.decorate(group, new AddCommitIdAnnotationDecorator());
+    resourceRegistry.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
+    resourceRegistry.decorate(group, new AddCommitIdAnnotationDecorator());
 
-    resources.decorate(group, new ApplyApplicationContainerDecorator(config.getName(), appContainer));
-    resources.decorate(group, new ApplyImageDecorator(config.getName(), image));
+    resourceRegistry.decorate(group, new ApplyApplicationContainerDecorator(config.getName(), appContainer));
+    resourceRegistry.decorate(group, new ApplyImageDecorator(config.getName(), image));
 
     for (Container container : config.getInitContainers()) {
-      resources.decorate(group, new AddInitContainerDecorator(config.getName(), container));
+      resourceRegistry.decorate(group, new AddInitContainerDecorator(config.getName(), container));
     }
 
     if (config.getPorts().length > 0) {
-      resources.decorate(group, new AddServiceResourceDecorator(config));
+      resourceRegistry.decorate(group, new AddServiceResourceDecorator(config));
     }
 
     Ports.getHttpPort(config).ifPresent(p -> {
-      resources.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
-      resources.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
+      resourceRegistry.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
+      resourceRegistry.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
     });
 
     if (config.isHeadless()) {
-      resources.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
+      resourceRegistry.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
     }
 
     if (config.getReplicas() != 1) {
-      resources.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
+      resourceRegistry.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     }
 
-    resources.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(),
+    resourceRegistry.decorate(KUBERNETES, new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(),
         config.getRollingUpdate()));
   }
 
@@ -243,8 +234,8 @@ public class KubernetesManifestGenerator extends AbstractKubernetesConfiguration
   }
 
   private static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig appConfig,
-      ConfigurationRegistry configurators) {
-    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i))
+      ConfigurationRegistry configurationRegistry) {
+    return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i))
         .orElse(ImageConfiguration.from(appConfig));
   }
 

@@ -101,13 +101,13 @@ An object that processes a certain type of `config` with the purpose of generati
 In some cases a `ManifestGenerator` may not generate the whole manifest, but influence parts of it.
 Usually such generators create `model` resources and register `decorators`.
 
-     public class KubernetesManifestGenerator extends AbstractKubernetesHandler<KubernetesConfig> implements ManifestGenerator {
+     public class KubernetesManifestGenerator extends AbstractKubernetesManifestGenerator<KubernetesConfig> implements ManifestGenerator {
 
-        public void handle(KubernetesConfig config) {
-            resources.add("kubernetes", createDeployment(config));
+        public void generate(KubernetesConfig config) {
+            resourceRegistry.add("kubernetes", createDeployment(config));
         }
 
-        public boolean canHandle(Class<? extends Configuration> type) {
+        public boolean accepts(Class<? extends Configuration> type) {
           return type.equals(KubernetesConfig.class);
         }
     }

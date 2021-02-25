@@ -34,11 +34,11 @@ public class ServiceBindingResourceGenerator implements ManifestGenerator<Servic
     return SERVICEBINDING;
   }
 
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(ServiceBindingConfig.class) || type.equals(EditableServiceBindingConfig.class);
   }
 
-  public void handle(ServiceBindingConfig config) {
+  public void generate(ServiceBindingConfig config) {
     LOGGER.info("Processing service binding config.");
     addVisitors(config);
   }

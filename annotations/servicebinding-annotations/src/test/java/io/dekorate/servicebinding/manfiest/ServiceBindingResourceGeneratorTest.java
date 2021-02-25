@@ -32,13 +32,13 @@ public class ServiceBindingResourceGeneratorTest {
   public void shouldAcceptServiceBindingConfig() {
     Session session = Session.getSession();
     ServiceBindingResourceGenerator handler = new ServiceBindingResourceGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(handler.canHandle(ServiceBindingConfig.class));
+    assertTrue(handler.accepts(ServiceBindingConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableServiceBindingConfig() {
     Session session = Session.getSession();
     ServiceBindingResourceGenerator handler = new ServiceBindingResourceGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(handler.canHandle(EditableServiceBindingConfig.class));
+    assertTrue(handler.accepts(EditableServiceBindingConfig.class));
   }
 }

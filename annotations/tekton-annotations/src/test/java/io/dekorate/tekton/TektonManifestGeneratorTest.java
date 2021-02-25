@@ -48,20 +48,20 @@ class TektonManifestGeneratorTest {
   public void shouldAcceptTektonConfig() {
     Session session = Session.getSession();
     TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(generator.canHandle(TektonConfig.class));
+    assertTrue(generator.accepts(TektonConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableTektonConfig() {
     Session session = Session.getSession();
     TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertTrue(generator.canHandle(EditableTektonConfig.class));
+    assertTrue(generator.accepts(EditableTektonConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfig() {
     Session session = Session.getSession();
     TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
-    assertFalse(generator.canHandle(BaseConfig.class));
+    assertFalse(generator.accepts(BaseConfig.class));
   }
 }

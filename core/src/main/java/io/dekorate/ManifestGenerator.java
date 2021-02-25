@@ -46,7 +46,7 @@ public interface ManifestGenerator<C extends Configuration> {
    * 
    * @param config The config to handle.
    */
-  void handle(C config);
+  void generate(C config);
 
   /**
    * The configuration to use if no configuration for the handler has been specified.
@@ -62,5 +62,5 @@ public interface ManifestGenerator<C extends Configuration> {
    * @param config The specified config class;
    * @returns True if config type is accepted, false otherwise.
    */
-  boolean canHandle(Class<? extends Configuration> config);
+  boolean accepts(Class<? extends Configuration> config);
 }

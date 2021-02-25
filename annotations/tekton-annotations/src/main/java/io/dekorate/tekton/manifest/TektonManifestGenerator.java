@@ -161,12 +161,12 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     return TEKTON;
   }
 
-  public boolean canHandle(Class<? extends Configuration> type) {
+  public boolean accepts(Class<? extends Configuration> type) {
     return type.equals(TektonConfig.class) ||
         type.equals(EditableTektonConfig.class);
   }
 
-  public void handle(TektonConfig config) {
+  public void generate(TektonConfig config) {
 
     ImageConfiguration imageConfiguration = getImageConfiguration(getProject(), config, configurationRegistry);
 
@@ -616,8 +616,8 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   }
 
   private static ImageConfiguration getImageConfiguration(Project project, TektonConfig tektonConfig,
-      ConfigurationRegistry configurators) {
-    return configurators.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(tektonConfig, i))
+      ConfigurationRegistry configurationRegistry) {
+    return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(tektonConfig, i))
         .orElse(ImageConfiguration.from(tektonConfig));
   }
 
