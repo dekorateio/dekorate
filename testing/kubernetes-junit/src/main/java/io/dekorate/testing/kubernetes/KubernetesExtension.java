@@ -123,14 +123,14 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
           i instanceof ReplicationController).collect(Collectors.toList());
       long started = System.currentTimeMillis();
       LOGGER.info("Waiting until ready (" + config.getReadinessTimeout() + " ms)...");
-      waitUntilCondition(context, waitables, i -> Readiness.isReady(i), config.getReadinessTimeout(),
+      waitUntilCondition(context, waitables, i -> Readiness.getInstance().isReady(i), config.getReadinessTimeout(),
           TimeUnit.MILLISECONDS);
       long ended = System.currentTimeMillis();
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
       waitables.stream().map(r -> client.resource(r).fromServer().get())
         .forEach(i -> {
-            if (!Readiness.isReady(i)) {
+            if (!Readiness.getInstance().isReady(i)) {
               readinessFailed(context);
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");
             }
