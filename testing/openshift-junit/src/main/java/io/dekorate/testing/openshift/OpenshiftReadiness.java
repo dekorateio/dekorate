@@ -15,25 +15,14 @@
  */
 package io.dekorate.testing.openshift;
 
-import io.fabric8.kubernetes.api.model.EndpointSubset;
 import io.fabric8.kubernetes.api.model.Endpoints;
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodCondition;
 import io.fabric8.kubernetes.api.model.Node;
-import io.fabric8.kubernetes.api.model.NodeCondition;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.ReplicationController;
-import io.fabric8.kubernetes.api.model.ReplicationControllerSpec;
-import io.fabric8.kubernetes.api.model.ReplicationControllerStatus;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
-import io.fabric8.kubernetes.api.model.apps.DeploymentStatus;
 import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
-import io.fabric8.kubernetes.api.model.apps.ReplicaSetSpec;
-import io.fabric8.kubernetes.api.model.apps.ReplicaSetStatus;
 import io.fabric8.kubernetes.api.model.apps.StatefulSet;
-import io.fabric8.kubernetes.api.model.apps.StatefulSetSpec;
-import io.fabric8.kubernetes.api.model.apps.StatefulSetStatus;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 import io.fabric8.kubernetes.client.utils.Utils;
 import io.fabric8.openshift.api.model.DeploymentConfig;
@@ -41,15 +30,6 @@ import io.fabric8.openshift.api.model.DeploymentConfigSpec;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 
 public class OpenshiftReadiness {
-
-  private static final String POD_READY = "Ready";
-  private static final String NODE_READY = "Ready";
-  private static final String TRUE = "True";
-
-
-  public static boolean isReadinessApplicable(Class<? extends HasMetadata> itemClass) {
-    return DeploymentConfig.class.isAssignableFrom(itemClass) || Readiness.isReadinessApplicable(itemClass);
-  }
 
   public static boolean isReady(HasMetadata item) {
     if (isReadiableKubernetesResource(item)) {

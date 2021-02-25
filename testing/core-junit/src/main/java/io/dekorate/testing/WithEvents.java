@@ -35,7 +35,6 @@ public interface WithEvents extends WithKubernetesClient {
     fields.put("involvedObject.uid", resource.getMetadata().getUid());
     fields.put("involvedObject.name", resource.getMetadata().getName());
     fields.put("involvedObject.namespace", resource.getMetadata().getNamespace());
-    return getKubernetesClient(context).events().inNamespace(resource.getMetadata().getNamespace()).withFields(fields)
-        .list();
+    return getKubernetesClient(context).v1().events().inNamespace(resource.getMetadata().getNamespace()).withFields(fields).list();
   }
 }
