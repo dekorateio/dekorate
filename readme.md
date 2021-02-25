@@ -1782,26 +1782,64 @@ In case, that dekorate bom is imported by a downstream project (e.g. snowdrop) a
 
 ## Versions and Branches
 
-At the moment dekorate is using 3 branches in parallel and two major versions are developed at the same time.
+The current version of dekorate is `<version>2.0.0</version>`.
+
+### What's changed in 2.x
+
+Most of the changes that happend inside 2.x are internal and are related to the maintainance of the project.
+
+#### New features
+
+- Configurable logging threshold
+- Git options
+- Inferring image configuration from application config
+- JaxRS support (without requiring Thorntail)
+- Integration testing framework improvements (detailed diagnostics on error)
+- Updated to kubernetes-client and model v5.1.1
+
+#### Annotation naming
+
+- EnableDockerBuild -> DockerBuild
+- EnableS2iBuild -> S2iBuild
+- EnableJibBuild -> JibBuild
+
+#### Dropped modules
+
+The following features were dropped:
+
+- service catalog
+- halkyon 
+- application crd
+- crd generator (functionality moved to the fabric8 kubernetes-client).
+- dependencies uberjar
+
+#### Dropped `dependencies` shadowed uber jar
+
+Earlier version of dekorate used a shadowed uberjar containing all dependencies.
+As of `2.0.0` the `dependencies` uberjar is no more.
+Downstream projects using dekorate as a library will need to switch from `io.dekorate.deps.xxx` to the original packages.
+
+#### Component naming
+
+Earlier version of dekorate used names for its core components that we too generic.
+So, in 2.0.0 the name changed so that they are more descriptive.
+Naming changes:
+
+- Generator -> ConfigGenerator
+- Hanlder -> ManifestGenerator
 
 ### Branches
 
+All dekorate development takes place on the `master` branch. From that branch `current` releases are created.
+Bug fixes for older releases are done through their correspnding branch.
+
 - master (active development, pull requests should point here)
-- 2.0.x  (not released yet)
-- 1.0.x  (bug fixes, only)
-- 0.15.x (old branch, former cuting edge branch)
+- 1.0.x
+- 0.15.x 
 
 ### Pull request guidelines
 
 All pull requests should target the `master` branch and from there things are backported to where it makes sense.
-
-### Release branches
-
-The current release branches are:
-
-- 2.0.x  (current)
-- 1.0.x  (stable, bug fixes only)
-- 0.15.x (maintainance mode)
 
 ## Frequently asked questions
 
