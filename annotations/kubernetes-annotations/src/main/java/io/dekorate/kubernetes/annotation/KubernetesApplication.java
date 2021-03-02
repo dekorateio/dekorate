@@ -119,7 +119,7 @@ public @interface KubernetesApplication {
    * 
    * @return The number of replicas.
    */
-  int replicas() default 1;
+  int replicas() ;
 
   /**
    * Specifies the deployment strategy.

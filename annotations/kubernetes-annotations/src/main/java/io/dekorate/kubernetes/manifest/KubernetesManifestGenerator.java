@@ -190,7 +190,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
         .withName(appConfig.getName())
         .endMetadata()
         .withNewSpec()
-        .withReplicas(1)
+        .withReplicas(appConfig.getReplicas())
         .withNewSelector() //We need to have at least an empty selector so that the decorator can work with it.
         .withMatchLabels(new HashMap<String, String>())
         .endSelector()
