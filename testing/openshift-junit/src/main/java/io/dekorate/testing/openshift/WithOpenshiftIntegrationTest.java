@@ -25,8 +25,8 @@ import io.dekorate.testing.openshift.config.OpenshiftIntegrationTestConfigBuilde
 public interface WithOpenshiftIntegrationTest {
 
   OpenshiftIntegrationTestConfig DEFAULT_OPENSHIFT_INTEGRATION_TEST_CONFIG = new OpenshiftIntegrationTestConfigBuilder()
-      .withImageStreamTagTimeout(120000)
-      .withReadinessTimeout(500000)
+      .withImageStreamTagTimeout(120000L)
+      .withReadinessTimeout(500000L)
       .build();
 
   default OpenshiftIntegrationTestConfig getOpenshiftIntegrationTestConfig(ExtensionContext context) {

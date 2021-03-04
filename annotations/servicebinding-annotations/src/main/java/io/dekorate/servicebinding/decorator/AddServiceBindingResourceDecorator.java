@@ -63,27 +63,30 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
   private Service[] getServices(ServiceConfig[] services) {
     return Arrays.stream(services)
         .map(s -> new Service(s.getGroup(), s.getKind(), s.getName(), s.getVersion(), s.getId(),
-            !s.getNamespace().equals("") ? s.getNamespace() : null,
-            !s.getEnvVarPrefix().equals("") ? s.getEnvVarPrefix() : null))
+            Strings.isNotNullOrEmpty(s.getNamespace()) ? s.getNamespace() : null,
+            Strings.isNotNullOrEmpty(s.getEnvVarPrefix()) ? s.getEnvVarPrefix() : null))
         .toArray(Service[]::new);
   }
 
   private Application getApplication(ApplicationConfig config, BindingPathConfig bindingPathConfig, HasMetadata meta) {
     String[] apiVersion = meta.getApiVersion().split("/");
-    String name = !config.getName().equals("") ? config.getName() : meta.getMetadata().getName();
+    String name = config != null && Strings.isNotNullOrEmpty(config.getName()) ? config.getName() : meta.getMetadata().getName();
     return new Application(apiVersion[0], meta.getKind(), name, apiVersion[1], getBindingPath(bindingPathConfig));
   }
 
   private String getServiceBindingName(String serviceBindingName, String deploymentName) {
-    if (serviceBindingName != null && !serviceBindingName.equals("")) {
+    if (Strings.isNotNullOrEmpty(serviceBindingName)) {
       return serviceBindingName;
     }
     return deploymentName + "-binding";
   }
 
   private BindingPath getBindingPath(BindingPathConfig config) {
-    String containerPath = !config.getContainerPath().equals("") ? config.getContainerPath() : null;
-    String secretPath = !config.getSecretPath().equals("") ? config.getSecretPath() : null;
+    if (config == null) {
+      return null;
+    }
+    String containerPath = Strings.isNotNullOrEmpty(config.getContainerPath()) ? config.getContainerPath() : null;
+    String secretPath = Strings.isNotNullOrEmpty(config.getSecretPath()) ? config.getSecretPath() : null;
     if (containerPath == null && secretPath == null) {
       return null;
     }
@@ -92,7 +95,7 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
 
   private CustomEnvVar[] getCustomEnvVar(Env[] config) {
     return Arrays.stream(config)
-        .map(s -> new CustomEnvVarBuilder().withName(!s.getName().equals("") ? s.getName() : null)
+        .map(s -> new CustomEnvVarBuilder().withName(Strings.isNotNullOrEmpty(s.getName()) ? s.getName() : null)
             .withValue(getEnvValue(s)).withValueFrom(getValueFrom(s)).build())
         .toArray(CustomEnvVar[]::new);
   }
@@ -107,7 +110,7 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
   }
 
   private String getEnvVarPrefix(String envVarPrefix) {
-    return !envVarPrefix.equals("") ? envVarPrefix : null;
+    return Strings.isNotNullOrEmpty(envVarPrefix) ? envVarPrefix : null;
   }
 
   private ValueFrom getValueFrom(Env envConfig) {

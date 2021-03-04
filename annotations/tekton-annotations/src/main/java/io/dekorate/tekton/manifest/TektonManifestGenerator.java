@@ -235,7 +235,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     resourceRegistry.decorate(group, new AddProjectBuildStepDecorator(projectBuildTaskName, ProjectBuildStep.ID, config.getName()));
 
     //Image Build
-    TektonImageBuildStrategy imageBuildStrategy = config.getImageBuildStrategy();
+    TektonImageBuildStrategy imageBuildStrategy = config.getImageBuildStrategy() != null ? config.getImageBuildStrategy() : TektonImageBuildStrategy.kaniko;
     ImageBuildStep imageBuildStep = imageBuildStrategy.getStep()
       .withContext(getContextPath(getProject()))
       .withDockerfile(config.getDockerfile())
@@ -555,8 +555,8 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   public PersistentVolumeClaim createSourceWorkspacePvc(TektonConfig config) {
     Map<String, Quantity> requests = new HashMap<String, Quantity>() {
       {
-        put("storage", new QuantityBuilder().withAmount(String.valueOf(config.getSourceWorkspaceClaim().getSize()))
-            .withFormat(config.getSourceWorkspaceClaim().getUnit()).build());
+        put("storage", new QuantityBuilder().withAmount(config.getSourceWorkspaceClaim().getSize() != null ? String.valueOf(config.getSourceWorkspaceClaim().getSize()) : "1")
+            .withFormat(config.getSourceWorkspaceClaim().getUnit() != null ? config.getSourceWorkspaceClaim().getUnit() : "Gi").build());
       }
     };
     LabelSelector selector = null;
@@ -572,7 +572,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withName(sourceWorkspaceClaimName(config))
         .endMetadata()
         .withNewSpec()
-        .withAccessModes(config.getSourceWorkspaceClaim().getAccessMode().name())
+        .withAccessModes(config.getSourceWorkspaceClaim().getAccessMode() != null ? config.getSourceWorkspaceClaim().getAccessMode().name() : "ReadWriteOnce")
         .withStorageClassName(config.getSourceWorkspaceClaim().getStorageClass())
         .withNewResources().withRequests(requests).endResources()
         .withSelector(selector)
@@ -600,7 +600,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withName(m2WorkspaceClaimName(config))
         .endMetadata()
         .withNewSpec()
-        .withAccessModes(config.getM2WorkspaceClaim().getAccessMode().name())
+        .withAccessModes(config.getSourceWorkspaceClaim().getAccessMode() != null ? config.getSourceWorkspaceClaim().getAccessMode().name() : "ReadWriteOnce")
         .withStorageClassName(config.getM2WorkspaceClaim().getStorageClass())
         .withNewResources().withRequests(requests).endResources()
         .withSelector(selector)

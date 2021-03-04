@@ -58,7 +58,8 @@ public class S2iBuildServiceFactory implements BuildServiceFactory {
   @Override
   public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
     if (config instanceof S2iBuildConfig) {
-      if (((S2iBuildConfig) config).isEnabled()) {
+      S2iBuildConfig s2iBuildConfig = (S2iBuildConfig) config;
+      if (s2iBuildConfig.isEnabled()) {
         return new BuildServiceApplicablility(true, MESSAGE_OK);
       } else {
         return new BuildServiceApplicablility(false, MESSAGE_DISABLED);

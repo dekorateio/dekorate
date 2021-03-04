@@ -57,6 +57,6 @@ public class Labels {
 
 
   public static Map<String, String> createLabelsAsMap(BaseConfig config, String kind) {
-    return createLabels(config).stream().filter(l -> l.getKinds().length == 0 || Arrays.asList(l.getKinds()).contains(kind)).collect(Collectors.toMap(l -> l.getKey(), l -> l.getValue()));
+    return createLabels(config).stream().filter(l -> l.getKinds() == null || l.getKinds().length == 0 || Arrays.asList(l.getKinds()).contains(kind)).collect(Collectors.toMap(l -> l.getKey(), l -> l.getValue()));
   }
 }

@@ -29,7 +29,7 @@ public class DefaultTektonConfigGenerator implements TektonConfigGenerator, With
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
     this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
-    on(new DefaultConfiguration<TektonConfig>(new TektonConfigBuilder()));
+    on(new DefaultConfiguration<TektonConfig>(TektonConfig.newTektonConfigBuilderFromDefaults()));
   }
 
   public ConfigurationRegistry getConfigurationRegistry() {

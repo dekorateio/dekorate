@@ -30,7 +30,7 @@ import io.sundr.builder.annotations.Pojo;
  * - https://www.baeldung.com/jvm-parameters (awesome resource).
  */
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "JvmConfig", relativePath = "../config", mutable = true, superClass = Configuration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "JvmConfig", relativePath = "../config", autobox = true, mutable = true, superClass = Configuration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false, adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface JvmOptions {

@@ -16,9 +16,12 @@
 package io.dekorate.utils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Generators {
 
@@ -36,6 +39,78 @@ public class Generators {
         throw e;
       }
       return findField(s, origin, field);
+    }
+  }
+
+  /**
+   * Change properties corresponding to primtives from String to the actual primitive value. 
+   */
+  public static void applyPrimitives(Class configClass, Map<String, Object> map) {
+    for (Map.Entry<String, Object> entry : new HashMap<String, Object>(map).entrySet()) {
+      String key = entry.getKey();
+      String fieldName = Strings.kebabToCamelCase(key);
+      Object value = entry.getValue();
+      try {
+        Class fieldType = findField(configClass, fieldName).getType();
+        if (value != null) {
+          if (!fieldType.isArray()) { 
+            if (fieldType.equals(Boolean.class)) {
+              map.put(key, Boolean.parseBoolean(String.valueOf(value)));
+            } else if (fieldType.equals(Short.class)) {
+              map.put(key, Short.parseShort(String.valueOf(value)));
+            } else if (fieldType.equals(Integer.class)) {
+              map.put(key, Integer.parseInt(String.valueOf(value)));
+            } else if (fieldType.equals(Long.class)) {
+              map.put(key, Long.parseLong(String.valueOf(value)));
+            } else if (fieldType.equals(Double.class)) {
+              map.put(key, Double.parseDouble(String.valueOf(value)));
+            } else if (value instanceof Map) {
+              applyPrimitives(fieldType, (Map) value);
+            }
+          } else {
+            if (fieldType.getComponentType().equals(Boolean.class)) {
+              map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
+                      .map(Boolean::parseBoolean)
+                      .collect(Collectors.toList())
+                      .toArray(new Boolean[]{}));
+            } else if (fieldType.getComponentType().equals(Short.class)) {
+              map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
+                      .map(Short::parseShort)
+                      .collect(Collectors.toList())
+                      .toArray(new Short[]{}));
+            } else if (fieldType.getComponentType().equals(Integer.class)) {
+              map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
+                      .map(Integer::parseInt)
+                      .collect(Collectors.toList())
+                      .toArray(new Integer[]{}));
+ 
+            } else if (fieldType.getComponentType().equals(Long.class)) {
+              map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
+                      .map(Long::parseLong)
+                      .collect(Collectors.toList())
+                      .toArray(new Long[]{}));
+ 
+            } else if (fieldType.getComponentType().equals(Double.class)) {
+              map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
+                      .map(Double::parseDouble)
+                      .collect(Collectors.toList())
+                      .toArray(new Double[]{}));
+            } else if (value instanceof Map[]) {
+              final List<Map<String, Object>> mapList = new ArrayList<>();
+              Arrays.stream((Map[])value).forEach(m -> {
+                  Map<String, Object> copy = new HashMap<>(m);
+                  applyPrimitives(fieldType.getComponentType(), copy);
+                  mapList.add(copy);
+                });
+              map.put(key, mapList.toArray(new Map[mapList.size()]));
+            } else {
+            }
+          }
+        }
+      } catch (NoSuchFieldError | SecurityException | NoSuchFieldException e) {
+        //ignore an move to next entry.
+        continue;
+      }
     }
   }
 

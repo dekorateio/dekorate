@@ -16,6 +16,9 @@
 
 package io.dekorate.kubernetes.annotation;
 
+import io.sundr.builder.annotations.Pojo;
+
+@Pojo(relativePath = "../config", autobox = true, mutable = true, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
 public @interface ResourceRequirements {
 
   String memory() default "";

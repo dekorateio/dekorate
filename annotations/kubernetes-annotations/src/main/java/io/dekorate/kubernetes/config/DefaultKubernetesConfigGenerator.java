@@ -32,7 +32,7 @@ public class DefaultKubernetesConfigGenerator implements KubernetesConfigGenerat
     this.configurationRegistry.add(new ApplyImagePullSecretConfiguration());
     this.configurationRegistry.add(new PopulateWebPort());
     this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
-    add(new DefaultConfiguration<KubernetesConfig>(new KubernetesConfigBuilder()));
+    add(new DefaultConfiguration<KubernetesConfig>(KubernetesConfig.newKubernetesConfigBuilderFromDefaults()));
   }
 
   @Override

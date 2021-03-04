@@ -36,7 +36,7 @@ public class AddLivenessProbeDecorator extends AbstractAddProbeDecorator {
 
   @Override
   protected void doCreateProbe(ContainerFluent<?> container, Actions actions) {
-    if (probe.getSuccessThreshold() != 1) {
+    if (probe.getSuccessThreshold() != null && probe.getSuccessThreshold() != 1) {
       LOGGER.warning("Invalid success threshold value for liveness probe. It must be 1, found: "
           + probe.getSuccessThreshold() + "! The correct value of 1 will be forced!");
     }

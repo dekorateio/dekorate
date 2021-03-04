@@ -156,6 +156,7 @@ public class Maps {
     return result;
   }
 
+
   public static <A extends Annotation> Map<String, Object> fromAnnotation(A annotation, Class<? extends A> type) {
     Map<String, Object> result = new HashMap<>();
     try {
@@ -179,6 +180,8 @@ public class Maps {
           }
         } else if (clazz.isAnnotation()) {
           result.put(m.getName(), fromAnnotation((Annotation) value, (Class) clazz));
+        } else if (clazz.isPrimitive()) {
+          result.put(m.getName(), value);
         } else {
           result.put(m.getName(), String.valueOf(value));
         }
@@ -188,6 +191,42 @@ public class Maps {
     }
     return result;
   }
+
+  public static <A extends Annotation> Map<String, Object> fromAnnotation(Class<? extends A> type) {
+    Map<String, Object> result = new HashMap<>();
+    try {
+      for (Method m : type.getDeclaredMethods()) {
+        Object value = m.getDefaultValue();
+        Class<?> clazz = m.getReturnType();
+        if (clazz.isArray()) {
+          Class componentType = clazz.getComponentType();
+          if (componentType.isAnnotation()) {
+            List<Map<String, Object>> maps = new ArrayList<>();
+            for (Object o : (Object[]) value) {
+              Map<String, Object> nested = fromAnnotation((Annotation) o, componentType);
+              maps.add(nested);
+            }
+            result.put(m.getName(), maps.toArray(new Map[maps.size()]));
+          } else if (((Object[]) value).length == 0) {
+            //let's skip empty arrays
+          } else {
+            result.put(m.getName(),
+                Arrays.stream((Object[]) value).map(String::valueOf).collect(Collectors.joining(",")));
+          }
+        } else if (clazz.isAnnotation()) {
+          result.put(m.getName(), fromAnnotation((Annotation) value, (Class) clazz));
+        } else if (clazz.isPrimitive()) {
+          result.put(m.getName(), value);
+        } else {
+          result.put(m.getName(), String.valueOf(value));
+        }
+      }
+    } catch (Exception e) {
+      throw DekorateException.launderThrowable(e);
+    }
+    return result;
+  }
+
 
 
   /**

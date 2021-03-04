@@ -38,7 +38,7 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
   @Override
   public void andThenVisit(IngressSpecBuilder spec, ObjectMeta meta) {
-    Predicate<IngressRuleBuilder> matchingHost = r -> r.getHost().equals(host);
+    Predicate<IngressRuleBuilder> matchingHost = r -> r.getHost() != null && r.getHost().equals(host);
 
     if (!spec.hasMatchingRule(matchingHost)) {
       spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPathType("Prefix").withPath(port.getPath()).withNewBackend()

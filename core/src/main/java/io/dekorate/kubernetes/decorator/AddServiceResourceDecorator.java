@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.utils.Labels;
@@ -58,7 +59,7 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
         .withLabels(labels)
         .endMetadata()
         .withNewSpec()
-        .withType(config.getServiceType().name())
+        .withType(config.getServiceType() != null ? config.getServiceType().name() : "ClusterIP")
         .withSelector(labels)
         .withPorts(Arrays.asList(config.getPorts()).stream()
             .filter(distinct(p -> p.getName())).map(this::toServicePort).collect(Collectors.toList()))

@@ -27,7 +27,7 @@ import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 
-@Pojo(name = "JibBuildConfig", mutable = true, superClass = ImageConfiguration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "JibBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "JibBuildConfig", autobox = true, mutable = true, superClass = ImageConfiguration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "JibBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface JibBuild {
@@ -49,7 +49,7 @@ public @interface JibBuild {
   String group() default "";
 
   /**
-   * The name of the application. This value will be used as name.
+   * The name of the application. This value will be used as name .
    * 
    * @return The specified application name.
    */

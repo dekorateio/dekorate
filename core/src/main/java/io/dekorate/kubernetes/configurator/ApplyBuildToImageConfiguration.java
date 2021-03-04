@@ -30,9 +30,9 @@ public class ApplyBuildToImageConfiguration extends Configurator<ImageConfigurat
   public void visit(ImageConfigurationFluent config) {
     String registry = System.getProperty(DEKORATE_DOCKER_REGISTRY, config.getRegistry());
     config.withAutoBuildEnabled(
-        Boolean.parseBoolean(System.getProperty(DEKORATE_BUILD, String.valueOf(config.isAutoBuildEnabled()))))
+        Boolean.parseBoolean(System.getProperty(DEKORATE_BUILD, String.valueOf(config.getAutoBuildEnabled()))))
         .withAutoPushEnabled(
-            Boolean.parseBoolean(System.getProperty(DEKORATE_PUSH, String.valueOf(config.isAutoPushEnabled()))))
+            Boolean.parseBoolean(System.getProperty(DEKORATE_PUSH, String.valueOf(config.getAutoPushEnabled()))))
         .withRegistry(registry);
   }
 }

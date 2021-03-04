@@ -68,19 +68,19 @@ public class ContainerAdapter {
     }
 
     // Container resources
-    if (Strings.isNotNullOrEmpty(container.getLimitResources().getCpu())) {
+    if (container.getLimitResources() != null && Strings.isNotNullOrEmpty(container.getLimitResources().getCpu())) {
       builder.accept(new ApplyLimitsCpuDecorator(name, container.getLimitResources().getCpu()));
     }
 
-    if (Strings.isNotNullOrEmpty(container.getLimitResources().getMemory())) {
+    if (container.getLimitResources() != null && Strings.isNotNullOrEmpty(container.getLimitResources().getMemory())) {
       builder.accept(new ApplyLimitsMemoryDecorator(name, container.getLimitResources().getMemory()));
     }
 
-    if (Strings.isNotNullOrEmpty(container.getRequestResources().getCpu())) {
+    if (container.getRequestResources() != null && Strings.isNotNullOrEmpty(container.getRequestResources().getCpu())) {
       builder.accept(new ApplyRequestsCpuDecorator(name, container.getRequestResources().getCpu()));
     }
 
-    if (Strings.isNotNullOrEmpty(container.getRequestResources().getMemory())) {
+    if (container.getRequestResources() != null && Strings.isNotNullOrEmpty(container.getRequestResources().getMemory())) {
       builder.accept(new ApplyRequestsMemoryDecorator(name, container.getRequestResources().getMemory()));
     }
   }

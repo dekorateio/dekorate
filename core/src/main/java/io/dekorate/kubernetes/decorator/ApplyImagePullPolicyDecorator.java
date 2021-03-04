@@ -49,7 +49,7 @@ public class ApplyImagePullPolicyDecorator extends ApplicationContainerDecorator
 
   @Override
   public void andThenVisit(ContainerFluent<?> container) {
-    container.withImagePullPolicy(imagePullPolicy.name());
+    container.withImagePullPolicy(imagePullPolicy != null ? imagePullPolicy.name() : "IfNotPresent");
   }
 
   public Class<? extends Decorator>[] after() {

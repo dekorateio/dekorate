@@ -20,7 +20,6 @@ package io.dekorate.s2i.manifest;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.ManifestGenerator;
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.ResourceRegistry;
@@ -70,7 +69,7 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
   }
 
   public void generate(S2iBuildConfig config) {
-    if (config.isEnabled()) {
+    if (config.getEnabled() == null || config.getEnabled()) {
       LOGGER.info("Processing s2i configuration.");
       //TODO: We are temporarily limit S2i to openshift until we find a better way to handle this (#367).
       resourceRegistry.decorate(OPENSHIFT, new AddBuilderImageStreamResourceDecorator(config));
