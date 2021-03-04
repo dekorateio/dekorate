@@ -29,7 +29,7 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "S2iBuildConfig", mutable = true, superClass = ImageConfiguration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "S2iBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "S2iBuildConfig", autobox = true, mutable = true, superClass = ImageConfiguration.class, relativePath = "../config", withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(name = "S2iBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 
 @Retention(RetentionPolicy.RUNTIME)

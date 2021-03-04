@@ -38,6 +38,7 @@ public class Issue331Test {
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
+    assertEquals(3, d.getSpec().getReplicas());
     PodSpec podSpec = d.getSpec().getTemplate().getSpec();
     Container container = podSpec.getContainers().get(0);
     assertNotNull(container);

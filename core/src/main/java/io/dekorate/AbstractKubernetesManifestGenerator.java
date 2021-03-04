@@ -169,11 +169,11 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       resourceRegistry.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(volume));
     }
 
-    if (config.getCommand().length > 0) {
+    if (config.getCommand() != null && config.getCommand().length > 0) {
       resourceRegistry.decorate(group, new ApplyCommandDecorator(config.getName(), config.getName(), config.getCommand()));
     }
 
-    if (config.getArguments().length > 0) {
+    if (config.getArguments() != null && config.getArguments().length > 0) {
       resourceRegistry.decorate(group, new ApplyArgsDecorator(config.getName(), config.getName(), config.getArguments()));
     }
 
@@ -188,24 +188,28 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     }
 
     //Container resources
-    if (Strings.isNotNullOrEmpty(config.getLimitResources().getCpu())) {
-      resourceRegistry.decorate(group,
-          new ApplyLimitsCpuDecorator(config.getName(), config.getName(), config.getLimitResources().getCpu()));
+    if (config.getLimitResources() != null) {
+      if (Strings.isNotNullOrEmpty(config.getLimitResources().getCpu())) {
+        resourceRegistry.decorate(group,
+                                  new ApplyLimitsCpuDecorator(config.getName(), config.getName(), config.getLimitResources().getCpu()));
+      }
+
+      if (Strings.isNotNullOrEmpty(config.getLimitResources().getMemory())) {
+        resourceRegistry.decorate(group,
+                                  new ApplyLimitsMemoryDecorator(config.getName(), config.getName(), config.getLimitResources().getMemory()));
+      }
     }
 
-    if (Strings.isNotNullOrEmpty(config.getLimitResources().getMemory())) {
-      resourceRegistry.decorate(group,
-          new ApplyLimitsMemoryDecorator(config.getName(), config.getName(), config.getLimitResources().getMemory()));
-    }
+    if (config.getRequestResources() != null) {
+      if (Strings.isNotNullOrEmpty(config.getRequestResources().getCpu())) {
+        resourceRegistry.decorate(group,
+                                  new ApplyRequestsCpuDecorator(config.getName(), config.getName(), config.getRequestResources().getCpu()));
+      }
 
-    if (Strings.isNotNullOrEmpty(config.getRequestResources().getCpu())) {
-      resourceRegistry.decorate(group,
-          new ApplyRequestsCpuDecorator(config.getName(), config.getName(), config.getRequestResources().getCpu()));
-    }
-
-    if (Strings.isNotNullOrEmpty(config.getRequestResources().getMemory())) {
-      resourceRegistry.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(),
-          config.getRequestResources().getMemory()));
+      if (Strings.isNotNullOrEmpty(config.getRequestResources().getMemory())) {
+        resourceRegistry.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(),
+                                                                          config.getRequestResources().getMemory()));
+      }
     }
 
     resourceRegistry.decorate(group,new RemoveProbesFromInitContainerDecorator());
@@ -218,7 +222,7 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     if (Strings.isNullOrEmpty(volume.getSecretName())) {
       throw new IllegalArgumentException("Secret volume: " + volume.getVolumeName() + ". Missing secret name!");
     }
-    if (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777) {
+    if (volume.getDefaultMode() != null && (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777)) {
       throw new IllegalArgumentException("Secret volume: " + volume.getVolumeName() + ". Illegal defaultMode: "
           + volume.getDefaultMode() + ". Should be between: 0000 and 0777!");
     }
@@ -231,7 +235,7 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     if (Strings.isNullOrEmpty(volume.getConfigMapName())) {
       throw new IllegalArgumentException("ConfigMap volume: " + volume.getVolumeName() + ". Missing configmap name!");
     }
-    if (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777) {
+    if (volume.getDefaultMode() != null && (volume.getDefaultMode() < 0 || volume.getDefaultMode() > 0777)) {
       throw new IllegalArgumentException("ConfigMap volume: " + volume.getVolumeName() + ". Illegal defaultMode: "
           + volume.getDefaultMode() + ". Should be between: 0000 and 0777!");
     }

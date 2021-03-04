@@ -72,7 +72,9 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
 
       BuildService buildService = null;
       boolean s2iEnabled = imageConfig instanceof S2iBuildConfig && ((S2iBuildConfig) imageConfig).isEnabled();
-      if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || openshiftConfig.isAutoDeployEnabled()) {
+      if (imageConfig.isAutoBuildEnabled()
+          || imageConfig.isAutoPushEnabled()
+          || openshiftConfig.isAutoDeployEnabled()) {
 
         KubernetesList list = session.getGeneratedResources().get("openshift");
         List<HasMetadata> generated = list != null ? list.getItems() : Collections.emptyList();

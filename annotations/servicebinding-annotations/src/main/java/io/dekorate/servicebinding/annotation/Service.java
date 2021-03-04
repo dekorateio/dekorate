@@ -26,7 +26,7 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "ServiceConfig", mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false)
+@Pojo(name = "ServiceConfig", autobox = true, mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false)
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface Service {

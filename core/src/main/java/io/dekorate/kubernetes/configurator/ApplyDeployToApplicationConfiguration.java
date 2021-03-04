@@ -27,6 +27,6 @@ public class ApplyDeployToApplicationConfiguration extends Configurator<BaseConf
   @Override
   public void visit(BaseConfigFluent config) {
     config.withAutoDeployEnabled(
-        Boolean.parseBoolean(System.getProperty(DEKORATE_DEPLOY, String.valueOf(config.isAutoDeployEnabled()))));
+        Boolean.parseBoolean(System.getProperty(DEKORATE_DEPLOY, String.valueOf(config.getAutoDeployEnabled()))));
   }
 }

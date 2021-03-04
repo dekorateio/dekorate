@@ -36,8 +36,8 @@ public class ImageConfiguration extends ApplicationConfiguration {
 
   private String image;
   private String dockerFile;
-  private boolean autoBuildEnabled;
-  private boolean autoPushEnabled;
+  private Boolean autoBuildEnabled;
+  private Boolean autoPushEnabled;
 
   public static ImageConfiguration from(ApplicationConfiguration applicationConfiguration) {
     return new ImageConfigurationBuilder()
@@ -54,7 +54,7 @@ public class ImageConfiguration extends ApplicationConfiguration {
   }
 
   public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, String registry, String group, String name,
-      String version, String image, String dockerFile, boolean autoBuildEnabled, boolean autoPushEnabled) {
+      String version, String image, String dockerFile, Boolean autoBuildEnabled, Boolean autoPushEnabled) {
     super(project, attributes, group, name, version);
     this.registry = registry;
     this.group = Strings.isNotNullOrEmpty(group) ? group : System.getProperty("user.name");
@@ -114,19 +114,27 @@ public class ImageConfiguration extends ApplicationConfiguration {
     this.dockerFile = dockerFile;
   }
 
-  public boolean isAutoBuildEnabled() {
+  public Boolean getAutoBuildEnabled() {
     return autoBuildEnabled;
   }
 
-  public void setAutoBuildEnabled(boolean autoBuildEnabled) {
+  public boolean isAutoBuildEnabled() {
+    return autoBuildEnabled != null && autoBuildEnabled;
+  }
+
+  public void setAutoBuildEnabled(Boolean autoBuildEnabled) {
     this.autoBuildEnabled = autoBuildEnabled;
   }
 
-  public boolean isAutoPushEnabled() {
+  public Boolean getAutoPushEnabled() {
     return autoPushEnabled;
   }
 
-  public void setAutoPushEnabled(boolean autoPushEnabled) {
+  public boolean isAutoPushEnabled() {
+    return autoPushEnabled != null && autoPushEnabled;
+  }
+
+  public void setAutoPushEnabled(Boolean autoPushEnabled) {
     this.autoPushEnabled = autoPushEnabled;
   }
 

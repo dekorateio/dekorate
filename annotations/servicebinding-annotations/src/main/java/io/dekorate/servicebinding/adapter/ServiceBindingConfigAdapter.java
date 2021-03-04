@@ -62,8 +62,8 @@ public class ServiceBindingConfigAdapter {
         Arrays.stream((Map[]) map.getOrDefault("services", new Map[0]))
             .map(ServiceBindingConfigAdapter::getServiceConfig).toArray(ServiceConfig[]::new),
         (String) map.getOrDefault("envVarPrefix", ""),
-        Boolean.parseBoolean((String) map.getOrDefault("detectBindingResources", "false")),
-        Boolean.parseBoolean((String) map.getOrDefault("bindAsFiles", "false")),
+        Boolean.parseBoolean(String.valueOf(map.getOrDefault("detectBindingResources", "false"))),
+        Boolean.parseBoolean(String.valueOf(map.getOrDefault("bindAsFiles", "false"))),
         (String) map.getOrDefault("mountPath", ""),
         Arrays.stream((Map[]) map.getOrDefault("customEnvVar", new Map[0]))
             .map(ServiceBindingConfigAdapter::getCustomEnvVarConfig).toArray(Env[]::new),

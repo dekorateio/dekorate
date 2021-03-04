@@ -29,7 +29,7 @@ public class DefaultOpenshiftConfigGenerator implements OpenshiftConfigGenerator
 
   public DefaultOpenshiftConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
-    on(new DefaultConfiguration<OpenshiftConfig>(new OpenshiftConfigBuilder()));
+    on(new DefaultConfiguration<OpenshiftConfig>(OpenshiftConfig.newOpenshiftConfigBuilderFromDefaults()));
 
     this.configurationRegistry.add(new ApplyImagePullSecretConfiguration());
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));

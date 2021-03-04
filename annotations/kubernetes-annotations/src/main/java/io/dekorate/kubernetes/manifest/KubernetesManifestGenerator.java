@@ -172,7 +172,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
       resourceRegistry.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
     }
 
-    if (config.getReplicas() != 1) {
+    if (config.getReplicas() != null) {
       resourceRegistry.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     }
 

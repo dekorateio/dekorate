@@ -61,7 +61,8 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
 
     BuildService buildService = null;
     ImageConfiguration imageConfig = optionalImageConfig.get();
-    if (imageConfig.isAutoPushEnabled() || imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+      if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+
       try {
         buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems()))
             .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));

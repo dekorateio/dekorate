@@ -31,7 +31,7 @@ import io.sundr.builder.annotations.Pojo;
  * a base for the rest of the config classes.
  */
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "BaseConfig", relativePath = "../config", mutable = true, superClass = ApplicationConfiguration.class, withStaticBuilderMethod = false, withStaticAdapterMethod = false)
+@Pojo(name = "BaseConfig", relativePath = "../config", autobox = true, mutable = true, superClass = ApplicationConfiguration.class, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
 @interface Base {

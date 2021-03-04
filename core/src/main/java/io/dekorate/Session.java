@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
@@ -174,6 +173,7 @@ public class Session {
         Map<String, Object> generatorMap = new HashMap<>();
         Class configClass = configtypes.get(key);
         String newKey = configClass.getName();
+        Generators.applyPrimitives(configClass, (Map<String, Object>) value);
         Generators.populateArrays(configClass, (Map<String, Object>) value);
         generatorMap.put(newKey, value);
         consumer.accept(generator, Maps.kebabToCamelCase(generatorMap));

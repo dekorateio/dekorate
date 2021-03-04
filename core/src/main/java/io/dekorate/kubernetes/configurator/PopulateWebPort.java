@@ -29,7 +29,7 @@ import io.dekorate.utils.Ports;
 public class PopulateWebPort extends Configurator<BaseConfigFluent<?>> {
 
   public Port map(Port port) {
-    if (port.getHostPort() > 0) {
+    if (port.getHostPort() != null && port.getHostPort() > 0) {
       return port;
     }
 

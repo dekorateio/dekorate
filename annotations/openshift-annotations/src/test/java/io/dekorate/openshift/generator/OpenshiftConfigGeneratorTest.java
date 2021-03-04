@@ -35,6 +35,7 @@ import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigGenerator;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
+import io.dekorate.s2i.config.S2iBuildConfig;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 
@@ -60,19 +61,15 @@ class OpenshiftConfigGeneratorTest {
 
     OpenshiftConfigGenerator generator = new DefaultOpenshiftConfigGenerator(session.getConfigurationRegistry());
 
-    Map<String, Object> map = new HashMap<String, Object>() {
-      {
-        put(OpenshiftConfig.class.getName(), new HashMap<String, Object>() {
-          {
+    Map<String, Object> openshiftConfig = new HashMap<String, Object>() {{
+        put(OpenshiftConfig.class.getName(), new HashMap<String, Object>() {{
             put("name", "generator-test");
             put("version", "latest");
             put("replicas", 2);
-          }
-        });
-      }
-    };
+          }});
+      }};
 
-    generator.addPropertyConfiguration(map);
+    generator.addPropertyConfiguration(openshiftConfig);
     final Map<String, String> result = session.close();
     KubernetesList list = session.getGeneratedResources().get("openshift");
     assertThat(list).isNotNull();
