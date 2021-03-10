@@ -66,7 +66,8 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
         .withName(config.getName())
         .withNewPort()
         .withName(port.getName())
-        .withNumber(port.getHostPort() > 0 ? port.getHostPort() : null).endPort()
+         // If we have a name we don't need to also specify the number.
+        .withNumber(Strings.isNullOrEmpty(port.getName()) && port.getHostPort() > 0 ? port.getHostPort() : null).endPort()
         .endService()
         .endBackend()
         .endPath()
