@@ -139,11 +139,11 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
                                    Ports.webPortNames().toArray(new String[Ports.webPortNames().size()])));
     addDecorators(KNATIVE, config);
 
-    if (config.getMinScale() != null) {
+    if (config.getMinScale() != null && config.getMinScale() != 0) {
       resourceRegistry.decorate(KNATIVE, new ApplyMinScaleDecorator(config.getName(), config.getMinScale()));
     }
 
-    if (config.getMaxScale() != null) {
+    if (config.getMaxScale() != null && config.getMaxScale() != 0) {
       resourceRegistry.decorate(KNATIVE, new ApplyMaxScaleDecorator(config.getName(), config.getMaxScale()));
     }
 
@@ -174,7 +174,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
                                                                                    config.getRevisionAutoScaling().getAutoScalerClass()));
       }
 
-      if (config.getRevisionAutoScaling().getTarget() != null) {
+      if (config.getRevisionAutoScaling().getTarget() != null && config.getRevisionAutoScaling().getTarget() != 0) {
         resourceRegistry.decorate(KNATIVE,
                                   new ApplyLocalAutoscalingTargetDecorator(config.getName(), config.getRevisionAutoScaling().getTarget()));
       }

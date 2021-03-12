@@ -131,7 +131,7 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenera
 
   protected void addDecorators(String group, OpenshiftConfig config, ImageConfiguration imageConfig) {
     super.addDecorators(group, config);
-    if (config.getReplicas() != null) {
+    if (config.getReplicas() != 1) {
       resourceRegistry.decorate(group, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     }
     resourceRegistry.decorate(group,
