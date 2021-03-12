@@ -21,8 +21,6 @@ import java.util.Optional;
 import io.dekorate.AbstractKubernetesManifestGenerator;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.ConfigurationRegistry;
-import io.dekorate.ManifestGenerator;
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.ResourceRegistry;
@@ -172,7 +170,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
       resourceRegistry.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));
     }
 
-    if (config.getReplicas() != null) {
+    if (config.getReplicas() != null && config.getReplicas() != 1) {
       resourceRegistry.decorate(KUBERNETES, new ApplyReplicasDecorator(config.getName(), config.getReplicas()));
     }
 
