@@ -31,6 +31,7 @@ class GradleInfoReaderTest {
   String GRADLE_INITIAL = "gradle/gradle-initial/build.gradle";
   String GRADLE_VERSIONED = "gradle/gradle-versioned/build.gradle";
   String GRADLE_WITH_SETTINGS = "gradle/gradle-with-settings/build.gradle";
+  String GRADLE_VERSIONED_DOUBLEQUOTES = "gradle/gradle-versioned-doublequotes/build.gradle";
 
   @Test
   void shouldParsePlainBuildGradle() {
@@ -75,5 +76,15 @@ class GradleInfoReaderTest {
     assertNotNull(info);
     assertNotEquals(info.getResourceDir(), info.getClassOutputDir());
     assertThat(info.getResourceDir().toString()).contains("src", "main", "resources");
+  }
+
+  @Test
+  void shouldParseDoublequotedVersionBuildGradle() {
+    URL gradleInitial = GradleInfoReaderTest.class.getClassLoader().getResource(GRADLE_VERSIONED_DOUBLEQUOTES);
+    File file = Urls.toFile(gradleInitial);
+    Path root = file.toPath().getParent();
+    BuildInfo info = new GradleInfoReader().getInfo(root);
+    assertNotNull(info);
+    assertEquals("1.0.0", info.getVersion());
   }
 }

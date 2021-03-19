@@ -58,6 +58,7 @@ public class GradleInfoReader implements BuildInfoReader {
   private static final String OPEN_BRACKET = "{";
   private static final String CLOSE_BRACKET = "}";
   private static final String QUOTE = "'";
+  private static final String DOUBLE_QUOTE = "\"";
 
   private static final String EQUALS = "=";
   private static final String DASH = "-";
@@ -206,7 +207,7 @@ public class GradleInfoReader implements BuildInfoReader {
 
         if ((inShadowJar.get() || inJar.get() || quotes.get() == 0) && l.contains(EQUALS)) {
           String key = l.substring(0, l.lastIndexOf(EQUALS));
-          String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "");
+          String value = l.substring(l.lastIndexOf(EQUALS) + 1).replaceAll(QUOTE, "").replace(DOUBLE_QUOTE, "");
           properties.put(key, value);
         }
       });
