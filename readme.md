@@ -607,7 +607,7 @@ Using the `@KubernetesApplication` one could set the resources like:
 import io.dekorate.kubernetes.annotation.ResourceRequirements;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
-@KubernetesApplication(requestResources=@ResourceRequirements(memory="64Mi", cpu="1m", limitResources=@ResourceRequirements(memory="256Mi", cpu="5m")
+@KubernetesApplication(requestResources=@ResourceRequirements(memory="64Mi", cpu="1m"), limitResources=@ResourceRequirements(memory="256Mi", cpu="5m"))
 public class Main {
 }
 ```
