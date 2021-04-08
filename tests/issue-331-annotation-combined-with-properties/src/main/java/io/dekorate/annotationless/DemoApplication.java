@@ -23,7 +23,7 @@ import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Port;
 
 @SpringBootApplication
-@KubernetesApplication(replicas = 3, serviceType = ServiceType.NodePort, serviceAccount = "test", ports = {
+@KubernetesApplication(replicas = 3, serviceAccount = "test", ports = {
     @Port(name = "http", containerPort = 8080),
     @Port(name = "admin-console", containerPort = 9090) })
 public class DemoApplication {
