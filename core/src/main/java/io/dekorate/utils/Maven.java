@@ -19,8 +19,8 @@ package io.dekorate.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
@@ -32,8 +32,7 @@ public class Maven {
   public static String MVNW = "mvnw";
   public static String DASH_VERSION = "-version";
 
-  public static String NEW_LINE = "[\\n\\r]+";
-  public static String SPACE = " ";
+  public static Pattern VERSION_PATTERN = Pattern.compile(".*Apache Maven (\\d+\\.\\d+\\.[^ ]+).*", Pattern.DOTALL);
 
   public static String FALLBACK_MAVEN_VERSION = "3.6.3";
 
@@ -63,28 +62,12 @@ public class Maven {
   }
 
   private static String getVersionFromOutput(String output) {
-    if (Strings.isNullOrEmpty(output)) {
-      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: "
-          + FALLBACK_MAVEN_VERSION + "!");
-      return FALLBACK_MAVEN_VERSION;
-    }
-
-    Optional<String> versionLine = Arrays.stream(output.split(NEW_LINE))
-        .filter(l -> l.startsWith("Apache Maven"))
-        .findFirst();
-
-    if (!versionLine.isPresent()) {
-      LOGGER.warning("Unknown maven version output format. Expected at least one line. Falling back to: "
-          + FALLBACK_MAVEN_VERSION + "!");
-      return FALLBACK_MAVEN_VERSION;
-
-    }
-    String[] parts = versionLine.map(l -> l.split(SPACE)).get();
-    if (parts.length < 3) {
+      Matcher matcher = VERSION_PATTERN.matcher(output);
+      if (matcher.find()) {
+        return matcher.group(1);
+      }
       LOGGER.warning("Unknown maven version output format. Expected 'Apache Maven x.y.z ...'. Falling back to: "
           + FALLBACK_MAVEN_VERSION + "!");
       return FALLBACK_MAVEN_VERSION;
-    }
-    return parts[2];
   }
 }
