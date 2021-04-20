@@ -13,7 +13,7 @@
     <java.version>1.8</java.version>
 
     <version.groovy>2.4.12</version.groovy>
-    <version.spring-boot>2.3.6.RELEASE</version.spring-boot>
+    <version.spring-boot>2.4.5</version.spring-boot>
     <version.gmavenplus-plugin>1.6.2</version.gmavenplus-plugin>
     <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
     <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
@@ -44,7 +44,7 @@
       <artifactId>spring-boot-starter-actuator</artifactId>
       <version>${version.spring-boot}</version>
     </dependency>
-    
+
     <!-- Testing -->
     <dependency>
       <groupId>io.dekorate</groupId>

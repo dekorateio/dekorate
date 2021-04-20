@@ -58,7 +58,7 @@
     <version.commons-codec>1.10</version.commons-codec>
     <version.commons-compress>1.19</version.commons-compress>
     <version.jansi>1.18</version.jansi>
-    <version.jackson>2.10.3</version.jackson>
+    <version.jackson>2.12.3</version.jackson>
     <version.kubernetes-client>5.1.1</version.kubernetes-client>
     <version.sundrio>0.25.1</version.sundrio>
 
@@ -68,9 +68,9 @@
     <version.assertj>3.11.1</version.assertj>
     <!-- Other Testing Dependencies (frameworks, tools, etc) -->
     <!-- Note: Dekorate DOES NOT depend on these, just some integration tests -->
-    <version.spring-boot>2.3.6.RELEASE</version.spring-boot>
+    <version.spring-boot>2.4.5</version.spring-boot>
     <version.thorntail>2.5.0.Final</version.thorntail>
-    
+
     <!-- Plugins -->
     <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
     <version.maven-invoker-plugin>3.1.0</version.maven-invoker-plugin>
@@ -165,7 +165,7 @@
         <version>${version.jackson}</version>
         <scope>import</scope>
         <type>pom</type>
-      </dependency>   
+      </dependency>
 
       <!-- Misc -->
       <dependency>
@@ -221,7 +221,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>${version.sundrio}</version> 
+        <version>${version.sundrio}</version>
         <dependencies>
           <dependency>
             <groupId>io.sundr</groupId>
@@ -355,10 +355,10 @@
           <skip>${format.skip}</skip>
           <removeUnused>true</removeUnused>
         </configuration>
-      </plugin>     
+      </plugin>
     </plugins>
   </pluginManagement>
-    
+
   </build>
 
   <repositories>
