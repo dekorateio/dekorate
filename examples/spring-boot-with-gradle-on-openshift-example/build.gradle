@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    springBootVersion = '2.1.1.RELEASE'
+    springBootVersion = '2.4.5'
     aptPluginVersion = '0.19'
     dekorateVersion = System.getProperty("dekorateVersion", "0.10.0")
     junitVersion = '5.3.1'
