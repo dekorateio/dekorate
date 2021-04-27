@@ -59,7 +59,7 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
             .withContainerPort(port.getContainerPort())
             .endPort();
       }
-      if (port.getHostPort() != 0) {
+      if ((port.getHostPort() != null) && (port.getHostPort() != 0)) {
         config.editMatchingPort(predicate)
             .withHostPort(port.getHostPort())
             .endPort();
