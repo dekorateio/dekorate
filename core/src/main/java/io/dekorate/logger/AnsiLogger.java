@@ -20,6 +20,9 @@ package io.dekorate.logger;
 import static org.fusesource.jansi.Ansi.*;
 import static org.fusesource.jansi.Ansi.Color.*;
 
+
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import org.fusesource.jansi.*;
@@ -29,7 +32,7 @@ import io.dekorate.LoggerFactory;
 
 public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
 
-  private final PrintStream stream;
+  private PrintStream stream;
 
   public Logger create(PrintStream stream) {
     return new AnsiLogger(stream);
@@ -79,7 +82,9 @@ public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
 
   private void check() {
     if (stream == null) {
-      throw new IllegalStateException("AnsiLogger requires a PrintStream instance.");
+      stream = new PrintStream(new FileOutputStream(FileDescriptor.out));
+      stream.println("Invalid AnsiLogger Stream -> Swapping to default sdt out logger.");
     }
   }
+
 }
