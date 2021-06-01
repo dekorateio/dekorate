@@ -1,7 +1,9 @@
 
 ![dekorate logo](assets/images/logo.png "Dekorate") 
 
-[![CircleCI](https://circleci.com/gh/dekorateio/dekorate.svg?style=svg)](https://circleci.com/gh/dekorateio/dekorate) [![Maven Central](https://img.shields.io/maven-central/v/io.dekorate/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.dekorate%22%20AND%20a:%22kubernetes-annotations%22)
+![Build](https://github.com/dekorateio/dekorate/actions/workflows/build.yml/badge.svg)
+![Integration Tests](https://github.com/dekorateio/dekorate/actions/workflows/integration-tests.yml/badge.svg)
+[![Maven Central](https://img.shields.io/maven-central/v/io.dekorate/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.dekorate%22%20AND%20a:%22kubernetes-annotations%22)
 
 Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
 
