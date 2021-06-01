@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # 
-name: Openshift
+name: Integration Tests
 
 env:
   MAVEN_ARGS: -B -e
@@ -24,8 +24,8 @@ on:
   pull_request_target:
 
 jobs:
-  m2-cache:
-    name: m2-cache
+  cache:
+    name: Cache
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,13 +39,13 @@ jobs:
       - name: Install artifacts
         run: mvn -f pom.xml ${MAVEN_ARGS} -DskipTests clean install
   kubernetes:
-    name: Build
-    needs: m2-cache
+    name: Kubernetes Build
+    needs: cache
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        kubernetes: [v1.20.1,v1.19.2,v1.12.0]
+        kubernetes: [v1.20.1]
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
@@ -79,8 +79,8 @@ jobs:
           mvn -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
 
   openshift:
-    name: Build
-    needs: m2-cache
+    name: Openshift Build
+    needs: cache
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
