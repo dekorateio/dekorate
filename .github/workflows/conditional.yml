@@ -23,7 +23,7 @@ jobs:
   conditional:
     name: Conditional
     runs-on: ubuntu-latest
-    if: github.event.label.name == 'bug'
+    if: github.event.label.name == 'bug' || contains(github.event.pull_request.labels.*.name, 'bug')
     steps:
       - name: Echo
         run: echo "Bug label present"
