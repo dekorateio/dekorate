@@ -26,4 +26,9 @@ jobs:
     if: github.event.label.name == 'bug' || contains(github.event.pull_request.labels.*.name, 'bug')
     steps:
       - name: Echo
-        run: echo "Bug label present"
+        run: |
+          echo "Pull request event labels:" 
+          echo ${{ github.event.pull_request.labels }}
+
+          echo "Pull label event:" 
+          echo ${{ github.event.label.name }}
