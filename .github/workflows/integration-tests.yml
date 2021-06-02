@@ -48,13 +48,9 @@ jobs:
           distribution: 'adopt'
       - name: Integration Tests
         run: |
-      - name: Dockerhub login
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERIO_USERNAME }}
-          password: ${{ secrets.DOCKERIO_PASSWORD }}
       - name: Install and Run Integration Tests
         run: |
+          minikube addons enable registry
           mvn -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
 
   openshift:
@@ -79,7 +75,7 @@ jobs:
           distribution: 'adopt'
       - name: Integration Tests
         run: |
-          oc login -u admin -p admin
+          oc login -u system:admin
           oc new-project itests
           oc get projects
           oc get services -n openshift-image-registry
