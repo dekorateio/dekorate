@@ -79,8 +79,8 @@ jobs:
           oc login -u system:admin
           oc new-project itests
           oc get projects
-          oc get services -n openshift-image-registry
-          oc port-forward -n openshift-image-registry service/image-registry 8888:5000
+          oc get services -n default
+          oc port-forward -n default service/docker-registry 8888:5000
           echo "Registry: localhost:8888"
           oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
           oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
