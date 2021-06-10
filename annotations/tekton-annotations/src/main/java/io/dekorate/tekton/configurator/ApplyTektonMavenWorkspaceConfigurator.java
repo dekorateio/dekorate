@@ -10,23 +10,23 @@ public class ApplyTektonMavenWorkspaceConfigurator extends Configurator<TektonCo
   private final String workspace;
   private final String claim;
   private final PersistentVolumeClaim pvc;
- 
-	public ApplyTektonMavenWorkspaceConfigurator(String workspace) {
+
+  public ApplyTektonMavenWorkspaceConfigurator(String workspace) {
     this(workspace, null, null);
-	}
+  }
 
-	public ApplyTektonMavenWorkspaceConfigurator(String workspace, String claim) {
+  public ApplyTektonMavenWorkspaceConfigurator(String workspace, String claim) {
     this(workspace, claim, null);
-	}
+  }
 
-	public ApplyTektonMavenWorkspaceConfigurator(String workspace, String claim, PersistentVolumeClaim pvc) {
-		this.workspace = workspace;
-		this.claim = claim;
-		this.pvc = pvc;
-	}
-  
-	@Override
-	public void visit(TektonConfigFluent<?> config) {
+  public ApplyTektonMavenWorkspaceConfigurator(String workspace, String claim, PersistentVolumeClaim pvc) {
+    this.workspace = workspace;
+    this.claim = claim;
+    this.pvc = pvc;
+  }
+
+  @Override
+  public void visit(TektonConfigFluent<?> config) {
     if (!Strings.isNotNullOrEmpty(workspace)) {
       config.withM2Workspace(workspace);
     }
@@ -38,5 +38,5 @@ public class ApplyTektonMavenWorkspaceConfigurator extends Configurator<TektonCo
     if (pvc != null) {
       config.withM2WorkspaceClaim(pvc);
     }
-	}
+  }
 }

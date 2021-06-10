@@ -33,5 +33,4 @@ public class ImagePushStep implements Step {
   public static final String ARGS_PARAM_DESCRIPTION = "The command arguments to use for performing project push";
   public static final String ARGS_PARAM_REF = "$(inputs.params." + ARGS_PARAM_NAME + "[*])";
 
-
 }

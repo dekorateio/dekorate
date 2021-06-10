@@ -25,7 +25,7 @@ import io.dekorate.project.ApplyProjectInfo;
 public class DefaultKubernetesConfigGenerator implements KubernetesConfigGenerator {
 
   private final ConfigurationRegistry configurationRegistry;
-  
+
   public DefaultKubernetesConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));

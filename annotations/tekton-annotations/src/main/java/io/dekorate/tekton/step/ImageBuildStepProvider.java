@@ -17,7 +17,7 @@
 
 package io.dekorate.tekton.step;
 
-public interface ImageBuildStepProvider<T extends ImageBuildStep<T>>  {
+public interface ImageBuildStepProvider<T extends ImageBuildStep<T>> {
 
   T getStep();
 }

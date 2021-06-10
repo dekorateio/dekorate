@@ -19,10 +19,10 @@ package io.dekorate.kubernetes.decorator;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.utils.Strings;
-import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.model.HostAliasBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodSpecFluent;

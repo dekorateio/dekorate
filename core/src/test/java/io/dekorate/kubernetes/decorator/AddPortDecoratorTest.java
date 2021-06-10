@@ -21,12 +21,13 @@ class AddPortDecoratorTest {
     AddPortDecorator addName = new AddPortDecorator(new PortBuilder().withName("http").withContainerPort(80).build());
 
     Deployment deployment = new DeploymentBuilder()
-      .withNewMetadata().withName("my-deployment").endMetadata()
-      .withNewSpec().withNewTemplate().withNewSpec()
-      .addNewContainer().withName("my-container").withImage("busybox").addNewPort().withContainerPort(80).endPort().endContainer()
-      .endSpec().endTemplate().endSpec()
-      .accept(addName)
-      .build();
+        .withNewMetadata().withName("my-deployment").endMetadata()
+        .withNewSpec().withNewTemplate().withNewSpec()
+        .addNewContainer().withName("my-container").withImage("busybox").addNewPort().withContainerPort(80).endPort()
+        .endContainer()
+        .endSpec().endTemplate().endSpec()
+        .accept(addName)
+        .build();
 
     Container c = deployment.getSpec().getTemplate().getSpec().getContainers().get(0);
     ContainerPort p = c.getPorts().get(0);

@@ -20,7 +20,8 @@ import io.dekorate.kubernetes.config.Configuration;
 
 /**
  * A manifest generator responsible for generating resources and registering {@link Decorator} instances.
- * Once all kinds of {@link Configuration} have been collected from various sources (e.g. annotations, properties, framework) they are passed to the matching handlers.
+ * Once all kinds of {@link Configuration} have been collected from various sources (e.g. annotations, properties, framework)
+ * they are passed to the matching handlers.
  */
 public interface ManifestGenerator<C extends Configuration> {
 

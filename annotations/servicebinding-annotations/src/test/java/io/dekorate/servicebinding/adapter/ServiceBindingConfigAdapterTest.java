@@ -340,68 +340,68 @@ public class ServiceBindingConfigAdapterTest {
     assertEquals("baz", config.getCustomEnvVar()[0].getField());
   }
 
-//  @Test
-//  public void testServiceBindingWithCustomEnvVarWithValueFromResourceFieldRef() {
-//
-//    final HashMap<String, Object> services[] = new HashMap[1];
-//    services[0] = new HashMap<String, Object>() {
-//      {
-//        put("group", "postgresql.dev");
-//        put("kind", "Database");
-//        put("name", "demo-database");
-//        put("id", "postgresDB");
-//      }
-//    };
-//
-//    final HashMap<String, Object> resourceFieldRef = new HashMap<String, Object>();
-//    resourceFieldRef.put("containerName", "foo");
-//    resourceFieldRef.put("divisor", "bar");
-//    resourceFieldRef.put("resource", "resource");
-//
-//    final HashMap<String, Object> valueFrom = new HashMap<String, Object>();
-//    valueFrom.put("resourceFieldRef", resourceFieldRef);
-//
-//    final HashMap<String, Object> customEnvVar[] = new HashMap[1];
-//    customEnvVar[0] = new HashMap<String, Object>() {
-//      {
-//        put("name", "foo");
-//        put("valueFrom", valueFrom);
-//      }
-//    };
-//
-//    final HashMap<String, Object> application = new HashMap<String, Object>();
-//    application.put("group", "apps");
-//    application.put("resource", "Deployment");
-//    application.put("version", "v1alpha1");
-//    application.put("name", "servicebinding-test");
-//
-//    Map<String, Object> map = new HashMap<String, Object>() {
-//      {
-//        put("name", "servicebinding-test-binding");
-//        put("application", application);
-//        put("services", services);
-//        put("envVarPrefix", "postgres");
-//        put("customEnvVar", customEnvVar);
-//      }
-//    };
-//
-//    ServiceBindingConfig config = ServiceBindingConfigAdapter.adapt(map);
-//
-//    assertNotNull(config);
-//
-//    assertEquals("apps", config.getApplication().getGroup());
-//    assertEquals("Deployment", config.getApplication().getResource());
-//    assertEquals("v1alpha1", config.getApplication().getVersion());
-//    assertEquals("servicebinding-test", config.getApplication().getName());
-//
-//    assertEquals(1, config.getServices().length);
-//    assertEquals("postgresql.dev", config.getServices()[0].getGroup());
-//    assertEquals("Database", config.getServices()[0].getKind());
-//    assertEquals("demo-database", config.getServices()[0].getName());
-//    assertEquals("postgresDB", config.getServices()[0].getId());
-//
-//    assertEquals("foo", config.getCustomEnvVar()[0].getValueFrom().getResourceFieldRef().getContainerName());
-//    assertEquals("bar", config.getCustomEnvVar()[0].getValueFrom().getResourceFieldRef().getDivisor());
-//    assertEquals("resource", config.getCustomEnvVar()[0].getValueFrom().getResourceFieldRef().getResource());
-//  }
+  //  @Test
+  //  public void testServiceBindingWithCustomEnvVarWithValueFromResourceFieldRef() {
+  //
+  //    final HashMap<String, Object> services[] = new HashMap[1];
+  //    services[0] = new HashMap<String, Object>() {
+  //      {
+  //        put("group", "postgresql.dev");
+  //        put("kind", "Database");
+  //        put("name", "demo-database");
+  //        put("id", "postgresDB");
+  //      }
+  //    };
+  //
+  //    final HashMap<String, Object> resourceFieldRef = new HashMap<String, Object>();
+  //    resourceFieldRef.put("containerName", "foo");
+  //    resourceFieldRef.put("divisor", "bar");
+  //    resourceFieldRef.put("resource", "resource");
+  //
+  //    final HashMap<String, Object> valueFrom = new HashMap<String, Object>();
+  //    valueFrom.put("resourceFieldRef", resourceFieldRef);
+  //
+  //    final HashMap<String, Object> customEnvVar[] = new HashMap[1];
+  //    customEnvVar[0] = new HashMap<String, Object>() {
+  //      {
+  //        put("name", "foo");
+  //        put("valueFrom", valueFrom);
+  //      }
+  //    };
+  //
+  //    final HashMap<String, Object> application = new HashMap<String, Object>();
+  //    application.put("group", "apps");
+  //    application.put("resource", "Deployment");
+  //    application.put("version", "v1alpha1");
+  //    application.put("name", "servicebinding-test");
+  //
+  //    Map<String, Object> map = new HashMap<String, Object>() {
+  //      {
+  //        put("name", "servicebinding-test-binding");
+  //        put("application", application);
+  //        put("services", services);
+  //        put("envVarPrefix", "postgres");
+  //        put("customEnvVar", customEnvVar);
+  //      }
+  //    };
+  //
+  //    ServiceBindingConfig config = ServiceBindingConfigAdapter.adapt(map);
+  //
+  //    assertNotNull(config);
+  //
+  //    assertEquals("apps", config.getApplication().getGroup());
+  //    assertEquals("Deployment", config.getApplication().getResource());
+  //    assertEquals("v1alpha1", config.getApplication().getVersion());
+  //    assertEquals("servicebinding-test", config.getApplication().getName());
+  //
+  //    assertEquals(1, config.getServices().length);
+  //    assertEquals("postgresql.dev", config.getServices()[0].getGroup());
+  //    assertEquals("Database", config.getServices()[0].getKind());
+  //    assertEquals("demo-database", config.getServices()[0].getName());
+  //    assertEquals("postgresDB", config.getServices()[0].getId());
+  //
+  //    assertEquals("foo", config.getCustomEnvVar()[0].getValueFrom().getResourceFieldRef().getContainerName());
+  //    assertEquals("bar", config.getCustomEnvVar()[0].getValueFrom().getResourceFieldRef().getDivisor());
+  //    assertEquals("resource", config.getCustomEnvVar()[0].getValueFrom().getResourceFieldRef().getResource());
+  //  }
 }

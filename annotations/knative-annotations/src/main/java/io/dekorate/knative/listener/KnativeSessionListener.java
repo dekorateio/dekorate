@@ -38,7 +38,7 @@ public class KnativeSessionListener implements SessionListener, WithProject, Wit
 
   @Override
   public void onClosed() {
-  //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
+    //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     try {
       Session session = getSession();

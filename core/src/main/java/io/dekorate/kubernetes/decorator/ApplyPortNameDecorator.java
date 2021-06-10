@@ -43,6 +43,7 @@ public class ApplyPortNameDecorator extends ApplicationContainerDecorator<Contai
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class, AddPortDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class,
+        AddPortDecorator.class };
   }
 }

@@ -27,42 +27,41 @@ public class ApplyTrafficDecorator extends NamedResourceDecorator<ServiceSpecFlu
   private final long percentage;
   private final String tag;
 
- 	public ApplyTrafficDecorator(String name, String revisionName, boolean latestRevision, long percentage, String tag) {
-		super(name);
-		this.revisionName = revisionName;
-		this.latestRevision = latestRevision;
-		this.percentage = percentage;
-		this.tag = tag;
-	}
+  public ApplyTrafficDecorator(String name, String revisionName, boolean latestRevision, long percentage, String tag) {
+    super(name);
+    this.revisionName = revisionName;
+    this.latestRevision = latestRevision;
+    this.percentage = percentage;
+    this.tag = tag;
+  }
 
- 	public ApplyTrafficDecorator(String name, long percentage, String tag) {
+  public ApplyTrafficDecorator(String name, long percentage, String tag) {
     this(ANY, null, true, percentage, tag);
   }
 
- 	public ApplyTrafficDecorator(String name, long percentage) {
+  public ApplyTrafficDecorator(String name, long percentage) {
     this(ANY, null, true, percentage, null);
   }
 
-
-	public ApplyTrafficDecorator(String revisionName, boolean latestRevision, long percentage, String tag) {
+  public ApplyTrafficDecorator(String revisionName, boolean latestRevision, long percentage, String tag) {
     this(ANY, revisionName, latestRevision, percentage, tag);
-	}
+  }
 
-	public ApplyTrafficDecorator(long percentage, String tag) {
+  public ApplyTrafficDecorator(long percentage, String tag) {
     this(ANY, null, true, percentage, tag);
-	}
+  }
 
-	public ApplyTrafficDecorator(long percentage) {
+  public ApplyTrafficDecorator(long percentage) {
     this(ANY, null, true, percentage, null);
-	}
+  }
 
-	@Override
-	public void andThenVisit(ServiceSpecFluent<?> spec, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(ServiceSpecFluent<?> spec, ObjectMeta resourceMeta) {
     spec.addNewTraffic()
-      .withRevisionName(revisionName)
-      .withLatestRevision(latestRevision)
-      .withPercent(percentage)
-      .withTag(tag)
-      .endTraffic();
-	}
+        .withRevisionName(revisionName)
+        .withLatestRevision(latestRevision)
+        .withPercent(percentage)
+        .withTag(tag)
+        .endTraffic();
+  }
 }

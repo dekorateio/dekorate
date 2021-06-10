@@ -17,8 +17,8 @@
 
 package io.dekorate.knative.manifest;
 
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ResourceRegistry;
 
 public class KnativeManifestGeneratorFactory implements ManifestGeneratorFactory {

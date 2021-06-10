@@ -41,6 +41,7 @@ public class ApplyRequestsMemoryDecorator extends ApplicationContainerDecorator<
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
+        AddSidecarDecorator.class };
   }
 }

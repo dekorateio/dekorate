@@ -15,9 +15,6 @@
  */
 package io.dekorate.thorntail;
 
-import io.dekorate.WithProject;
-import io.dekorate.utils.Maps;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.dekorate.WithProject;
+import io.dekorate.utils.Maps;
 
 public interface ThorntailConfigHolder extends WithProject {
 
@@ -36,10 +34,11 @@ public interface ThorntailConfigHolder extends WithProject {
   default Map<String, Object> getThorntailConfig() {
     if (thorntailConfig.get() == null) {
       final Map<String, Object> properties = new HashMap<>();
-      try (InputStream is = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve(PROJECT_DEFAULTS_YML).toFile())) {
-        properties.putAll(Maps.parseResourceFile(is,PROJECT_DEFAULTS_YML));
+      try (InputStream is = new FileInputStream(
+          getProject().getBuildInfo().getResourceDir().resolve(PROJECT_DEFAULTS_YML).toFile())) {
+        properties.putAll(Maps.parseResourceFile(is, PROJECT_DEFAULTS_YML));
         thorntailConfig.set(properties);
-      }catch (FileNotFoundException e){
+      } catch (FileNotFoundException e) {
         return properties;
       } catch (IOException e) {
         throw new RuntimeException(e);

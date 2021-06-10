@@ -37,6 +37,7 @@ public class ContainerAdapter {
 
   /**
    * Applies all container properties to the {@link ContainerBuilder}.
+   * 
    * @param builder The container builder
    * @param container The container
    */
@@ -60,7 +61,7 @@ public class ContainerAdapter {
 
     //Probes
     if (Probes.isConfigured(container.getLivenessProbe())) {
-        builder.accept(new AddLivenessProbeDecorator(name, container.getLivenessProbe()));
+      builder.accept(new AddLivenessProbeDecorator(name, container.getLivenessProbe()));
     }
 
     if (Probes.isConfigured(container.getReadinessProbe())) {
@@ -87,6 +88,7 @@ public class ContainerAdapter {
 
   /**
    * Adapt the dekorate {@link io.dekorate.kubernetes.config.Container} to a kuberntes model {@link Container}.
+   * 
    * @param container the input container
    * @return the kubernetes model container
    */

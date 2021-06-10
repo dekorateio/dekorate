@@ -35,6 +35,7 @@ public @interface VcsOptions {
 
   /**
    * The remote to use.
+   * 
    * @return the name of the remote, defaults to 'origin'.
    */
   String remote() default "origin";
@@ -42,6 +43,7 @@ public @interface VcsOptions {
   /**
    * Flag that specifies that https is preferred.
    * When use vcs url that use 'git+ssh' will be converted to https.
+   * 
    * @return true, if https is prefered.
    */
   boolean httpsPreferred() default false;

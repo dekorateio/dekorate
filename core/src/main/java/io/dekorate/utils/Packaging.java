@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
-import io.dekorate.DekorateException;
-
 public class Packaging {
 
   private static final String DEFAULT_DOCKERFILE = "Dockerfile";

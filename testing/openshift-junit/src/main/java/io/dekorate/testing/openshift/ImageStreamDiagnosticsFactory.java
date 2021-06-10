@@ -7,8 +7,8 @@ import io.fabric8.openshift.api.model.ImageStream;
 
 public class ImageStreamDiagnosticsFactory extends DiagnosticsFactory<ImageStream> {
 
-    @Override
-    public DiagnosticsService<ImageStream> create(KubernetesClient client) {
-      return new ImageStreamDiagnostics(client);
-    }
+  @Override
+  public DiagnosticsService<ImageStream> create(KubernetesClient client) {
+    return new ImageStreamDiagnostics(client);
   }
+}

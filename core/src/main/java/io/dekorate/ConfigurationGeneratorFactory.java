@@ -17,5 +17,5 @@ package io.dekorate;
 
 public interface ConfigurationGeneratorFactory {
 
- ConfigurationGenerator create(ConfigurationRegistry configurationRegistry);
+  ConfigurationGenerator create(ConfigurationRegistry configurationRegistry);
 }

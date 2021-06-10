@@ -29,7 +29,7 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Jvm options, which are used for the target deployment.")
 @SupportedAnnotationTypes("io.dekorate.option.annotation.JvmOptions")
-public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements  WithSession {
+public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {

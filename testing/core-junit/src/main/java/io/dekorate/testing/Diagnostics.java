@@ -59,13 +59,14 @@ public class Diagnostics {
   public <T extends HasMetadata> void display(T resource) {
     Optional<DiagnosticsService<T>> service = DiagnosticsFactory.create(client, (Class<T>) resource.getClass());
     service.ifPresent(s -> {
-        try {
-          s.display(resource);
-        } catch (Exception e) {
-          logger.error("Error displaying diagnostics for resource:" + resource.getKind() + " " + resource.getMetadata().getName());
-          e.printStackTrace();
-        }
-     });
+      try {
+        s.display(resource);
+      } catch (Exception e) {
+        logger
+            .error("Error displaying diagnostics for resource:" + resource.getKind() + " " + resource.getMetadata().getName());
+        e.printStackTrace();
+      }
+    });
   }
 
   protected void log(Pod pod, Container container) {

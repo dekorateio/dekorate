@@ -17,13 +17,14 @@
 
 package io.dekorate.prometheus.manifest;
 
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ResourceRegistry;
 
 public class ServiceMonitorResourceGeneratorFactory implements ManifestGeneratorFactory {
 
-  public ServiceMonitorResourceGenerator create(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry) {
+  public ServiceMonitorResourceGenerator create(ResourceRegistry resourceRegistry,
+      ConfigurationRegistry configurationRegistry) {
     return new ServiceMonitorResourceGenerator(resourceRegistry, configurationRegistry);
   }
 }

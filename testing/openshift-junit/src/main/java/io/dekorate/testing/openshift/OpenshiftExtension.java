@@ -154,7 +154,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
       if (hasReadinessFailed(context)) {
         throw new IllegalStateException("Readiness Failed");
-      } 
+      }
     }
   }
 

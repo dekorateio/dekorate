@@ -35,62 +35,62 @@ import io.sundr.builder.annotations.BuildableReference;
 @Version("v1beta1")
 public class ServiceBinding implements HasMetadata {
 
-    @JsonProperty("kind")
-    private String kind = "ServiceBinding";
-    @JsonProperty("apiVersion")
-    private String apiVersion = "operators.coreos.com/v1beta1";
-    @JsonProperty("metadata")
-    private ObjectMeta metadata;
-    @JsonProperty("spec")
-    private ServiceBindingSpec spec;
+  @JsonProperty("kind")
+  private String kind = "ServiceBinding";
+  @JsonProperty("apiVersion")
+  private String apiVersion = "operators.coreos.com/v1beta1";
+  @JsonProperty("metadata")
+  private ObjectMeta metadata;
+  @JsonProperty("spec")
+  private ServiceBindingSpec spec;
 
-    public ServiceBinding() {
-    }
+  public ServiceBinding() {
+  }
 
-    public ServiceBinding(String kind, String apiVersion, ObjectMeta metadata, ServiceBindingSpec spec) {
-        this.kind = kind;
-        this.apiVersion = apiVersion;
-        this.metadata = metadata;
-        this.spec = spec;
-    }
+  public ServiceBinding(String kind, String apiVersion, ObjectMeta metadata, ServiceBindingSpec spec) {
+    this.kind = kind;
+    this.apiVersion = apiVersion;
+    this.metadata = metadata;
+    this.spec = spec;
+  }
 
-    @JsonProperty("kind")
-    public String getKind() {
-        return kind;
-    }
+  @JsonProperty("kind")
+  public String getKind() {
+    return kind;
+  }
 
-    @JsonProperty("kind")
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
+  @JsonProperty("kind")
+  public void setKind(String kind) {
+    this.kind = kind;
+  }
 
-    @JsonProperty("apiVersion")
-    public String getApiVersion() {
-        return apiVersion;
-    }
+  @JsonProperty("apiVersion")
+  public String getApiVersion() {
+    return apiVersion;
+  }
 
-    @JsonProperty("apiVersion")
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
-    }
+  @JsonProperty("apiVersion")
+  public void setApiVersion(String apiVersion) {
+    this.apiVersion = apiVersion;
+  }
 
-    @JsonProperty("metadata")
-    public ObjectMeta getMetadata() {
-        return metadata;
-    }
+  @JsonProperty("metadata")
+  public ObjectMeta getMetadata() {
+    return metadata;
+  }
 
-    @JsonProperty("metadata")
-    public void setMetadata(ObjectMeta metadata) {
-        this.metadata = metadata;
-    }
+  @JsonProperty("metadata")
+  public void setMetadata(ObjectMeta metadata) {
+    this.metadata = metadata;
+  }
 
-    @JsonProperty("spec")
-    public ServiceBindingSpec getSpec() {
-        return spec;
-    }
+  @JsonProperty("spec")
+  public ServiceBindingSpec getSpec() {
+    return spec;
+  }
 
-    @JsonProperty("spec")
-    public void setSpec(ServiceBindingSpec spec) {
-        this.spec = spec;
-    }
+  @JsonProperty("spec")
+  public void setSpec(ServiceBindingSpec spec) {
+    this.spec = spec;
+  }
 }

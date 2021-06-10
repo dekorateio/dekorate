@@ -42,15 +42,15 @@ public class ImageStreamDiagnostics extends AbstractDiagonsticsService<ImageStre
     LOGGER.info("Spec:");
     LOGGER.info("\tDocker image repository:" + imageStream.getSpec().getDockerImageRepository());
     LOGGER.info("\tLookup policy:" + imageStream.getSpec().getLookupPolicy());
-    if (updated != null)  {
+    if (updated != null) {
       LOGGER.info("Status:");
       LOGGER.info("\tDocker image repository:" + updated.getStatus().getDockerImageRepository());
       LOGGER.info("\tPublic docker image repository:" + updated.getStatus().getPublicDockerImageRepository());
       LOGGER.info("\tTags:");
       if (updated.getStatus().getTags() != null && !updated.getStatus().getTags().isEmpty()) {
-        updated.getStatus().getTags().stream().peek(t -> LOGGER.info("\t"+t));
+        updated.getStatus().getTags().stream().peek(t -> LOGGER.info("\t" + t));
       } else {
-        LOGGER.warning("\t\tNo tags found for ImageStream: [" + name +"]");
+        LOGGER.warning("\t\tNo tags found for ImageStream: [" + name + "]");
       }
     } else {
       LOGGER.error("Failed to retrieve ImageStream: [" + name + "]");

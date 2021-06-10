@@ -20,7 +20,6 @@ package io.dekorate.docker.config;
 import java.util.Map;
 
 import io.dekorate.ConfigurationGenerator;
-import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
@@ -39,12 +38,14 @@ public interface DockerBuildConfigGenerator extends ConfigurationGenerator {
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))));
+    on(new AnnotationConfiguration<DockerBuildConfig>(
+        DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<DockerBuildConfig>(DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))));
+    on(new PropertyConfiguration<DockerBuildConfig>(
+        DockerBuildConfigAdapter.newBuilder(propertiesMap(map, DockerBuildConfig.class))));
   }
 
   default void on(ConfigurationSupplier<DockerBuildConfig> config) {

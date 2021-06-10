@@ -35,11 +35,10 @@ public class KanikoBuildStep extends ImageBuildStep<KanikoBuildStep> {
   public static final String PUSH_IMAGE_PARAM_DEFAULT = BUILD_COMMAND_PARAM_DEFAULT;
   public static final String PUSH_COMMAND_PARAM_DEFAULT = "/kaniko/executor";
 
-
   public KanikoBuildStep() {
     this(PATH_TO_CONTEXT_PARAM_DEFAULT, PATH_TO_DOCKERFILE_PARAM_DEFAULT, BUILD_IMAGE_PARAM_DEFAULT,
         BUILD_COMMAND_PARAM_DEFAULT, getDefaultBuildArguments(PATH_TO_DOCKERFILE_PARAM_DEFAULT, getContextPath()),
-         null, null, null);
+        null, null, null);
   }
 
   public KanikoBuildStep(String context, String dockerfile, String buildImage, String buildCommand,
@@ -50,73 +49,74 @@ public class KanikoBuildStep extends ImageBuildStep<KanikoBuildStep> {
   @Override
   public KanikoBuildStep withContext(String context) {
     return new KanikoBuildStep(context, dockerfile,
-                                buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
-                               null, null, null);
+        buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
+        null, null, null);
   }
 
   @Override
   public KanikoBuildStep withDockerfile(String dockerfile) {
     return new KanikoBuildStep(context, Strings.isNotNullOrEmpty(dockerfile) ? dockerfile : this.dockerfile,
-                                buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
-                               null, null, null);
+        buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
+        null, null, null);
   }
 
   @Override
   public KanikoBuildStep withBuildImage(String buildImage) {
     return new KanikoBuildStep(context, dockerfile,
-                               Strings.isNotNullOrEmpty(buildImage) ? buildImage : this.buildImage,
-                               buildCommand, buildArguments, pushImage, pushCommand,
+        Strings.isNotNullOrEmpty(buildImage) ? buildImage : this.buildImage,
+        buildCommand, buildArguments, pushImage, pushCommand,
         pushArguments);
   }
 
   @Override
   public KanikoBuildStep withBuildCommand(String buildCommand) {
     return new KanikoBuildStep(context, dockerfile,
-                               buildImage,
-                               Strings.isNotNullOrEmpty(buildCommand) ? buildCommand : this.buildCommand,
-                               buildArguments,
-                               pushImage, pushCommand, pushArguments);
+        buildImage,
+        Strings.isNotNullOrEmpty(buildCommand) ? buildCommand : this.buildCommand,
+        buildArguments,
+        pushImage, pushCommand, pushArguments);
   }
 
   @Override
   public KanikoBuildStep withBuildArguments(String[] buildArguments) {
     return new KanikoBuildStep(context, dockerfile,
-                               buildImage, buildCommand,
-                               buildArguments != null && buildArguments.length > 0 ? buildArguments : this.buildArguments,
-                               pushImage, pushCommand, pushArguments);
+        buildImage, buildCommand,
+        buildArguments != null && buildArguments.length > 0 ? buildArguments : this.buildArguments,
+        pushImage, pushCommand, pushArguments);
   }
 
   @Override
   public KanikoBuildStep withPushImage(String pushImage) {
     return new KanikoBuildStep(context, dockerfile,
-                               buildImage, buildCommand, buildArguments,
-                               Strings.isNotNullOrEmpty(pushImage) ? pushImage : this.pushImage,
-                               pushCommand, pushArguments);
+        buildImage, buildCommand, buildArguments,
+        Strings.isNotNullOrEmpty(pushImage) ? pushImage : this.pushImage,
+        pushCommand, pushArguments);
   }
 
   @Override
   public KanikoBuildStep withPushCommand(String pushCommand) {
     return new KanikoBuildStep(context, dockerfile,
-                               buildImage, buildCommand, buildArguments,
-                               pushImage,
-                               Strings.isNotNullOrEmpty(pushCommand) ? pushCommand : this.pushCommand,
-                               pushArguments);
+        buildImage, buildCommand, buildArguments,
+        pushImage,
+        Strings.isNotNullOrEmpty(pushCommand) ? pushCommand : this.pushCommand,
+        pushArguments);
   }
 
   @Override
   public KanikoBuildStep withPushArguments(String[] pushArguments) {
     return new KanikoBuildStep(context, dockerfile,
-                               buildImage, buildCommand, buildArguments,
-                               pushImage, pushCommand,
-                               pushArguments != null && pushArguments.length > 0 ? pushArguments : this.pushArguments);
+        buildImage, buildCommand, buildArguments,
+        pushImage, pushCommand,
+        pushArguments != null && pushArguments.length > 0 ? pushArguments : this.pushArguments);
   }
 
   @Override
   public boolean isPushRequired() {
     return false;
   }
- 
+
   private static String[] getDefaultBuildArguments(String context, String dockerfile) {
-    return new String[] { String.format(DOCKERFILE_FORMAT, dockerfile), String.format(CONTEXT_FORMAT, context), IMAGE_DESTINATION_ARG };
+    return new String[] { String.format(DOCKERFILE_FORMAT, dockerfile), String.format(CONTEXT_FORMAT, context),
+        IMAGE_DESTINATION_ARG };
   }
 }

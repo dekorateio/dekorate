@@ -62,12 +62,12 @@ public class Maven {
   }
 
   private static String getVersionFromOutput(String output) {
-      Matcher matcher = VERSION_PATTERN.matcher(output);
-      if (matcher.find()) {
-        return matcher.group(1);
-      }
-      LOGGER.warning("Unknown maven version output format. Expected 'Apache Maven x.y.z ...'. Falling back to: "
-          + FALLBACK_MAVEN_VERSION + "!");
-      return FALLBACK_MAVEN_VERSION;
+    Matcher matcher = VERSION_PATTERN.matcher(output);
+    if (matcher.find()) {
+      return matcher.group(1);
+    }
+    LOGGER.warning("Unknown maven version output format. Expected 'Apache Maven x.y.z ...'. Falling back to: "
+        + FALLBACK_MAVEN_VERSION + "!");
+    return FALLBACK_MAVEN_VERSION;
   }
 }

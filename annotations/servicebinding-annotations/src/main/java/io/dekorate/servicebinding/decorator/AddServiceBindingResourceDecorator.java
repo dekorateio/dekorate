@@ -27,7 +27,6 @@ import io.dekorate.servicebinding.model.Service;
 import io.dekorate.servicebinding.model.ServiceBindingBuilder;
 import io.dekorate.servicebinding.model.ValueFrom;
 import io.dekorate.utils.Strings;
-
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
@@ -70,7 +69,8 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
 
   private Application getApplication(ApplicationConfig config, BindingPathConfig bindingPathConfig, HasMetadata meta) {
     String[] apiVersion = meta.getApiVersion().split("/");
-    String name = config != null && Strings.isNotNullOrEmpty(config.getName()) ? config.getName() : meta.getMetadata().getName();
+    String name = config != null && Strings.isNotNullOrEmpty(config.getName()) ? config.getName()
+        : meta.getMetadata().getName();
     return new Application(apiVersion[0], meta.getKind(), name, apiVersion[1], getBindingPath(bindingPathConfig));
   }
 

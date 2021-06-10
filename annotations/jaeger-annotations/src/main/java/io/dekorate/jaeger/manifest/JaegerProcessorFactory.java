@@ -17,8 +17,8 @@
 
 package io.dekorate.jaeger.manifest;
 
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ResourceRegistry;
 
 public class JaegerProcessorFactory implements ManifestGeneratorFactory {

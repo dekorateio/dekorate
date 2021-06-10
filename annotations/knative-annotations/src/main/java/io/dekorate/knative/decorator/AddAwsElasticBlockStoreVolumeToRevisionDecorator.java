@@ -48,5 +48,4 @@ public class AddAwsElasticBlockStoreVolumeToRevisionDecorator extends NamedResou
         .endVolume();
   }
 
-	
 }

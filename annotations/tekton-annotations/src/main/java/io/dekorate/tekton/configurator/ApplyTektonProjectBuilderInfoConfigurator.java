@@ -10,15 +10,15 @@ public class ApplyTektonProjectBuilderInfoConfigurator extends Configurator<Tekt
   private final String image;
   private final String command;
   private final String[] arguments;
-  
-	public ApplyTektonProjectBuilderInfoConfigurator(String image, String command, String[] arguments) {
-		this.image = image;
-		this.command = command;
-		this.arguments = arguments;
-	}
 
-	@Override
-	public void visit(TektonConfigFluent<?> config) {
+  public ApplyTektonProjectBuilderInfoConfigurator(String image, String command, String[] arguments) {
+    this.image = image;
+    this.command = command;
+    this.arguments = arguments;
+  }
+
+  @Override
+  public void visit(TektonConfigFluent<?> config) {
     if (Strings.isNotNullOrEmpty(image)) {
       config.withProjectBuilderImage(image);
     }
@@ -30,5 +30,5 @@ public class ApplyTektonProjectBuilderInfoConfigurator extends Configurator<Tekt
     if (arguments != null) {
       config.withProjectBuilderArguments(arguments);
     }
-	}
+  }
 }

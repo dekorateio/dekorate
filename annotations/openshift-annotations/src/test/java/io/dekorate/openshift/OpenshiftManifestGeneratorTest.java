@@ -40,28 +40,33 @@ class OpenshiftManifestGeneratorTest {
   @BeforeAll
   public static void setup() throws IOException {
     Path tempDir = Files.createTempDirectory("dekorate");
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    WithProject withProject = new WithProject() {
+    };
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+        .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
   }
- 
+
   @Test
   public void shouldAcceptOpenshiftConfig() {
     Session session = Session.getSession();
-    OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(generator.accepts(OpenshiftConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableOpenshiftConfig() {
     Session session = Session.getSession();
-    OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(generator.accepts(EditableOpenshiftConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfig() {
     Session session = Session.getSession();
-    OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    OpenshiftManifestGenerator generator = new OpenshiftManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertFalse(generator.accepts(BaseConfig.class));
   }
 }

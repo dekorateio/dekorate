@@ -19,5 +19,6 @@ import io.dekorate.kubernetes.config.Configuration;
 
 public interface ManifestGeneratorFactory {
 
- <C extends Configuration> ManifestGenerator<C> create(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry);
+  <C extends Configuration> ManifestGenerator<C> create(ResourceRegistry resourceRegistry,
+      ConfigurationRegistry configurationRegistry);
 }

@@ -20,22 +20,18 @@ package io.dekorate;
 public interface Logger {
 
   static enum Level {
-    OFF,
-    ERROR,
-    WARN,
-    INFO,
-    DEBUG;
+    OFF, ERROR, WARN, INFO, DEBUG;
   }
 
   String THRESHOLD = "io.dekorate.log.level";
 
   default Level getLogLevel() {
-   String threshold = System.getProperty(THRESHOLD, "INFO");
-   try {
-     return Enum.valueOf(Level.class, threshold.toUpperCase());
-   } catch (IllegalArgumentException e) {
-     return Level.INFO;
-   }
+    String threshold = System.getProperty(THRESHOLD, "INFO");
+    try {
+      return Enum.valueOf(Level.class, threshold.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      return Level.INFO;
+    }
   }
 
   default boolean isDebugEnabled() {
@@ -45,7 +41,7 @@ public interface Logger {
   default boolean isInfoEnabled() {
     return getLogLevel().ordinal() >= Level.INFO.ordinal();
   }
-    
+
   default boolean isWarnEnabled() {
     return getLogLevel().ordinal() >= Level.WARN.ordinal();
   }

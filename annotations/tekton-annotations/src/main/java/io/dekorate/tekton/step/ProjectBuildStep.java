@@ -24,7 +24,7 @@ public final class ProjectBuildStep implements Step {
   public static final String IMAGE_PARAM_NAME = "projectBuilderImage";
   public static final String IMAGE_PARAM_DESCRIPTION = "The image to use for performing project build";
   public static final String IMAGE_PARAM_REF = "$(inputs.params." + IMAGE_PARAM_NAME + ")";
-  
+
   public static final String COMMAND_PARAM_NAME = "projectBuilderCommand";
   public static final String COMMAND_PARAM_DESCRIPTION = "The command to use for performing project build";
   public static final String COMMAND_PARAM_REF = "$(inputs.params." + COMMAND_PARAM_NAME + ")";

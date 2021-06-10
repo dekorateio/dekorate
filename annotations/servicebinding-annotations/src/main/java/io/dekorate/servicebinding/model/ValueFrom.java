@@ -9,7 +9,7 @@ import io.sundr.builder.annotations.Buildable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "configMapKeyRef", "secretKeyRef", "fieldRef", "resourceFieldRef" })
 @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder") 
+@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder")
 public class ValueFrom {
 
   private ConfigMapKeyRef configMapKeyRef;

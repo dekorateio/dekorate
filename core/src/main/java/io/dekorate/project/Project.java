@@ -15,16 +15,8 @@
  */
 package io.dekorate.project;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.dekorate.utils.Serialization;
 import io.sundr.builder.annotations.Buildable;
 
 public class Project {
@@ -97,7 +89,6 @@ public class Project {
   public Project withDekorateOutputDir(String dekorateOutputDir) {
     return new Project(root, dekorateInputDir, dekorateMetaDir, dekorateOutputDir, buildInfo);
   }
-
 
   public ScmInfo getScmInfo() {
     return scmInfo;

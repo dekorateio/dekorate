@@ -43,17 +43,19 @@ public class DeploymentConfigDiagnostics extends AbstractDiagonsticsService<Depl
     String name = deployment.getMetadata().getName();
     DeploymentConfig updated = getKubernetesClient().adapt(OpenShiftClient.class).deploymentConfigs().withName(name).get();
 
-    if (updated != null)  {
-      int readyReplicas = updated.getStatus() != null && updated.getStatus().getReadyReplicas() != null ? updated.getStatus().getReadyReplicas() : 0;
+    if (updated != null) {
+      int readyReplicas = updated.getStatus() != null && updated.getStatus().getReadyReplicas() != null
+          ? updated.getStatus().getReadyReplicas()
+          : 0;
       LOGGER.info(String.format(DEPLOYMENT_STATUS_HEADER_FORMAT, name, readyReplicas, updated.getSpec().getReplicas()));
       if (updated.getStatus() != null) {
-        LOGGER.info(String.format(DEPLOYMENT_STATUS_CONDITIONS_FORMAT,  "Type", "Status", "Message"));
+        LOGGER.info(String.format(DEPLOYMENT_STATUS_CONDITIONS_FORMAT, "Type", "Status", "Message"));
         updated.getStatus().getConditions().forEach(c -> {
-            LOGGER.info(String.format(DEPLOYMENT_STATUS_CONDITIONS_FORMAT, 
-                                  c.getType(),
-                                  c.getStatus(),
-                                  c.getMessage()));
-          });
+          LOGGER.info(String.format(DEPLOYMENT_STATUS_CONDITIONS_FORMAT,
+              c.getType(),
+              c.getStatus(),
+              c.getMessage()));
+        });
       } else {
         LOGGER.error("Failed to retrieve Deployment: [" + name + "]");
       }

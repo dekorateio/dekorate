@@ -15,16 +15,10 @@
  */
 package io.dekorate.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.dekorate.DekorateException;
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +30,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.dekorate.DekorateException;
 
@@ -91,6 +86,7 @@ public class Maps {
     return result;
 
   }
+
   public static Map<String, Object> parseResourceFile(InputStream is, String resourceName) {
     if (resourceName.endsWith(".properties")) {
       return parse(is, Serialization.propertiesMapper());
@@ -103,7 +99,8 @@ public class Maps {
 
   private static Map<String, Object> parse(InputStream is, ObjectMapper javaPropsMapper) {
     try {
-      return javaPropsMapper.readValue(is, new TypeReference<Map<String, Object>>() {});
+      return javaPropsMapper.readValue(is, new TypeReference<Map<String, Object>>() {
+      });
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -155,7 +152,6 @@ public class Maps {
     result.put(root, fromAnnotation(annotation, type));
     return result;
   }
-
 
   public static <A extends Annotation> Map<String, Object> fromAnnotation(A annotation, Class<? extends A> type) {
     Map<String, Object> result = new HashMap<>();
@@ -226,8 +222,6 @@ public class Maps {
     }
     return result;
   }
-
-
 
   /**
    * Convert a multipart-key value pair to a Map.
@@ -349,6 +343,5 @@ public class Maps {
       }
     }
   }
-
 
 }

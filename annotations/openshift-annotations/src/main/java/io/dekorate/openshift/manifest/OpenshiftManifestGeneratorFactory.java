@@ -17,8 +17,8 @@
 
 package io.dekorate.openshift.manifest;
 
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ResourceRegistry;
 
 public class OpenshiftManifestGeneratorFactory implements ManifestGeneratorFactory {
@@ -27,5 +27,3 @@ public class OpenshiftManifestGeneratorFactory implements ManifestGeneratorFacto
     return new OpenshiftManifestGenerator(resourceRegistry, configurationRegistry);
   }
 }
-
-  

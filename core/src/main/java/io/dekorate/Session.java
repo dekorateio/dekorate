@@ -111,14 +111,16 @@ public class Session {
   }
 
   public void loadManifestGenerators() {
-    Iterator<ManifestGeneratorFactory> iterator = ServiceLoader.load(ManifestGeneratorFactory.class, Session.class.getClassLoader()).iterator();
+    Iterator<ManifestGeneratorFactory> iterator = ServiceLoader
+        .load(ManifestGeneratorFactory.class, Session.class.getClassLoader()).iterator();
     while (iterator.hasNext()) {
       this.manifestGenerators.add(iterator.next().create(this.resourceRegistry, this.configurationRegistry));
     }
   }
 
   public void loadConfigurationGenerators() {
-    Iterator<ConfigurationGeneratorFactory> iterator = ServiceLoader.load(ConfigurationGeneratorFactory.class, Session.class.getClassLoader()).iterator();
+    Iterator<ConfigurationGeneratorFactory> iterator = ServiceLoader
+        .load(ConfigurationGeneratorFactory.class, Session.class.getClassLoader()).iterator();
     while (iterator.hasNext()) {
       ConfigurationGenerator g = iterator.next().create(this.configurationRegistry);
       if (g.getKey() != null) {
@@ -136,8 +138,6 @@ public class Session {
       addListener(iterator.next());
     }
   }
-
-
 
   public void enable(String... groups) {
     for (String group : groups) {
@@ -306,46 +306,49 @@ public class Session {
 
   private void checkConfigurationConsistency() {
     Set<Coordinates> applicationConfigurations = configurationRegistry.stream()
-      .filter(c -> (c instanceof ApplicationConfiguration) && !(c instanceof ImageConfiguration))
-      .map(c -> (ApplicationConfiguration) c)
-      .map(a -> new DefaultCoordinates(a.getPartOf(), a.getName(), a.getVersion()))
-      .collect(Collectors.toSet());
+        .filter(c -> (c instanceof ApplicationConfiguration) && !(c instanceof ImageConfiguration))
+        .map(c -> (ApplicationConfiguration) c)
+        .map(a -> new DefaultCoordinates(a.getPartOf(), a.getName(), a.getVersion()))
+        .collect(Collectors.toSet());
 
     //If we have a single appliction configuration, we should apply it to ImageConfiguration using defaults.
     if (applicationConfigurations.size() == 1) {
       final Coordinates coords = applicationConfigurations.iterator().next();
       configurationRegistry.add(new Configurator<ImageConfigurationFluent>() {
-          @Override
-          public void visit(ImageConfigurationFluent imageConfiguration) {
-            if (Strings.isNullOrEmpty(imageConfiguration.getGroup())) {
-              imageConfiguration.withGroup(coords.getPartOf());
-            }
-
-            if (Strings.isNullOrEmpty(imageConfiguration.getName())) {
-              imageConfiguration.withName(coords.getName());
-            }
-            if (Strings.isNullOrEmpty(imageConfiguration.getVersion())) {
-              imageConfiguration.withVersion(coords.getVersion());
-            }
+        @Override
+        public void visit(ImageConfigurationFluent imageConfiguration) {
+          if (Strings.isNullOrEmpty(imageConfiguration.getGroup())) {
+            imageConfiguration.withGroup(coords.getPartOf());
           }
+
+          if (Strings.isNullOrEmpty(imageConfiguration.getName())) {
+            imageConfiguration.withName(coords.getName());
+          }
+          if (Strings.isNullOrEmpty(imageConfiguration.getVersion())) {
+            imageConfiguration.withVersion(coords.getVersion());
+          }
+        }
       });
     }
-    
+
     configurationRegistry.imageConfigurationStream()
-      .filter(i -> i != null)
-      .forEach(i -> {
+        .filter(i -> i != null)
+        .forEach(i -> {
           Set<ApplicationConfiguration> matched = configurationRegistry.stream()
               .filter(c -> (c instanceof ApplicationConfiguration) && !(c instanceof ImageConfiguration))
               .map(c -> (ApplicationConfiguration) c)
-              .filter(a -> a != null 
-                        && ( !Strings.equals(i.getGroup(), a.getPartOf()) 
-                             || !Strings.equals(i.getName(), a.getName())
-                             || !Strings.equals(i.getVersion(), a.getVersion()))).collect(Collectors.toSet());
+              .filter(a -> a != null
+                  && (!Strings.equals(i.getGroup(), a.getPartOf())
+                      || !Strings.equals(i.getName(), a.getName())
+                      || !Strings.equals(i.getVersion(), a.getVersion())))
+              .collect(Collectors.toSet());
 
           if (matched.isEmpty()) {
-            LOGGER.debug(String.format("No matching Application configuration found for Image configuration (group=%s,name=%s,version=%s). This is often leads to confusion!", i.getGroup(), i.getName(), i.getVersion()));
-          } 
-    });
+            LOGGER.debug(String.format(
+                "No matching Application configuration found for Image configuration (group=%s,name=%s,version=%s). This is often leads to confusion!",
+                i.getGroup(), i.getName(), i.getVersion()));
+          }
+        });
   }
 
   private static void generate(ManifestGenerator h, ConfigurationRegistry configurationRegistry) {

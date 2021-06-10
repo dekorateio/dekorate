@@ -20,7 +20,6 @@ package io.dekorate.logger;
 import static org.fusesource.jansi.Ansi.*;
 import static org.fusesource.jansi.Ansi.Color.*;
 
-
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.PrintStream;

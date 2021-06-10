@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.InputStream;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.dekorate.DekorateException;
 import io.fabric8.kubernetes.api.model.KubernetesList;
@@ -61,4 +61,3 @@ class SerializationTest {
     }
   }
 }
-

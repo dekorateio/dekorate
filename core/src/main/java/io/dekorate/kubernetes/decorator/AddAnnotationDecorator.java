@@ -45,15 +45,13 @@ public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBui
     this.annotation = new Annotation(key, value, kinds);
   }
 
-
-
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, String kind, ObjectMeta resourceMeta) {
-    if (annotation.getKinds() == null || annotation.getKinds().length == 0 || Arrays.asList(annotation.getKinds()).contains(kind)) {
+    if (annotation.getKinds() == null || annotation.getKinds().length == 0
+        || Arrays.asList(annotation.getKinds()).contains(kind)) {
       andThenVisit(builder, resourceMeta);
     }
   }
-
 
   @Override
   public void andThenVisit(ObjectMetaBuilder builder, ObjectMeta resourceMeta) {
@@ -67,7 +65,8 @@ public class AddAnnotationDecorator extends NamedResourceDecorator<ObjectMetaBui
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
+        AddSidecarDecorator.class };
   }
 
   @Override

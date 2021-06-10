@@ -18,6 +18,7 @@ package io.dekorate.servicebinding.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.sundr.builder.annotations.Buildable;
 
 /**
@@ -27,7 +28,7 @@ import io.sundr.builder.annotations.Buildable;
 @JsonPropertyOrder({ "application", "services", "envVarPrefix", "detectBindingResources", "bindAsFiles", "mountPath",
     "customEnvVar" })
 @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
-@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder" )
+@Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder")
 public class ServiceBindingSpec {
 
   private Application application;

@@ -30,9 +30,6 @@ import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.tekton.pipeline.v1beta1.StepBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 public abstract class NamedStepDecorator<T> extends Decorator<VisitableBuilder> {
 
@@ -85,7 +82,6 @@ public abstract class NamedStepDecorator<T> extends Decorator<VisitableBuilder> 
       return (Class) Generics.getTypeArguments(NamedStepDecorator.class, NamedStepDecorator.this.getClass()).get(0);
     }
   }
-
 
   @Override
   public Class<? extends Decorator>[] after() {

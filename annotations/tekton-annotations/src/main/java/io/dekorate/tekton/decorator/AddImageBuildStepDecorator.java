@@ -46,7 +46,8 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
     this(taskName, stepName, projectName, BUILDER_IMAGE_REF, BUILDER_COMMAND_REF, BUILDER_ARGS_REF);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command, String... args) {
+  public AddImageBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command,
+      String... args) {
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;

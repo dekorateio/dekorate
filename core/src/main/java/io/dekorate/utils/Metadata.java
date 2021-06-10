@@ -18,9 +18,9 @@ package io.dekorate.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import io.fabric8.kubernetes.api.builder.Builder;
-import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.ObjectMeta;

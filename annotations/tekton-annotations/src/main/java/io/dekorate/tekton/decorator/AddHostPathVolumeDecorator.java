@@ -15,49 +15,49 @@
  */
 package io.dekorate.tekton.decorator;
 
+import java.util.function.Predicate;
+
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
-import java.util.function.Predicate;
-import io.fabric8.kubernetes.api.model.Volume;
 import io.fabric8.kubernetes.api.model.VolumeBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 @Description("Add a persistent host path volume to the specified task.")
 public class AddHostPathVolumeDecorator extends NamedTaskDecorator {
 
-    private final String name;
-    private final String path;
-    private final String type;
+  private final String name;
+  private final String path;
+  private final String type;
 
-    public AddHostPathVolumeDecorator(String taskName, String name, String path, String type) {
-        super(taskName);
-        this.name = name;
-        this.path = path;
-        this.type = type;
-    }
+  public AddHostPathVolumeDecorator(String taskName, String name, String path, String type) {
+    super(taskName);
+    this.name = name;
+    this.path = path;
+    this.type = type;
+  }
 
   @Override
   public void andThenVisit(TaskSpecFluent<?> spec) {
-      Predicate<VolumeBuilder> predicate = matchingVolume(name);
-      if (spec.hasMatchingVolume(predicate)) {
-          spec.removeMatchingFromVolumes(predicate);
-      }
+    Predicate<VolumeBuilder> predicate = matchingVolume(name);
+    if (spec.hasMatchingVolume(predicate)) {
+      spec.removeMatchingFromVolumes(predicate);
+    }
 
-      spec.addToVolumes(new VolumeBuilder()
-                      .withName(name)
-                      .withNewHostPath()
-                        .withType(type)
-                        .withPath(path)
-                      .endHostPath()
-                      .build());
+    spec.addToVolumes(new VolumeBuilder()
+        .withName(name)
+        .withNewHostPath()
+        .withType(type)
+        .withPath(path)
+        .endHostPath()
+        .build());
   }
 
-    private static Predicate<VolumeBuilder> matchingVolume(String name) {
-        return new Predicate<VolumeBuilder>() {
-            @Override
-            public boolean test(VolumeBuilder volume) {
-                return Strings.isNullOrEmpty(name) || volume.getName().equals(name);
-            }
-        };
-    }
+  private static Predicate<VolumeBuilder> matchingVolume(String name) {
+    return new Predicate<VolumeBuilder>() {
+      @Override
+      public boolean test(VolumeBuilder volume) {
+        return Strings.isNullOrEmpty(name) || volume.getName().equals(name);
+      }
+    };
+  }
 }

@@ -45,7 +45,6 @@ public class AddKanikoImageBuildStepDecorator extends NamedTaskDecorator impleme
   private final String command;
   private final String[] args;
 
-
   public AddKanikoImageBuildStepDecorator(String taskName, String projectName) {
     this(taskName, STEP_NAME, projectName);
   }
@@ -54,13 +53,15 @@ public class AddKanikoImageBuildStepDecorator extends NamedTaskDecorator impleme
     this(taskName, stepName, projectName, BUILDER_IMAGE_REF, BUILDER_COMMAND_REF, BUILDER_ARGS_REF);
   }
 
-  public AddKanikoImageBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command, String... args) {
+  public AddKanikoImageBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command,
+      String... args) {
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;
     this.image = Strings.isNotNullOrEmpty(image) ? image : BUILDER_IMAGE_REF;
     this.command = Strings.isNotNullOrEmpty(command) ? command : KANIKO_CMD;
-    this.args = args != null && args.length != 0 ? args : new String[] {DOCKERFILE_ARG, CONTEXT_ARG, IMAGE_DESTINATION_ARG, VERBOSITY_DEBUG};
+    this.args = args != null && args.length != 0 ? args
+        : new String[] { DOCKERFILE_ARG, CONTEXT_ARG, IMAGE_DESTINATION_ARG, VERBOSITY_DEBUG };
   }
 
   @Override

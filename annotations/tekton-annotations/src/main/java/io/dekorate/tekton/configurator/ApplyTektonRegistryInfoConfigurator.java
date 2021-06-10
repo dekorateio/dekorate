@@ -10,15 +10,15 @@ public class ApplyTektonRegistryInfoConfigurator extends Configurator<TektonConf
   private final String registry;
   private final String username;
   private final String password;
-  
-	public ApplyTektonRegistryInfoConfigurator(String registry, String username, String password) {
-		this.registry = registry;
-		this.username = username;
-		this.password = password;
-	}
 
-	@Override
-	public void visit(TektonConfigFluent<?> config) {
+  public ApplyTektonRegistryInfoConfigurator(String registry, String username, String password) {
+    this.registry = registry;
+    this.username = username;
+    this.password = password;
+  }
+
+  @Override
+  public void visit(TektonConfigFluent<?> config) {
     if (Strings.isNotNullOrEmpty(registry)) {
       config.withRegistry(registry);
     }
@@ -30,5 +30,5 @@ public class ApplyTektonRegistryInfoConfigurator extends Configurator<TektonConf
     if (Strings.isNotNullOrEmpty(password)) {
       config.withRegistryPassword(password);
     }
-	}
+  }
 }

@@ -17,6 +17,7 @@
 package io.dekorate.tekton.step;
 
 import static io.dekorate.tekton.util.TektonUtils.getContextPath;
+
 import io.dekorate.utils.Strings;
 
 public class BuildahBuildStep extends ImageBuildStep<BuildahBuildStep> {
@@ -50,80 +51,79 @@ public class BuildahBuildStep extends ImageBuildStep<BuildahBuildStep> {
     super(context, dockerfile, buildImage, buildCommand, buildArguments, pushImage, pushCommand, pushArguments);
   }
 
-
   @Override
   public BuildahBuildStep withContext(String context) {
     return new BuildahBuildStep(context, dockerfile,
-                                buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
-                                pushImage, pushCommand, getDefaultPushArguments(context, dockerfile));
+        buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
+        pushImage, pushCommand, getDefaultPushArguments(context, dockerfile));
   }
 
   @Override
   public BuildahBuildStep withDockerfile(String dockerfile) {
     return new BuildahBuildStep(context, Strings.isNotNullOrEmpty(dockerfile) ? dockerfile : this.dockerfile,
-                                buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
-                                pushImage, pushCommand, getDefaultPushArguments(context, dockerfile));
+        buildImage, buildCommand, getDefaultBuildArguments(context, dockerfile),
+        pushImage, pushCommand, getDefaultPushArguments(context, dockerfile));
   }
 
   @Override
   public BuildahBuildStep withBuildImage(String buildImage) {
     return new BuildahBuildStep(context, dockerfile,
-                               Strings.isNotNullOrEmpty(buildImage) ? buildImage : this.buildImage,
-                               buildCommand, buildArguments, pushImage, pushCommand,
+        Strings.isNotNullOrEmpty(buildImage) ? buildImage : this.buildImage,
+        buildCommand, buildArguments, pushImage, pushCommand,
         pushArguments);
   }
 
   @Override
   public BuildahBuildStep withBuildCommand(String buildCommand) {
     return new BuildahBuildStep(context, dockerfile,
-                               buildImage,
-                               Strings.isNotNullOrEmpty(buildCommand) ? buildCommand : this.buildCommand,
-                               buildArguments,
-                               pushImage, pushCommand, pushArguments);
+        buildImage,
+        Strings.isNotNullOrEmpty(buildCommand) ? buildCommand : this.buildCommand,
+        buildArguments,
+        pushImage, pushCommand, pushArguments);
   }
 
   @Override
   public BuildahBuildStep withBuildArguments(String[] buildArguments) {
     return new BuildahBuildStep(context, dockerfile,
-                               buildImage, buildCommand,
-                               buildArguments != null && buildArguments.length > 0 ? buildArguments : this.buildArguments,
-                               pushImage, pushCommand, pushArguments);
+        buildImage, buildCommand,
+        buildArguments != null && buildArguments.length > 0 ? buildArguments : this.buildArguments,
+        pushImage, pushCommand, pushArguments);
   }
 
   @Override
   public BuildahBuildStep withPushImage(String pushImage) {
     return new BuildahBuildStep(context, dockerfile,
-                               buildImage, buildCommand, buildArguments,
-                               Strings.isNotNullOrEmpty(pushImage) ? pushImage : this.pushImage,
-                               pushCommand, pushArguments);
+        buildImage, buildCommand, buildArguments,
+        Strings.isNotNullOrEmpty(pushImage) ? pushImage : this.pushImage,
+        pushCommand, pushArguments);
   }
 
   @Override
   public BuildahBuildStep withPushCommand(String pushCommand) {
     return new BuildahBuildStep(context, dockerfile,
-                               buildImage, buildCommand, buildArguments,
-                               pushImage,
-                               Strings.isNotNullOrEmpty(pushCommand) ? pushCommand : this.pushCommand,
-                               pushArguments);
+        buildImage, buildCommand, buildArguments,
+        pushImage,
+        Strings.isNotNullOrEmpty(pushCommand) ? pushCommand : this.pushCommand,
+        pushArguments);
   }
 
   @Override
   public BuildahBuildStep withPushArguments(String[] pushArguments) {
     return new BuildahBuildStep(context, dockerfile,
-                               buildImage, buildCommand, buildArguments,
-                               pushImage, pushCommand,
-                               pushArguments != null && pushArguments.length > 0 ? pushArguments : this.pushArguments);
+        buildImage, buildCommand, buildArguments,
+        pushImage, pushCommand,
+        pushArguments != null && pushArguments.length > 0 ? pushArguments : this.pushArguments);
   }
 
   @Override
   public boolean isPushRequired() {
     return true;
   }
-  
+
   @Override
   public boolean isDockerSocketRequired() {
     return false;
-   } 
+  }
 
   private static String[] getDefaultBuildArguments(String context, String dockerfile) {
     return new String[] { BUG, TARGET, IMAGE_TARGET_ARG, FILE, dockerfile, context };

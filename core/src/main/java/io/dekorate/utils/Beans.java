@@ -101,7 +101,6 @@ public class Beans {
       return override;
     }
 
-
     Constructor constructor = null;
     try {
       constructor = originClass.getConstructor();

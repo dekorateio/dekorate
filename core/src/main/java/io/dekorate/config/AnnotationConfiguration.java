@@ -21,7 +21,8 @@ import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
 /**
  * A {@link Supplier} for {@link Configuration} found in annotations.
- * Typically annotation configuration, has higher priority than {@link DefaultConfiguration} and lower than {@link PropertyConfiguration}.
+ * Typically annotation configuration, has higher priority than {@link DefaultConfiguration} and lower than
+ * {@link PropertyConfiguration}.
  */
 public class AnnotationConfiguration<C extends Configuration> extends ConfigurationSupplier<C> {
 

@@ -32,8 +32,8 @@ public abstract class AbstractDiagonsticsService<T extends HasMetadata> implemen
     this.client = client;
   }
 
-	@Override
-	public KubernetesClient getKubernetesClient() {
+  @Override
+  public KubernetesClient getKubernetesClient() {
     return this.client;
   }
 }

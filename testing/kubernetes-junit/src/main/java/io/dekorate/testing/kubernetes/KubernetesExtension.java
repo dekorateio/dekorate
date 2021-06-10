@@ -18,7 +18,6 @@ package io.dekorate.testing.kubernetes;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -35,8 +34,6 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.testing.Diagnostics;
-import io.dekorate.testing.Pods;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithImageConfig;
 import io.dekorate.testing.WithKubernetesClient;
@@ -46,7 +43,6 @@ import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.ReplicationController;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
@@ -129,7 +125,7 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       LOGGER.info("Waited: " + (ended - started) + " ms.");
       //Display the item status
       waitables.stream().map(r -> client.resource(r).fromServer().get())
-        .forEach(i -> {
+          .forEach(i -> {
             if (!Readiness.getInstance().isReady(i)) {
               readinessFailed(context);
               LOGGER.warning(i.getKind() + ":" + i.getMetadata().getName() + " not ready!");

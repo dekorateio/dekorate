@@ -13,4 +13,3 @@ class JvmTest {
     assertTrue(version >= 8);
   }
 }
-

@@ -21,16 +21,17 @@ import io.dekorate.tekton.step.ImageStep;
 
 public class AddDockerSocketMountDecorator extends AddMountDecorator {
 
-    public AddDockerSocketMountDecorator() {
-        this(ANY, ANY);
-    }
+  public AddDockerSocketMountDecorator() {
+    this(ANY, ANY);
+  }
 
-    public AddDockerSocketMountDecorator(String taskName, String stepName) {
-        this(taskName, stepName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, null, false);
-    }
+  public AddDockerSocketMountDecorator(String taskName, String stepName) {
+    this(taskName, stepName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, null, false);
+  }
 
-	public AddDockerSocketMountDecorator(String taskName, String stepName, String name, String path, String subPath, boolean readOnly) {
-		super(taskName, stepName, name, path, subPath, readOnly);
-	}
+  public AddDockerSocketMountDecorator(String taskName, String stepName, String name, String path, String subPath,
+      boolean readOnly) {
+    super(taskName, stepName, name, path, subPath, readOnly);
+  }
 
 }

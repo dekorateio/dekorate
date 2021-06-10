@@ -42,9 +42,9 @@ public class Ports {
   public static final String DEFAULT_HTTP_PORT_PATH = "/";
 
   public static final Predicate<PortBuilder> PORT_PREDICATE = p -> HTTP_PORT_NAMES.contains(p.getName())
-    || HTTPS_PORT_NAMES.contains(p.getName())
-    || HTTP_PORT_NUMBERS.contains(p.getContainerPort())
-    || HTTPS_PORT_NUMBERS.contains(p.getContainerPort());
+      || HTTPS_PORT_NAMES.contains(p.getName())
+      || HTTP_PORT_NUMBERS.contains(p.getContainerPort())
+      || HTTPS_PORT_NUMBERS.contains(p.getContainerPort());
 
   public static final List<String> webPortNames() {
     return Stream.of(HTTP_PORT_NAMES, HTTPS_PORT_NAMES).flatMap(Collection::stream).collect(Collectors.toList());

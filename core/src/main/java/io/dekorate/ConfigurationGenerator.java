@@ -44,9 +44,8 @@ public interface ConfigurationGenerator extends SessionHandler {
     return null;
   }
 
-
   ConfigurationRegistry getConfigurationRegistry();
-  
+
   /**
    * Add a map as the generator annotation configuration.
    */

@@ -1,16 +1,16 @@
 package io.dekorate.servicebinding.manifest;
 
 import io.dekorate.ConfigurationRegistry;
-import io.dekorate.ManifestGenerator;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.ManifestGenerator;
 import io.dekorate.ResourceRegistry;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.servicebinding.config.EditableServiceBindingConfig;
 import io.dekorate.servicebinding.config.ServiceBindingConfig;
 import io.dekorate.servicebinding.decorator.AddServiceBindingResourceDecorator;
 
-public class ServiceBindingResourceGenerator implements ManifestGenerator<ServiceBindingConfig>  {
+public class ServiceBindingResourceGenerator implements ManifestGenerator<ServiceBindingConfig> {
 
   private final ResourceRegistry resourceRegistry;
   private final ConfigurationRegistry configurationRegistry;

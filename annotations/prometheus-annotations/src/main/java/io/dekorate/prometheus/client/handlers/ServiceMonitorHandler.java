@@ -64,8 +64,9 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   }
 
   @Override
-  public Boolean delete(OkHttpClient client, Config config, String namespace, DeletionPropagation propagationPolicy, ServiceMonitor item) {
-      return new ServiceMonitorOperationsImpl(client, config).withItem(item).withPropagationPolicy(propagationPolicy).delete();
+  public Boolean delete(OkHttpClient client, Config config, String namespace, DeletionPropagation propagationPolicy,
+      ServiceMonitor item) {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).withPropagationPolicy(propagationPolicy).delete();
   }
 
   @Override
@@ -78,13 +79,16 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
   @Override
   public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, String resourceVersion,
       Watcher<ServiceMonitor> watcher) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).watch(resourceVersion, watcher);
   }
 
- @Override
- public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, ListOptions listOptions, Watcher<ServiceMonitor> watcher) {
-    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace).withName(item.getMetadata().getName()).watch(listOptions, watcher);
- }
+  @Override
+  public Watch watch(OkHttpClient client, Config config, String namespace, ServiceMonitor item, ListOptions listOptions,
+      Watcher<ServiceMonitor> watcher) {
+    return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
+        .withName(item.getMetadata().getName()).watch(listOptions, watcher);
+  }
 
   @Override
   public ServiceMonitor waitUntilReady(OkHttpClient client, Config config, String namespace, ServiceMonitor item, long amount,
@@ -99,6 +103,5 @@ public class ServiceMonitorHandler implements ResourceHandler<ServiceMonitor, Se
     return new ServiceMonitorOperationsImpl(client, config).withItem(item).inNamespace(namespace)
         .withName(item.getMetadata().getName()).waitUntilCondition(condition, amount, timeUnit);
   }
-
 
 }

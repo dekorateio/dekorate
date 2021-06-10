@@ -8,8 +8,8 @@ public class AddToMatchingLabelsDecorator extends NamedResourceDecorator<LabelSe
 
   private String key;
   private String value;
-  
- 	public AddToMatchingLabelsDecorator(String key, String value) {
+
+  public AddToMatchingLabelsDecorator(String key, String value) {
     this(ANY, key, value);
   }
 

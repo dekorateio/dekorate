@@ -32,7 +32,7 @@ public class AddInitContainerToRevisionDecorator extends NamedResourceDecorator<
 
   public AddInitContainerToRevisionDecorator(Container container) {
     this(ANY, container);
-  } 
+  }
 
   public AddInitContainerToRevisionDecorator(String deployment, Container container) {
     super(deployment);

@@ -17,8 +17,8 @@
 
 package io.dekorate.s2i.manifest;
 
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ResourceRegistry;
 
 public class S2iManifestGeneratorFactory implements ManifestGeneratorFactory {
@@ -27,4 +27,3 @@ public class S2iManifestGeneratorFactory implements ManifestGeneratorFactory {
     return new S2iManifestGenerator(resourceRegistry, configurationRegistry);
   }
 }
-

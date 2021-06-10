@@ -24,9 +24,7 @@ import io.dekorate.tekton.step.KanikoBuildStep;
 
 public enum TektonImageBuildStrategy {
 
-  kaniko(new KanikoBuildStep()),
-  docker(new DockerBuildStep()),
-  buildah(new BuildahBuildStep());
+  kaniko(new KanikoBuildStep()), docker(new DockerBuildStep()), buildah(new BuildahBuildStep());
 
   ImageBuildStep<?> step;
 

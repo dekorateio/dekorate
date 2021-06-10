@@ -51,7 +51,8 @@ public class AddHostAliasesToRevisionDecorator extends NamedResourceDecorator<Re
       }
       existing = existing.stream().filter(h -> !h.getIp().equals(hostAlias.getIp())).collect(Collectors.toList());
       List<io.fabric8.kubernetes.api.model.HostAlias> updated = new ArrayList<>(existing);
-      updated.add(new HostAliasBuilder().withIp(hostAlias.getIp()).withHostnames(Arrays.asList(hostAlias.getHostnames().split(","))).build());
+      updated.add(new HostAliasBuilder().withIp(hostAlias.getIp())
+          .withHostnames(Arrays.asList(hostAlias.getHostnames().split(","))).build());
       revisionSpec.withHostAliases(updated);
     }
   }
