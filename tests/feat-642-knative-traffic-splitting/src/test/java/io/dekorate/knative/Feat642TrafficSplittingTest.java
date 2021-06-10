@@ -44,7 +44,7 @@ public class Feat642TrafficSplittingTest {
     TrafficTarget traffic = s.getSpec().getTraffic().get(0);
     assertEquals("my-revision", s.getSpec().getTemplate().getMetadata().getName());
     assertEquals("my-revision", traffic.getRevisionName());
-    assertEquals((long)80, traffic.getPercent());
+    assertEquals((long) 80, traffic.getPercent());
     assertFalse(traffic.getLatestRevision());
   }
 

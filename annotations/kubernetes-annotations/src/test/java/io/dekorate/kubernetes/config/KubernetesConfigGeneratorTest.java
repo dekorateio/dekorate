@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import io.dekorate.ConfigurationRegistry;
 import io.dekorate.Session;
 import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;

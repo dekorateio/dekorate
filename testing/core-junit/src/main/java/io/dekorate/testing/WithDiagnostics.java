@@ -17,14 +17,14 @@
 
 package io.dekorate.testing;
 
+import static io.dekorate.testing.Testing.DEKORATE_STORE;
+import static io.dekorate.testing.Testing.KUBERNETES_LIST;
+
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.client.KubernetesClient;
-
-import static io.dekorate.testing.Testing.DEKORATE_STORE;
-import static io.dekorate.testing.Testing.KUBERNETES_LIST;
 
 public interface WithDiagnostics extends WithKubernetesClient {
 

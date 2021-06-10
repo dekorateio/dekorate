@@ -40,25 +40,30 @@ class KubernetesManifestGeneratorTest {
   @BeforeAll
   public static void setup() throws IOException {
     Path tempDir = Files.createTempDirectory("dekorate");
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    WithProject withProject = new WithProject() {
+    };
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+        .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
   }
- 
+
   @Test
   public void shouldAcceptKubernetesConfig() {
-    KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(), new ConfigurationRegistry());
+    KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(),
+        new ConfigurationRegistry());
     assertTrue(generator.accepts(KubernetesConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableKubernetesConfig() {
-    KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(), new ConfigurationRegistry());
+    KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(),
+        new ConfigurationRegistry());
     assertTrue(generator.accepts(EditableKubernetesConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfigSubclasses() {
-    KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(), new ConfigurationRegistry());
+    KubernetesManifestGenerator generator = new KubernetesManifestGenerator(new ResourceRegistry(),
+        new ConfigurationRegistry());
     assertFalse(generator.accepts(KubernetesConfigSubclass.class));
   }
 

@@ -87,18 +87,16 @@ public class Git {
     try {
       final AtomicReference<String> currentRemote = new AtomicReference<>();
       Files.lines(getConfig(path)).map(String::trim).forEach(l -> {
-          remoteValue(l).ifPresent(r -> currentRemote.set(r));
-          if (l.startsWith(URL)  && l.contains(EQUALS)) {
-            result.put(currentRemote.get(), l.split(EQUALS)[1].trim());
-          }
-        });
+        remoteValue(l).ifPresent(r -> currentRemote.set(r));
+        if (l.startsWith(URL) && l.contains(EQUALS)) {
+          result.put(currentRemote.get(), l.split(EQUALS)[1].trim());
+        }
+      });
       return result;
     } catch (Exception e) {
       return result;
     }
   }
-  
-
 
   /**
    * Get the git remote url.
@@ -127,7 +125,6 @@ public class Git {
       return Optional.empty();
     }
   }
-
 
   static String sanitizeRemoteUrl(String remoteUrl) {
     final int atSign = remoteUrl.indexOf('@');
@@ -197,7 +194,6 @@ public class Git {
       return state.get();
     };
   }
-
 
   public static Optional<String> remoteValue(String line) {
     Pattern p = Pattern.compile(REMOTE_PATTERN);

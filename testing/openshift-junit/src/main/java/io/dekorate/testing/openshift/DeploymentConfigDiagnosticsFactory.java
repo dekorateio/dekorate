@@ -7,8 +7,8 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 
 public class DeploymentConfigDiagnosticsFactory extends DiagnosticsFactory<DeploymentConfig> {
 
-    @Override
-    public DiagnosticsService<DeploymentConfig> create(KubernetesClient client) {
-      return new DeploymentConfigDiagnostics(client);
-    }
+  @Override
+  public DiagnosticsService<DeploymentConfig> create(KubernetesClient client) {
+    return new DeploymentConfigDiagnostics(client);
   }
+}

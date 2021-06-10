@@ -59,7 +59,7 @@ public class ApplyDeploymentStrategyDecorator extends NamedResourceDecorator<Dep
 
   private boolean hasCusomRollingUpdateConfig(RollingUpdate rollingUpdate) {
     return rollingUpdate != null &&
-      ((rollingUpdate.getMaxUnavailable() != null && !rollingUpdate.getMaxUnavailable().equals("25%")) ||
-       (rollingUpdate.getMaxSurge() != null && !rollingUpdate.getMaxSurge().equals("25%")));
+        ((rollingUpdate.getMaxUnavailable() != null && !rollingUpdate.getMaxUnavailable().equals("25%")) ||
+            (rollingUpdate.getMaxSurge() != null && !rollingUpdate.getMaxSurge().equals("25%")));
   }
 }

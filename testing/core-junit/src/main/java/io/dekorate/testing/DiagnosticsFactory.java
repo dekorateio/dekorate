@@ -32,24 +32,26 @@ public abstract class DiagnosticsFactory<T extends HasMetadata> {
 
   /**
    * The type of {@link DiagnosticsService} this factory handles.
+   * 
    * @return the resource type the factory handles.
    */
   public Class<T> getType() {
     return (Class) Generics.getTypeArguments(DiagnosticsFactory.class, getClass()).get(0);
   }
-  
+
   public static <R extends HasMetadata> Optional<DiagnosticsService<R>> create(KubernetesClient client, Class<R> type) {
     return find(type).map(f -> f.create(client));
   }
 
   private static Stream<DiagnosticsFactory> stream() {
-    return StreamSupport.stream(ServiceLoader.load(DiagnosticsFactory.class, DiagnosticsFactory.class.getClassLoader()).spliterator(), false);
+    return StreamSupport
+        .stream(ServiceLoader.load(DiagnosticsFactory.class, DiagnosticsFactory.class.getClassLoader()).spliterator(), false);
   }
 
   public static <R extends HasMetadata> Optional<DiagnosticsFactory<R>> find(Class<R> type) {
     return stream()
-      .filter(f -> f.getType().isAssignableFrom(type))
-      .map(f -> (DiagnosticsFactory<R>) f)
-      .findFirst();
+        .filter(f -> f.getType().isAssignableFrom(type))
+        .map(f -> (DiagnosticsFactory<R>) f)
+        .findFirst();
   }
 }

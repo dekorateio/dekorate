@@ -46,7 +46,7 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "KnativeConfig", autobox = true ,mutable = true, superClass = BaseConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "KnativeConfig", autobox = true, mutable = true, superClass = BaseConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KnativeApplication {
@@ -108,7 +108,6 @@ public @interface KnativeApplication {
    * @return The annotations.
    */
   Annotation[] annotations() default {};
-
 
   /**
    * Environment variables to add to all containers.
@@ -298,8 +297,7 @@ public @interface KnativeApplication {
   /**
    * The template name to specify.
    */
-  String templateName() default ""; 
-
+  String templateName() default "";
 
   /**
    * Traffic configuration for the application.

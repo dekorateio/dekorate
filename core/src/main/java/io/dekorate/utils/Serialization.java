@@ -15,19 +15,6 @@
  */
 package io.dekorate.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
-import io.dekorate.DekorateException;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -44,6 +31,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
+
+import io.dekorate.DekorateException;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+
 public class Serialization {
 
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper() {
@@ -54,11 +55,10 @@ public class Serialization {
     }
   };
   private static final ObjectMapper YAML_MAPPER = new ObjectMapper(
-    new YAMLFactory()
-      .enable(Feature.MINIMIZE_QUOTES)
-      .enable(Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS)
-      .enable(Feature.INDENT_ARRAYS_WITH_INDICATOR)
-  ) {
+      new YAMLFactory()
+          .enable(Feature.MINIMIZE_QUOTES)
+          .enable(Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS)
+          .enable(Feature.INDENT_ARRAYS_WITH_INDICATOR)) {
     {
       configure(SerializationFeature.INDENT_OUTPUT, true);
       configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
@@ -89,8 +89,8 @@ public class Serialization {
           return JSON_MAPPER.writeValueAsString(list.getItems().get(0));
         }
         return list.getItems().stream()
-          .map(Serialization::writeValueAsJsonSafe)
-          .collect(Collectors.joining());
+            .map(Serialization::writeValueAsJsonSafe)
+            .collect(Collectors.joining());
       }
       return JSON_MAPPER.writeValueAsString(object);
     } catch (JsonProcessingException e) {
@@ -107,8 +107,8 @@ public class Serialization {
         }
 
         return list.getItems().stream()
-          .map(Serialization::writeValueAsYamlSafe)
-          .collect(Collectors.joining());
+            .map(Serialization::writeValueAsYamlSafe)
+            .collect(Collectors.joining());
       }
       return YAML_MAPPER.writeValueAsString(object);
     } catch (JsonProcessingException e) {
@@ -323,8 +323,8 @@ public class Serialization {
 
     while (nLine < lines.length) {
       if ((lines[nLine].length() >= DOCUMENT_DELIMITER.length()
-        && !lines[nLine].substring(0, DOCUMENT_DELIMITER.length()).equals(DOCUMENT_DELIMITER))
-        || (lines[nLine].length() < DOCUMENT_DELIMITER.length())) {
+          && !lines[nLine].substring(0, DOCUMENT_DELIMITER.length()).equals(DOCUMENT_DELIMITER))
+          || (lines[nLine].length() < DOCUMENT_DELIMITER.length())) {
         builder.append(lines[nLine] + System.lineSeparator());
       } else {
         documents.add(builder.toString());

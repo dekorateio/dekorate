@@ -24,4 +24,3 @@ class BuildImageTest {
     assertEquals("docker.io/maven:3.6.3-jdk-11", image.get().getImage());
   }
 }
-

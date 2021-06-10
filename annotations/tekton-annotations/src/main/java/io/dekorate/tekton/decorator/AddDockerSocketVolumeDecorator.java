@@ -25,7 +25,7 @@ public class AddDockerSocketVolumeDecorator extends AddHostPathVolumeDecorator {
     super(taskName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, ImageStep.DOCKER_SOCKET_TYPE);
   }
 
-    public AddDockerSocketVolumeDecorator(String taskName, String name, String path, String type) {
-        super(taskName, name, path, type);
-    }
+  public AddDockerSocketVolumeDecorator(String taskName, String name, String path, String type) {
+    super(taskName, name, path, type);
+  }
 }

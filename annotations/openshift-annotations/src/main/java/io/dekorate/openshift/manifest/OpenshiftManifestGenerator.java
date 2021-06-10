@@ -139,7 +139,8 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenera
     resourceRegistry.decorate(group, new AddRouteDecorator(config));
 
     if (config.hasAttribute(RUNTIME_TYPE)) {
-      resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE), new String[0])));
+      resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(),
+          new Label(OpenshiftLabels.RUNTIME, config.getAttribute(RUNTIME_TYPE), new String[0])));
     }
     resourceRegistry.decorate(group, new RemoveAnnotationDecorator(config.getName(), Annotations.VCS_URL));
 
@@ -149,8 +150,8 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenera
     boolean httpsPrefered = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
 
     String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
-      ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
-      : Labels.UNKNOWN;
+        ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
+        : Labels.UNKNOWN;
 
     resourceRegistry.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), OpenshiftAnnotations.VCS_URL, vcsUrl));
     resourceRegistry.decorate(group, new AddCommitIdAnnotationDecorator());

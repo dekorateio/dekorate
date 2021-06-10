@@ -45,12 +45,14 @@ public interface JaxrsConfigGenerator extends ConfigurationGenerator, WithProjec
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    add(new AnnotationConfiguration<>(JaxrsConfigAdapter.newBuilder(propertiesMap(map, JaxrsConfig.class)).accept(new ApplyProjectInfo(getProject()))));
+    add(new AnnotationConfiguration<>(
+        JaxrsConfigAdapter.newBuilder(propertiesMap(map, JaxrsConfig.class)).accept(new ApplyProjectInfo(getProject()))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    add(new PropertyConfiguration<>(JaxrsConfigAdapter.newBuilder(propertiesMap(map, JaxrsConfig.class)).accept(new ApplyProjectInfo(getProject()))));
+    add(new PropertyConfiguration<>(
+        JaxrsConfigAdapter.newBuilder(propertiesMap(map, JaxrsConfig.class)).accept(new ApplyProjectInfo(getProject()))));
   }
 
   default void add(ConfigurationSupplier<JaxrsConfig> config) {

@@ -25,7 +25,7 @@ import io.dekorate.project.ApplyProjectInfo;
 public class DefaultJibBuildConfigGenerator implements JibBuildConifgGenerator {
 
   private final ConfigurationRegistry configurationRegistry;
-  
+
   public DefaultJibBuildConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));

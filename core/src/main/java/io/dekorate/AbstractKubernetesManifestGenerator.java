@@ -33,7 +33,6 @@ import io.dekorate.kubernetes.decorator.AddAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddAwsElasticBlockStoreVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureDiskVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureFileVolumeDecorator;
-import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddHostAliasesDecorator;
@@ -46,6 +45,7 @@ import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
+import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
@@ -56,7 +56,6 @@ import io.dekorate.kubernetes.decorator.ApplyRequestsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyRequestsMemoryDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.kubernetes.decorator.RemoveProbesFromInitContainerDecorator;
-import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
@@ -105,9 +104,9 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
 
     //Metadata handling
     Labels.createLabels(config).forEach(l -> {
-        resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), l));
-        resourceRegistry.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
-        resourceRegistry.decorate(group, new AddToMatchingLabelsDecorator(config.getName(), l.getKey(), l.getValue()));
+      resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), l));
+      resourceRegistry.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
+      resourceRegistry.decorate(group, new AddToMatchingLabelsDecorator(config.getName(), l.getKey(), l.getValue()));
     });
 
     for (Annotation annotation : config.getAnnotations()) {
@@ -191,28 +190,28 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     if (config.getLimitResources() != null) {
       if (Strings.isNotNullOrEmpty(config.getLimitResources().getCpu())) {
         resourceRegistry.decorate(group,
-                                  new ApplyLimitsCpuDecorator(config.getName(), config.getName(), config.getLimitResources().getCpu()));
+            new ApplyLimitsCpuDecorator(config.getName(), config.getName(), config.getLimitResources().getCpu()));
       }
 
       if (Strings.isNotNullOrEmpty(config.getLimitResources().getMemory())) {
         resourceRegistry.decorate(group,
-                                  new ApplyLimitsMemoryDecorator(config.getName(), config.getName(), config.getLimitResources().getMemory()));
+            new ApplyLimitsMemoryDecorator(config.getName(), config.getName(), config.getLimitResources().getMemory()));
       }
     }
 
     if (config.getRequestResources() != null) {
       if (Strings.isNotNullOrEmpty(config.getRequestResources().getCpu())) {
         resourceRegistry.decorate(group,
-                                  new ApplyRequestsCpuDecorator(config.getName(), config.getName(), config.getRequestResources().getCpu()));
+            new ApplyRequestsCpuDecorator(config.getName(), config.getName(), config.getRequestResources().getCpu()));
       }
 
       if (Strings.isNotNullOrEmpty(config.getRequestResources().getMemory())) {
         resourceRegistry.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(),
-                                                                          config.getRequestResources().getMemory()));
+            config.getRequestResources().getMemory()));
       }
     }
 
-    resourceRegistry.decorate(group,new RemoveProbesFromInitContainerDecorator());
+    resourceRegistry.decorate(group, new RemoveProbesFromInitContainerDecorator());
   }
 
   protected static void validateVolume(SecretVolume volume) {

@@ -35,7 +35,7 @@ public class JaxrsConfigAdapter {
     return new JaxrsConfigBuilder().withPath(path instanceof String ? (String) path : null);
   }
 
-    public static JaxrsConfig adapt(Map map) {
-      return newBuilder(map).build(); 
-    }
+  public static JaxrsConfig adapt(Map map) {
+    return newBuilder(map).build();
+  }
 }

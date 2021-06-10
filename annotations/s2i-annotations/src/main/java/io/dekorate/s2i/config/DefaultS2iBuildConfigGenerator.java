@@ -26,7 +26,7 @@ import io.dekorate.project.ApplyProjectInfo;
 public class DefaultS2iBuildConfigGenerator implements S2iBuildConfigGenerator, WithProject {
 
   private final ConfigurationRegistry configurationRegistry;
-  
+
   public DefaultS2iBuildConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));

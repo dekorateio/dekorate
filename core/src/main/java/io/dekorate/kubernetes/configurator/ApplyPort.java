@@ -19,6 +19,7 @@ package io.dekorate.kubernetes.configurator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
@@ -26,7 +27,6 @@ import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
 import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
-import java.util.function.Predicate;
 
 public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
 

@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.Map;
 
 import io.dekorate.ConfigurationGenerator;
-import io.dekorate.ManifestGenerator;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.ManifestGenerator;
 import io.dekorate.Session;
 import io.dekorate.WithSession;
 import io.dekorate.config.ConfigurationSupplier;

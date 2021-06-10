@@ -23,12 +23,12 @@ public class DefaultJaxrsConfigGenerator implements JaxrsConfigGenerator {
 
   private final ConfigurationRegistry configurationRegistry;
 
-	public DefaultJaxrsConfigGenerator(ConfigurationRegistry configurationRegistry) {
-		this.configurationRegistry = configurationRegistry;
-	}
+  public DefaultJaxrsConfigGenerator(ConfigurationRegistry configurationRegistry) {
+    this.configurationRegistry = configurationRegistry;
+  }
 
-	@Override
-	public ConfigurationRegistry getConfigurationRegistry() {
-		return this.configurationRegistry;
-	}
+  @Override
+  public ConfigurationRegistry getConfigurationRegistry() {
+    return this.configurationRegistry;
+  }
 }

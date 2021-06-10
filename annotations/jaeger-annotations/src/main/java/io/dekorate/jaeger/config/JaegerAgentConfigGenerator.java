@@ -24,7 +24,7 @@ import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.jaeger.adapter.JaegerAgentConfigAdapter;
 import io.dekorate.kubernetes.config.Configuration;
 
-public interface JaegerAgentConfigGenerator extends ConfigurationGenerator  {
+public interface JaegerAgentConfigGenerator extends ConfigurationGenerator {
 
   default String getKey() {
     return "jaeger";

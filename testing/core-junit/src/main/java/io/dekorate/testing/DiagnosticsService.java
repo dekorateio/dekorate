@@ -24,9 +24,9 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.utils.Generics;
 import io.dekorate.utils.Serialization;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Event;
 import io.fabric8.kubernetes.api.model.EventList;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
 public interface DiagnosticsService<T extends HasMetadata> {
@@ -50,7 +50,7 @@ public interface DiagnosticsService<T extends HasMetadata> {
       LOGGER.info("\t---");
     }
   }
- 
+
   default void displayEvents(T resource) {
     try {
       Map<String, String> fields = new HashMap<>();
@@ -58,11 +58,12 @@ public interface DiagnosticsService<T extends HasMetadata> {
       fields.put("involvedObject.name", resource.getMetadata().getName());
       fields.put("involvedObject.namespace", resource.getMetadata().getNamespace());
 
-      EventList eventList = getKubernetesClient().v1().events().inNamespace(resource.getMetadata().getNamespace()).withFields(fields).list();
+      EventList eventList = getKubernetesClient().v1().events().inNamespace(resource.getMetadata().getNamespace())
+          .withFields(fields).list();
       if (eventList == null) {
         return;
       }
-      LOGGER.info(String.format("Events of %s: [%s]", resource.getKind() , resource.getMetadata().getName()));
+      LOGGER.info(String.format("Events of %s: [%s]", resource.getKind(), resource.getMetadata().getName()));
       for (Event event : eventList.getItems()) {
         LOGGER.info(String.format("%s\t\t%s", event.getReason(), event.getMessage()));
       }

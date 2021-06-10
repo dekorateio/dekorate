@@ -8,15 +8,15 @@ import io.dekorate.utils.Strings;
 public class ApplyTektonImagePushSecretConfigurator extends Configurator<TektonConfigFluent<?>> {
 
   private final String secret;
-  
-	public ApplyTektonImagePushSecretConfigurator(String secret) {
-		this.secret = secret;
-	}
 
-	@Override
-	public void visit(TektonConfigFluent<?> config) {
+  public ApplyTektonImagePushSecretConfigurator(String secret) {
+    this.secret = secret;
+  }
+
+  @Override
+  public void visit(TektonConfigFluent<?> config) {
     if (Strings.isNotNullOrEmpty(secret)) {
       config.withImagePushSecret(secret);
     }
-	}
+  }
 }

@@ -22,7 +22,6 @@ import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.tekton.step.ProjectBuildStep;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
-
 public class AddProjectBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
   private final String projectName;
@@ -36,14 +35,16 @@ public class AddProjectBuildStepDecorator extends NamedTaskDecorator implements 
   }
 
   public AddProjectBuildStepDecorator(String taskName, String stepName, String projectName) {
-    this(taskName, stepName, projectName, ProjectBuildStep.IMAGE_PARAM_REF, ProjectBuildStep.COMMAND_PARAM_REF, ProjectBuildStep.ARGS_PARAM_REF);
+    this(taskName, stepName, projectName, ProjectBuildStep.IMAGE_PARAM_REF, ProjectBuildStep.COMMAND_PARAM_REF,
+        ProjectBuildStep.ARGS_PARAM_REF);
   }
 
   public AddProjectBuildStepDecorator(String taskName, String stepName, String projectName, BuildImage builder) {
     this(taskName, stepName, projectName, builder.getImage(), builder.getCommand(), builder.getArguments());
   }
-  
-  public AddProjectBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command, String... arguments) {
+
+  public AddProjectBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command,
+      String... arguments) {
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;

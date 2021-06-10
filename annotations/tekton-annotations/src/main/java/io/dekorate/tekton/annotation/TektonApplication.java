@@ -160,6 +160,7 @@ public @interface TektonApplication {
 
   /**
    * The image builder strategy to use.
+   * 
    * @return the strategy.
    */
   TektonImageBuildStrategy imageBuildStrategy() default TektonImageBuildStrategy.kaniko;
@@ -208,10 +209,10 @@ public @interface TektonApplication {
 
   /**
    * The relative path to the Dockerfile.
+   * 
    * @return the path to the Dockerfile.
    */
   String dockerfile() default "Dockerfile";
-
 
   /**
    * The docker image to be used for the deployment task.

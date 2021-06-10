@@ -21,9 +21,12 @@ import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
 /**
  * A {@link Configuration} {@link Supplier} that can be present multiple times.
- * All suppliers are grouped and merged by type. So, typically we end up with a single property configuration, annotatin configuration etc.
- * MultiConfiguration is the exception to the rule above and is not merged, allowing for multiple MultiConfiguration instances to be passed around.
- * Usually, a MutliConfiguration is used when we have multiple sources of configuration of the same kind, that doesn make sense to be merged together (e.g. multiple annotations). 
+ * All suppliers are grouped and merged by type. So, typically we end up with a single property configuration, annotatin
+ * configuration etc.
+ * MultiConfiguration is the exception to the rule above and is not merged, allowing for multiple MultiConfiguration instances
+ * to be passed around.
+ * Usually, a MutliConfiguration is used when we have multiple sources of configuration of the same kind, that doesn make sense
+ * to be merged together (e.g. multiple annotations).
  */
 public class MultiConfiguration<C extends Configuration> extends ConfigurationSupplier<C> {
 

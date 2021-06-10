@@ -40,28 +40,33 @@ class TektonManifestGeneratorTest {
   @BeforeAll
   public static void setup() throws IOException {
     Path tempDir = Files.createTempDirectory("dekorate");
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    WithProject withProject = new WithProject() {
+    };
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+        .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
   }
- 
+
   @Test
   public void shouldAcceptTektonConfig() {
     Session session = Session.getSession();
-    TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(generator.accepts(TektonConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableTektonConfig() {
     Session session = Session.getSession();
-    TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(generator.accepts(EditableTektonConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfig() {
     Session session = Session.getSession();
-    TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    TektonManifestGenerator generator = new TektonManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertFalse(generator.accepts(BaseConfig.class));
   }
 }

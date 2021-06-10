@@ -10,23 +10,23 @@ public class ApplyTektonSourceWorkspaceConfigurator extends Configurator<TektonC
   private final String workspace;
   private final String claim;
   private final PersistentVolumeClaim pvc;
- 
-	public ApplyTektonSourceWorkspaceConfigurator(String workspace) {
+
+  public ApplyTektonSourceWorkspaceConfigurator(String workspace) {
     this(workspace, null, null);
-	}
+  }
 
-	public ApplyTektonSourceWorkspaceConfigurator(String workspace, String claim) {
+  public ApplyTektonSourceWorkspaceConfigurator(String workspace, String claim) {
     this(workspace, claim, null);
-	}
+  }
 
-	public ApplyTektonSourceWorkspaceConfigurator(String workspace, String claim, PersistentVolumeClaim pvc) {
-		this.workspace = workspace;
-		this.claim = claim;
-		this.pvc = pvc;
-	}
-  
-	@Override
-	public void visit(TektonConfigFluent<?> config) {
+  public ApplyTektonSourceWorkspaceConfigurator(String workspace, String claim, PersistentVolumeClaim pvc) {
+    this.workspace = workspace;
+    this.claim = claim;
+    this.pvc = pvc;
+  }
+
+  @Override
+  public void visit(TektonConfigFluent<?> config) {
     if (!Strings.isNotNullOrEmpty(workspace)) {
       config.withSourceWorkspace(workspace);
     }
@@ -38,5 +38,5 @@ public class ApplyTektonSourceWorkspaceConfigurator extends Configurator<TektonC
     if (pvc != null) {
       config.withSourceWorkspaceClaim(pvc);
     }
-	}
+  }
 }

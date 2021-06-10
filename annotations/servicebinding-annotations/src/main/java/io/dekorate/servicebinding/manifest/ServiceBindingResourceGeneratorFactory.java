@@ -17,13 +17,14 @@
 
 package io.dekorate.servicebinding.manifest;
 
-import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ConfigurationRegistry;
+import io.dekorate.ManifestGeneratorFactory;
 import io.dekorate.ResourceRegistry;
 
 public class ServiceBindingResourceGeneratorFactory implements ManifestGeneratorFactory {
 
-  public ServiceBindingResourceGenerator create(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry) {
+  public ServiceBindingResourceGenerator create(ResourceRegistry resourceRegistry,
+      ConfigurationRegistry configurationRegistry) {
     return new ServiceBindingResourceGenerator(resourceRegistry, configurationRegistry);
   }
 }

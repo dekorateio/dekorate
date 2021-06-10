@@ -51,17 +51,18 @@ public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuil
   @Override
   public void andThenVisit(VisitableBuilder builder, String kind, ObjectMeta resourceMeta) {
     Optional<SelectorDecoratorFactory> factory = SelectorDecoratorFactories.find(kind);
-    factory.map(f -> f.createAddToSelectorDecorator(resourceMeta.getName(), key, value)).ifPresent(m -> builder.accept((Visitor) m));
-	}
+    factory.map(f -> f.createAddToSelectorDecorator(resourceMeta.getName(), key, value))
+        .ifPresent(m -> builder.accept((Visitor) m));
+  }
 
   @Override
   public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
     //Not needed
-	}
+  }
 
-	@Override
+  @Override
   public Class<? extends Decorator>[] before() {
-    return new Class[] {AddToSelectorDecorator.class};
+    return new Class[] { AddToSelectorDecorator.class };
   }
 
 }

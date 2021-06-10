@@ -15,9 +15,6 @@
  */
 package io.dekorate.spring;
 
-import io.dekorate.WithProject;
-import io.dekorate.utils.Maps;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,32 +24,34 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.dekorate.WithProject;
+import io.dekorate.utils.Maps;
 
 public interface SpringPropertiesHolder extends WithProject {
 
   AtomicReference<Map<String, Object>> springProperties = new AtomicReference<>(null);
 
-    default Map<String, Object> getSpringProperties() {
-      if (springProperties.get() == null) {
-        final Map<String, Object> properties = new HashMap<>();
-        try{
-          InputStream appPropsIs = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve("application.properties").toFile());
-          properties.putAll(Maps.parseResourceFile(appPropsIs, "application.properties"));
-          InputStream appYamlIs = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve("application.yaml").toFile());
-          properties.putAll(Maps.parseResourceFile(appYamlIs, "application.yaml"));
-          InputStream appYmlIs = new FileInputStream(getProject().getBuildInfo().getResourceDir().resolve("application.yml").toFile());
-          properties.putAll(Maps.parseResourceFile(appYmlIs, "application.yml"));
-          springProperties.set(properties);
-        } catch (FileNotFoundException e) {
-          return properties;
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-
-
+  default Map<String, Object> getSpringProperties() {
+    if (springProperties.get() == null) {
+      final Map<String, Object> properties = new HashMap<>();
+      try {
+        InputStream appPropsIs = new FileInputStream(
+            getProject().getBuildInfo().getResourceDir().resolve("application.properties").toFile());
+        properties.putAll(Maps.parseResourceFile(appPropsIs, "application.properties"));
+        InputStream appYamlIs = new FileInputStream(
+            getProject().getBuildInfo().getResourceDir().resolve("application.yaml").toFile());
+        properties.putAll(Maps.parseResourceFile(appYamlIs, "application.yaml"));
+        InputStream appYmlIs = new FileInputStream(
+            getProject().getBuildInfo().getResourceDir().resolve("application.yml").toFile());
+        properties.putAll(Maps.parseResourceFile(appYmlIs, "application.yml"));
+        springProperties.set(properties);
+      } catch (FileNotFoundException e) {
+        return properties;
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-      return springProperties.get();
-    }
 
+    }
+    return springProperties.get();
+  }
 
 }

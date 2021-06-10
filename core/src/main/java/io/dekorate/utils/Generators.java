@@ -43,7 +43,7 @@ public class Generators {
   }
 
   /**
-   * Change properties corresponding to primtives from String to the actual primitive value. 
+   * Change properties corresponding to primtives from String to the actual primitive value.
    */
   public static void applyPrimitives(Class configClass, Map<String, Object> map) {
     for (Map.Entry<String, Object> entry : new HashMap<String, Object>(map).entrySet()) {
@@ -53,7 +53,7 @@ public class Generators {
       try {
         Class fieldType = findField(configClass, fieldName).getType();
         if (value != null) {
-          if (!fieldType.isArray()) { 
+          if (!fieldType.isArray()) {
             if (fieldType.equals(Boolean.class)) {
               map.put(key, Boolean.parseBoolean(String.valueOf(value)));
             } else if (fieldType.equals(Short.class)) {
@@ -70,38 +70,38 @@ public class Generators {
           } else {
             if (fieldType.getComponentType().equals(Boolean.class)) {
               map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
-                      .map(Boolean::parseBoolean)
-                      .collect(Collectors.toList())
-                      .toArray(new Boolean[]{}));
+                  .map(Boolean::parseBoolean)
+                  .collect(Collectors.toList())
+                  .toArray(new Boolean[] {}));
             } else if (fieldType.getComponentType().equals(Short.class)) {
               map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
-                      .map(Short::parseShort)
-                      .collect(Collectors.toList())
-                      .toArray(new Short[]{}));
+                  .map(Short::parseShort)
+                  .collect(Collectors.toList())
+                  .toArray(new Short[] {}));
             } else if (fieldType.getComponentType().equals(Integer.class)) {
               map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
-                      .map(Integer::parseInt)
-                      .collect(Collectors.toList())
-                      .toArray(new Integer[]{}));
- 
+                  .map(Integer::parseInt)
+                  .collect(Collectors.toList())
+                  .toArray(new Integer[] {}));
+
             } else if (fieldType.getComponentType().equals(Long.class)) {
               map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
-                      .map(Long::parseLong)
-                      .collect(Collectors.toList())
-                      .toArray(new Long[]{}));
- 
+                  .map(Long::parseLong)
+                  .collect(Collectors.toList())
+                  .toArray(new Long[] {}));
+
             } else if (fieldType.getComponentType().equals(Double.class)) {
               map.put(key, Arrays.stream(String.valueOf(value).split("\\s*,\\s*"))
-                      .map(Double::parseDouble)
-                      .collect(Collectors.toList())
-                      .toArray(new Double[]{}));
+                  .map(Double::parseDouble)
+                  .collect(Collectors.toList())
+                  .toArray(new Double[] {}));
             } else if (value instanceof Map[]) {
               final List<Map<String, Object>> mapList = new ArrayList<>();
-              Arrays.stream((Map[])value).forEach(m -> {
-                  Map<String, Object> copy = new HashMap<>(m);
-                  applyPrimitives(fieldType.getComponentType(), copy);
-                  mapList.add(copy);
-                });
+              Arrays.stream((Map[]) value).forEach(m -> {
+                Map<String, Object> copy = new HashMap<>(m);
+                applyPrimitives(fieldType.getComponentType(), copy);
+                mapList.add(copy);
+              });
               map.put(key, mapList.toArray(new Map[mapList.size()]));
             } else {
             }

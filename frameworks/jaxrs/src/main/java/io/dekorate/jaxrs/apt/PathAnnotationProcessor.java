@@ -17,7 +17,6 @@
 
 package io.dekorate.jaxrs.apt;
 
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,16 +48,16 @@ public class PathAnnotationProcessor extends AbstractAnnotationProcessor {
     Set<String> paths = new HashSet<>();
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-          Path path = mainClass.getAnnotation(Path.class);
-          if (path != null && Strings.isNotNullOrEmpty(path.value())) {
-            paths.add(path.value());
-          }
+        Path path = mainClass.getAnnotation(Path.class);
+        if (path != null && Strings.isNotNullOrEmpty(path.value())) {
+          paths.add(path.value());
+        }
       }
     }
 
     if (paths.size() == 1) {
-      Map<String, Object>  jaxrs = new HashMap<>();
-      Map<String, Object>  properties = new HashMap<>();
+      Map<String, Object> jaxrs = new HashMap<>();
+      Map<String, Object> properties = new HashMap<>();
       properties.put("path", paths.iterator().next());
       jaxrs.put("jaxrs", properties);
       getSession().addAnnotationConfiguration(jaxrs);

@@ -54,7 +54,6 @@ public class ResourceRegistry {
     return this.groups;
   }
 
-
   /**
    * Get the global builder
    * 

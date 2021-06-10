@@ -15,10 +15,10 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import java.util.function.Predicate;
+
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.utils.Strings;
-
-import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.networking.v1.HTTPIngressPathBuilder;
@@ -41,16 +41,17 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
     Predicate<IngressRuleBuilder> matchingHost = r -> r.getHost() != null && r.getHost().equals(host);
 
     if (!spec.hasMatchingRule(matchingHost)) {
-      spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPathType("Prefix").withPath(port.getPath()).withNewBackend()
-        .withNewService()
-        .withName(name)
-        .withNewPort().withName(port.getName())
-        .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
-        .endService()
-        .endBackend()
-        .endPath()
-        .endHttp()
-        .endRule();
+      spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPathType("Prefix").withPath(port.getPath())
+          .withNewBackend()
+          .withNewService()
+          .withName(name)
+          .withNewPort().withName(port.getName())
+          .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
+          .endService()
+          .endBackend()
+          .endPath()
+          .endHttp()
+          .endRule();
     } else {
       spec.accept(new HostVisitor(meta));
     }
@@ -70,13 +71,13 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
       if (rule.getHost().equals(host)) {
         if (!rule.editOrNewHttp().hasMatchingPath(mathcingPath)) {
           rule.editHttp().addNewPath().withNewBackend()
-            .withNewService()
-            .withName(name)
-            .withNewPort().withName(port.getName())
-            .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
-            .endService()
-            .endBackend()
-            .endPath().endHttp();
+              .withNewService()
+              .withName(name)
+              .withNewPort().withName(port.getName())
+              .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
+              .endService()
+              .endBackend()
+              .endPath().endHttp();
         } else {
           rule.accept(new PathVisitor(meta));
         }
@@ -94,12 +95,12 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
     public void visit(HTTPIngressPathBuilder path) {
       path.withNewBackend()
-        .withNewService()
-        .withName(name)
-        .withNewPort().withName(port.getName())
-        .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
-        .endService()
-        .endBackend();
+          .withNewService()
+          .withName(name)
+          .withNewPort().withName(port.getName())
+          .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
+          .endService()
+          .endBackend();
     }
   }
 }

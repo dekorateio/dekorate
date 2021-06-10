@@ -23,7 +23,6 @@ public interface ImageStep extends Step {
   String PATH_TO_DOCKERFILE_PARAM_DESCRIPTION = "Path to Dockerfile";
   String PATH_TO_DOCKERFILE_PARAM_DEFAULT = "Dockerfile";
 
-
   String DOCKER_SOCKET_NAME = "docker-socket";
   String DOCKER_SOCKET_PATH = "/var/run/docker.sock";
   String DOCKER_SOCKET_TYPE = "Socket";

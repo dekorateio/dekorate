@@ -37,7 +37,7 @@ public class PopulateWebPort extends Configurator<BaseConfigFluent<?>> {
       return port;
     }
     return new PortBuilder(port).withHostPort(80).build();
-  } 
+  }
 
   @Override
   public void visit(BaseConfigFluent<?> config) {

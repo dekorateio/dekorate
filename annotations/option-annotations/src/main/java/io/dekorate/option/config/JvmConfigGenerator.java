@@ -24,7 +24,6 @@ import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.option.adapter.JvmConfigAdapter;
-import io.dekorate.option.config.JvmConfig;
 import io.dekorate.option.configurator.ApplyJvmOptsConfigurator;
 
 public interface JvmConfigGenerator extends ConfigurationGenerator {

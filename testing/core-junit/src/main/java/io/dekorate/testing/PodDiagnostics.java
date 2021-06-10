@@ -26,10 +26,9 @@ public class PodDiagnostics extends AbstractDiagonsticsService<Pod> {
   private static final String CONTAINER_STATUS_FORMAT = "\t%-40s %-7s %-7s %s";
 
   public PodDiagnostics(KubernetesClient client) {
-		super(client);
-	}
+    super(client);
+  }
 
-   
   public void display(Pod pod) {
     LOGGER.info("Diagnostics for kind: [Pod] with name : [" + pod.getMetadata().getName() + "].");
     displayStatus(pod);
@@ -37,30 +36,32 @@ public class PodDiagnostics extends AbstractDiagonsticsService<Pod> {
     displayLogs(pod);
   }
 
-@Override
-	public void displayStatus(Pod pod) {
+  @Override
+  public void displayStatus(Pod pod) {
     LOGGER.info("Container statuses of Pod:" + pod.getMetadata().getName());
     if (pod.getStatus() != null && pod.getStatus().getContainerStatuses() != null) {
       LOGGER.info(String.format(CONTAINER_STATUS_FORMAT, "Name", "Running", "Ready", "Image"));
       pod.getStatus().getContainerStatuses().forEach(c -> {
-          LOGGER.info(String.format(CONTAINER_STATUS_FORMAT, c.getName(), c.getState().getRunning() != null, c.getReady(), c.getImage()));
-        });
+        LOGGER.info(
+            String.format(CONTAINER_STATUS_FORMAT, c.getName(), c.getState().getRunning() != null, c.getReady(), c.getImage()));
+      });
     } else {
       LOGGER.warning("No containers statuses found.");
     }
-	}
+  }
 
-	protected void displayLogs(Pod pod) {
+  protected void displayLogs(Pod pod) {
     for (Container container : pod.getSpec().getContainers()) {
       displayLogs(pod, container);
     }
   }
-  
+
   protected void displayLogs(Pod pod, Container container) {
     try {
       LOGGER.info("Logs of pod: [" + pod.getMetadata().getName() + "], container: [" + container.getName() + "]");
-      LOGGER.info(getKubernetesClient().pods().inNamespace(pod.getMetadata().getNamespace()).withName(pod.getMetadata().getName())
-          .inContainer(container.getName()).tailingLines(100).withPrettyOutput().getLog());
+      LOGGER
+          .info(getKubernetesClient().pods().inNamespace(pod.getMetadata().getNamespace()).withName(pod.getMetadata().getName())
+              .inContainer(container.getName()).tailingLines(100).withPrettyOutput().getLog());
     } catch (Throwable t) {
       LOGGER.error("Failed to read logs, due to:" + t.getMessage());
     } finally {

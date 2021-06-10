@@ -20,8 +20,8 @@ package io.dekorate.docker.config;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.WithProject;
 import io.dekorate.config.DefaultConfiguration;
-import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
+import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultDockerBuildConfigGenerator implements DockerBuildConfigGenerator, WithProject {
 

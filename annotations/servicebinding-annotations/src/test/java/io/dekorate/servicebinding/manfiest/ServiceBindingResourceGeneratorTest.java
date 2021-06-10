@@ -11,9 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.Session;
-import io.dekorate.SessionWriter;
 import io.dekorate.WithProject;
-import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
 import io.dekorate.servicebinding.config.EditableServiceBindingConfig;
 import io.dekorate.servicebinding.config.ServiceBindingConfig;
@@ -24,21 +22,25 @@ public class ServiceBindingResourceGeneratorTest {
   @BeforeAll
   public static void setup() throws IOException {
     Path tempDir = Files.createTempDirectory("dekorate");
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    WithProject withProject = new WithProject() {
+    };
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+        .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
   }
- 
+
   @Test
   public void shouldAcceptServiceBindingConfig() {
     Session session = Session.getSession();
-    ServiceBindingResourceGenerator handler = new ServiceBindingResourceGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    ServiceBindingResourceGenerator handler = new ServiceBindingResourceGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(handler.accepts(ServiceBindingConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableServiceBindingConfig() {
     Session session = Session.getSession();
-    ServiceBindingResourceGenerator handler = new ServiceBindingResourceGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    ServiceBindingResourceGenerator handler = new ServiceBindingResourceGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(handler.accepts(EditableServiceBindingConfig.class));
   }
 }

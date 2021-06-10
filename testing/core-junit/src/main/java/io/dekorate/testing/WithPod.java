@@ -33,7 +33,8 @@ import io.fabric8.kubernetes.client.KubernetesClient;
  * Mixin for storing / loading the KubernetesList to context.
  * It also provides methods for injecting the list.
  */
-public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, WithKubernetesClient, WithClosables, WithDiagnostics {
+public interface WithPod
+    extends TestInstancePostProcessor, WithBaseConfig, WithKubernetesClient, WithClosables, WithDiagnostics {
 
   default void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
     stream(testInstance.getClass().getDeclaredFields())
@@ -79,8 +80,7 @@ public interface WithPod extends TestInstancePostProcessor, WithBaseConfig, With
           .filter(a -> a.getTargetRef().getKind().equals("Pod"))
           .map(a -> a.getTargetRef().getName())
           .map(n -> client.pods().withName(n).get())
-        .findAny();
-
+          .findAny();
 
       if (!pod.isPresent()) {
         extensionError(context, "Failed to detect endpoints for service:" + service);

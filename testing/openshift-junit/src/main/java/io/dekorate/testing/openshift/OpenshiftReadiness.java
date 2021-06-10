@@ -37,7 +37,9 @@ public class OpenshiftReadiness {
     } else if (isReadiableOpenshiftResource(item)) {
       return isOpenshiftResourceReady(item);
     } else {
-      throw new IllegalArgumentException("Item needs to be one of [Node, Deployment, ReplicaSet, StatefulSet, Pod, ReplicationController], but was: [" + (item != null ? item.getKind() : "Unknown (null)") + "]");
+      throw new IllegalArgumentException(
+          "Item needs to be one of [Node, Deployment, ReplicaSet, StatefulSet, Pod, ReplicationController], but was: ["
+              + (item != null ? item.getKind() : "Unknown (null)") + "]");
     }
   }
 
@@ -72,13 +74,13 @@ public class OpenshiftReadiness {
 
   protected static boolean isReadiableKubernetesResource(HasMetadata item) {
     return (item instanceof Deployment ||
-      item instanceof io.fabric8.kubernetes.api.model.extensions.Deployment ||
-    item instanceof ReplicaSet ||
-    item instanceof Pod ||
-    item instanceof ReplicationController ||
-    item instanceof Endpoints ||
-    item instanceof Node ||
-    item instanceof StatefulSet);
+        item instanceof io.fabric8.kubernetes.api.model.extensions.Deployment ||
+        item instanceof ReplicaSet ||
+        item instanceof Pod ||
+        item instanceof ReplicationController ||
+        item instanceof Endpoints ||
+        item instanceof Node ||
+        item instanceof StatefulSet);
   }
 
   protected static boolean isReadiableOpenshiftResource(HasMetadata item) {
@@ -100,9 +102,7 @@ public class OpenshiftReadiness {
     }
 
     return spec.getReplicas().intValue() == status.getReplicas() &&
-      spec.getReplicas().intValue() <= status.getAvailableReplicas();
+        spec.getReplicas().intValue() <= status.getAvailableReplicas();
   }
 
 }
-
-

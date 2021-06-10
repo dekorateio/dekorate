@@ -45,7 +45,6 @@ public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> 
     this.label = new Label(key, value, kinds);
   }
 
-
   @Override
   public void andThenVisit(VisitableBuilder builder, String kind, ObjectMeta resourceMeta) {
     if (label.getKinds() == null || label.getKinds().length == 0 || Arrays.asList(label.getKinds()).contains(kind)) {
@@ -73,7 +72,8 @@ public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> 
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
+        AddSidecarDecorator.class };
   }
 
   @Override

@@ -34,7 +34,8 @@ class Issue667Test {
 
   @Test
   public void shouldFindNoProbesInInitContainers() throws Exception {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     Container c = d.getSpec().getTemplate().getSpec().getContainers().get(0);
@@ -54,4 +55,3 @@ class Issue667Test {
         .findFirst();
   }
 }
-

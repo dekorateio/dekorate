@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Map;
 import java.util.Optional;
 
-import io.fabric8.kubernetes.api.model.*;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
@@ -47,24 +47,25 @@ public class Issue331Test {
     Container container = podSpec.getContainers().get(0);
     assertNotNull(container);
     assertEquals("test", podSpec.getServiceAccount());
-    Optional<ContainerPort> httpPort = container.getPorts().stream().filter(p -> p.getName().equals("http") && p.getContainerPort()==8081).findAny();
+    Optional<ContainerPort> httpPort = container.getPorts().stream()
+        .filter(p -> p.getName().equals("http") && p.getContainerPort() == 8081).findAny();
     assertTrue(httpPort.isPresent());
     assertTrue(container.getPorts().stream().filter(p -> p.getName().equals("admin-console") && p.getContainerPort() == 9090)
-      .findAny().isPresent());
+        .findAny().isPresent());
     assertEquals(3, d.getSpec().getReplicas());
-
 
   }
 
   @Test
   public void shouldContainService() {
     KubernetesList list = Serialization
-      .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Service service = findFirst(list, Service.class).orElseThrow(IllegalStateException::new);
     assertNotNull(service);
     assertEquals(1, list.getItems().stream().filter(i -> Service.class.isInstance(i)).count());
-    assertTrue(service.getSpec().getPorts().stream().filter(p -> p.getName().equals("http")&&p.getTargetPort().getIntVal()==8081).findAny().isPresent());
+    assertTrue(service.getSpec().getPorts().stream()
+        .filter(p -> p.getName().equals("http") && p.getTargetPort().getIntVal() == 8081).findAny().isPresent());
     assertTrue(service.getSpec().getType().equals("LoadBalancer"));
   }
 

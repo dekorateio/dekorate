@@ -40,8 +40,10 @@ class ThorntailAnnotationlessTest {
 
     Optional<Ingress> ingress = findFirst(list, Ingress.class);
     assertTrue(ingress.isPresent());
-    assertNotNull(ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getService().getPort().getName());
-    assertNull(ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getService().getPort().getNumber());
+    assertNotNull(
+        ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getService().getPort().getName());
+    assertNull(
+        ingress.get().getSpec().getRules().get(0).getHttp().getPaths().get(0).getBackend().getService().getPort().getNumber());
   }
 
   @Test

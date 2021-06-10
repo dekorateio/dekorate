@@ -45,7 +45,8 @@ public class AddImagePushStepDecorator extends NamedTaskDecorator implements Ste
     this(taskName, stepName, projectName, PUSH_IMAGE_REF, PUSH_COMMAND_REF, PUSH_ARGS_REF);
   }
 
-  public AddImagePushStepDecorator(String taskName, String stepName, String projectName, String image, String command, String... args) {
+  public AddImagePushStepDecorator(String taskName, String stepName, String projectName, String image, String command,
+      String... args) {
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;
@@ -57,13 +58,13 @@ public class AddImagePushStepDecorator extends NamedTaskDecorator implements Ste
   @Override
   public void andThenVisit(TaskSpecFluent<?> taskSpec) {
     taskSpec.addNewStep()
-      .withName(stepName)
-      .withImage(image)
-      .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
-      .withCommand(command)
-      .withArgs(args)
-      .withWorkingDir(sourcePath(projectName))
-      .endStep();
+        .withName(stepName)
+        .withImage(image)
+        .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
+        .withCommand(command)
+        .withArgs(args)
+        .withWorkingDir(sourcePath(projectName))
+        .endStep();
   }
 
   @Override

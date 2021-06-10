@@ -26,7 +26,8 @@ import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 
 /**
  * A {@link Supplier} of {@link Configuration} objects.
- * There may be multiple such suppliers, supplying {@link Configuration} found in annotations, property files, or inferred by the actual code.
+ * There may be multiple such suppliers, supplying {@link Configuration} found in annotations, property files, or inferred by
+ * the actual code.
  * This is a Facade around configuration builders, which hide the builder specifics and only allows the use of
  * {@link Configurator} as visitors.
  * 

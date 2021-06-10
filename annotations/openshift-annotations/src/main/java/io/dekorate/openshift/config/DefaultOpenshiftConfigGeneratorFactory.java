@@ -26,5 +26,3 @@ public class DefaultOpenshiftConfigGeneratorFactory implements ConfigurationGene
     return new DefaultOpenshiftConfigGenerator(configurationRegistry);
   }
 }
-
-  

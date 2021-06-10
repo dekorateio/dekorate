@@ -61,7 +61,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
 
     BuildService buildService = null;
     ImageConfiguration imageConfig = optionalImageConfig.get();
-      if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+    if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
 
       try {
         buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems()))

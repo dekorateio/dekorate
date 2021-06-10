@@ -43,12 +43,13 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
   protected final String buildImage;
   protected final String buildCommand;
   protected final String[] buildArguments;
-  
+
   protected final String pushImage;
   protected final String pushCommand;
   protected final String[] pushArguments;
 
-  public ImageBuildStep(String context, String dockerfile, String buildImage, String buildCommand, String[] buildArguments, String pushImage, String pushCommand, String[] pushArguments) {
+  public ImageBuildStep(String context, String dockerfile, String buildImage, String buildCommand, String[] buildArguments,
+      String pushImage, String pushCommand, String[] pushArguments) {
     this.context = context;
     this.dockerfile = dockerfile;
     this.buildImage = buildImage;
@@ -61,6 +62,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified context.
+   * 
    * @param context the specified context.
    * @return the updated step.
    */
@@ -68,6 +70,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified dockerfile.
+   * 
    * @param dockerfile the specified dockerfile.
    * @return the updated step.
    */
@@ -75,6 +78,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified build image.
+   * 
    * @param buildImage the specified build image.
    * @return the updated step
    */
@@ -82,6 +86,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified build command.
+   * 
    * @param buildCommand the specified build command.
    * @return the updated step.
    */
@@ -89,6 +94,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified build arguments.
+   * 
    * @param buildArguments the specified build arguments.
    * @return the updated step.
    */
@@ -96,6 +102,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified push image.
+   * 
    * @param pushImage the specified push image.
    * @return the updated step.
    */
@@ -103,6 +110,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified push command.
+   * 
    * @param pushCommand the specified push command.
    * @return the updated step.
    */
@@ -110,11 +118,11 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified push arguments.
+   * 
    * @param pushArguments the specified push arguments.
    * @return the updated step.
    */
   public abstract T withPushArguments(String[] pushArguments);
-
 
   /**
    * Returns true if the current build step requires an explicit push.
@@ -136,6 +144,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The conntext.
+   * 
    * @return the context.
    */
   public String getContext() {
@@ -144,6 +153,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The dockerfile.
+   * 
    * @return the dockerfile.
    */
   public String getDockerfile() {

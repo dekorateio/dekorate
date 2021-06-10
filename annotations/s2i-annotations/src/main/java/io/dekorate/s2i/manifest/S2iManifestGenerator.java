@@ -19,9 +19,9 @@ package io.dekorate.s2i.manifest;
 
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.ConfigurationRegistry;
-import io.dekorate.ManifestGenerator;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.ManifestGenerator;
 import io.dekorate.ResourceRegistry;
 import io.dekorate.WithProject;
 import io.dekorate.kubernetes.config.Configuration;

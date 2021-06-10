@@ -64,9 +64,9 @@ public class Exec {
       Process process = null;
       try {
         ProcessBuilder processBuilder = new ProcessBuilder()
-          .directory(path.toFile())
-          .command(commands)
-          .redirectErrorStream(true);
+            .directory(path.toFile())
+            .command(commands)
+            .redirectErrorStream(true);
         //we need to strip the new process of the MAVEN_DEBUG_OPTS in case of debugging mvnDebug, otherwise it is locked
         processBuilder.environment().keySet().removeIf(key -> key.equals("MAVEN_DEBUG_OPTS"));
         process = processBuilder

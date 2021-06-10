@@ -129,14 +129,14 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
             imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     Container appContainer = new ContainerBuilder()
-          .withName(config.getName())
-          .withImage(image)
-          .withImagePullPolicy(ImagePullPolicy.IfNotPresent)
-          .addNewEnvVar()
-            .withName(KUBERNETES_NAMESPACE)
-            .withField(METADATA_NAMESPACE)
-          .endEnvVar()
-          .build();
+        .withName(config.getName())
+        .withImage(image)
+        .withImagePullPolicy(ImagePullPolicy.IfNotPresent)
+        .addNewEnvVar()
+        .withName(KUBERNETES_NAMESPACE)
+        .withField(METADATA_NAMESPACE)
+        .endEnvVar()
+        .build();
 
     Project project = getProject();
     Optional<VcsConfig> vcsConfig = configurationRegistry.get(VcsConfig.class);
@@ -144,8 +144,8 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
     boolean httpsPrefered = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
 
     String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
-      ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
-      : Labels.UNKNOWN;
+        ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
+        : Labels.UNKNOWN;
 
     resourceRegistry.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), Annotations.VCS_URL, vcsUrl));
     resourceRegistry.decorate(group, new AddCommitIdAnnotationDecorator());

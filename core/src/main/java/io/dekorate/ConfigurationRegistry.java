@@ -28,8 +28,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.dekorate.config.MultiConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.config.MultiConfiguration;
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Configurator;
@@ -116,7 +116,8 @@ public class ConfigurationRegistry {
             .collect(Collectors.toList())));
   }
 
-  public Stream<? extends ApplicationConfiguration> applicationConfigurationStream(Predicate<ConfigurationSupplier<ApplicationConfiguration>> predicate) {
+  public Stream<? extends ApplicationConfiguration> applicationConfigurationStream(
+      Predicate<ConfigurationSupplier<ApplicationConfiguration>> predicate) {
     return suppliers.values()
         .stream()
         .map(l -> combine(l.stream()
@@ -145,16 +146,17 @@ public class ConfigurationRegistry {
             .collect(Collectors.toList())));
   }
 
-  public Stream<? extends ImageConfiguration> imageConfigurationStream(Predicate<ConfigurationSupplier<ImageConfiguration>> predicate) {
+  public Stream<? extends ImageConfiguration> imageConfigurationStream(
+      Predicate<ConfigurationSupplier<ImageConfiguration>> predicate) {
     return suppliers.values()
-      .stream()
-      .map(l -> combine(l.stream()
-        .map(s -> s.configure(configurators))
-        .filter(s -> s.get() instanceof ImageConfiguration)
-        .map(s -> (ConfigurationSupplier<ImageConfiguration>) s)
-        .filter(predicate)
-        .sorted()
-        .collect(Collectors.toList())));
+        .stream()
+        .map(l -> combine(l.stream()
+            .map(s -> s.configure(configurators))
+            .filter(s -> s.get() instanceof ImageConfiguration)
+            .map(s -> (ConfigurationSupplier<ImageConfiguration>) s)
+            .filter(predicate)
+            .sorted()
+            .collect(Collectors.toList())));
   }
 
   public <C extends ImageConfiguration> Optional<C> getImageConfig(Class<C> type) {
@@ -186,14 +188,14 @@ public class ConfigurationRegistry {
         .collect(Collectors.toList());
   }
 
-
   private static <C extends Configuration> C combine(ConfigurationSupplier<C> origin, ConfigurationSupplier<C> override) {
     return Beans.combine(origin.get(), override.get());
   }
 
   private static <C extends Configuration> List<C> combineMulti(List<ConfigurationSupplier<C>> suppliers) {
     Stream<ConfigurationSupplier<C>> multis = suppliers.stream().filter(s -> s instanceof MultiConfiguration);
-    List<ConfigurationSupplier<C>> singles = suppliers.stream().filter(s -> !(s instanceof MultiConfiguration)).collect(Collectors.toList());
+    List<ConfigurationSupplier<C>> singles = suppliers.stream().filter(s -> !(s instanceof MultiConfiguration))
+        .collect(Collectors.toList());
     List<C> result = new ArrayList<>();
     if (!singles.isEmpty()) {
       result.add(combine(singles));

@@ -21,7 +21,7 @@ import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 
-public class DefaultTektonConfigGenerator implements TektonConfigGenerator, WithProject{
+public class DefaultTektonConfigGenerator implements TektonConfigGenerator, WithProject {
 
   private final ConfigurationRegistry configurationRegistry;
 

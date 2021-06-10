@@ -34,11 +34,11 @@ public class Predicates {
     };
   }
 
-
   /**
    * Creates a {@link java.util.function.Predicate} for {@link ContainerBuilder}.
    */
-  public static java.util.function.Predicate<ContainerBuilder> builderMatches(io.dekorate.kubernetes.config.Container container) {
+  public static java.util.function.Predicate<ContainerBuilder> builderMatches(
+      io.dekorate.kubernetes.config.Container container) {
     return new java.util.function.Predicate<ContainerBuilder>() {
       @Override
       public boolean test(ContainerBuilder builder) {
@@ -59,7 +59,6 @@ public class Predicates {
     };
   }
 
-
   /**
    * Creates a {@link Predicate} for {@link io.dekorate.kubernetes.config.Port}.
    */
@@ -69,7 +68,8 @@ public class Predicates {
       public boolean test(ContainerPort p) {
         if (Strings.isNullOrEmpty(p.getName())) {
           return p.getContainerPort().intValue() == port.getContainerPort();
-        } else return p.getName().equals(port.getName());
+        } else
+          return p.getName().equals(port.getName());
       }
     };
   }
@@ -78,7 +78,7 @@ public class Predicates {
    * Creates a {@link java.util.function.Predicate} for {@link ContainerPortBuilder}.
    */
   public static java.util.function.Predicate<ContainerPortBuilder> builderMatches(io.dekorate.kubernetes.config.Port port) {
-     return new java.util.function.Predicate<ContainerPortBuilder> () {
+    return new java.util.function.Predicate<ContainerPortBuilder>() {
       @Override
       public boolean test(ContainerPortBuilder builder) {
         return matches(port).test(builder.build());

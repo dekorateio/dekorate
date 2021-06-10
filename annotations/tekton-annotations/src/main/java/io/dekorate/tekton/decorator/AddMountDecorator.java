@@ -26,10 +26,10 @@ import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
 @Description("Add mount to the named step.")
 public class AddMountDecorator extends NamedStepDecorator<StepFluent<?>> {
 
-    private String name;
-    private String path;
-    private String subPath = "";
-    private boolean readOnly = false;
+  private String name;
+  private String path;
+  private String subPath = "";
+  private boolean readOnly = false;
 
   public AddMountDecorator(String name, String path, String subPath, boolean readOnly) {
     this(ANY, ANY, name, path, subPath, readOnly);
@@ -54,8 +54,8 @@ public class AddMountDecorator extends NamedStepDecorator<StepFluent<?>> {
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
+        AddSidecarDecorator.class };
   }
-
 
 }

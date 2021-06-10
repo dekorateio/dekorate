@@ -23,19 +23,20 @@ import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
 public class RemoveProbesFromInitContainerDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
-	@Override
-	public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
+  @Override
+  public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
     podSpec.getContainers().forEach(container -> {
-        podSpec.editMatchingContainer(Predicates.builderMatches(container))
+      podSpec.editMatchingContainer(Predicates.builderMatches(container))
           .withLivenessProbe(null)
           .withReadinessProbe(null)
           .withLifecycle(null)
           .withStartupProbe(null);
     });
-	}
+  }
 
-	@Override
-	public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, AddInitContainerDecorator.class, AddLivenessProbeDecorator.class, AddReadinessProbeDecorator.class };
-	}
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, AddInitContainerDecorator.class, AddLivenessProbeDecorator.class,
+        AddReadinessProbeDecorator.class };
+  }
 }

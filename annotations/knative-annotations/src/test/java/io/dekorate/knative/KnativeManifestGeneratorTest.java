@@ -40,28 +40,33 @@ class KnativeManifestGeneratorTest {
   @BeforeAll
   public static void setup() throws IOException {
     Path tempDir = Files.createTempDirectory("dekorate");
-    WithProject withProject = new WithProject() {};
-    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString()).withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
+    WithProject withProject = new WithProject() {
+    };
+    withProject.setProject(FileProjectFactory.create(new File(".")).withDekorateOutputDir(tempDir.toAbsolutePath().toString())
+        .withDekorateMetaDir(tempDir.toAbsolutePath().toString()));
   }
- 
+
   @Test
   public void shouldAcceptKnativeConfig() {
     Session session = Session.getSession();
-    KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(generator.accepts(KnativeConfig.class));
   }
 
   @Test
   public void shouldAcceptEditableKnativeConfig() {
     Session session = Session.getSession();
-    KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertTrue(generator.accepts(EditableKnativeConfig.class));
   }
 
   @Test
   public void shouldNotAcceptKubernetesConfig() {
     Session session = Session.getSession();
-    KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(), session.getConfigurationRegistry());
+    KnativeManifestGenerator generator = new KnativeManifestGenerator(session.getResourceRegistry(),
+        session.getConfigurationRegistry());
     assertFalse(generator.accepts(BaseConfig.class));
   }
 }

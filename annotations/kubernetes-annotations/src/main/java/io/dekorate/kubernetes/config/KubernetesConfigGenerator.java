@@ -27,6 +27,7 @@ import io.dekorate.kubernetes.adapter.KubernetesConfigAdapter;
 public interface KubernetesConfigGenerator extends ConfigurationGenerator, WithProject {
 
   String KUBERNETES = "kubernetes";
+
   default String getKey() {
     return KUBERNETES;
   }

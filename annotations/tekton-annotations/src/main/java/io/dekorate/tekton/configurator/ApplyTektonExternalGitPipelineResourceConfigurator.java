@@ -8,15 +8,15 @@ import io.dekorate.utils.Strings;
 public class ApplyTektonExternalGitPipelineResourceConfigurator extends Configurator<TektonConfigFluent<?>> {
 
   private final String resource;
-  
-	public ApplyTektonExternalGitPipelineResourceConfigurator(String resource) {
-		this.resource = resource;
-	}
 
-	@Override
-	public void visit(TektonConfigFluent<?> config) {
+  public ApplyTektonExternalGitPipelineResourceConfigurator(String resource) {
+    this.resource = resource;
+  }
+
+  @Override
+  public void visit(TektonConfigFluent<?> config) {
     if (Strings.isNotNullOrEmpty(resource)) {
       config.withExternalGitPipelineResource(resource);
     }
-	}
+  }
 }
