@@ -10,7 +10,7 @@
     <relativePath>../</relativePath>
   </parent>
 
-  <groupId>io.dekorate.it</groupId>
+  <groupId>io.dekorate</groupId>
   <artifactId>feat-204-spring-boot-with-spring-cloud-kubernetes</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Spring Boot with Spring Cloud Kubernetes</name>
   <description>Check that when using Spring Cloud Kubernetes all required RBAC are properlly configured</description>
