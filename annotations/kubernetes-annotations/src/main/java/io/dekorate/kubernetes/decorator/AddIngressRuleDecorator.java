@@ -70,7 +70,10 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
       Predicate<HTTPIngressPathBuilder> mathcingPath = r -> r.getPath() != null && r.getPath().equals(port.getPath());
       if (rule.getHost().equals(host)) {
         if (!rule.editOrNewHttp().hasMatchingPath(mathcingPath)) {
-          rule.editHttp().addNewPath().withNewBackend()
+          rule.editHttp().addNewPath()
+              .withPathType("Prefix")
+              .withPath(port.getPath())
+              .withNewBackend()
               .withNewService()
               .withName(name)
               .withNewPort().withName(port.getName())
