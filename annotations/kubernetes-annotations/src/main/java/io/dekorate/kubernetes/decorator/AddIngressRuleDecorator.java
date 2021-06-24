@@ -23,6 +23,7 @@ import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.networking.v1.HTTPIngressPathBuilder;
 import io.fabric8.kubernetes.api.model.networking.v1.IngressRuleBuilder;
+import io.fabric8.kubernetes.api.model.networking.v1.IngressServiceBackendBuilder;
 import io.fabric8.kubernetes.api.model.networking.v1.IngressSpecBuilder;
 
 public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecBuilder> {
@@ -38,7 +39,8 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
   @Override
   public void andThenVisit(IngressSpecBuilder spec, ObjectMeta meta) {
-    Predicate<IngressRuleBuilder> matchingHost = r -> r.getHost() != null && r.getHost().equals(host);
+    Predicate<IngressRuleBuilder> matchingHost = r -> host == null && r.getHost() == null
+        || (r.getHost() != null && r.getHost().equals(host));
 
     if (!spec.hasMatchingRule(matchingHost)) {
       spec.addNewRule().withHost(host).withNewHttp().addNewPath().withPathType("Prefix").withPath(port.getPath())
@@ -68,9 +70,10 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
     @Override
     public void visit(IngressRuleBuilder rule) {
       Predicate<HTTPIngressPathBuilder> mathcingPath = r -> r.getPath() != null && r.getPath().equals(port.getPath());
-      if (rule.getHost().equals(host)) {
-        if (!rule.editOrNewHttp().hasMatchingPath(mathcingPath)) {
-          rule.editHttp().addNewPath()
+      if (rule.getHost() != null && rule.getHost().equals(host)) {
+        if (!rule.hasHttp()) {
+          rule.withNewHttp()
+              .addNewPath()
               .withPathType("Prefix")
               .withPath(port.getPath())
               .withNewBackend()
@@ -82,7 +85,7 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
               .endBackend()
               .endPath().endHttp();
         } else {
-          rule.accept(new PathVisitor(meta));
+          rule.accept(new PathVisitor());
         }
       }
     }
@@ -90,20 +93,30 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
   private class PathVisitor extends TypedVisitor<HTTPIngressPathBuilder> {
 
-    private final ObjectMeta meta;
-
-    public PathVisitor(ObjectMeta meta) {
-      this.meta = meta;
-    }
-
+    @Override
     public void visit(HTTPIngressPathBuilder path) {
-      path.withNewBackend()
-          .withNewService()
-          .withName(name)
-          .withNewPort().withName(port.getName())
-          .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
-          .endService()
-          .endBackend();
+      if (path.equals(port.getPath())) {
+        if (!path.hasBackend()) {
+          path.withNewBackend()
+              .withNewService()
+              .withName(name)
+              .withNewPort().withName(port.getName())
+              .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort()
+              .endService()
+              .endBackend();
+        } else {
+          path.accept(new ServiceVisitor());
+        }
+      }
+    }
+  }
+
+  private class ServiceVisitor extends TypedVisitor<IngressServiceBackendBuilder> {
+
+    @Override
+    public void visit(IngressServiceBackendBuilder service) {
+      service.withName(port.getName()).withNewPort()
+          .withNumber(Strings.isNullOrEmpty(port.getName()) ? port.getHostPort() : null).endPort();
     }
   }
 }
