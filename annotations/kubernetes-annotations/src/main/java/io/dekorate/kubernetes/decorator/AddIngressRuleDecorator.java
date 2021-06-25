@@ -75,7 +75,7 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
           rule.withNewHttp()
               .addNewPath()
               .withPathType("Prefix")
-              .withPath(port.getPath())
+              .withPath(Strings.isNotNullOrEmpty(port.getPath()) ? port.getPath() : "/")
               .withNewBackend()
               .withNewService()
               .withName(name)
