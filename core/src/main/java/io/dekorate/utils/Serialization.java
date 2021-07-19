@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,6 +41,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 
 import io.dekorate.DekorateException;
+import io.dekorate.utils.serialization.Features;
+import io.dekorate.utils.serialization.SerializationFeatures;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -47,24 +50,75 @@ import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 public class Serialization {
 
-  private static final ObjectMapper JSON_MAPPER = new ObjectMapper() {
-    {
-      configure(SerializationFeature.INDENT_OUTPUT, true);
-      configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-      configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
+  private static final String MINIMIZE_QUOTES = "MINIMIZE_QUOTES";
+  private static final String ALWAYS_QUOTE_NUMBERS_AS_STRINGS = "ALWAYS_QUOTE_NUMBERS_AS_STRINGS";
+  private static final String INDENT_ARRAYS_WITH_INDICATOR = "INDENT_ARRAYS_WITH_INDICATOR";
+
+  private static final String INDENT_OUTPUT = "INDENT_OUTPUT";
+  private static final String WRITE_NULL_MAP_VALUES = "WRITE_NULL_MAP_VALUES";
+  private static final String WRITE_EMPTY_JSON_ARRAYS = "WRITE_EMPTY_JSON_ARRAYS";
+
+  public static YAMLFactory createYamlFactory(String[] features) {
+    YAMLFactory result = new YAMLFactory();
+    for (String name : features) {
+      Optional<Feature> feature = Features.find(name);
+      if (feature.isPresent()) {
+        result = result.enable(feature.get());
+      }
     }
-  };
-  private static final ObjectMapper YAML_MAPPER = new ObjectMapper(
-      new YAMLFactory()
-          .enable(Feature.MINIMIZE_QUOTES)
-          .enable(Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS)
-          .enable(Feature.INDENT_ARRAYS_WITH_INDICATOR)) {
-    {
-      configure(SerializationFeature.INDENT_OUTPUT, true);
-      configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-      configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
-    }
-  };
+    return result;
+  }
+
+  public static ObjectMapper createYamlMapper(String[] generatorFeatures, String[] enabledFeatures, String[] disabledFeatures) {
+    return new ObjectMapper(createYamlFactory(generatorFeatures)) {
+      {
+
+        for (String name : enabledFeatures) {
+          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+          if (feature.isPresent()) {
+            configure(feature.get(), true);
+          }
+        }
+        for (String name : disabledFeatures) {
+          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+          if (feature.isPresent()) {
+            configure(feature.get(), false);
+          }
+        }
+
+      }
+    };
+  }
+
+  public static ObjectMapper createJsonMapper(String[] enabledFeatures, String[] disabledFeatures) {
+    return new ObjectMapper() {
+      {
+
+        for (String name : enabledFeatures) {
+          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+          if (feature.isPresent()) {
+            configure(feature.get(), true);
+          }
+        }
+        for (String name : disabledFeatures) {
+          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+          if (feature.isPresent()) {
+            configure(feature.get(), false);
+          }
+        }
+
+      }
+    };
+  }
+
+  private static final ObjectMapper JSON_MAPPER = createJsonMapper(new String[] { INDENT_OUTPUT },
+      new String[] { WRITE_NULL_MAP_VALUES, WRITE_EMPTY_JSON_ARRAYS });
+
+  private static final ObjectMapper YAML_MAPPER = createYamlMapper(
+      new String[] { MINIMIZE_QUOTES, ALWAYS_QUOTE_NUMBERS_AS_STRINGS, INDENT_ARRAYS_WITH_INDICATOR },
+      new String[] { INDENT_OUTPUT },
+      new String[] { WRITE_NULL_MAP_VALUES, WRITE_EMPTY_JSON_ARRAYS });
+
   private static final JavaPropsMapper PROPERTIES_MAPPER = new JavaPropsMapper();
 
   private static final String DOCUMENT_DELIMITER = "---";
