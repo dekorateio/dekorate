@@ -41,7 +41,7 @@ public class AddPvcVolumeToRevisionDecorator extends NamedResourceDecorator<Revi
         .withName(volume.getVolumeName())
         .withNewPersistentVolumeClaim()
         .withClaimName(volume.getClaimName())
-        .withNewReadOnly(volume.isReadOnly())
+        .withReadOnly(volume.isReadOnly())
         .endPersistentVolumeClaim()
         .endVolume();
 

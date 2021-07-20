@@ -69,7 +69,7 @@ public class S2iBuildService implements BuildService {
               } catch (IllegalArgumentException e) {
                 LOGGER.warning(e.getMessage());
                 //We can should ignore that, as its expected to be thrown when item is actually deleted.
-              } catch (InterruptedException e) {
+              } catch (Exception e) {
                 LOGGER.warning(e.getMessage());
                 throw DekorateException.launderThrowable(e);
               }
