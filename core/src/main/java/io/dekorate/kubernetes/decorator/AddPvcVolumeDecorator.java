@@ -34,7 +34,7 @@ public class AddPvcVolumeDecorator extends Decorator<PodSpecBuilder> {
         .withName(volume.getVolumeName())
         .withNewPersistentVolumeClaim()
         .withClaimName(volume.getClaimName())
-        .withNewReadOnly(volume.isReadOnly())
+        .withReadOnly(volume.isReadOnly())
         .endPersistentVolumeClaim()
         .endVolume();
 
