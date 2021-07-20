@@ -52,6 +52,7 @@
       <module>feat-642-knative-traffic-splitting</module>
       <module>issue-667-init-container-probes</module>
       <module>issue-687-knative-volumes</module>
+      <module>issue-769-old-jackson-version</module>
     </modules>
 
 </project>
