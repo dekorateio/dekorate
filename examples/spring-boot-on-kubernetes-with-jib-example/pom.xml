@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-on-kubernetes-with-jib-example</artifactId>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.3-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot on Kubernetes with JIB</name>
 
   <properties>
