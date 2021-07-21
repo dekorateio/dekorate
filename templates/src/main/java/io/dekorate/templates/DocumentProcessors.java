@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.doc;
+package io.dekorate.templates;
 
-import io.sundr.codegen.annotations.PackageSelector;
-import io.sundr.transform.annotations.VelocityTransformation;
-import io.sundr.transform.annotations.VelocityTransformations;
+import io.sundr.transform.annotations.PackageSelector;
+import io.sundr.transform.annotations.TemplateTransformation;
+import io.sundr.transform.annotations.TemplateTransformations;
 
-@VelocityTransformations(value = @VelocityTransformation(value = "/processor-doc.vm", outputPath = "processors-table.org", gather = true), packages = {
+@TemplateTransformations(value = @TemplateTransformation(value = "/processor-doc.vm", outputPath = "processors-table.org", gather = true), packages = {
     @PackageSelector(value = "io.dekorate.processor"),
     @PackageSelector(value = "io.dekorate.kubernetes.processor"),
     @PackageSelector(value = "io.dekorate.openshift.processor"),

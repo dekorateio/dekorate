@@ -18,12 +18,12 @@
 package io.dekorate.s2i.doc;
 
 import io.sundr.builder.annotations.Pojo;
-import io.sundr.codegen.annotations.AnnotationSelector;
-import io.sundr.codegen.model.Attributeable;
-import io.sundr.transform.annotations.VelocityTransformation;
-import io.sundr.transform.annotations.VelocityTransformations;
+import io.sundr.model.Attributeable;
+import io.sundr.transform.annotations.AnnotationSelector;
+import io.sundr.transform.annotations.TemplateTransformation;
+import io.sundr.transform.annotations.TemplateTransformations;
 
-@VelocityTransformations(value = @VelocityTransformation(value = "/annotation-doc.vm", outputPath = "annotation-table.org", gather = true), annotations = {
+@TemplateTransformations(value = @TemplateTransformation(value = "/annotation-doc.vm", outputPath = "annotation-table.org", gather = true), annotations = {
     @AnnotationSelector(value = Pojo.class)
 })
 public class S2iAnnotationsTableGenerator {

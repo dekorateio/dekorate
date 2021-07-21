@@ -105,7 +105,7 @@ limitations under the License.
           <target>${java.target}</target>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
-            <processor>io.sundr.transform.internal.VelocityTransformationProcessor</processor>
+            <processor>io.sundr.transform.internal.TemplateTransformationProcessor</processor>
           </annotationProcessors>
         </configuration>
       </plugin>
