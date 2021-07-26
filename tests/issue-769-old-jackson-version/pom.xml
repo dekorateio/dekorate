@@ -15,12 +15,17 @@
   <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Use of old jackson version #769</name>
   <description>Spring Boot application with custom path</description>
 
+  <properties>
+    <jackson.old.version>2.10.0</jackson.old.version>
+  </properties>
+    
+
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.fasterxml.jackson</groupId>
         <artifactId>jackson-bom</artifactId>
-        <version>2.10.0</version>
+        <version>${jackson.old.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
