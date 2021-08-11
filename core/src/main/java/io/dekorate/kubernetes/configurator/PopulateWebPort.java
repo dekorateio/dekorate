@@ -36,7 +36,11 @@ public class PopulateWebPort extends Configurator<BaseConfigFluent<?>> {
     if (!Ports.isWebPort(port)) {
       return port;
     }
-    return new PortBuilder(port).withHostPort(80).build();
+    /*
+     * Delegate to AddServiceResourceDecorator the role to define the hostPort as it is only needed by the Kubernetes service
+     * return new PortBuilder(port).withHostPort(80).build();
+     */
+    return new PortBuilder(port).build();
   }
 
   @Override

@@ -25,7 +25,6 @@ import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
-import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 
 public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
@@ -63,11 +62,14 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
         config.editMatchingPort(predicate)
             .withHostPort(port.getHostPort())
             .endPort();
-      } else if (Ports.isWebPort(port)) {
-        config.editMatchingPort(predicate)
-            .withHostPort(80)
-            .endPort();
-      }
+      } /*
+         * Delegate to AddServiceResourceDecorator the role to define the hostPort as it is only needed by the Kubernetes service
+         * else if (Ports.isWebPort(port)) {
+         * config.editMatchingPort(predicate)
+         * .withHostPort(80)
+         * .endPort();
+         * }
+         */
     } else {
       String name = names.size() > 0 ? names.get(0) : FALLBACK_PORT_NAME;
       config.addNewPortLike(port)
