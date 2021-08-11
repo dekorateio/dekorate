@@ -53,6 +53,7 @@
       <module>issue-667-init-container-probes</module>
       <module>issue-687-knative-volumes</module>
       <module>issue-769-old-jackson-version</module>
+      <module>issue-775-duplicate-service-port</module>
     </modules>
 
 </project>
