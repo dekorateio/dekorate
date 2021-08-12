@@ -63,7 +63,7 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
             .withHostPort(port.getHostPort())
             .endPort();
       } /*
-         * Delete to AddServiceResourceDecorator the role to define it
+         * Delegate to AddServiceResourceDecorator the role to define the hostPort as it is only needed by the Kubernetes service
          * else if (Ports.isWebPort(port)) {
          * config.editMatchingPort(predicate)
          * .withHostPort(80)
