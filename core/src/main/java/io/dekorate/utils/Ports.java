@@ -33,7 +33,7 @@ import io.fabric8.kubernetes.api.model.ContainerPort;
 
 public class Ports {
 
-  private static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[] { "http", "web" });
+  private static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[] { "http", "web", "http1", "h2c" });
   private static final List<String> HTTPS_PORT_NAMES = Arrays.asList(new String[] { "https" });
 
   private static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[] { 80, 8080 });

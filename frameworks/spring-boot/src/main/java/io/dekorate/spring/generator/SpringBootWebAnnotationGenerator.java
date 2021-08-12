@@ -51,9 +51,7 @@ public interface SpringBootWebAnnotationGenerator extends ConfigurationGenerator
   default Port detectHttpPort(Map map) {
     return new PortBuilder()
         .withName("http")
-        // Don't decide here to apply a fixed hostPort as several ports (HTTP, HTTPS, ...) could be generated for a K8s Service
-        // The AddServiceResourceDecorator will take care to assign it
-        //.withHostPort()
+        .withHostPort(80)
         .withContainerPort(extractPortFromProperties())
         .withPath(String.valueOf(map.getOrDefault(DEKORATE_SPRING_WEB_PATH, Ports.DEFAULT_HTTP_PORT_PATH)))
         .build();

@@ -29,6 +29,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.utils.Labels;
+import io.dekorate.utils.Ports;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.ServicePort;
 import io.fabric8.kubernetes.api.model.ServicePortBuilder;
@@ -68,21 +69,9 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
     return new ServicePortBuilder()
         .withName(port.getName())
         .withNewTargetPort(port.getContainerPort())
-        .withPort(calculateHostPort(port))
+        .withPort(port.getHostPort() != null && port.getHostPort() > 0 ? port.getHostPort()
+            : (Ports.isWebPort(port) ? 80 : port.getContainerPort()))
         .build();
-  }
-
-  public static Integer calculateHostPort(Port port) {
-    // Check if ingress is enabled
-    // TODO : Add ingress property to the Kubernetes config
-
-    // If a HostPort has been defined by the user, then we use it
-    if (port.getHostPort() != null && port.getHostPort() > 0) {
-      return port.getHostPort();
-    }
-    // If not hostPort exists, then we will return the containerPort to follow
-    // the same convention as kubernetes suggests
-    return port.getContainerPort();
   }
 
   public static <T> Predicate<T> distinct(Function<? super T, Object> keyExtractor) {

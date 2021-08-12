@@ -36,11 +36,7 @@ public class PopulateWebPort extends Configurator<BaseConfigFluent<?>> {
     if (!Ports.isWebPort(port)) {
       return port;
     }
-    /*
-     * Delete to AddServiceResourceDecorator the role to define it
-     * return new PortBuilder(port).withHostPort(80).build();
-     */
-    return new PortBuilder(port).build();
+    return new PortBuilder(port).withHostPort(80).build();
   }
 
   @Override
