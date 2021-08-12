@@ -47,8 +47,6 @@ public class Issue775Test {
 
     ServicePort servicePort2 = p.get(1);
     assertEquals("https", servicePort2.getName());
-    // Fail due to wrong logic implemented
-    //assertEquals(8443, servicePort2.getPort());
     assertEquals(80, servicePort2.getPort());
     assertEquals(8443, servicePort2.getTargetPort().getIntVal());
   }
