@@ -23,14 +23,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.TestPropertySource;
 
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.*;
 
-public class Issue775Test {
+@TestPropertySource(locations = "./application2.properties")
+public class Issue775TwoPortsTest {
 
   @Test
-  public void shouldHaveUniquePortNumber() {
+  public void shouldHaveUniquePortNumberForTwoPorts() {
     KubernetesList list = Serialization
         .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);

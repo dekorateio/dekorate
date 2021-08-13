@@ -11,9 +11,9 @@
   </parent>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>issue-775-duplicate-service-port</artifactId>
-  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Duplicate Service port #775</name>
-  <description>Kubernetes service should have HTTP - 8080 and HTTPS - 8443 ports</description>
+  <artifactId>issue-775-one-port</artifactId>
+  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Should have one service port - 8080 #775</name>
+  <description>Kubernetes service should have one HTTP - 8080 port</description>
 
   <dependencies>
     <dependency>
