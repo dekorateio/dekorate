@@ -45,7 +45,7 @@ public class Issue775SpringBootServerTest {
 
     ServicePort servicePort1 = p.get(0);
     assertEquals("http", servicePort1.getName());
-    assertEquals(8090, servicePort1.getPort());
+    assertEquals(80, servicePort1.getPort());
     assertEquals(8090, servicePort1.getTargetPort().getIntVal());
   }
 
