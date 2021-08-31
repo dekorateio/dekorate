@@ -45,7 +45,7 @@ public interface SpringBootWebAnnotationGenerator extends ConfigurationGenerator
   default void addConfiguration(Map map) {
     Session session = getSession();
     Port port = detectHttpPort(map);
-    session.getConfigurationRegistry().add(new ApplyPort(port, Ports.webPortNames()));
+    session.getConfigurationRegistry().add(new ApplyPort(port));
   }
 
   default Port detectHttpPort(Map map) {

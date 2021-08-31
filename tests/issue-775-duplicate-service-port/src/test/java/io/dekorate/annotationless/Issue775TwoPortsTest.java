@@ -44,12 +44,12 @@ public class Issue775TwoPortsTest {
 
     ServicePort servicePort1 = p.get(0);
     assertEquals("http", servicePort1.getName());
-    assertEquals(8080, servicePort1.getPort());
+    assertEquals(80, servicePort1.getPort());
     assertEquals(8080, servicePort1.getTargetPort().getIntVal());
 
     ServicePort servicePort2 = p.get(1);
     assertEquals("https", servicePort2.getName());
-    assertEquals(8443, servicePort2.getPort());
+    assertEquals(443, servicePort2.getPort());
     assertEquals(8443, servicePort2.getTargetPort().getIntVal());
   }
 

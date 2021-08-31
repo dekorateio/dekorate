@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import io.dekorate.kubernetes.config.BaseConfigFluent;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Port;
-import io.dekorate.kubernetes.config.PortBuilder;
 import io.dekorate.utils.Ports;
 
 public class PopulateWebPort extends Configurator<BaseConfigFluent<?>> {
@@ -36,11 +35,8 @@ public class PopulateWebPort extends Configurator<BaseConfigFluent<?>> {
     if (!Ports.isWebPort(port)) {
       return port;
     }
-    /*
-     * Delegate to AddServiceResourceDecorator the role to define the hostPort as it is only needed by the Kubernetes service
-     * return new PortBuilder(port).withHostPort(80).build();
-     */
-    return new PortBuilder(port).build();
+
+    return Ports.populateHostPort(port);
   }
 
   @Override

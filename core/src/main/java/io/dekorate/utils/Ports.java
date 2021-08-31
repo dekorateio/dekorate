@@ -16,12 +16,13 @@
 package io.dekorate.utils;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Container;
@@ -33,25 +34,64 @@ import io.fabric8.kubernetes.api.model.ContainerPort;
 
 public class Ports {
 
-  private static final List<String> HTTP_PORT_NAMES = Arrays.asList(new String[] { "http", "web" });
-  private static final List<String> HTTPS_PORT_NAMES = Arrays.asList(new String[] { "https" });
+  private static final Map<String, Integer> HTTP_PORT_NAMES = Collections.unmodifiableMap(new HashMap<String, Integer>() {
+    {
+      put("http", 80);
+      put("https", 443);
+      put("http1", 80);
+      put("h2c", 443);
+    }
+  });
 
-  private static final List<Integer> HTTP_PORT_NUMBERS = Arrays.asList(new Integer[] { 80, 8080 });
-  private static final List<Integer> HTTPS_PORT_NUMBERS = Arrays.asList(new Integer[] { 443, 8443 });
+  private static final Map<Integer, Integer> HTTP_PORT_NUMBERS = Collections.unmodifiableMap(new HashMap<Integer, Integer>() {
+    {
+      put(80, 80);
+      put(8080, 80);
+      put(443, 443);
+      put(8443, 443);
+    }
+  });
 
   public static final String DEFAULT_HTTP_PORT_PATH = "/";
 
-  public static final Predicate<PortBuilder> PORT_PREDICATE = p -> HTTP_PORT_NAMES.contains(p.getName())
-      || HTTPS_PORT_NAMES.contains(p.getName())
-      || HTTP_PORT_NUMBERS.contains(p.getContainerPort())
-      || HTTPS_PORT_NUMBERS.contains(p.getContainerPort());
+  public static final Predicate<PortBuilder> PORT_PREDICATE = p -> HTTP_PORT_NAMES.containsKey(p.getName())
+      || HTTP_PORT_NAMES.containsKey(p.getName())
+      || HTTP_PORT_NUMBERS.containsKey(p.getContainerPort());
+
+  public static final Map<String, Integer> webPortNameMappings() {
+    return HTTP_PORT_NAMES;
+  }
 
   public static final List<String> webPortNames() {
-    return Stream.of(HTTP_PORT_NAMES, HTTPS_PORT_NAMES).flatMap(Collection::stream).collect(Collectors.toList());
+    return HTTP_PORT_NAMES.keySet().stream().collect(Collectors.toList());
+  }
+
+  public static final Map<Integer, Integer> webPortNumberMappings() {
+    return HTTP_PORT_NUMBERS;
   }
 
   public static final List<Integer> webPortNumbers() {
-    return Stream.of(HTTP_PORT_NUMBERS, HTTPS_PORT_NUMBERS).flatMap(Collection::stream).collect(Collectors.toList());
+    return HTTP_PORT_NUMBERS.keySet().stream().collect(Collectors.toList());
+  }
+
+  public static Port populateHostPort(Port port) {
+    if (!isWebPort(port)) {
+      return port;
+    }
+
+    if (port.getHostPort() != null) {
+      return port;
+    }
+
+    if (port.getContainerPort() != null && HTTP_PORT_NUMBERS.containsKey(port)) {
+      return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort())).build();
+    }
+
+    if (port.getName() != null && HTTP_PORT_NAMES.containsKey(port.getName())) {
+      return new PortBuilder(port).withHostPort(HTTP_PORT_NAMES.get(port.getName())).build();
+    }
+    //No match
+    return port;
   }
 
   public static boolean isWebPort(Port port) {
@@ -81,13 +121,13 @@ public class Ports {
     }
 
     //Check the service name
-    Optional<ContainerPort> port = container.getPorts().stream().filter(p -> HTTP_PORT_NAMES.contains(p.getName()))
+    Optional<ContainerPort> port = container.getPorts().stream().filter(p -> HTTP_PORT_NAMES.containsKey(p.getName()))
         .findFirst();
     if (port.isPresent()) {
       return port;
     }
 
-    port = container.getPorts().stream().filter(p -> HTTP_PORT_NUMBERS.contains(p.getHostPort())).findFirst();
+    port = container.getPorts().stream().filter(p -> HTTP_PORT_NUMBERS.containsKey(p.getHostPort())).findFirst();
     if (port.isPresent()) {
       return port;
     }
@@ -101,13 +141,13 @@ public class Ports {
     }
 
     //Check the service name
-    Optional<Port> port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NAMES.contains(p.getName()))
+    Optional<Port> port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NAMES.containsKey(p.getName()))
         .findFirst();
     if (port.isPresent()) {
       return port;
     }
 
-    port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NUMBERS.contains(p.getHostPort())).findFirst();
+    port = Arrays.stream(container.getPorts()).filter(p -> HTTP_PORT_NUMBERS.containsKey(p.getHostPort())).findFirst();
     if (port.isPresent()) {
       return port;
     }
@@ -121,12 +161,12 @@ public class Ports {
     }
 
     //Check the service name
-    Optional<Port> port = Arrays.stream(config.getPorts()).filter(p -> HTTP_PORT_NAMES.contains(p.getName())).findFirst();
+    Optional<Port> port = Arrays.stream(config.getPorts()).filter(p -> HTTP_PORT_NAMES.containsKey(p.getName())).findFirst();
     if (port.isPresent()) {
       return port;
     }
 
-    port = Arrays.stream(config.getPorts()).filter(p -> HTTP_PORT_NUMBERS.contains(p.getHostPort())).findFirst();
+    port = Arrays.stream(config.getPorts()).filter(p -> HTTP_PORT_NUMBERS.containsKey(p.getHostPort())).findFirst();
     if (port.isPresent()) {
       return port;
     }
