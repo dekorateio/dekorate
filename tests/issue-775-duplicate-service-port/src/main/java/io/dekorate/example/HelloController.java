@@ -15,7 +15,7 @@
  * 
 **/
 
-package io.dekorate.annotationless;
+package io.dekorate.example;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
