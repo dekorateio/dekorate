@@ -93,6 +93,7 @@
   </properties>
 
   <modules>
+    <module>formatter</module>
     <module>templates</module>
     <module>doc</module>
     <module>core</module>
@@ -345,13 +346,20 @@
               <goal>format</goal>
             </goals>
             <configuration>
-              <configFile>${maven.multiModuleProjectDirectory}/.code-format.xml</configFile>
+              <configFile>code-format.xml</configFile>
               <lineEnding>LF</lineEnding>
               <skip>${format.skip}</skip>
               <encoding>UTF-8</encoding>
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+            <dependency>
+              <groupId>io.dekorate</groupId>
+              <artifactId>dekorate-formatter</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
       </plugin>
       <plugin>
         <groupId>net.revelc.code</groupId>
