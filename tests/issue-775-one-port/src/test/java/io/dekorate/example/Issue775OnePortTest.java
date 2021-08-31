@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.dekorate.annotationless;
+package io.dekorate.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,10 +30,10 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServicePort;
 
-public class Issue775SpringBootServerTest {
+public class Issue775OnePortTest {
 
   @Test
-  public void shouldHaveSpringBootServerPort() {
+  public void shouldHaveOnePort() {
     KubernetesList list = Serialization
         .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
@@ -46,7 +46,7 @@ public class Issue775SpringBootServerTest {
     ServicePort servicePort1 = p.get(0);
     assertEquals("http", servicePort1.getName());
     assertEquals(80, servicePort1.getPort());
-    assertEquals(8090, servicePort1.getTargetPort().getIntVal());
+    assertEquals(8080, servicePort1.getTargetPort().getIntVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
