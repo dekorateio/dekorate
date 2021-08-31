@@ -26,6 +26,14 @@ Please, avoid combining code with indentation changes.
 
 Please use [semantic commit messages](https://seesparkbox.com/foundry/semantic_commit_messages).
 
+## Tests and documentation are not optional
+
+1. All pull requests must contain unit tests so don't forget to include tests in your pull requests. The unit tests should be added in the corresponding `src/test` folder of the modified module. 
+1. When fixing an issue a test case should be added in the [tests](https://github.com/dekorateio/dekorate/tree/master/tests) folder. Navigate to the `tests` folder and add a new folder named as follows: `feat/issue-github_issue_number-issue_description`, then add the code inside it.
+1. Check if some of the [examples](https://github.com/dekorateio/dekorate/tree/master/examples) should be modified.
+1. Also don't forget the documentation (reference documentation, javadoc...).
+
+
 ## Frequently Asked Questions
 
 * IntelliJ fails to compile dekorate with `Cannot resolve method 'withName(java.lang.String)'` and this kind of errors. 
