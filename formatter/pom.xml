@@ -7,14 +7,41 @@
   <name>Dekorate :: Code Formatter</name>
   <version>2.4-SNAPSHOT</version>
   <packaging>jar</packaging>
+  <description>Dekorate code formatter settings</description>
 
-  <properties>
-    <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
-    <version.maven-enforcer-plugin>1.3.1</version.maven-enforcer-plugin>
-    <version.maven-javadoc-plugin>2.10.3</version.maven-javadoc-plugin>
-    <version.maven-source-plugin>2.4</version.maven-source-plugin>
-  </properties>
+  <url>https://dekorate.io</url>
+  <inceptionYear>2018</inceptionYear>
 
+  <organization>
+    <name>Red Hat</name>
+    <url>http://redhat.com</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!-- including A developer as it's required by the maven poms going into
+    central -->
+  <developers>
+    <developer>
+      <id>geeks</id>
+      <name>Snowdrop Development Team</name>
+      <organization>snowdrop</organization>
+      <organizationUrl>http://snowdrop.me/</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
+    <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
+    <url>http://github.com/dekorateio/dekorate</url>
+    <tag>${project.version}</tag>
+  </scm>
 
   <distributionManagement>
     <repository>
@@ -23,6 +50,13 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
   </distributionManagement>
+
+  <properties>
+    <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
+    <version.maven-enforcer-plugin>1.3.1</version.maven-enforcer-plugin>
+    <version.maven-javadoc-plugin>2.10.3</version.maven-javadoc-plugin>
+    <version.maven-source-plugin>2.4</version.maven-source-plugin>
+  </properties>
 
   <profiles>
     <profile>
