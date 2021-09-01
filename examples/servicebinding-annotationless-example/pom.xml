@@ -20,7 +20,7 @@ limitations under the License.
 
   <groupId>io.dekorate</groupId>
   <artifactId>servicebinding-annotationless-example</artifactId>
-  <version>2.3-SNAPSHOT</version>
+  <version>2.4-SNAPSHOT</version>
   <name>Dekorate :: Examples :: ServiceBinding :: Annotationless</name>
 
   <properties>
