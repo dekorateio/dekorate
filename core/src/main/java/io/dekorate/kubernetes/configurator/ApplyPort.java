@@ -61,8 +61,8 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
 
     if (config.hasMatchingPort(matchingHostPort)) {
       matchFound = true;
-      applyPath(config, updated, matchingPortName);
-      applyContainerPort(config, updated, matchingPortName);
+      applyPath(config, updated, matchingHostPort);
+      applyContainerPort(config, updated, matchingHostPort);
     }
 
     if (!matchFound) {
@@ -74,9 +74,9 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
     applyPath(config, port, p -> port.getName().equals(p.getName()));
   }
 
-  private void applyPath(BaseConfigFluent<?> config, Port port, Predicate<PortBuilder> matchingPortName) {
+  private void applyPath(BaseConfigFluent<?> config, Port port, Predicate<PortBuilder> predicate) {
     if (Strings.isNotNullOrEmpty(port.getPath()) && !DEFAULT_PATH.equals(port.getPath())) {
-      config.editMatchingPort(matchingPortName).withPath(port.getPath()).endPort();
+      config.editMatchingPort(predicate).withPath(port.getPath()).endPort();
     }
   }
 
@@ -84,9 +84,9 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
     applyPath(config, port, p -> port.getName().equals(p.getName()));
   }
 
-  private void applyContainerPort(BaseConfigFluent<?> config, Port port, Predicate<PortBuilder> matchingPortName) {
+  private void applyContainerPort(BaseConfigFluent<?> config, Port port, Predicate<PortBuilder> predicate) {
     if (port.getContainerPort() != 0) {
-      config.editMatchingPort(matchingPortName).withContainerPort(port.getContainerPort()).endPort();
+      config.editMatchingPort(predicate).withContainerPort(port.getContainerPort()).endPort();
     }
   }
 
