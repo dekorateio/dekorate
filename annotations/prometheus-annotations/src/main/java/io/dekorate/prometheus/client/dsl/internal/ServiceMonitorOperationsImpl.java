@@ -23,19 +23,16 @@ import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation;
 import io.fabric8.kubernetes.client.dsl.base.OperationContext;
 import okhttp3.OkHttpClient;
 
-public class ServiceMonitorOperationsImpl extends
-    HasMetadataOperation<ServiceMonitor, ServiceMonitorList, Resource<ServiceMonitor>> {
+public class ServiceMonitorOperationsImpl
+    extends HasMetadataOperation<ServiceMonitor, ServiceMonitorList, Resource<ServiceMonitor>> {
 
   public ServiceMonitorOperationsImpl(OkHttpClient client, Config config) {
     this(new OperationContext().withOkhttpClient(client).withConfig(config));
   }
 
   public ServiceMonitorOperationsImpl(OperationContext context) {
-    super(context.withApiGroupName("monitoring.coreos.om")
-        .withApiGroupVersion("v1")
-        .withPlural("servicemonitors"));
-    this.type = ServiceMonitor.class;
-    this.listType = ServiceMonitorList.class;
+    super(context.withApiGroupName("monitoring.coreos.com").withApiGroupVersion("v1").withPlural("servicemonitors"),
+        ServiceMonitor.class, ServiceMonitorList.class);
   }
 
   public ServiceMonitorOperationsImpl newInstance(OperationContext context) {

@@ -57,6 +57,12 @@ limitations under the License.
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>io.sundr</groupId>
+      <artifactId>sundr-codegen-velocity</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency> 
   </dependencies>
 
   <build>
@@ -69,7 +75,7 @@ limitations under the License.
           <target>${java.target}</target>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
-            <processor>io.sundr.transform.internal.VelocityTransformationProcessor</processor>
+            <processor>io.sundr.transform.internal.TemplateTransformationProcessor</processor>
           </annotationProcessors>
         </configuration>
       </plugin>
