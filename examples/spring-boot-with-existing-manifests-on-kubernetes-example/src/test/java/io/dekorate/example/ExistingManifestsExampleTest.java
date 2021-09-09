@@ -20,7 +20,7 @@ import java.util.Optional;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.batch.Job;
+import io.fabric8.kubernetes.api.model.batch.v1.Job;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
