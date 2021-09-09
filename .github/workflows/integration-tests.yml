@@ -37,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-maven-
       - name: Install artifacts
-        run: mvn -f pom.xml ${MAVEN_ARGS} -DskipTests clean install
+        run: ./mvnw -f pom.xml ${MAVEN_ARGS} -DskipTests clean install
   kubernetes:
     name: Kubernetes Build
     needs: cache
@@ -76,7 +76,7 @@ jobs:
           password: ${{ secrets.DOCKERIO_PASSWORD }}
       - name: Install and Run Integration Tests
         run: |
-          mvn -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
 
   openshift:
     name: Openshift Build
@@ -116,4 +116,4 @@ jobs:
           oc new-project itests
           oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
           oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-          mvn -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
