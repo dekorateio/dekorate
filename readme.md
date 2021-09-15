@@ -1588,7 +1588,7 @@ import io.dekorate.kubernetes.annotation.KubernentesApplication;
 import io.dekorate.jaeger.annotation.EnableJaegerAgent;
 
 @KubernetesApplication
-@EnableJaegerAgent(operatorEnabled="true")
+@EnableJaegerAgent(operatorEnabled = true)
 public class Main {
     public static void main(String[] args) {
       //Your code goes here
