@@ -26,7 +26,7 @@ public class ServiceBindingMappingProvider implements KubernetesResourceMappingP
 
   private Map<String, Class<? extends KubernetesResource>> mappings = new HashMap<String, Class<? extends KubernetesResource>>() {
     {
-      put("operators.coreos.com/v1alpha1", ServiceBinding.class);
+      put("binding.operators.coreos.com/v1alpha1#ServiceBinding", ServiceBinding.class);
     }
   };
 
