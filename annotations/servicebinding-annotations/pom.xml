@@ -190,6 +190,7 @@ limitations under the License.
                     <include>io/dekorate/servicebinding/manifest/**</include>
                     <include>io/dekorate/servicebinding/model/**</include>
                     <include>io/dekorate/servicebinding/processor/**</include>
+                    <include>META-INF/services/io.fabric8.*</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
