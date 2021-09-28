@@ -20,6 +20,9 @@ public class Service {
   private String namespace;
   private String envVarPrefix;
 
+  public Service() {
+  }
+
   public Service(String group, String kind, String name, String version, String id, String namespace,
       String envVarPrefix) {
     super();

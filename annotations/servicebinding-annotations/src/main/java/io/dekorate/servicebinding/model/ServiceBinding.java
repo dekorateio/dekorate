@@ -31,14 +31,14 @@ import io.sundr.builder.annotations.BuildableReference;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder", refs = @BuildableReference(ObjectMeta.class))
-@Group("operators.coreos.com")
-@Version("v1beta1")
+@Group("binding.operators.coreos.com")
+@Version("v1alpha1")
 public class ServiceBinding implements HasMetadata {
 
   @JsonProperty("kind")
   private String kind = "ServiceBinding";
   @JsonProperty("apiVersion")
-  private String apiVersion = "operators.coreos.com/v1beta1";
+  private String apiVersion = "binding.operators.coreos.com/v1alpha1";
   @JsonProperty("metadata")
   private ObjectMeta metadata;
   @JsonProperty("spec")

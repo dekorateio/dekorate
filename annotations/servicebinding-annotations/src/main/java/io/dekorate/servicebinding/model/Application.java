@@ -18,6 +18,9 @@ public class Application {
   private String version;
   private BindingPath bindingPath;
 
+  public Application() {
+  }
+
   public Application(String group, String resource, String name, String version, BindingPath bindingPath) {
     this.group = group;
     this.resource = resource;
