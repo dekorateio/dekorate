@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.dekorate.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+
+@KubernetesApplication(replicas =  2)
 @SpringBootApplication
 public class Main {
 
