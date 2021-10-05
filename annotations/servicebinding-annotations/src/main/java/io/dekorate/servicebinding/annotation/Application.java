@@ -31,11 +31,13 @@ import io.sundr.builder.annotations.Pojo;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Application {
 
-  String group() default "";
-
   String resource() default "";
 
+  String kind() default "";
+
   String name() default "";
+
+  String group() default "";
 
   String version() default "";
 

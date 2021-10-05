@@ -26,6 +26,7 @@ import io.dekorate.servicebinding.model.SecretKeyRefBuilder;
 import io.dekorate.servicebinding.model.Service;
 import io.dekorate.servicebinding.model.ServiceBindingBuilder;
 import io.dekorate.servicebinding.model.ValueFrom;
+import io.dekorate.utils.Pluralize;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -61,7 +62,7 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
 
   private Service[] getServices(ServiceConfig[] services) {
     return Arrays.stream(services)
-        .map(s -> new Service(s.getGroup(), s.getKind(), s.getName(), s.getVersion(), s.getId(),
+        .map(s -> new Service(s.getGroup(), s.getVersion(), s.getKind(), s.getName(), s.getId(),
             Strings.isNotNullOrEmpty(s.getNamespace()) ? s.getNamespace() : null,
             Strings.isNotNullOrEmpty(s.getEnvVarPrefix()) ? s.getEnvVarPrefix() : null))
         .toArray(Service[]::new);
@@ -71,7 +72,10 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
     String[] apiVersion = meta.getApiVersion().split("/");
     String name = config != null && Strings.isNotNullOrEmpty(config.getName()) ? config.getName()
         : meta.getMetadata().getName();
-    return new Application(apiVersion[0], meta.getKind(), name, apiVersion[1], getBindingPath(bindingPathConfig));
+    return new Application(Pluralize.FUNCTION.apply(meta.getKind()).toLowerCase(), meta.getKind(), apiVersion[0],
+        apiVersion[1],
+        name,
+        getBindingPath(bindingPathConfig));
   }
 
   private String getServiceBindingName(String serviceBindingName, String deploymentName) {

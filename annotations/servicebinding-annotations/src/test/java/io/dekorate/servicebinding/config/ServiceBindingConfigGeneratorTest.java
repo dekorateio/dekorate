@@ -61,7 +61,7 @@ public class ServiceBindingConfigGeneratorTest {
 
     final HashMap<String, Object> application = new HashMap<String, Object>();
     application.put("group", "apps");
-    application.put("resource", "Deployment");
+    application.put("kind", "Deployment");
     application.put("version", "v1");
     application.put("name", "servicebinding-test");
 
@@ -89,7 +89,8 @@ public class ServiceBindingConfigGeneratorTest {
           assertThat(item).isInstanceOfSatisfying(ServiceBinding.class, s -> {
             assertThat(s.getSpec()).satisfies(spec -> {
               assertThat(spec.getEnvVarPrefix()).isEqualTo("postgres");
-              assertThat(spec.getApplication().getResource()).isEqualTo("Deployment");
+              assertThat(spec.getApplication().getKind()).isEqualTo("Deployment");
+              assertThat(spec.getApplication().getResource()).isEqualTo("deployments");
               assertThat(spec.getApplication().getVersion()).isEqualTo("v1");
               assertThat(spec.getApplication().getName()).isEqualTo("servicebinding-test");
               assertThat(spec.getApplication().getGroup()).isEqualTo("apps");

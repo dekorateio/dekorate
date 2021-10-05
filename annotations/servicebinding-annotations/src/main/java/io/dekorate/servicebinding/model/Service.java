@@ -7,15 +7,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.sundr.builder.annotations.Buildable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "group", "kind", "name", "version", "id" })
+@JsonPropertyOrder({ "group", "version", "kind", "name", "id" })
 @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, builderPackage = "io.fabric8.kubernetes.api.builder")
 public class Service {
 
   private String group;
+  private String version;
   private String kind;
   private String name;
-  private String version;
   private String id;
   private String namespace;
   private String envVarPrefix;
@@ -23,15 +23,14 @@ public class Service {
   public Service() {
   }
 
-  public Service(String group, String kind, String name, String version, String id, String namespace,
-      String envVarPrefix) {
+  public Service(String group, String version, String kind, String name, String id, String namespace, String envVarPrefix) {
     super();
     this.group = group;
+    this.version = version;
     this.kind = kind;
     this.name = name;
-    this.version = version;
-    this.id = id;
     this.namespace = namespace;
+    this.id = id;
     this.envVarPrefix = envVarPrefix;
   }
 
