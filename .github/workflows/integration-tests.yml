@@ -74,6 +74,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERIO_USERNAME }}
           password: ${{ secrets.DOCKERIO_PASSWORD }}
+      - name: Install the Service Binding Operator
+        run: |
+          curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.18.3/install.sh | bash -s v0.18.3
+          kubectl create -f https://operatorhub.io/install/service-binding-operator.yaml
+          until [[ "Succeeded" == `kubectl get csv -n operators | grep service-binding-operator | awk -F' ' '{print $7}'` ]]; do echo "Waiting for SBO"; sleep 5; done
+          kubectl get csv -n operators | grep service-binding-operator | awk -F" " '{print $7}'
       - name: Install and Run Integration Tests
         run: |
           ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
@@ -116,4 +122,4 @@ jobs:
           oc new-project itests
           oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
           oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Duser.name=dekorateio -Dformat.skip=true
