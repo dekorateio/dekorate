@@ -16,6 +16,9 @@ public class CustomEnvVar {
   private String value;
   private ValueFrom valueFrom;
 
+  public CustomEnvVar() {
+  }
+
   public CustomEnvVar(String name, String value, ValueFrom valueFrom) {
     super();
     this.name = name;
@@ -46,5 +49,4 @@ public class CustomEnvVar {
   public void setValueFrom(ValueFrom valueFrom) {
     this.valueFrom = valueFrom;
   }
-
 }

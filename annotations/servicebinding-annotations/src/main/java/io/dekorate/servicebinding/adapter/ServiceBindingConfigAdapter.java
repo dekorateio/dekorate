@@ -24,10 +24,12 @@ import io.dekorate.servicebinding.annotation.Application;
 import io.dekorate.servicebinding.annotation.BindingPath;
 import io.dekorate.servicebinding.annotation.ServiceBinding;
 import io.dekorate.servicebinding.config.ApplicationConfig;
+import io.dekorate.servicebinding.config.ApplicationConfigBuilder;
 import io.dekorate.servicebinding.config.BindingPathConfig;
 import io.dekorate.servicebinding.config.ServiceBindingConfig;
 import io.dekorate.servicebinding.config.ServiceBindingConfigBuilder;
 import io.dekorate.servicebinding.config.ServiceConfig;
+import io.dekorate.servicebinding.config.ServiceConfigBuilder;
 
 public class ServiceBindingConfigAdapter {
 
@@ -40,7 +42,13 @@ public class ServiceBindingConfigAdapter {
     BindingPath bindingPath = instance.bindingPath();
     return new ServiceBindingConfigBuilder(
         new io.dekorate.servicebinding.config.ServiceBindingConfig(null, null, null, instance.name(), null,
-            new ApplicationConfig(null, null, app.group(), app.resource(), app.name(), app.version()),
+            new ApplicationConfigBuilder()
+                .withResource(app.resource())
+                .withKind(app.kind())
+                .withGroup(app.group())
+                .withVersion(app.version())
+                .withName(app.name())
+                .build(),
             Arrays.stream(instance.services())
                 .map(s -> new ServiceConfig(null, null, s.group(), s.kind(), s.name(), s.version(), s.id(),
                     s.namespace(), s.envVarPrefix()))
@@ -78,16 +86,29 @@ public class ServiceBindingConfigAdapter {
     if (i == null) {
       return null;
     }
-    return new ApplicationConfig(null, null, (String) i.getOrDefault("group", null),
-        (String) i.getOrDefault("resource", null), (String) i.getOrDefault("name", null),
-        (String) i.getOrDefault("version", null));
+    return new ApplicationConfigBuilder()
+        .withResource((String) i.getOrDefault("resource", null))
+        .withKind((String) i.getOrDefault("kind", null))
+        .withGroup((String) i.getOrDefault("group", null))
+        .withVersion((String) i.getOrDefault("version", null))
+        .withName((String) i.getOrDefault("name", null))
+        .build();
   }
 
   private static ServiceConfig getServiceConfig(Map i) {
-    return new ServiceConfig(null, null, (String) i.getOrDefault("group", null), (String) i.getOrDefault("kind", null),
-        (String) i.getOrDefault("name", null), (String) i.getOrDefault("version", null),
-        (String) i.getOrDefault("id", null), (String) i.getOrDefault("namespace", null),
-        (String) i.getOrDefault("envVarPrefix", null));
+    String apiVersion = (String) i.getOrDefault("apiVersion", null);
+    String apiVersionGroup = apiVersion != null && apiVersion.contains("/") ? apiVersion.split("/")[0] : "";
+    String apiVersionVersion = apiVersion != null && apiVersion.contains("/") ? apiVersion.split("/")[1] : apiVersion;
+
+    return new ServiceConfigBuilder()
+        .withKind((String) i.getOrDefault("kind", null))
+        .withGroup((String) i.getOrDefault("group", apiVersionGroup))
+        .withVersion((String) i.getOrDefault("version", apiVersionVersion))
+        .withName((String) i.getOrDefault("name", null))
+        .withNamespace((String) i.getOrDefault("namespace", null))
+        .withId((String) i.getOrDefault("id", null))
+        .withEnvVarPrefix((String) i.getOrDefault("envVarPrefix", null))
+        .build();
   }
 
   private static Env getCustomEnvVarConfig(Map i) {
