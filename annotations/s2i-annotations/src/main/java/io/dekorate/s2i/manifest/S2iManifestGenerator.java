@@ -89,14 +89,15 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
     } else {
       //If S2i is disabled, check if other build configs are available and check it makes sense to create an ImageStream
       ImageConfiguration imageConfig = configurationRegistry
-          .getImageConfig(BuildServiceFactories.supplierMatches(getProject())
-              .and(i -> Strings.isNotNullOrEmpty(i.get().getRegistry())))
+          .getImageConfig(BuildServiceFactories.supplierMatches(getProject()))
           .orElse(null);
+      String registry = Strings.isNullOrEmpty(imageConfig.getRegistry()) ? "docker.io" : imageConfig.getRegistry();
 
       if (imageConfig != null) {
-        String image = Images.getImage(imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(),
+        String image = Images.getImage(registry,
+            imageConfig.getGroup(), imageConfig.getName(),
             imageConfig.getVersion());
-        String repository = imageConfig.getRegistry() + "/" + Images.getRepository(image);
+        String repository = registry + "/" + Images.getRepository(image);
         resourceRegistry.decorate(OPENSHIFT, new AddDockerImageStreamResourceDecorator(imageConfig, repository));
       }
     }
