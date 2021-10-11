@@ -56,7 +56,7 @@
       <module>issue-775-duplicate-service-port</module>
       <module>issue-775-one-port</module>
       <module>issue-775-sb-server-port</module>
-      <module>issue-791-spring-boot-on-openshift-with-jib</module>
+      <module>issue-791-missing-imagestream-with-default-configuration</module>
     </modules>
 
 </project>
