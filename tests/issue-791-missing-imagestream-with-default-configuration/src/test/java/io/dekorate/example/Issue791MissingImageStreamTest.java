@@ -35,7 +35,7 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Issue791SpringBootToOpenShiftWithJibTest {
+public class Issue791MissingImageStreamTest {
 
   @Test
   public void shouldHaveMatchingOutputImageAndTrigger() {
