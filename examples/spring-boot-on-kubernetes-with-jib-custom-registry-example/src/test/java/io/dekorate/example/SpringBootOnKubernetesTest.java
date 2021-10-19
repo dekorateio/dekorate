@@ -15,10 +15,10 @@
  */
 package io.dekorate.example;
 
-import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.*;
 import io.dekorate.utils.Serialization;
 import org.junit.jupiter.api.Test;
 
@@ -30,13 +30,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SpringBootOnKubernetesTest {
 
   @Test
-  public void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshalAsList(SpringBootOnKubernetesTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+  public void shouldContainDeploymentWithAnImageContainingTheConfiguredRegistry() {
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     Container container = d.getSpec().getTemplate().getSpec().getContainers().get(0);
-    assertTrue(container.getImage().contains("docker.io"));
+    assertTrue(container.getImage().contains("quay.io"));
   }
 
 
