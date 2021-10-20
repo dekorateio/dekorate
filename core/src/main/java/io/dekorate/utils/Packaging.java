@@ -150,7 +150,7 @@ public class Packaging {
     TarArchiveOutputStream stream = new TarArchiveOutputStream(bout);
     stream.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
     stream.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
-    
+
     return stream;
   }
 

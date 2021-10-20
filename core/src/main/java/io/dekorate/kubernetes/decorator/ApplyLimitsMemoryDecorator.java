@@ -42,6 +42,6 @@ public class ApplyLimitsMemoryDecorator extends ApplicationContainerDecorator<Co
 
   public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-      AddSidecarDecorator.class, AddInitContainerDecorator.class };
+        AddSidecarDecorator.class, AddInitContainerDecorator.class };
   }
 }
