@@ -43,6 +43,6 @@ public class ApplyLimitsCpuDecorator extends ApplicationContainerDecorator<Conta
 
   public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
+      AddSidecarDecorator.class, AddInitContainerDecorator.class };
   }
 }
