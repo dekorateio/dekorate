@@ -55,7 +55,7 @@ As the project now supports `decorating` of kubernetes manifests without the use
 - [Explicit configuration of annotation processors](#explicit-configuration-of-annotation-processors)
 - junit5 integration testing extension
   - [Kubernetes](#kubernetes-extension-for-junit5)
-  - [OpenShift](#openshift-extension-for-juni5)
+  - [OpenShift](#openshift-extension-for-junit5)
 
 ### Experimental features
 
@@ -930,7 +930,7 @@ Dekorate also supports generating manifests for `knative`. To make use of
 ```
 
 This module provides the 
-[@KnativeApplication](annotations/knative-annotations/src/main/java/io/dekorate/knative/annotation/Knative.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `knative.yml` / `knative.json` instead.
+[@KnativeApplication](annotations/knative-annotations/src/main/java/io/dekorate/knative/annotation/KnativeApplication.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `knative.yml` / `knative.json` instead.
 Also instead of creating a `Deployment` it will create a knative serving `Service`.
 
 #### Cluster local services
@@ -1320,7 +1320,7 @@ for the annotated applications.
    - client
    - application pod
 
-#### Kubernetes extension for Junit5
+#### Kubernetes extension for JUnit5
 
 The kubernetes extension can be used by adding the following dependency:
 ```xml
@@ -1391,9 +1391,9 @@ This is important since in the `test` phase the application is not packaged. Her
 #### related examples
  - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
  
-#### OpenShift extension for JUnit5 
+#### OpenShift extension for JUnit5
 
-Similarly, to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/dekorate/testing/annotation/OpenshiftIntegrationTest.java).
+Similarly, to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/dekorate/testing/openshift/annotation/OpenshiftIntegrationTest.java).
 To use that you need to add:
 ```xml
 <dependency>
@@ -1414,8 +1414,8 @@ By adding the annotation to your test class the following things will happen:
 
 #### related examples
  - [spring boot on openshift example](examples/spring-boot-on-openshift-example)
- - [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-openshift-example)
- - [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-openshift-example)
+ - [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-on-openshift-example)
+ - [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-on-openshift-example)
  
 #### Configuration externalization
 It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.
@@ -1612,7 +1612,7 @@ public class Main {
 }
 ```
 #### related examples
-- [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
+- [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jaeger-on-kubernetes-example)
 
 ### ServiceBinding CRD 
 [Service Binding Operator](https://github.com/redhat-developer/service-binding-operator) enables the application developers to bind the services that are backed by Kubernetes operators to an application that is deployed in kubernetes without having to perform manual configuration.
@@ -1686,7 +1686,7 @@ No matter how good a generator/scaffolding tool is, its often desirable to handc
 Other times it might be desirable to combine different tools together (e.g. to generate the manifests using fmp but customize them via dekorate annotations)
 
 No matter what the reason is, dekorate supports working on existing resources and decorating them based on the provided annotation configuration.
-This is as simple as letting dekorate know where to read the existing manifests and where to store the generated ones. By adding the [@GeneratorOptions](core/src/main/java/io/dekorate/annotation/GeneratorOptions.java).
+This is as simple as letting dekorate know where to read the existing manifests and where to store the generated ones. By adding the [@GeneratorOptions](annotations/option-annotations/src/main/java/io/dekorate/option/annotation/GeneratorOptions.java).
 
 ##### Integration with Fabric8 Maven Plugin.
 
@@ -1881,5 +1881,5 @@ dekorate:
 By all means please do! We love contributions! 
 Docs, Bug fixes, New features ... everything is important!
 
-Make sure you take a look at contributor [guidelines](assets/contributor-guideliness.md).
+Make sure you take a look at contributor [guidelines](assets/contributor-guidelines.md).
 Also, it can be useful to have a look at the dekorate [design](assets/design.md).
