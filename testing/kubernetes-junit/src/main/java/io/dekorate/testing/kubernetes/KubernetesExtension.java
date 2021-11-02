@@ -34,6 +34,7 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.testing.WithAdditionalResources;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithImageConfig;
 import io.dekorate.testing.WithKubernetesClient;
@@ -52,7 +53,7 @@ import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 
 public class KubernetesExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
     WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject,
-    WithKubernetesConfig, WithImageConfig {
+    WithKubernetesConfig, WithImageConfig, WithAdditionalResources {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
@@ -87,6 +88,8 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       } catch (Exception e) {
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
       }
+
+      loadAdditionalResources(context, config.getAdditionalResources(), config.getAdditionalResourcesTimeout());
 
       //
       // We use the isAutoPushEnabled flag of the @KubernetesApplication annotation and not @KubernetesIntegrationTest.
@@ -160,12 +163,22 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
         displayDiagnostics(context);
       }
 
-      getKubernetesResources(context).getItems().stream().forEach(r -> {
-        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
-            + getKubernetesClient(context).resource(r).cascading(true).delete());
-      });
+      KubernetesIntegrationTestConfig config = getKubernetesIntegrationTestConfig(context);
+      KubernetesClient client = getKubernetesClient(context);
+
+      getKubernetesResources(context).getItems().stream().forEach(r -> deleteResource(client, r));
+
+      deleteAdditionalResources(context, config.getAdditionalResources());
     } finally {
       closeKubernetesClient(context);
+    }
+  }
+
+  public void deleteResource(KubernetesClient client, HasMetadata resource) {
+    try {
+      LOGGER.info("Deleting: " + resource.getKind() + " name:" + resource.getMetadata().getName()
+          + ". Deleted:" + client.resource(resource).cascading(true).delete());
+    } catch (Exception ignored) {
     }
   }
 

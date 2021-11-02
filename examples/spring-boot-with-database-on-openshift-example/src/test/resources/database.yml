@@ -1,0 +1,112 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: my-database
+    name: my-database
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: quay.io/bitnami/postgresql
+      from:
+        kind: DockerImage
+        name: quay.io/bitnami/postgresql:13.4.0
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: my-database
+    name: my-database
+  spec:
+    replicas: 1
+    selector:
+      app: my-database
+      deploymentconfig: my-database
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: my-database
+          deploymentconfig: my-database
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: my_data
+          - name: POSTGRESQL_PASSWORD
+            value: secret
+          - name: POSTGRESQL_USER
+            value: luke
+          image: quay.io/bitnami/postgresql:13.4.0
+          name: my-database
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          resources: {}
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: my-database-volume-1
+        volumes:
+        - emptyDir: {}
+          name: my-database-volume-1
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - my-database
+        from:
+          kind: ImageStreamTag
+          name: my-database:latest
+      type: ImageChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: my-database
+    name: my-database
+  spec:
+    ports:
+    - name: 5432-tcp
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: my-database
+      deploymentconfig: my-database
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}

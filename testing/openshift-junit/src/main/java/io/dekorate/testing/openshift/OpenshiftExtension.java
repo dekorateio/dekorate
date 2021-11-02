@@ -40,6 +40,7 @@ import io.dekorate.kubernetes.annotation.Internal;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.project.Project;
+import io.dekorate.testing.WithAdditionalResources;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
@@ -63,7 +64,7 @@ import io.fabric8.openshift.client.OpenShiftClient;
 @Internal
 public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
     WithOpenshiftIntegrationTest, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithEvents,
-    WithOpenshiftConfig, WithRoute {
+    WithOpenshiftConfig, WithAdditionalResources, WithRoute {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
@@ -103,6 +104,9 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     } catch (Exception e) {
       throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
     }
+
+    loadAdditionalResources(context, config.getAdditionalResources(), config.getAdditionalResourcesTimeout());
+
     if (config.isPushEnabled()) {
       buildService.prepare();
       buildService.build();
@@ -175,18 +179,17 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
   @Override
   public void afterAll(ExtensionContext context) {
+    OpenshiftIntegrationTestConfig config = getOpenshiftIntegrationTestConfig(context);
     OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
     try {
       if (shouldDisplayDiagnostics(context)) {
         displayDiagnostics(context);
       }
-      getOpenshiftResources(context).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
-        try {
-          LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
-              + client.resource(r).delete());
-        } catch (Exception e) {
-        }
-      });
+      getOpenshiftResources(context).getItems().stream()
+          .filter(r -> !(r instanceof ImageStream))
+          .forEach(r -> deleteResource(client, r));
+
+      deleteAdditionalResources(context, config.getAdditionalResources());
 
       OpenshiftConfig openshiftConfig = getOpenshiftConfig();
       List<HasMetadata> buildPods = client.pods().list().getItems().stream()
@@ -213,6 +216,14 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
         .filter(i -> i instanceof BuildConfig)
         .map(i -> (BuildConfig) i)
         .forEach(bc -> binaryBuild(client.adapt(OpenShiftClient.class), bc, tar));
+  }
+
+  public void deleteResource(KubernetesClient client, HasMetadata resource) {
+    try {
+      LOGGER.info("Deleting: " + resource.getKind() + " name:" + resource.getMetadata().getName()
+          + ". Deleted:" + client.resource(resource).delete());
+    } catch (Exception ignored) {
+    }
   }
 
   /**

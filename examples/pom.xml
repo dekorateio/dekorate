@@ -25,6 +25,7 @@
     <module>spring-boot-on-openshift-example</module>
     <module>spring-boot-on-openshift-with-docker-example</module>
     <module>spring-boot-on-openshift-with-jib-custom-registry-example</module>
+    <module>spring-boot-with-database-on-openshift-example</module>
     <module>spring-boot-with-groovy-on-openshift-example</module>
     <module>spring-boot-with-existing-manifests-on-kubernetes-example</module>
     <module>spring-boot-with-fmp-on-kubernetes-example</module>

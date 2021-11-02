@@ -73,4 +73,18 @@ public @interface OpenshiftIntegrationTest {
    * @return The max amount in milliseconds.
    */
   long readinessTimeout() default 300000;
+
+  /**
+   * Additional resources to be deployed before the application.
+   *
+   * @return list of resources to be deployed before the application deployment.
+   */
+  String[] additionalResources() default {};
+
+  /**
+   * The amount of time in milliseconds to wait for additional resources to become ready.
+   *
+   * @return The max amount in milliseconds.
+   */
+  long additionalResourcesTimeout() default 120000;
 }
