@@ -165,8 +165,10 @@ public class ConfigurationRegistry {
 
   //Copy
   public Optional<ImageConfiguration> getImageConfig(Predicate<ConfigurationSupplier<ImageConfiguration>> predicate) {
-    return imageConfigurationStream(predicate).filter(i -> i instanceof ImageConfiguration)
+    return imageConfigurationStream(predicate)
+        .filter(i -> i instanceof ImageConfiguration)
         .map(i -> (ImageConfiguration) i)
+        .filter(ImageConfiguration::isEnabled)
         .findFirst();
   }
 
@@ -174,6 +176,7 @@ public class ConfigurationRegistry {
     return imageConfigurationStream().filter(i -> type.isInstance(i))
         .map(i -> (C) i)
         .filter(predicate)
+        .filter(ImageConfiguration::isEnabled)
         .findFirst();
   }
 

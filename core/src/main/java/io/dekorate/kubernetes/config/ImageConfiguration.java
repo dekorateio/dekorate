@@ -29,6 +29,8 @@ import io.sundr.builder.annotations.Buildable;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class ImageConfiguration extends ApplicationConfiguration {
 
+  private Boolean enabled;
+
   private String registry;
   private String group;
   private String name;
@@ -41,6 +43,7 @@ public class ImageConfiguration extends ApplicationConfiguration {
 
   public static ImageConfiguration from(ApplicationConfiguration applicationConfiguration) {
     return new ImageConfigurationBuilder()
+        .withEnabled(true)
         .withProject(applicationConfiguration.getProject())
         .withGroup(applicationConfiguration.getPartOf())
         .withPartOf(applicationConfiguration.getPartOf())
@@ -53,9 +56,11 @@ public class ImageConfiguration extends ApplicationConfiguration {
   public ImageConfiguration() {
   }
 
-  public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, String registry, String group, String name,
+  public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, Boolean enabled, String registry, String group,
+      String name,
       String version, String image, String dockerFile, Boolean autoBuildEnabled, Boolean autoPushEnabled) {
     super(project, attributes, group, name, version);
+    this.enabled = enabled;
     this.registry = registry;
     this.group = Strings.isNotNullOrEmpty(group) ? group : System.getProperty("user.name");
     this.name = name;
@@ -64,6 +69,14 @@ public class ImageConfiguration extends ApplicationConfiguration {
     this.dockerFile = dockerFile;
     this.autoBuildEnabled = autoBuildEnabled;
     this.autoPushEnabled = autoPushEnabled;
+  }
+
+  public Boolean getEnabled() {
+    return this.enabled;
+  }
+
+  public boolean isEnabled() {
+    return this.enabled != null && this.enabled;
   }
 
   public String getRegistry() {
