@@ -39,7 +39,10 @@ public class Images {
     }
     StringBuilder sb = new StringBuilder();
     if (Strings.isNotNullOrEmpty(registry)) {
-      sb.append(registry).append(SLASH);
+      sb.append(registry);
+      if (!registry.endsWith(SLASH)) {
+        sb.append(SLASH);
+      }
     }
     if (Strings.isNotNullOrEmpty(repository)) {
       sb.append(repository).append(SLASH);
