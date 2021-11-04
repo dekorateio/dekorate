@@ -79,7 +79,7 @@ public class Ports {
       return port;
     }
 
-    if (port.getHostPort() != null) {
+    if (port.getHostPort() != null && port.getHostPort() > 0) {
       return port;
     }
 
