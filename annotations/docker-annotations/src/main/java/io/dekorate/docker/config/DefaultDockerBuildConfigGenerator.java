@@ -31,7 +31,7 @@ public class DefaultDockerBuildConfigGenerator implements DockerBuildConfigGener
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
     this.configurationRegistry.add(new ApplyBuildToImageConfiguration());
-    on(new DefaultConfiguration<DockerBuildConfig>(new DockerBuildConfigBuilder()));
+    on(new DefaultConfiguration<DockerBuildConfig>(DockerBuildConfig.newDockerBuildConfigBuilderFromDefaults()));
   }
 
   @Override

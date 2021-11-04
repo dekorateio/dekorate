@@ -30,7 +30,7 @@ public class DefaultJibBuildConfigGenerator implements JibBuildConifgGenerator {
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
     this.configurationRegistry.add(new ApplyBuildToImageConfiguration());
-    on(new DefaultConfiguration<JibBuildConfig>(new JibBuildConfigBuilder()));
+    on(new DefaultConfiguration<JibBuildConfig>(JibBuildConfig.newJibBuildConfigBuilderFromDefaults()));
   }
 
   public ConfigurationRegistry getConfigurationRegistry() {
