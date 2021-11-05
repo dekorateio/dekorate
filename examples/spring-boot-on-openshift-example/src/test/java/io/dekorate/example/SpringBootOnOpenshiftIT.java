@@ -15,10 +15,7 @@
  */
 package io.dekorate.example;
 
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.LocalPortForward;
+import io.fabric8.openshift.api.model.Route;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -34,30 +31,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @OpenshiftIntegrationTest
 class SpringBootOnOpenshiftIT {
   @Inject
-  private KubernetesClient client;
+  private Route route;
 
   @Inject
-  private KubernetesList list;
-
-  @Inject
-  Pod pod;
+  private URL appUrl;
 
   @Test
   public void shouldRespondWithHelloWorld() throws Exception {
-    assertNotNull(client);
-    assertNotNull(list);
-    System.out.println("Forwarding port");
-    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
-      assertTrue(p.isAlive());
-      URL url = new URL("http://localhost:"+p.getLocalPort()+"/");
+    assertNotNull(route);
+    assertNotNull(appUrl);
 
-      OkHttpClient client = new OkHttpClient();
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals(response.body().string(), "Hello world");
-    } catch (Exception e)  {
-      e.printStackTrace();
-    }
+    OkHttpClient client = new OkHttpClient();
+    Request request = new Request.Builder().get().url(appUrl).build();
+    Response response = client.newCall(request).execute();
+    assertEquals(response.body().string(), "Hello world");
   }
 
 }

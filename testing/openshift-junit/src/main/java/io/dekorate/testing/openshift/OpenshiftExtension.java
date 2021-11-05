@@ -63,7 +63,7 @@ import io.fabric8.openshift.client.OpenShiftClient;
 @Internal
 public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
     WithOpenshiftIntegrationTest, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithEvents,
-    WithOpenshiftConfig {
+    WithOpenshiftConfig, WithRoute {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
@@ -165,6 +165,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
           injectKubernetesClient(context, testInstance, f);
           injectOpenshiftResources(context, testInstance, f);
           injectPod(context, testInstance, f);
+          injectRoute(context, testInstance, f);
         });
 
     if (hasExtensionError(context)) {
