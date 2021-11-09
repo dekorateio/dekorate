@@ -64,7 +64,7 @@ public interface WithRoute
       return;
     }
 
-    String name = namedAnnotationForRoute(field).orElseGet(this::getName);
+    String name = namedAnnotationForRoute(field).orElseGet(() -> getName(context));
     Route route = routeForName(context, name);
     field.setAccessible(true);
     try {
@@ -101,8 +101,9 @@ public interface WithRoute
   }
 
   /**
+   * @param context The execution context.
    * @return the resource name.
    */
-  String getName();
+  String getName(ExtensionContext context);
 
 }

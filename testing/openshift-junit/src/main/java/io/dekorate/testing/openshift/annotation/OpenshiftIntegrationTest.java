@@ -73,4 +73,11 @@ public @interface OpenshiftIntegrationTest {
    * @return The max amount in milliseconds.
    */
   long readinessTimeout() default 300000;
+
+  /**
+   * List of additional modules to be loaded by the test framework.
+   *
+   * @return The list of additional modules to be loaded.
+   */
+  String[] additionalModules() default {};
 }
