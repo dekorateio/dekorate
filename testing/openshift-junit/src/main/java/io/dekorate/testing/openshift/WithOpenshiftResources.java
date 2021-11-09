@@ -19,18 +19,22 @@ import static io.dekorate.testing.Testing.DEKORATE_STORE;
 import static io.dekorate.testing.Testing.KUBERNETES_LIST;
 import static java.util.Arrays.stream;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 import io.dekorate.DekorateException;
+import io.dekorate.project.Project;
 import io.dekorate.testing.WithProject;
 import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 
 /**
@@ -65,9 +69,17 @@ public interface WithOpenshiftResources extends TestInstancePostProcessor, WithP
       return;
     }
 
+    List<Project> projects = getProjects(context);
+    List<HasMetadata> items = new ArrayList<>();
+    for (Project project : projects) {
+      items.addAll(getOpenshiftResources(context, project).getItems());
+    }
+
     field.setAccessible(true);
     try {
-      field.set(testInstance, getOpenshiftResources(context));
+      KubernetesList list = new KubernetesList();
+      list.setItems(items);
+      field.set(testInstance, list);
     } catch (IllegalAccessException e) {
       throw DekorateException.launderThrowable(e);
     }
@@ -77,34 +89,38 @@ public interface WithOpenshiftResources extends TestInstancePostProcessor, WithP
    * Gets or creates an instance of {@link KubernetesList} with all generated resources.
    *
    * @param context The context.
+   * @param project project to load the manifest from.
    * @return An instance of the list.
    */
-  default KubernetesList getOpenshiftResources(ExtensionContext context) {
-    Object list = context.getStore(DEKORATE_STORE).get(KUBERNETES_LIST);
+  default KubernetesList getOpenshiftResources(ExtensionContext context, Project project) {
+    String key = KUBERNETES_LIST + project.getRoot();
+    Object list = context.getStore(DEKORATE_STORE).get(key);
     if (list instanceof KubernetesList) {
       return (KubernetesList) list;
     }
 
-    list = fromManifest();
-    context.getStore(DEKORATE_STORE).put(KUBERNETES_LIST, list);
+    list = fromManifest(project);
+    context.getStore(DEKORATE_STORE).put(key, list);
     return (KubernetesList) list;
   }
 
   /**
    * Load an unmarshal the {@KubernetesList} from the manifest file.
-   * 
+   *
+   * @param project project to load the manifest from.
    * @return The kubernetes list if found or an empty kubernetes list otherwise.
    */
-  default KubernetesList fromManifest() {
+  default KubernetesList fromManifest(Project project) {
     KubernetesList result = new KubernetesList();
-    URL manifestUrl = WithOpenshiftResources.class.getClassLoader()
-        .getResource(getProject().getDekorateOutputDir() + File.separatorChar + MANIFEST_PATH);
-    if (manifestUrl == null) {
+
+    Path manifestUrl = project.getRoot().resolve("target/classes").resolve(project.getDekorateOutputDir())
+        .resolve(MANIFEST_PATH);
+    if (!Files.exists(manifestUrl)) {
       return result;
     }
 
     System.out.println("Apply test resources from:" + manifestUrl);
-    try (InputStream is = manifestUrl.openStream()) {
+    try (InputStream is = manifestUrl.toUri().toURL().openStream()) {
       result = Serialization.unmarshalAsList(is);
     } catch (IOException e) {
       throw DekorateException.launderThrowable(e);

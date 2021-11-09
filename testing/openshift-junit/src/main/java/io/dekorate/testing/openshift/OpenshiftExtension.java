@@ -15,10 +15,6 @@
  */
 package io.dekorate.testing.openshift;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +41,6 @@ import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
 import io.dekorate.testing.WithProject;
 import io.dekorate.testing.openshift.config.OpenshiftIntegrationTestConfig;
-import io.dekorate.utils.Packaging;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -54,7 +49,6 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.VersionInfo;
-import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.BuildConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.ImageStream;
@@ -88,18 +82,77 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
+    List<Project> projects = getProjects(context);
+    for (Project project : projects) {
+      startProject(context, project);
+    }
+  }
+
+  @Override
+  public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+    Arrays.stream(testInstance.getClass().getDeclaredFields())
+        .forEach(f -> {
+          injectKubernetesClient(context, testInstance, f);
+          injectOpenshiftResources(context, testInstance, f);
+          injectPod(context, testInstance, f);
+          injectRoute(context, testInstance, f);
+        });
+
+    if (hasExtensionError(context)) {
+      displayDiagnostics(context);
+    }
+  }
+
+  @Override
+  public void afterAll(ExtensionContext context) {
+    OpenshiftIntegrationTestConfig config = getOpenshiftIntegrationTestConfig(context);
+    OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
+    try {
+      if (shouldDisplayDiagnostics(context)) {
+        displayDiagnostics(context);
+      }
+
+      if (config.isDeployEnabled()) {
+        List<Project> projects = getProjects(context);
+        for (Project project : projects) {
+          deleteProject(context, project, client);
+        }
+      }
+    } finally {
+      closeKubernetesClient(context);
+    }
+  }
+
+  @Override
+  public String getName(ExtensionContext context) {
+    List<Project> projects = getProjects(context);
+    if (projects.size() != 1) {
+      throw new IllegalStateException(
+          "Multiple projects found, can't use default name. Please, use `@Named` annotations for injecting instances.");
+    }
+
+    return getOpenshiftConfig(projects.get(0)).getName();
+  }
+
+  @Override
+  public String[] getAdditionalModules(ExtensionContext context) {
+    return getOpenshiftIntegrationTestConfig(context).getAdditionalModules();
+  }
+
+  private void startProject(ExtensionContext context, Project project) throws InterruptedException {
+    LOGGER.info("Starting project at " + project.getRoot());
     OpenshiftIntegrationTestConfig config = getOpenshiftIntegrationTestConfig(context);
     KubernetesClient client = getKubernetesClient(context);
-    KubernetesList list = getOpenshiftResources(context);
+    KubernetesList list = getOpenshiftResources(context, project);
 
-    OpenshiftConfig openshiftConfig = getOpenshiftConfig();
+    OpenshiftConfig openshiftConfig = getOpenshiftConfig(project);
     ImageConfiguration imageConfiguration = ImageConfiguration.from(openshiftConfig);
 
     BuildService buildService = null;
     try {
-      BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfiguration)
+      BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(project, imageConfiguration)
           .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-      buildService = buildServiceFactory.create(getProject(), imageConfiguration, list.getItems());
+      buildService = buildServiceFactory.create(project, imageConfiguration, list.getItems());
     } catch (Exception e) {
       throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
     }
@@ -158,89 +211,24 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     }
   }
 
-  @Override
-  public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
-    Arrays.stream(testInstance.getClass().getDeclaredFields())
-        .forEach(f -> {
-          injectKubernetesClient(context, testInstance, f);
-          injectOpenshiftResources(context, testInstance, f);
-          injectPod(context, testInstance, f);
-          injectRoute(context, testInstance, f);
-        });
+  private void deleteProject(ExtensionContext context, Project project, OpenShiftClient client) {
+    getOpenshiftResources(context, project).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
+      try {
+        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
+            + client.resource(r).delete());
+      } catch (Exception e) {
+      }
+    });
 
-    if (hasExtensionError(context)) {
-      displayDiagnostics(context);
-    }
-  }
+    OpenshiftConfig openshiftConfig = getOpenshiftConfig(project);
+    List<HasMetadata> buildPods = client.pods().list().getItems().stream()
+        .filter(i -> i.getMetadata().getName().matches(openshiftConfig.getName() + "-\\d-build"))
+        .collect(Collectors.toList());
 
-  @Override
-  public void afterAll(ExtensionContext context) {
-    OpenshiftIntegrationTestConfig config = getOpenshiftIntegrationTestConfig(context);
-    OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
     try {
-      if (shouldDisplayDiagnostics(context)) {
-        displayDiagnostics(context);
-      }
-
-      if (config.isDeployEnabled()) {
-        getOpenshiftResources(context).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
-          try {
-            LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
-              + client.resource(r).delete());
-          } catch (Exception e) {
-          }
-        });
-
-        OpenshiftConfig openshiftConfig = getOpenshiftConfig();
-        List<HasMetadata> buildPods = client.pods().list().getItems().stream()
-          .filter(i -> i.getMetadata().getName().matches(openshiftConfig.getName() + "-\\d-build"))
-          .collect(Collectors.toList());
-
-        try {
-          client.resourceList(buildPods).delete();
-          client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
-        } catch (Exception e) {
-        }
-      }
-    } finally {
-      closeKubernetesClient(context);
+      client.resourceList(buildPods).delete();
+      client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
+    } catch (Exception e) {
     }
-  }
-
-  public void build(ExtensionContext context, Project project) {
-    KubernetesList kubernetesList = getOpenshiftResources(context);
-    KubernetesClient client = getKubernetesClient(context);
-    Path path = project.getBuildInfo().getOutputFile();
-    File tar = Packaging.packageFile(path.getParent().toAbsolutePath());
-
-    kubernetesList.getItems().stream()
-        .filter(i -> i instanceof BuildConfig)
-        .map(i -> (BuildConfig) i)
-        .forEach(bc -> binaryBuild(client.adapt(OpenShiftClient.class), bc, tar));
-  }
-
-  /**
-   * Performs the binary build of the specified {@link BuildConfig} with the given binary input.
-   * 
-   * @param buildConfig The build config.
-   * @param binaryFile The binary file.
-   */
-  private void binaryBuild(OpenShiftClient client, BuildConfig buildConfig, File binaryFile) {
-    LOGGER.info("Running binary build:" + buildConfig.getMetadata().getName() + " for:" + binaryFile.getAbsolutePath());
-    Build build = client.buildConfigs().withName(buildConfig.getMetadata().getName()).instantiateBinary()
-        .fromFile(binaryFile);
-    try (BufferedReader reader = new BufferedReader(
-        client.builds().withName(build.getMetadata().getName()).getLogReader())) {
-      for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-        System.out.println(line);
-      }
-    } catch (IOException e) {
-      throw DekorateException.launderThrowable(e);
-    }
-  }
-
-  @Override
-  public String getName() {
-    return getOpenshiftConfig().getName();
   }
 }

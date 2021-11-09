@@ -24,7 +24,6 @@ import java.nio.file.Path;
 
 import io.dekorate.DekorateException;
 import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.project.FileProjectFactory;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 
@@ -33,17 +32,17 @@ public interface WithKubernetesConfig {
   String CONFIG_DIR = "config";
   String KUBERNETES_YML = "kubernetes.yml";
 
-  default boolean hasKubernetesConfig() {
-    return getKubernetesConfigPath().toFile().exists();
+  default boolean hasKubernetesConfig(Project project) {
+    return getKubernetesConfigPath(project).toFile().exists();
   }
 
-  default KubernetesConfig getKubernetesConfig() {
-    return getKubernetesConfig(getKubernetesConfigPath());
+  default KubernetesConfig getKubernetesConfig(Project project) {
+    return getKubernetesConfig(getKubernetesConfigPath(project));
   }
 
-  default Path getKubernetesConfigPath() {
-    Project p = new FileProjectFactory().create(new File("."));
-    return p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(CONFIG_DIR).resolve(KUBERNETES_YML);
+  default Path getKubernetesConfigPath(Project project) {
+    return project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir()).resolve(CONFIG_DIR)
+        .resolve(KUBERNETES_YML);
   }
 
   default KubernetesConfig getKubernetesConfig(Path path) {

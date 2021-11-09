@@ -23,7 +23,6 @@ import java.nio.file.Path;
 
 import io.dekorate.DekorateException;
 import io.dekorate.openshift.config.OpenshiftConfig;
-import io.dekorate.project.FileProjectFactory;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 
@@ -32,13 +31,13 @@ public interface WithOpenshiftConfig {
   String CONFIG_DIR = "config";
   String OPENSHIFT_YML = "openshift.yml";
 
-  default OpenshiftConfig getOpenshiftConfig() {
-    return getOpenshiftConfig(getOpenshiftConfigPath());
+  default OpenshiftConfig getOpenshiftConfig(Project project) {
+    return getOpenshiftConfig(getOpenshiftConfigPath(project));
   }
 
-  default Path getOpenshiftConfigPath() {
-    Project p = new FileProjectFactory().create(new File("."));
-    return p.getBuildInfo().getClassOutputDir().resolve(p.getDekorateMetaDir()).resolve(CONFIG_DIR).resolve(OPENSHIFT_YML);
+  default Path getOpenshiftConfigPath(Project project) {
+    return project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir()).resolve(CONFIG_DIR)
+        .resolve(OPENSHIFT_YML);
   }
 
   default OpenshiftConfig getOpenshiftConfig(Path path) {

@@ -62,7 +62,8 @@ public interface WithPod
       return;
     }
 
-    String name = namedAnnotation(field).orElseGet(() -> getName());
+    String name = namedAnnotation(field).orElseGet(() -> getName(context));
+
     field.setAccessible(true);
     try {
       field.set(testInstance, podForName(context, name));
@@ -93,7 +94,7 @@ public interface WithPod
 
   /**
    * Returns the value of the {@link Named} annotation.
-   * 
+   *
    * @param field The target field.
    * @return An optional string with the name if the field is annotated or empty otherwise.
    */
@@ -105,8 +106,9 @@ public interface WithPod
   }
 
   /**
+   * @param context The execution context.
    * @return the resource name.
    */
-  String getName();
+  String getName(ExtensionContext context);
 
 }

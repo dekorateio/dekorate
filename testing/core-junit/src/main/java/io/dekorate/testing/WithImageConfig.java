@@ -31,8 +31,7 @@ public interface WithImageConfig extends WithProject {
   String CONFIG_YML = "%s.yml";
   String CONFIG_DIR = "config";
 
-  default <C extends ImageConfiguration> Stream<C> stream(Class<C> type) {
-    final Project project = getProject();
+  default <C extends ImageConfiguration> Stream<C> stream(Class<C> type, Project project) {
     final Path configDir = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateMetaDir())
         .resolve(CONFIG_DIR);
 
@@ -42,17 +41,17 @@ public interface WithImageConfig extends WithProject {
         .map(s -> configDir.resolve(s))
         .filter(p -> p.toFile().exists())
         .map(p -> Serialization.unmarshal(p.toFile(), ImageConfiguration.class))
-        .filter(BuildServiceFactories.configMatches(getProject()))
+        .filter(BuildServiceFactories.configMatches(project))
         .filter(i -> type.isInstance(i))
         .map(i -> (C) i);
   }
 
-  default boolean hasImageConfig() {
-    return stream(ImageConfiguration.class).findAny().isPresent();
+  default boolean hasImageConfig(Project project) {
+    return stream(ImageConfiguration.class, project).findAny().isPresent();
   }
 
-  default Optional<ImageConfiguration> getImageConfig() {
-    return stream(ImageConfiguration.class).findFirst();
+  default Optional<ImageConfiguration> getImageConfig(Project project) {
+    return stream(ImageConfiguration.class, project).findFirst();
   }
 
 }

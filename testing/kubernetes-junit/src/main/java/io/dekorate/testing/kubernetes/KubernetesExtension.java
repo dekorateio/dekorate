@@ -33,7 +33,7 @@ import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.kubernetes.config.KubernetesConfig;
+import io.dekorate.project.Project;
 import io.dekorate.testing.WithEvents;
 import io.dekorate.testing.WithImageConfig;
 import io.dekorate.testing.WithKubernetesClient;
@@ -72,18 +72,81 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
+    List<Project> projects = getProjects(context);
+    for (Project project : projects) {
+      startProject(context, project);
+    }
+  }
+
+  @Override
+  public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+    Arrays.stream(testInstance.getClass().getDeclaredFields())
+        .forEach(f -> {
+          injectKubernetesClient(context, testInstance, f);
+          injectKubernetesResources(context, testInstance, f);
+          injectPod(context, testInstance, f);
+        });
+
+    if (hasExtensionError(context)) {
+      displayDiagnostics(context);
+    }
+  }
+
+  @Override
+  public void afterAll(ExtensionContext context) {
+    KubernetesIntegrationTestConfig config = getKubernetesIntegrationTestConfig(context);
+
+    try {
+      LOGGER.info("Cleaning up...");
+      if (shouldDisplayDiagnostics(context)) {
+        displayDiagnostics(context);
+      }
+
+      if (config.isDeployEnabled()) {
+        List<Project> projects = getProjects(context);
+        for (Project project : projects) {
+          deleteProject(context, project);
+        }
+      }
+    } finally {
+      closeKubernetesClient(context);
+    }
+  }
+
+  @Override
+  public String[] getAdditionalModules(ExtensionContext context) {
+    return getKubernetesIntegrationTestConfig(context).getAdditionalModules();
+  }
+
+  /**
+   * Returns the configured name.
+   *
+   * @param context The execution context.
+   * @return The name.
+   */
+  public String getName(ExtensionContext context) {
+    List<Project> projects = getProjects(context);
+    if (projects.size() != 1) {
+      throw new IllegalStateException(
+          "Multiple projects found, can't use default name. Please, use `@Named` annotations for injecting instances.");
+    }
+
+    return getKubernetesConfig(projects.get(0)).getName();
+  }
+
+  private void startProject(ExtensionContext context, Project project) throws InterruptedException {
+    LOGGER.info("Starting project at " + project.getRoot());
     KubernetesIntegrationTestConfig config = getKubernetesIntegrationTestConfig(context);
     KubernetesClient client = getKubernetesClient(context);
-    KubernetesList list = getKubernetesResources(context);
+    KubernetesList list = getKubernetesResources(context, project);
 
-    if (hasKubernetesConfig() && hasImageConfig()) {
-      KubernetesConfig kubernetesConfig = getKubernetesConfig();
-      ImageConfiguration imageConfig = getImageConfig().get();
+    if (hasKubernetesConfig(project) && hasImageConfig(project)) {
+      ImageConfiguration imageConfig = getImageConfig(project).get();
       BuildService buildService = null;
       try {
-        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(getProject(), imageConfig)
+        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(project, imageConfig)
             .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-        buildService = buildServiceFactory.create(getProject(), imageConfig, list.getItems());
+        buildService = buildServiceFactory.create(project, imageConfig, list.getItems());
       } catch (Exception e) {
         throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
       }
@@ -138,47 +201,10 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
     }
   }
 
-  @Override
-  public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
-    Arrays.stream(testInstance.getClass().getDeclaredFields())
-        .forEach(f -> {
-          injectKubernetesClient(context, testInstance, f);
-          injectKubernetesResources(context, testInstance, f);
-          injectPod(context, testInstance, f);
-        });
-
-    if (hasExtensionError(context)) {
-      displayDiagnostics(context);
-    }
-  }
-
-  @Override
-  public void afterAll(ExtensionContext context) {
-    KubernetesIntegrationTestConfig config = getKubernetesIntegrationTestConfig(context);
-
-    try {
-      LOGGER.info("Cleaning up...");
-      if (shouldDisplayDiagnostics(context)) {
-        displayDiagnostics(context);
-      }
-
-      if (config.isDeployEnabled()) {
-        getKubernetesResources(context).getItems().stream().forEach(r -> {
-          LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
-            + getKubernetesClient(context).resource(r).cascading(true).delete());
-        });
-      }
-    } finally {
-      closeKubernetesClient(context);
-    }
-  }
-
-  /**
-   * Returns the configured name.
-   * 
-   * @return The name.
-   */
-  public String getName() {
-    return getKubernetesConfig().getName();
+  private void deleteProject(ExtensionContext context, Project project) {
+    getKubernetesResources(context, project).getItems().stream().forEach(r -> {
+      LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
+          + getKubernetesClient(context).resource(r).cascading(true).delete());
+    });
   }
 }
