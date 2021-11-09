@@ -154,16 +154,20 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
 
   @Override
   public void afterAll(ExtensionContext context) {
+    KubernetesIntegrationTestConfig config = getKubernetesIntegrationTestConfig(context);
+
     try {
       LOGGER.info("Cleaning up...");
       if (shouldDisplayDiagnostics(context)) {
         displayDiagnostics(context);
       }
 
-      getKubernetesResources(context).getItems().stream().forEach(r -> {
-        LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
+      if (config.isDeployEnabled()) {
+        getKubernetesResources(context).getItems().stream().forEach(r -> {
+          LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
             + getKubernetesClient(context).resource(r).cascading(true).delete());
-      });
+        });
+      }
     } finally {
       closeKubernetesClient(context);
     }

@@ -175,28 +175,32 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
   @Override
   public void afterAll(ExtensionContext context) {
+    OpenshiftIntegrationTestConfig config = getOpenshiftIntegrationTestConfig(context);
     OpenShiftClient client = getKubernetesClient(context).adapt(OpenShiftClient.class);
     try {
       if (shouldDisplayDiagnostics(context)) {
         displayDiagnostics(context);
       }
-      getOpenshiftResources(context).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
-        try {
-          LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
-              + client.resource(r).delete());
-        } catch (Exception e) {
-        }
-      });
 
-      OpenshiftConfig openshiftConfig = getOpenshiftConfig();
-      List<HasMetadata> buildPods = client.pods().list().getItems().stream()
+      if (config.isDeployEnabled()) {
+        getOpenshiftResources(context).getItems().stream().filter(r -> !(r instanceof ImageStream)).forEach(r -> {
+          try {
+            LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
+              + client.resource(r).delete());
+          } catch (Exception e) {
+          }
+        });
+
+        OpenshiftConfig openshiftConfig = getOpenshiftConfig();
+        List<HasMetadata> buildPods = client.pods().list().getItems().stream()
           .filter(i -> i.getMetadata().getName().matches(openshiftConfig.getName() + "-\\d-build"))
           .collect(Collectors.toList());
 
-      try {
-        client.resourceList(buildPods).delete();
-        client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
-      } catch (Exception e) {
+        try {
+          client.resourceList(buildPods).delete();
+          client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
+        } catch (Exception e) {
+        }
       }
     } finally {
       closeKubernetesClient(context);
