@@ -23,7 +23,6 @@
     <module>spring-boot-on-kubernetes-with-jib-example</module>
     <module>spring-boot-on-kubernetes-with-jib-custom-registry-example</module>
     <module>spring-boot-on-openshift-example</module>
-    <module>spring-boot-on-openshift-with-docker-example</module>
     <module>spring-boot-on-openshift-with-jib-custom-registry-example</module>
     <module>spring-boot-with-groovy-on-openshift-example</module>
     <module>spring-boot-with-existing-manifests-on-kubernetes-example</module>
@@ -41,6 +40,12 @@
   </modules>
 
   <profiles>
+    <profile>
+      <id>with-external-registy-examples</id>
+      <modules>
+        <module>spring-boot-on-openshift-with-docker-example</module>
+      </modules>
+    </profile>
     <profile>
       <id>with-service-binding-examples</id>
       <modules>

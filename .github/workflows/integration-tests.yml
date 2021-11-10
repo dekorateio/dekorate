@@ -67,9 +67,8 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
-      - name: Integration Tests
-        run: |
       - name: Dockerhub login
+        if: ${{secrets.DOCKERIO_USERNAME != null && secerts.DOCKERIO_PASSWORD != null }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERIO_USERNAME }}
@@ -112,6 +111,7 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
       - name: Dockerhub login
+        if: ${{secrets.DOCKERIO_USERNAME != null && secerts.DOCKERIO_PASSWORD != null }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERIO_USERNAME }}
