@@ -19,11 +19,11 @@ import static io.dekorate.testing.Testing.DEKORATE_STORE;
 import static io.dekorate.testing.Testing.KUBERNETES_LIST;
 import static java.util.Arrays.stream;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,14 +112,15 @@ public interface WithKubernetesResources extends TestInstancePostProcessor, With
    */
   default KubernetesList fromManifest(Project project) {
     KubernetesList result = new KubernetesList();
-    URL manifestUrl = WithKubernetesResources.class.getClassLoader()
-        .getResource(project.getDekorateOutputDir() + File.separatorChar + MANIFEST_PATH);
-    if (manifestUrl == null) {
+    Path manifestUrl = project.getRoot().resolve(project.getBuildInfo().getClassOutputDir())
+        .resolve(project.getDekorateOutputDir())
+        .resolve(MANIFEST_PATH);
+    if (!Files.exists(manifestUrl)) {
       return result;
     }
 
     System.out.println("Apply test resources from:" + manifestUrl);
-    try (InputStream is = manifestUrl.openStream()) {
+    try (InputStream is = manifestUrl.toUri().toURL().openStream()) {
       result = Serialization.unmarshalAsList(is);
     } catch (IOException e) {
       throw DekorateException.launderThrowable(e);
