@@ -113,7 +113,8 @@ public interface WithOpenshiftResources extends TestInstancePostProcessor, WithP
   default KubernetesList fromManifest(Project project) {
     KubernetesList result = new KubernetesList();
 
-    Path manifestUrl = project.getRoot().resolve("target/classes").resolve(project.getDekorateOutputDir())
+    Path manifestUrl = project.getRoot().resolve(project.getBuildInfo().getClassOutputDir())
+        .resolve(project.getDekorateOutputDir())
         .resolve(MANIFEST_PATH);
     if (!Files.exists(manifestUrl)) {
       return result;
