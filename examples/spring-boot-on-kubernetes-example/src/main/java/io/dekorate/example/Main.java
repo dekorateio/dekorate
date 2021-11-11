@@ -19,8 +19,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.option.annotation.JvmOptions;
 
 @KubernetesApplication(replicas =  2)
+@JvmOptions(preferIPv4Stack = true)
 @SpringBootApplication
 public class Main {
 
