@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.net.URL;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.testing.annotation.Inject;
@@ -30,14 +29,15 @@ import io.dekorate.testing.annotation.KubernetesIntegrationTest;
 import io.dekorate.testing.annotation.Named;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
+import io.fabric8.kubernetes.client.utils.HttpClientUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
- //TODO: Re-enable the test once CI issues are resolved.
-@Disabled
 @KubernetesIntegrationTest(additionalModules = { "../multimodule-project-a-on-kubernetes-example", "../multimodule-project-b-on-kubernetes-example" })
 class SpringBootForMultiModuleAppsOnKubernetesIT {
 
@@ -74,11 +74,12 @@ class SpringBootForMultiModuleAppsOnKubernetesIT {
   }
 
   private void assertHelloWorld(Pod pod) throws IOException {
-    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(9090)) {
+    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
       assertTrue(p.isAlive());
-      URL url = new URL("http://localhost:"+p.getLocalPort()+"/");
+      URL url = new URL("http://localhost:" + p.getLocalPort() + "/");
 
-      OkHttpClient client = new OkHttpClient();
+      Config config = new ConfigBuilder().build();
+      OkHttpClient client = HttpClientUtils.createHttpClient(config);
       Request request = new Request.Builder().get().url(url).build();
       Response response = client.newCall(request).execute();
       assertEquals(response.body().string(), "Hello world");

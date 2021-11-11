@@ -20,13 +20,16 @@ package io.dekorate.testing;
 import static io.dekorate.testing.Testing.DEKORATE_STORE;
 import static io.dekorate.testing.Testing.KUBERNETES_LIST;
 
+import java.util.List;
+
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
-public interface WithDiagnostics extends WithKubernetesClient {
+public interface WithDiagnostics extends WithKubernetesClient, WithProject {
 
   String EXTENSION_ERROR = "EXTENSION_ERROR";
   String READINESS_FAILED = "READINESS_FAILED";
@@ -53,10 +56,18 @@ public interface WithDiagnostics extends WithKubernetesClient {
 
   default void displayDiagnostics(ExtensionContext context) {
     KubernetesClient client = getKubernetesClient(context);
-    KubernetesList resources = (KubernetesList) context.getStore(DEKORATE_STORE).get(KUBERNETES_LIST);
     Pods pods = new Pods(client);
     final Diagnostics diagnostics = new Diagnostics(client, pods);
-    resources.getItems().stream().forEach(r -> diagnostics.display(r));
+
+    List<Project> projects = getProjects(context);
+    for (Project project : projects) {
+      String key = KUBERNETES_LIST + project.getRoot();
+      KubernetesList resources = (KubernetesList) context.getStore(DEKORATE_STORE).get(key);
+      if (resources != null) {
+        resources.getItems().stream().forEach(r -> diagnostics.display(r));
+      }
+    }
+
     diagnostics.displayAll();
   }
 }

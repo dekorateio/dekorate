@@ -15,6 +15,8 @@
  */
 package io.dekorate.testing;
 
+import static io.dekorate.testing.Testing.DEKORATE_STORE;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,11 +37,17 @@ import io.dekorate.utils.Serialization;
 
 public interface WithProject {
 
+  String PROJECTS = "PROJECTS";
   String PROJECT_YML = ".project.yml";
 
   String[] getAdditionalModules(ExtensionContext context);
 
   default List<Project> getProjects(ExtensionContext context) {
+    Object projectsInStore = context.getStore(DEKORATE_STORE).get(PROJECTS);
+    if (projectsInStore != null && projectsInStore instanceof List) {
+      return (List<Project>) projectsInStore;
+    }
+
     try {
       List<String> projectsLocations = new ArrayList<>();
       // Current project
@@ -67,6 +75,8 @@ public interface WithProject {
             })
             .forEach(projects::add);
       }
+
+      context.getStore(DEKORATE_STORE).put(PROJECTS, projects);
 
       return projects;
     } catch (IOException e) {
