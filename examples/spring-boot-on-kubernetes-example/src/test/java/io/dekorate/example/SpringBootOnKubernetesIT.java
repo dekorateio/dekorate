@@ -26,7 +26,6 @@ import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.annotation.KubernetesIntegrationTest;
 import io.dekorate.testing.annotation.Named;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -35,7 +34,6 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled("It fails because of https://github.com/dekorateio/dekorate/issues/818. It works locally.")
 @KubernetesIntegrationTest
 public class SpringBootOnKubernetesIT {
 
@@ -54,7 +52,7 @@ public class SpringBootOnKubernetesIT {
     Assertions.assertNotNull(client);
     Assertions.assertNotNull(list);
     System.out.println("Forwarding port");
-    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(9090)) { //port matches what is configured in properties file
+    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) { //port matches what is configured in properties file
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:" + p.getLocalPort() + "/");
 
