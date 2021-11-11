@@ -17,24 +17,23 @@ package io.dekorate.example;
 
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.Config;
-import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
-import io.fabric8.kubernetes.client.utils.HttpClientUtils;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.annotation.KubernetesIntegrationTest;
 import io.dekorate.testing.annotation.Named;
+import io.restassured.RestAssured;
+import io.restassured.config.ConnectionConfig;
+
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.concurrent.TimeUnit;
 
 @KubernetesIntegrationTest
 public class SpringBootOnKubernetesIT {
@@ -54,15 +53,21 @@ public class SpringBootOnKubernetesIT {
     Assertions.assertNotNull(client);
     Assertions.assertNotNull(list);
     System.out.println("Forwarding port");
-    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(9090)) { //port matches what is configured in properties file
-      assertTrue(p.isAlive());
-      URL url = new URL("http://localhost:" + p.getLocalPort() + "/");
+    Awaitility.await()
+      .ignoreExceptions()
+      .dontCatchUncaughtExceptions()
+      .atMost(30, TimeUnit.SECONDS).pollInterval(5, TimeUnit.SECONDS)
+      .untilAsserted(() -> {
+      System.out.println("Trying... " + pod.getMetadata().getName());
+      try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(9090)) { //port matches what is configured in properties file
+        assertTrue(p.isAlive());
+        RestAssured.config = RestAssured.config().connectionConfig(new ConnectionConfig()
+          .closeIdleConnectionsAfterEachResponseAfter(10, TimeUnit.MILLISECONDS)
+          .closeIdleConnectionsAfterEachResponse());
+        given().relaxedHTTPSValidation().redirects().follow(true).get("http://localhost:" + p.getLocalPort() + "/")
+          .then().log().all().body(is("Hello world"));
+      }
+    });
 
-      Config config = new ConfigBuilder().build();
-      OkHttpClient client = HttpClientUtils.createHttpClient(config);
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals(response.body().string(), "Hello world");
-    }
   }
 }
