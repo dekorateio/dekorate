@@ -139,7 +139,7 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       resourceRegistry.decorate(group, new AddPortDecorator(config.getName(), config.getName(), port));
     }
     for (Mount mount : config.getMounts()) {
-      resourceRegistry.decorate(group, new AddMountDecorator(mount));
+      resourceRegistry.decorate(group, new AddMountDecorator(config.getName(), config.getName(), mount));
     }
 
     for (SecretVolume volume : config.getSecretVolumes()) {
