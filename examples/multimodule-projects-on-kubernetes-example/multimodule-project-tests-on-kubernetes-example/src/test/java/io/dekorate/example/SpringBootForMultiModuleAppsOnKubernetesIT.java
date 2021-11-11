@@ -36,8 +36,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
- //TODO: Re-enable the test once CI issues are resolved.
-@Disabled
+@Disabled("It fails because of https://github.com/dekorateio/dekorate/issues/818. It works locally.")
 @KubernetesIntegrationTest(additionalModules = { "../multimodule-project-a-on-kubernetes-example", "../multimodule-project-b-on-kubernetes-example" })
 class SpringBootForMultiModuleAppsOnKubernetesIT {
 
@@ -74,7 +73,7 @@ class SpringBootForMultiModuleAppsOnKubernetesIT {
   }
 
   private void assertHelloWorld(Pod pod) throws IOException {
-    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(9090)) {
+    try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:"+p.getLocalPort()+"/");
 

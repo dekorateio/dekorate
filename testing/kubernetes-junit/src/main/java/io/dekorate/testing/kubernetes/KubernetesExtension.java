@@ -25,6 +25,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestWatcher;
 
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactories;
@@ -50,7 +51,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.VersionInfo;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 
-public class KubernetesExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback,
+public class KubernetesExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback, TestWatcher,
     WithKubernetesIntegrationTestConfig, WithPod, WithKubernetesClient, WithKubernetesResources, WithEvents, WithProject,
     WithKubernetesConfig, WithImageConfig {
 
@@ -93,11 +94,18 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
   }
 
   @Override
+  public void testFailed(ExtensionContext context, Throwable throwable) {
+    // For test failures:
+    displayDiagnostics(context);
+  }
+
+  @Override
   public void afterAll(ExtensionContext context) {
     KubernetesIntegrationTestConfig config = getKubernetesIntegrationTestConfig(context);
 
     try {
       LOGGER.info("Cleaning up...");
+      // For setup failures:
       if (shouldDisplayDiagnostics(context)) {
         displayDiagnostics(context);
       }
