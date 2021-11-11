@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.net.URL;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.testing.annotation.Inject;
@@ -36,7 +35,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-@Disabled("It fails because of https://github.com/dekorateio/dekorate/issues/818. It works locally.")
 @KubernetesIntegrationTest(additionalModules = { "../multimodule-project-a-on-kubernetes-example", "../multimodule-project-b-on-kubernetes-example" })
 class SpringBootForMultiModuleAppsOnKubernetesIT {
 
@@ -83,5 +81,4 @@ class SpringBootForMultiModuleAppsOnKubernetesIT {
       assertEquals(response.body().string(), "Hello world");
     }
   }
-
 }

@@ -75,7 +75,8 @@ jobs:
           kubectl get csv -n operators | grep service-binding-operator | awk -F" " '{print $7}'
       - name: Install and Run Integration Tests
         run: |
-          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Duser.name=dekorateio -Dformat.skip=true
+          eval $(minikube docker-env)
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Duser.name=noregistry -Dformat.skip=true -Dkubernetes.image-pull-policy=IfNotPresent
 
   openshift:
     name: Openshift Build
