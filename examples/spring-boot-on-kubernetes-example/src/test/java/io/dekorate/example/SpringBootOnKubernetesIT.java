@@ -51,6 +51,7 @@ public class SpringBootOnKubernetesIT {
   public void shouldRespondWithHelloWorld() throws IOException {
     Assertions.assertNotNull(client);
     Assertions.assertNotNull(list);
+    System.out.println("Using pod:" + pod.getMetadata().getName());
     System.out.println("Forwarding port");
     try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) { //port matches what is configured in properties file
       assertTrue(p.isAlive());
