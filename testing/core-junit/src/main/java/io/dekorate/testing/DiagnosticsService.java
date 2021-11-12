@@ -24,6 +24,7 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.utils.Generics;
 import io.dekorate.utils.Serialization;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.Event;
 import io.fabric8.kubernetes.api.model.EventList;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -54,9 +55,13 @@ public interface DiagnosticsService<T extends HasMetadata> {
   default void displayEvents(T resource) {
     try {
       Map<String, String> fields = new HashMap<>();
-      fields.put("involvedObject.uid", resource.getMetadata().getUid());
+      if (Strings.isNotNullOrEmpty(resource.getMetadata().getUid())) {
+        fields.put("involvedObject.uid", resource.getMetadata().getUid());
+      }
+      if (Strings.isNotNullOrEmpty(resource.getMetadata().getNamespace())) {
+        fields.put("involvedObject.namespace", resource.getMetadata().getNamespace());
+      }
       fields.put("involvedObject.name", resource.getMetadata().getName());
-      fields.put("involvedObject.namespace", resource.getMetadata().getNamespace());
 
       EventList eventList = getKubernetesClient().v1().events().inNamespace(resource.getMetadata().getNamespace())
           .withFields(fields).list();

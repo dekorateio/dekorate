@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.EventList;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 
@@ -32,9 +33,14 @@ public interface WithEvents extends WithKubernetesClient {
 
   default EventList getEvents(ExtensionContext context, HasMetadata resource) {
     Map<String, String> fields = new HashMap<>();
-    fields.put("involvedObject.uid", resource.getMetadata().getUid());
+    if (Strings.isNotNullOrEmpty(resource.getMetadata().getUid())) {
+      fields.put("involvedObject.uid", resource.getMetadata().getUid());
+    }
+    if (Strings.isNotNullOrEmpty(resource.getMetadata().getNamespace())) {
+      fields.put("involvedObject.namespace", resource.getMetadata().getNamespace());
+    }
     fields.put("involvedObject.name", resource.getMetadata().getName());
-    fields.put("involvedObject.namespace", resource.getMetadata().getNamespace());
+
     return getKubernetesClient(context).v1().events().inNamespace(resource.getMetadata().getNamespace()).withFields(fields)
         .list();
   }

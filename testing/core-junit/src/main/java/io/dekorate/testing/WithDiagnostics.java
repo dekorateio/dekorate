@@ -56,8 +56,7 @@ public interface WithDiagnostics extends WithKubernetesClient, WithProject {
 
   default void displayDiagnostics(ExtensionContext context) {
     KubernetesClient client = getKubernetesClient(context);
-    Pods pods = new Pods(client);
-    final Diagnostics diagnostics = new Diagnostics(client, pods);
+    final Diagnostics diagnostics = new Diagnostics(client);
 
     List<Project> projects = getProjects(context);
     for (Project project : projects) {

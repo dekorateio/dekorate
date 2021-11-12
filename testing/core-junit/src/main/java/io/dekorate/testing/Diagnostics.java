@@ -23,12 +23,12 @@ import java.util.Optional;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Event;
 import io.fabric8.kubernetes.api.model.EventList;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
 /*
@@ -39,21 +39,13 @@ public class Diagnostics {
   private Logger logger = LoggerFactory.getLogger();
 
   private final KubernetesClient client;
-  private final Pods pods;
 
   public Diagnostics(KubernetesClient client) {
     this.client = client;
-    this.pods = new Pods(client);
-  }
-
-  public Diagnostics(KubernetesClient client, Pods pods) {
-    this.client = client;
-    this.pods = pods;
   }
 
   public void displayAll() {
-    PodList pods = client.pods().list();
-    pods.getItems().stream().forEach(p -> display(p));
+    client.pods().list().getItems().stream().forEach(p -> display(p));
   }
 
   public <T extends HasMetadata> void display(T resource) {
@@ -84,9 +76,13 @@ public class Diagnostics {
   protected void events(Pod pod) {
     try {
       Map<String, String> fields = new HashMap<>();
-      fields.put("involvedObject.uid", pod.getMetadata().getUid());
+      if (Strings.isNotNullOrEmpty(pod.getMetadata().getUid())) {
+        fields.put("involvedObject.uid", pod.getMetadata().getUid());
+      }
+      if (Strings.isNotNullOrEmpty(pod.getMetadata().getNamespace())) {
+        fields.put("involvedObject.namespace", pod.getMetadata().getNamespace());
+      }
       fields.put("involvedObject.name", pod.getMetadata().getName());
-      fields.put("involvedObject.namespace", pod.getMetadata().getNamespace());
 
       EventList eventList = client.v1().events().inNamespace(pod.getMetadata().getNamespace()).withFields(fields).list();
       if (eventList == null) {
