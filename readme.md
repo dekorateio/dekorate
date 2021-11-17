@@ -56,6 +56,7 @@ As the project now supports `decorating` of kubernetes manifests without the use
 - junit5 integration testing extension
   - [Kubernetes](#kubernetes-extension-for-junit5)
   - [OpenShift](#openshift-extension-for-junit5)
+  - [Multi-Module testing](#testing-multi-module-projects)
 
 ### Experimental features
 
@@ -1542,6 +1543,46 @@ or using yaml:
 #### related examples
  - [Vert.x on kubernetes example](examples/vertx-on-kubernetes-example)
  - [Vert.x on openshift example](examples/vertx-on-openshift-example)
+
+#### Testing Multi-Module projects
+
+The Dekorate testing framework supports multi-module projects either using [the OpenShift JUnit 5 extension](#openshift-extension-for-junit5) or using [the Kubernetes JUnit 5 extension](#kubernetes-extension-for-junit5).
+
+A multi-module project consist of multiple modules, all using Dekorate to generate the cluster manifests and a `tests` module that will run the integration tests:
+
+```
+multi-module-parent
+└───module-1
+└───module-2
+└───tests
+```
+
+In the `tests` module, we can now specify the location of the additional modules via the field `additionalModules` which is part of the `@OpenshiftIntegrationTest` and `@KubernetesIntegrationTest` annotations:
+
+```java
+@OpenshiftIntegrationTest(additionalModules = { "../module-1", "../module-2" })
+class SpringBootForMultipleAppsOnOpenshiftIT {
+
+  @Inject
+  private KubernetesClient client;
+
+  @Inject
+  @Named("module-1")
+  Pod podForModuleOne;
+
+  @Inject
+  @Named("module-2")
+  Pod podForModuleTwo;
+
+  // ...
+}
+```
+
+Doing so, the test framework will locate the Dekorate manifests that have been previously generated to build and deploy the application for each integration test.
+
+##### related examples
+- [Multi-Module projects on OpenShift example](examples/multimodule-projects-on-openshift-example)
+- [Multi-Module projects on Kubernetes example](examples/multimodule-projects-on-kubernetes-example)
 
 ### Prometheus annotations
 
