@@ -38,6 +38,7 @@ import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.project.Project;
 import io.dekorate.testing.WithEvents;
+import io.dekorate.testing.WithImageConfig;
 import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
 import io.dekorate.testing.WithProject;
@@ -58,7 +59,7 @@ import io.fabric8.openshift.client.OpenShiftClient;
 @Internal
 public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback, AfterAllCallback, TestWatcher,
     WithOpenshiftIntegrationTest, WithPod, WithKubernetesClient, WithOpenshiftResources, WithProject, WithEvents,
-    WithOpenshiftConfig, WithRoute {
+    WithOpenshiftConfig, WithImageConfig, WithRoute {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
@@ -154,24 +155,25 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
     KubernetesClient client = getKubernetesClient(context);
     KubernetesList list = getOpenshiftResources(context, project);
 
-    OpenshiftConfig openshiftConfig = getOpenshiftConfig(project);
-    ImageConfiguration imageConfiguration = ImageConfiguration.from(openshiftConfig);
+    if (hasOpenshiftConfig(project) && hasImageConfig(project)) {
+      ImageConfiguration imageConfig = getImageConfig(project).get();
+      BuildService buildService;
+      try {
+        BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(project, imageConfig)
+            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+        buildService = buildServiceFactory.create(project, imageConfig, list.getItems());
+      } catch (Exception e) {
+        throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
+      }
 
-    BuildService buildService = null;
-    try {
-      BuildServiceFactory buildServiceFactory = BuildServiceFactories.find(project, imageConfiguration)
-          .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-      buildService = buildServiceFactory.create(project, imageConfiguration, list.getItems());
-    } catch (Exception e) {
-      throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
-    }
-    if (config.isPushEnabled()) {
-      buildService.prepare();
-      buildService.build();
-      buildService.push();
-    } else if (config.isBuildEnabled()) {
-      buildService.prepare();
-      buildService.build();
+      if (config.isPushEnabled()) {
+        buildService.prepare();
+        buildService.build();
+        buildService.push();
+      } else if (config.isBuildEnabled()) {
+        buildService.prepare();
+        buildService.build();
+      }
     }
 
     if (config.isDeployEnabled()) {

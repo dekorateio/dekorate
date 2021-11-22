@@ -91,9 +91,8 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
       ImageConfiguration imageConfig = configurationRegistry
           .getImageConfig(BuildServiceFactories.supplierMatches(getProject()))
           .orElse(null);
-      String registry = Strings.isNullOrEmpty(imageConfig.getRegistry()) ? "docker.io" : imageConfig.getRegistry();
-
       if (imageConfig != null) {
+        String registry = Strings.isNullOrEmpty(imageConfig.getRegistry()) ? "docker.io" : imageConfig.getRegistry();
         String image = Images.getImage(registry,
             imageConfig.getGroup(), imageConfig.getName(),
             imageConfig.getVersion());
