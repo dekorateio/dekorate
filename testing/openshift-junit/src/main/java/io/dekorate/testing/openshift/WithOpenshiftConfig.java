@@ -31,6 +31,10 @@ public interface WithOpenshiftConfig {
   String CONFIG_DIR = "config";
   String OPENSHIFT_YML = "openshift.yml";
 
+  default boolean hasOpenshiftConfig(Project project) {
+    return getOpenshiftConfigPath(project).toFile().exists();
+  }
+
   default OpenshiftConfig getOpenshiftConfig(Project project) {
     return getOpenshiftConfig(getOpenshiftConfigPath(project));
   }

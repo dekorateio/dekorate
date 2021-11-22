@@ -25,6 +25,7 @@ import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.jib.config.JibBuildConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.MavenInfoReader;
 import io.dekorate.project.Project;
@@ -47,9 +48,14 @@ public class JibBuildServiceFactory implements BuildServiceFactory {
 
   @Override
   public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
-    boolean supportedTool = SUPPORTED_TOOLS.contains(project.getBuildInfo().getBuildTool());
+    if (!(config instanceof JibBuildConfig)) {
+      return new BuildServiceApplicablility(false, "Jib build config not found");
+    }
 
-    if (!supportedTool) {
+    JibBuildConfig buildConfig = (JibBuildConfig) config;
+    if (!buildConfig.isEnabled()) {
+      return new BuildServiceApplicablility(false, "Project build tool is disabled by Jib");
+    } else if (!SUPPORTED_TOOLS.contains(project.getBuildInfo().getBuildTool())) {
       return new BuildServiceApplicablility(false, "Project build tool no support by Jib");
     } else {
       return new BuildServiceApplicablility(true, "ok");

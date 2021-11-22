@@ -57,15 +57,16 @@ public class S2iBuildServiceFactory implements BuildServiceFactory {
 
   @Override
   public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
-    if (config instanceof S2iBuildConfig) {
-      S2iBuildConfig s2iBuildConfig = (S2iBuildConfig) config;
-      if (s2iBuildConfig.isEnabled()) {
-        return new BuildServiceApplicablility(true, MESSAGE_OK);
-      } else {
-        return new BuildServiceApplicablility(false, MESSAGE_DISABLED);
-      }
+    if (!(config instanceof S2iBuildConfig)) {
+      return new BuildServiceApplicablility(false, "S2i build config not found");
     }
-    return new BuildServiceApplicablility(true, MESSAGE_OK);
+
+    S2iBuildConfig s2iBuildConfig = (S2iBuildConfig) config;
+    if (s2iBuildConfig.isEnabled()) {
+      return new BuildServiceApplicablility(true, MESSAGE_OK);
+    } else {
+      return new BuildServiceApplicablility(false, MESSAGE_DISABLED);
+    }
   }
 
   @Override

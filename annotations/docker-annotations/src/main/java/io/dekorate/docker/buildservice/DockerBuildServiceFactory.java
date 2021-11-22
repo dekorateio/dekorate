@@ -23,6 +23,7 @@ import io.dekorate.BuildService;
 import io.dekorate.BuildServiceApplicablility;
 import io.dekorate.BuildServiceFactory;
 import io.dekorate.config.ConfigurationSupplier;
+import io.dekorate.docker.config.DockerBuildConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Strings;
@@ -56,8 +57,14 @@ public class DockerBuildServiceFactory implements BuildServiceFactory {
 
   @Override
   public BuildServiceApplicablility checkApplicablility(Project project, ImageConfiguration config) {
-    String dockerFile = Strings.isNotNullOrEmpty(config.getDockerFile()) ? config.getDockerFile() : "Dockerfile";
-    boolean applicable = project.getRoot().resolve(dockerFile).toFile().exists();
+    if (!(config instanceof DockerBuildConfig)) {
+      return new BuildServiceApplicablility(false, "Docker build config not found");
+    }
+
+    DockerBuildConfig dockerBuildConfig = (DockerBuildConfig) config;
+    String dockerFile = Strings.isNotNullOrEmpty(dockerBuildConfig.getDockerFile()) ? dockerBuildConfig.getDockerFile()
+        : "Dockerfile";
+    boolean applicable = dockerBuildConfig.isEnabled() && project.getRoot().resolve(dockerFile).toFile().exists();
     String message = applicable
         ? MESSAGE_OK
         : String.format(MESSAGE_NOK, project.getRoot().resolve(dockerFile));
