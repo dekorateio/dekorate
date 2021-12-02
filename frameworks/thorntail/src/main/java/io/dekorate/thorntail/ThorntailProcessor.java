@@ -15,6 +15,8 @@
  */
 package io.dekorate.thorntail;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -24,6 +26,7 @@ import javax.lang.model.element.TypeElement;
 
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.Session;
+import io.dekorate.config.AdditionalResourcesLocator;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.thorntail.configurator.ThorntailPrometheusAgentConfigurator;
@@ -42,7 +45,13 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
       return true;
     }
 
-    session.addPropertyConfiguration(readApplicationConfig("project-defaults.yml"));
+    List<String> resourceNames = new ArrayList<>();
+    // default resource names:
+    resourceNames.add("project-defaults.yml");
+    // resource names from active Dekorate features
+    resourceNames.addAll(AdditionalResourcesLocator.getAdditionalResources());
+
+    session.addPropertyConfiguration(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         add(mainClass);

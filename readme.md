@@ -1123,9 +1123,23 @@ an `application` descriptor will override any existing annotation-specified conf
 2. `application.properties`
 3. `application.yaml`
 4. `application.yml`
-5. `application-kubernetes.properties`
-6. `application-kubernetes.yaml`
-7. `application-kubernetes.yml`
+
+Then,  it will use the properties file depending on the active Dekorate dependencies in use. For example, if we're using the dependency `io.dekorate:kubernetes-annotations`, then:
+1. `application-kubernetes.properties`
+2. `application-kubernetes.yaml`
+3. `application-kubernetes.yml`
+
+| Note that only the `openshift`, `kubernetes` and `knative` modules are providing additional properties files.
+
+Then, for Spring Boot applications, it will also take into account the Spring property `spring.profiles.active` if set:
+1. `application-${spring.profiles.active}.properties`
+2. `application-${spring.profiles.active}.yaml`
+3. `application-${spring.profiles.active}.yml`
+
+Finally, if the Dekorate profile property `dekorate.properties.profile` is set:
+1. if property `dekorate.properties.profile` is set, then `application-${dekorate.properties.profile}.properties`
+2. if property `dekorate.properties.profile` is set, then `application-${dekorate.properties.profile}.yaml`
+3. if property `dekorate.properties.profile` is set, then `application-${dekorate.properties.profile}.yml`
 
 It's important to repeat that the override that occurs by *fully* replacing any lower-priority configuration and not via any kind
 of merge between the existing and higher-priority values. This means that if you choose to override the annotation-specified

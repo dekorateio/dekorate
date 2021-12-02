@@ -15,6 +15,9 @@
  */
 package io.dekorate.spring.apt;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -26,6 +29,7 @@ import io.dekorate.ConfigurationRegistry;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
+import io.dekorate.config.AdditionalResourcesLocator;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.generator.SpringBootApplicationGenerator;
@@ -33,6 +37,8 @@ import io.dekorate.spring.generator.SpringBootApplicationGenerator;
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
 @SupportedAnnotationTypes({ "org.springframework.boot.autoconfigure.SpringBootApplication" })
 public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor implements SpringBootApplicationGenerator {
+
+  private static final String SPRING_PROFILE = "spring.profiles.active";
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
@@ -48,12 +54,24 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
         LOGGER.info("Found @SpringBootApplication on: " + mainClass.toString());
       }
     }
-    getSession().addPropertyConfiguration(readApplicationConfig("application.properties",
-        "application.yaml",
-        "application.yml",
-        "application-kubernetes.properties",
-        "application-kubernetes.yaml",
-        "application-kubernetes.yml"));
+
+    List<String> resourceNames = new ArrayList<>();
+    // default resource names:
+    resourceNames.add("application.properties");
+    resourceNames.add("application.yaml");
+    resourceNames.add("application.yml");
+    // resource names from active Dekorate features
+    resourceNames.addAll(AdditionalResourcesLocator.getAdditionalResources());
+    // resource name for Spring profile
+    Optional.ofNullable(System.getProperty(SPRING_PROFILE))
+        .filter(str -> !str.isEmpty())
+        .ifPresent(profile -> {
+          resourceNames.add("application-" + profile + ".properties");
+          resourceNames.add("application-" + profile + ".yaml");
+          resourceNames.add("application-" + profile + ".yml");
+        });
+
+    getSession().addPropertyConfiguration(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
     addPropertyConfiguration(SPRING_BOOT_APPLICATION);
     return false;
   }
