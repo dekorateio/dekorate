@@ -17,6 +17,9 @@
 
 package io.dekorate.apt;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -28,6 +31,7 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.adapter.DekorateConfigAdapter;
 import io.dekorate.annotation.Dekorate;
+import io.dekorate.config.AdditionalResourcesLocator;
 import io.dekorate.config.DekorateConfig;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
@@ -51,9 +55,15 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
         LOGGER.info("Found @Dekorate on: " + mainClass.toString());
         Dekorate dekorate = mainClass.getAnnotation(Dekorate.class);
         DekorateConfig dekorateConfig = DekorateConfigAdapter.adapt(dekorate);
-        String[] configFiles = dekorateConfig.getResources().length > 0 ? dekorateConfig.getResources()
-            : DEFAULT_CONFIG_FILES;
-        getSession().addPropertyConfiguration(readApplicationConfig(configFiles));
+
+        List<String> resourceNames = new ArrayList<>();
+        // resource names from annotation or default:
+        resourceNames.addAll(Arrays.asList(dekorateConfig.getResources().length > 0 ? dekorateConfig.getResources()
+            : DEFAULT_CONFIG_FILES));
+        // resource names from active Dekorate features
+        resourceNames.addAll(AdditionalResourcesLocator.getAdditionalResources());
+
+        getSession().addPropertyConfiguration(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
       }
     }
     return false;
