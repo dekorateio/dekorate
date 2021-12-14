@@ -1,0 +1,214 @@
+@mixin position($pos: relative, $top: null, $right: null, $bottom: null, $left: null) {
+  position: $pos;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+div.nav-wrapper {
+  background-color: $blue;
+  padding: 0 13rem;
+  @media screen and (max-width: 1170px) { padding: 0 6rem; }
+  @media screen and (max-width: 768px) { padding: 0 2rem; }
+}
+
+.main-nav {
+  position: relative;
+  width: 100%;
+
+  .container {
+  }
+
+  a, a i,
+  span, {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.8rem;
+    color: $white !important;
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
+    
+    &.active{
+      font-weight: 800;
+      position: relative;
+    }
+  }
+
+  a i,
+  span i {
+    font-family: "Font Awesome 5 Free";
+    color: $white !important;
+
+  }
+
+  .logo-wrapper {
+    display: inline-block;
+    padding-top: 0; 
+    width: 13rem;
+    height: 40px;
+    padding: 0 10px;
+    z-index: 0;
+    @media screen and (max-width: 768px) {
+      width: 8rem;
+      margin-top: .5rem;
+    }
+
+    @include position;
+
+    a, span {
+    }
+  }
+
+  .menu {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: $blue_shade_60;
+
+    z-index: 1;
+
+    @include position(absolute, 50px, 0, null, 0);
+
+    a, span {
+      display: block;
+      padding: 15px;
+    }
+
+    .dropdown:hover {
+      i {
+        transition: 0.2s;
+        transform: rotateX(180deg);
+      }
+      .submenu {
+        position: relative;
+        padding-left: 0px;
+        li a,
+        li span {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .nav-toggle {
+    display: inline-block;
+    font-size: 1.7em;
+    line-height: 1.5em;
+    float: right;
+    user-select: none;
+    -webkit-user-select: none;
+    i {
+      color: $white;
+      vertical-align: middle;
+    }
+  }
+}
+
+#checkbox {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: -99999px;
+
+  &:checked ~ nav .menu {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 1170px) {
+  .main-nav {
+    .nav-toggle {
+      display: none;
+    }
+
+    .container {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .logo-wrapper {
+      margin: 5px 0;
+      padding: 10px 10px 0 10px;
+    }
+
+    .menu {
+      display: block;
+      box-shadow: none;
+      border: none;
+      float: right;
+      background: $blue;
+
+
+      @include position(static);
+
+      li {
+        display: inline-block;
+      }
+
+      span {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      a, span {
+        border: none;
+        padding: 20px 10px;
+        height: 35px;
+        &.active {
+
+        }
+      }
+      .dropdown:hover .submenu {
+        position: absolute;
+
+        li a,
+        li span {
+          text-align: left;
+        }
+      }
+    }
+  }
+}
+
+.submenu {
+  display: none !important;
+  list-style: none;
+
+}
+
+.dropdown:hover .submenu {
+  display: block !important;
+  background-color: $blue_tint_60;
+  border: 1px solid $blue;
+  z-index: 100;
+
+  li {
+    float: none;
+    border-bottom: 1px solid $blue;
+    width: 100%;
+  }
+
+  li a,
+  li span {
+    color: $blue_shade_80 !important;
+    text-transform: none;
+    font-weight: 400;
+    padding: 5px 10px;
+    height: 100%;
+
+    &.active {
+    }
+
+    &:hover {
+      background-color: $blue_tint_90;
+    }
+    &:hover a {
+      color: $white;
+    }
+  }
+  
+}

@@ -1,0 +1,32 @@
+<div class="content-slim project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="{{site.baseurl}}/"><img src="{{site.baseurl}}/assets/images/dekorate_logo_grey.png" class="project-logo" title="Dekorate Project"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">{{ site.data.projectfooter.footer_text }}</p>
+
+    {% for item in site.data.projectfooter.links %}
+      <div class="width-1-12 project-links">
+        <b>{{ item.title }}</b>
+        <ul class="footer-links width-1-12">
+          {% for entry in item.subfolderitems %}
+            <li><a href="{{ entry.url }}">{{ entry.page }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+
+    {% for item in site.data.projectfooter.more_links %}
+      <div class="width-6-12 more-links">
+        <b>{{ item.title }}</b>
+        <ul class="footer-links">
+          {% for entry in item.subfolderitems %}
+            <li><a href="{{ entry.url }}" target="_blank">{{ entry.page }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</div>

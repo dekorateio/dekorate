@@ -1,0 +1,17 @@
+<div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ post.url }}&title={{ post.title }}" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <img src="{{site.baseurl}}/assets/images/share-page/icons_social-linkedin.png"/>
+  </a>
+  <a class="share-twitter" href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ site.url }}{{ post.url }}&via={{ site.twitter_username }}&related={{ site.twitter_username }}" rel="nofollow" target="_blank" title="Share on Twitter">
+    <img src="{{site.baseurl}}/assets/images/share-page/icons_social-twitter.png"/>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u={{ site.url }}{{ post.url }}" rel="nofollow" target="_blank" title="Share on Facebook">
+    <img src="{{site.baseurl}}/assets/images/share-page/icons_social-facebook.png"/>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url={{ site.url }}{{ post.url }}" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <img src="{{site.baseurl}}/assets/images/share-page/icons_social-reddit.png"/>
+  </a>
+  <a class="share-email" href="mailto:?subject={{ post.title }}&amp;body={{post.title}} {{ site.url }}{{ post.url }}" title="Share via Email" >
+    <img src="{{site.baseurl}}/assets/images/share-page/icons_social-email.png"/>
+  </a>
+</div>

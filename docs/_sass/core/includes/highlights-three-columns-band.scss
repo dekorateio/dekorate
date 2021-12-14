@@ -1,0 +1,13 @@
+.highlights-three-columns-band {
+  .highlight-columns-block {
+    img ~ .block-title {
+      background-color: $blue;
+      padding: 1rem;
+      margin-top: -3px;
+      h2 {
+        color: $white;
+        margin: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+.redhat-footer {
+  background-color: $black;
+
+  .grid-wrapper {
+    padding: .5rem 0;
+    grid-row-gap: 0;
+  }
+
+  .licence {
+    grid-column: 5/9;
+    align-self: center;
+    justify-self: center;
+    color: $white;
+    a, i {
+      color: $white;
+      font-size: .75rem;
+      font-weight: 200;
+    }
+    @media screen and (max-width: 1024px) {
+      grid-column: 1/7;
+      justify-self: left;
+    }
+    @media screen and (max-width: 768px) {
+      grid-column: 1/13;
+      justify-self: center;
+      order: 3;
+    }
+  }
+
+  .redhat {
+    grid-column: 9/12;
+    align-self: center;
+    justify-self: end;
+    font-size: .75rem;
+    font-weight: 200;
+    color: $white;
+    @media screen and (max-width: 1024px) {
+      grid-column: 7/12;
+      justify-self: right;
+    }
+    @media screen and (max-width: 768px) {
+      grid-column: 1/13;
+      justify-self: center;
+      order: 2;
+    }
+  }
+  .redhat-logo {
+    grid-column: 12/13;
+    justify-self: end;
+    align-self: center;
+    img { min-width: 6rem; }
+    @media screen and (max-width: 768px) {
+      grid-column: 1/13;
+      justify-self: center;
+      order: 1;
+    }
+  }
+}
