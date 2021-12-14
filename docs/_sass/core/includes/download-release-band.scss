@@ -1,0 +1,28 @@
+.download-release-band {
+  .version-table {
+    margin-bottom: 1rem;
+    table {
+      width: 100%;
+    }
+    .version-name {
+      text-align: left;
+      &.final {
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .release-date {
+        float: right;
+      }
+    }
+
+    .licence { min-width: 3rem; }
+    .links {
+      min-width: 6rem;
+      text-align: right;
+    }
+    td, a { font-size: .875rem; }
+    @media screen and (max-width: 1024px) {
+      grid-column: span 12;
+    }
+  }
+}

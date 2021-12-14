@@ -1,0 +1,17 @@
+.mid-page-cta-band {
+
+  h3 {
+  @media screen and (max-width: 768px) {
+    font-size: 2rem;
+    line-height: 2.2rem;
+  }
+  }
+
+  .cta {
+    align-self: center;
+    justify-self: center;
+    @media screen and (max-width: 768px) {
+    justify-self: stretch;
+    }
+  }
+}

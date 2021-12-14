@@ -1,0 +1,31 @@
+<div class="component recent-posts-band full-width-bg">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <h2 class="text-centered">Recent Blog Posts</h2>
+    </div>
+    {% for post in site.posts %}
+      {% if forloop.index <= 3 %}
+        <div class="block-item width-4-12 width-12-12-m">
+          <div class="post-title">
+            <h6 class="margin-tb-0"><a href="{{site.baseurl}}{{ post.url }}">{{ post.title }}</a></h6>
+          </div>
+          <p class="margin-tb-sm">
+            <small>{{ post.date | date: '%B %d, %Y' }}</small>
+          </p>
+          <p class="margin-tb-sm">By {{ site.data.authors[post.author].name }}</p>
+          <p class="margin-tb-sm" style="min-height: 50px">
+             {% for tag in post.tags %}<a href="{{site.baseurl}}/blog/tag/{{tag | slugify}}">{{ tag}}</a> {% endfor %}</small>
+          </p>
+          {% if post.synopsis %}
+            <p style="min-height: 300px">{{ post.synopsis | strip_html }}</p>
+          {% else %}
+            <p style="min-height: 300px">{{ post.content | strip_html | truncate: 280 }}</p>
+          {% endif %}
+          <div class="text-centered">
+            <a href="{{site.baseurl}}{{ post.url }}" class="button-cta tertiary">Read More</a> 
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

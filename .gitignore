@@ -90,3 +90,8 @@ crashlytics-build.properties
 .meghanada
 
 .factorypath
+
+#jekyll
+_site
+.sass-cache
+.jekyll-metadata
