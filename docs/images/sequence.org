@@ -1,0 +1,50 @@
+#+title: sequence diagram
+
+
+#+begin_src plantuml :file sequence.png
+  @startuml
+  participant Compiler as Compiler
+  actor       AnnotationProcessor       as AnnotationProcessor
+  control     Session                   as Session
+  database    ConfigurationRegistry    as ConfigurationRegistry
+  actor       ConfigurationGenerator    as ConfigurationGenerator
+  database    ManifestRegistry    as ManifestRegistry
+  actor       ManifestGenerator         as ManifestGenerator
+  entity      Annotation                as Annotation
+  entity      Properties                as Properties
+  entity      Configuration  as Configuration
+
+  Compiler -> AnnotationProcessor: process
+  AnnotationProcessor -> Session: initialize
+  Session -> ConfigurationRegistry: initialize
+  Session -> ConfigurationGenerator: load
+  Session -> ManifestRegistry: initialize
+  Session -> ManifestGenerator: load
+  Session -> AnnotationProcessor: return
+
+  AnnotationProcessor -> Annotation: collect annotations
+  Annotation -> Configuration : convert
+  Configuration -> ConfigurationGenerator: configuration
+  ConfigurationGenerator -> ConfigurationRegistry: configuration
+  ConfigurationGenerator -> ConfigurationRegistry: configurators
+
+  AnnotationProcessor -> Properties: collect properties
+  Properties -> Configuration : convert
+  Configuration -> ConfigurationGenerator: configuration
+  ConfigurationGenerator -> ConfigurationRegistry: configuration
+  ConfigurationGenerator -> ConfigurationRegistry: configurators
+
+  Compiler -> AnnotationProcessor: processingOver            
+  AnnotationProcessor -> Session: close
+  Session -> ConfigurationRegistry: merge
+  ConfigurationRegistry -> Session: configuration
+  Session -> ManifestGenerator: configuration
+  ManifestGenerator -> Session: resources
+  ManifestGenerator -> Session: decorators
+  Session -> Session: decorate resources
+  Session -> Session: write resources to file
+  @enduml
+#+end_src
+
+#+RESULTS:
+[[file:sequence.png]]

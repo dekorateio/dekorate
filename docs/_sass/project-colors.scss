@@ -1,0 +1,42 @@
+// PROJECT color palette
+
+// Tints and shades of primary blue color
+
+$blue: #3371E3;
+$blue_shade_80: #0a172d;
+$blue_shade_60: #142d5b;
+$blue_tint_60: #adc6f4;
+$blue_tint_90: #ebf1fc;
+$global-muted-color: #999 !default;
+$global-inverse-color: #fff !default;
+$inverse-global-muted-color: rgba($global-inverse-color, 0.5) !default;
+
+$red: #E8614A;
+$green: #81B015;
+$orange: #E8614A;
+
+$green_shade_60: #344608;
+
+// Overwrites link colors in /core/colors.scss
+$link: #1259A5;
+$link-dark-bg: #9BCAFA;
+$link-light-bg: #1259A5;
+$link-hover: $red;
+$link-visited: #AA4494;
+
+$cta-hover: $link-hover;
+
+//Grayscale
+$gray-0 : #EFEFEF;
+$gray-1 : #AAAAAA;
+$gray-2 : #555555;
+$gray-3 : #333333;
+$gray-4 : #222222;
+
+
+// Alternative spelling
+$grey-0 : #EFEFEF;
+$grey-1 : #AAAAAA;
+$grey-2 : #555555;
+$grey-3 : #333333;
+$grey-4 : #222222;

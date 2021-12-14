@@ -1,0 +1,14 @@
+tsmith:
+  name: "Tim Smith"
+  email: "tsmith@email.com"
+  emailhash: "55acsfsfg7f29105b0"
+  job_title: ""
+  twitter: "tsmith"
+  bio: "Lorem ipsum dolor sit amet, eos posse ipsum legendos id. Ad duo assum augue democritum."
+swoods:
+  name: "Sam Woods"
+  email: "swoods@email.com"
+  emailhash: "55acsfsfg7f29105b0"
+  job_title: ""
+  twitter: "swoods"
+  bio: "Lorem ipsum dolor sit amet, eos posse ipsum legendos id. Ad duo assum augue democritum."

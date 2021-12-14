@@ -1,0 +1,298 @@
+// This is a partial.
+// It lies in <source>/_sass, just waiting to be imported.
+// It does not contain the YAML front matter and has no corresponding output file in the built site.
+
+@import "colors";
+
+html,
+body {
+  font-size: 100%;
+  font-weight: 100;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+div.content {
+  padding: 0rem 13rem 6rem 13rem;
+  @media screen and (max-width: 1170px) { padding: 0rem 6rem 4rem 6rem; }
+  @media screen and (max-width: 768px) { padding: 0rem 2rem 4rem 2rem; }
+}
+
+div.content-slim, {
+  padding: 0 13rem;
+  @media screen and (max-width: 1170px) {  padding: 0 6rem; }
+  @media screen and (max-width: 480px) {  padding: 0 2rem; }
+}
+
+div.content-detail {
+  padding-top: 4rem;
+  @media screen and (max-width: 1170px) { padding-top: 0rem; }
+}
+
+.hide {
+  &-tablet {
+    @media screen and (max-width: 768px) { display: none; }
+  }
+  &-mobile {
+    @media screen and (max-width: 480px) { display: none; }
+  }
+}
+
+.tablet-fullwidth {
+  @media screen and (max-width: 768px) {
+    margin-left: -6rem !important;
+    margin-right: -6rem !important;
+  } 
+  @media screen and (max-width: 480px) {
+    margin-left: -2rem !important;
+    margin-right: -2rem !important;
+  }
+}
+
+.mobile-fullwidth {
+  @media screen and (max-width: 480px) {
+    margin-left: -2rem !important;
+    margin-right: -2rem !important;
+  }
+}
+
+* {
+  font-family: Helvetica, Arial, sans-serif;
+  color: $black;
+  line-height: 1rem;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+  margin: 2rem 0;
+}
+
+h1 {
+  font-size: 4rem;
+  line-height: 4rem;
+  font-weight: 200;
+  @media screen and (max-width: 768px) {
+    font-size: 3rem;
+    line-height: 3rem;    
+  }
+}
+
+h2 {
+  font-size: 3rem;
+  line-height: 3rem;
+  font-weight: 200;
+  @media screen and (max-width: 768px) {
+    font-size: 2rem;
+    line-height: 2rem;    
+  }
+}
+
+h3 {
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: 200;
+  @media screen and (max-width: 768px) {
+    font-size: 1.75rem;
+    line-height: 1.75rem;    
+  }
+}
+
+h4 {
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  font-weight: 200;
+}
+
+h5 {
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  font-weight: 200;
+}
+
+h6 {
+  font-size: 1.125rem;
+  line-height: 1.125rem;
+  font-weight: 200;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 100;
+}
+
+p.byline {
+  font-size: 1.5rem;
+  line-height: 1.8rem;
+}
+
+a {
+  line-height: 1.5rem;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+  color: $link;
+  &:hover, &:active, &:focus {
+    color: $link-visited;
+  }
+}
+
+a.button-cta,
+button,
+input[type="submit"] {
+  text-align: center;
+  color: $white;
+  background-color: $red;
+  border: 2px solid $red;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 200;
+  margin: .5rem;
+  padding: .75rem 3rem;
+  white-space: nowrap;
+  line-height: 3.5;
+  transition: background .2s ease-in 0s;
+  &:hover, &:active, &:focus {
+    background-color: $dark-red;
+    border-color: $dark-red;
+    color: $white;
+  }
+}
+
+a.button-cta.secondary {
+  background: none;
+  border: 2px solid $red;
+  color: $red;
+  &:hover, &:active, &:focus {
+    background-color: $dark-red;
+    border-color: $dark-red;
+    color: $white;
+  }
+}
+
+code, pre {
+  font-family: 'PT Mono', monospace;
+  background-color: $gray-0;
+  color: $grey-4;
+  line-height: 1.2;
+  overflow: scroll;
+  padding: 0 5px;
+}
+
+div pre.highlight code {
+  padding: 0;
+}
+
+pre {
+  padding: .5rem 1rem;
+}
+
+hr {
+  border-width: 2px;
+  margin: 6rem 0 4rem 0;
+}
+
+img { max-width: 100%; }
+
+.logo-wrapper {
+  display: inline-block;
+  max-width: 13.5rem;
+  padding-top: 1rem;
+}
+
+.project-logo {
+  width: 100%;
+}
+
+
+table {
+  border-spacing: 1px;
+
+  thead th, tbody td {
+    padding: .5rem 1rem;
+  }
+
+  thead th {
+    background-color: $blue;
+    color: $white;
+    padding: .5rem 1rem;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    font-weight: 400;
+    text-align: left;
+  }
+  tbody tr {
+    &:nth-child(even) {
+      background-color: $gray-0;
+    }
+    td p {
+       margin: 0;
+    }
+  }
+}
+
+.admonitionblock.note, .note, .admonitionblock.tip, .tip {
+  tbody .icon {
+    background-color: $teal;
+  }
+  tbody .content {
+    background-color: $blue;
+  }
+}
+
+.admonitionblock {
+  tbody .icon {
+    text-align: center;
+    width: 50px;
+  }
+}
+
+.admonitionblock + .admonitionblock {
+  margin-top: 20px;
+}
+
+.listingblock,
+.literalblock,
+.imageblock,
+.tableblock  {
+  .content {
+    padding: 0;
+  }
+}
+
+.paginator-btns a {
+  margin: 1rem 0;
+  line-height: 1.5;
+  max-width: 10rem;
+  &:first-of-type {
+    margin-right: calc(100% - 535px);
+  }
+  @media screen and (max-width: 850px) {
+    display: block;
+  }
+}
+
+form {
+  input, textarea {
+    padding: .75rem;
+    font-size: 1rem;
+    border-radius: 10px;
+    border-color: $gray-1;
+    border-width: 1px;
+    border-style: solid;
+  }
+  textarea {
+    min-height: 13rem;
+  }
+  input[type="submit"] {
+    font-size: 1rem;
+    line-height: 1.5;
+    cursor: pointer;
+    border-radius: 0;
+    border: none;
+    max-width: 10rem;
+  }
+}

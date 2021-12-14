@@ -1,0 +1,53 @@
+.blog,
+.post {
+  .blog-list-item {
+    margin-bottom: 5rem;
+    p {
+      margin: 0;
+    }
+
+    .post-title {
+      h3 {
+        margin: 0;
+
+        a{
+        font-family: 'Jost', sans-serif;
+        font-size: 2rem;
+        line-height: 2.2rem;
+        font-weight: 400;
+        }
+      }
+    }
+  }
+  .byline-wrapper {
+    display: flex;
+    align-items:center;
+    p.byline {
+      font-size: 1rem;
+      line-height: 1.2rem;
+      font-weight: 400;
+      margin: 0;
+    }
+  }
+  .headshot, .byline {
+    display: inline;
+  }
+  .headshot {
+    max-width: 2.5rem;
+    border-radius: 1.5rem;
+    margin-right: .5rem;
+  }
+  .share-page {
+    text-align: right;
+  }
+}
+
+@media screen and (max-width: $breakpoint-m) {
+  .blog-list-item .share-page {
+    text-align: left;
+  }
+  .blog p.byline {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
+}

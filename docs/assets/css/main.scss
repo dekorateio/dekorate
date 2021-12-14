@@ -1,0 +1,47 @@
+---
+# this ensures Jekyll reads the file to be transformed into CSS later
+# only Main files contain this front matter, not partials.
+---
+
+$baseurl: "{{ site.baseurl }}";
+
+@import "project-colors";
+@import "variables";
+@import "core/global";
+@import "core/grid";
+@import "core/colors";
+@import "core/asciidoc";
+@import "core/includes/product-download-band";
+@import "core/includes/quick-pitch-band";
+@import "core/includes/secondary-page-title-band";
+@import "core/includes/download-announcement-band";
+@import "core/includes/two-column-content-band";
+@import "core/includes/mid-page-cta-band";
+@import "core/includes/docs-archive-subnav";
+@import "core/includes/contributions-band";
+@import "core/includes/big-three-subnav-band";
+@import "core/includes/video-content-band";
+@import "core/includes/highlights-inline-images-band";
+@import "core/includes/highlights-alternating-images-band";
+@import "core/includes/highlights-three-columns-band";
+@import "core/includes/download-release-band";
+@import "core/includes/contact-form-band";
+
+@import "components";
+@import "article";
+@import "container";
+@import "grid";
+@import "section";
+@import "width";
+@import "visibility";
+@import "nav";
+@import "mixins-theme";
+@import "position";
+@import "layouts/blog";
+@import "includes/project-footer";
+@import "includes/redhat-footer";
+@import "includes/share-page";
+@import "includes/header-navigation";
+@import "includes/homepage-hero-band";
+@import "includes/recent-posts-band";
+@import "dekorate";

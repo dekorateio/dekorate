@@ -1,0 +1,45 @@
+$global-margin:                                  20px !default;
+$global-large-margin:                            70px !default;
+$global-medium-margin:                           40px !default;
+$global-xlarge-margin:                           140px !default;
+
+$global-2xlarge-font-size:                       2.625rem !default; // 42px
+$global-small-font-size:                         0.875rem !default; // 14px
+
+$global-gutter: 30px !default;
+$global-medium-gutter: 40px !default;
+$global-small-gutter: 15px !default;
+$global-large-gutter: 70px !default;
+
+$global-line-height: 1.5 !default;
+$global-color: #666 !default;
+$global-emphasis-color: #333 !default;
+$global-large-font-size: 1.5rem !default;
+
+$breakpoint-small: 640px !default;
+$breakpoint-medium: 960px !default;
+$breakpoint-large: 1200px !default;
+$breakpoint-xlarge: 1600px !default;
+$breakpoint-xsmall-max: ($breakpoint-small - 1) !default;
+$breakpoint-small-max: ($breakpoint-medium - 1) !default;
+$breakpoint-medium-max: ($breakpoint-large - 1) !default;
+$breakpoint-large-max: ($breakpoint-xlarge - 1) !default;
+
+$global-border-width: 1px !default;
+
+$global-border: #e5e5e5 !default;
+$global-inverse-color: #fff !default;
+$inverse-global-emphasis-color: $global-inverse-color !default;
+
+
+$global-font-size: 16px !default;
+
+$inverse-global-border: rgba($global-inverse-color, 0.2) !default;
+$inverse-global-color: rgba($global-inverse-color, 0.7) !default;
+
+$global-background:                              #fff !default;
+$global-muted-background:                        #f8f8f8 !default;
+$global-primary-background:                      #1e87f0 !default;
+$global-secondary-background:                    #222 !default;
+
+$deprecated: false !default;

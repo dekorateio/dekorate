@@ -1,0 +1,14 @@
+.contributions-band {
+  .contrib-block {
+    text-align: center;
+    h4, p {
+      margin: 1rem 0;
+    }
+    img {
+      max-width: 12rem;
+      @media screen and (max-width: $breakpoint-m) {
+        max-width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+footer_text: "This website built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a> is hosted on <a href='https://pages.github.com/' target='_blank'>Github Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/dekorateio/dekorate' target='_blank'>fork the website</a> and show us what you’ve got."
+
+links:
+  - title: Navigation
+    subfolderitems:
+      - page: Home
+        url: /
+      - page: Downloads
+        url: /downloads
+      - page: Blog
+        url: /blog
+  - title: Contribute
+    subfolderitems:
+      - page: Follow us
+        url: https://twitter.com/
+      - page: GitHub
+        url: https://github.com/dekorateio/dekorate
+  - title: Get Help
+    subfolderitems:
+      - page: Chatroom
+        url: https://example.com
+      - page: Google&nbsp;Groups
+        url: https://example.com
+      - page: FAQ
+        url: /faq
+
+more_links:
+  - title: Find more Red Hat Middleware Community Projects
+    subfolderitems:
+      - page: APIMan
+        url: https://www.apiman.io/
+      - page: Arquillian
+        url: http://arquillian.org
+      - page: Byteman
+        url: http://byteman.jboss.org/
+      - page: CapeDwarf
+        url: http://capedwarf.org/
+      - page: Chronicler
+        url: https://github.com/alechenninger/chronicler
+      - page: Darcy
+        url: https://github.com/darcy-framework
+      - page: Debezium
+        url: http://debezium.io/
+      - page: Drools
+        url: https://www.drools.org/
+      - page: GateIn
+        url: http://gatein.jboss.org/
+      - page: Hawkular
+        url: http://www.hawkular.org/
+      - page: Hawtio
+        url: http://hawt.io/
+      - page: Hibernate
+        url: http://hibernate.org/
+      - page: Infinispan
+        url: http://www.infinispan.org/
+      - page: JBoss DevStudio
+        url: https://devstudio.jboss.com/
+      - page: JBoss Forge
+        url: http://forge.jboss.org/
+      - page: JBoss Logging
+        url: https://github.com/jboss-logging
+      - page: JBoss Remoting
+        url: http://jbossremoting.jboss.org/
+      - page: jBPM
+        url: https://www.jbpm.org/
+      - page: JSFUnit
+        url: https://jsfunit.jboss.org/
+      - page: Keycloak
+        url: https://www.keycloak.org/
+      - page: Mod_cluster
+        url: http://modcluster.io/
+      - page: ModeShape
+        url: http://modeshape.jboss.org/
+      - page: OptaPlanner
+        url: https://www.optaplanner.org/
+      - page: Picketbox
+        url: https://picketbox.jboss.org/
+      - page: Quarkus
+        url: https://quarkus.io/
+      - page: RESTEasy
+        url: http://resteasy.jboss.org/
+      - page: Riftsaw
+        url: https://riftsaw.jboss.org/
+      - page: Savara
+        url: http://savara.jboss.org/
+      - page: Seam
+        url: http://seamframework.org/
+      - page: Shrinkwrap
+        url: http://arquillian.org/
+      - page: Snowdrop
+        url: http://snowdrop.jboss.org/
+      - page: Switchyard
+        url: https://switchyard.jboss.org/
+      - page: Tattletale
+        url: https://tattletale.jboss.org/
+      - page: Teiid
+        url: http://teiid.jboss.org/
+      - page: WildFly Swarm
+        url: http://wildfly-swarm.io/
+      - page: Wise
+        url: http://wise.jboss.org/
+      - page: XNIO
+        url: https://xnio.jboss.org/
