@@ -37,7 +37,7 @@ import io.sundr.builder.annotations.Pojo;
 @interface Base {
 
   /**
-   * The name of the collection of componnet this component belongs to.
+   * The name of the collection of component this component belongs to.
    * This value will be use as:
    * - docker image repo
    * - labeling resources
@@ -217,4 +217,11 @@ import io.sundr.builder.annotations.Pojo;
    * @return True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;
+
+  /**
+   * Flag to trigger the registration of the kind load docker-image hook. *
+   * 
+   * @return True for automatic registration of the build hook.
+   */
+  boolean autoLoadEnabled() default false;
 }

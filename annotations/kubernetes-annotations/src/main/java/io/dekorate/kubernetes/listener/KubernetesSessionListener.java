@@ -34,6 +34,7 @@ import io.dekorate.hook.ImagePushHook;
 import io.dekorate.hook.OrderedHook;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.hook.ResourcesApplyHook;
+import io.dekorate.kind.hook.KindImageAutoloadHook;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
@@ -61,7 +62,8 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
 
     BuildService buildService = null;
     ImageConfiguration imageConfig = optionalImageConfig.get();
-    if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+    if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || kubernetesConfig.isAutoDeployEnabled()
+        || kubernetesConfig.isAutoLoadEnabled()) {
 
       try {
         buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems()))
@@ -84,8 +86,12 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
       // This ensure that the pod runs the proper image
       hooks.add(new ImageBuildHook(getProject(), buildService));
       hooks.add(new ImagePushHook(getProject(), buildService));
-    } else if (imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+    } else if (imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()
+        || kubernetesConfig.isAutoLoadEnabled()) {
       hooks.add(new ImageBuildHook(getProject(), buildService));
+    }
+    if (kubernetesConfig.isAutoLoadEnabled()) {
+      hooks.add(new KindImageAutoloadHook(getProject(), imageConfig.getImage()));
     }
 
     if (kubernetesConfig.isAutoDeployEnabled()) {

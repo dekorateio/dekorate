@@ -39,6 +39,7 @@ limitations under the License.
     <module>docker-annotations</module>
     <module>s2i-annotations</module>
     <module>jib-annotations</module>
+    <module>kind-annotations</module>
   </modules>
 
 </project>
