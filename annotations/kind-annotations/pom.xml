@@ -24,8 +24,8 @@ limitations under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>kubernetes-annotations</artifactId>
-  <name>Dekorate :: Annotations :: Kubernetes</name>
+  <artifactId>kind-annotations</artifactId>
+  <name>Dekorate :: Annotations :: Kind</name>
 
   <dependencies>
     <dependency>
@@ -36,11 +36,6 @@ limitations under the License.
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>option-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.dekorate</groupId>
-      <artifactId>kind-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

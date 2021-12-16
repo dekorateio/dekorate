@@ -158,12 +158,12 @@ public @interface KubernetesApplication {
   ServiceType serviceType() default ServiceType.ClusterIP;
 
   /**
-   * PersistentVolumeClaim volumues to add to all containers.
+   * PersistentVolumeClaim volumes to add to all containers.
    */
   PersistentVolumeClaimVolume[] pvcVolumes() default {};
 
   /**
-   * Secret volumues to add to all containers.
+   * Secret volumes to add to all containers.
    */
   SecretVolume[] secretVolumes() default {};
 

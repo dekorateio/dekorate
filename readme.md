@@ -1228,6 +1228,7 @@ So, at the moment as an experimental feature the following hooks are provided:
 - docker build hook (requires docker binary, triggered with `-Ddekorate.build=true`)
 - docker push hook (requires docker binary, triggered with `-Ddekorate.push=true`)
 - OpenShift s2i build hook (requires oc binary, triggered with `-Ddekorate.deploy=true`)
+- [KiND](https://kind.sigs.k8s.io/) docker images loading hook (requires `kind`, triggered with `-Ddekorate.kind.autoload=true`)
 
 #### Docker build hook
 This hook will just trigger a docker build, using an existing Dockerfile at the root of the project.
