@@ -110,6 +110,6 @@ public class ServiceBindingConfigGeneratorTest {
     assertThat(tempDir.resolve("kubernetes.json")).doesNotExist();
     assertThat(tempDir.resolve("kubernetes.yml")).doesNotExist();
 
-    assertThat(result).hasSize(6);
+    assertThat(result).hasSize(7);
   }
 }
