@@ -19,8 +19,10 @@ description: >- # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new project site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://dekorate.io/" # the base hostname & protocol for your site, e.g. http://example.com
+#baseurl: "" # the subpath of your site, e.g. /blog
+#url: "https://dekorate.io/" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "dekorate" # the subpath of your site, e.g. /blog
+url: "https://aureamunoz.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: dekorateio ‏
 github_username:  project_github_username
 github_fork_url: "https://github.com/dekorateio"
