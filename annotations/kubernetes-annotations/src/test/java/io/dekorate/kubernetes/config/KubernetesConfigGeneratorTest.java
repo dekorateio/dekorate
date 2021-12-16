@@ -105,6 +105,6 @@ class KubernetesConfigGeneratorTest {
     assertThat(tempDir.resolve("kubernetes.json")).doesNotExist();
     assertThat(tempDir.resolve("kubernetes.yml")).doesNotExist();
 
-    assertThat(result).hasSize(5);
+    assertThat(result).hasSize(6);
   }
 }
