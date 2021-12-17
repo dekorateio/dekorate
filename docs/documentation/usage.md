@@ -1,3 +1,10 @@
+---
+title: Usage
+description: Dekorate usage
+layout: docs
+permalink: /docs/usage
+---
+
 ## Usage
 
 To start using this project you just need to add one of the provided dependencies to your project.

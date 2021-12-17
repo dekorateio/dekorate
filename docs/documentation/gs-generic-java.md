@@ -1,3 +1,10 @@
+---
+title: Generic Java Application
+description: Generic Java Application
+layout: docs
+permalink: /docs/generic-java-application
+---
+
 ### Hello Generic Java Application
 
 Add the following dependency to your project:

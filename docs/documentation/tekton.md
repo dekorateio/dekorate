@@ -1,4 +1,9 @@
-
+---
+title: Tekton
+description: Tekton
+layout: docs
+permalink: /docs/tekton
+---
 ### Tekton
 
 Dekorate supports generating `tekton` pipelines.

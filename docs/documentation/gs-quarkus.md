@@ -1,3 +1,10 @@
+---
+title: Quarkus
+description: Quarkus
+layout: docs
+permalink: /docs/quarkus
+---
+
 ### Hello Quarkus
 
 Add the following dependency to your project:

@@ -1,4 +1,9 @@
-
+---
+title: Jaeger
+description: Jaeger
+layout: docs
+permalink: /docs/jaeger
+---
 ### Jaeger annotations
 
 The [jaeger](https://www.jaegertracing.io) annotation processor provides annotations for injecting the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent) into the application pod.

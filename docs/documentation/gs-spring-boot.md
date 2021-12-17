@@ -1,3 +1,10 @@
+---
+title: Spring Boot
+description: Spring Boot
+layout: docs
+permalink: /docs/spring-boot
+---
+
 ### Hello Spring Boot
 
 Add the following dependency to your project:

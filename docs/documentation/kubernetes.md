@@ -1,3 +1,10 @@
+---
+title: Kubernetes
+description: Kubernetes
+layout: docs
+permalink: /docs/kubernetes
+---
+
 ### Kubernetes
 
 [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) is a more specialized form of [@Dekorate](core/src/main/java/io/dekorate/annotation/Dekorate.java).

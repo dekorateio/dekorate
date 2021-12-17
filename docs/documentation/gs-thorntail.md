@@ -1,3 +1,10 @@
+---
+title: Thorntail
+description: Thorntail
+layout: docs
+permalink: /docs/thorntail
+---
+
 ### Hello Thorntail
 
 Add the following dependency to your project:

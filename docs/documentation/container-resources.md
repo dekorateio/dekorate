@@ -1,6 +1,13 @@
+---
+title: Container Resource
+description: Container Resources
+layout: docs
+permalink: /docs/container-resources
+---
+
 ### Container Resources
 
-Kubernetes allwos setting rules about container resources:
+Kubernetes allows setting rules about container resources:
 
 - Request CPU: The amount of CPU the container needs.
 - Request Memory: The amount of memory the container needs.

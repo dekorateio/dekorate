@@ -1,3 +1,9 @@
+---
+title: Prometheus
+description: Prometheus
+layout: docs
+permalink: /docs/prometheus
+---
 ### Prometheus annotations
 
 The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.

@@ -1,0 +1,19 @@
+$global-large-margin:                            70px !default;
+
+$global-2xlarge-font-size:                       2.625rem !default; // 42px
+$global-small-font-size:                         0.875rem !default; // 14px
+
+$global-gutter: 30px !default;
+$global-medium-gutter: 40px !default;
+$global-small-gutter: 15px !default;
+$global-large-gutter: 70px !default;
+
+$breakpoint-small: 640px !default;
+$breakpoint-medium: 960px !default;
+$breakpoint-large: 1200px !default;
+
+$global-border-width: 1px !default;
+
+$global-border: #e5e5e5 !default;
+$global-inverse-color: #fff !default;
+$inverse-global-border: rgba($global-inverse-color, 0.2) !default;

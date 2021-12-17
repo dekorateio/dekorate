@@ -1,4 +1,9 @@
-
+---
+title: Using the BOM
+description: using the BOM
+layout: docs
+permalink: /docs/using-bom
+---
 ### Using the bom
 
 Dekorate provides a bom, that offers dependency management for dekorate artifacts.

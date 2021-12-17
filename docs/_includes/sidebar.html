@@ -1,0 +1,9 @@
+<div class="sidebar uk-visible@m">
+  <div class="uk-position-fixed uk-margin-top">
+    <ul class="uk-nav uk-text-left">
+      {% for link in site.data.sidebar %}
+      {% include menuItems.html %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>

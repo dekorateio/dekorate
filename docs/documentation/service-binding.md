@@ -1,4 +1,9 @@
-
+---
+title: Service Binding
+description: Service Binding
+layout: docs
+permalink: /docs/service-binding
+---
 ### ServiceBinding CRD
 [Service Binding Operator](https://github.com/redhat-developer/service-binding-operator) enables the application developers to bind the services that are backed by Kubernetes operators to an application that is deployed in kubernetes without having to perform manual configuration.
 Dekorate supports generation of ServiceBinding CR.

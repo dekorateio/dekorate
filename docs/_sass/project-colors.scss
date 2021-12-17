@@ -7,6 +7,9 @@ $blue_shade_80: #0a172d;
 $blue_shade_60: #142d5b;
 $blue_tint_60: #adc6f4;
 $blue_tint_90: #ebf1fc;
+$global-muted-color: #999 !default;
+$global-inverse-color: #fff !default;
+$inverse-global-muted-color: rgba($global-inverse-color, 0.5) !default;
 
 $red: #E8614A;
 $green: #81B015;
