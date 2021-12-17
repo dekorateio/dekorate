@@ -1,0 +1,23 @@
+### Hello Spring Boot
+
+Add the following dependency to your project:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>kubernetes-spring-starter</artifactId>
+  <version>2.6.0</version>
+</dependency>
+```
+
+That's all! Next time you perform a build, using something like:
+
+    mvn clean package
+
+The generated manifests can be found under `target/classes/META-INF/dekorate`.
+
+![asciicast](images/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast")
+
+#### related examples
+- [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
+- [spring boot on openshift example](examples/spring-boot-on-openshift-example)
