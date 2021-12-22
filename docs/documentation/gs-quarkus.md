@@ -24,4 +24,4 @@ That's all! Next time you perform a build, using something like:
 The generated manifests can be found under `target/kubernetes`.
 Note: [Quarkus](https://quarkus.io) is using its own `dekorate` based Kubernetes extension (see more at  [Quarkus](#quarkus)).
 
-![asciicast](images/dekorate-quarkus-hello-world.gif "Dekorate Quarkus Hello World Asciicast")
+![asciicast](../images/dekorate-quarkus-hello-world.gif "Dekorate Quarkus Hello World Asciicast")

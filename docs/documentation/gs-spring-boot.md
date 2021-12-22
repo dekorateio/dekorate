@@ -23,7 +23,7 @@ That's all! Next time you perform a build, using something like:
 
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
-![asciicast](images/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast")
+![asciicast](../images/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast")
 
 #### related examples
 - [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)

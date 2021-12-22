@@ -2,13 +2,12 @@
   - title: Dekorate
     url: /docs/overview
   - title: Getting Started
+    url: /docs/getting-started
     dropdown:
       - title: Spring Boot
         url: /docs/spring-boot
       - title: Quarkus
         url: /docs/quarkus
-      - title: Thorntail
-        url: /docs/thorntail
       - title: Generic Java Application
         url: /docs/generic-java-application
   - title: Usage

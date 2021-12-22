@@ -37,7 +37,7 @@ Next time you perform a build, using something like:
 The generated manifests can be found under `target/classes/META-INF/dekorate`.
 
 
-![asciicast](images/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast")
+![asciicast](../images/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast")
 
 #### related examples
 - [vertx on kubernetes example](examples/vertx-on-kubernetes-example)
