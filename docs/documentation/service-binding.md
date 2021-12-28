@@ -141,7 +141,7 @@ The example below configures the Mapstruct, Lombok and Dekorate annotation proce
                         <path>
                             <groupId>io.dekorate</groupId>
                             <artifactId>kubernetes-annotations</artifactId>
-                            <version>2.6.0</version>
+                            <version>{{site.release.version}}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

@@ -130,6 +130,6 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>2.6.0</version>
+  <version>{{site.release.version}}</version>
 </dependency>
 ```

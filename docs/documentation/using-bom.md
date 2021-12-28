@@ -16,7 +16,7 @@ The bom can be imported like:
             <dependency>
                <groupId>io.dekorate</groupId>
                <artifactId>dekorate-bom</artifactId>
-               <version>2.6.0</version>
+               <version>{{site.release.version}}</version>
                <type>pom</type>
                <scope>import</scope>
             </dependency>

@@ -25,7 +25,7 @@ The kubernetes extension can be used by adding the following dependency:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-junit</artifactId>
-  <version>2.6.0</version>
+  <version>{{site.release.version}}</version>
 </dependency>
 ```    
 This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
@@ -97,7 +97,7 @@ To use that you need to add:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-junit</artifactId>
-  <version>2.6.0</version>
+  <version>{{site.release.version}}</version>
 </dependency>
 ```    
 By adding the annotation to your test class the following things will happen:

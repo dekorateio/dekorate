@@ -1,3 +1,10 @@
+---
+title: Knative
+description: Knative
+layout: docs
+permalink: /docs/knative
+---
+
 
 ### Knative
 
@@ -8,7 +15,7 @@ this feature you need to add:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>knative-annotations</artifactId>
-  <version>2.6.0</version>
+  <version>{{site.release.version}}</version>
 </dependency>
 ```
 

@@ -21,6 +21,8 @@
         url: /docs/openshift
       - title: Tekton
         url: /docs/tekton
+      - title: Knative
+        url: /docs/knative
       - title: Prometheus
         url: /docs/prometheus
       - title: Jaeger
@@ -29,6 +31,9 @@
         url: /docs/service-binding
       - title: Using the BOM
         url: /docs/using-bom
+      - title: Framework Integration
+        url: /docs/framework-integration
+
 
 #
 #

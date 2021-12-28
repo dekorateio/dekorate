@@ -1038,7 +1038,7 @@ Or if you are on [OpenShift](https://openshift.com):
 
 For Spring Boot application, dekorate will automatically detect known annotation and will align generated manifests accordingly.
 
-##### Exposing servies
+##### Exposing services
 
 Dekorate tunes the generated manifest based on the presence of web annotations in the project:
 
@@ -1070,7 +1070,7 @@ An alternative way of configuration is via `application properties`:
 dekorate.openshift.expose=true
 ```
 
-There are cases where the `Ingress` or `Route` host needs to be customized. This is done using the `host` parametes either via annotation or property configuration.
+There are cases where the `Ingress` or `Route` host needs to be customized. This is done using the `host` parameter either via annotation or property configuration.
 
 
 ###### Kubernetes 
