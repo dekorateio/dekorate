@@ -1,9 +1,14 @@
+---
+title: Experimental features
+description: Experimental features
+layout: docs
+permalink: /docs/experimental-features
+---
 ## Experimental features
 
 Apart from the core feature, which is resource generation, there are a couple of experimental features that do add to the developer experience.
 
 These features have to do with things like building, deploying and testing.
-
 
 ### Building and Deploying?
 Dekorate does not generate Docker files, neither it provides internal support

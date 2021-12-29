@@ -1896,7 +1896,7 @@ Bug fixes for older releases are done through their correspnding branch.
 
 ### Pull request guidelines
 
-All pull requests should target the `master` branch and from there things are backported to where it makes sense.
+All pull requests should target the `main` branch and from there things are backported to where it makes sense.
 
 ## Frequently asked questions
 

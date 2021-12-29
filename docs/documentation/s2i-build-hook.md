@@ -1,3 +1,10 @@
+---
+title: Source to Image Build Hook
+description: Source to Image Build Hook
+layout: docs
+permalink: /docs/s2i-build-hook
+---
+
 ### S2i build hook
 This hook will just trigger an s2i binary build, that will pass the output folder as an input to the build
 

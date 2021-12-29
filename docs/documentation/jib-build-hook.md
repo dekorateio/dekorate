@@ -1,6 +1,11 @@
+---
+title: JIB Build Hook
+description: JIB Build Hook
+layout: docs
+permalink: /docs/jib-build-hook
+---
 
-
-#### Jib build hook
+### Jib build hook
 This hook will just trigger a jib build in order to perform a container build.
 
 In order to use it, one needs to add the `jib-annotations` dependency.

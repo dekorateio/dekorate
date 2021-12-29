@@ -1,3 +1,10 @@
+---
+title: Docker Build Hook
+description: Docker Build Hook
+layout: docs
+permalink: /docs/docker-build-hook
+---
+
 ### Docker build hook
 This hook will just trigger a docker build, using an existing Dockerfile at the root of the project.
 It will not generate or customize the docker build in any way.

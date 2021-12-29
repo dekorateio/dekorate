@@ -33,6 +33,21 @@
         url: /docs/using-bom
       - title: Framework Integration
         url: /docs/framework-integration
+      - title: Junit Extensions
+        url: /docs/junit-extensions
+      - title: Debugging and Logging
+        url: /docs/debugging-logging
+      - title: Annotation Processors
+        url: /docs/annotation-processors
+  - title: Experimental Features
+    url: /docs/experimental-features
+    dropdown:
+      - title: Docker Build Hook
+        url: /docs/docker-build-hook
+      - title: Jib Build Hook
+        url: /docs/jib-build-hook
+      - title: S2I Build Hook
+        url: /docs/s2i-build-hook
 
 
 #
@@ -61,7 +76,7 @@
 #          - Thorntail: 'thorntail.md'
 #          - Annotation Less: 'annotation-less-configuration.md'
 #      - Experimental features:
-#          - Overview: 'ef-overview.md'
+#          - Overview: 'experimental-features.md'
 #          - Docker Build Hook: 'docker-build-hook.md'
 #          - Source To Image Build Hook: 's2i-build-hook.md'
 #          - Jib Build Hook: 'jib-build-hook.md'
