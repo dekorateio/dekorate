@@ -147,13 +147,13 @@ It's important to repeat that the override that occurs by *fully* replacing any 
 of merge between the existing and higher-priority values. This means that if you choose to override the annotation-specified
 configuration, you need to repeat all the configuration you want in the @Env annotation-less configuration.
 
-Here's the full list of supported [configuration options](/configuration-guide/). Special attention should be paid to the path of these
+Here's the full list of supported [configuration options]({{site.baseurl}}/configuration-guide). Special attention should be paid to the path of these
 properties. The properties' path match the annotation properties and not what would end up in the manifest, meaning the
 annotation-less configuration matches the model defined by the annotations. More precisely, what is being configured using
 properties is the same model as what is configured using annotations. While
 there is some overlap between how the annotations
 are configured and the resulting manifest, the properties (or YAML file) still need to provide values for the annotation fields,
-hence why they need to match how the annotations are configured. Always refer to the [configuration options guide](assets/config.md)
+hence why they need to match how the annotations are configured. Always refer to the [configuration options guide]({{site.baseurl}}/configuration-guide)
 if in doubt.
 
 ###### Generated resources when not using annotations

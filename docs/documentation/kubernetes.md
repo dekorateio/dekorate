@@ -183,7 +183,7 @@ To add a port using `application.properties`:
 **IMPORTANT**: When mixing annotations and `application.properties` the latter will always take precedence overriding values that defined using annotations.
 This allows users to define the configuration using annotations and externalize configuration to `application.properties`.
 
-**REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide](assets/config.md).
+**REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide]({{site.baseurl}}/configuration-guide).
 
 #### Adding container environment variables
 To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
