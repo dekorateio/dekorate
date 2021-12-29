@@ -37,7 +37,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>{{site.release.version}}</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 
@@ -374,7 +374,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>option-annotations</artifactId>
-  <version>{{site.release.version}}</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 

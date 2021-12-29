@@ -13,7 +13,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.quarkus</groupId>
   <artifactId>quarkus-kubernetes</artifactId>
-  <version>{{site.release.version}}</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 

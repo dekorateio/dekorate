@@ -45,10 +45,6 @@ defaults:
     values:
       permalink: /blog/:title/
 
-release:
-  version: 2.6.0
-
-
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
