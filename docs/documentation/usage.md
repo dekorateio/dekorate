@@ -18,5 +18,5 @@ Further configuration is feasible using:
 - Configuration properties (application.properties)
 - Both
 
-A complete reference of the supported properties can be found in the [configuration options guide](assets/config.md).
+A complete reference of the supported properties can be found in the [configuration options guide](/configuration-guide/).
 
