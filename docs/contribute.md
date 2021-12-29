@@ -137,6 +137,10 @@ dekorate:
 #### related examples
 - [kubernetes with custom image name example](examples/kubernetes-with-custom-image-name-example)
 
+
+### Release Guidelines
+Please, check our [release guidelines]({{site.baseurl}}/release-guidelines)
+
 [comment]: <> (## Want to get involved?)
 
 [comment]: <> (By all means please do! We love contributions!)
