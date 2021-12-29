@@ -1,9 +1,11 @@
 ---
 layout: base
 title: Configuration Guide
-subtitle: full list of supported properties
+subtitle: Full list of supported properties
 permalink: /configuration-guide/
 ---
+
+{% include title-band.html %}
 
 # Configuration Options
 This page describes all the available configuration options.
