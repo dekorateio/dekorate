@@ -1,3 +1,10 @@
+---
+title: Quarkus integration
+description:  Quarkus integration
+layout: docs
+permalink: /docs/quarkus-integration
+---
+
 #### Quarkus
 
 [quarkus](https://quarkus.io) provides rich set of [extensions](https://quarkus.io/extensions) including one for [kubernetes](https://quarkus.io/guides/deploying-to-kubernetes).

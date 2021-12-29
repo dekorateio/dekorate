@@ -1,3 +1,10 @@
+---
+title: Spring Boot integration
+description:  Spring Boot integration
+layout: docs
+permalink: /docs/spring-boot-integration
+---
+
 #### Spring Boot
 
 With spring boot, we suggest you start with one of the provided starters:

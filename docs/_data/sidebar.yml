@@ -33,6 +33,11 @@
         url: /docs/using-bom
   - title: Framework Integration
     url: /docs/framework-integration
+    dropdown:
+      - title: Spring Boot integration
+        url: /docs/spring-boot-integration
+      - title: Quarkus integration
+        url: /docs/quarkus-integration
   - title: Junit Extensions
     url: /docs/junit-extensions
   - title: Debugging and Logging
