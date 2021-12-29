@@ -31,14 +31,14 @@
         url: /docs/service-binding
       - title: Using the BOM
         url: /docs/using-bom
-      - title: Framework Integration
-        url: /docs/framework-integration
-      - title: Junit Extensions
-        url: /docs/junit-extensions
-      - title: Debugging and Logging
-        url: /docs/debugging-logging
-      - title: Annotation Processors
-        url: /docs/annotation-processors
+  - title: Framework Integration
+    url: /docs/framework-integration
+  - title: Junit Extensions
+    url: /docs/junit-extensions
+  - title: Debugging and Logging
+    url: /docs/debugging-logging
+  - title: Annotation Processors
+    url: /docs/annotation-processors
   - title: Experimental Features
     url: /docs/experimental-features
     dropdown:

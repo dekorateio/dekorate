@@ -20,7 +20,7 @@
   {% endif %}
 </div>
 {% else %}
-<a href="{{ domain }}{{ link.url }}" {% if link.url contains 'http' %}target="_blank" rel="noopener" {% endif %}>{{ link.title }}</a>
+<a class="uk-nav-title" href="{{ domain }}{{ link.url }}" {% if link.url contains 'http' %}target="_blank" rel="noopener" {% endif %}>{{ link.title }}</a>
 {% endif %}
 {% else %}
 <a href="#">{{ link.title }}</a>
