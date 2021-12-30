@@ -7,43 +7,14 @@ on:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+*'
 jobs:
-  test:
+  publish-website:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Test
+      - name: Render docs and publish
         run: |
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
-#  publish-website:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#        name: Checkout code
-#        with:
-#          fetch-depth: 0 # fetch all commits and branches for mike to work properly
-#      - uses: actions/setup-java@v2
-#        name: Set up Java 11
-#        with:
-#          java-version: 11
-#          distribution: temurin
-#          cache: maven
-#      - uses: actions/setup-python@v2
-#        name: Set up Python
-#        with:
-#          python-version: 3.x
-#      - name: Tools setup
-#        run: |
-#          git config --global user.name "SmallRye CI"
-#          git config --global user.email "smallrye@googlegroups.com"
-#          sudo snap install yq
-#          pip install mkdocs-material
-#          pip install mkdocs-macros-plugin
-#          pip install mkdocs-build-plantuml-plugin
-#          pip install mike
-#      - name: Build local artifacts
-#        run: mvn -B install -DskipTests
-#      - name: Render docs and publish
-#        run: .github/publish-docs.sh
+          .github/publish-docs.sh $RELEASE_VERSION
