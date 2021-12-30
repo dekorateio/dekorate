@@ -45,4 +45,4 @@ public class Main {
 }
 ```
 #### related examples
-- [spring boot with jaeger on kubernetes example](examples/spring-boot-with-jeager-on-kubernetes-example)
+- [spring boot with jaeger on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-jeager-on-kubernetes-example)
