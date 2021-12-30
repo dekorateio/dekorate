@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - jekyll-site
-#    tags:
-#      - '[0-9]+.[0-9]+.[0-9]+*'
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'
 jobs:
   publish-website:
     runs-on: ubuntu-latest
