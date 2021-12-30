@@ -2,8 +2,8 @@ name: Publish the website
 on:
   workflow_dispatch:
   push:
-#    branches:
-#      - jekyll-site
+    branches:
+      - jekyll-site
     tags:
       - '[0-9]+.[0-9]+.[0-9]+*'
 jobs:
@@ -15,10 +15,9 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Render docs and publish
         run: |
-          git config --global user.name "Dekorate docs maker"
-          git config --global user.email "auri@redhat.com"
+          git config --global user.name "Dekorate"
+          git config --global user.email "cmoullia-staff@redhat.com"
           sudo apt-get install moreutils
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
-          echo "--- estoy aqui: $pwd"
           .github/publish-docs.sh $RELEASE_VERSION
