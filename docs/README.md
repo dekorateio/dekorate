@@ -65,3 +65,57 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+
+## Navigation
+
+The side navigation bars make use of the `/_data/sidebar.yml` file, here you can write down the title and url where you want to page to be reached at. It will automatically be added to the website.
+Please make sure the `url` here is the same as the `permalink` inside the page front matter.
+
+For example:
+
+`sidebar.yml` -
+```
+ title: Getting Started
+ url: /docs/getting-started
+```
+`docs/getting-started.md` -
+```---
+title: Getting Started
+description: Getting Started
+layout: docs
+permalink: /docs/getting-started
+---
+```
+
+In order to create a navigation dropdown follow the following example:
+```- title: Usage
+    url: /docs/usage
+    dropdown:
+      - title: Kubernetes
+        url: /docs/kubernetes
+      - title: Container Resources
+        url: /docs/container-resources
+```
+
+## Page Layouts
+
+There are a few page layouts:
+
+[comment]: <> (// TO DO: review the layouts part)
+
+[comment]: <> (* `homepage` this is very specific to the homepage and shouldn't be used for other pages)
+
+[comment]: <> (* `docs` this is specific to all the pages that are related to documentation files.)
+
+[comment]: <> (* `default` this can be reused for any other pages. Mention the title in the Front Matter and omit it in the content of your page.)
+
+## Documetation pages
+
+All documentation files should be added to the `documentation/` folder and for the navigation to have `/docs/page-name` in the url.
+
+
+## Github api
+
+The website uses the [jekyll-github-metadata](https://github.com/jekyll/github-metadata) plugin in order to display new releases automatically,
+this can be use for other purposes if need arises
