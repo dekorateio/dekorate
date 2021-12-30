@@ -424,3 +424,22 @@ The section below describes all the available subtypes.
 | dekorate.tekton.registry-username               | String                |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |                                    |
 | dekorate.tekton.registry-password               | String                |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |                                    |
 
+
+## Prometheus
+
+| Property     | Type    | Description| Default Value |
+|--------------|---------|------------|---------------|
+| port         | String  |            | "http"        |
+| path         | String  |            | "/metrics"    |
+| interval     | int     |            | 10            |
+| honor-labels | boolean |            | false         |
+
+## Jaeger
+
+| Property         | Type      | Description                                                | Default Value     |
+|------------------|-----------|------------------------------------------------------------|-------------------|
+| operator-enabled | boolean   | Flag to specify if Jaeger operator is available / enabled. | false             |
+| version          | String    | The jaeger agent version.                                  | "1.10"            |
+| collector        | Collector |                                                            | ( see Collector ) |
+| ports            | Port[]    |                                                            | {}                |
+
