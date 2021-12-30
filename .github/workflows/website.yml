@@ -18,4 +18,5 @@ jobs:
           sudo apt-get install moreutils
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
+          echo "--- estoy aqui: $pwd"
           .github/publish-docs.sh $RELEASE_VERSION
