@@ -26,5 +26,5 @@ The generated manifests can be found under `target/classes/META-INF/dekorate`.
 ![asciicast](../images/dekorate-spring-hello-world.gif "Dekorate Spring Boot Hello World Asciicast")
 
 #### related examples
-- [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
-- [spring boot on openshift example](examples/spring-boot-on-openshift-example)
+- [spring boot on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-kubernetes-example)
+- [spring boot on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-openshift-example)

@@ -96,7 +96,7 @@ public class Main {
 }
 ```
 #### related examples
-- [spring boot with fmp on openshift example](examples/spring-boot-with-fmp-on-kubernetes-example)
+- [spring boot with fmp on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-fmp-on-kubernetes-example)
 
 
 

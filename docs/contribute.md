@@ -135,7 +135,7 @@ dekorate:
 ```
 
 #### related examples
-- [kubernetes with custom image name example](examples/kubernetes-with-custom-image-name-example)
+- [kubernetes with custom image name example](https://github.com/dekorateio/dekorate/tree/main/examples/kubernetes-with-custom-image-name-example)
 
 
 ### Release Guidelines

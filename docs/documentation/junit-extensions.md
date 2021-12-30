@@ -92,7 +92,7 @@ This is important since in the `test` phase the application is not packaged. Her
 ```
 
 #### related examples
-- [spring boot on kubernetes example](examples/spring-boot-on-kubernetes-example)
+- [spring boot on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-kubernetes-example)
 
 #### OpenShift extension for JUnit5
 
@@ -116,9 +116,9 @@ By adding the annotation to your test class the following things will happen:
 7. Applied resources will be removed.
 
 #### related examples
-- [spring boot on openshift example](examples/spring-boot-on-openshift-example)
-- [spring boot with groovy on openshift example](examples/spring-boot-with-groovy-on-openshift-example)
-- [spring boot with gradle on openshift example](examples/spring-boot-with-gradle-on-openshift-example)
+- [spring boot on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-openshift-example)
+- [spring boot with groovy on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-groovy-on-openshift-example)
+- [spring boot with gradle on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-gradle-on-openshift-example)
 
 #### Configuration externalization
 It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.
@@ -243,8 +243,8 @@ or using yaml:
             value: bar
 
 #### related examples
-- [Vert.x on kubernetes example](examples/vertx-on-kubernetes-example)
-- [Vert.x on openshift example](examples/vertx-on-openshift-example)
+- [Vert.x on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/vertx-on-kubernetes-example)
+- [Vert.x on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/vertx-on-openshift-example)
 
 #### Testing Multi-Module projects
 
@@ -283,5 +283,5 @@ class SpringBootForMultipleAppsOnOpenshiftIT {
 Doing so, the test framework will locate the Dekorate manifests that have been previously generated to build and deploy the application for each integration test.
 
 ##### related examples
-- [Multi-Module projects on OpenShift example](examples/multimodule-projects-on-openshift-example)
-- [Multi-Module projects on Kubernetes example](examples/multimodule-projects-on-kubernetes-example)
+- [Multi-Module projects on OpenShift example](https://github.com/dekorateio/dekorate/tree/main/examples/multimodule-projects-on-openshift-example)
+- [Multi-Module projects on Kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/multimodule-projects-on-kubernetes-example)

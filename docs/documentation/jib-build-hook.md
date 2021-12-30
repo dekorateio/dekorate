@@ -40,4 +40,4 @@ You can easily switch to dockerless mode, by setting the `@JibBuild(dockerBuild=
 In case of the dockerless mode, an `openjdk-8` image is going to be used as a base image. The image can be changed through the `from` property on the @JibBuild annotation or `dekorate.jib.from` when using property configuration.
 
 #### related examples
-- [spring boot on kubernetes with jib example](examples/spring-boot-on-kubernetes-with-jib-example)
+- [spring boot on kubernetes with jib example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-kubernetes-with-jib-example)

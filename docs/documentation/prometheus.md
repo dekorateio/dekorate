@@ -30,4 +30,4 @@ Note: Some framework integration modules may further decorate the ServiceMonitor
 For example, the Spring Boot module will decorate the monitor with the Spring Boot specific path, which is `/actuator/prometheus`.
 
 #### related examples
-- [spring boot with prometheus on kubernetes example](examples/spring-boot-with-prometheus-on-kubernetes-example)
+- [spring boot with prometheus on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-prometheus-on-kubernetes-example)

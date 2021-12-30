@@ -40,5 +40,5 @@ The generated manifests can be found under `target/classes/META-INF/dekorate`.
 ![asciicast](../images/dekorate-vertx-hello-world.gif "Dekorate Vert.X Hello World Asciicast")
 
 #### related examples
-- [vertx on kubernetes example](examples/vertx-on-kubernetes-example)
-- [vertx on openshift example](examples/vertx-on-openshift-example)
+- [vertx on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/vertx-on-kubernetes-example)
+- [vertx on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/vertx-on-openshift-example)
