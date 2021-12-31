@@ -443,3 +443,46 @@ The section below describes all the available subtypes.
 | collector        | Collector |                                                            | ( see Collector ) |
 | ports            | Port[]    |                                                            | {}                |
 
+## ServiceBinding
+
+| Property                 | Type        | Description         | Default Value                        |
+|--------------------------|-------------|---------------------|--------------------------------------|
+| name                     | String      |                     |  ""                                  |
+| application              | Application |                     | ( see Application )                  |
+| services                 | Service[]   |                     | {}                                   |
+| env-var-prefix           | String      |                     | ""                                   |
+| detect-binding-resources | boolean     |                     | false                                |
+| bind-as-files            | boolean     |                     | false                                |
+| mount-path               | String      |                     | ""                                   |
+| custom-env-var           | Env[]       |                     | {}                                   |
+| binding-path             | BindingPath |                     | ( see BindingPath )                  |
+
+## Binding-path
+
+| Property           | Type   | Description | Default Value |
+|--------------------|--------|-------------|---------------|
+| dekorate..resource | String | ""          |               |
+| dekorate..kind     | String | ""          |               |
+| dekorate..name     | String | ""          |               |
+| dekorate..group    | String | ""          |               |
+| dekorate..version  | String | ""          |               |
+
+## Service
+
+| Property       | Type   | Description | Default Value |
+|----------------|--------|-------------|---------------|
+| group          | String |             |               |
+| kind           | String |             |               |
+| name           | String | ""          |               |
+| version        | String |             |               |
+| id             | String | ""          |               |
+| namespace      | String | ""          |               |
+| env-var-prefix | String | ""          |               |
+
+
+## BindingPath
+
+| Property       | Type   | Description | Default Value |
+|----------------|--------|-------------|---------------|
+| container-path | String | ""          |               |
+| secret-path    | String | ""          |               |  
