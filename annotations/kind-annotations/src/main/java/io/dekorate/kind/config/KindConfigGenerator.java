@@ -22,7 +22,7 @@ import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
-import io.dekorate.kind.adapter.KindConfigAdapter;
+import io.dekorate.kind.adapter.KindLoadConfigAdapter;
 import io.dekorate.kubernetes.config.Configuration;
 
 public interface KindConfigGenerator extends ConfigurationGenerator, WithProject {
@@ -34,20 +34,20 @@ public interface KindConfigGenerator extends ConfigurationGenerator, WithProject
   }
 
   default Class<? extends Configuration> getConfigType() {
-    return KindConfig.class;
+    return KindLoadConfig.class;
   }
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    add(new AnnotationConfiguration<>(KindConfigAdapter.newBuilder(propertiesMap(map, KindConfig.class))));
+    add(new AnnotationConfiguration<>(KindLoadConfigAdapter.newBuilder(propertiesMap(map, KindLoadConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    add(new PropertyConfiguration<>(KindConfigAdapter.newBuilder(propertiesMap(map, KindConfig.class))));
+    add(new PropertyConfiguration<>(KindLoadConfigAdapter.newBuilder(propertiesMap(map, KindLoadConfig.class))));
   }
 
-  default void add(ConfigurationSupplier<KindConfig> config) {
+  default void add(ConfigurationSupplier<KindLoadConfig> config) {
     getConfigurationRegistry().add(config);
   }
 }
