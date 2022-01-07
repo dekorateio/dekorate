@@ -23,8 +23,8 @@ As the project now supports `decorating` of kubernetes manifests without the use
   - [OpenShift](#openshift)
   - [Knative](#knative)
   - [Tekton](#tekton)
-  - [Prometheus](#prometheus)
-  - [Jaeger](#jaeger)
+  - [Prometheus](#prometheus-annotations)
+  - [Jaeger](#jaeger-annotations)
   - [ServiceBinding CRD](#servicebinding-crd)
 - Customize manifests using annotations
   - Kubernetes
@@ -433,8 +433,7 @@ public class Main {
 
 To add an environment variable referencing a config map using `application.properties`:
 
-    dekorate.
-    .env-vars[0].name=key1
+    dekorate.kubernetes.env-vars[0].name=key1
     dekorate.kubernetes.env-vars[0].value=key1
     dekorate.kubernetes.env-vars[0].config-map=my-config
 
