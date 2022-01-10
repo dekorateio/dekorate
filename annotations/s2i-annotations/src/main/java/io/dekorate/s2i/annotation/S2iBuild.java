@@ -42,7 +42,7 @@ public @interface S2iBuild {
    * 
    * @return The registry or empty string if no registry has been specified.
    */
-  String registry() default "";
+  String registry() default "docker.io";
 
   /**
    * The group of the application. This value will be use as image user.

@@ -145,7 +145,7 @@ public class Session {
     }
   }
 
-  public void disalbe(String... groups) {
+  public void disable(String... groups) {
     for (String group : groups) {
       this.disabledGroups.add(group);
     }

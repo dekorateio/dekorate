@@ -281,6 +281,22 @@ public class Serialization {
   }
 
   /**
+   * Unmarshals an {@link String} optionally performing placeholder substitution to the stream.
+   *
+   * @param str The {@link String}.
+   * @param type The {@link TypeReference}.
+   * @param <T>
+   * @return
+   */
+  public static <T> T unmarshal(String str, TypeReference<T> type) {
+    try (InputStream is = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8))) {
+      return unmarshal(is, type);
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable(e);
+    }
+  }
+
+  /**
    * Unmarshals an {@link InputStream} optionally performing placeholder substitution to the stream.
    *
    * @param is The {@link InputStream}.

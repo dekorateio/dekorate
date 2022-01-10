@@ -83,5 +83,11 @@
         <module>spring-boot-with-gradle-on-openshift-example</module>
       </modules>
     </profile>
+    <profile>
+      <id>with-helm-examples</id>
+      <modules>
+        <module>helm-example</module>
+      </modules>
+    </profile>
   </profiles>
 </project>
