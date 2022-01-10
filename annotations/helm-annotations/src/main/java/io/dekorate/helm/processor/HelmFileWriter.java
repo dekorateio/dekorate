@@ -17,16 +17,13 @@
 
 package io.dekorate.helm.processor;
 
-import static io.dekorate.helm.config.HelmBuildConfigGenerator.HELM;
 import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
-import static org.apache.commons.lang.StringUtils.EMPTY;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,10 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
@@ -68,13 +64,14 @@ public class HelmFileWriter extends SimpleFileWriter {
   @Override
   public Map<String, String> write(Session session) {
     Map<String, String> artifacts = super.write(session);
+    Map<String, Object> values = session.getResourceRegistry().getConfigReferences();
     session.getConfigurationRegistry().get(HelmBuildConfig.class).ifPresent(helmConfig -> {
       if (helmConfig.isEnabled()) {
         try {
           LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getChart()));
-          artifacts.putAll(processSourceFiles());
+          artifacts.putAll(processSourceFiles(values));
           artifacts.putAll(createChartYaml(helmConfig));
-          artifacts.putAll(createValuesYaml(artifacts));
+          artifacts.putAll(createValuesYaml(values));
           artifacts.putAll(createTarball(helmConfig, artifacts));
 
         } catch (IOException e) {
@@ -86,23 +83,7 @@ public class HelmFileWriter extends SimpleFileWriter {
     return artifacts;
   }
 
-  private Map<String, String> createValuesYaml(Map<String, String> artifacts) throws IOException {
-    Path projectMetaDir = getMetaDir().resolve("config").normalize();
-
-    Map<Object, Object> values = new HashMap<>();
-    for (Map.Entry<String, String> artifact : artifacts.entrySet()) {
-      Path artifactFile = Paths.get(artifact.getKey());
-      if (artifactFile.startsWith(projectMetaDir) && !artifactFile.toFile().getName().contains(HELM)) {
-        Map<Object, Object> yaml = Serialization.unmarshal(artifact.getValue(), new TypeReference<Map<Object, Object>>() {
-        });
-        // Remove project information as we're only interested in annotations/properties (which are mapped with attrs)
-        yaml.remove("project");
-        if (!yaml.isEmpty()) {
-          values.put(artifactFile.toFile().getName().replaceFirst("[.][^.]+$", ""), yaml);
-        }
-      }
-    }
-
+  private Map<String, String> createValuesYaml(Map<String, Object> values) throws IOException {
     Path valuesFile = getOutputDir().resolve(VALUES_FILENAME);
     return writeFileAsYaml(values, valuesFile);
   }
@@ -134,18 +115,41 @@ public class HelmFileWriter extends SimpleFileWriter {
     return helmConfig.getVersion();
   }
 
-  private Map<String, String> processSourceFiles() throws IOException {
+  private Map<String, String> processSourceFiles(Map<String, Object> values) throws IOException {
     Map<String, String> sourceFiles = new HashMap<>();
 
+    StringBuilder sb = new StringBuilder();
     Path templatesDir = getOutputDir().resolve(TEMPLATES);
     Files.createDirectory(templatesDir);
     for (File file : listYamls(getOutputDir())) {
+      List<Map<Object, Object>> resourceList = Serialization.unmarshalAsListOfMaps(file.toPath());
+
+      for (String configReference : values.keySet()) {
+        String[] configReferencePath = configReference.split(Pattern.quote("."));
+        if (configReferencePath.length > 1) {
+          String kind = configReferencePath[0];
+          for (Map<Object, Object> resource : resourceList) {
+            if (kind.equalsIgnoreCase((String) resource.get("kind"))) {
+              Map<Object, Object> pointer = resource;
+              for (int index = 1; index < configReferencePath.length - 1; index++) {
+                String field = configReferencePath[index];
+                Object value = resource.get(field);
+                if (value instanceof Map) {
+                  pointer = (Map) value;
+                }
+              }
+
+              pointer.put(configReferencePath[configReferencePath.length - 1], "{{ .Values." + configReference + " }}");
+            }
+
+            sb.append(Serialization.asYaml(resource));
+          }
+
+        }
+      }
+
       Path targetFile = templatesDir.resolve(file.getName());
-
-      Files.copy(file.toPath(), targetFile);
-
-      // Not load target files, it will be empty.
-      sourceFiles.put(targetFile.toString(), EMPTY);
+      writeFile(sb.toString(), targetFile);
     }
 
     return sourceFiles;
@@ -173,11 +177,15 @@ public class HelmFileWriter extends SimpleFileWriter {
     return writeFileAsYaml(chart, yml);
   }
 
-  private Map<String, String> writeFileAsYaml(Object data, Path yml) throws IOException {
+  private Map<String, String> writeFileAsYaml(Object data, Path file) throws IOException {
     String value = Serialization.asYaml(data);
-    try (FileWriter writer = new FileWriter(yml.toFile())) {
+    return writeFile(value, file);
+  }
+
+  private Map<String, String> writeFile(String value, Path file) throws IOException {
+    try (FileWriter writer = new FileWriter(file.toFile())) {
       writer.write(value);
-      return Collections.singletonMap(yml.toString(), value);
+      return Collections.singletonMap(file.toString(), value);
     }
   }
 

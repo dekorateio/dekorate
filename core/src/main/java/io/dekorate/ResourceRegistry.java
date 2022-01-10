@@ -200,6 +200,18 @@ public class ResourceRegistry {
     return resources;
   }
 
+  public Map<String, Object> getConfigReferences() {
+    Map<String, Object> configReferences = new HashMap<>();
+    groupDecorators.values().stream().flatMap(Set::stream).forEach(decorator -> {
+      if (decorator instanceof WithConfigReference) {
+        WithConfigReference decoratorWithConfigReference = (WithConfigReference) decorator;
+        configReferences.put(decoratorWithConfigReference.getConfigReference(), decoratorWithConfigReference.getConfigValue());
+      }
+    });
+
+    return configReferences;
+  }
+
   public List<Decorator> applyConstraints(Set<Decorator> decorators) {
     List<Decorator> result = new ArrayList<>();
     Decorator[] array = decorators.toArray(new Decorator[decorators.size()]);

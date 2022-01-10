@@ -15,12 +15,13 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.WithConfigReference;
 import io.dekorate.doc.Description;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecFluent;
 
 @Description("Apply the number of replicas to the DeploymentSpec.")
-public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpecFluent> {
+public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpecFluent> implements WithConfigReference {
 
   private final int replicas;
 
@@ -38,5 +39,15 @@ public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpe
     if (replicas > 0) {
       deploymentSpec.withReplicas(replicas);
     }
+  }
+
+  @Override
+  public String getConfigReference() {
+    return "deployment.spec.replicas";
+  }
+
+  @Override
+  public Object getConfigValue() {
+    return replicas;
   }
 }
