@@ -40,6 +40,7 @@ public class ImageConfiguration extends ApplicationConfiguration {
   private String dockerFile;
   private Boolean autoBuildEnabled;
   private Boolean autoPushEnabled;
+  private Boolean autoLoadEnabled;
 
   public static ImageConfiguration from(ApplicationConfiguration applicationConfiguration) {
     return new ImageConfigurationBuilder()
@@ -57,8 +58,8 @@ public class ImageConfiguration extends ApplicationConfiguration {
   }
 
   public ImageConfiguration(Project project, Map<ConfigKey, Object> attributes, Boolean enabled, String registry, String group,
-      String name,
-      String version, String image, String dockerFile, Boolean autoBuildEnabled, Boolean autoPushEnabled) {
+      String name, String version, String image, String dockerFile, Boolean autoBuildEnabled, Boolean autoPushEnabled,
+      Boolean autoLoadEnabled) {
     super(project, attributes, group, name, version);
     this.enabled = enabled;
     this.registry = registry;
@@ -69,6 +70,7 @@ public class ImageConfiguration extends ApplicationConfiguration {
     this.dockerFile = dockerFile;
     this.autoBuildEnabled = autoBuildEnabled;
     this.autoPushEnabled = autoPushEnabled;
+    this.autoLoadEnabled = autoLoadEnabled;
   }
 
   public Boolean getEnabled() {
@@ -151,4 +153,15 @@ public class ImageConfiguration extends ApplicationConfiguration {
     this.autoPushEnabled = autoPushEnabled;
   }
 
+  public boolean isAutoLoadEnabled() {
+    return autoLoadEnabled != null && autoLoadEnabled;
+  }
+
+  public Boolean getAutoLoadEnabled() {
+    return autoLoadEnabled;
+  }
+
+  public void setAutoLoadEnabled(Boolean autoLoadEnabled) {
+    this.autoLoadEnabled = autoLoadEnabled;
+  }
 }
