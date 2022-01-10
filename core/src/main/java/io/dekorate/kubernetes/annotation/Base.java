@@ -218,10 +218,4 @@ import io.sundr.builder.annotations.Pojo;
    */
   boolean autoDeployEnabled() default false;
 
-  /**
-   * Flag to trigger the registration of the kind load docker-image hook. *
-   * 
-   * @return True for automatic registration of the build hook.
-   */
-  boolean autoLoadEnabled() default false;
 }

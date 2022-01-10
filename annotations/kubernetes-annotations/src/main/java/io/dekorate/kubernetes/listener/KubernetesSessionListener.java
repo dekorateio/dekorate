@@ -63,7 +63,7 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
     BuildService buildService = null;
     ImageConfiguration imageConfig = optionalImageConfig.get();
     if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || kubernetesConfig.isAutoDeployEnabled()
-        || kubernetesConfig.isAutoLoadEnabled()) {
+        || imageConfig.isAutoLoadEnabled()) {
 
       try {
         buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems()))
@@ -86,11 +86,10 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
       // This ensure that the pod runs the proper image
       hooks.add(new ImageBuildHook(getProject(), buildService));
       hooks.add(new ImagePushHook(getProject(), buildService));
-    } else if (imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()
-        || kubernetesConfig.isAutoLoadEnabled()) {
+    } else if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoLoadEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
       hooks.add(new ImageBuildHook(getProject(), buildService));
     }
-    if (kubernetesConfig.isAutoLoadEnabled()) {
+    if (imageConfig.isAutoLoadEnabled()) {
       hooks.add(new KindImageAutoloadHook(getProject(), imageConfig.getImage()));
     }
 

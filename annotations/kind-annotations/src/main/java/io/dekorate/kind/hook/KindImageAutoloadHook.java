@@ -26,6 +26,6 @@ public class KindImageAutoloadHook extends ProjectHook {
   @Override
   public void run() {
     LOGGER.info("Performing docker image loading with KiND.");
-    exec("kind", "load docker-image", image);
+    exec("kind", "load", "docker-image", image);
   }
 }
