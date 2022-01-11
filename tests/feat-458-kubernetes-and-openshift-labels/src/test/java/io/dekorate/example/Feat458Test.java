@@ -36,7 +36,7 @@ import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.openshift.api.model.*;
 
- //TODO: Re-enable the test once CI issues are resolved.
+//TODO: Re-enable the test once CI issues are resolved.
 @Disabled
 public class Feat458Test {
 

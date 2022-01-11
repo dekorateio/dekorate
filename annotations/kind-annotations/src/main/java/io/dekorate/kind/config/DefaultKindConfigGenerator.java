@@ -17,7 +17,6 @@ package io.dekorate.kind.config;
 
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.config.DefaultConfiguration;
-import io.dekorate.kind.decorator.ApplyKindImageAutoloadConfiguration;
 
 public class DefaultKindConfigGenerator implements KindConfigGenerator {
 
