@@ -18,8 +18,10 @@ package io.dekorate.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,5 +43,24 @@ class HelmExampleTest {
     // zip manifest
     String zipName = String.format("META-INF/dekorate/%s-%s-helm.tar.gz", chart.getName(), chart.getVersion());
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(zipName), "File '" + zipName + "' not found!");
+  }
+
+  @Test
+  public void valuesShouldContainExpectedData() throws IOException {
+    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/values.yaml"), Map.class);
+    assertNotNull(values, "Values is null!");
+
+    assertNotNull(values.containsKey("helm-example"), "Does not contain `helm-example`");
+    assertNotNull(values.get("helm-example") instanceof Map, "Value `helm-example` is not a map!");
+    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get("helm-example");
+
+    // Should contain replicas
+    assertEquals(3, helmExampleValues.get("replicas"));
+    // Should NOT contain not-found: as this property is ignored
+    assertNull(helmExampleValues.get("not-found"));
+    // Should contain commit-id
+    assertNotNull(helmExampleValues.get("commit-id"));
+    // Shoult contain vcs-url with the overridden value from properties
+    assertEquals("Overridden", helmExampleValues.get("vcs-url"));
   }
 }

@@ -59,6 +59,14 @@ public abstract class ApplicationContainerDecorator<T> extends Decorator<Visitab
     this.containerName = containerName;
   }
 
+  protected String getDeploymentName() {
+    return deploymentName;
+  }
+
+  protected String getContainerName() {
+    return containerName;
+  }
+
   @Override
   public void visit(VisitableBuilder builder) {
     Optional<ObjectMeta> objectMeta = getMetadata(builder);

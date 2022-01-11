@@ -42,14 +42,12 @@ public interface HelmBuildConfigGenerator extends ConfigurationGenerator, WithPr
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    System.out.println("From annotations: " + map);
     on(new AnnotationConfiguration<>(
         HelmBuildConfigAdapter.newBuilder(propertiesMap(map, HelmBuildConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    System.out.println("From properties: " + map);
     on(new PropertyConfiguration<>(
         HelmBuildConfigAdapter.newBuilder(propertiesMap(map, HelmBuildConfig.class))));
   }

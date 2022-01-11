@@ -200,12 +200,12 @@ public class ResourceRegistry {
     return resources;
   }
 
-  public Map<String, Object> getConfigReferences() {
-    Map<String, Object> configReferences = new HashMap<>();
+  public Map<String, WithConfigReference> getConfigReferences() {
+    Map<String, WithConfigReference> configReferences = new HashMap<>();
     groupDecorators.values().stream().flatMap(Set::stream).forEach(decorator -> {
       if (decorator instanceof WithConfigReference) {
         WithConfigReference decoratorWithConfigReference = (WithConfigReference) decorator;
-        configReferences.put(decoratorWithConfigReference.getConfigReference(), decoratorWithConfigReference.getConfigValue());
+        configReferences.put(decoratorWithConfigReference.getConfigReference(), decoratorWithConfigReference);
       }
     });
 

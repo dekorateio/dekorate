@@ -43,11 +43,11 @@ public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpe
 
   @Override
   public String getConfigReference() {
-    return "deployment.spec.replicas";
+    return getName() + ".replicas";
   }
 
   @Override
-  public Object getConfigValue() {
-    return replicas;
+  public String getJsonPathProperty() {
+    return "$.[?(@.kind == 'Deployment')].spec.replicas";
   }
 }

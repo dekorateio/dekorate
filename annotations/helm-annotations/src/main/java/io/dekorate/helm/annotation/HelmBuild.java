@@ -56,4 +56,6 @@ public @interface HelmBuild {
   Maintainer[] maintainers() default {};
 
   HelmDependency[] dependencies() default {};
+
+  ValueReference[] values() default {};
 }

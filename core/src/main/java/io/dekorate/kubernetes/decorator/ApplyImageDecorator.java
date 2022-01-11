@@ -15,9 +15,10 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import io.dekorate.WithConfigReference;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 
-public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> {
+public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> implements WithConfigReference {
 
   private final String image;
 
@@ -39,6 +40,21 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
   public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
         AddSidecarDecorator.class };
+  }
+
+  @Override
+  public String getConfigReference() {
+    return getContainerName() + ".image";
+  }
+
+  @Override
+  public String getJsonPathProperty() {
+    return "$.[?(@.kind == 'Deployment')].spec.template.spec.containers[?(@.name == '" + getContainerName() + "')].image";
+  }
+
+  @Override
+  public Object getConfigValue() {
+    return image;
   }
 
 }

@@ -51,6 +51,10 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
     this.name = name;
   }
 
+  protected String getName() {
+    return name;
+  }
+
   @Override
   public void visit(VisitableBuilder builder) {
     Optional<String> resourceKind = getKind(builder);
