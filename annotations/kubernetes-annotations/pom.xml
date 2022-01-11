@@ -40,11 +40,6 @@ limitations under the License.
     </dependency>
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>kind-annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.dekorate</groupId>
       <artifactId>docker-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>

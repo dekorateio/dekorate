@@ -1,4 +1,4 @@
-package io.dekorate.kind.decorator;
+package io.dekorate.kind.config;
 
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.ImageConfigurationFluent;

@@ -30,11 +30,11 @@ import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.hook.ImageLoadHook;
 import io.dekorate.hook.ImagePushHook;
 import io.dekorate.hook.OrderedHook;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.hook.ResourcesApplyHook;
-import io.dekorate.kind.hook.KindImageAutoloadHook;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.hook.ScaleDeploymentHook;
@@ -86,11 +86,9 @@ public class KubernetesSessionListener implements SessionListener, WithProject, 
       // This ensure that the pod runs the proper image
       hooks.add(new ImageBuildHook(getProject(), buildService));
       hooks.add(new ImagePushHook(getProject(), buildService));
-    } else if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoLoadEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+    } else if (imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
       hooks.add(new ImageBuildHook(getProject(), buildService));
-    }
-    if (imageConfig.isAutoLoadEnabled()) {
-      hooks.add(new KindImageAutoloadHook(getProject(), imageConfig.getImage()));
+      hooks.add(new ImageLoadHook(getProject(), imageConfig));
     }
 
     if (kubernetesConfig.isAutoDeployEnabled()) {
