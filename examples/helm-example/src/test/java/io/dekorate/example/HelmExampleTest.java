@@ -50,17 +50,17 @@ class HelmExampleTest {
     Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/values.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
-    assertNotNull(values.containsKey("helm-example"), "Does not contain `helm-example`");
-    assertNotNull(values.get("helm-example") instanceof Map, "Value `helm-example` is not a map!");
-    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get("helm-example");
+    assertNotNull(values.containsKey("helmExample"), "Does not contain `helmExample`");
+    assertNotNull(values.get("helmExample") instanceof Map, "Value `helm-example` is not a map!");
+    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get("helmExample");
 
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
     // Should contain commit-id
-    assertNotNull(helmExampleValues.get("commit-id"));
+    assertNotNull(helmExampleValues.get("commitId"));
     // Shoult contain vcs-url with the overridden value from properties
-    assertEquals("Overridden", helmExampleValues.get("vcs-url"));
+    assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
   }
 }

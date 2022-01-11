@@ -52,6 +52,7 @@ import io.dekorate.helm.model.Value;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
+import io.dekorate.utils.Strings;
 
 public class HelmFileWriter extends SimpleFileWriter {
 
@@ -175,6 +176,8 @@ public class HelmFileWriter extends SimpleFileWriter {
       // Parse to json in order to process jsonpaths
       String json = Serialization.jsonMapper().writeValueAsString(yaml);
       for (Value valueReference : valuesReferences) {
+        String valueReferenceProperty = Strings.kebabToCamelCase(valueReference.getProperty());
+
         DocumentContext jsonContext = JsonPath.parse(json);
 
         // Check whether path exists
@@ -183,23 +186,23 @@ public class HelmFileWriter extends SimpleFileWriter {
           currentValue = jsonContext.read(valueReference.getJsonPath(), Object.class);
         } catch (PathNotFoundException ex) {
           LOGGER.warning(String.format("Property '%s' is ignored in Helm generation because the json Path '%s' was not found. ",
-              valueReference.getProperty(), valueReference.getJsonPath()));
+              valueReferenceProperty, valueReference.getJsonPath()));
           continue;
         }
 
         if (valueReference.getValue() == null) {
           if (currentValue instanceof List && !((List) currentValue).isEmpty()) {
             // We get the first value
-            values.put(valueReference.getProperty(), ((List) currentValue).get(0));
+            values.put(valueReferenceProperty, ((List) currentValue).get(0));
           } else {
-            values.put(valueReference.getProperty(), currentValue);
+            values.put(valueReferenceProperty, currentValue);
           }
         } else {
-          values.put(valueReference.getProperty(), valueReference.getValue());
+          values.put(valueReferenceProperty, valueReference.getValue());
         }
 
         json = jsonContext
-            .set(valueReference.getJsonPath(), "{{ .Values." + valueReference.getProperty() + " }}")
+            .set(valueReference.getJsonPath(), "{{ .Values." + valueReferenceProperty + " }}")
             .jsonString();
       }
 
