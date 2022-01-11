@@ -25,11 +25,11 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
-import io.dekorate.kind.annotation.KindApplication;
+import io.dekorate.kind.annotation.Kind;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generates kubernetes manifests.")
-@SupportedAnnotationTypes("io.dekorate.kind.annotation.KindApplication")
+@SupportedAnnotationTypes("io.dekorate.kind.annotation.Kind")
 public class KindAnnotationProcessor extends AbstractAnnotationProcessor {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
@@ -41,8 +41,8 @@ public class KindAnnotationProcessor extends AbstractAnnotationProcessor {
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        LOGGER.info("Found @KindApplication on: " + mainClass.toString());
-        process("kind", mainClass, KindApplication.class);
+        LOGGER.info("Found @Kind on: " + mainClass.toString());
+        process("kind", mainClass, Kind.class);
       }
     }
     return false;

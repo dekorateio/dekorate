@@ -29,16 +29,8 @@ import io.sundr.builder.annotations.Pojo;
 @Pojo(name = "KindLoadConfig", relativePath = "../config", autobox = true, mutable = true, superClass = BaseConfig.class, withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(name = "KindLoadConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface KindApplication {
+public @interface Kind {
 
   boolean enabled() default true;
-
-  /**
-   * Flag to trigger the registration of the deploy hook. It's generally
-   * preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
-   *
-   * @return True for automatic registration of the build hook.
-   */
-  boolean autoDeployEnabled() default true;
 
 }

@@ -30,6 +30,6 @@ public class KindImageLoader implements ImageLoader {
   @Override
   public void load(Project project, String image) {
     LOGGER.info("Performing docker image loading with KiND!");
-    Exec.inProject(project).redirectingOutput(System.out).commands("kind", "load", "docker-image", image); 
+    Exec.inProject(project).redirectingOutput(System.out).commands("kind", "load", "docker-image", image);
   }
 }
