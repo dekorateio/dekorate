@@ -33,6 +33,7 @@ import io.dekorate.BuildServiceFactory;
 import io.dekorate.DekorateException;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
+import io.dekorate.hook.ImageLoadHook;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
 import io.dekorate.testing.WithEvents;
@@ -174,6 +175,9 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       } else if (config.isBuildEnabled()) {
         buildService.prepare();
         buildService.build();
+      }
+      if (imageConfig.isAutoLoadEnabled()) {
+        new ImageLoadHook(project, imageConfig).run();
       }
     }
 
