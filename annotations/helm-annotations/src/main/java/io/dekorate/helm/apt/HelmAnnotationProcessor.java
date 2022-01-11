@@ -24,7 +24,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.helm.annotation.HelmBuild;
+import io.dekorate.helm.annotation.HelmChart;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @SupportedAnnotationTypes({ "io.dekorate.helm.annotation.HelmBuild" })
@@ -38,7 +38,7 @@ public class HelmAnnotationProcessor extends AbstractAnnotationProcessor {
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        process("helm", mainClass, HelmBuild.class);
+        process("helm", mainClass, HelmChart.class);
       }
     }
     return false;

@@ -31,7 +31,7 @@ public class DefaultHelmBuildConfigGenerator implements HelmBuildConfigGenerator
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
     this.configurationRegistry.add(new ApplyBuildToImageConfiguration());
-    on(new DefaultConfiguration<>(HelmBuildConfig.newHelmBuildConfigBuilderFromDefaults()));
+    on(new DefaultConfiguration<>(HelmChartConfig.newHelmChartConfigBuilderFromDefaults()));
   }
 
   public ConfigurationRegistry getConfigurationRegistry() {

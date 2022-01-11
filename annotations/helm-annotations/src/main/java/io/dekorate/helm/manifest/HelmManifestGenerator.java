@@ -23,11 +23,11 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.ManifestGenerator;
 import io.dekorate.ResourceRegistry;
 import io.dekorate.WithProject;
-import io.dekorate.helm.config.EditableHelmBuildConfig;
-import io.dekorate.helm.config.HelmBuildConfig;
+import io.dekorate.helm.config.EditableHelmChartConfig;
+import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.kubernetes.config.Configuration;
 
-public class HelmManifestGenerator implements ManifestGenerator<HelmBuildConfig>, WithProject {
+public class HelmManifestGenerator implements ManifestGenerator<HelmChartConfig>, WithProject {
 
   private static final String HELM = "helm";
 
@@ -51,10 +51,10 @@ public class HelmManifestGenerator implements ManifestGenerator<HelmBuildConfig>
   }
 
   public boolean accepts(Class<? extends Configuration> type) {
-    return type.equals(HelmBuildConfig.class) || type.equals(EditableHelmBuildConfig.class);
+    return type.equals(HelmChartConfig.class) || type.equals(EditableHelmChartConfig.class);
   }
 
-  public void generate(HelmBuildConfig config) {
+  public void generate(HelmChartConfig config) {
     if (config.isEnabled()) {
       LOGGER.info("Processing helm configuration.");
       // TODO

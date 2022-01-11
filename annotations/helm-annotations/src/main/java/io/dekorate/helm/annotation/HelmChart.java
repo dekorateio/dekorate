@@ -28,16 +28,16 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "HelmBuildConfig", autobox = true, mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(name = "HelmBuildConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "HelmChartConfig", autobox = true, mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(name = "HelmChartConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HelmBuild {
+public @interface HelmChart {
 
   boolean enabled() default true;
 
-  String chart();
+  String name();
 
-  String chartExtension() default "tar.gz";
+  String extension() default "tar.gz";
 
   String description() default "";
 

@@ -44,7 +44,7 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.WithConfigReference;
-import io.dekorate.helm.config.HelmBuildConfig;
+import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
@@ -72,12 +72,12 @@ public class HelmFileWriter extends SimpleFileWriter {
   @Override
   public Map<String, String> write(Session session) {
     Map<String, String> artifacts = super.write(session);
-    session.getConfigurationRegistry().get(HelmBuildConfig.class).ifPresent(helmConfig -> {
+    session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(helmConfig -> {
       if (helmConfig.isEnabled()) {
         List<Value> valuesReferences = getValuesReferences(helmConfig, session);
 
         try {
-          LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getChart()));
+          LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
           Map<String, Object> values = new HashMap<>();
           artifacts.putAll(processSourceFiles(valuesReferences, values));
           artifacts.putAll(createChartYaml(helmConfig));
@@ -93,7 +93,7 @@ public class HelmFileWriter extends SimpleFileWriter {
     return artifacts;
   }
 
-  private List<Value> getValuesReferences(HelmBuildConfig helmBuildConfig, Session session) {
+  private List<Value> getValuesReferences(HelmChartConfig helmBuildConfig, Session session) {
     List<Value> configReferences = new ArrayList<>();
     // From decorators
     for (Map.Entry<String, WithConfigReference> entry : session.getResourceRegistry().getConfigReferences().entrySet()) {
@@ -136,10 +136,10 @@ public class HelmFileWriter extends SimpleFileWriter {
     return writeFileAsYaml(keyValue, valuesFile);
   }
 
-  private Map<String, String> createTarball(HelmBuildConfig helmConfig, Map<String, String> artifacts) throws IOException {
+  private Map<String, String> createTarball(HelmChartConfig helmConfig, Map<String, String> artifacts) throws IOException {
 
     File tarballFile = getOutputDir().resolve(String.format("%s-%s-%s.%s",
-        helmConfig.getChart(), getVersion(helmConfig), getHelmClassifier(artifacts), helmConfig.getChartExtension()))
+        helmConfig.getName(), getVersion(helmConfig), getHelmClassifier(artifacts), helmConfig.getExtension()))
         .toFile();
 
     LOGGER.debug(String.format("Creating Helm configuration Tarball: '%s'", tarballFile));
@@ -149,13 +149,13 @@ public class HelmFileWriter extends SimpleFileWriter {
     yamls.add(getOutputDir().resolve(VALUES_FILENAME).toFile());
     yamls.addAll(listYamls(getOutputDir().resolve(TEMPLATES)));
 
-    createTarBall(tarballFile, getOutputDir().toFile(), yamls, helmConfig.getChartExtension(),
-        tae -> tae.setName(String.format("%s/%s", helmConfig.getChart(), tae.getName())));
+    createTarBall(tarballFile, getOutputDir().toFile(), yamls, helmConfig.getExtension(),
+        tae -> tae.setName(String.format("%s/%s", helmConfig.getName(), tae.getName())));
 
     return Collections.singletonMap(tarballFile.toString(), null);
   }
 
-  private String getVersion(HelmBuildConfig helmConfig) {
+  private String getVersion(HelmChartConfig helmConfig) {
     if (helmConfig.getVersion() == null || helmConfig.getVersion().isEmpty()) {
       return getProject().getBuildInfo().getVersion();
     }
@@ -221,10 +221,10 @@ public class HelmFileWriter extends SimpleFileWriter {
     return sourceFiles;
   }
 
-  private Map<String, String> createChartYaml(HelmBuildConfig helmConfig) throws IOException {
+  private Map<String, String> createChartYaml(HelmChartConfig helmConfig) throws IOException {
     final Chart chart = new Chart();
     chart.setApiVersion(CHART_API_VERSION);
-    chart.setName(helmConfig.getChart());
+    chart.setName(helmConfig.getName());
     chart.setVersion(getVersion(helmConfig));
     chart.setDescription(helmConfig.getDescription());
     chart.setHome(helmConfig.getHome());

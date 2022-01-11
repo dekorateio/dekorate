@@ -24,7 +24,7 @@ import io.dekorate.WithProject;
 import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
-import io.dekorate.helm.adapter.HelmBuildConfigAdapter;
+import io.dekorate.helm.adapter.HelmChartConfigAdapter;
 import io.dekorate.helm.processor.HelmFileWriter;
 import io.dekorate.kubernetes.config.Configuration;
 
@@ -37,22 +37,22 @@ public interface HelmBuildConfigGenerator extends ConfigurationGenerator, WithPr
   }
 
   default Class<? extends Configuration> getConfigType() {
-    return HelmBuildConfig.class;
+    return HelmChartConfig.class;
   }
 
   @Override
   default void addAnnotationConfiguration(Map map) {
     on(new AnnotationConfiguration<>(
-        HelmBuildConfigAdapter.newBuilder(propertiesMap(map, HelmBuildConfig.class))));
+        HelmChartConfigAdapter.newBuilder(propertiesMap(map, HelmChartConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
     on(new PropertyConfiguration<>(
-        HelmBuildConfigAdapter.newBuilder(propertiesMap(map, HelmBuildConfig.class))));
+        HelmChartConfigAdapter.newBuilder(propertiesMap(map, HelmChartConfig.class))));
   }
 
-  default void on(ConfigurationSupplier<HelmBuildConfig> config) {
+  default void on(ConfigurationSupplier<HelmChartConfig> config) {
     getConfigurationRegistry().add(config);
 
     getSession().setWriter(new HelmFileWriter(getProject()));
