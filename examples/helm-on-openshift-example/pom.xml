@@ -19,9 +19,9 @@ limitations under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>helm-example</artifactId>
+  <artifactId>helm-on-openshift-example</artifactId>
   <version>2.7-SNAPSHOT</version>
-  <name>Dekorate :: Examples :: Helm</name>
+  <name>Dekorate :: Examples :: Helm on Openshift</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,7 +37,13 @@ limitations under the License.
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>kubernetes-spring-starter</artifactId>
+      <artifactId>openshift-spring-starter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>docker-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -56,7 +62,7 @@ limitations under the License.
     <!-- Testing -->
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>kubernetes-junit-starter</artifactId>
+      <artifactId>openshift-junit-starter</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

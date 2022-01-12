@@ -28,20 +28,22 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.utils.Serialization;
 
-class HelmExampleTest {
+class HelmOpenshiftExampleTest {
+
+  private static final String ROOT_CONFIG_NAME = "helmOnOpenshiftExample";
 
   @Test
   public void shouldHelmManifestsBeGenerated() throws IOException {
     Chart chart = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/Chart.yaml"), Chart.class);
     assertNotNull(chart, "Chart is null!");
     // Should be the same as in `dekorate.helm.chart` from properties.
-    assertEquals("myChart", chart.getName());
+    assertEquals("myOcpChart", chart.getName());
     // Values.yaml manifest
     assertNotNull(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/values.yaml"));
     // templates
-    assertNotNull(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/templates/kubernetes.yml"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/templates/openshift.yml"));
     // zip manifest
-    String zipName = String.format("META-INF/dekorate/%s-%s-helm.tar.gz", chart.getName(), chart.getVersion());
+    String zipName = String.format("META-INF/dekorate/%s-%s-helmshift.tar.gz", chart.getName(), chart.getVersion());
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(zipName), "File '" + zipName + "' not found!");
   }
 
@@ -50,9 +52,9 @@ class HelmExampleTest {
     Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/values.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
-    assertNotNull(values.containsKey("helmExample"), "Does not contain `helmExample`");
-    assertNotNull(values.get("helmExample") instanceof Map, "Value `helm-example` is not a map!");
-    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get("helmExample");
+    assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
+    assertNotNull(values.get(ROOT_CONFIG_NAME) instanceof Map, "Value `" + ROOT_CONFIG_NAME + "` is not a map!");
+    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
