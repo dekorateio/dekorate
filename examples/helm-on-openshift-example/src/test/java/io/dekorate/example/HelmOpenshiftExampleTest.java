@@ -56,6 +56,9 @@ class HelmOpenshiftExampleTest {
     assertNotNull(values.get(ROOT_CONFIG_NAME) instanceof Map, "Value `" + ROOT_CONFIG_NAME + "` is not a map!");
     Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
+    // Should contain s2i configuration
+    assertNotNull(helmExampleValues.get("s2iJava"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2iJava")).get("builderImage"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain not-found: as this property is ignored

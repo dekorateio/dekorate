@@ -17,6 +17,7 @@
 
 package io.dekorate.s2i.decorator;
 
+import io.dekorate.WithConfigReference;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.s2i.config.S2iBuildConfig;
@@ -26,7 +27,8 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.openshift.api.model.ImageStreamBuilder;
 
 @Description("Add a builder ImageStream resource to the list of generated resources.")
-public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
+public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder>
+    implements WithConfigReference {
 
   private S2iBuildConfig config;
 
@@ -37,11 +39,7 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
 
-    String repository = Images.getRepository(config.getBuilderImage());
-
-    String name = !repository.contains("/")
-        ? repository
-        : repository.substring(repository.lastIndexOf("/") + 1);
+    String name = getImageStreamName();
 
     if (contains(list, "image.openshift.io/v1", "ImageStream", name)) {
       return;
@@ -59,4 +57,26 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
         .endSpec());
   }
 
+  @Override
+  public String getConfigReference() {
+    return generateConfigReferenceName("builder-image", config.getName(), getImageStreamName());
+  }
+
+  @Override
+  public String getJsonPathProperty() {
+    return "$.[?(@.kind == 'ImageStream' && @.metadata.name == '" + getImageStreamName() + "')].spec.dockerImageRepository";
+  }
+
+  @Override
+  public Object getConfigValue() {
+    return Images.removeTag(config.getBuilderImage());
+  }
+
+  private String getImageStreamName() {
+    String repository = Images.getRepository(config.getBuilderImage());
+
+    return !repository.contains("/")
+        ? repository
+        : repository.substring(repository.lastIndexOf("/") + 1);
+  }
 }

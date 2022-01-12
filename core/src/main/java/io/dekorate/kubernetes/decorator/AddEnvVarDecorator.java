@@ -18,6 +18,7 @@ package io.dekorate.kubernetes.decorator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import io.dekorate.WithConfigReference;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.utils.Strings;
@@ -29,7 +30,7 @@ import io.fabric8.kubernetes.api.model.EnvVarBuilder;
  * A decorator that adds an environment variable to the specified container(s).
  */
 @Description("Add a environment variable to the container.")
-public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerBuilder> {
+public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerBuilder> implements WithConfigReference {
 
   private final Env env;
 
@@ -147,4 +148,34 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
         AddSidecarDecorator.class };
   }
 
+  @Override
+  public String getConfigReference() {
+    return generateConfigReferenceName("envs." + env.getName(), getContainerName());
+  }
+
+  @Override
+  public boolean isConfigReferenceCompatible() {
+    // Only env vars with value: secrets, configmap and so on are not supported yet.
+    return Strings.isNotNullOrEmpty(env.getValue());
+  }
+
+  @Override
+  public String getJsonPathProperty() {
+    String envFilter = ".env.[?(@.name == '" + env.getName() + "')].value";
+    if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
+      return "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
+          + getContainerName() + "')]" + envFilter;
+    } else if (!Strings.equals(getDeploymentName(), ANY)) {
+      return "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers." + envFilter;
+    } else if (!Strings.equals(getContainerName(), ANY)) {
+      return "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')]" + envFilter;
+    }
+
+    return "$..spec.template.spec.containers." + envFilter;
+  }
+
+  @Override
+  public Object getConfigValue() {
+    return env.getValue();
+  }
 }
