@@ -17,6 +17,9 @@
 
 package io.dekorate.helm.apt;
 
+import static io.dekorate.helm.config.HelmBuildConfigGenerator.HELM;
+
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -27,7 +30,7 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.helm.annotation.HelmChart;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedAnnotationTypes({ "io.dekorate.helm.annotation.HelmBuild" })
+@SupportedAnnotationTypes({ "io.dekorate.helm.annotation.HelmChart" })
 public class HelmAnnotationProcessor extends AbstractAnnotationProcessor {
 
   @Override
@@ -36,11 +39,19 @@ public class HelmAnnotationProcessor extends AbstractAnnotationProcessor {
       getSession().close();
       return true;
     }
+
+    Set<Element> mainClasses = new HashSet<>();
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        process("helm", mainClass, HelmChart.class);
+        mainClasses.add(mainClass);
       }
     }
+
+    for (Element mainClass : mainClasses) {
+      process(HELM, mainClass, HelmChart.class);
+    }
+
     return false;
+
   }
 }
