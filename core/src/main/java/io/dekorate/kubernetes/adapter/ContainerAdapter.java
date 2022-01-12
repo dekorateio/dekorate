@@ -87,7 +87,7 @@ public class ContainerAdapter {
   }
 
   /**
-   * Adapt the dekorate {@link io.dekorate.kubernetes.config.Container} to a kuberntes model {@link Container}.
+   * Adapt the dekorate {@link io.dekorate.kubernetes.config.Container} to a kubernetes model {@link Container}.
    * 
    * @param container the input container
    * @return the kubernetes model container

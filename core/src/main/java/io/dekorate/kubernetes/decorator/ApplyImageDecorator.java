@@ -16,6 +16,7 @@
 package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.WithConfigReference;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 
 public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> implements WithConfigReference {
@@ -23,7 +24,7 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
   private final String image;
 
   public ApplyImageDecorator(String containerName, String image) {
-    super(null, containerName);
+    super(ANY, containerName);
     this.image = image;
   }
 
@@ -44,12 +45,21 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
 
   @Override
   public String getConfigReference() {
-    return getContainerName() + ".image";
+    return generateConfigReferenceName("image", getContainerName(), getDeploymentName());
   }
 
   @Override
   public String getJsonPathProperty() {
-    return "$.[?(@.kind == 'Deployment')].spec.template.spec.containers[?(@.name == '" + getContainerName() + "')].image";
+    if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
+      return "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
+          + getContainerName() + "')].image";
+    } else if (!Strings.equals(getDeploymentName(), ANY)) {
+      return "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers..image";
+    } else if (!Strings.equals(getContainerName(), ANY)) {
+      return "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')].image";
+    }
+
+    return "$..spec.template.spec.containers..image";
   }
 
   @Override

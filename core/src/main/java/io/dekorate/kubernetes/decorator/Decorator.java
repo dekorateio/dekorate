@@ -19,6 +19,12 @@ import io.fabric8.kubernetes.api.builder.TypedVisitor;
 
 public abstract class Decorator<T> extends TypedVisitor<T> implements Comparable<Decorator> {
 
+  /**
+   * For resource name null acts as a wildcards.
+   * Let's use a constant instead, for clarity's shake
+   */
+  public static final String ANY = null;
+
   public Class<? extends Decorator>[] after() {
     return new Class[0];
   }

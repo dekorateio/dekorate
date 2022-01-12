@@ -17,6 +17,7 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.WithConfigReference;
 import io.dekorate.doc.Description;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecFluent;
 
@@ -43,11 +44,15 @@ public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpe
 
   @Override
   public String getConfigReference() {
-    return getName() + ".replicas";
+    return generateConfigReferenceName("replicas", getName());
   }
 
   @Override
   public String getJsonPathProperty() {
+    if (!Strings.equals(getName(), ANY)) {
+      return "$.[?(@.kind == 'Deployment' && @.metadata.name == '" + getName() + "')].spec.replicas";
+    }
+
     return "$.[?(@.kind == 'Deployment')].spec.replicas";
   }
 }

@@ -42,14 +42,12 @@ public interface HelmBuildConfigGenerator extends ConfigurationGenerator, WithPr
 
   @Override
   default void addAnnotationConfiguration(Map map) {
-    on(new AnnotationConfiguration<>(
-        HelmChartConfigAdapter.newBuilder(propertiesMap(map, HelmChartConfig.class))));
+    on(new AnnotationConfiguration<>(HelmChartConfigAdapter.newBuilder(propertiesMap(map, HelmChartConfig.class))));
   }
 
   @Override
   default void addPropertyConfiguration(Map map) {
-    on(new PropertyConfiguration<>(
-        HelmChartConfigAdapter.newBuilder(propertiesMap(map, HelmChartConfig.class))));
+    on(new PropertyConfiguration<>(HelmChartConfigAdapter.newBuilder(propertiesMap(map, HelmChartConfig.class))));
   }
 
   default void on(ConfigurationSupplier<HelmChartConfig> config) {

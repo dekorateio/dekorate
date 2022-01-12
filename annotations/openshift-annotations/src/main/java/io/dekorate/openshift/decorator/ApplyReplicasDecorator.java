@@ -15,13 +15,15 @@
  */
 package io.dekorate.openshift.decorator;
 
+import io.dekorate.WithConfigReference;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.openshift.api.model.DeploymentConfigSpecFluent;
 
 @Description("Apply the number of replicas to the DeploymentConfigSpec.")
-public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentConfigSpecFluent> {
+public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentConfigSpecFluent> implements WithConfigReference {
 
   private final int replicas;
 
@@ -40,5 +42,24 @@ public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentCon
     if (replicas > 0) {
       deploymentSpec.withReplicas(replicas);
     }
+  }
+
+  @Override
+  public String getConfigReference() {
+    return generateConfigReferenceName("replicas", getName());
+  }
+
+  @Override
+  public String getJsonPathProperty() {
+    if (!Strings.equals(getName(), ANY)) {
+      return "$.[?(@.kind == 'DeploymentConfig' && @.metadata.name == '" + getName() + "')].spec.replicas";
+    }
+
+    return "$.[?(@.kind == 'DeploymentConfig')].spec.replicas";
+  }
+
+  @Override
+  public Object getConfigValue() {
+    return replicas;
   }
 }

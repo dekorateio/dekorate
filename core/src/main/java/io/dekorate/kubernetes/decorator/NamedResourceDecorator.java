@@ -27,12 +27,6 @@ import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuilder> {
-  /**
-   * For resource name null acts as a wildcards.
-   * Let's use a constant instead, for clarity's shake
-   */
-  public static final String ANY = null;
-
   protected final String kind;
   protected final String name;
 

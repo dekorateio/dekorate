@@ -15,6 +15,10 @@
  */
 package io.dekorate;
 
+import static io.dekorate.kubernetes.decorator.Decorator.ANY;
+
+import io.dekorate.utils.Strings;
+
 /**
  * Interface to resolve properties that were handled by decorators from final manifests using JSON Path.
  */
@@ -36,5 +40,22 @@ public interface WithConfigReference {
    */
   default Object getConfigValue() {
     return null;
+  }
+
+  /**
+   * Will generate a config reference name based on the value in `base` and appending also the properties
+   * if they are not null or any.
+   *
+   * For example, if `base` is `image` and `properties` are [`first`, null], it will generate: `first.image`.
+   */
+  default String generateConfigReferenceName(String base, String... properties) {
+    String configReferenceName = base;
+    for (String property : properties) {
+      if (!Strings.equals(ANY, property)) {
+        configReferenceName = property + "." + configReferenceName;
+      }
+    }
+
+    return configReferenceName;
   }
 }
