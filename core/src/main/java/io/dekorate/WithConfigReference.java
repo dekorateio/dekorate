@@ -43,19 +43,29 @@ public interface WithConfigReference {
   }
 
   /**
+   * If the config reference can not be found (unsupported data type or not relevant), then returns false.
+   * By default, it's always compatible.
+   */
+  default boolean isConfigReferenceCompatible() {
+    return true;
+  }
+
+  /**
    * Will generate a config reference name based on the value in `base` and appending also the properties
    * if they are not null or any.
    *
    * For example, if `base` is `image` and `properties` are [`first`, null], it will generate: `first.image`.
    */
-  default String generateConfigReferenceName(String base, String... properties) {
-    String configReferenceName = base;
+  default String generateConfigReferenceName(String suffix, String... properties) {
+    StringBuilder sb = new StringBuilder();
     for (String property : properties) {
       if (!Strings.equals(ANY, property)) {
-        configReferenceName = property + "." + configReferenceName;
+        sb.append(property + ".");
       }
     }
 
-    return configReferenceName;
+    sb.append(suffix);
+
+    return sb.toString();
   }
 }

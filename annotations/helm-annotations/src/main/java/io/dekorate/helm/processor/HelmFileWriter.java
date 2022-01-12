@@ -63,6 +63,8 @@ public class HelmFileWriter extends SimpleFileWriter {
   private static final String KUBERNETES_CLASSIFIER = "helm";
   private static final String OPENSHIFT_CLASSIFIER = "helmshift";
   private static final String OPENSHIFT = "openshift";
+  private static final String VALUES_START_TAG = "{{ .Values.";
+  private static final String VALUES_END_TAG = " }}";
   private static final Logger LOGGER = LoggerFactory.getLogger();
 
   public HelmFileWriter(Project project) {
@@ -202,7 +204,7 @@ public class HelmFileWriter extends SimpleFileWriter {
         }
 
         json = jsonContext
-            .set(valueReference.getJsonPath(), "{{ .Values." + valueReferenceProperty + " }}")
+            .set(valueReference.getJsonPath(), VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG)
             .jsonString();
       }
 
@@ -215,7 +217,11 @@ public class HelmFileWriter extends SimpleFileWriter {
         sb.append(Serialization.yamlMapper().writeValueAsString(jsonElement));
       }
 
-      writeFile(sb.toString(), targetFile);
+      String adaptedString = sb.toString()
+          .replaceAll(Pattern.quote("\"" + VALUES_START_TAG), VALUES_START_TAG)
+          .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG);
+
+      writeFile(adaptedString, targetFile);
     }
 
     return sourceFiles;

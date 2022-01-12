@@ -14,7 +14,7 @@ Compile the project using:
 
     mvn clean install
     
-You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/knative.yml` that should look like:
+You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/` that should look like:
 - Chart.yaml
 - values.yaml
 - <chart name>-<chart version>-helm.tar.gz

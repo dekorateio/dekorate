@@ -14,23 +14,21 @@ Compile the project using:
 
     mvn clean install
     
-You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/knative.yml` that should look like:
+You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/` that should look like:
 - Chart.yaml
 - values.yaml
-- <chart name>-<chart version>-helm.tar.gz
+- <chart name>-<chart version>-helmshift.tar.gz
 - templates/*.yml the generated resources by Dekorate
 
 How can we use it?
 
 First, make sure you have logged into a cluster with Helm enabled (in OpenShift clusters, Helm is enabled by default).
 
-Then, generate the Helm artifacts and push the image into a container registry:
+Then, generate the Helm artifacts:
 
 ```shell
-mvn clean package -Ddekorate.push=true -Ddekorate.docker.registry=<container registry url> -Ddekorate.docker.group=<your group>
+mvn clean package
 ```
-
-This command will push the image into the container registry to be available for the cluster when deploying.
 
 Finally, let's use Helm to deploy it into the cluster:
 
@@ -38,12 +36,18 @@ Finally, let's use Helm to deploy it into the cluster:
 helm install helm-example ./target/classes/META-INF/dekorate/
 ```
 
+Now, we need to generate the image in OpenShift (s2i from binaries):
+
+```shell
+oc start-build helm-on-openshift-example --from-dir=target --follow=true --wait
+```
+
 How can we update my deployment?
 
 After doing some changes, you would need to regenerate the resources using Dekorate:
 
 ```shell
-mvn clean package -Ddekorate.push=true -Ddekorate.docker.registry=<container registry url> -Ddekorate.docker.group=<your group>
+mvn clean package
 ```
 
 And then, upgrade your Helm deployment:
