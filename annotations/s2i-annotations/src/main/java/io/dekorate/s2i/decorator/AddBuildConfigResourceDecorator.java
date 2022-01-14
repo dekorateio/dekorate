@@ -17,7 +17,13 @@
 
 package io.dekorate.s2i.decorator;
 
-import io.dekorate.WithConfigReference;
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
@@ -33,7 +39,7 @@ import io.fabric8.openshift.api.model.BuildConfigBuilder;
 
 @Description("Add a BuildConfig resource to the list of generated resources.")
 public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder>
-    implements WithConfigReference {
+    implements WithConfigReferences {
 
   private static final String IMAGESTREAMTAG = "ImageStreamTag";
   private static final String LATEST = "latest";
@@ -93,14 +99,16 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
   }
 
   @Override
-  public String getConfigReference() {
-    return generateConfigReferenceName("tag", config.getName(), getImageStreamName());
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceTag());
   }
 
-  @Override
-  public String getJsonPathProperty() {
-    return "$.[?(@.kind == 'BuildConfig' && @.metadata.name == '" + config.getName()
+  private ConfigReference buildConfigReferenceTag() {
+    String property = generateConfigReferenceName("tag", config.getName(), getImageStreamName());
+    String jsonPath = "$.[?(@.kind == 'BuildConfig' && @.metadata.name == '" + config.getName()
         + "')].spec.strategy.sourceStrategy.from.name";
+
+    return new ConfigReference(property, jsonPath);
   }
 
   private String getImageStreamName() {

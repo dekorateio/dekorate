@@ -15,7 +15,13 @@
  */
 package io.dekorate.openshift.decorator;
 
-import io.dekorate.WithConfigReference;
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.dekorate.utils.Strings;
@@ -23,7 +29,7 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.openshift.api.model.DeploymentConfigSpecFluent;
 
 @Description("Apply the number of replicas to the DeploymentConfigSpec.")
-public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentConfigSpecFluent> implements WithConfigReference {
+public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentConfigSpecFluent> implements WithConfigReferences {
 
   private final int replicas;
 
@@ -45,21 +51,17 @@ public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentCon
   }
 
   @Override
-  public String getConfigReference() {
-    return generateConfigReferenceName("replicas", getName());
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceReplicas());
   }
 
-  @Override
-  public String getJsonPathProperty() {
+  private ConfigReference buildConfigReferenceReplicas() {
+    String property = generateConfigReferenceName("replicas", getName());
+    String jsonPath = "$.[?(@.kind == 'DeploymentConfig')].spec.replicas";
     if (!Strings.equals(getName(), ANY)) {
-      return "$.[?(@.kind == 'DeploymentConfig' && @.metadata.name == '" + getName() + "')].spec.replicas";
+      jsonPath = "$.[?(@.kind == 'DeploymentConfig' && @.metadata.name == '" + getName() + "')].spec.replicas";
     }
 
-    return "$.[?(@.kind == 'DeploymentConfig')].spec.replicas";
-  }
-
-  @Override
-  public Object getConfigValue() {
-    return replicas;
+    return new ConfigReference(property, jsonPath, replicas);
   }
 }

@@ -15,11 +15,17 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.WithConfigReference;
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 
-public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> implements WithConfigReference {
+public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> implements WithConfigReferences {
 
   private final String image;
 
@@ -44,27 +50,23 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
   }
 
   @Override
-  public String getConfigReference() {
-    return generateConfigReferenceName("image", getContainerName(), getDeploymentName());
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceForImage());
   }
 
-  @Override
-  public String getJsonPathProperty() {
+  private ConfigReference buildConfigReferenceForImage() {
+    String property = generateConfigReferenceName("image", getContainerName(), getDeploymentName());
+    String jsonPath = "$..spec.template.spec.containers..image";
     if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
-      return "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
+      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
           + getContainerName() + "')].image";
     } else if (!Strings.equals(getDeploymentName(), ANY)) {
-      return "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers..image";
+      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers..image";
     } else if (!Strings.equals(getContainerName(), ANY)) {
-      return "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')].image";
+      jsonPath = "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')].image";
     }
 
-    return "$..spec.template.spec.containers..image";
-  }
-
-  @Override
-  public Object getConfigValue() {
-    return image;
+    return new ConfigReference(property, jsonPath, image);
   }
 
 }

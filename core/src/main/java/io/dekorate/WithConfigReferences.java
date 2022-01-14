@@ -12,22 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- **/
-package io.dekorate.helm.annotation;
+ */
+package io.dekorate;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import static io.dekorate.kubernetes.decorator.Decorator.ANY;
 
-@Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ValueReference {
+import java.util.List;
 
-  String property();
+/**
+ * Interface to resolve properties that were handled by decorators from final manifests using JSON Path.
+ */
+public interface WithConfigReferences {
 
-  String[] jsonPaths();
-
-  String value() default "";
+  /**
+   * @return a list of config references {@link ConfigReference}.
+   */
+  List<ConfigReference> getConfigReferences();
 }

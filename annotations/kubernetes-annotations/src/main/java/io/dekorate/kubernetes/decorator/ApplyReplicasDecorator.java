@@ -15,14 +15,20 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import io.dekorate.WithConfigReference;
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecFluent;
 
 @Description("Apply the number of replicas to the DeploymentSpec.")
-public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpecFluent> implements WithConfigReference {
+public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpecFluent> implements WithConfigReferences {
 
   private final int replicas;
 
@@ -43,16 +49,17 @@ public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpe
   }
 
   @Override
-  public String getConfigReference() {
-    return generateConfigReferenceName("replicas", getName());
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceReplicas());
   }
 
-  @Override
-  public String getJsonPathProperty() {
+  private ConfigReference buildConfigReferenceReplicas() {
+    String property = generateConfigReferenceName("replicas", getName());
+    String jsonPath = "$.[?(@.kind == 'Deployment')].spec.replicas";
     if (!Strings.equals(getName(), ANY)) {
-      return "$.[?(@.kind == 'Deployment' && @.metadata.name == '" + getName() + "')].spec.replicas";
+      jsonPath = "$.[?(@.kind == 'Deployment' && @.metadata.name == '" + getName() + "')].spec.replicas";
     }
 
-    return "$.[?(@.kind == 'Deployment')].spec.replicas";
+    return new ConfigReference(property, jsonPath);
   }
 }

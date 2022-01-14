@@ -20,34 +20,53 @@ import static io.dekorate.kubernetes.decorator.Decorator.ANY;
 import io.dekorate.utils.Strings;
 
 /**
- * Interface to resolve properties that were handled by decorators from final manifests using JSON Path.
+ * A config reference is a way to find configuration values using json path from the generated manifests by Dekorate.
+ * This can be handy for some extensions like Helm.
  */
-public interface WithConfigReference {
+public class ConfigReference {
+  private String property;
+  private String[] jsonPaths;
+  private Object value;
+
+  public ConfigReference(String property, String jsonPath) {
+    this(property, new String[] { jsonPath });
+  }
+
+  public ConfigReference(String property, String[] jsonPaths) {
+    this(property, jsonPaths, null);
+  }
+
+  public ConfigReference(String property, String jsonPath, Object value) {
+    this(property, new String[] { jsonPath }, value);
+  }
+
+  public ConfigReference(String property, String[] jsonPaths, Object value) {
+    this.property = property;
+    this.jsonPaths = jsonPaths;
+    this.value = value;
+  }
+
   /**
    * @return key name of the config reference to resolve.
    */
-  String getConfigReference();
+  public String getProperty() {
+    return property;
+  }
 
   /**
    * @return json path to resolve the property in the generated JSON manifest.
    */
-  String getJsonPathProperty();
-
-  /**
-   * If the value is null, then the framework will check the actual value of the generated JSON manifest.
-   * 
-   * @return value of the config reference.
-   */
-  default Object getConfigValue() {
-    return null;
+  public String[] getJsonPaths() {
+    return jsonPaths;
   }
 
   /**
-   * If the config reference can not be found (unsupported data type or not relevant), then returns false.
-   * By default, it's always compatible.
+   * If the value is null, then the framework will check the actual value of the generated JSON manifest.
+   *
+   * @return value of the config reference.
    */
-  default boolean isConfigReferenceCompatible() {
-    return true;
+  public Object getValue() {
+    return value;
   }
 
   /**
@@ -56,7 +75,7 @@ public interface WithConfigReference {
    *
    * For example, if `base` is `image` and `properties` are [`first`, null], it will generate: `first.image`.
    */
-  default String generateConfigReferenceName(String suffix, String... properties) {
+  public static String generateConfigReferenceName(String suffix, String... properties) {
     StringBuilder sb = new StringBuilder();
     for (String property : properties) {
       if (!Strings.equals(ANY, property)) {

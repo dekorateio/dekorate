@@ -40,15 +40,15 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
+import io.dekorate.ConfigReference;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
-import io.dekorate.WithConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
-import io.dekorate.helm.model.Value;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
@@ -76,7 +76,7 @@ public class HelmFileWriter extends SimpleFileWriter {
     Map<String, String> artifacts = super.write(session);
     session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(helmConfig -> {
       if (helmConfig.isEnabled()) {
-        List<Value> valuesReferences = getValuesReferences(helmConfig, session);
+        List<ConfigReference> valuesReferences = getValuesReferences(helmConfig, session);
 
         try {
           LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
@@ -95,17 +95,16 @@ public class HelmFileWriter extends SimpleFileWriter {
     return artifacts;
   }
 
-  private List<Value> getValuesReferences(HelmChartConfig helmBuildConfig, Session session) {
-    List<Value> configReferences = new ArrayList<>();
+  private List<ConfigReference> getValuesReferences(HelmChartConfig helmBuildConfig, Session session) {
+    List<ConfigReference> configReferences = new ArrayList<>();
     // From decorators
-    for (Map.Entry<String, WithConfigReference> entry : session.getResourceRegistry().getConfigReferences().entrySet()) {
-      configReferences.add(new Value(entry.getValue().getConfigReference(),
-          entry.getValue().getJsonPathProperty(), entry.getValue().getConfigValue()));
+    for (WithConfigReferences decorator : session.getResourceRegistry().getConfigReferences()) {
+      configReferences.addAll(decorator.getConfigReferences());
     }
 
     // From user
     Stream.of(helmBuildConfig.getValues()).forEach(valueReference -> configReferences
-        .add(new Value(valueReference.getProperty(), valueReference.getJsonPath(),
+        .add(new ConfigReference(valueReference.getProperty(), valueReference.getJsonPaths(),
             valueReference.getValue().isEmpty() ? null : valueReference.getValue())));
     return configReferences;
   }
@@ -165,7 +164,7 @@ public class HelmFileWriter extends SimpleFileWriter {
     return helmConfig.getVersion();
   }
 
-  private Map<String, String> processSourceFiles(List<Value> valuesReferences, Map<String, Object> values)
+  private Map<String, String> processSourceFiles(List<ConfigReference> valuesReferences, Map<String, Object> values)
       throws IOException {
     Map<String, String> sourceFiles = new HashMap<>();
 
@@ -177,35 +176,38 @@ public class HelmFileWriter extends SimpleFileWriter {
 
       // Parse to json in order to process jsonpaths
       String json = Serialization.jsonMapper().writeValueAsString(yaml);
-      for (Value valueReference : valuesReferences) {
+      for (ConfigReference valueReference : valuesReferences) {
         String valueReferenceProperty = Strings.kebabToCamelCase(valueReference.getProperty());
 
         DocumentContext jsonContext = JsonPath.parse(json);
 
         // Check whether path exists
-        Object currentValue;
-        try {
-          currentValue = jsonContext.read(valueReference.getJsonPath(), Object.class);
-        } catch (PathNotFoundException ex) {
-          LOGGER.warning(String.format("Property '%s' is ignored in Helm generation because the json Path '%s' was not found. ",
-              valueReferenceProperty, valueReference.getJsonPath()));
-          continue;
-        }
-
-        if (valueReference.getValue() == null) {
-          if (currentValue instanceof List && !((List) currentValue).isEmpty()) {
-            // We get the first value
-            values.put(valueReferenceProperty, ((List) currentValue).get(0));
-          } else {
-            values.put(valueReferenceProperty, currentValue);
+        Object currentValue = null;
+        for (String jsonPath : valueReference.getJsonPaths()) {
+          try {
+            currentValue = jsonContext.read(jsonPath, Object.class);
+          } catch (PathNotFoundException ex) {
+            LOGGER
+                .warning(String.format("Property '%s' is ignored in Helm generation because the json Path '%s' was not found. ",
+                    valueReferenceProperty, jsonPath));
+            continue;
           }
-        } else {
-          values.put(valueReferenceProperty, valueReference.getValue());
-        }
 
-        json = jsonContext
-            .set(valueReference.getJsonPath(), VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG)
-            .jsonString();
+          if (valueReference.getValue() == null) {
+            if (currentValue instanceof List && !((List) currentValue).isEmpty()) {
+              // We get the first value
+              values.put(valueReferenceProperty, ((List) currentValue).get(0));
+            } else {
+              values.put(valueReferenceProperty, currentValue);
+            }
+          } else {
+            values.put(valueReferenceProperty, valueReference.getValue());
+          }
+
+          json = jsonContext
+              .set(jsonPath, VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG)
+              .jsonString();
+        }
       }
 
       Path targetFile = templatesDir.resolve(file.getName());

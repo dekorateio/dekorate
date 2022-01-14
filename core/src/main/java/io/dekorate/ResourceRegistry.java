@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -200,8 +201,8 @@ public class ResourceRegistry {
     return resources;
   }
 
-  public Map<String, WithConfigReference> getConfigReferences() {
-    Map<String, WithConfigReference> configReferences = new HashMap<>();
+  public List<WithConfigReferences> getConfigReferences() {
+    List<WithConfigReferences> configReferences = new LinkedList<>();
 
     Set<Decorator> allDecorators = new HashSet<>();
     allDecorators.addAll(globalDecorators);
@@ -209,9 +210,8 @@ public class ResourceRegistry {
     customDecorators.values().forEach(allDecorators::addAll);
 
     for (Decorator decorator : allDecorators) {
-      if (decorator instanceof WithConfigReference) {
-        WithConfigReference decoratorWithConfigReference = (WithConfigReference) decorator;
-        configReferences.put(decoratorWithConfigReference.getConfigReference(), decoratorWithConfigReference);
+      if (decorator instanceof WithConfigReferences) {
+        configReferences.add((WithConfigReferences) decorator);
       }
     }
 

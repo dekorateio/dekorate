@@ -17,7 +17,13 @@
 
 package io.dekorate.s2i.decorator;
 
-import io.dekorate.WithConfigReference;
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.s2i.config.S2iBuildConfig;
@@ -28,7 +34,7 @@ import io.fabric8.openshift.api.model.ImageStreamBuilder;
 
 @Description("Add a builder ImageStream resource to the list of generated resources.")
 public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder>
-    implements WithConfigReference {
+    implements WithConfigReferences {
 
   private S2iBuildConfig config;
 
@@ -58,18 +64,16 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
   }
 
   @Override
-  public String getConfigReference() {
-    return generateConfigReferenceName("builder-image", config.getName(), getImageStreamName());
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceBuilderImage());
   }
 
-  @Override
-  public String getJsonPathProperty() {
-    return "$.[?(@.kind == 'ImageStream' && @.metadata.name == '" + getImageStreamName() + "')].spec.dockerImageRepository";
-  }
-
-  @Override
-  public Object getConfigValue() {
-    return Images.removeTag(config.getBuilderImage());
+  private ConfigReference buildConfigReferenceBuilderImage() {
+    String property = generateConfigReferenceName("builder-image", config.getName(), getImageStreamName());
+    String jsonPath = "$.[?(@.kind == 'ImageStream' && @.metadata.name == '" + getImageStreamName()
+        + "')].spec.dockerImageRepository";
+    String value = Images.removeTag(config.getBuilderImage());
+    return new ConfigReference(property, jsonPath, value);
   }
 
   private String getImageStreamName() {
