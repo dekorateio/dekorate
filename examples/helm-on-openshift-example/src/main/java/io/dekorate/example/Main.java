@@ -23,9 +23,9 @@ import io.dekorate.helm.annotation.ValueReference;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 
 @HelmChart(name = "myOcpChart",
-  values = { @ValueReference(property = "helmOnOpenshiftExample.not-found", jsonPath = "$.metadata.not-found"),
-    @ValueReference(property = "helmOnOpenshiftExample.commit-id", jsonPath = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/commit-id']"),
-    @ValueReference(property = "helmOnOpenshiftExample.vcs-url", jsonPath = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/vcs-url']", value = "Overridden")})
+  values = { @ValueReference(property = "helmOnOpenshiftExample.not-found", jsonPaths = "$.metadata.not-found"),
+    @ValueReference(property = "helmOnOpenshiftExample.commit-id", jsonPaths = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/commit-id']"),
+    @ValueReference(property = "helmOnOpenshiftExample.vcs-url", jsonPaths = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/vcs-url']", value = "Overridden")})
 @SpringBootApplication
 public class Main {
 
