@@ -208,6 +208,10 @@ $grid-divider-border:                            $global-border !default;
     bottom: 0;
     border-left: $grid-divider-border-width solid $grid-divider-border;
     @if(mixin-exists(hook-grid-divider-horizontal)) {@include hook-grid-divider-horizontal();}
+
+    @media screen and (max-width: 1170px)
+    {     border-left: $grid-divider-border-width solid $white; }
+
 }
 
 /* Vertical */

@@ -60,28 +60,28 @@
 /* Phone portrait and smaller */
 @media (max-width: $breakpoint-xsmall-max) {
 
-    .uk-visible\@s { display: none !important; }
+ /*   .uk-visible\@s { display: none !important; }  */
 
 }
 
 /* Phone landscape and smaller */
 @media (max-width: $breakpoint-small-max) {
 
-    .uk-visible\@m { display: none !important; }
+/*    .uk-visible\@m { display: none !important; }  */
 
 }
 
 /* Tablet landscape and smaller */
 @media (max-width: $breakpoint-medium-max) {
 
-    .uk-visible\@l { display: none !important; }
+/*    .uk-visible\@l { display: none !important; }  */
 
 }
 
 /* Desktop and smaller */
 @media (max-width: $breakpoint-large-max) {
 
-    .uk-visible\@xl { display: none !important; }
+ /*   .uk-visible\@xl { display: none !important; }   */
 
 }
 
