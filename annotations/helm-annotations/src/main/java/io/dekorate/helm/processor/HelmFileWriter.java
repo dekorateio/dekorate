@@ -81,9 +81,9 @@ public class HelmFileWriter extends SimpleFileWriter {
         try {
           LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
           Map<String, Object> values = new HashMap<>();
-          artifacts.putAll(processSourceFiles(valuesReferences, values));
+          artifacts.putAll(processSourceFiles(helmConfig, valuesReferences, values));
           artifacts.putAll(createChartYaml(helmConfig));
-          artifacts.putAll(createValuesYaml(values));
+          artifacts.putAll(createValuesYaml(helmConfig, values));
           artifacts.putAll(createTarball(helmConfig, artifacts));
 
         } catch (IOException e) {
@@ -109,7 +109,7 @@ public class HelmFileWriter extends SimpleFileWriter {
     return configReferences;
   }
 
-  private Map<String, String> createValuesYaml(Map<String, Object> values) throws IOException {
+  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Map<String, Object> values) throws IOException {
     Map<String, Object> keyValue = new HashMap<>();
     values.forEach((k, v) -> {
 
@@ -133,7 +133,7 @@ public class HelmFileWriter extends SimpleFileWriter {
       }
     });
 
-    Path valuesFile = getOutputDir().resolve(VALUES_FILENAME);
+    Path valuesFile = getChartOutputDir(helmConfig).resolve(VALUES_FILENAME);
     return writeFileAsYaml(keyValue, valuesFile);
   }
 
@@ -145,12 +145,14 @@ public class HelmFileWriter extends SimpleFileWriter {
 
     LOGGER.debug(String.format("Creating Helm configuration Tarball: '%s'", tarballFile));
 
-    List<File> yamls = new ArrayList<>();
-    yamls.add(getOutputDir().resolve(CHART_FILENAME).toFile());
-    yamls.add(getOutputDir().resolve(VALUES_FILENAME).toFile());
-    yamls.addAll(listYamls(getOutputDir().resolve(TEMPLATES)));
+    Path helmSources = getChartOutputDir(helmConfig);
 
-    createTarBall(tarballFile, getOutputDir().toFile(), yamls, helmConfig.getExtension(),
+    List<File> yamls = new ArrayList<>();
+    yamls.add(helmSources.resolve(CHART_FILENAME).toFile());
+    yamls.add(helmSources.resolve(VALUES_FILENAME).toFile());
+    yamls.addAll(listYamls(helmSources.resolve(TEMPLATES)));
+
+    createTarBall(tarballFile, helmSources.toFile(), yamls, helmConfig.getExtension(),
         tae -> tae.setName(String.format("%s/%s", helmConfig.getName(), tae.getName())));
 
     return Collections.singletonMap(tarballFile.toString(), null);
@@ -164,12 +166,13 @@ public class HelmFileWriter extends SimpleFileWriter {
     return helmConfig.getVersion();
   }
 
-  private Map<String, String> processSourceFiles(List<ConfigReference> valuesReferences, Map<String, Object> values)
-      throws IOException {
+  private Map<String, String> processSourceFiles(HelmChartConfig helmConfig, List<ConfigReference> valuesReferences,
+      Map<String, Object> values) throws IOException {
+
     Map<String, String> sourceFiles = new HashMap<>();
 
-    Path templatesDir = getOutputDir().resolve(TEMPLATES);
-    Files.createDirectory(templatesDir);
+    Path templatesDir = getChartOutputDir(helmConfig).resolve(TEMPLATES);
+    Files.createDirectories(templatesDir);
     for (File file : listYamls(getOutputDir())) {
       // Read yaml
       List<Map<Object, Object>> yaml = Serialization.unmarshalAsListOfMaps(file.toPath());
@@ -247,7 +250,7 @@ public class HelmFileWriter extends SimpleFileWriter {
         .map(d -> new HelmDependency(d.getName(), d.getVersion(), d.getRepository()))
         .collect(Collectors.toList()));
 
-    Path yml = getOutputDir().resolve(CHART_FILENAME).normalize();
+    Path yml = getChartOutputDir(helmConfig).resolve(CHART_FILENAME).normalize();
     return writeFileAsYaml(chart, yml);
   }
 
@@ -269,6 +272,10 @@ public class HelmFileWriter extends SimpleFileWriter {
     }
 
     return KUBERNETES_CLASSIFIER;
+  }
+
+  private Path getChartOutputDir(HelmChartConfig helmConfig) {
+    return getOutputDir().resolve(helmConfig.getName());
   }
 
   private static List<File> listYamls(Path directory) {

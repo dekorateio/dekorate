@@ -30,18 +30,20 @@ import io.dekorate.utils.Serialization;
 
 class HelmKubernetesExampleTest {
 
+  private static final String CHART_NAME = "myChart";
+  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/" + CHART_NAME;
   private static final String ROOT_CONFIG_NAME = "helmOnKubernetesExample";
 
   @Test
   public void shouldHelmManifestsBeGenerated() throws IOException {
-    Chart chart = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/Chart.yaml"), Chart.class);
+    Chart chart = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/Chart.yaml"), Chart.class);
     assertNotNull(chart, "Chart is null!");
     // Should be the same as in `dekorate.helm.chart` from properties.
-    assertEquals("myChart", chart.getName());
+    assertEquals(CHART_NAME, chart.getName());
     // Values.yaml manifest
-    assertNotNull(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/values.yaml"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
     // templates
-    assertNotNull(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/templates/kubernetes.yml"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/kubernetes.yml"));
     // zip manifest
     String zipName = String.format("META-INF/dekorate/%s-%s-helm.tar.gz", chart.getName(), chart.getVersion());
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(zipName), "File '" + zipName + "' not found!");
@@ -49,7 +51,7 @@ class HelmKubernetesExampleTest {
 
   @Test
   public void valuesShouldContainExpectedData() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream("META-INF/dekorate/values.yaml"), Map.class);
+    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");

@@ -14,7 +14,7 @@ Compile the project using:
 
     mvn clean install
     
-You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/` that should look like:
+You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/<chart name>` that should look like:
 - Chart.yaml
 - values.yaml
 - <chart name>-<chart version>-helmshift.tar.gz
@@ -33,7 +33,7 @@ mvn clean package
 Finally, let's use Helm to deploy it into the cluster:
 
 ```shell
-helm install helm-example ./target/classes/META-INF/dekorate/
+helm install helm-example ./target/classes/META-INF/dekorate/<chart name>
 ```
 
 Now, we need to generate the image in OpenShift (s2i from binaries):
@@ -53,5 +53,5 @@ mvn clean package
 And then, upgrade your Helm deployment:
 
 ```shell
-helm upgrade helm-example ./target/classes/META-INF/dekorate/
+helm upgrade helm-example ./target/classes/META-INF/dekorate/<chart name>
 ```
