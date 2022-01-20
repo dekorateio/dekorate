@@ -22,9 +22,9 @@ You can find the generated Helm artifacts under: `target/classes/META-INF/dekora
 
 How can we use it?
 
-First, make sure you have logged into a cluster with Helm enabled (in OpenShift clusters, Helm is enabled by default).
+First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and have connected into a cluster.
 
-Then, generate the Helm artifacts:
+Then, run the following Maven command in order to generate the Helm artifacts:
 
 ```shell
 mvn clean package
@@ -36,6 +36,12 @@ Finally, let's use Helm to deploy it into the cluster:
 helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
 ```
 
+The above command will use the default values file `values.yaml`, we can select a different values file by doing:
+
+```shell
+helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --values ./target/classes/META-INF/dekorate/helm/<chart name>/values.dev.yaml
+```
+
 Now, we need to generate the image in OpenShift (s2i from binaries):
 
 ```shell
@@ -44,14 +50,28 @@ oc start-build helm-on-openshift-example --from-dir=target --follow=true --wait
 
 How can we update my deployment?
 
-After doing some changes, you would need to regenerate the resources using Dekorate:
+- Via the `upgrade` option of Helm command line:
+
+After doing changes in your project, you would need to regenerate the resources using Dekorate:
 
 ```shell
 mvn clean package
 ```
 
-And then, upgrade your Helm deployment:
+And then you need to upgrade your deployment:
 
 ```shell
 helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
+```
+
+- Via the `set` option of Helm command line:
+
+```shell
+helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --set helmOnOpenshiftExample.replicas=1
+```
+
+How can we delete my deployment?
+
+```shell
+helm uninstall helm-example
 ```

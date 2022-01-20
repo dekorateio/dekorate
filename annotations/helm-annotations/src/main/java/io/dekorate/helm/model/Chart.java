@@ -25,8 +25,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents the <a href="https://github.com/kubernetes/helm">Helm</a>
- * <a href="https://github.com/kubernetes/helm/blob/master/pkg/proto/hapi/chart/metadata.pb.go#L50">Chart.yaml file</a>
+ * Represents the <a href="https://github.com/helm/helm">Helm</a>
+ * <a href="https://github.com/helm/helm/blob/c7e1f9b04606574b2f0d93d34e22efb06847ad08/pkg/chart/metadata.go#L44">Chart.yaml file</a>
  */
 @JsonInclude(NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
