@@ -27,23 +27,25 @@ public class ConfigReference {
   private String property;
   private String[] jsonPaths;
   private Object value;
+  private String profile;
 
   public ConfigReference(String property, String jsonPath) {
     this(property, new String[] { jsonPath });
   }
 
   public ConfigReference(String property, String[] jsonPaths) {
-    this(property, jsonPaths, null);
+    this(property, jsonPaths, null, null);
   }
 
   public ConfigReference(String property, String jsonPath, Object value) {
-    this(property, new String[] { jsonPath }, value);
+    this(property, new String[] { jsonPath }, value, null);
   }
 
-  public ConfigReference(String property, String[] jsonPaths, Object value) {
+  public ConfigReference(String property, String[] jsonPaths, Object value, String profile) {
     this.property = property;
     this.jsonPaths = jsonPaths;
     this.value = value;
+    this.profile = profile;
   }
 
   /**
@@ -67,6 +69,13 @@ public class ConfigReference {
    */
   public Object getValue() {
     return value;
+  }
+
+  /**
+   * @return get the profile where the config reference belongs.
+   */
+  public String getProfile() {
+    return profile;
   }
 
   /**

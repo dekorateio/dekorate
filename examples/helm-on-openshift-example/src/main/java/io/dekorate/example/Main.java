@@ -25,7 +25,9 @@ import io.dekorate.openshift.annotation.OpenshiftApplication;
 @HelmChart(name = "myOcpChart",
   values = { @ValueReference(property = "helmOnOpenshiftExample.not-found", jsonPaths = "$.metadata.not-found"),
     @ValueReference(property = "helmOnOpenshiftExample.commit-id", jsonPaths = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/commit-id']"),
-    @ValueReference(property = "helmOnOpenshiftExample.vcs-url", jsonPaths = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/vcs-url']", value = "Overridden")})
+    @ValueReference(property = "helmOnOpenshiftExample.vcs-url", jsonPaths = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/vcs-url']", value = "Overridden"),
+    @ValueReference(property = "helmOnOpenshiftExample.vcs-url", jsonPaths = "$[?(@.kind == 'DeploymentConfig')]['spec']['template']['metadata']['annotations']['app.dekorate.io/vcs-url']", value = "Only for DEV!", profile = "dev")
+})
 @SpringBootApplication
 public class Main {
 

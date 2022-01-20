@@ -29,5 +29,7 @@ public @interface ValueReference {
 
   String[] jsonPaths();
 
+  String profile() default "";
+
   String value() default "";
 }

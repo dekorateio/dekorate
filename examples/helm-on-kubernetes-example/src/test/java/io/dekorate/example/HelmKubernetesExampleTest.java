@@ -42,6 +42,7 @@ class HelmKubernetesExampleTest {
     assertEquals(CHART_NAME, chart.getName());
     // Values.yaml manifest
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"));
     // templates
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/deployment.yaml"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/ingress.yaml"));
@@ -74,5 +75,26 @@ class HelmKubernetesExampleTest {
     assertNotNull(helmExampleValues.get("commitId"));
     // Shoult contain vcs-url with the overridden value from properties
     assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
+  }
+
+  @Test
+  public void valuesShouldContainExpectedDataInDevProfile() throws IOException {
+    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"), Map.class);
+    assertNotNull(values, "Values is null!");
+
+    assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
+    assertNotNull(values.get(ROOT_CONFIG_NAME) instanceof Map, "Value `" + ROOT_CONFIG_NAME + "` is not a map!");
+    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
+
+    // Should contain image
+    assertNotNull(helmExampleValues.get("image"));
+    // Should contain replicas
+    assertEquals(3, helmExampleValues.get("replicas"));
+    // Should NOT contain not-found: as this property is ignored
+    assertNull(helmExampleValues.get("not-found"));
+    // Should contain commit-id
+    assertNotNull(helmExampleValues.get("commitId"));
+    // Shoult contain vcs-url with the value from annotations
+    assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
   }
 }

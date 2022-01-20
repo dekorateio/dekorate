@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,7 +61,7 @@ public class HelmFileWriter extends SimpleFileWriter {
 
   private static final String YAML = ".yaml";
   private static final String CHART_FILENAME = "Chart" + YAML;
-  private static final String VALUES_FILENAME = "values" + YAML;
+  private static final String VALUES = "values";
   private static final String CHART_API_VERSION = "v1";
   private static final String TEMPLATES = "templates";
   private static final String CHARTS = "charts";
@@ -68,6 +69,7 @@ public class HelmFileWriter extends SimpleFileWriter {
   private static final String KUBERNETES_CLASSIFIER = "helm";
   private static final String OPENSHIFT_CLASSIFIER = "helmshift";
   private static final String OPENSHIFT = "openshift";
+  private static final String KIND = "kind";
   private static final String VALUES_START_TAG = "{{ .Values.";
   private static final String VALUES_END_TAG = " }}";
   private static final String EMPTY = "";
@@ -87,11 +89,12 @@ public class HelmFileWriter extends SimpleFileWriter {
 
         try {
           LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
-          Map<String, Object> values = new HashMap<>();
-          artifacts.putAll(processSourceFiles(helmConfig, valuesReferences, values));
+          Map<String, Object> prodValues = new HashMap<>();
+          Map<String, Map<String, Object>> valuesByProfile = new HashMap<>();
+          artifacts.putAll(processSourceFiles(helmConfig, valuesReferences, prodValues, valuesByProfile));
           artifacts.putAll(createChartYaml(helmConfig));
-          artifacts.putAll(createValuesYaml(helmConfig, values));
-          artifacts.putAll(createTarball(helmConfig, artifacts));
+          artifacts.putAll(createValuesYaml(helmConfig, prodValues, valuesByProfile));
+          artifacts.putAll(createTarball(helmConfig, artifacts, valuesByProfile.keySet()));
           // To follow Helm file structure standards:
           artifacts.putAll(createEmptyChartFolder(helmConfig));
           artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig));
@@ -119,7 +122,7 @@ public class HelmFileWriter extends SimpleFileWriter {
   }
 
   private List<ConfigReference> getValuesReferences(HelmChartConfig helmBuildConfig, Session session) {
-    List<ConfigReference> configReferences = new ArrayList<>();
+    List<ConfigReference> configReferences = new LinkedList<>();
     // From decorators
     for (WithConfigReferences decorator : session.getResourceRegistry().getConfigReferences()) {
       configReferences.addAll(decorator.getConfigReferences());
@@ -128,39 +131,40 @@ public class HelmFileWriter extends SimpleFileWriter {
     // From user
     Stream.of(helmBuildConfig.getValues()).forEach(valueReference -> configReferences
         .add(new ConfigReference(valueReference.getProperty(), valueReference.getJsonPaths(),
-            valueReference.getValue().isEmpty() ? null : valueReference.getValue())));
+            valueReference.getValue().isEmpty() ? null : valueReference.getValue(), valueReference.getProfile())));
     return configReferences;
   }
 
-  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Map<String, Object> values) throws IOException {
-    Map<String, Object> keyValue = new HashMap<>();
-    values.forEach((k, v) -> {
+  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Map<String, Object> prodValues,
+      Map<String, Map<String, Object>> valuesByProfile) throws IOException {
 
-      String[] nodes = k.split(Pattern.quote("."));
-      if (nodes.length == 1) {
-        keyValue.put(k, v);
-      } else {
-        Map<String, Object> auxKeyValue = keyValue;
-        for (int index = 0; index < nodes.length - 1; index++) {
-          String nodeName = nodes[index];
-          Object nodeKeyValue = auxKeyValue.get(nodeName);
-          if (nodeKeyValue == null || !(nodeKeyValue instanceof Map)) {
-            nodeKeyValue = new HashMap<>();
-          }
+    Map<String, String> artifacts = new HashMap<>();
 
-          auxKeyValue.put(nodes[index], nodeKeyValue);
-          auxKeyValue = (Map<String, Object>) nodeKeyValue;
+    // first, we process the values in each profile
+    for (Map.Entry<String, Map<String, Object>> valuesInProfile : valuesByProfile.entrySet()) {
+      String profile = valuesInProfile.getKey();
+      Map<String, Object> values = valuesInProfile.getValue();
+      // Populate the profiled values with the one from prod if the key does not exist
+      for (Map.Entry<String, Object> prodValue : prodValues.entrySet()) {
+        if (!values.containsKey(prodValue.getKey())) {
+          values.put(prodValue.getKey(), prodValue.getValue());
         }
-
-        auxKeyValue.put(nodes[nodes.length - 1], v);
       }
-    });
 
-    Path valuesFile = getChartOutputDir(helmConfig).resolve(VALUES_FILENAME);
-    return writeFileAsYaml(keyValue, valuesFile);
+      // Create the values.<profile>.yaml file
+      artifacts.putAll(writeFileAsYaml(toMultiValueMap(values),
+          getChartOutputDir(helmConfig).resolve(VALUES + "." + profile + YAML)));
+    }
+
+    // Next, we process the prod profile
+    artifacts.putAll(writeFileAsYaml(toMultiValueMap(prodValues),
+        getChartOutputDir(helmConfig).resolve(VALUES + YAML)));
+
+    return artifacts;
   }
 
-  private Map<String, String> createTarball(HelmChartConfig helmConfig, Map<String, String> artifacts) throws IOException {
+  private Map<String, String> createTarball(HelmChartConfig helmConfig, Map<String, String> artifacts, Set<String> profiles)
+      throws IOException {
 
     File tarballFile = getOutputDir().resolve(String.format("%s-%s-%s.%s",
         helmConfig.getName(), getVersion(helmConfig), getHelmClassifier(artifacts), helmConfig.getExtension()))
@@ -172,7 +176,11 @@ public class HelmFileWriter extends SimpleFileWriter {
 
     List<File> yamls = new ArrayList<>();
     yamls.add(helmSources.resolve(CHART_FILENAME).toFile());
-    yamls.add(helmSources.resolve(VALUES_FILENAME).toFile());
+    yamls.add(helmSources.resolve(VALUES + YAML).toFile());
+    for (String profile : profiles) {
+      yamls.add(helmSources.resolve(VALUES + "." + profile + YAML).toFile());
+    }
+
     yamls.addAll(listYamls(helmSources.resolve(TEMPLATES)));
 
     createTarBall(tarballFile, helmSources.toFile(), yamls, helmConfig.getExtension(),
@@ -190,16 +198,16 @@ public class HelmFileWriter extends SimpleFileWriter {
   }
 
   private Map<String, String> processSourceFiles(HelmChartConfig helmConfig, List<ConfigReference> valuesReferences,
-      Map<String, Object> values) throws IOException {
+      Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile) throws IOException {
 
     Path templatesDir = getChartOutputDir(helmConfig).resolve(TEMPLATES);
     Files.createDirectories(templatesDir);
-    List<String> yamlsContent = replaceValuesInYamls(valuesReferences, values);
+    List<String> yamlsContent = replaceValuesInYamls(valuesReferences, prodValues, valuesByProfile);
     // Split yamls in separated files by kind
     for (String yamlContent : yamlsContent) {
       List<Map<Object, Object>> resources = Serialization.unmarshalAsListOfMaps(yamlContent);
       for (Map<Object, Object> resource : resources) {
-        String kind = (String) resource.get("kind");
+        String kind = (String) resource.get(KIND);
         Path targetFile = templatesDir.resolve(kind.toLowerCase() + YAML);
 
         // Adapt the values tag to Helm standards:
@@ -214,8 +222,9 @@ public class HelmFileWriter extends SimpleFileWriter {
     return Collections.emptyMap();
   }
 
-  private List<String> replaceValuesInYamls(List<ConfigReference> valuesReferences, Map<String, Object> values)
-      throws IOException {
+  private List<String> replaceValuesInYamls(List<ConfigReference> valuesReferences, Map<String, Object> prodValues,
+      Map<String, Map<String, Object>> valuesByProfile) throws IOException {
+
     List<String> yamlsContent = new LinkedList<>();
     for (File file : listYamls(getOutputDir())) {
       // Read yaml
@@ -240,20 +249,31 @@ public class HelmFileWriter extends SimpleFileWriter {
             continue;
           }
 
-          if (valueReference.getValue() == null) {
-            if (currentValue instanceof List && !((List) currentValue).isEmpty()) {
-              // We get the first value
-              values.put(valueReferenceProperty, ((List) currentValue).get(0));
-            } else {
-              values.put(valueReferenceProperty, currentValue);
-            }
-          } else {
-            values.put(valueReferenceProperty, valueReference.getValue());
-          }
-
           json = jsonContext
               .set(jsonPath, VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG)
               .jsonString();
+
+          Object value = valueReference.getValue();
+          if (value == null) {
+            if (currentValue instanceof List && !((List) currentValue).isEmpty()) {
+              // We get the first value
+              value = ((List) currentValue).get(0);
+            } else {
+              value = currentValue;
+            }
+          }
+
+          String valueProfile = valueReference.getProfile();
+          Map<String, Object> values = prodValues;
+          if (Strings.isNotNullOrEmpty(valueProfile)) {
+            values = valuesByProfile.get(valueProfile);
+            if (values == null) {
+              values = new HashMap<>();
+              valuesByProfile.put(valueProfile, values);
+            }
+          }
+
+          values.put(valueReferenceProperty, value);
         }
       }
 
@@ -321,5 +341,32 @@ public class HelmFileWriter extends SimpleFileWriter {
         .filter(File::isFile)
         .filter(f -> f.getName().toLowerCase().matches(".*?\\.ya?ml$"))
         .collect(Collectors.toList());
+  }
+
+  private static Map<String, Object> toMultiValueMap(Map<String, Object> map) {
+    Map<String, Object> multiValueMap = new HashMap<>();
+    map.forEach((k, v) -> {
+
+      String[] nodes = k.split(Pattern.quote("."));
+      if (nodes.length == 1) {
+        multiValueMap.put(k, v);
+      } else {
+        Map<String, Object> auxKeyValue = multiValueMap;
+        for (int index = 0; index < nodes.length - 1; index++) {
+          String nodeName = nodes[index];
+          Object nodeKeyValue = auxKeyValue.get(nodeName);
+          if (nodeKeyValue == null || !(nodeKeyValue instanceof Map)) {
+            nodeKeyValue = new HashMap<>();
+          }
+
+          auxKeyValue.put(nodes[index], nodeKeyValue);
+          auxKeyValue = (Map<String, Object>) nodeKeyValue;
+        }
+
+        auxKeyValue.put(nodes[nodes.length - 1], v);
+      }
+    });
+
+    return multiValueMap;
   }
 }

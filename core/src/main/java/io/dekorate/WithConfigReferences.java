@@ -15,8 +15,6 @@
  */
 package io.dekorate;
 
-import static io.dekorate.kubernetes.decorator.Decorator.ANY;
-
 import java.util.List;
 
 /**
