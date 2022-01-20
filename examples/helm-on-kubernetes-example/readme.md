@@ -14,7 +14,7 @@ Compile the project using:
 
     mvn clean install
     
-You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/<chart name>/` that should look like:
+You can find the generated Helm artifacts under: `target/classes/META-INF/dekorate/helm/<chart name>/` that should look like:
 - Chart.yaml
 - values.yaml
 - <chart name>-<chart version>-helm.tar.gz
@@ -35,7 +35,7 @@ This command will push the image into the container registry to be available for
 Finally, let's use Helm to deploy it into the cluster:
 
 ```shell
-helm install helm-example ./target/classes/META-INF/dekorate/<chart name>
+helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
 ```
 
 How can we update my deployment?
@@ -49,5 +49,5 @@ mvn clean package -Ddekorate.push=true -Ddekorate.docker.registry=<container reg
 And then, upgrade your Helm deployment:
 
 ```shell
-helm upgrade helm-example ./target/classes/META-INF/dekorate/<chart name>
+helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
 ```

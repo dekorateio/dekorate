@@ -17,6 +17,7 @@
 
 package io.dekorate.helm.processor;
 
+import static io.dekorate.helm.config.HelmBuildConfigGenerator.HELM;
 import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
 
 import java.io.File;
@@ -333,7 +334,7 @@ public class HelmFileWriter extends SimpleFileWriter {
   }
 
   private Path getChartOutputDir(HelmChartConfig helmConfig) {
-    return getOutputDir().resolve(helmConfig.getName());
+    return getOutputDir().resolve(HELM).resolve(helmConfig.getName());
   }
 
   private static List<File> listYamls(Path directory) {

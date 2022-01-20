@@ -31,7 +31,7 @@ import io.dekorate.utils.Serialization;
 class HelmKubernetesExampleTest {
 
   private static final String CHART_NAME = "myChart";
-  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/" + CHART_NAME;
+  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/" + CHART_NAME;
   private static final String ROOT_CONFIG_NAME = "helmOnKubernetesExample";
 
   @Test
