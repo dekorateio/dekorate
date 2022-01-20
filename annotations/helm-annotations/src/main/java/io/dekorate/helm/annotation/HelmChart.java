@@ -51,8 +51,6 @@ public @interface HelmChart {
 
   String[] sources() default {};
 
-  String engine() default "";
-
   Maintainer[] maintainers() default {};
 
   HelmDependency[] dependencies() default {};

@@ -9,7 +9,7 @@ class path:
       <version>${project.version}</version>
     </dependency>
 
-Compile the project using:
+Build the project using:
 
     mvn clean install
 
@@ -18,7 +18,7 @@ You can find the generated Helm artifacts under: `target/classes/META-INF/dekora
 - values.yaml
 - templates/*.yml the generated resources by Dekorate
 
-How can we use it?
+How can it be used?
 
 First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and have connected into a cluster.
 
@@ -42,11 +42,11 @@ The above command will use the default values file `values.yaml`, we can select 
 helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --values ./target/classes/META-INF/dekorate/helm/<chart name>/values.dev.yaml
 ```
 
-How can we update my deployment?
+How can I update my deployment?
 
 - Via the `upgrade` option of Helm command line:
 
-After doing changes in your project, you would need to regenerate the resources using Dekorate:
+After making changes to your project, you would need to regenerate the resources using Dekorate:
 
 ```shell
 mvn clean package

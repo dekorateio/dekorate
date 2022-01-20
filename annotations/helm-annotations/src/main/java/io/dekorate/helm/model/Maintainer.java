@@ -36,13 +36,17 @@ public class Maintainer implements Serializable {
   @JsonProperty
   private String email;
 
+  @JsonProperty
+  private String url;
+
   public Maintainer() {
 
   }
 
-  public Maintainer(String name, String email) {
+  public Maintainer(String name, String email, String url) {
     this.name = name;
     this.email = email;
+    this.url = url;
   }
 
   public String getName() {
@@ -59,5 +63,13 @@ public class Maintainer implements Serializable {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
   }
 }

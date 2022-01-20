@@ -300,11 +300,10 @@ public class HelmFileWriter extends SimpleFileWriter {
     chart.setHome(helmConfig.getHome());
     chart.setSources(Arrays.asList(helmConfig.getSources()));
     chart.setMaintainers(Arrays.stream(helmConfig.getMaintainers())
-        .map(m -> new Maintainer(m.getName(), m.getEmail()))
+        .map(m -> new Maintainer(m.getName(), m.getEmail(), m.getUrl()))
         .collect(Collectors.toList()));
     chart.setIcon(helmConfig.getIcon());
     chart.setKeywords(Arrays.asList(helmConfig.getKeywords()));
-    chart.setEngine(helmConfig.getEngine());
     chart.setDependencies(Arrays.stream(helmConfig.getDependencies())
         .map(d -> new HelmDependency(d.getName(), d.getVersion(), d.getRepository()))
         .collect(Collectors.toList()));

@@ -10,7 +10,7 @@ class path:
       <version>${project.version}</version>
     </dependency>
 
-Compile the project using:
+Build the project using:
 
     mvn clean install
     
@@ -20,9 +20,9 @@ You can find the generated Helm artifacts under: `target/classes/META-INF/dekora
 - <chart name>-<chart version>-helm.tar.gz
 - templates/*.yml the generated resources by Dekorate
 
-How can we use it?
+How can it be used?
 
-First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and have connected into a cluster.
+First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and has access to a kubernetes cluster.
 
 Then, run the following Maven command in order to generate the Helm artifacts and build/push the image into a container registry:
 
@@ -38,17 +38,14 @@ Finally, let's use Helm to deploy it into the cluster:
 helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
 ```
 
-The above command will use the default values file `values.yaml`, we can select a different values file by doing:
+The above command will use the default values, which are located in `./target/classes/META-INF/dekorate/helm/<chart name>/values.yaml`.
+To override the default values, pass as parameter you own value file `--values /path/to/another.values.yaml` or set them using `--set key1=val1 --set key2=val2`.
 
-```shell
-helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --values ./target/classes/META-INF/dekorate/helm/<chart name>/values.dev.yaml
-```
-
-How can we update my deployment?
+How can I update my deployment?
 
 - Via the `upgrade` option of Helm command line:
 
-After doing changes in your project, you would need to regenerate the resources using Dekorate:
+After making changes to your project, you would need to regenerate the resources using Dekorate:
 
 ```shell
 mvn clean package -Ddekorate.push=true -Ddekorate.docker.registry=<container registry url> -Ddekorate.docker.group=<your group>

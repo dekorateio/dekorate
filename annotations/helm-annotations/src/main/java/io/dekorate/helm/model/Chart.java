@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents the <a href="https://github.com/helm/helm">Helm</a>
- * <a href="https://github.com/helm/helm/blob/c7e1f9b04606574b2f0d93d34e22efb06847ad08/pkg/chart/metadata.go#L44">Chart.yaml file</a>
+ * <a href="https://github.com/helm/helm/blob/v3.7.2/pkg/chart/metadata.go">Chart.yaml file</a>
  */
 @JsonInclude(NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -47,8 +47,6 @@ public class Chart {
   private List<String> keywords;
   @JsonProperty
   private List<Maintainer> maintainers;
-  @JsonProperty
-  private String engine;
   @JsonProperty
   private String icon;
   @JsonProperty
@@ -116,14 +114,6 @@ public class Chart {
 
   public void setSources(List<String> sources) {
     this.sources = sources;
-  }
-
-  public String getEngine() {
-    return engine;
-  }
-
-  public void setEngine(String engine) {
-    this.engine = engine;
   }
 
   public String getHome() {

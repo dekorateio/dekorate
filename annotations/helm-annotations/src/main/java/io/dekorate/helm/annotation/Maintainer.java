@@ -30,4 +30,6 @@ public @interface Maintainer {
 
   String email();
 
+  String url();
+
 }
