@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,8 +58,9 @@ import io.dekorate.utils.Strings;
 
 public class HelmFileWriter extends SimpleFileWriter {
 
-  private static final String CHART_FILENAME = "Chart.yaml";
-  private static final String VALUES_FILENAME = "values.yaml";
+  private static final String YAML = ".yaml";
+  private static final String CHART_FILENAME = "Chart" + YAML;
+  private static final String VALUES_FILENAME = "values" + YAML;
   private static final String CHART_API_VERSION = "v1";
   private static final String TEMPLATES = "templates";
   private static final String CHARTS = "charts";
@@ -69,6 +71,7 @@ public class HelmFileWriter extends SimpleFileWriter {
   private static final String VALUES_START_TAG = "{{ .Values.";
   private static final String VALUES_END_TAG = " }}";
   private static final String EMPTY = "";
+  private static final boolean APPEND = true;
   private static final Logger LOGGER = LoggerFactory.getLogger();
 
   public HelmFileWriter(Project project) {
@@ -189,10 +192,31 @@ public class HelmFileWriter extends SimpleFileWriter {
   private Map<String, String> processSourceFiles(HelmChartConfig helmConfig, List<ConfigReference> valuesReferences,
       Map<String, Object> values) throws IOException {
 
-    Map<String, String> sourceFiles = new HashMap<>();
-
     Path templatesDir = getChartOutputDir(helmConfig).resolve(TEMPLATES);
     Files.createDirectories(templatesDir);
+    List<String> yamlsContent = replaceValuesInYamls(valuesReferences, values);
+    // Split yamls in separated files by kind
+    for (String yamlContent : yamlsContent) {
+      List<Map<Object, Object>> resources = Serialization.unmarshalAsListOfMaps(yamlContent);
+      for (Map<Object, Object> resource : resources) {
+        String kind = (String) resource.get("kind");
+        Path targetFile = templatesDir.resolve(kind.toLowerCase() + YAML);
+
+        // Adapt the values tag to Helm standards:
+        String adaptedString = Serialization.yamlMapper().writeValueAsString(resource)
+            .replaceAll(Pattern.quote("\"" + VALUES_START_TAG), VALUES_START_TAG)
+            .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG);
+
+        writeFile(adaptedString, targetFile);
+      }
+    }
+
+    return Collections.emptyMap();
+  }
+
+  private List<String> replaceValuesInYamls(List<ConfigReference> valuesReferences, Map<String, Object> values)
+      throws IOException {
+    List<String> yamlsContent = new LinkedList<>();
     for (File file : listYamls(getOutputDir())) {
       // Read yaml
       List<Map<Object, Object>> yaml = Serialization.unmarshalAsListOfMaps(file.toPath());
@@ -233,8 +257,6 @@ public class HelmFileWriter extends SimpleFileWriter {
         }
       }
 
-      Path targetFile = templatesDir.resolve(file.getName());
-
       // Parse back to yaml and write to file
       StringBuilder sb = new StringBuilder();
       JsonNode jsonTree = Serialization.jsonMapper().readTree(json);
@@ -242,14 +264,10 @@ public class HelmFileWriter extends SimpleFileWriter {
         sb.append(Serialization.yamlMapper().writeValueAsString(jsonElement));
       }
 
-      String adaptedString = sb.toString()
-          .replaceAll(Pattern.quote("\"" + VALUES_START_TAG), VALUES_START_TAG)
-          .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG);
-
-      writeFile(adaptedString, targetFile);
+      yamlsContent.add(sb.toString());
     }
 
-    return sourceFiles;
+    return yamlsContent;
   }
 
   private Map<String, String> createChartYaml(HelmChartConfig helmConfig) throws IOException {
@@ -280,7 +298,7 @@ public class HelmFileWriter extends SimpleFileWriter {
   }
 
   private Map<String, String> writeFile(String value, Path file) throws IOException {
-    try (FileWriter writer = new FileWriter(file.toFile())) {
+    try (FileWriter writer = new FileWriter(file.toFile(), APPEND)) {
       writer.write(value);
       return Collections.singletonMap(file.toString(), value);
     }

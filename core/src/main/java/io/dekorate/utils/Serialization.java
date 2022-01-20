@@ -175,7 +175,16 @@ public class Serialization {
    * @return
    */
   public static List<Map<Object, Object>> unmarshalAsListOfMaps(Path file) throws IOException {
-    String content = Strings.read(file);
+    return unmarshalAsListOfMaps(Strings.read(file));
+  }
+
+  /**
+   * Unmarshals a file into a list of maps.
+   *
+   * @param content The YAML content.
+   * @return
+   */
+  public static List<Map<Object, Object>> unmarshalAsListOfMaps(String content) throws IOException {
     String[] parts = Serialization.splitDocument(content);
 
     List<Map<Object, Object>> list = new ArrayList<>();
