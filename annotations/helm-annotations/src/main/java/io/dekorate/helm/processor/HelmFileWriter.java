@@ -22,6 +22,7 @@ import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -60,11 +61,14 @@ public class HelmFileWriter extends SimpleFileWriter {
   private static final String VALUES_FILENAME = "values.yaml";
   private static final String CHART_API_VERSION = "v1";
   private static final String TEMPLATES = "templates";
+  private static final String CHARTS = "charts";
+  private static final String NOTES = "NOTES.txt";
   private static final String KUBERNETES_CLASSIFIER = "helm";
   private static final String OPENSHIFT_CLASSIFIER = "helmshift";
   private static final String OPENSHIFT = "openshift";
   private static final String VALUES_START_TAG = "{{ .Values.";
   private static final String VALUES_END_TAG = " }}";
+  private static final String EMPTY = "";
   private static final Logger LOGGER = LoggerFactory.getLogger();
 
   public HelmFileWriter(Project project) {
@@ -85,6 +89,9 @@ public class HelmFileWriter extends SimpleFileWriter {
           artifacts.putAll(createChartYaml(helmConfig));
           artifacts.putAll(createValuesYaml(helmConfig, values));
           artifacts.putAll(createTarball(helmConfig, artifacts));
+          // To follow Helm file structure standards:
+          artifacts.putAll(createEmptyChartFolder(helmConfig));
+          artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig));
 
         } catch (IOException e) {
           throw new RuntimeException("Error writing resources", e);
@@ -93,6 +100,19 @@ public class HelmFileWriter extends SimpleFileWriter {
     });
 
     return artifacts;
+  }
+
+  private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig) throws IOException {
+    InputStream notesInputStream = HelmFileWriter.class.getResourceAsStream("/" + NOTES);
+    Path outputDir = getChartOutputDir(helmConfig).resolve(TEMPLATES).resolve(NOTES);
+    Files.copy(notesInputStream, outputDir);
+    return Collections.singletonMap(outputDir.toString(), EMPTY);
+  }
+
+  private Map<String, String> createEmptyChartFolder(HelmChartConfig helmConfig) throws IOException {
+    Path emptyChartsDir = getChartOutputDir(helmConfig).resolve(CHARTS);
+    Files.createDirectories(emptyChartsDir);
+    return Collections.singletonMap(emptyChartsDir.toString(), EMPTY);
   }
 
   private List<ConfigReference> getValuesReferences(HelmChartConfig helmBuildConfig, Session session) {

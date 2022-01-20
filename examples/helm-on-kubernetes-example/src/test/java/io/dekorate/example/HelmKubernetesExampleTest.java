@@ -44,6 +44,10 @@ class HelmKubernetesExampleTest {
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
     // templates
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/kubernetes.yml"));
+    // empty charts folder
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/charts"));
+    // notes
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/NOTES.txt"));
     // zip manifest
     String zipName = String.format("META-INF/dekorate/%s-%s-helm.tar.gz", chart.getName(), chart.getVersion());
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(zipName), "File '" + zipName + "' not found!");
