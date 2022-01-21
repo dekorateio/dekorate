@@ -30,6 +30,7 @@ limitations under the License.
   <modules>
     <module>option-annotations</module>
     <module>kubernetes-annotations</module>
+    <module>minikube-annotations</module>
     <module>openshift-annotations</module>
     <module>knative-annotations</module>
     <module>tekton-annotations</module>

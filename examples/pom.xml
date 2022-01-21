@@ -47,6 +47,7 @@
         <module>vertx-on-openshift-example</module>
         <module>multimodule-projects-on-kubernetes-example</module>
         <module>multimodule-projects-on-openshift-example</module>
+        <module>minikube-example</module>
         <module>helm-on-kubernetes-example</module>
         <module>helm-on-openshift-example</module>
       </modules>

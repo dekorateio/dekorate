@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.spring.generator;
+package io.dekorate.spring.config;
 
 import java.util.Collections;
 import java.util.Map;

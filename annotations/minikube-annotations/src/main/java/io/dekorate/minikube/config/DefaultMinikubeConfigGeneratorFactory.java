@@ -15,27 +15,14 @@
  * 
 **/
 
-package io.dekorate.spring.listener;
+package io.dekorate.minikube.config;
 
+import io.dekorate.ConfigurationGeneratorFactory;
 import io.dekorate.ConfigurationRegistry;
-import io.dekorate.Session;
-import io.dekorate.spring.BeanListener;
-import io.dekorate.spring.config.SpringBootWebAnnotationGenerator;
 
-public class RouterFunctionListener implements BeanListener, SpringBootWebAnnotationGenerator {
+public class DefaultMinikubeConfigGeneratorFactory implements ConfigurationGeneratorFactory {
 
-  @Override
-  public String getType() {
-    return "org.springframework.web.reactive.function.server.RouterFunction";
-  }
-
-  @Override
-  public void onBean() {
-    addPropertyConfiguration(WEB_ANNOTATIONS);
-  }
-
-  @Override
-  public ConfigurationRegistry getConfigurationRegistry() {
-    return Session.getSession().getConfigurationRegistry();
+  public DefaultMinikubeConfigGenerator create(ConfigurationRegistry configurationRegistry) {
+    return new DefaultMinikubeConfigGenerator(configurationRegistry);
   }
 }

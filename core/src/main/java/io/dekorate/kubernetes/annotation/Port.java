@@ -40,6 +40,13 @@ public @interface Port {
   int hostPort() default 0;
 
   /**
+   * The port number. Refers to the container port.
+   *
+   * @return The port number.
+   */
+  int nodePort() default 0;
+
+  /**
    * The application path (refers to web application path).
    * 
    * @return The path, defaults to /.
