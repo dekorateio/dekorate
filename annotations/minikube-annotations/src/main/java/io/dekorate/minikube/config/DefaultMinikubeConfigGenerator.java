@@ -33,29 +33,6 @@ public class DefaultMinikubeConfigGenerator implements MinikubeConfigGenerator {
     add(new DefaultConfiguration<MinikubeConfig>(MinikubeConfig.newMinikubeConfigBuilderFromDefaults()));
   }
 
-  //  Port detectNodePort() {
-  //    return new PortBuilder()
-  //        // Don't decide here to apply a fixed hostPort as several ports (HTTP, HTTPS, ...) could be generated for a K8s Service
-  //        // The AddServiceResourceDecorator will take care to assign it
-  //        //.withHostPort()
-  //        .withName("nodeport")
-  //        .withHostPort(80)
-  //        //        .withContainerPort(extractPortFromProperties())
-  //        .withNodePort(30123)
-  //        .build();
-  //  }
-
-  //    Integer extractPortFromProperties() {
-  //      final Object server = getProperties().get("server");
-  //      if (server != null && Map.class.isAssignableFrom(server.getClass())) {
-  //        final Map<String, Object> serverProperties = (Map<String, Object>) server;
-  //        final Object port = serverProperties.get("port");
-  //        if (port != null) {
-  //          return port instanceof Integer ? (Integer) port : Integer.valueOf(port.toString());
-  //        }
-  //      }
-  //      return 8080;
-  //    }
 
   @Override
   public ConfigurationRegistry getConfigurationRegistry() {

@@ -28,10 +28,6 @@ import io.dekorate.utils.Ports;
 public class PopulateNodePort extends Configurator<BaseConfigFluent<?>> {
 
   public Port map(Port port) {
-    //    if (port.getNodePort() != null && port.getNodePort() > 0) {
-    //      return port;
-    //    }
-
     return Ports.populateNodePort(port);
   }
 
