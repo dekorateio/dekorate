@@ -32,7 +32,7 @@ import io.dekorate.Session;
 import io.dekorate.config.AdditionalResourcesLocator;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.spring.generator.SpringBootApplicationGenerator;
+import io.dekorate.spring.config.SpringBootApplicationGenerator;
 
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
 @SupportedAnnotationTypes({ "org.springframework.boot.autoconfigure.SpringBootApplication" })

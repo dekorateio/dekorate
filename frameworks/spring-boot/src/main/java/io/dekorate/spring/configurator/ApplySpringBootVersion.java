@@ -20,7 +20,7 @@ import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.ConfigurationFluent;
 import io.dekorate.kubernetes.config.Configurator;
 
-public class SetSpringBootVersion extends Configurator<ConfigurationFluent<?>> {
+public class ApplySpringBootVersion extends Configurator<ConfigurationFluent<?>> {
 
   public static final ConfigKey<String> RUNTIME_VERSION = new ConfigKey<>("RUNTIME_VERSION", String.class);
 

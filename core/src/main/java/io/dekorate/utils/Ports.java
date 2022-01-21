@@ -75,7 +75,7 @@ public class Ports {
   }
 
   public static Port populateHostPort(Port port) {
-    if (!isWebPort(port)) {
+    if (!isWebPort(port) && !isNodePort(port)) {
       return port;
     }
 
@@ -83,7 +83,7 @@ public class Ports {
       return port;
     }
 
-    if (port.getContainerPort() != null && HTTP_PORT_NUMBERS.containsKey(port)) {
+    if (port.getContainerPort() != null && HTTP_PORT_NUMBERS.containsKey(port.getContainerPort())) {
       return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort())).build();
     }
 
@@ -94,7 +94,25 @@ public class Ports {
     return port;
   }
 
+  public static Port populateNodePort(Port port) {
+    if (!isNodePort(port)) {
+      return port;
+    }
+
+    if (port.getNodePort() != null && port.getNodePort() > 0) {
+      if (port.getHostPort() == null || port.getHostPort() == 0) {
+        return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort())).build();
+      }
+      return port;
+    }
+    //TODO implement logic to select the node port from config or range...
+    return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort())).withNodePort(30123).build();
+  }
+
   public static boolean isWebPort(Port port) {
+    if (isNodePort(port)) {
+      return false;
+    }
     if (webPortNames().contains(port.getName())) {
       return true;
     }
@@ -109,6 +127,13 @@ public class Ports {
       return true;
     }
     if (webPortNumbers().contains(port.getContainerPort())) {
+      return true;
+    }
+    return false;
+  }
+
+  public static boolean isNodePort(Port port) {
+    if (port.getNodePort() != null && port.getNodePort() > 30000 && port.getNodePort() < 31999) {
       return true;
     }
     return false;

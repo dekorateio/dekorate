@@ -19,7 +19,7 @@ import io.dekorate.kubernetes.config.ConfigKey;
 import io.dekorate.kubernetes.config.ConfigurationFluent;
 import io.dekorate.kubernetes.config.Configurator;
 
-public class SetSpringBootRuntime extends Configurator<ConfigurationFluent<?>> {
+public class ApplySpringBootRuntime extends Configurator<ConfigurationFluent<?>> {
 
   // TODO : Make this property generic as it will also be ued by Vert.x, Tornthail, ...
   public static final ConfigKey<String> RUNTIME_TYPE = new ConfigKey<>("RUNTIME_TYPE", String.class);

@@ -33,7 +33,7 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
-import io.dekorate.spring.generator.SpringBootWebAnnotationGenerator;
+import io.dekorate.spring.config.SpringBootWebAnnotationGenerator;
 
 @Description("Detects Spring Boot web endpoints and registers the http port.")
 @SupportedAnnotationTypes({ "org.springframework.web.bind.annotation.RestController",

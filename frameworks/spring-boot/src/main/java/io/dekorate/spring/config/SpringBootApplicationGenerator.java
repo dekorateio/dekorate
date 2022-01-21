@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.spring.generator;
+package io.dekorate.spring.config;
 
 import java.util.Collections;
 import java.util.Map;
@@ -34,10 +34,8 @@ import io.dekorate.kubernetes.decorator.AddServiceAccountResourceDecorator;
 import io.dekorate.kubernetes.decorator.ApplyServiceAccountNamedDecorator;
 import io.dekorate.prometheus.config.EditableServiceMonitorConfig;
 import io.dekorate.prometheus.decorator.EndpointPathDecorator;
-import io.dekorate.spring.config.SpringApplicationConfig;
-import io.dekorate.spring.config.SpringApplicationConfigBuilder;
-import io.dekorate.spring.configurator.SetSpringBootRuntime;
-import io.dekorate.spring.configurator.SetSpringBootVersion;
+import io.dekorate.spring.configurator.ApplySpringBootRuntime;
+import io.dekorate.spring.configurator.ApplySpringBootVersion;
 
 public interface SpringBootApplicationGenerator extends ConfigurationGenerator, WithSession {
 
@@ -57,8 +55,8 @@ public interface SpringBootApplicationGenerator extends ConfigurationGenerator, 
   default void addConfiguration(Map map) {
     Session session = getSession();
     session.getConfigurationRegistry().add(new ConfigurationSupplier(new SpringApplicationConfigBuilder()));
-    session.getConfigurationRegistry().add(new SetSpringBootRuntime());
-    session.getConfigurationRegistry().add(new SetSpringBootVersion());
+    session.getConfigurationRegistry().add(new ApplySpringBootRuntime());
+    session.getConfigurationRegistry().add(new ApplySpringBootVersion());
 
     session.getManifestGenerators().add(new ManifestGenerator() {
 
