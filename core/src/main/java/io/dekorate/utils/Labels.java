@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.Label;
 
 public class Labels {
@@ -52,6 +53,25 @@ public class Labels {
     for (Label label : config.getLabels()) {
       result.add(label);
     }
+    return result;
+  }
+
+  /**
+   * Creates a {@link Map} with the labels for the {@link ImageConfiguration}.
+   * 
+   * @param config The config.
+   * @return A map containing the lables.
+   */
+  public static Set<Label> createLabels(ImageConfiguration config) {
+    Set<Label> result = new HashSet<Label>() {
+      {
+        add(new Label(NAME, config.getName(), null));
+        add(new Label(VERSION, config.getVersion(), null));
+        if (Strings.isNotNullOrEmpty(config.getPartOf())) {
+          add(new Label(PART_OF, config.getPartOf(), null));
+        }
+      }
+    };
     return result;
   }
 
