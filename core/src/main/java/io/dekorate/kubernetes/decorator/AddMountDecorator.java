@@ -35,6 +35,8 @@ public class AddMountDecorator extends ApplicationContainerDecorator<ContainerBu
 
   @Override
   public void andThenVisit(ContainerBuilder container) {
+    container.removeMatchingFromVolumeMounts(m -> mount.getName().equals(m.getName()));
+
     container.addNewVolumeMount()
         .withName(mount.getName())
         .withMountPath(mount.getPath())
