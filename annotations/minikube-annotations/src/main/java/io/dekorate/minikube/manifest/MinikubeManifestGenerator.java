@@ -135,24 +135,6 @@ public class MinikubeManifestGenerator extends AbstractKubernetesManifestGenerat
         .build();
   }
 
-  //  public Service createService(MinikubeConfig config) {
-  //    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurationRegistry);
-  //
-  //    String image = Strings
-  //        .isNotNullOrEmpty(imageConfig.getImage())
-  //            ? imageConfig.getImage()
-  //            : Images
-  //                .getImage(
-  //                    imageConfig.isAutoPushEnabled()
-  //                        ? (Strings.isNullOrEmpty(imageConfig.getRegistry()) ? DEFAULT_REGISTRY
-  //                            : imageConfig.getRegistry())
-  //                        : imageConfig.getRegistry(),
-  //                    imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
-  //
-  //    return new ServiceBuilder().withNewMetadata().withName(config.getName())
-  //        .endMetadata().withNewSpec().withNewTemplate().withNewSpec().addNewContainer().withName(config.getName())
-  //        .withImage(image).endContainer().endSpec().endTemplate().endSpec().build();
-  //  }
 
   @Override
   public boolean accepts(Class<? extends Configuration> config) {
