@@ -167,7 +167,7 @@ public class HelmFileWriter extends SimpleFileWriter {
   private Map<String, String> createTarball(HelmChartConfig helmConfig, Map<String, String> artifacts, Set<String> profiles)
       throws IOException {
 
-    File tarballFile = getOutputDir().resolve(String.format("%s-%s-%s.%s",
+    File tarballFile = getOutputDir().resolve(HELM).resolve(String.format("%s-%s-%s.%s",
         helmConfig.getName(), getVersion(helmConfig), getHelmClassifier(artifacts), helmConfig.getExtension()))
         .toFile();
 

@@ -53,7 +53,7 @@ class HelmOpenshiftExampleTest {
     // notes
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/NOTES.txt"));
     // zip manifest
-    String zipName = String.format("META-INF/dekorate/%s-%s-helmshift.tar.gz", chart.getName(), chart.getVersion());
+    String zipName = String.format("META-INF/dekorate/helm/%s-%s-helmshift.tar.gz", chart.getName(), chart.getVersion());
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(zipName), "File '" + zipName + "' not found!");
   }
 
