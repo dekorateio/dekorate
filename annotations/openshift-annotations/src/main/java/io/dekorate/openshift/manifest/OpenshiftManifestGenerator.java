@@ -16,6 +16,7 @@
 package io.dekorate.openshift.manifest;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.dekorate.AbstractKubernetesManifestGenerator;
 import io.dekorate.BuildServiceFactories;
@@ -172,6 +173,8 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenera
     return new DeploymentConfigBuilder()
         .withNewMetadata()
         .withName(config.getName())
+        // We are adding the labels up front as they might be picked up by auxilliary resources
+        .withLabels(Labels.createLabels(config).stream().collect(Collectors.toMap(l -> l.getKey(), l -> l.getValue())))
         .endMetadata()
         .withNewSpec()
         .withReplicas(1)
