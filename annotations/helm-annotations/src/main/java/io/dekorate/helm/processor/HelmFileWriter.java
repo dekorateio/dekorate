@@ -50,6 +50,7 @@ import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.WithConfigReferences;
 import io.dekorate.helm.config.HelmChartConfig;
+import io.dekorate.helm.config.ValueReference;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
@@ -130,10 +131,14 @@ public class HelmFileWriter extends SimpleFileWriter {
     }
 
     // From user
-    Stream.of(helmBuildConfig.getValues()).forEach(valueReference -> configReferences
-        .add(new ConfigReference(valueReference.getProperty(), valueReference.getJsonPaths(),
-            valueReference.getValue().isEmpty() ? null : valueReference.getValue(), valueReference.getProfile())));
+    Stream.of(helmBuildConfig.getValues()).map(this::toConfigReference).forEach(configReferences::add);
     return configReferences;
+  }
+
+  private ConfigReference toConfigReference(ValueReference valueReference) {
+    return new ConfigReference(valueReference.getProperty(),
+        valueReference.getJsonPaths(),
+        valueReference.getValue().isEmpty() ? null : valueReference.getValue(), valueReference.getProfile());
   }
 
   private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Map<String, Object> prodValues,

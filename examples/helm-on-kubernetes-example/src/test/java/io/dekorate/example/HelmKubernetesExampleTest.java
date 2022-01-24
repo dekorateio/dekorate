@@ -73,7 +73,7 @@ class HelmKubernetesExampleTest {
     assertNull(helmExampleValues.get("not-found"));
     // Should contain commit-id
     assertNotNull(helmExampleValues.get("commitId"));
-    // Shoult contain vcs-url with the overridden value from properties
+    // Should contain vcs-url with the overridden value from properties
     assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
   }
 
@@ -94,7 +94,9 @@ class HelmKubernetesExampleTest {
     assertNull(helmExampleValues.get("not-found"));
     // Should contain commit-id
     assertNotNull(helmExampleValues.get("commitId"));
-    // Shoult contain vcs-url with the value from annotations
+    // Should contain vcs-url with the value from properties
     assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
+    // Should contain ingress with the value from properties
+    assertEquals("my-test-host", helmExampleValues.get("host"));
   }
 }

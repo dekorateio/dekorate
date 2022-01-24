@@ -23,6 +23,8 @@
         url: /docs/tekton
       - title: Knative
         url: /docs/knative
+      - title: Helm
+        url: /docs/helm
       - title: Prometheus
         url: /docs/prometheus
       - title: Jaeger
