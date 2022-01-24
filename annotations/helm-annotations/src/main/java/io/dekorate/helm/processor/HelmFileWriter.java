@@ -87,6 +87,8 @@ public class HelmFileWriter extends SimpleFileWriter {
     Map<String, String> artifacts = super.write(session);
     session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(helmConfig -> {
       if (helmConfig.isEnabled()) {
+        validateHelmConfig(helmConfig);
+
         List<ConfigReference> valuesReferences = getValuesReferences(helmConfig, session);
 
         try {
@@ -108,6 +110,12 @@ public class HelmFileWriter extends SimpleFileWriter {
     });
 
     return artifacts;
+  }
+
+  private void validateHelmConfig(HelmChartConfig helmConfig) {
+    if (Strings.isNullOrEmpty(helmConfig.getName())) {
+      throw new RuntimeException("Helm Chart name is required!");
+    }
   }
 
   private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig) throws IOException {
