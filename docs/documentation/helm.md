@@ -7,7 +7,7 @@ permalink: /docs/helm
 
 ### Helm
 
-Dekorate also supports generating manifests for `helm`. To make use of this feature you need to add:
+To let Dekorate to generate the Helm manifest files for a project, simply declare the following dependency part of your pom file:
 
 ```xml
 <dependency>
@@ -17,7 +17,7 @@ Dekorate also supports generating manifests for `helm`. To make use of this feat
 </dependency>
 ```
 
-This module provides the [@HelmChart](annotations/helm-annotations/src/main/java/io/dekorate/helm/annotation/HelmChart.java) that will generate the following Helm resources:
+This dependency will generate the following Helm resources:
 - Chart.yaml
 - values.yaml
 - templates/*.yml the generated resources by Dekorate
@@ -25,14 +25,14 @@ This module provides the [@HelmChart](annotations/helm-annotations/src/main/java
 
 #### Getting Started
 
-Add your Helm chart configuration in your properties like:
+To generate the Helm resources, you first need to configure the Helm chart via properties:
 
 ```
 dekorate.helm.name=myChart
 dekorate.helm.description=Description of my Chart
 ```
 
-Or annotate one of your Java source files with the Helm annotation:
+Or annotate one of your Java source files with the [@HelmChart](annotations/helm-annotations/src/main/java/io/dekorate/helm/annotation/HelmChart.java) annotation:
 
 ```java
 @HelmChart(name = "myChart", description = "Description of my Chart")
@@ -45,17 +45,17 @@ public class Main {
 }
 ```
 
-#### Building
+Once, you have configured the Helm chart, you can generate the Helm resources under the folder `target/classes/META-INF/dekorate/helm/<chart name>/` with:
 
     mvn clean package
 
-To generate the above Helm resources under the folder `target/classes/META-INF/dekorate/helm/<chart name>/`.
-
-Moreover, assuming you're using Kubernetes, the Helm templates will include the following files by default:
+Assuming you're using the [Kubernetes]({{site.baseurl}}/docs/kubernetes) Dekorate extension, the Helm resources will include by default the following templates at `target/classes/META-INF/dekorate/helm/<chart name>/templates/`:
 - deployment.yaml
 - ingress.yaml
 - service.yaml
 - NOTES.txt
+
+**Note**: the Helm annotation is also compatible with the [Openshift]({{site.baseurl}}/docs/openshift) Dekorate extension.
 
 #### Mapping Values
 
@@ -85,7 +85,7 @@ myModule:
   replicas: 3
 ```
 
-Note that `myModule` is the name of your project.
+**Note**: `myModule` is the name of your project.
 
 And the Deployment file at `target/classes/META-INF/dekorate/helm/<chart name>/templates/deployment.yaml` will have a reference to this value:
 
@@ -102,10 +102,7 @@ This is done transparently to users.
 
 ##### Mapping user properties using JSONPath expressions
 
-What about if you want to map another property like the name of all the resources (the metadata name)?
-Dekorate allows users to define [JSONPath](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html) expressions to map properties into the Helm values file.
-
-For example, having the following YAML resource:
+Let's see the following YAML resource:
 
 ```yaml
 apiVersion: v1
@@ -114,6 +111,11 @@ metadata:
   name: helm-on-kubernetes-example
 ...
 ```
+
+Dekorate will not replace the property at `metadata.name` with `{{ .Values.myModule.name }}`.
+However, Dekorate allows users to define [JSONPath](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html) expressions to map properties into the Helm values file. Let's see how to do it using the above example to map the property `metadata.name` with `{{ .Values.myModule.name }}`.
+
+**Note**: JSONPath works with JSON, not YAML. So, for testing your expressions, you first need to convert YAML files to JSON files using [this online tool](https://jsonformatter.org/yaml-to-json) and then use some JSONPath online evaluator like [https://jsonpath.com/](https://jsonpath.com/). Remember to wrap the json objects into lists.
 
 After getting familiar with JSONPath, the expression to map the metadata name value is `$..metadata.name`, so you need to add it to your configuration:
 
@@ -126,8 +128,6 @@ dekorate.helm.values[0].property=myModule.name
 dekorate.helm.values[0].jsonPaths=$..metadata.name
 ```
 
-| Note that JSONPath works with JSON, not YAML. So, for testing your expressions, you first need to convert YAML files to JSON files using [this online tool](https://jsonformatter.org/yaml-to-json) and then use some JSONPath online evaluator like [https://jsonpath.com/](https://jsonpath.com/). Remember to wrap the json objects into lists.
-
 The resulting `values.yaml` file will look like as:
 
 ```yaml
@@ -135,9 +135,7 @@ myModule:
   name: helm-on-kubernetes-example
 ```
 
-Why the value is `helm-on-kubernetes-example`? This is because Dekorate will automatically inspect the generated resources to find the matching value of the JSONPath expression. 
-
-However, users can provide other values using the `value` property:
+The `myModule.name` value is set automatically by Dekorate. However, users can provide other values using the `value` property:
 
 ```
 dekorate.helm.name=myChart
@@ -146,6 +144,7 @@ dekorate.helm.description=Description of my Chart
 # Map all the metadata name resources
 dekorate.helm.values[0].property=myModule.name
 dekorate.helm.values[0].jsonPaths=$..metadata.name
+## Overwrite value:
 dekorate.helm.values[0].value=this-is-another-name
 ```
 
@@ -158,7 +157,7 @@ myModule:
 
 ##### Mapping multiple properties at once
 
-What about if the properties to map are at different locations, for example:
+What about if the properties are located in different places, for example:
 
 ```yaml
 ---
@@ -237,7 +236,7 @@ Then, run the following Maven command in order to generate the Helm artifacts an
 mvn clean package -Ddekorate.push=true -Ddekorate.docker.registry=<container registry url> -Ddekorate.docker.group=<your group>
 ```
 
-This command will push the image into the container registry to be available for the cluster when deploying.
+This command will push the image to a container registry and will become available when a pod or container is created.
 
 Finally, let's use Helm to deploy it into the cluster:
 

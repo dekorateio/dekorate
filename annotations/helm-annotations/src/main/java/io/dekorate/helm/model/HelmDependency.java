@@ -22,6 +22,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Represents the <a href="https://github.com/helm/helm">Helm</a>
+ * <a href="https://github.com/helm/helm/blob/v3.7.2/pkg/chart/dependency.go">Dependency object</a>
+ */
 @JsonInclude(NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HelmDependency {

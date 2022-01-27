@@ -30,7 +30,7 @@ Then, run the following Maven command in order to generate the Helm artifacts an
 mvn clean package -Ddekorate.push=true -Ddekorate.docker.registry=<container registry url> -Ddekorate.docker.group=<your group>
 ```
 
-This command will push the image into the container registry to be available for the cluster when deploying.
+This command will push the image to a container registry and will become available when a pod or container is created.
 
 Finally, let's use Helm to deploy it into the cluster:
 
