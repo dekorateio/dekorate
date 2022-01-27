@@ -22,7 +22,7 @@ You can find the generated Helm artifacts under: `target/classes/META-INF/dekora
 
 How can it be used?
 
-First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and have connected into a cluster.
+First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and connected/logged to a kubernetes cluster.
 
 Then, run the following Maven command in order to generate the Helm artifacts and build/push the image into a container registry:
 
@@ -38,7 +38,7 @@ Finally, let's use Helm to deploy it into the cluster:
 helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
 ```
 
-The above command will deploy a chart using the default values (as defined within the `values.yaml` file). We can override the default values to use your `values.dev.yaml` file by doing:
+The above command will deploy a chart using the default values (as defined within the `values.yaml` file). We can override the default values to use your `values.dev.yaml` file by executing the following command:
 
 ```shell
 helm install helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --values ./target/classes/META-INF/dekorate/helm/<chart name>/values.dev.yaml

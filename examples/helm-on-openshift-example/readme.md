@@ -22,7 +22,7 @@ You can find the generated Helm artifacts under: `target/classes/META-INF/dekora
 
 How can it be used?
 
-First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and has access to a kubernetes cluster.
+First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and connected/logged to a kubernetes cluster.
 
 Then, run the following Maven command in order to generate the Helm artifacts:
 

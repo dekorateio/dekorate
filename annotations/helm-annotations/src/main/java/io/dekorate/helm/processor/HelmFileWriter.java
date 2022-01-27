@@ -204,7 +204,7 @@ public class HelmFileWriter extends SimpleFileWriter {
   }
 
   private String getVersion(HelmChartConfig helmConfig) {
-    if (helmConfig.getVersion() == null || helmConfig.getVersion().isEmpty()) {
+    if (Strings.isNullOrEmpty(helmConfig.getVersion())) {
       return getProject().getBuildInfo().getVersion();
     }
 

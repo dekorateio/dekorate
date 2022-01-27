@@ -28,14 +28,18 @@ This dependency will generate the following Helm resources:
 To generate the Helm resources, you first need to configure the Helm chart via properties:
 
 ```
+# This name property is mandatory to generate the Helm chart
 dekorate.helm.name=myChart
+# If the version is not provided, the application version will be used instead
+dekorate.helm.version=1.0.0-SNAPSHOT
+# The description property is optional
 dekorate.helm.description=Description of my Chart
 ```
 
 Or annotate one of your Java source files with the [@HelmChart](annotations/helm-annotations/src/main/java/io/dekorate/helm/annotation/HelmChart.java) annotation:
 
 ```java
-@HelmChart(name = "myChart", description = "Description of my Chart")
+@HelmChart(name = "myChart", version = "1.0.0-SNAPSHOT", description = "Description of my Chart")
 @SpringBootApplication
 public class Main {
 
@@ -45,17 +49,15 @@ public class Main {
 }
 ```
 
-Once, you have configured the Helm chart, you can generate the Helm resources under the folder `target/classes/META-INF/dekorate/helm/<chart name>/` with:
+Once, you have configured the Helm chart, you can generate the Helm resources under the folder `target/classes/META-INF/dekorate/helm/<chart name>/` using the maven command:
 
     mvn clean package
 
-Assuming you're using the [Kubernetes]({{site.baseurl}}/docs/kubernetes) Dekorate extension, the Helm resources will include by default the following templates at `target/classes/META-INF/dekorate/helm/<chart name>/templates/`:
+Depending on the Dekorate extensions that you are using in your project, the Helm resources will include some templates or others. For example, if your project declared the [Kubernetes]({{site.baseurl}}/docs/kubernetes) Dekorate extension, then the helm resources will include the following templates at `target/classes/META-INF/dekorate/helm/<chart name>/templates/`:
 - deployment.yaml
 - ingress.yaml
 - service.yaml
 - NOTES.txt
-
-**Note**: the Helm annotation is also compatible with the [Openshift]({{site.baseurl}}/docs/openshift) Dekorate extension.
 
 #### Mapping Values
 
@@ -102,7 +104,7 @@ This is done transparently to users.
 
 ##### Mapping user properties using JSONPath expressions
 
-Let's see the following YAML resource:
+As we have introduced in the previous section, Dekorate will automatically map some properties like the `replicas` or the `images` to the Values helm file. Still, some users might need to map more properties. For example, let's see the following YAML resource:
 
 ```yaml
 apiVersion: v1
@@ -112,7 +114,7 @@ metadata:
 ...
 ```
 
-Dekorate will not replace the property at `metadata.name` with `{{ .Values.myModule.name }}`.
+The property at `metadata.name` will not be replaced with `{{ .Values.myModule.name }}` in the Helm templates.
 However, Dekorate allows users to define [JSONPath](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html) expressions to map properties into the Helm values file. Let's see how to do it using the above example to map the property `metadata.name` with `{{ .Values.myModule.name }}`.
 
 **Note**: JSONPath works with JSON, not YAML. So, for testing your expressions, you first need to convert YAML files to JSON files using [this online tool](https://jsonformatter.org/yaml-to-json) and then use some JSONPath online evaluator like [https://jsonpath.com/](https://jsonpath.com/). Remember to wrap the json objects into lists.
@@ -164,7 +166,7 @@ What about if the properties are located in different places, for example:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: helm-on-kubernetes-example ## we need to map this property
+  name: helm-on-kubernetes-example ## (1)
 spec:
   rules:
     - host: my-host
@@ -172,14 +174,14 @@ spec:
         paths:
           - backend:
               service:
-                name: helm-on-kubernetes-example ## And this property
+                name: helm-on-kubernetes-example ## (2)
                 port:
                   name: http
             path: /
             pathType: Prefix
 ```
 
-For this scenario, you need to provide a comma-separated list of JSONPath expressions to be mapped to the same property `myModule.name`:
+From this example, we need to map the value `helm-on-kubernetes-example` which is used in two places: (1) `metadata.name` and (2) `spec.rules..http.paths..backend.service.name` to the same property `myModule.name`. For doing this, we need to provide a comma-separated list of JSONPath expressions to be mapped to `myModule.name`:
 
 ```
 dekorate.helm.name=myChart
@@ -187,10 +189,11 @@ dekorate.helm.description=Description of my Chart
 
 # Map all the metadata name resources
 dekorate.helm.values[0].property=myModule.name
+## Comma separated list of JSONPath expressions:
 dekorate.helm.values[0].jsonPaths=$..metadata.name,$.[?(@.kind == 'Ingress')].spec.rules..http.paths..backend.service.name
 ```
 
-So, Dekorate will first map the expression `$..metadata.name` and then the expression `$.[?(@.kind == 'Ingress')].spec.rules..http.paths..backend.service.name` (this expression only applies to `Ingress` resources - see more about filtering in JSONPath).
+Now, Dekorate will first map the expression `$..metadata.name` and then the expression `$.[?(@.kind == 'Ingress')].spec.rules..http.paths..backend.service.name` (this expression only applies to `Ingress` resources - see more about filtering in JSONPath).
 
 #### Helm Profiles
 
@@ -228,7 +231,7 @@ myModule:
 
 #### Helm Usage
 
-First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and has access to a kubernetes cluster.
+First, make sure you have installed [the Helm command line](https://helm.sh/docs/intro/install/) and connected/logged to a kubernetes cluster.
 
 Then, run the following Maven command in order to generate the Helm artifacts and build/push the image into a container registry:
 
