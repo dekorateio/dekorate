@@ -139,12 +139,9 @@ public class Serialization {
     try {
       if (object instanceof KubernetesList) {
         KubernetesList list = (KubernetesList) object;
-        if (list.getItems().size() == 1) {
-          return JSON_MAPPER.writeValueAsString(list.getItems().get(0));
-        }
         return list.getItems().stream()
             .map(Serialization::writeValueAsJsonSafe)
-            .collect(Collectors.joining());
+            .collect(Collectors.joining(",", "[", "]"));
       }
       return JSON_MAPPER.writeValueAsString(object);
     } catch (JsonProcessingException e) {
