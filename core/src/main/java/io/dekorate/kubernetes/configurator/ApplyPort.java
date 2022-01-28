@@ -29,7 +29,6 @@ import io.dekorate.utils.Strings;
 
 public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
 
-  private static final String FALLBACK_PORT_NAME = "http";
   private static final String DEFAULT_PATH = "/";
 
   private final Port port;
@@ -50,22 +49,9 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
     Predicate<PortBuilder> matchingPortName = p -> updated.getName().equals(p.getName());
     Predicate<PortBuilder> matchingHostPort = p -> updated.getHostPort() != null
         && updated.getHostPort().equals(p.getHostPort());
+    if (!config.hasMatchingPort(matchingPortName)
+        || !config.hasMatchingPort(matchingHostPort)) {
 
-    boolean matchFound = false;
-    if (config.hasMatchingPort(matchingPortName)) {
-      matchFound = true;
-      applyPath(config, updated, matchingPortName);
-      applyContainerPort(config, updated, matchingPortName);
-
-    }
-
-    if (config.hasMatchingPort(matchingHostPort)) {
-      matchFound = true;
-      applyPath(config, updated, matchingHostPort);
-      applyContainerPort(config, updated, matchingHostPort);
-    }
-
-    if (!matchFound) {
       config.addToPorts(updated);
     }
   }
