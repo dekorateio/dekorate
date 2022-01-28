@@ -20,8 +20,6 @@ package io.dekorate.helm.config;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.WithProject;
 import io.dekorate.config.DefaultConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyBuildToImageConfiguration;
-import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultHelmBuildConfigGenerator implements HelmBuildConfigGenerator, WithProject {
 
@@ -29,8 +27,6 @@ public class DefaultHelmBuildConfigGenerator implements HelmBuildConfigGenerator
 
   public DefaultHelmBuildConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
-    this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
-    this.configurationRegistry.add(new ApplyBuildToImageConfiguration());
     on(new DefaultConfiguration<>(HelmChartConfig.newHelmChartConfigBuilderFromDefaults()));
   }
 
