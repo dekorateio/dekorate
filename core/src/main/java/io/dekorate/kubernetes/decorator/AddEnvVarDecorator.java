@@ -15,9 +15,16 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.utils.Strings;
@@ -29,7 +36,7 @@ import io.fabric8.kubernetes.api.model.EnvVarBuilder;
  * A decorator that adds an environment variable to the specified container(s).
  */
 @Description("Add a environment variable to the container.")
-public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerBuilder> {
+public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerBuilder> implements WithConfigReferences {
 
   private final Env env;
 
@@ -147,4 +154,28 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
         AddSidecarDecorator.class };
   }
 
+  @Override
+  public List<ConfigReference> getConfigReferences() {
+    if (Strings.isNotNullOrEmpty(env.getValue())) {
+      return Arrays.asList(buildConfigReferenceForEnvValue());
+    }
+
+    return Collections.emptyList();
+  }
+
+  private ConfigReference buildConfigReferenceForEnvValue() {
+    String property = generateConfigReferenceName("envs." + env.getName(), getContainerName());
+    String envFilter = ".env.[?(@.name == '" + env.getName() + "')].value";
+    String jsonPath = "$..spec.template.spec.containers." + envFilter;
+    if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
+      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
+          + getContainerName() + "')]" + envFilter;
+    } else if (!Strings.equals(getDeploymentName(), ANY)) {
+      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers." + envFilter;
+    } else if (!Strings.equals(getContainerName(), ANY)) {
+      jsonPath = "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')]" + envFilter;
+    }
+
+    return new ConfigReference(property, jsonPath, env.getValue());
+  }
 }

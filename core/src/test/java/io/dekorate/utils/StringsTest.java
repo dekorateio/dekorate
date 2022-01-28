@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class StringsTest {
 
   @Test
-  public void shloudConvertToCamelCase() throws Exception {
+  public void shouldConvertToCamelCase() throws Exception {
     assertNull(Strings.kebabToCamelCase(null));
     assertEquals("", Strings.kebabToCamelCase(""));
     assertEquals("my", Strings.kebabToCamelCase("my"));

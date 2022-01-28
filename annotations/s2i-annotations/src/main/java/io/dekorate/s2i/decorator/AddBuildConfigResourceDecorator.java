@@ -17,6 +17,13 @@
 
 package io.dekorate.s2i.decorator;
 
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
@@ -31,7 +38,8 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.openshift.api.model.BuildConfigBuilder;
 
 @Description("Add a BuildConfig resource to the list of generated resources.")
-public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
+public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder>
+    implements WithConfigReferences {
 
   private static final String IMAGESTREAMTAG = "ImageStreamTag";
   private static final String LATEST = "latest";
@@ -45,13 +53,8 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
 
-    String repository = Images.getRepository(config.getBuilderImage());
-    String builderRepository = Images.getRepository(config.getBuilderImage());
     String builderTag = Images.getTag(config.getBuilderImage());
-
-    String builderName = !builderRepository.contains("/")
-        ? builderRepository
-        : builderRepository.substring(builderRepository.lastIndexOf("/") + 1);
+    String builderName = getImageStreamName();
 
     //First we need to consult the labels
     String fallbackVersion = Strings.isNotNullOrEmpty(config.getVersion()) ? config.getVersion() : LATEST;
@@ -93,5 +96,26 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
   @Override
   public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, AddLabelDecorator.class, RemoveLabelDecorator.class };
+  }
+
+  @Override
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceTag());
+  }
+
+  private ConfigReference buildConfigReferenceTag() {
+    String property = generateConfigReferenceName("tag", config.getName(), getImageStreamName());
+    String jsonPath = "$.[?(@.kind == 'BuildConfig' && @.metadata.name == '" + config.getName()
+        + "')].spec.strategy.sourceStrategy.from.name";
+
+    return new ConfigReference(property, jsonPath);
+  }
+
+  private String getImageStreamName() {
+    String repository = Images.getRepository(config.getBuilderImage());
+
+    return !repository.contains("/")
+        ? repository
+        : repository.substring(repository.lastIndexOf("/") + 1);
   }
 }

@@ -17,6 +17,13 @@
 
 package io.dekorate.s2i.decorator;
 
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.s2i.config.S2iBuildConfig;
@@ -26,7 +33,8 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.openshift.api.model.ImageStreamBuilder;
 
 @Description("Add a builder ImageStream resource to the list of generated resources.")
-public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
+public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder>
+    implements WithConfigReferences {
 
   private S2iBuildConfig config;
 
@@ -37,11 +45,7 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
   public void visit(KubernetesListBuilder list) {
     ObjectMeta meta = getMandatoryDeploymentMetadata(list);
 
-    String repository = Images.getRepository(config.getBuilderImage());
-
-    String name = !repository.contains("/")
-        ? repository
-        : repository.substring(repository.lastIndexOf("/") + 1);
+    String name = getImageStreamName();
 
     if (contains(list, "image.openshift.io/v1", "ImageStream", name)) {
       return;
@@ -59,4 +63,24 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
         .endSpec());
   }
 
+  @Override
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceBuilderImage());
+  }
+
+  private ConfigReference buildConfigReferenceBuilderImage() {
+    String property = generateConfigReferenceName("builder-image", config.getName(), getImageStreamName());
+    String jsonPath = "$.[?(@.kind == 'ImageStream' && @.metadata.name == '" + getImageStreamName()
+        + "')].spec.dockerImageRepository";
+    String value = Images.removeTag(config.getBuilderImage());
+    return new ConfigReference(property, jsonPath, value);
+  }
+
+  private String getImageStreamName() {
+    String repository = Images.getRepository(config.getBuilderImage());
+
+    return !repository.contains("/")
+        ? repository
+        : repository.substring(repository.lastIndexOf("/") + 1);
+  }
 }

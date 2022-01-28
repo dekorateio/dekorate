@@ -69,7 +69,7 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
     @Override
     public void visit(IngressRuleBuilder rule) {
-      Predicate<HTTPIngressPathBuilder> mathcingPath = r -> r.getPath() != null && r.getPath().equals(port.getPath());
+      Predicate<HTTPIngressPathBuilder> matchingPath = r -> r.getPath() != null && r.getPath().equals(port.getPath());
       if (rule.getHost() != null && rule.getHost().equals(host)) {
         if (!rule.hasHttp()) {
           rule.withNewHttp()

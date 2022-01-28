@@ -164,4 +164,12 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
   public Set<String> getWhitelistedGroups() {
     return whitelistedGroups;
   }
+
+  protected Path getOutputDir() {
+    return outputDir;
+  }
+
+  protected Path getMetaDir() {
+    return metaDir;
+  }
 }

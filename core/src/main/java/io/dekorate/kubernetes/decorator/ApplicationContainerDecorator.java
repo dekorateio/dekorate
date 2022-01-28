@@ -34,12 +34,6 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
  */
 public abstract class ApplicationContainerDecorator<T> extends Decorator<VisitableBuilder> {
 
-  /**
-   * For container and deployment name null acts as a wildcards.
-   * Let's use a constant instead, for clarity's shake
-   */
-  public static final String ANY = null;
-
   private final String deploymentName;
   private final String containerName;
 
@@ -47,16 +41,24 @@ public abstract class ApplicationContainerDecorator<T> extends Decorator<Visitab
   private final ContainerVisitor containerVisitor = new ContainerVisitor();
 
   public ApplicationContainerDecorator() {
-    this(null, null);
+    this(ANY, ANY);
   }
 
   public ApplicationContainerDecorator(String containerName) {
-    this(null, containerName);
+    this(ANY, containerName);
   }
 
   public ApplicationContainerDecorator(String deploymentName, String containerName) {
     this.deploymentName = deploymentName;
     this.containerName = containerName;
+  }
+
+  protected String getDeploymentName() {
+    return deploymentName;
+  }
+
+  protected String getContainerName() {
+    return containerName;
   }
 
   @Override

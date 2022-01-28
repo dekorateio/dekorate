@@ -15,14 +15,22 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 
-public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> {
+public class ApplyImageDecorator extends ApplicationContainerDecorator<ContainerFluent> implements WithConfigReferences {
 
   private final String image;
 
   public ApplyImageDecorator(String containerName, String image) {
-    super(null, containerName);
+    super(ANY, containerName);
     this.image = image;
   }
 
@@ -39,6 +47,26 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
   public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
         AddSidecarDecorator.class };
+  }
+
+  @Override
+  public List<ConfigReference> getConfigReferences() {
+    return Arrays.asList(buildConfigReferenceForImage());
+  }
+
+  private ConfigReference buildConfigReferenceForImage() {
+    String property = generateConfigReferenceName("image", getContainerName(), getDeploymentName());
+    String jsonPath = "$..spec.template.spec.containers..image";
+    if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
+      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
+          + getContainerName() + "')].image";
+    } else if (!Strings.equals(getDeploymentName(), ANY)) {
+      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers..image";
+    } else if (!Strings.equals(getContainerName(), ANY)) {
+      jsonPath = "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')].image";
+    }
+
+    return new ConfigReference(property, jsonPath, image);
   }
 
 }

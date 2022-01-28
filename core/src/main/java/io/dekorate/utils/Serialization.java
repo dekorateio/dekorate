@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -168,6 +169,38 @@ public class Serialization {
   }
 
   /**
+   * Unmarshals a file into a list of maps.
+   *
+   * @param file The {@link Path}.
+   * @return
+   */
+  public static List<Map<Object, Object>> unmarshalAsListOfMaps(Path file) throws IOException {
+    return unmarshalAsListOfMaps(Strings.read(file));
+  }
+
+  /**
+   * Unmarshals a file into a list of maps.
+   *
+   * @param content The YAML content.
+   * @return
+   */
+  public static List<Map<Object, Object>> unmarshalAsListOfMaps(String content) throws IOException {
+    String[] parts = Serialization.splitDocument(content);
+
+    List<Map<Object, Object>> list = new ArrayList<>();
+    for (String part : parts) {
+      if (part.trim().isEmpty()) {
+        continue;
+      }
+
+      list.add(Serialization.yamlMapper().readValue(part, new TypeReference<Map<Object, Object>>() {
+      }));
+    }
+
+    return list;
+  }
+
+  /**
    * Unmarshals a stream.
    *
    * @param is The {@link InputStream}.
@@ -281,6 +314,22 @@ public class Serialization {
   }
 
   /**
+   * Unmarshals an {@link String} optionally performing placeholder substitution to the stream.
+   *
+   * @param str The {@link String}.
+   * @param type The {@link TypeReference}.
+   * @param <T>
+   * @return
+   */
+  public static <T> T unmarshal(String str, TypeReference<T> type) {
+    try (InputStream is = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8))) {
+      return unmarshal(is, type);
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable(e);
+    }
+  }
+
+  /**
    * Unmarshals an {@link InputStream} optionally performing placeholder substitution to the stream.
    *
    * @param is The {@link InputStream}.
@@ -295,6 +344,22 @@ public class Serialization {
         return type;
       }
     });
+  }
+
+  /**
+   * Unmarshals an {@link File} optionally performing placeholder substitution to the stream.
+   *
+   * @param f The {@link File}.
+   * @param type The {@link TypeReference}.
+   * @param <T>
+   * @return
+   */
+  public static <T> T unmarshal(File f, TypeReference<T> type) {
+    try (InputStream is = new FileInputStream(f)) {
+      return unmarshal(is, type);
+    } catch (IOException e) {
+      throw DekorateException.launderThrowable(e);
+    }
   }
 
   /**

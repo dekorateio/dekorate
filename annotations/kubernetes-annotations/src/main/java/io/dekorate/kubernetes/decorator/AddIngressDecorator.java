@@ -16,11 +16,17 @@
 
 package io.dekorate.kubernetes.decorator;
 
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
 import static io.dekorate.utils.Ports.getHttpPort;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.Port;
@@ -29,7 +35,7 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.networking.v1.IngressBuilder;
 
 @Description("Add an ingress to the list.")
-public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
+public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> implements WithConfigReferences {
 
   private final KubernetesConfig config;
   private final Map<String, String> allLabels; //A combination of config and project labels.
@@ -78,5 +84,20 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
         .endRule()
         .endSpec()
         .build());
+  }
+
+  @Override
+  public List<ConfigReference> getConfigReferences() {
+    if (!config.isExpose()) {
+      return Collections.emptyList();
+    }
+
+    return Arrays.asList(buildConfigReferenceHost());
+  }
+
+  private ConfigReference buildConfigReferenceHost() {
+    String property = generateConfigReferenceName("host", config.getName());
+    String jsonPath = "$.[?(@.kind == 'Ingress' && @.metadata.name == '" + config.getName() + "')].spec.rules..host";
+    return new ConfigReference(property, jsonPath, config.getHost());
   }
 }
