@@ -15,6 +15,9 @@
  */
 package io.dekorate.utils;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,6 +56,10 @@ public class Ports {
   });
 
   public static final String DEFAULT_HTTP_PORT_PATH = "/";
+  public static final int MIN_PORT_NUMBER = 1;
+  public static final int MAX_PORT_NUMBER = 65535;
+  public static final int MIN_NODE_PORT_VALUE = 30000;
+  public static final int MAX_NODE_PORT_VALUE = 31999;
 
   public static final Predicate<PortBuilder> PORT_PREDICATE = p -> HTTP_PORT_NAMES.containsKey(p.getName())
       || HTTP_PORT_NAMES.containsKey(p.getName())
@@ -94,19 +101,16 @@ public class Ports {
     return port;
   }
 
-  public static Port populateNodePort(Port port) {
-    if (!isNodePort(port)) {
-      return port;
-    }
-
+  public static Port populateNodePort(Port port, String input) {
     if (port.getNodePort() != null && port.getNodePort() > 0) {
       if (port.getHostPort() == null || port.getHostPort() == 0) {
         return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort())).build();
       }
       return port;
     }
-    //TODO implement logic to select the node port from config or range...
-    return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort())).withNodePort(30123).build();
+    int stablePortNumberInRange = getStablePortNumberInRange(input, MIN_NODE_PORT_VALUE, MAX_NODE_PORT_VALUE);
+    return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort()))
+        .withNodePort(stablePortNumberInRange).build();
   }
 
   public static boolean isWebPort(Port port) {
@@ -196,5 +200,25 @@ public class Ports {
       return port;
     }
     return Optional.empty();
+  }
+
+  /**
+   * Given a string, generate a port number within the supplied range
+   * The output is always the same (between {@code min} and {@code max})
+   * given the same input and it's useful when we need to generate a port number
+   * which needs to stay the same but we don't care about the exact value
+   */
+  private static int getStablePortNumberInRange(String input, int min, int max) {
+    if (min < MIN_PORT_NUMBER || max > MAX_PORT_NUMBER) {
+      throw new IllegalArgumentException(
+          String.format("Port number range must be within [%d-%d]", MIN_PORT_NUMBER, MAX_PORT_NUMBER));
+    }
+
+    try {
+      byte[] hash = MessageDigest.getInstance("SHA-256").digest(input.getBytes(StandardCharsets.UTF_8));
+      return min + new BigInteger(hash).mod(BigInteger.valueOf(max - min)).intValue();
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to generate stable port number from input string: '" + input + "'", e);
+    }
   }
 }

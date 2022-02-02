@@ -135,7 +135,6 @@ public class MinikubeManifestGenerator extends AbstractKubernetesManifestGenerat
         .build();
   }
 
-
   @Override
   public boolean accepts(Class<? extends Configuration> config) {
     return config.equals(MinikubeConfig.class) || config.equals(EditableMinikubeConfig.class);
