@@ -33,7 +33,6 @@ public class DefaultMinikubeConfigGenerator implements MinikubeConfigGenerator {
     add(new DefaultConfiguration<MinikubeConfig>(MinikubeConfig.newMinikubeConfigBuilderFromDefaults()));
   }
 
-
   @Override
   public ConfigurationRegistry getConfigurationRegistry() {
     return this.configurationRegistry;

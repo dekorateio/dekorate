@@ -27,14 +27,14 @@ import io.dekorate.utils.Ports;
 
 public class PopulateNodePort extends Configurator<BaseConfigFluent<?>> {
 
-  public Port map(Port port) {
-    return Ports.populateNodePort(port);
+  public Port map(Port port, String input) {
+    return Ports.populateNodePort(port, input);
   }
 
   @Override
   public void visit(BaseConfigFluent<?> config) {
     Port[] ports = config.buildPorts();
     config.removeFromPorts(ports);
-    config.addAllToPorts(Arrays.stream(ports).map(this::map).collect(Collectors.toList()));
+    config.addAllToPorts(Arrays.stream(ports).map(port -> map(port, config.getName())).collect(Collectors.toList()));
   }
 }

@@ -33,11 +33,11 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import java.util.List;
 import java.util.Optional;
 
-class MinikubeExampleTest {
+class MinikubeExampleWithPropertiesTest {
 
   @Test
   public void shouldContainNodePortService() {
-    KubernetesList list = Serialization.unmarshalAsList(MinikubeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/minikube.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(MinikubeExampleWithPropertiesTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/minikube.yml"));
     assertNotNull(list);
     Service service = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(service);
@@ -46,7 +46,7 @@ class MinikubeExampleTest {
     List<ServicePort> ports = service.getSpec().getPorts();
     assertEquals(1, ports.size());
     ServicePort servicePort = ports.get(0);
-    assertNotNull(servicePort.getNodePort());
+    assertEquals(30123,servicePort.getNodePort());
     assertEquals(80,servicePort.getPort());
   }
 

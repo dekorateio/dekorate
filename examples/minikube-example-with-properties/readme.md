@@ -13,7 +13,7 @@ class path:
     </dependency>  
 ```
 ```java
-@MinikubeApplication(ports = @Port(name = "http", containerPort = 8080))
+@MinikubeApplication(ports = @Port(name = "http", containerPort = 8080, nodePort=30123))
 public class App
 {
 
@@ -28,9 +28,10 @@ Users that configure dekorate in the annotationless fashion (via application.pro
 ```
 dekorate.minikube.ports[0].name=http
 dekorate.minikube.ports[0].containerPort=8080
+dekorate.minikube.ports[0].nodePort=30123
 ```
 
-or 
+or
 
 ```
 dekorate:
@@ -38,6 +39,7 @@ dekorate:
     ports: 
     - name: http
       containerPort: 8080
+      nodePort: 30123
 ```
 
 
@@ -45,32 +47,27 @@ Check, if necessary, the [App.java](src/main/java/io/dekorate/example/App.java).
 
 Compile the project using:
 
-    mvn clean install   
-
-
-The minikube module will calculate a few values by default:
-- ImagePullPolicy will be set to `IfNotPresent`.
-- Service type will be set to NodePort
-- A node port number will be selected from a range between 30000 and 31999.
+    mvn clean install
 
 You can find the generated deployment under: `target/classes/META-INF/dekorate/minikube.yml` that should look like:
 
 ```
+---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/name: minikube-example
+    app.kubernetes.io/name: minikube-example-with-properties
     app.kubernetes.io/version: 2.7-SNAPSHOT
-  name: minikube-example
+  name: minikube-example-with-properties
 spec:
   ports:
     - name: http
-      nodePort: 31992
+      nodePort: 30123
       port: 80
       targetPort: 8080
   selector:
-    app.kubernetes.io/name: minikube-example
+    app.kubernetes.io/name: minikube-example-with-properties
     app.kubernetes.io/version: 2.7-SNAPSHOT
   type: NodePort
 ---
@@ -79,20 +76,21 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/version: 2.7-SNAPSHOT
-    app.kubernetes.io/name: minikube-example
-  name: minikube-example
+    app.kubernetes.io/name: minikube-example-with-properties
+  name: minikube-example-with-properties
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/version: 2.7-SNAPSHOT
-      app.kubernetes.io/name: minikube-example
+      app.kubernetes.io/name: minikube-example-with-properties
   template:
     metadata:
       labels:
         app.kubernetes.io/version: 2.7-SNAPSHOT
-        app.kubernetes.io/name: minikube-example
+        app.kubernetes.io/name: minikube-example-with-properties
     spec: {}
+
 ```
 
 
