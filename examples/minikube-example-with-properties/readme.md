@@ -58,7 +58,7 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: minikube-example-with-properties
-    app.kubernetes.io/version: 2.7-SNAPSHOT
+    app.kubernetes.io/version: 2.8-SNAPSHOT
   name: minikube-example-with-properties
 spec:
   ports:
@@ -68,26 +68,26 @@ spec:
       targetPort: 8080
   selector:
     app.kubernetes.io/name: minikube-example-with-properties
-    app.kubernetes.io/version: 2.7-SNAPSHOT
+    app.kubernetes.io/version: 2.8-SNAPSHOT
   type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/version: 2.7-SNAPSHOT
+    app.kubernetes.io/version: 2.8-SNAPSHOT
     app.kubernetes.io/name: minikube-example-with-properties
   name: minikube-example-with-properties
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/version: 2.7-SNAPSHOT
+      app.kubernetes.io/version: 2.8-SNAPSHOT
       app.kubernetes.io/name: minikube-example-with-properties
   template:
     metadata:
       labels:
-        app.kubernetes.io/version: 2.7-SNAPSHOT
+        app.kubernetes.io/version: 2.8-SNAPSHOT
         app.kubernetes.io/name: minikube-example-with-properties
     spec: {}
 
