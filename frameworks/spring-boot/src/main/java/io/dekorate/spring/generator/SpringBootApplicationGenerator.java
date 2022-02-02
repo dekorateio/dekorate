@@ -86,10 +86,10 @@ public interface SpringBootApplicationGenerator extends ConfigurationGenerator, 
 
     if (isActuatorAvailable()) {
       //Users configuration should take priority, so add but don't overwrite.
-      session.getConfigurationRegistry().add(
-          new AddLivenessProbeConfigurator(new ProbeBuilder().withHttpActionPath("/actuator/info").build(), false));
+      session.getConfigurationRegistry().add(new AddLivenessProbeConfigurator(
+          new ProbeBuilder().withHttpActionPath("/actuator/health/liveness").build(), false));
       session.getConfigurationRegistry().add(new AddReadinessProbeConfigurator(
-          new ProbeBuilder().withHttpActionPath("/actuator/health").build(), false));
+          new ProbeBuilder().withHttpActionPath("/actuator/health/readiness").build(), false));
     }
 
     if (isSpringCloudKubernetesAvailable()) {
