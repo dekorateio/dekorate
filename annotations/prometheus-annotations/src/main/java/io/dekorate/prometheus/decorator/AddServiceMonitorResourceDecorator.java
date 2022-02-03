@@ -34,7 +34,7 @@ public class AddServiceMonitorResourceDecorator extends ResourceProvidingDecorat
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list, ANY);
     list.addToItems(new ServiceMonitorBuilder()
         .withNewMetadata()
         .withName(meta.getName())

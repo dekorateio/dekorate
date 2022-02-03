@@ -58,7 +58,7 @@ public class AddBasicAuthSecretDecorator extends ResourceProvidingDecorator<Kube
 
   @Override
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list, this.name);
     String name = Strings.isNullOrEmpty(this.name) ? meta.getName() : this.name;
 
     if (contains(list, "v1", "Secret", name)) {

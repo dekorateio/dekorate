@@ -191,10 +191,6 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     resourceRegistry.add(group, createOutputImageResource(config, imageConfiguration));
     resourceRegistry.add(group, createRole(config));
 
-    resourceRegistry.decorate(group, new AddServiceAccountResourceDecorator(config.getName()));
-    resourceRegistry.decorate(group, new AddRoleBindingResourceDecorator(config.getName() + ":deployer", config.getName(),
-        "pipeline-deployer", AddRoleBindingResourceDecorator.RoleKind.Role));
-
     //All Tasks
     resourceRegistry.decorate(group, new AddWorkspaceToTaskDecorator(null, config.getSourceWorkspace(),
         "The workspace to hold all project sources", false, null));
@@ -389,6 +385,10 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
       resourceRegistry.decorate(TEKTON_PIPELINE_RUN,
           new AddPvcToPipelineRunDecorator(null, PIPELINE_M2_WS, m2WorkspaceClaimName, false));
     }
+
+    resourceRegistry.decorate(TEKTON_PIPELINE, new AddServiceAccountResourceDecorator(imageBuildTaskName));
+    resourceRegistry.decorate(TEKTON_PIPELINE, new AddRoleBindingResourceDecorator(imageBuildTaskName + ":deployer",
+        config.getName(), "pipeline-deployer", AddRoleBindingResourceDecorator.RoleKind.Role));
   }
 
   public void generateTaskResources(TektonConfig config) {
@@ -401,6 +401,10 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
       resourceRegistry.decorate(TEKTON_TASK_RUN,
           new AddPvcToTaskRunDecorator(null, config.getM2Workspace(), m2WorkspaceClaimName, false));
     }
+
+    resourceRegistry.decorate(TEKTON_TASK, new AddServiceAccountResourceDecorator(monolithTaskName));
+    resourceRegistry.decorate(TEKTON_TASK, new AddRoleBindingResourceDecorator(monolithTaskName + ":deployer", config.getName(),
+        "pipeline-deployer", AddRoleBindingResourceDecorator.RoleKind.Role));
   }
 
   public PipelineResource createGitResource(TektonConfig config) {
@@ -531,7 +535,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
           .withName(config.getName() + DASH + RUN + DASH + NOW)
           .endMetadata()
           .withNewSpec()
-          .withServiceAccountName(config.getName())
+          .withServiceAccountName(imageBuildTaskName(config))
           .addNewWorkspace().withName(PIPELINE_SOURCE_WS)
           .withNewPersistentVolumeClaim(sourceWorkspaceClaimName(config), false)
           .endWorkspace()
@@ -555,7 +559,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
           .withName(config.getName() + DASH + RUN + DASH + NOW)
           .endMetadata()
           .withNewSpec()
-          .withServiceAccountName(config.getName())
+          .withServiceAccountName(monolithTaskName(config))
           .addNewWorkspace().withName(config.getSourceWorkspace())
           .withEmptyDir(new EmptyDirVolumeSourceBuilder().withMedium("Memory").build()).endWorkspace()
           .withNewTaskRef().withName(monolithTaskName(config)).endTaskRef()

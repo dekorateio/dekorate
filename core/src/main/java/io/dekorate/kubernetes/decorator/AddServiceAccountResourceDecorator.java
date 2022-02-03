@@ -34,7 +34,7 @@ public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorat
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list, this.name);
     String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName();
 
     if (contains(list, "v1", "ServiceAccount", name)) {

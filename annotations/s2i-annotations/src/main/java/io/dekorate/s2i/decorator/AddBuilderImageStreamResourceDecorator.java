@@ -43,8 +43,7 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
-
+    ObjectMeta meta = getDeploymentMetadata(list, this.config.getName()).orElseGet(ObjectMeta::new);
     String name = getImageStreamName();
 
     if (contains(list, "image.openshift.io/v1", "ImageStream", name)) {
