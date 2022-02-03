@@ -51,7 +51,7 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    ObjectMeta meta = getDeploymentMetadata(list, this.config.getName()).orElseGet(ObjectMeta::new);
 
     String builderTag = Images.getTag(config.getBuilderImage());
     String builderName = getImageStreamName();

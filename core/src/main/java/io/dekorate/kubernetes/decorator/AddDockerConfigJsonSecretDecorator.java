@@ -67,7 +67,7 @@ public class AddDockerConfigJsonSecretDecorator extends ResourceProvidingDecorat
 
   @Override
   public void visit(KubernetesListBuilder list) {
-    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : getMandatoryDeploymentMetadata(list).getName();
+    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : getMandatoryDeploymentMetadata(list, ANY).getName();
     Secret secret = new SecretBuilder()
         .withNewMetadata()
         .withName(name)

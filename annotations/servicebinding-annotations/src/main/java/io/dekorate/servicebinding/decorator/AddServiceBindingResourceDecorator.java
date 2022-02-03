@@ -43,7 +43,7 @@ public class AddServiceBindingResourceDecorator extends ResourceProvidingDecorat
 
   @Override
   public void visit(KubernetesListBuilder list) {
-    HasMetadata meta = getMandatoryDeploymentHasMetadata(list);
+    HasMetadata meta = getMandatoryDeploymentHasMetadata(list, ANY);
     ServiceBindingBuilder serviceBindingBuilder = new ServiceBindingBuilder().withNewMetadata()
         .withName(getServiceBindingName(config.getName(), meta.getMetadata().getName()))
         .withNamespace(meta.getMetadata().getNamespace()).endMetadata().withNewSpec()

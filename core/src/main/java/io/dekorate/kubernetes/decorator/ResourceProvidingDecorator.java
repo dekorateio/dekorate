@@ -51,22 +51,35 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
     return true;
   }
 
-  public Optional<ObjectMeta> getDeploymentMetadata(KubernetesListBuilder list) {
-    return list.getItems().stream().filter(h -> DEPLOYMENT_KINDS.contains(h.getKind())).map(HasMetadata::getMetadata)
-        .findFirst();
+  public List<ObjectMeta> getDeploymentMetadataList(KubernetesListBuilder list, String name) {
+    // In 99% of the cases we select metadata by name.
+    // There are some edge cases (e.g. RoleBindings) where a suffix is added (e.g. <name>:deployer).
+    // We need to get rid of such suffixes when present as we NEVER have thtem in `deployment` kinds.
+    String trimedName = Strings.isNotNullOrEmpty(name) ? name.replaceAll("[:].*$", "") : name;
+
+    return list.getItems()
+        .stream()
+        .filter(h -> DEPLOYMENT_KINDS.contains(h.getKind()))
+        .filter(h -> trimedName == ANY || h.getMetadata().getName().equals(trimedName))
+        .map(HasMetadata::getMetadata)
+        .collect(Collectors.toList());
   }
 
-  public Optional<HasMetadata> getDeploymentHasMetadata(KubernetesListBuilder list) {
+  public Optional<ObjectMeta> getDeploymentMetadata(KubernetesListBuilder list, String name) {
+    return getDeploymentMetadataList(list, name).stream().findFirst();
+  }
+
+  public Optional<HasMetadata> getDeploymentHasMetadata(KubernetesListBuilder list, String name) {
     return list.getItems().stream().filter(h -> DEPLOYMENT_KINDS.contains(h.getKind())).findFirst();
   }
 
-  public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list) {
-    return getDeploymentMetadata(list).orElseThrow(() -> new IllegalStateException(
+  public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list, String name) {
+    return getDeploymentMetadata(list, name).orElseThrow(() -> new IllegalStateException(
         "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(",")) + " to be present."));
   }
 
-  public HasMetadata getMandatoryDeploymentHasMetadata(KubernetesListBuilder list) {
-    return getDeploymentHasMetadata(list).orElseThrow(() -> new IllegalStateException(
+  public HasMetadata getMandatoryDeploymentHasMetadata(KubernetesListBuilder list, String name) {
+    return getDeploymentHasMetadata(list, name).orElseThrow(() -> new IllegalStateException(
         "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(",")) + " to be present."));
   }
 }

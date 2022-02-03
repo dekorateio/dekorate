@@ -17,6 +17,8 @@
 
 package io.dekorate.s2i.decorator;
 
+import java.util.List;
+
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
@@ -36,8 +38,7 @@ public class AddDockerImageStreamResourceDecorator extends ResourceProvidingDeco
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
-
+    ObjectMeta meta = getDeploymentMetadata(list, this.config.getName()).orElseGet(ObjectMeta::new);
     if (contains(list, "image.openshift.io/v1", "ImageStream", config.getName())) {
       return;
     }

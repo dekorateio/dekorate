@@ -54,7 +54,7 @@ public class AddRoleBindingResourceDecorator extends ResourceProvidingDecorator<
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list);
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list, this.name);
     String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName() + "-" + this.role;
     String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount : meta.getName();
 
