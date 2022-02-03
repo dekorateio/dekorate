@@ -39,6 +39,7 @@ class GitTest {
   private static final ClassLoader loader = GitTest.class.getClassLoader();
   private static final String CONFIG_SUFFIX = "/git/config";
   private static final String GIT_SIMPLE = "git-simple";
+  private static final String GIT_SUB = "git-sub";
   private static final String GIT_SSH = "git-ssh";
   private static final String GIT_GITLAB = "git-gitlab";
   private static final Map<String, Path> configurationNameToConfigRoot = new HashMap<>(7);
@@ -46,6 +47,7 @@ class GitTest {
   @BeforeAll
   static void setup() {
     setup(GIT_SIMPLE);
+    setup(GIT_SUB);
     setup(GIT_SSH);
     setup(GIT_GITLAB);
   }
@@ -132,5 +134,15 @@ class GitTest {
     Map<String, String> remotes = Git.getRemotes(root);
     assertNotNull(remotes);
     assertFalse(remotes.isEmpty());
+  }
+
+  @ParameterizedTest(name = "should read remotes map ignoring submodules from \"{0}\"")
+  @ValueSource(strings = { GIT_SUB })
+  void filtersSubmodules(String configFile) throws Exception {
+    final Path root = getRootFor(configFile);
+    Map<String, String> remotes = Git.getRemotes(root);
+    assertNotNull(remotes);
+    assertTrue(remotes.containsKey("[remote \"origin\"]"));
+    assertEquals(1, remotes.size());
   }
 }
