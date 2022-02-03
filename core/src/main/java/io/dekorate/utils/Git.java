@@ -23,10 +23,10 @@ package io.dekorate.utils;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,13 +85,17 @@ public class Git {
   public static Map<String, String> getRemotes(Path path) {
     Map<String, String> result = new HashMap<String, String>();
     try {
-      final AtomicReference<String> currentRemote = new AtomicReference<>();
-      Files.lines(getConfig(path)).map(String::trim).forEach(l -> {
-        remoteValue(l).ifPresent(r -> currentRemote.set(r));
-        if (l.startsWith(URL) && l.contains(EQUALS)) {
-          result.put(currentRemote.get(), l.split(EQUALS)[1].trim());
-        }
-      });
+      Iterator<String> linesIter = Files.lines(getConfig(path)).map(String::trim).iterator();
+      while (linesIter.hasNext()) {
+        remoteValue(linesIter.next()).ifPresent(remote -> {
+          while (linesIter.hasNext()) {
+            String remoteLine = linesIter.next();
+            if (remoteLine.startsWith(URL) && remoteLine.contains(EQUALS)) {
+              result.put(remote, remoteLine.split(EQUALS)[1].trim());
+            }
+          }
+        });
+      }
       return result;
     } catch (Exception e) {
       return result;

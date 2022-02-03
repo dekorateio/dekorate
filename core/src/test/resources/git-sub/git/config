@@ -1,0 +1,14 @@
+[core]
+        repositoryformatversion = 0
+        filemode = true
+        bare = false
+        logallrefupdates = true
+[submodule "sub"]
+        url = git@github.com:myorg/myprojectsub.git
+	      active = true
+[remote "origin"]
+        url = git@github.com:myorg/myproject.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        fetch = +refs/pull/*/head:refs/pullreqs/*
+[branch "master"]
+        pushRemote = origin
