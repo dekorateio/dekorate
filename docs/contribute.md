@@ -1,9 +1,8 @@
 ---
-layout: base
+layout: base-with-padding
 title: Contribute
 subtitle: Feel free to contribute in any way you like docs, suggestions, features, fixes tests.
 permalink: /contribute/
-class: content
 ---
 
 {% include title-band.html %}

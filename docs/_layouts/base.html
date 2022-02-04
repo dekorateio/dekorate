@@ -27,11 +27,8 @@
 
 <body class="{% if page.url == '/' %}homepage{% else %}{{page.layout}}{% endif %}">
   {% include header-navigation.html %}
-  <div class="{{page.class}}">
 
     {{ content }}
- 
-  </div>
 
   {% include project-footer.html %}
   {% include redhat-footer.html %}
