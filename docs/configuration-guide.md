@@ -3,6 +3,7 @@ layout: base
 title: Configuration Guide
 subtitle: Full list of supported properties
 permalink: /configuration-guide/
+class: content
 ---
 
 {% include title-band.html %}

@@ -3,6 +3,7 @@ layout: base-detail
 title: Content Detail
 subtitle: 
 permalink: /contentdetail/
+class: content
 ---
 
 
