@@ -11,15 +11,22 @@
   </parent>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>issue-507-spring-boot-server-port</artifactId>
-  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Spring Boot server port #503</name>
-  <description>Spring Boot server.port property is properly respected</description>
+  <artifactId>issue-545-spring-boot-web-with-server-port-path-kubernetes</artifactId>
+  <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Spring Boot web application with server.port and custom path #545</name>
+  <description>Spring Boot application with server.port and custom path</description>
 
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-spring-starter</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.sundr</groupId>
+      <artifactId>builder-annotations</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
