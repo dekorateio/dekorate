@@ -1,5 +1,5 @@
 ---
-layout: base
+layout: base-with-padding
 title: Release Guidelines
 subtitle: Release Guidelines
 permalink: /release-guidelines/

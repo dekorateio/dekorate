@@ -1,5 +1,5 @@
 ---
-layout: base
+layout: base-with-padding
 title: Get Started
 subtitle: Using Spring Boot
 permalink: /get-started/
