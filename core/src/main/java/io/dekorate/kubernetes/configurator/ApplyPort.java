@@ -25,11 +25,8 @@ import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.config.PortBuilder;
 import io.dekorate.utils.Ports;
-import io.dekorate.utils.Strings;
 
 public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
-
-  private static final String DEFAULT_PATH = "/";
 
   private final Port port;
   private final Map<String, Integer> nameMappings;
@@ -47,44 +44,9 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
   public void visit(BaseConfigFluent<?> config) {
     Port updated = Ports.populateHostPort(port);
     Predicate<PortBuilder> matchingPortName = p -> updated.getName().equals(p.getName());
-    Predicate<PortBuilder> matchingHostPort = p -> updated.getHostPort() != null
-        && updated.getHostPort().equals(p.getHostPort());
-    if (!config.hasMatchingPort(matchingPortName)
-        || !config.hasMatchingPort(matchingHostPort)) {
-
+    Predicate<PortBuilder> matchingHostPort = p -> updated.getHostPort() != null && updated.getHostPort().equals(p.getHostPort());
+    if (!config.hasMatchingPort(matchingPortName) && !config.hasMatchingPort(matchingHostPort)) {
       config.addToPorts(updated);
-    }
-  }
-
-  private void applyPath(BaseConfigFluent<?> config, Port port) {
-    applyPath(config, port, p -> port.getName().equals(p.getName()));
-  }
-
-  private void applyPath(BaseConfigFluent<?> config, Port port, Predicate<PortBuilder> predicate) {
-    if (Strings.isNotNullOrEmpty(port.getPath()) && !DEFAULT_PATH.equals(port.getPath())) {
-      config.editMatchingPort(predicate).withPath(port.getPath()).endPort();
-    }
-  }
-
-  private void applyContainerPort(BaseConfigFluent<?> config, Port port) {
-    applyPath(config, port, p -> port.getName().equals(p.getName()));
-  }
-
-  private void applyContainerPort(BaseConfigFluent<?> config, Port port, Predicate<PortBuilder> predicate) {
-    if (port.getContainerPort() != 0) {
-      config.editMatchingPort(predicate).withContainerPort(port.getContainerPort()).endPort();
-    }
-  }
-
-  private void applyHostPort(BaseConfigFluent<?> config, Port port) {
-    applyPath(config, port, p -> port.getHostPort() != null && port.getHostPort().equals(p.getHostPort()));
-  }
-
-  private void applyHostPort(BaseConfigFluent<?> config, Port port, Predicate<PortBuilder> matchingHostPort) {
-    if (port.getHostPort() != null && port.getHostPort() != 0 && !config.hasMatchingPort(matchingHostPort)) {
-      config.editMatchingPort(matchingHostPort)
-          .withHostPort(port.getHostPort())
-          .endPort();
     }
   }
 }
