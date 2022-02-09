@@ -2,7 +2,7 @@
 
 release_version=$1;
 if [ -z $release_version ]; then
-  echo "Option --release_version is required!"
+  echo "Release version param is required!"
   exit 1
 fi
 
