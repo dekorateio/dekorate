@@ -3,13 +3,14 @@ package io.dekorate.example;
 import com.sun.net.httpserver.HttpServer;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Port;
-import io.dekorate.minikube.annotation.MinikubeApplication;
+import io.dekorate.minikube.annotation.Minikube;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-@MinikubeApplication(ports = @Port(name = "http", containerPort = 8080))
+@Minikube(ports = @Port(name = "http", containerPort = 8080))
+@KubernetesApplication
 public class App
 {
   public static void main(String[] args) throws IOException {

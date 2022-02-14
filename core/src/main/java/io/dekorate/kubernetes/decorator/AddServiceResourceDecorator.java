@@ -16,6 +16,9 @@
 
 package io.dekorate.kubernetes.decorator;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +40,10 @@ import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 public class AddServiceResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger();
+  public static final int MIN_PORT_NUMBER = 1;
+  public static final int MAX_PORT_NUMBER = 65535;
+  public static final int MIN_NODE_PORT_VALUE = 30000;
+  public static final int MAX_NODE_PORT_VALUE = 31999;
 
   private final BaseConfig config;
 
@@ -69,7 +76,7 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
         .withName(port.getName())
         .withNewTargetPort(port.getContainerPort())
         .withPort(calculateHostPort(port))
-        .withNodePort(port.getNodePort())
+        .withNodePort(calculateNodePort(port))
         .build();
   }
 
@@ -84,6 +91,41 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
     // If not hostPort exists, then we will return the containerPort to follow
     // the same convention as kubernetes suggests
     return port.getContainerPort();
+  }
+
+  private Integer calculateNodePort(Port port) {
+    // Check if ingress is enabled
+    // TODO : Add ingress property to the Kubernetes config
+
+    // If a HostPort has been defined by the user, then we use it
+    if (port.getNodePort() != null && port.getNodePort() > 0) {
+      return port.getNodePort();
+    }
+    // If not hostPort exists, then we will return the containerPort to follow
+    // the same convention as kubernetes suggests
+    return getStablePortNumberInRange(config.getName(), MIN_NODE_PORT_VALUE, MAX_NODE_PORT_VALUE);
+    //    return new PortBuilder(port).withHostPort(calculateHostPort(port))
+    //      .withNodePort(stablePortNumberInRange).build();
+  }
+
+  /**
+   * Given a string, generate a port number within the supplied range
+   * The output is always the same (between {@code min} and {@code max})
+   * given the same input and it's useful when we need to generate a port number
+   * which needs to stay the same but we don't care about the exact value
+   */
+  private static int getStablePortNumberInRange(String input, int min, int max) {
+    if (min < MIN_PORT_NUMBER || max > MAX_PORT_NUMBER) {
+      throw new IllegalArgumentException(
+          String.format("Port number range must be within [%d-%d]", MIN_PORT_NUMBER, MAX_PORT_NUMBER));
+    }
+
+    try {
+      byte[] hash = MessageDigest.getInstance("SHA-256").digest(input.getBytes(StandardCharsets.UTF_8));
+      return min + new BigInteger(hash).mod(BigInteger.valueOf(max - min)).intValue();
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to generate stable port number from input string: '" + input + "'", e);
+    }
   }
 
   public static <T> Predicate<T> distinct(Function<? super T, Object> keyExtractor) {

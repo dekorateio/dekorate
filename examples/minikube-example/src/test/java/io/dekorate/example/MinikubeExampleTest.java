@@ -18,6 +18,7 @@ package io.dekorate.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -41,13 +42,16 @@ class MinikubeExampleTest {
     assertNotNull(list);
     Service service = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(service);
-    assertEquals(service.getSpec().getType(), ServiceType.NodePort.name());
+    assertEquals(ServiceType.NodePort.name(), service.getSpec().getType());
 
     List<ServicePort> ports = service.getSpec().getPorts();
     assertEquals(1, ports.size());
     ServicePort servicePort = ports.get(0);
     assertNotNull(servicePort.getNodePort());
+    assertTrue(servicePort.getNodePort()>=30000);
+    assertTrue(servicePort.getNodePort()<=31999);
     assertEquals(80,servicePort.getPort());
+    assertEquals(8080,servicePort.getTargetPort().getIntVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

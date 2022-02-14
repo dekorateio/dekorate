@@ -41,13 +41,14 @@ class MinikubeExampleWithPropertiesTest {
     assertNotNull(list);
     Service service = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(service);
-    assertEquals(service.getSpec().getType(), ServiceType.NodePort.name());
+    assertEquals(ServiceType.NodePort.name(), service.getSpec().getType());
 
     List<ServicePort> ports = service.getSpec().getPorts();
     assertEquals(1, ports.size());
     ServicePort servicePort = ports.get(0);
     assertEquals(30123,servicePort.getNodePort());
     assertEquals(80,servicePort.getPort());
+    assertEquals(8080,servicePort.getTargetPort().getIntVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
