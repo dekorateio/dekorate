@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.utils.Labels;
@@ -66,18 +67,22 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
         .withType(config.getServiceType() != null ? config.getServiceType().name() : "ClusterIP")
         .withSelector(labels)
         .withPorts(Arrays.asList(config.getPorts()).stream()
-            .filter(distinct(p -> p.getName())).map(this::toServicePort).collect(Collectors.toList()))
+            .filter(distinct(p -> p.getName()))
+            .map(port -> toServicePort(port, config.getServiceType().equals(ServiceType.NodePort) ? true : false))
+            .collect(Collectors.toList()))
         .endSpec()
         .endServiceItem();
   }
 
-  private ServicePort toServicePort(Port port) {
-    return new ServicePortBuilder()
+  private ServicePort toServicePort(Port port, boolean isNodePort) {
+    ServicePortBuilder servicePortBuilder = new ServicePortBuilder()
         .withName(port.getName())
         .withNewTargetPort(port.getContainerPort())
-        .withPort(calculateHostPort(port))
-        .withNodePort(calculateNodePort(port))
-        .build();
+        .withPort(calculateHostPort(port));
+    if (isNodePort) {
+      servicePortBuilder = servicePortBuilder.withNodePort(calculateNodePort(port));
+    }
+    return servicePortBuilder.build();
   }
 
   public static Integer calculateHostPort(Port port) {
