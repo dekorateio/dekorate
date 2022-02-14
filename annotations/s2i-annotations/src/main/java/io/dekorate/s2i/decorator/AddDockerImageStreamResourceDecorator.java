@@ -17,8 +17,6 @@
 
 package io.dekorate.s2i.decorator;
 
-import java.util.List;
-
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;

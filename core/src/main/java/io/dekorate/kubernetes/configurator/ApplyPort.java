@@ -44,7 +44,8 @@ public class ApplyPort extends Configurator<BaseConfigFluent<?>> {
   public void visit(BaseConfigFluent<?> config) {
     Port updated = Ports.populateHostPort(port);
     Predicate<PortBuilder> matchingPortName = p -> updated.getName().equals(p.getName());
-    Predicate<PortBuilder> matchingHostPort = p -> updated.getHostPort() != null && updated.getHostPort().equals(p.getHostPort());
+    Predicate<PortBuilder> matchingHostPort = p -> updated.getHostPort() != null
+        && updated.getHostPort().equals(p.getHostPort());
     if (!config.hasMatchingPort(matchingPortName) && !config.hasMatchingPort(matchingHostPort)) {
       config.addToPorts(updated);
     }

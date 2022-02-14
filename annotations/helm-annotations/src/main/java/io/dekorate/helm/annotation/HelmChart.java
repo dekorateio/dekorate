@@ -37,8 +37,6 @@ public @interface HelmChart {
 
   String name();
 
-  String extension() default "tar.gz";
-
   String description() default "";
 
   String version() default "";
@@ -50,6 +48,10 @@ public @interface HelmChart {
   String[] keywords() default {};
 
   String[] sources() default {};
+
+  boolean createTarFile() default false;
+
+  String extension() default "tar.gz";
 
   Maintainer[] maintainers() default {};
 

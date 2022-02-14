@@ -91,7 +91,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Project project = getProject();
     Path outputDir = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir());
     session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(
-        helmConfig -> writeHelmFiles(session, helmConfig, outputDir, listYamls(outputDir)));
+        helmConfig -> writeHelmFiles(session, project, helmConfig, outputDir, listYamls(outputDir)));
   }
 
   /**
@@ -99,7 +99,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
    * 
    * @return the list of the Helm generated files.
    */
-  public Map<String, String> writeHelmFiles(Session session, HelmChartConfig helmConfig, Path outputDir,
+  public Map<String, String> writeHelmFiles(Session session, Project project, HelmChartConfig helmConfig, Path outputDir,
       Collection<File> generatedFiles) {
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
@@ -113,10 +113,10 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         Map<String, Map<String, Object>> valuesByProfile = new HashMap<>();
         artifacts.putAll(processSourceFiles(helmConfig, outputDir, generatedFiles, valuesReferences, prodValues,
             valuesByProfile));
-        artifacts.putAll(createChartYaml(helmConfig, outputDir));
+        artifacts.putAll(createChartYaml(helmConfig, project, outputDir));
         artifacts.putAll(createValuesYaml(helmConfig, outputDir, prodValues, valuesByProfile));
         if (helmConfig.isCreateTarFile()) {
-          artifacts.putAll(createTarball(helmConfig, outputDir, artifacts, valuesByProfile.keySet()));
+          artifacts.putAll(createTarball(helmConfig, project, outputDir, artifacts, valuesByProfile.keySet()));
         }
 
         // To follow Helm file structure standards:
@@ -165,7 +165,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private ConfigReference toConfigReference(ValueReference valueReference) {
     return new ConfigReference(valueReference.getProperty(),
         valueReference.getJsonPaths(),
-        valueReference.getValue().isEmpty() ? null : valueReference.getValue(), valueReference.getProfile());
+        Strings.isNullOrEmpty(valueReference.getValue()) ? null : valueReference.getValue(), valueReference.getProfile());
   }
 
   private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Path outputDir, Map<String, Object> prodValues,
@@ -196,11 +196,11 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return artifacts;
   }
 
-  private Map<String, String> createTarball(HelmChartConfig helmConfig, Path outputDir, Map<String, String> artifacts,
-      Set<String> profiles) throws IOException {
+  private Map<String, String> createTarball(HelmChartConfig helmConfig, Project project, Path outputDir,
+      Map<String, String> artifacts, Set<String> profiles) throws IOException {
 
     File tarballFile = outputDir.resolve(HELM).resolve(String.format("%s-%s-%s.%s",
-        helmConfig.getName(), getVersion(helmConfig), getHelmClassifier(artifacts), helmConfig.getExtension()))
+        helmConfig.getName(), getVersion(helmConfig, project), getHelmClassifier(artifacts), helmConfig.getExtension()))
         .toFile();
 
     LOGGER.debug(String.format("Creating Helm configuration Tarball: '%s'", tarballFile));
@@ -222,9 +222,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return Collections.singletonMap(tarballFile.toString(), null);
   }
 
-  private String getVersion(HelmChartConfig helmConfig) {
+  private String getVersion(HelmChartConfig helmConfig, Project project) {
     if (Strings.isNullOrEmpty(helmConfig.getVersion())) {
-      return getProject().getBuildInfo().getVersion();
+      return project.getBuildInfo().getVersion();
     }
 
     return helmConfig.getVersion();
@@ -261,6 +261,10 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
     List<String> yamlsContent = new LinkedList<>();
     for (File generatedFile : generatedFiles) {
+      if (!generatedFile.getName().toLowerCase().matches(YAML_REG_EXP)) {
+        continue;
+      }
+
       // Read yaml
       List<Map<Object, Object>> yaml = Serialization.unmarshalAsListOfMaps(generatedFile.toPath());
 
@@ -324,11 +328,11 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return yamlsContent;
   }
 
-  private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Path outputDir) throws IOException {
+  private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Project project, Path outputDir) throws IOException {
     final Chart chart = new Chart();
     chart.setApiVersion(CHART_API_VERSION);
     chart.setName(helmConfig.getName());
-    chart.setVersion(getVersion(helmConfig));
+    chart.setVersion(getVersion(helmConfig, project));
     chart.setDescription(helmConfig.getDescription());
     chart.setHome(helmConfig.getHome());
     chart.setSources(Arrays.asList(helmConfig.getSources()));
