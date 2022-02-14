@@ -25,11 +25,11 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
-import io.dekorate.minikube.annotation.MinikubeApplication;
+import io.dekorate.minikube.annotation.Minikube;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
 @Description("Generates kubernetes manifests for Minikube.")
-@SupportedAnnotationTypes("io.dekorate.minikube.annotation.MinikubeApplication")
+@SupportedAnnotationTypes("io.dekorate.minikube.annotation.Minikube")
 public class MinikubeAnnotationProcessor extends AbstractAnnotationProcessor {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
@@ -41,8 +41,8 @@ public class MinikubeAnnotationProcessor extends AbstractAnnotationProcessor {
     }
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        LOGGER.info("Found @MinikubeApplication on: " + mainClass.toString());
-        process("minikube", mainClass, MinikubeApplication.class);
+        LOGGER.info("Found @Minikube on: " + mainClass.toString());
+        process("minikube", mainClass, Minikube.class);
       }
     }
     return false;

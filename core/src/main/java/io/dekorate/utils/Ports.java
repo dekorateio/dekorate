@@ -82,7 +82,7 @@ public class Ports {
   }
 
   public static Port populateHostPort(Port port) {
-    if (!isWebPort(port) && !isNodePort(port)) {
+    if (!isWebPort(port)) {
       return port;
     }
 
@@ -101,22 +101,7 @@ public class Ports {
     return port;
   }
 
-  public static Port populateNodePort(Port port, String input) {
-    if (port.getNodePort() != null && port.getNodePort() > 0) {
-      if (port.getHostPort() == null || port.getHostPort() == 0) {
-        return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort())).build();
-      }
-      return port;
-    }
-    int stablePortNumberInRange = getStablePortNumberInRange(input, MIN_NODE_PORT_VALUE, MAX_NODE_PORT_VALUE);
-    return new PortBuilder(port).withHostPort(HTTP_PORT_NUMBERS.get(port.getContainerPort()))
-        .withNodePort(stablePortNumberInRange).build();
-  }
-
   public static boolean isWebPort(Port port) {
-    if (isNodePort(port)) {
-      return false;
-    }
     if (webPortNames().contains(port.getName())) {
       return true;
     }
