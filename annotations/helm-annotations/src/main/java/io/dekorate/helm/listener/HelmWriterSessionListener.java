@@ -15,7 +15,7 @@
  *
  **/
 
-package io.dekorate.helm.processor;
+package io.dekorate.helm.listener;
 
 import static io.dekorate.helm.config.HelmBuildConfigGenerator.HELM;
 import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -48,20 +49,23 @@ import io.dekorate.ConfigReference;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
+import io.dekorate.SessionListener;
 import io.dekorate.WithConfigReferences;
+import io.dekorate.WithProject;
+import io.dekorate.WithSession;
 import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.helm.config.ValueReference;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
-import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
 
-public class HelmFileWriter extends SimpleFileWriter {
+public class HelmWriterSessionListener implements SessionListener, WithProject, WithSession {
 
   private static final String YAML = ".yaml";
+  private static final String YAML_REG_EXP = ".*?\\.ya?ml$";
   private static final String CHART_FILENAME = "Chart" + YAML;
   private static final String VALUES = "values";
   private static final String CHART_API_VERSION = "v1";
@@ -78,36 +82,51 @@ public class HelmFileWriter extends SimpleFileWriter {
   private static final boolean APPEND = true;
   private static final Logger LOGGER = LoggerFactory.getLogger();
 
-  public HelmFileWriter(Project project) {
-    super(project);
+  /**
+   * Invoked when the session is closed
+   */
+  @Override
+  public void onClosed() {
+    Session session = getSession();
+    Project project = getProject();
+    Path outputDir = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir());
+    session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(
+        helmConfig -> writeHelmFiles(session, helmConfig, outputDir, listYamls(outputDir)));
   }
 
-  @Override
-  public Map<String, String> write(Session session) {
-    Map<String, String> artifacts = super.write(session);
-    session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(helmConfig -> {
-      if (helmConfig.isEnabled()) {
-        validateHelmConfig(helmConfig);
+  /**
+   * Needs to be public in order to be called from outside the session context.
+   * 
+   * @return the list of the Helm generated files.
+   */
+  public Map<String, String> writeHelmFiles(Session session, HelmChartConfig helmConfig, Path outputDir,
+      Collection<File> generatedFiles) {
+    Map<String, String> artifacts = new HashMap<>();
+    if (helmConfig.isEnabled()) {
+      validateHelmConfig(helmConfig);
 
-        List<ConfigReference> valuesReferences = getValuesReferences(helmConfig, session);
+      List<ConfigReference> valuesReferences = getValuesReferences(helmConfig, session);
 
-        try {
-          LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
-          Map<String, Object> prodValues = new HashMap<>();
-          Map<String, Map<String, Object>> valuesByProfile = new HashMap<>();
-          artifacts.putAll(processSourceFiles(helmConfig, valuesReferences, prodValues, valuesByProfile));
-          artifacts.putAll(createChartYaml(helmConfig));
-          artifacts.putAll(createValuesYaml(helmConfig, prodValues, valuesByProfile));
-          artifacts.putAll(createTarball(helmConfig, artifacts, valuesByProfile.keySet()));
-          // To follow Helm file structure standards:
-          artifacts.putAll(createEmptyChartFolder(helmConfig));
-          artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig));
-
-        } catch (IOException e) {
-          throw new RuntimeException("Error writing resources", e);
+      try {
+        LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
+        Map<String, Object> prodValues = new HashMap<>();
+        Map<String, Map<String, Object>> valuesByProfile = new HashMap<>();
+        artifacts.putAll(processSourceFiles(helmConfig, outputDir, generatedFiles, valuesReferences, prodValues,
+            valuesByProfile));
+        artifacts.putAll(createChartYaml(helmConfig, outputDir));
+        artifacts.putAll(createValuesYaml(helmConfig, outputDir, prodValues, valuesByProfile));
+        if (helmConfig.isCreateTarFile()) {
+          artifacts.putAll(createTarball(helmConfig, outputDir, artifacts, valuesByProfile.keySet()));
         }
+
+        // To follow Helm file structure standards:
+        artifacts.putAll(createEmptyChartFolder(helmConfig, outputDir));
+        artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig, outputDir));
+
+      } catch (IOException e) {
+        throw new RuntimeException("Error writing resources", e);
       }
-    });
+    }
 
     return artifacts;
   }
@@ -118,15 +137,15 @@ public class HelmFileWriter extends SimpleFileWriter {
     }
   }
 
-  private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig) throws IOException {
-    InputStream notesInputStream = HelmFileWriter.class.getResourceAsStream("/" + NOTES);
-    Path outputDir = getChartOutputDir(helmConfig).resolve(TEMPLATES).resolve(NOTES);
-    Files.copy(notesInputStream, outputDir);
-    return Collections.singletonMap(outputDir.toString(), EMPTY);
+  private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig, Path outputDir) throws IOException {
+    InputStream notesInputStream = HelmWriterSessionListener.class.getResourceAsStream("/" + NOTES);
+    Path chartOutputDir = getChartOutputDir(helmConfig, outputDir).resolve(TEMPLATES).resolve(NOTES);
+    Files.copy(notesInputStream, chartOutputDir);
+    return Collections.singletonMap(chartOutputDir.toString(), EMPTY);
   }
 
-  private Map<String, String> createEmptyChartFolder(HelmChartConfig helmConfig) throws IOException {
-    Path emptyChartsDir = getChartOutputDir(helmConfig).resolve(CHARTS);
+  private Map<String, String> createEmptyChartFolder(HelmChartConfig helmConfig, Path outputDir) throws IOException {
+    Path emptyChartsDir = getChartOutputDir(helmConfig, outputDir).resolve(CHARTS);
     Files.createDirectories(emptyChartsDir);
     return Collections.singletonMap(emptyChartsDir.toString(), EMPTY);
   }
@@ -149,7 +168,7 @@ public class HelmFileWriter extends SimpleFileWriter {
         valueReference.getValue().isEmpty() ? null : valueReference.getValue(), valueReference.getProfile());
   }
 
-  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Map<String, Object> prodValues,
+  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Path outputDir, Map<String, Object> prodValues,
       Map<String, Map<String, Object>> valuesByProfile) throws IOException {
 
     Map<String, String> artifacts = new HashMap<>();
@@ -167,26 +186,26 @@ public class HelmFileWriter extends SimpleFileWriter {
 
       // Create the values.<profile>.yaml file
       artifacts.putAll(writeFileAsYaml(toMultiValueMap(values),
-          getChartOutputDir(helmConfig).resolve(VALUES + "." + profile + YAML)));
+          getChartOutputDir(helmConfig, outputDir).resolve(VALUES + "." + profile + YAML)));
     }
 
     // Next, we process the prod profile
     artifacts.putAll(writeFileAsYaml(toMultiValueMap(prodValues),
-        getChartOutputDir(helmConfig).resolve(VALUES + YAML)));
+        getChartOutputDir(helmConfig, outputDir).resolve(VALUES + YAML)));
 
     return artifacts;
   }
 
-  private Map<String, String> createTarball(HelmChartConfig helmConfig, Map<String, String> artifacts, Set<String> profiles)
-      throws IOException {
+  private Map<String, String> createTarball(HelmChartConfig helmConfig, Path outputDir, Map<String, String> artifacts,
+      Set<String> profiles) throws IOException {
 
-    File tarballFile = getOutputDir().resolve(HELM).resolve(String.format("%s-%s-%s.%s",
+    File tarballFile = outputDir.resolve(HELM).resolve(String.format("%s-%s-%s.%s",
         helmConfig.getName(), getVersion(helmConfig), getHelmClassifier(artifacts), helmConfig.getExtension()))
         .toFile();
 
     LOGGER.debug(String.format("Creating Helm configuration Tarball: '%s'", tarballFile));
 
-    Path helmSources = getChartOutputDir(helmConfig);
+    Path helmSources = getChartOutputDir(helmConfig, outputDir);
 
     List<File> yamls = new ArrayList<>();
     yamls.add(helmSources.resolve(CHART_FILENAME).toFile());
@@ -211,12 +230,13 @@ public class HelmFileWriter extends SimpleFileWriter {
     return helmConfig.getVersion();
   }
 
-  private Map<String, String> processSourceFiles(HelmChartConfig helmConfig, List<ConfigReference> valuesReferences,
-      Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile) throws IOException {
+  private Map<String, String> processSourceFiles(HelmChartConfig helmConfig, Path outputDir, Collection<File> generatedFiles,
+      List<ConfigReference> valuesReferences, Map<String, Object> prodValues,
+      Map<String, Map<String, Object>> valuesByProfile) throws IOException {
 
-    Path templatesDir = getChartOutputDir(helmConfig).resolve(TEMPLATES);
+    Path templatesDir = getChartOutputDir(helmConfig, outputDir).resolve(TEMPLATES);
     Files.createDirectories(templatesDir);
-    List<String> yamlsContent = replaceValuesInYamls(valuesReferences, prodValues, valuesByProfile);
+    List<String> yamlsContent = replaceValuesInYamls(generatedFiles, valuesReferences, prodValues, valuesByProfile);
     // Split yamls in separated files by kind
     for (String yamlContent : yamlsContent) {
       List<Map<Object, Object>> resources = Serialization.unmarshalAsListOfMaps(yamlContent);
@@ -236,13 +256,13 @@ public class HelmFileWriter extends SimpleFileWriter {
     return Collections.emptyMap();
   }
 
-  private List<String> replaceValuesInYamls(List<ConfigReference> valuesReferences, Map<String, Object> prodValues,
-      Map<String, Map<String, Object>> valuesByProfile) throws IOException {
+  private List<String> replaceValuesInYamls(Collection<File> generatedFiles, List<ConfigReference> valuesReferences,
+      Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile) throws IOException {
 
     List<String> yamlsContent = new LinkedList<>();
-    for (File file : listYamls(getOutputDir())) {
+    for (File generatedFile : generatedFiles) {
       // Read yaml
-      List<Map<Object, Object>> yaml = Serialization.unmarshalAsListOfMaps(file.toPath());
+      List<Map<Object, Object>> yaml = Serialization.unmarshalAsListOfMaps(generatedFile.toPath());
 
       // Parse to json in order to process jsonpaths
       String json = Serialization.jsonMapper().writeValueAsString(yaml);
@@ -304,7 +324,7 @@ public class HelmFileWriter extends SimpleFileWriter {
     return yamlsContent;
   }
 
-  private Map<String, String> createChartYaml(HelmChartConfig helmConfig) throws IOException {
+  private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Path outputDir) throws IOException {
     final Chart chart = new Chart();
     chart.setApiVersion(CHART_API_VERSION);
     chart.setName(helmConfig.getName());
@@ -318,10 +338,13 @@ public class HelmFileWriter extends SimpleFileWriter {
     chart.setIcon(helmConfig.getIcon());
     chart.setKeywords(Arrays.asList(helmConfig.getKeywords()));
     chart.setDependencies(Arrays.stream(helmConfig.getDependencies())
-        .map(d -> new HelmDependency(d.getName(), d.getVersion(), d.getRepository()))
+        .map(d -> new HelmDependency(d.getName(),
+            Strings.defaultIfEmpty(d.getAlias(), d.getName()),
+            d.getVersion(),
+            d.getRepository()))
         .collect(Collectors.toList()));
 
-    Path yml = getChartOutputDir(helmConfig).resolve(CHART_FILENAME).normalize();
+    Path yml = getChartOutputDir(helmConfig, outputDir).resolve(CHART_FILENAME).normalize();
     return writeFileAsYaml(chart, yml);
   }
 
@@ -345,14 +368,14 @@ public class HelmFileWriter extends SimpleFileWriter {
     return KUBERNETES_CLASSIFIER;
   }
 
-  private Path getChartOutputDir(HelmChartConfig helmConfig) {
-    return getOutputDir().resolve(HELM).resolve(helmConfig.getName());
+  private Path getChartOutputDir(HelmChartConfig helmConfig, Path outputDir) {
+    return outputDir.resolve(HELM).resolve(helmConfig.getName());
   }
 
   private static List<File> listYamls(Path directory) {
     return Stream.of(Optional.ofNullable(directory.toFile().listFiles()).orElse(new File[0]))
         .filter(File::isFile)
-        .filter(f -> f.getName().toLowerCase().matches(".*?\\.ya?ml$"))
+        .filter(f -> f.getName().toLowerCase().matches(YAML_REG_EXP))
         .collect(Collectors.toList());
   }
 
