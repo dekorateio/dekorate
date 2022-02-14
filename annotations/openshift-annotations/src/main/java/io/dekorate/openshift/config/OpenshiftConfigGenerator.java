@@ -23,12 +23,10 @@ import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.openshift.adapter.OpenshiftConfigAdapter;
-import io.dekorate.openshift.listener.OpenshiftSessionListener;
 
 public interface OpenshiftConfigGenerator extends ConfigurationGenerator {
 
   String OPENSHIFT = "openshift";
-  OpenshiftSessionListener LISTENER = new OpenshiftSessionListener();
 
   default String getKey() {
     return OPENSHIFT;
