@@ -27,6 +27,8 @@ public @interface HelmDependency {
 
   String name();
 
+  String alias() default "";
+
   String version();
 
   String repository();

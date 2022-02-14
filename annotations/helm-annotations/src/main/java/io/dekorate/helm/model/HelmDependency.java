@@ -39,12 +39,16 @@ public class HelmDependency {
   @JsonProperty
   private String repository;
 
+  @JsonProperty
+  private String alias;
+
   public HelmDependency() {
 
   }
 
-  public HelmDependency(String name, String version, String repository) {
+  public HelmDependency(String name, String alias, String version, String repository) {
     this.name = name;
+    this.alias = alias;
     this.version = version;
     this.repository = repository;
   }
@@ -55,6 +59,14 @@ public class HelmDependency {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getAlias() {
+    return alias;
+  }
+
+  public void setAlias(String alias) {
+    this.alias = alias;
   }
 
   public String getVersion() {

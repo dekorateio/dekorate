@@ -39,6 +39,10 @@ public class Strings {
     return str == null || str.isEmpty();
   }
 
+  public static String defaultIfEmpty(String str, String defaultStr) {
+    return isNullOrEmpty(str) ? defaultStr : str;
+  }
+
   public static String join(final Object[] array) {
     return join(array, ',');
   }

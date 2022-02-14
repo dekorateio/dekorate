@@ -40,6 +40,14 @@ class HelmKubernetesExampleTest {
     assertNotNull(chart, "Chart is null!");
     // Should be the same as in `dekorate.helm.chart` from properties.
     assertEquals(CHART_NAME, chart.getName());
+    // Should contain expected dependencies
+    assertEquals(2, chart.getDependencies().size());
+    assertEquals("dependency-name-a", chart.getDependencies().get(0).getName());
+    assertEquals("dependency-name-a", chart.getDependencies().get(0).getAlias());
+    assertEquals("0.0.1", chart.getDependencies().get(0).getVersion());
+    assertEquals("http://localhost:8080", chart.getDependencies().get(0).getRepository());
+    assertEquals("dependency-name-b", chart.getDependencies().get(1).getName());
+    assertEquals("app", chart.getDependencies().get(1).getAlias());
     // Values.yaml manifest
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"));
