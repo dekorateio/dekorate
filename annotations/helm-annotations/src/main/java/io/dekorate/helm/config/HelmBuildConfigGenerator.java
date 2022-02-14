@@ -25,7 +25,6 @@ import io.dekorate.config.AnnotationConfiguration;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.config.PropertyConfiguration;
 import io.dekorate.helm.adapter.HelmChartConfigAdapter;
-import io.dekorate.helm.processor.HelmFileWriter;
 import io.dekorate.kubernetes.config.Configuration;
 
 public interface HelmBuildConfigGenerator extends ConfigurationGenerator, WithProject {
@@ -52,7 +51,5 @@ public interface HelmBuildConfigGenerator extends ConfigurationGenerator, WithPr
 
   default void on(ConfigurationSupplier<HelmChartConfig> config) {
     getConfigurationRegistry().add(config);
-
-    getSession().setWriter(new HelmFileWriter(getProject()));
   }
 }
