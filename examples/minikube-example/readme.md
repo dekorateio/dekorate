@@ -1,8 +1,8 @@
 # Minikube example
 
-A very simple example that demonstrates the use of `@MinikubeApplication` in its simplest form.
+A very simple example that demonstrates the use of `@Minikube` in its simplest form.
 Check the [Main.java](src/main/java/io/dekorate/example/App.java) which bears the annotation.
-To access the `@MinikubeApplication` annotation you just need to have the following dependency in your
+To access the `@Minikube` annotation you just need to have the following dependency in your
 class path:
 
 ```
@@ -13,7 +13,7 @@ class path:
     </dependency>  
 ```
 ```java
-@MinikubeApplication(ports = @Port(name = "http", containerPort = 8080))
+@Minikube(ports = @Port(name = "http", containerPort = 8080))
 public class App
 {
 
