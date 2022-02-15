@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-@Minikube(ports = @Port(name = "http", containerPort = 8080))
-@KubernetesApplication
+@Minikube
+@KubernetesApplication(ports = @Port(name = "http", containerPort = 8080))
 public class App
 {
   public static void main(String[] args) throws IOException {

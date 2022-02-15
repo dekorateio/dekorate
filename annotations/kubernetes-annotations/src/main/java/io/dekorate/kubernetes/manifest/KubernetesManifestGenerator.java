@@ -74,7 +74,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
   private static final String METADATA_NAMESPACE = "metadata.namespace";
 
   private final Logger LOGGER = LoggerFactory.getLogger();
-  private final ConfigurationRegistry configurationRegistry;
+  protected final ConfigurationRegistry configurationRegistry;
 
   public KubernetesManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurators) {
     super(resources);
@@ -231,7 +231,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
         .accept(new ApplyDeployToApplicationConfiguration()).accept(new ApplyProjectInfo(p)));
   }
 
-  private static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig appConfig,
+  protected static ImageConfiguration getImageConfiguration(Project project, KubernetesConfig appConfig,
       ConfigurationRegistry configurationRegistry) {
     return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(appConfig, i))
         .orElse(ImageConfiguration.from(appConfig));

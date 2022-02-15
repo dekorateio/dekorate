@@ -187,6 +187,21 @@ public class Ports {
     return Optional.empty();
   }
 
+  public static Integer calculateNodePort(String name, Port port) {
+    // Check if ingress is enabled
+    // TODO : Add ingress property to the Kubernetes config
+
+    // If a HostPort has been defined by the user, then we use it
+    if (port.getNodePort() != null && port.getNodePort() > 0) {
+      return port.getNodePort();
+    }
+    // If not hostPort exists, then we will return the containerPort to follow
+    // the same convention as kubernetes suggests
+    return getStablePortNumberInRange(name, MIN_NODE_PORT_VALUE, MAX_NODE_PORT_VALUE);
+    //    return new PortBuilder(port).withHostPort(calculateHostPort(port))
+    //      .withNodePort(stablePortNumberInRange).build();
+  }
+
   /**
    * Given a string, generate a port number within the supplied range
    * The output is always the same (between {@code min} and {@code max})

@@ -18,7 +18,7 @@ package io.dekorate.minikube.config;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.PopulateWebPort;
-import io.dekorate.minikube.configurator.ApplyServiceTypeNodePortConfigurator;
+import io.dekorate.minikube.configurator.ApplyServiceTypeNodePortToMinikubeConfig;
 import io.dekorate.project.ApplyProjectInfo;
 
 public class DefaultMinikubeConfigGenerator implements MinikubeConfigGenerator {
@@ -28,7 +28,7 @@ public class DefaultMinikubeConfigGenerator implements MinikubeConfigGenerator {
   public DefaultMinikubeConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
-    this.configurationRegistry.add(new ApplyServiceTypeNodePortConfigurator());
+    this.configurationRegistry.add(new ApplyServiceTypeNodePortToMinikubeConfig());
     this.configurationRegistry.add(new PopulateWebPort());
     add(new DefaultConfiguration<MinikubeConfig>(MinikubeConfig.newMinikubeConfigBuilderFromDefaults()));
   }
