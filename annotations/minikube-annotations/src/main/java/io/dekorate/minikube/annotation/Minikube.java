@@ -33,13 +33,6 @@ import io.sundr.builder.annotations.Pojo;
 public @interface Minikube {
 
   /**
-   * The number of replicas to use.
-   *
-   * @return The number of replicas.
-   */
-  int replicas() default 1;
-
-  /**
    * The application ports.
    */
   Port[] ports() default {};
@@ -48,10 +41,5 @@ public @interface Minikube {
    * The type of service that will be generated for the application.
    */
   ServiceType serviceType() default ServiceType.NodePort;
-
-  /**
-   * Controls whether the application should be exposed via Ingress
-   */
-  boolean expose() default false;
 
 }
