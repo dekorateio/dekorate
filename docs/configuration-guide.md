@@ -100,6 +100,14 @@ The document is structured as follows.
 | dekorate.kubernetes.headless                        | boolean                       | Controls whether the generated {@link Service} will be headless.                                                                                                                                                                                                                                                                                                                                                                                                                                                               | false                        |
 | dekorate.kubernetes.auto-deploy-enabled             | boolean                       | Flag to trigger the registration of the deploy hook. It's generally preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.                                                                                                                                                                                                                                                                                                                                                                                | false                        |
 
+### Minikube
+
+| Property                                              | Type                            | Description                                                       | Default Value                                          |
+|-- --------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------- | -----------------------                                |
+| dekorate.minikube.ports                               | Port[]                          | The application ports.                                            | {}                                                     |
+| dekorate.minikube.service-type                        | ServiceType                     | The type of service that will be generated for the application.   | io.dekorate.kubernetes.annotation.ServiceType.NodePort |
+
+
 ### Global Types
 The section below describes all the available subtypes.
 

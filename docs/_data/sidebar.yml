@@ -19,6 +19,8 @@
         url: /docs/container-resources
       - title: Openshift
         url: /docs/openshift
+      - title: Minikube
+        url: /docs/minikube
       - title: Tekton
         url: /docs/tekton
       - title: Knative
