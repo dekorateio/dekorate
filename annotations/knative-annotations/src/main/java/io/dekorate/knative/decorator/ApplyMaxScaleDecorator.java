@@ -17,25 +17,11 @@
 
 package io.dekorate.knative.decorator;
 
-import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.knative.serving.v1.ServiceFluent;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-
-public class ApplyMaxScaleDecorator extends NamedResourceDecorator<ServiceFluent<?>> {
+public class ApplyMaxScaleDecorator extends ApplyAnnotationsToServiceTemplate {
 
   private static final String MAX_SCALE = "autoscaling.knative.dev/maxScale";
 
-  private final int scale;
-
   public ApplyMaxScaleDecorator(String name, int scale) {
-    super("Service", name);
-    this.scale = scale;
-  }
-
-  @Override
-  public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
-    service.editMetadata()
-        .addToAnnotations(MAX_SCALE, String.valueOf(scale))
-        .endMetadata();
+    super(name, MAX_SCALE, String.valueOf(scale));
   }
 }

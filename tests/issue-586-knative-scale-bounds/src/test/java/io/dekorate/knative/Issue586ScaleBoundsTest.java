@@ -37,8 +37,8 @@ public class Issue586ScaleBoundsTest {
         .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
-    String minScale = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/minScale");
-    String maxScale = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/maxScale");
+    String minScale = s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/minScale");
+    String maxScale = s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/maxScale");
     assertEquals("3", minScale);
     assertEquals("5", maxScale);
 

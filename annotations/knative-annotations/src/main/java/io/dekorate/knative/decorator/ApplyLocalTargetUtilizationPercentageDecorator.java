@@ -17,25 +17,11 @@
 
 package io.dekorate.knative.decorator;
 
-import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.knative.serving.v1.ServiceFluent;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-
-public class ApplyLocalTargetUtilizationPercentageDecorator extends NamedResourceDecorator<ServiceFluent<?>> {
+public class ApplyLocalTargetUtilizationPercentageDecorator extends ApplyAnnotationsToServiceTemplate {
 
   private static final String UTILIZATION_PERCENTAGE = "autoscaling.knative.dev/targetUtilizationPercentage";
 
-  private final int target;
-
   public ApplyLocalTargetUtilizationPercentageDecorator(String name, int target) {
-    super("Service", name);
-    this.target = target;
-  }
-
-  @Override
-  public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
-    service.editMetadata()
-        .addToAnnotations(UTILIZATION_PERCENTAGE, String.valueOf(target))
-        .endMetadata();
+    super(name, UTILIZATION_PERCENTAGE, String.valueOf(target));
   }
 }

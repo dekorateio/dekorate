@@ -17,25 +17,11 @@
 
 package io.dekorate.knative.decorator;
 
-import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
-import io.fabric8.knative.serving.v1.ServiceFluent;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-
-public class ApplyLocalAutoscalingTargetDecorator extends NamedResourceDecorator<ServiceFluent<?>> {
+public class ApplyLocalAutoscalingTargetDecorator extends ApplyAnnotationsToServiceTemplate {
 
   private static final String AUTOSCALING_TARGET = "autoscaling.knative.dev/target";
 
-  private final int target;
-
   public ApplyLocalAutoscalingTargetDecorator(String name, int target) {
-    super("Service", name);
-    this.target = target;
-  }
-
-  @Override
-  public void andThenVisit(ServiceFluent<?> service, ObjectMeta resourceMeta) {
-    service.editMetadata()
-        .addToAnnotations(AUTOSCALING_TARGET, String.valueOf(target))
-        .endMetadata();
+    super(name, AUTOSCALING_TARGET, String.valueOf(target));
   }
 }

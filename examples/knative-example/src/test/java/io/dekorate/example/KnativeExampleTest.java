@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import io.dekorate.utils.Serialization;
 import io.fabric8.knative.serving.v1.Service;
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
@@ -35,12 +36,21 @@ class KnativeExampleTest {
   public void shouldContainServiceWithPortNamedHttp1() {
     KubernetesList list = Serialization.unmarshalAsList(KnativeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
-    assertEquals(1, list.getItems().size());
+    assertEquals(2, list.getItems().size());
+    // Verify Knative Service
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException("No knative service found!"));
     assertNotNull(s);
-    Container c = s.getSpec().getTemplate().getSpec().getContainers().get(0);
-    assertEquals("http1", c.getPorts().get(0).getName());
+    assertEquals("1", s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/minScale"));
+    assertEquals("5", s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/maxScale"));
+    Container container = s.getSpec().getTemplate().getSpec().getContainers().get(0);
+    assertEquals("http1", container.getPorts().get(0).getName());
 
+    // Verify ConfigMap
+    ConfigMap configMap = findFirst(list, ConfigMap.class).orElseThrow(() -> new IllegalStateException("No configMap found!"));
+    assertEquals("config-autoscaler", configMap.getMetadata().getName());
+    assertEquals("knative-serving", configMap.getMetadata().getNamespace());
+    assertEquals(1, configMap.getData().size());
+    assertEquals("false", configMap.getData().get("enable-scale-to-zero"));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
