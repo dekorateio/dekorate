@@ -42,7 +42,7 @@ public class Ports {
       put("http", 80);
       put("https", 443);
       put("http1", 80); //This is needed for knative
-      put("h2c", 443);  //This is needed for knative
+      put("h2c", 443); //This is needed for knative
     }
   });
 

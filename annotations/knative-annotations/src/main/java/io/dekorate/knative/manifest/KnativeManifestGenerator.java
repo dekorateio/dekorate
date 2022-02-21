@@ -84,6 +84,9 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerator<KnativeConfig> implements WithProject {
 
   private static final String KNATIVE = "knative";
+  private static final String KNATIVE_SERVING = "knative-serving";
+  private static final String CONFIG_AUTOSCALER = "config-autoscaler";
+  private static final String CONFIG_DEFAULTS = "config-defaults";
   private static final String DEFAULT_REGISTRY = "dev.local/";
 
   private static final String KNATIVE_VISIBILITY = "serving.knative.dev/visibility";
@@ -146,8 +149,8 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
     }
 
     if (!config.isScaleToZeroEnabled()) {
-      resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
-      resourceRegistry.decorate(KNATIVE, new AddConfigMapDataDecorator("config-autoscaler", "enable-scale-to-zero",
+      resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_AUTOSCALER, KNATIVE_SERVING));
+      resourceRegistry.decorate(KNATIVE, new AddConfigMapDataDecorator(CONFIG_AUTOSCALER, "enable-scale-to-zero",
           String.valueOf(config.isAutoDeployEnabled())));
     }
 
@@ -194,7 +197,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
     // Global autoscaling configuration
     if (config.getGlobalAutoScaling() != null) {
       if (!isDefault(config.getGlobalAutoScaling())) {
-        resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-autoscaler"));
+        resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_AUTOSCALER, KNATIVE_SERVING));
         if (config.getGlobalAutoScaling().getAutoScalerClass() != null
             && config.getGlobalAutoScaling().getAutoScalerClass() != AutoScalerClass.kpa) {
           resourceRegistry.decorate(KNATIVE,
@@ -215,7 +218,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
 
       if (config.getGlobalAutoScaling().getContainerConcurrency() != null
           && config.getGlobalAutoScaling().getContainerConcurrency() != 0) {
-        resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator("config-defaults"));
+        resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_DEFAULTS, KNATIVE_SERVING));
         resourceRegistry.decorate(KNATIVE,
             new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getContainerConcurrency()));
       }

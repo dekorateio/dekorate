@@ -37,9 +37,9 @@ public class Feat575LocalAutoscalingTest {
         .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
-    String metric = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/metric");
+    String metric = s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/metric");
     assertEquals("rps", metric);
-    String target = s.getMetadata().getAnnotations().get("autoscaling.knative.dev/target");
+    String target = s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/target");
     assertEquals("100", target);
   }
 

@@ -19,7 +19,7 @@ import io.dekorate.knative.annotation.KnativeApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KnativeApplication
+@KnativeApplication(minScale = 1, maxScale = 5, scaleToZeroEnabled = false)
 @SpringBootApplication
 public class Main {
 

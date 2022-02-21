@@ -22,12 +22,13 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyGlobalContainerConcurrencyDecorator extends NamedResourceDecorator<ConfigMapFluent<?>> {
 
+  public static final String CONFIG_DEFAULTS = "config-defaults";
   private static final String CONTAINER_CONCURRENCY = "container-concurrency";
 
   private final int target;
 
   public ApplyGlobalContainerConcurrencyDecorator(int target) {
-    super("config-autoscaler");
+    super(CONFIG_DEFAULTS);
     this.target = target;
   }
 

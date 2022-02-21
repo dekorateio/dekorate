@@ -22,9 +22,11 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 public class AddConfigMapResourceProvidingDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private final String name;
+  private final String namespace;
 
-  public AddConfigMapResourceProvidingDecorator(String name) {
+  public AddConfigMapResourceProvidingDecorator(String name, String namespace) {
     this.name = name;
+    this.namespace = namespace;
   }
 
   @Override
@@ -36,6 +38,7 @@ public class AddConfigMapResourceProvidingDecorator extends ResourceProvidingDec
     list.addNewConfigMapItem()
         .withNewMetadata()
         .withName(name)
+        .withNamespace(namespace)
         .endMetadata()
         .endConfigMapItem();
   }
