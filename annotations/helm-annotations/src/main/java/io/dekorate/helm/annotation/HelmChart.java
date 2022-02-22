@@ -53,6 +53,8 @@ public @interface HelmChart {
 
   String extension() default "tar.gz";
 
+  String notes() default "/NOTES.template.txt";
+
   Maintainer[] maintainers() default {};
 
   HelmDependency[] dependencies() default {};

@@ -138,7 +138,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   }
 
   private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig, Path outputDir) throws IOException {
-    InputStream notesInputStream = HelmWriterSessionListener.class.getResourceAsStream("/" + NOTES);
+    InputStream notesInputStream = HelmWriterSessionListener.class.getResourceAsStream(helmConfig.getNotes());
     Path chartOutputDir = getChartOutputDir(helmConfig, outputDir).resolve(TEMPLATES).resolve(NOTES);
     Files.copy(notesInputStream, chartOutputDir);
     return Collections.singletonMap(chartOutputDir.toString(), EMPTY);
