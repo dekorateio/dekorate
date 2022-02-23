@@ -20,7 +20,7 @@ env:
 on:
   push:
     branches:
-      - main
+      - fix-test-frameworkless-example
   pull_request:
 
 jobs:
