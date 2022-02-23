@@ -15,7 +15,6 @@
  */
 package io.dekorate.example;
 
-import io.dekorate.testing.annotation.Named;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
