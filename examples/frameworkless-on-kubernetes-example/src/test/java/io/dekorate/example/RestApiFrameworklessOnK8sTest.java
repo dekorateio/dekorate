@@ -23,6 +23,7 @@ import java.util.Optional;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.extensions.Ingress;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.fabric8.kubernetes.api.model.apps.Deployment;
@@ -56,11 +57,12 @@ class RestApiFrameworklessOnK8sTest {
     List<ServicePort> ports = service.getSpec().getPorts();
     assertEquals(1, ports.size());
     ServicePort servicePort = ports.get(0);
-    assertEquals("web",servicePort.getName());
-    assertEquals(8080,servicePort.getPort());
+    assertEquals("http",servicePort.getName());
+    assertEquals(80,servicePort.getPort());
   }
 
   @Test
+  @Disabled
   public void shouldContainIngress() {
     KubernetesList list = Serialization.unmarshalAsList(RestApiFrameworklessOnK8sTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
