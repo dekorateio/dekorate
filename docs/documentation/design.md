@@ -142,9 +142,10 @@ The `decorator` looks pretty similar to the `configurator` the only difference b
 |-------------------------------|----------------|--------------------------------------------------------|
 | AddSecretVolume               | PodSpec        | Add a secret volume to all pod specs.                  |
 | AddService                    | KubernetesList | Add a service to the list.                             |
-| AddLivenessProbe              | Container      | Add a liveness probe to all containers.                |
 | AddEnvVar                     | Container      | Add a environment variable to the container.           |
 | AddReadinessProbe             | Container      | Add a readiness probe to all containers.               |
+| AddLivenessProbe              | Container      | Add a liveness probe to all containers.                |
+| AddStartupProbe               | Container      | Add a startup probe to all containers.                 |
 | AddConfigMapVolume            | PodSpec        | Add a configmap volume to the pod spec.                |
 | AddEnvToComponent             | ComponentSpec  | Add environment variable to component.                 |
 | AddAzureDiskVolume            | PodSpec        | Add an Azure disk volume to the pod spec.              |

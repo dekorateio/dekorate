@@ -16,10 +16,16 @@
 package io.dekorate.example;
 
 import io.dekorate.knative.annotation.KnativeApplication;
+import io.dekorate.kubernetes.annotation.Probe;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KnativeApplication(minScale = 1, maxScale = 5, scaleToZeroEnabled = false)
+@KnativeApplication(minScale = 1, maxScale = 5, scaleToZeroEnabled = false,
+  readinessProbe = @Probe(httpActionPath = "/readiness", periodSeconds = 30, timeoutSeconds = 10),
+  livenessProbe = @Probe(httpActionPath = "/liveness", periodSeconds = 31, timeoutSeconds = 11),
+  startupProbe = @Probe(httpActionPath = "/startup", periodSeconds = 32, timeoutSeconds = 12)
+)
 @SpringBootApplication
 public class Main {
 

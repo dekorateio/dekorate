@@ -231,6 +231,13 @@ public @interface KubernetesApplication {
   Probe readinessProbe() default @Probe();
 
   /**
+   * The startup probe.
+   *
+   * @return The probe.
+   */
+  Probe startupProbe() default @Probe();
+
+  /**
    * The resources that the application container requires.
    */
   ResourceRequirements requestResources() default @ResourceRequirements();
