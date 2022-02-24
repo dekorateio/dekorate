@@ -54,6 +54,10 @@ public interface Logger {
 
   void info(String message);
 
+  default void info(String message, Object... objects) {
+    info(String.format(message, objects));
+  }
+
   void warning(String message);
 
   void error(String message);

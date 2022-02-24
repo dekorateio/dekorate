@@ -15,6 +15,8 @@
  */
 package io.dekorate;
 
+import static io.dekorate.utils.Development.isVerbose;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -351,9 +353,13 @@ public class Session {
         });
   }
 
-  private static void generate(ManifestGenerator h, ConfigurationRegistry configurationRegistry) {
+  private void generate(ManifestGenerator h, ConfigurationRegistry configurationRegistry) {
     configurationRegistry.stream().forEach(c -> {
       if (h.accepts(c.getClass())) {
+        if (isVerbose()) {
+          LOGGER.info("Using the configuration registry '%s'", c.getClass().getName());
+        }
+
         h.generate(c);
       }
     });
