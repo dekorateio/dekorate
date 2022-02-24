@@ -15,6 +15,8 @@
  */
 package io.dekorate;
 
+import static io.dekorate.utils.Development.isVerbose;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 public class ResourceRegistry {
 
   private static final String DEFAULT_GROUP = "kubernetes";
+  private static final Logger LOGGER = LoggerFactory.getLogger(ResourceRegistry.class);
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
   private final KubernetesListBuilder global = new KubernetesListBuilder();
   private final Set<Decorator> globalDecorators = new HashSet<>();
@@ -176,6 +179,10 @@ public class ResourceRegistry {
         union.addAll(decorators);
         union.addAll(globalDecorators);
         for (Decorator d : applyConstraints(union)) {
+          if (isVerbose()) {
+            LOGGER.info("Applying decorator '%s'", d.getClass().getName());
+          }
+
           groups.get(group).accept(d);
         }
       }
@@ -192,6 +199,10 @@ public class ResourceRegistry {
         union.addAll(decorators);
         union.addAll(globalDecorators);
         for (Decorator d : applyConstraints(union)) {
+          if (isVerbose()) {
+            LOGGER.info("Applying decorator '%s'", d.getClass().getName());
+          }
+
           customGroups.get(group).accept(d);
         }
       }
