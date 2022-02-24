@@ -18,8 +18,10 @@ package io.dekorate.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +31,7 @@ import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.Probe;
 
 class KnativeExampleTest {
 
@@ -51,6 +54,41 @@ class KnativeExampleTest {
     assertEquals("knative-serving", configMap.getMetadata().getNamespace());
     assertEquals(1, configMap.getData().size());
     assertEquals("false", configMap.getData().get("enable-scale-to-zero"));
+  }
+
+  @Test
+  public void shouldContainProbes() {
+    KubernetesList list = Serialization.unmarshalAsList(KnativeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
+    Service service = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException("No knative service found!"));
+
+    assertReadinessProbe(service, "/readiness", 30, 10);
+    assertLivenessProbe(service, "/liveness", 31, 11);
+    assertStartupProbe(service, "/startup", 32, 12);
+  }
+
+  private static void assertReadinessProbe(Service service, String actionPath,
+    int periodSeconds, int timeoutSeconds) {
+    assertProbe(service, Container::getReadinessProbe, actionPath, periodSeconds, timeoutSeconds);
+  }
+
+  private static void assertLivenessProbe(Service service, String actionPath,
+    int periodSeconds, int timeoutSeconds) {
+    assertProbe(service, Container::getLivenessProbe, actionPath, periodSeconds, timeoutSeconds);
+  }
+
+  private static void assertStartupProbe(Service service, String actionPath,
+    int periodSeconds, int timeoutSeconds) {
+    assertProbe(service, Container::getStartupProbe, actionPath, periodSeconds, timeoutSeconds);
+  }
+
+  private static void assertProbe(Service service,
+    Function<Container, Probe> probeFunction,
+    String actionPath, int periodSeconds, int timeoutSeconds) {
+
+    assertTrue(service.getSpec().getTemplate().getSpec().getContainers().stream()
+      .map(probeFunction)
+      .anyMatch(probe -> actionPath.equals(probe.getHttpGet().getPath())
+        && periodSeconds == probe.getPeriodSeconds() && timeoutSeconds == probe.getTimeoutSeconds()));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

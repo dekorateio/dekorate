@@ -23,6 +23,7 @@ import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
 import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
+import io.dekorate.kubernetes.decorator.AddStartupProbeDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLimitsCpuDecorator;
 import io.dekorate.kubernetes.decorator.ApplyLimitsMemoryDecorator;
@@ -66,6 +67,10 @@ public class ContainerAdapter {
 
     if (Probes.isConfigured(container.getReadinessProbe())) {
       builder.accept(new AddReadinessProbeDecorator(name, container.getReadinessProbe()));
+    }
+
+    if (Probes.isConfigured(container.getStartupProbe())) {
+      builder.accept(new AddStartupProbeDecorator(name, container.getStartupProbe()));
     }
 
     // Container resources

@@ -37,6 +37,6 @@ public class RemoveProbesFromInitContainerDecorator extends NamedResourceDecorat
   @Override
   public Class<? extends Decorator>[] after() {
     return new Class[] { ResourceProvidingDecorator.class, AddInitContainerDecorator.class, AddLivenessProbeDecorator.class,
-        AddReadinessProbeDecorator.class };
+        AddReadinessProbeDecorator.class, AddStartupProbeDecorator.class };
   }
 }

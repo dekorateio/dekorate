@@ -45,6 +45,7 @@ import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
+import io.dekorate.kubernetes.decorator.AddStartupProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
@@ -184,6 +185,11 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     if (Probes.isConfigured(config.getReadinessProbe())) {
       resourceRegistry.decorate(group,
           new AddReadinessProbeDecorator(config.getName(), config.getName(), config.getReadinessProbe()));
+    }
+
+    if (Probes.isConfigured(config.getStartupProbe())) {
+      resourceRegistry.decorate(group,
+          new AddStartupProbeDecorator(config.getName(), config.getName(), config.getStartupProbe()));
     }
 
     //Container resources
