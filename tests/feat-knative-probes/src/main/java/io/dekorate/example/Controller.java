@@ -12,28 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- **/
-
+ */
 package io.dekorate.example;
 
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.Service;
+@RestController
+public class Controller {
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static io.dekorate.testing.KubernetesResources.*;
-
-class VertxTest {
-
-  @Test
-  public void shouldContainService() throws Exception {
-    KubernetesList list = loadGenerated("openshift");
-    Optional<Service> service = findFirst(list, Service.class);
-    assertTrue(service.isPresent());
+  @RequestMapping("/")
+  public String hello() {
+    return "Hello world";
   }
 }
-

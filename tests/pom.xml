@@ -60,6 +60,9 @@
       <module>issue-775-sb-server-port</module>
       <module>issue-791-missing-imagestream-with-default-configuration</module>
       <module>issue-821-docker-build-on-ocp-test</module>
+      <module>feat-kubernetes-probes</module>
+      <module>feat-openshift-probes</module>
+      <module>feat-knative-probes</module>
     </modules>
 
 </project>
