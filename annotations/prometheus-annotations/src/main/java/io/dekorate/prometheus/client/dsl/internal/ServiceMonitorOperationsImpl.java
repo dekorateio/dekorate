@@ -17,17 +17,17 @@ package io.dekorate.prometheus.client.dsl.internal;
 
 import io.dekorate.prometheus.model.ServiceMonitor;
 import io.dekorate.prometheus.model.ServiceMonitorList;
-import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ClientContext;
 import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation;
 import io.fabric8.kubernetes.client.dsl.base.OperationContext;
-import okhttp3.OkHttpClient;
+import io.fabric8.kubernetes.client.dsl.internal.HasMetadataOperationsImpl;
 
 public class ServiceMonitorOperationsImpl
     extends HasMetadataOperation<ServiceMonitor, ServiceMonitorList, Resource<ServiceMonitor>> {
 
-  public ServiceMonitorOperationsImpl(OkHttpClient client, Config config) {
-    this(new OperationContext().withOkhttpClient(client).withConfig(config));
+  public ServiceMonitorOperationsImpl(ClientContext clientContext) {
+    this(HasMetadataOperationsImpl.defaultContext(clientContext));
   }
 
   public ServiceMonitorOperationsImpl(OperationContext context) {
