@@ -273,4 +273,11 @@ public @interface KubernetesApplication {
    * @return True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;
+
+  /**
+   * The Kubernetes Jobs.
+   *
+   * @return the jobs;
+   */
+  Job[] jobs() default {};
 }

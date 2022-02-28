@@ -32,6 +32,7 @@ import io.dekorate.kubernetes.annotation.Container;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.annotation.GitRepoVolume;
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
+import io.dekorate.kubernetes.annotation.Job;
 import io.dekorate.kubernetes.annotation.Label;
 import io.dekorate.kubernetes.annotation.Mount;
 import io.dekorate.kubernetes.annotation.PersistentVolumeClaimVolume;
@@ -310,5 +311,12 @@ public @interface KnativeApplication {
    * Traffic configuration for the application.
    */
   Traffic[] traffic() default {};
+
+  /**
+   * The Kubernetes Jobs.
+   *
+   * @return the jobs;
+   */
+  Job[] jobs() default {};
 
 }

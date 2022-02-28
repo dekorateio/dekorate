@@ -25,6 +25,7 @@ import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.HostAlias;
+import io.dekorate.kubernetes.config.Job;
 import io.dekorate.kubernetes.config.Mount;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.config.Port;
@@ -37,6 +38,7 @@ import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddHostAliasesDecorator;
 import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
+import io.dekorate.kubernetes.decorator.AddJobDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
@@ -215,6 +217,10 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
         resourceRegistry.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(),
             config.getRequestResources().getMemory()));
       }
+    }
+
+    for (Job job : config.getJobs()) {
+      resourceRegistry.decorate(group, new AddJobDecorator(config, job));
     }
 
     resourceRegistry.decorate(group, new RemoveProbesFromInitContainerDecorator());
