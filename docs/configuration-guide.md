@@ -23,7 +23,7 @@ Each option can be:
 They can be referenced by index inside brackets as in java for example: `dekorate.kubernetes.labels[0]`.
 
 ## Complex object
-Each property of the complex object can be specified, by expanding the the property key.
+Each property of the complex object can be specified, by expanding the property key.
 For example lets assume the object `Probe` that looks like:
 
 | Property              | Type   | Description | Default Value |
@@ -31,6 +31,7 @@ For example lets assume the object `Probe` that looks like:
 | http-action-path      | String |             |               |
 | exec-action           | String |             |               |
 | tcp-socket-action     | String |             |               |
+| grpc-action     | String |             |               |
 | initial-delay-seconds | int    |             |             0 |
 | period-seconds        | int    |             |            30 |
 | timeout-seconds       | int    |             |            10 |
@@ -169,6 +170,7 @@ The section below describes all the available subtypes.
 | http-action-path      | String | The http path to use for the probe For this to work, the container port also needs to be set Assuming the container port has been set (as per above comment), if execAction or tcpSocketAction are not set, an http probe will be used automatically even if no path is set (which will result in the root path being used) |               |
 | exec-action           | String | The command to use for the probe.                                                                                                                                                                                                                                                                                           |               |
 | tcp-socket-action     | String | The tcp socket to use for the probe (the format is host:port).                                                                                                                                                                                                                                                              |               |
+| grpc-action           | String | The gRPC port to use for the probe (the format is either port or port:service).                                                                                                                                                                                                                                             |               |
 | initial-delay-seconds | int    | The amount of time to wait in seconds before starting to probe.                                                                                                                                                                                                                                                             |             0 |
 | period-seconds        | int    | The period in which the action should be called.                                                                                                                                                                                                                                                                            |            30 |
 | timeout-seconds       | int    | The amount of time to wait for each action.                                                                                                                                                                                                                                                                                 |            10 |
