@@ -36,6 +36,7 @@ public class AddStartupProbeDecorator extends AbstractAddProbeDecorator {
         .withExec(actions.execAction)
         .withHttpGet(actions.httpGetAction)
         .withTcpSocket(actions.tcpSocketAction)
+        .withGrpc(actions.grpcAction)
         .withInitialDelaySeconds(probe.getInitialDelaySeconds())
         .withPeriodSeconds(probe.getPeriodSeconds())
         .withTimeoutSeconds(probe.getTimeoutSeconds())

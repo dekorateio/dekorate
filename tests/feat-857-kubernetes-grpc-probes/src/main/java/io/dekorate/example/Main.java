@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.utils;
+package io.dekorate.example;
 
-import io.dekorate.kubernetes.config.Probe;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public class Probes {
+@SpringBootApplication
+public class Main {
 
-  /**
-   * Checks if {@link Probe} has been configured.
-   * 
-   * @return true if {@link Probe} has been explicitly configured.
-   */
-  public static boolean isConfigured(Probe probe) {
-    return probe != null
-        && (Strings.isNotNullOrEmpty(probe.getHttpActionPath())
-            || Strings.isNotNullOrEmpty(probe.getExecAction())
-            || Strings.isNotNullOrEmpty(probe.getTcpSocketAction())
-            || Strings.isNotNullOrEmpty(probe.getGrpcAction()));
+  public static void main(String[] args) {
+    SpringApplication.run(Main.class, args);
   }
 }

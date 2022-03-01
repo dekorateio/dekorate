@@ -46,6 +46,15 @@ public @interface Probe {
   String tcpSocketAction() default "";
 
   /**
+   * The gRPC port to use for the probe (the format is "port").
+   * If the health endpoint is configured on a non-default service, you must also specify the service (the format
+   * is "port:service").
+   *
+   * @return The string representation of the gRPC probe.
+   */
+  String grpcAction() default "";
+
+  /**
    * The amount of time to wait in seconds before starting to probe.
    * 
    * @return The initial delay.

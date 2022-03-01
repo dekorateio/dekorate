@@ -23,6 +23,7 @@ import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.ExecAction;
+import io.fabric8.kubernetes.api.model.GRPCAction;
 import io.fabric8.kubernetes.api.model.HTTPGetAction;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.TCPSocketAction;
@@ -31,7 +32,6 @@ import io.fabric8.kubernetes.api.model.TCPSocketAction;
  * Base class for any kind of {@link Decorator} that acts on probes.
  */
 public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
-
   protected final Probe probe;
 
   abstract protected void doCreateProbe(ContainerFluent<?> container, Actions actions);
@@ -54,13 +54,14 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
 
     final ExecAction execAction = execAction(probe);
     final TCPSocketAction tcpSocketAction = tcpSocketAction(probe);
+    final GRPCAction grpcAction = grpcAction(probe);
     final boolean defaultToHttpGetAction = (execAction == null) && (tcpSocketAction == null);
     final HTTPGetAction httpGetAction = defaultToHttpGetAction ? httpGetAction(probe, container) : null;
     if (defaultToHttpGetAction && (httpGetAction == null)) {
       return;
     }
 
-    doCreateProbe(container, new Actions(execAction, tcpSocketAction, httpGetAction));
+    doCreateProbe(container, new Actions(execAction, tcpSocketAction, httpGetAction, grpcAction));
   }
 
   private ExecAction execAction(Probe probe) {
@@ -93,15 +94,40 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     return new TCPSocketAction(parts[0], new IntOrString(parts[1]));
   }
 
+  private GRPCAction grpcAction(Probe probe) {
+    String grpcActionExpression = probe.getGrpcAction();
+    if (Strings.isNullOrEmpty(grpcActionExpression)) {
+      return null;
+    }
+
+    try {
+      GRPCAction grpcAction;
+      if (grpcActionExpression.contains(":")) {
+        // both port and service is provided
+        String[] parts = grpcActionExpression.split(":");
+        grpcAction = new GRPCAction(Integer.valueOf(parts[0]), parts[1]);
+      } else {
+        grpcAction = new GRPCAction(Integer.valueOf(grpcActionExpression), null);
+      }
+
+      return grpcAction;
+    } catch (NumberFormatException ex) {
+      throw new RuntimeException("Wrong port format set in the gRPC probe. Got: " + grpcActionExpression, ex);
+    }
+  }
+
   protected static class Actions {
     protected final ExecAction execAction;
     protected final TCPSocketAction tcpSocketAction;
     protected final HTTPGetAction httpGetAction;
+    protected final GRPCAction grpcAction;
 
-    protected Actions(ExecAction execAction, TCPSocketAction tcpSocketAction, HTTPGetAction httpGetAction) {
+    protected Actions(ExecAction execAction, TCPSocketAction tcpSocketAction,
+        HTTPGetAction httpGetAction, GRPCAction grpcAction) {
       this.execAction = execAction;
       this.tcpSocketAction = tcpSocketAction;
       this.httpGetAction = httpGetAction;
+      this.grpcAction = grpcAction;
     }
   }
 }

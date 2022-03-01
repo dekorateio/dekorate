@@ -63,6 +63,7 @@
       <module>feat-kubernetes-probes</module>
       <module>feat-openshift-probes</module>
       <module>feat-knative-probes</module>
+      <module>feat-857-kubernetes-grpc-probes</module>
     </modules>
 
 </project>
