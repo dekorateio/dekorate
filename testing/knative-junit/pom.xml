@@ -1,32 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>knative-starters</artifactId>
+    <artifactId>testing</artifactId>
     <groupId>io.dekorate</groupId>
     <version>2.9-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>knative-junit-starter</artifactId>
-  <name>Dekorate :: Starters :: Knative :: Junit</name>
+  <artifactId>knative-junit</artifactId>
+  <name>Dekorate :: Testing :: Knative</name>
 
   <dependencies>
+
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>knative-junit</artifactId>
+      <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>core-junit</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>knative-annotations</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.sundr</groupId>
+      <artifactId>builder-annotations</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>      
+    </dependency>
+    <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${version.junit-jupiter}</version>
+      <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${version.junit-jupiter}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 

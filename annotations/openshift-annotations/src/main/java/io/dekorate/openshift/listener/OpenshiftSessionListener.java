@@ -49,7 +49,7 @@ public class OpenshiftSessionListener implements SessionListener, WithProject, W
   public void onClosed() {
     Session session = getSession();
     Project project = getProject();
-    // We ned to set the TTCL, becuase the KubenretesClient used in this part of
+    // We need to set the TTCL, becuase the KubenretesClient used in this part of
     // code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
     List<ProjectHook> hooks = new ArrayList<>();

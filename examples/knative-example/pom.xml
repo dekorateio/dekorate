@@ -43,6 +43,11 @@ limitations under the License.
     </dependency>
     <dependency>
       <groupId>io.dekorate</groupId>
+      <artifactId>docker-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
       <artifactId>dekorate-spring-boot</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -55,7 +60,7 @@ limitations under the License.
     <!-- Testing -->
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>knative-junit-starter</artifactId>
+      <artifactId>knative-junit</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -92,6 +97,25 @@ limitations under the License.
           <trimStackTrace>false</trimStackTrace>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${version.maven-failsafe-plugin}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <phase>integration-test</phase>
+            <configuration>
+              <includes>
+                <include>**/*IT.class</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -15,7 +15,6 @@
  */
 package io.dekorate.knative.apt;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -23,6 +22,8 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import io.dekorate.Logger;
+import io.dekorate.LoggerFactory;
 import io.dekorate.doc.Description;
 import io.dekorate.knative.annotation.KnativeApplication;
 import io.dekorate.processor.AbstractAnnotationProcessor;
@@ -31,22 +32,19 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 @SupportedAnnotationTypes("io.dekorate.knative.annotation.KnativeApplication")
 public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor {
 
+  private final Logger LOGGER = LoggerFactory.getLogger();
+
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }
-    Set<Element> mainClasses = new HashSet<>();
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        mainClasses.add(mainClass);
+        LOGGER.info("Found @KnativeApplication on: " + mainClass.toString());
+        process("knative", mainClass, KnativeApplication.class);
       }
-    }
-
-    for (Element mainClass : mainClasses) {
-      process("knative", mainClass, KnativeApplication.class);
     }
     return false;
   }
-
 }

@@ -17,6 +17,8 @@
 
 package io.dekorate.knative.listener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import io.dekorate.BuildService;
@@ -27,6 +29,9 @@ import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.hook.OrderedHook;
+import io.dekorate.hook.ProjectHook;
+import io.dekorate.hook.ResourcesApplyHook;
 import io.dekorate.knative.config.KnativeConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.project.Project;
@@ -38,8 +43,9 @@ public class KnativeSessionListener implements SessionListener, WithProject, Wit
 
   @Override
   public void onClosed() {
-    //We ned to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
+    //We need to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
     ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+    List<ProjectHook> hooks = new ArrayList<>();
     try {
       Session session = getSession();
       Project project = getProject();
@@ -63,8 +69,16 @@ public class KnativeSessionListener implements SessionListener, WithProject, Wit
           hook.register();
         }
       });
+
+      if (config.isAutoDeployEnabled()) {
+        hooks.add(new ResourcesApplyHook(getProject(), KNATIVE, "kubectl"));
+      }
     } finally {
       Thread.currentThread().setContextClassLoader(tccl);
+      if (!hooks.isEmpty()) {
+        OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
+        hook.register();
+      }
     }
   }
 }
