@@ -314,7 +314,7 @@ Or via configuration properties at the file `application.properties`:
     dekorate.kubernetes.jobs[0].name=say-hello
     dekorate.kubernetes.jobs[0].containers[0].image=docker.io/user/hello
 
-Currently, the supported annotations for adding Kubernetes Jobs are:
+Currently, the supported annotations for adding jobs are:
 
 - @KubernetesApplication
 - @OpenShiftApplication
