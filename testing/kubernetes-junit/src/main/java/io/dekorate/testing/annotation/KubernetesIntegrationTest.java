@@ -47,7 +47,7 @@ public @interface KubernetesIntegrationTest {
   boolean deployEnabled() default true;
 
   /**
-   * Flag to define whether the extension should automatically apply resources.
+   * Flag to define whether the extension should automatically perform container builds.
    * 
    * @return True, if extensions should automatically perform container builds.
    */

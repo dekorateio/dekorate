@@ -15,23 +15,37 @@
  */
 package io.dekorate.testing.openshift;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import io.dekorate.testing.WithIntegrationTestConfig;
 import io.dekorate.testing.openshift.adapter.OpenshiftIntegrationTestConfigAdapter;
 import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
 import io.dekorate.testing.openshift.config.OpenshiftIntegrationTestConfig;
 import io.dekorate.testing.openshift.config.OpenshiftIntegrationTestConfigBuilder;
 
-public interface WithOpenshiftIntegrationTest {
+public interface WithOpenshiftIntegrationTest extends WithIntegrationTestConfig {
 
-  OpenshiftIntegrationTestConfig DEFAULT_OPENSHIFT_INTEGRATION_TEST_CONFIG = new OpenshiftIntegrationTestConfigBuilder()
+  OpenshiftIntegrationTestConfigBuilder DEFAULT_INTEGRATION_TEST_CONFIG = new OpenshiftIntegrationTestConfigBuilder()
       .withImageStreamTagTimeout(120000L)
-      .withReadinessTimeout(500000L)
-      .build();
+      .withReadinessTimeout(500000L);
 
   default OpenshiftIntegrationTestConfig getOpenshiftIntegrationTestConfig(ExtensionContext context) {
-    return context.getElement()
-        .map(e -> OpenshiftIntegrationTestConfigAdapter.adapt(e.getAnnotation(OpenshiftIntegrationTest.class)))
-        .orElse(DEFAULT_OPENSHIFT_INTEGRATION_TEST_CONFIG);
+    OpenshiftIntegrationTestConfigBuilder builder = context.getElement()
+        .map(e -> OpenshiftIntegrationTestConfigAdapter.newBuilder(e.getAnnotation(OpenshiftIntegrationTest.class)))
+        .orElse(DEFAULT_INTEGRATION_TEST_CONFIG);
+
+    // from user properties
+    getDeployEnabledFromProperties().ifPresent(builder::withDeployEnabled);
+    getBuildEnabledFromProperties().ifPresent(builder::withBuildEnabled);
+    Optional.ofNullable(System.getProperty("dekorate.test.openshift.push.enabled")).map(Boolean::parseBoolean)
+        .ifPresent(builder::withPushEnabled);
+    Optional.ofNullable(System.getProperty("dekorate.test.openshift.image-stream.timeout")).map(Long::parseLong)
+        .ifPresent(builder::withImageStreamTagTimeout);
+    getReadinessTimeoutFromProperties().ifPresent(builder::withReadinessTimeout);
+    getAdditionalModulesFromProperties().ifPresent(builder::withAdditionalModules);
+
+    return builder.build();
   }
 }
