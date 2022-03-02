@@ -19,6 +19,12 @@
 
   <dependencies>
 
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>openshift-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>io.dekorate</groupId>
