@@ -151,7 +151,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
     if (!config.isScaleToZeroEnabled()) {
       resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_AUTOSCALER, KNATIVE_SERVING));
       resourceRegistry.decorate(KNATIVE, new AddConfigMapDataDecorator(CONFIG_AUTOSCALER, "enable-scale-to-zero",
-          String.valueOf(config.isAutoDeployEnabled())));
+          String.valueOf(config.isScaleToZeroEnabled())));
     }
 
     if (Strings.isNotNullOrEmpty(config.getRevisionName())) {

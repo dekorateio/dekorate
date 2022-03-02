@@ -10,6 +10,7 @@ Dekorate provides two junit5 extensions for:
 
 - Kubernetes
 - OpenShift
+- Knative
 
 These extensions are `dekorate` aware and can read generated resources and configuration, in order to manage `end to end` tests
 for the annotated applications.
@@ -167,6 +168,98 @@ class OpenShiftIT {
 - [spring boot on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-openshift-example)
 - [spring boot with groovy on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-groovy-on-openshift-example)
 - [spring boot with gradle on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-gradle-on-openshift-example)
+
+#### Knative extension for JUnit5
+
+The knative extension can be used by adding the following dependency:
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>knative-junit</artifactId>
+  <version>{{site.data.project.release.current-version}}</version>
+</dependency>
+```    
+This dependency gives access to [@KnativeIntegrationTest](testing/knative-junit/src/main/java/io/dekorate/testing/annotation/KnativeIntegrationTest.java) which is what enables the extension for your tests.
+
+By adding the annotation to your test class the following things will happen:
+
+1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
+2. If `@EnableDockerBuild` is present in the project, a docker build will be triggered.
+3. All generated manifests will be applied.
+4. Will wait until applied resources and the Knative services are ready.
+5. Dependencies will be injected (e.g. KnativeClient, Service, Knative Routes, etc)
+6. Test will run
+7. Applied resources will be removed.
+
+##### Dependency injection
+
+In addition to the supported items from the Kubernetes JUnit 5 extension, the following resources can be injected:
+
+- KnativeClient
+- Knative Service
+- Knative Route (or the URL of the Knative route)
+
+To inject one of this you need a field in the code annotated with [@Inject](testing/core-junit/src/main/java/io/dekorate/testing/annotation/Inject.java).
+
+For example:
+```java
+@Inject
+KnativeClient client;
+```    
+When injecting the URL of a Route, it's likely we need to specify the route name. For example, if the deployment is named `hello-world` then you can do something like:
+```java
+@Inject
+@Named("hello-world")
+URL knativeAppRouteUrl;
+```
+Note: It is highly recommended to also add `maven-failsafe-plugin` configuration so that integration tests only run in the `integration-test` phase.
+This is important since in the `test` phase the application is not packaged. Here's an example of how it you can configure the project:
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-failsafe-plugin</artifactId>
+  <version>${version.maven-failsafe-plugin}</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>integration-test</goal>
+        <goal>verify</goal>
+      </goals>
+      <phase>integration-test</phase>
+      <configuration>
+        <includes>
+          <include>**/*IT.class</include>
+        </includes>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
+
+##### Integration Test Configuration
+
+We can customize the deployment configuration within the test execution using the Knative integration test annotation:
+
+```java
+@KnativeIntegrationTest(deployEnabled = true,
+  buildEnabled = true,
+  readinessTimeout = 300000,
+  additionalModules = {} 
+)
+class KnativeIT {
+    // ...
+}
+```
+
+| Field                 | Type     | Description                                                                         | Overridable using System Property | Default Value |
+|-----------------------|----------|-------------------------------------------------------------------------------------|-----------------------------------|---------------|
+| deployEnabled         | boolean  | Flag to define whether the extension should automatically apply resources.          | dekorate.test.deploy.enabled      |          true |
+| buildEnabled          | boolean  | Flag to define whether the extension should automatically perform container builds. | dekorate.test.build.enabled       |          true |
+| readinessTimeout      | long     | The amount of time in milliseconds to wait for application to become ready.         | dekorate.test.readiness.timeout   |        300000 |
+| additionalModules     | String[] | List of additional modules to be loaded by the test framework.                      | dekorate.test.additional-modules  |               |
+
+##### related examples
+- [knative example](https://github.com/dekorateio/dekorate/tree/main/examples/knative-example)
 
 #### Configuration externalization
 It is often desired to externalize configuration in configuration files, instead of hard coding things inside annotations.

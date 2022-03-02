@@ -15,6 +15,7 @@
   <modules>
     <module>openshift-junit</module>
     <module>kubernetes-junit</module>
+    <module>knative-junit</module>
     <module>core-junit</module>
   </modules>
 

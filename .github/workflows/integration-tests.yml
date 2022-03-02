@@ -84,10 +84,14 @@ jobs:
           kubectl create -f https://operatorhub.io/install/service-binding-operator.yaml
           until [[ "Succeeded" == `kubectl get csv -n operators | grep service-binding-operator | awk -F' ' '{print $7}'` ]]; do echo "Waiting for SBO"; sleep 5; done
           kubectl get csv -n operators | grep service-binding-operator | awk -F" " '{print $7}'
+      - name: Install Knative
+        run: |
+          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-crds.yaml
+          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-core.yaml
       - name: Install and Run Integration Tests
         run: |
           eval $(minikube docker-env)
-          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Duser.name=noregistry -Dformat.skip=true -Dkubernetes.image-pull-policy=IfNotPresent
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Pwith-knative-examples -Duser.name=noregistry -Dformat.skip=true -Dkubernetes.image-pull-policy=IfNotPresent
 
   openshift:
     name: Openshift Build
