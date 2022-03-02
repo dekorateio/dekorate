@@ -17,20 +17,28 @@ package io.dekorate.testing.kubernetes;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import io.dekorate.testing.WithIntegrationTestConfig;
 import io.dekorate.testing.adapter.KubernetesIntegrationTestConfigAdapter;
 import io.dekorate.testing.annotation.KubernetesIntegrationTest;
-import io.dekorate.testing.config.KubernetesIntegrationTestConfig;
+import io.dekorate.testing.config.EditableKubernetesIntegrationTestConfig;
 import io.dekorate.testing.config.KubernetesIntegrationTestConfigBuilder;
 
-public interface WithKubernetesIntegrationTestConfig {
+public interface WithKubernetesIntegrationTestConfig extends WithIntegrationTestConfig {
 
-  KubernetesIntegrationTestConfig DEFAULT_KUBERNETES_INTEGRATION_TEST_CONFIG = new KubernetesIntegrationTestConfigBuilder()
-      .withReadinessTimeout(500000)
-      .build();
+  KubernetesIntegrationTestConfigBuilder DEFAULT_INTEGRATION_TEST_CONFIG = new KubernetesIntegrationTestConfigBuilder()
+      .withReadinessTimeout(500000);
 
-  default KubernetesIntegrationTestConfig getKubernetesIntegrationTestConfig(ExtensionContext context) {
-    return context.getElement()
-        .map(e -> KubernetesIntegrationTestConfigAdapter.adapt(e.getAnnotation(KubernetesIntegrationTest.class)))
-        .orElse(DEFAULT_KUBERNETES_INTEGRATION_TEST_CONFIG);
+  default EditableKubernetesIntegrationTestConfig getKubernetesIntegrationTestConfig(ExtensionContext context) {
+    KubernetesIntegrationTestConfigBuilder builder = context.getElement()
+        .map(e -> KubernetesIntegrationTestConfigAdapter.newBuilder(e.getAnnotation(KubernetesIntegrationTest.class)))
+        .orElse(DEFAULT_INTEGRATION_TEST_CONFIG);
+
+    // from user properties
+    getDeployEnabledFromProperties().ifPresent(builder::withDeployEnabled);
+    getBuildEnabledFromProperties().ifPresent(builder::withBuildEnabled);
+    getReadinessTimeoutFromProperties().ifPresent(builder::withReadinessTimeout);
+    getAdditionalModulesFromProperties().ifPresent(builder::withAdditionalModules);
+
+    return builder.build();
   }
 }

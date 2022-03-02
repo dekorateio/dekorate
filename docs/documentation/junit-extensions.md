@@ -91,7 +91,29 @@ This is important since in the `test` phase the application is not packaged. Her
 </plugin>
 ```
 
-#### related examples
+##### Integration Test Configuration
+
+We can customize the deployment configuration within the test execution using the Kubernetes integration test annotation:
+
+```java
+@KubernetesIntegrationTest(deployEnabled = true,
+  buildEnabled = true,
+  readinessTimeout = 300000,
+  additionalModules = {} 
+)
+class KubernetesIT {
+    // ...
+}
+```
+
+| Field                 | Type     | Description                                                                         | Overridable using System Property | Default Value |
+|-----------------------|----------|-------------------------------------------------------------------------------------|-----------------------------------|---------------|
+| deployEnabled         | boolean  | Flag to define whether the extension should automatically apply resources.          | dekorate.test.deploy.enabled      |          true |
+| buildEnabled          | boolean  | Flag to define whether the extension should automatically perform container builds. | dekorate.test.build.enabled       |          true |
+| readinessTimeout      | long     | The amount of time in milliseconds to wait for application to become ready.         | dekorate.test.readiness.timeout   |        300000 |
+| additionalModules     | String[] | List of additional modules to be loaded by the test framework.                      | dekorate.test.additional-modules  |               |
+
+##### related examples
 - [spring boot on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-kubernetes-example)
 
 #### OpenShift extension for JUnit5
@@ -115,7 +137,33 @@ By adding the annotation to your test class the following things will happen:
 6. Test will run
 7. Applied resources will be removed.
 
-#### related examples
+##### Integration Test Configuration
+
+We can customize the deployment configuration within the test execution using the OpenShift integration test annotation:
+
+```java
+@OpenshiftIntegrationTest(deployEnabled = true,
+  buildEnabled = true,
+  pushEnabled = false,
+  imageStreamTagTimeout = 120000,
+  readinessTimeout = 300000,
+  additionalModules = {} 
+)
+class OpenShiftIT {
+    // ...
+}
+```
+
+| Field                 | Type     | Description                                                                         | Overridable using System Property            | Default Value |
+|-----------------------|----------|-------------------------------------------------------------------------------------|----------------------------------------------|---------------|
+| deployEnabled         | boolean  | Flag to define whether the extension should automatically apply resources.          | dekorate.test.deploy.enabled                 |          true |
+| buildEnabled          | boolean  | Flag to define whether the extension should automatically perform container builds. | dekorate.test.build.enabled                  |          true |
+| pushEnabled           | boolean  | Flag to define whether the extension should automatically push image.               | dekorate.test.openshift.push.enabled         |         false |
+| imageStreamTagTimeout | long     | The amount of time in seconds to wait for the image stream tags to be available.    | dekorate.test.openshift.image-stream.timeout |        120000 |
+| readinessTimeout      | long     | The amount of time in milliseconds to wait for application to become ready.         | dekorate.test.readiness.timeout              |        300000 |
+| additionalModules     | String[] | List of additional modules to be loaded by the test framework.                      | dekorate.test.additional-modules             |               |
+
+##### related examples
 - [spring boot on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-openshift-example)
 - [spring boot with groovy on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-groovy-on-openshift-example)
 - [spring boot with gradle on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-gradle-on-openshift-example)
@@ -285,3 +333,4 @@ Doing so, the test framework will locate the Dekorate manifests that have been p
 ##### related examples
 - [Multi-Module projects on OpenShift example](https://github.com/dekorateio/dekorate/tree/main/examples/multimodule-projects-on-openshift-example)
 - [Multi-Module projects on Kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/multimodule-projects-on-kubernetes-example)
+
