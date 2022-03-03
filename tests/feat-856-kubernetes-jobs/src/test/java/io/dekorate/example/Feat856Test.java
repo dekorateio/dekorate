@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +50,22 @@ public class Feat856Test {
     assertEquals(EXPECTED_JOB_NAME, job.getMetadata().getName());
     assertEquals(EXPECTED_IMAGE_NAME, job.getSpec().getTemplate().getSpec().getContainers().get(0).getName());
     assertEquals(EXPECTED_IMAGE, job.getSpec().getTemplate().getSpec().getContainers().get(0).getImage());
+
+    // verify volumes
+    assertVolume(job, "secret", v -> v.getSecret().getSecretName().equals("secretName"));
+    assertVolume(job, "pvc", v -> v.getPersistentVolumeClaim().getClaimName().equals("claimName"));
+    assertVolume(job, "configMap", v -> v.getConfigMap().getName().equals("configMapName"));
+    assertVolume(job, "awsElastic", v -> v.getAwsElasticBlockStore().getVolumeID().equals("volumeId")
+        && v.getAwsElasticBlockStore().getPartition().equals(3));
+    assertVolume(job, "azureDisk", v -> v.getAzureDisk().getDiskName().equals("diskName")
+        && v.getAzureDisk().getDiskURI().equals("diskURI"));
+    assertVolume(job, "azureFile", v -> v.getAzureFile().getShareName().equals("shareName")
+        && v.getAzureFile().getSecretName().equals("secretName"));
+  }
+
+  private void assertVolume(Job job, String name, Predicate<Volume> assertion) {
+    assertTrue(job.getSpec().getTemplate().getSpec().getVolumes().stream()
+        .anyMatch(v -> v.getName().equals(name) && assertion.test(v)));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

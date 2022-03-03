@@ -17,19 +17,25 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.AzureDiskVolume;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
 @Description("Add an Azure disk volume to the pod spec.")
-public class AddAzureDiskVolumeDecorator extends Decorator<PodSpecBuilder> {
+public class AddAzureDiskVolumeDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
   private final AzureDiskVolume volume;
 
   public AddAzureDiskVolumeDecorator(AzureDiskVolume volume) {
+    this(ANY, volume);
+  }
+
+  public AddAzureDiskVolumeDecorator(String name, AzureDiskVolume volume) {
+    super(name);
     this.volume = volume;
   }
 
   @Override
-  public void visit(PodSpecBuilder podSpec) {
+  public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
     podSpec.addNewVolume()
         .withName(volume.getVolumeName())
         .withNewAzureDisk()
@@ -41,6 +47,5 @@ public class AddAzureDiskVolumeDecorator extends Decorator<PodSpecBuilder> {
         .withReadOnly(volume.isReadOnly())
         .endAzureDisk()
         .endVolume();
-
   }
 }

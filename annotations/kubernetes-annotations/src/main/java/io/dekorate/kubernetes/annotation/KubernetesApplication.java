@@ -168,12 +168,12 @@ public @interface KubernetesApplication {
   SecretVolume[] secretVolumes() default {};
 
   /**
-   * ConfigMap volumues to add to all containers.
+   * The ConfigMap volumes to add to all containers.
    */
   ConfigMapVolume[] configMapVolumes() default {};
 
   /**
-   * Git repo volumues to add to all containers.
+   * Git repo volumes to add to all containers.
    */
   GitRepoVolume[] gitRepoVolumes() default {};
 

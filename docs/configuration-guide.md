@@ -192,6 +192,12 @@ The section below describes all the available subtypes.
 | suspend               | boolean | Suspend specifies whether the Job controller should create Pods or not.                           |         false |
 | restartPolicy         | String  | Restart policy when the job container fails. Options: OnFailure, Never                            |     OnFailure |
 | containers            | Container[]  | The containers to be run within the Job execution.                                           |  ( see Container ) |
+| pvc-volumes           | PersistentVolumeClaimVolume[] | PersistentVolumeClaim volumes to add to all containers.                     |                    |
+| secret-volumes        | SecretVolume[] | Secret volumes to add to all containers.                                                   |                    |
+| config-map-volumes    | ConfigMapVolume[] | ConfigMap volumes to add to all containers.                                             |                    |
+| aws-elastic-block-store-volumes    | AwsElasticBlockStoreVolume[] | Aws elastic block store volumes to add to all containers.       |                    |
+| azure-disk-volumes    | AzureDiskVolume[] | Azure disk volumes to add.                                                              |                    |
+| azure-file-volumes    | AzureFileVolume[] | Azure file volumes to add.                                                              |                    |
 
 ### Mounts and Volumes
 #### Mount

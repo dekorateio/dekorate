@@ -17,19 +17,25 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
 @Description("Add a persistent volume claim volume to all pod specs.")
-public class AddPvcVolumeDecorator extends Decorator<PodSpecBuilder> {
+public class AddPvcVolumeDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
   private final PersistentVolumeClaimVolume volume;
 
   public AddPvcVolumeDecorator(PersistentVolumeClaimVolume volume) {
+    this(ANY, volume);
+  }
+
+  public AddPvcVolumeDecorator(String name, PersistentVolumeClaimVolume volume) {
+    super(name);
     this.volume = volume;
   }
 
   @Override
-  public void visit(PodSpecBuilder podSpec) {
+  public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
     podSpec.addNewVolume()
         .withName(volume.getVolumeName())
         .withNewPersistentVolumeClaim()
@@ -37,6 +43,5 @@ public class AddPvcVolumeDecorator extends Decorator<PodSpecBuilder> {
         .withReadOnly(volume.isReadOnly())
         .endPersistentVolumeClaim()
         .endVolume();
-
   }
 }

@@ -17,19 +17,25 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.AzureFileVolume;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
 @Description("Add an Azure File volume to the Pod spec.")
-public class AddAzureFileVolumeDecorator extends Decorator<PodSpecBuilder> {
+public class AddAzureFileVolumeDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
   private final AzureFileVolume volume;
 
   public AddAzureFileVolumeDecorator(AzureFileVolume volume) {
+    this(ANY, volume);
+  }
+
+  public AddAzureFileVolumeDecorator(String name, AzureFileVolume volume) {
+    super(name);
     this.volume = volume;
   }
 
   @Override
-  public void visit(PodSpecBuilder podSpec) {
+  public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
     podSpec.addNewVolume()
         .withName(volume.getVolumeName())
         .withNewAzureFile()
@@ -38,6 +44,5 @@ public class AddAzureFileVolumeDecorator extends Decorator<PodSpecBuilder> {
         .withReadOnly(volume.isReadOnly())
         .endAzureFile()
         .endVolume();
-
   }
 }

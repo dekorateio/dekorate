@@ -83,6 +83,36 @@ public @interface Job {
   JobRestartPolicy restartPolicy() default JobRestartPolicy.OnFailure;
 
   /**
+   * PersistentVolumeClaim volumes to add to all containers.
+   */
+  PersistentVolumeClaimVolume[] pvcVolumes() default {};
+
+  /**
+   * Secret volumes to add to all containers.
+   */
+  SecretVolume[] secretVolumes() default {};
+
+  /**
+   * The ConfigMap volumes to add to all containers.
+   */
+  ConfigMapVolume[] configMapVolumes() default {};
+
+  /**
+   * Aws elastic block store volumes to add to all containers
+   */
+  AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes() default {};
+
+  /**
+   * Azure disk volumes to add
+   */
+  AzureDiskVolume[] azureDiskVolumes() default {};
+
+  /**
+   * Azure file volumes to add
+   */
+  AzureFileVolume[] azureFileVolumes() default {};
+
+  /**
    * The containers to be run within the Job execution.
    *
    * @return the list of containers.

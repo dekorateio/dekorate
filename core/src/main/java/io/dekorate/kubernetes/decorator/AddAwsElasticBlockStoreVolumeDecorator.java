@@ -17,19 +17,25 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
-import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
 @Description("Add an elastic block store volume to the pod spec.")
-public class AddAwsElasticBlockStoreVolumeDecorator extends Decorator<PodSpecBuilder> {
+public class AddAwsElasticBlockStoreVolumeDecorator extends NamedResourceDecorator<PodSpecFluent<?>> {
 
   private final AwsElasticBlockStoreVolume volume;
 
   public AddAwsElasticBlockStoreVolumeDecorator(AwsElasticBlockStoreVolume volume) {
+    this(ANY, volume);
+  }
+
+  public AddAwsElasticBlockStoreVolumeDecorator(String name, AwsElasticBlockStoreVolume volume) {
+    super(name);
     this.volume = volume;
   }
 
   @Override
-  public void visit(PodSpecBuilder podSpec) {
+  public void andThenVisit(PodSpecFluent<?> podSpec, ObjectMeta resourceMeta) {
     podSpec.addNewVolume()
         .withName(volume.getVolumeName())
         .withNewAwsElasticBlockStore()
