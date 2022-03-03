@@ -10,7 +10,7 @@ The fast way to get started is to add the following dependency to your spring-bo
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>kubernetes-spring-starter</artifactId>
-      <version>2.8-SNAPSHOT</version>
+      <version>2.8.1</version>
     </dependency>
     
 This should be enough to get `dekorate` to generate kubernets manifests under `target/classes/META-INF/dekorate/`.
@@ -60,7 +60,7 @@ You will need to add dependency below as a supplement or replacement of `kuberne
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>openshift-spring-starter</artifactId>
-      <version>2.8-SNAPSHOT</version>
+      <version>2.8.1</version>
     </dependency>
  
 When `-Ddekorate.deploy=true` is detected and `openshift-spring-starter` is available, an binary build will take place.

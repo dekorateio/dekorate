@@ -12,7 +12,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-annotations</artifactId>
-  <version>2.8-SNAPSHOT</version>
+  <version>2.8.1</version>
 </dependency>
 ```
 
