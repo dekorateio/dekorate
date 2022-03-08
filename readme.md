@@ -540,7 +540,7 @@ This is possible when using git over https, but not possible when using git over
 but have 3d-party tools use `https` instead. To force dekorate covnert vcs urls to `https` one case use the `httpsPreferred` parameter of `@VcsOptions`.
 Or using properties:
 
-    dekoarate.vcs.https-preferred=true
+    dekorate.vcs.https-preferred=true
 
 
 #### Jvm Options
