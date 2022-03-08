@@ -18,10 +18,8 @@ package io.dekorate.knative.manifest;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesManifestGenerator;
-import io.dekorate.BuildServiceFactories;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.ResourceRegistry;
-import io.dekorate.WithProject;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.knative.config.AutoScalerClass;
 import io.dekorate.knative.config.AutoscalingMetric;
@@ -57,7 +55,6 @@ import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.kubernetes.config.ImageConfiguration;
-import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.LabelBuilder;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.config.SecretVolume;
@@ -81,7 +78,7 @@ import io.fabric8.knative.serving.v1.Service;
 import io.fabric8.knative.serving.v1.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
-public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerator<KnativeConfig> implements WithProject {
+public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerator<KnativeConfig> {
 
   private static final String KNATIVE = "knative";
   private static final String KNATIVE_SERVING = "knative-serving";
@@ -92,15 +89,12 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
   private static final String KNATIVE_VISIBILITY = "serving.knative.dev/visibility";
   private static final String CLUSTER_LOCAL = "cluster-local";
 
-  private final ConfigurationRegistry configurationRegistry;
-
   public KnativeManifestGenerator() {
     this(new ResourceRegistry(), new ConfigurationRegistry());
   }
 
   public KnativeManifestGenerator(ResourceRegistry resourceRegistry, ConfigurationRegistry configurationRegistry) {
-    super(resourceRegistry);
-    this.configurationRegistry = configurationRegistry;
+    super(resourceRegistry, configurationRegistry);
   }
 
   @Override
@@ -299,7 +293,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
    * @return The deployment config.
    */
   public Service createService(KnativeConfig config) {
-    ImageConfiguration imageConfig = getImageConfiguration(getProject(), config, configurationRegistry);
+    ImageConfiguration imageConfig = getImageConfiguration(config);
 
     String image = Strings
         .isNotNullOrEmpty(imageConfig.getImage())
@@ -331,32 +325,5 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
       return false;
     }
     return true;
-  }
-
-  private static ImageConfiguration getImageConfiguration(Project project, KnativeConfig config,
-      ConfigurationRegistry configurationRegistry) {
-    return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(config, i))
-        .orElse(ImageConfiguration.from(config));
-  }
-
-  private static ImageConfiguration merge(KnativeConfig config, ImageConfiguration imageConfig) {
-    if (config == null) {
-      throw new NullPointerException("KnativeConfig is null.");
-    }
-    if (imageConfig == null) {
-      return ImageConfiguration.from(config);
-    }
-    return new ImageConfigurationBuilder()
-        .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
-        .withImage(imageConfig.getImage() != null ? imageConfig.getImage() : null)
-        .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
-        .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
-        .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
-        .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
-        .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : null)
-        .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
-        .withAutoPushEnabled(
-            imageConfig.isAutoPushEnabled() && imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoPushEnabled() : false)
-        .build();
   }
 }

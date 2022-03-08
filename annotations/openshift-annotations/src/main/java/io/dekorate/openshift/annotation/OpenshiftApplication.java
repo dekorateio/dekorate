@@ -86,6 +86,14 @@ public @interface OpenshiftApplication {
   String version() default "";
 
   /**
+   * The kind of the deployment resource to use.
+   * Supported values are 'DeploymentConfig', 'Deployment', 'StatefulSet', 'Job' and 'CronJob' defaulting to the first.
+   *
+   * @return The deployment kind resource.
+   */
+  String deploymentKind() default "DeploymentConfig";
+
+  /**
    * The init containers.
    * 
    * @return the init containers.

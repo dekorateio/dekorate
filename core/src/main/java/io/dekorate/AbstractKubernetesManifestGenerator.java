@@ -15,6 +15,12 @@
  */
 package io.dekorate;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.config.Annotation;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
@@ -26,6 +32,8 @@ import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.kubernetes.config.Job;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
 import io.dekorate.kubernetes.config.Mount;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.config.Port;
@@ -62,6 +70,8 @@ import io.dekorate.kubernetes.decorator.RemoveProbesFromInitContainerDecorator;
 import io.dekorate.utils.Labels;
 import io.dekorate.utils.Probes;
 import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 /**
  * An abstract generator.
@@ -69,12 +79,14 @@ import io.dekorate.utils.Strings;
  * 
  * @param <C> The config type (its expected to vary between processors).
  */
-public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> implements ManifestGenerator<C> {
+public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> implements ManifestGenerator<C>, WithProject {
 
   protected final ResourceRegistry resourceRegistry;
+  protected final ConfigurationRegistry configurationRegistry;
 
-  public AbstractKubernetesManifestGenerator(ResourceRegistry resources) {
+  public AbstractKubernetesManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurators) {
     this.resourceRegistry = resources;
+    this.configurationRegistry = configurators;
   }
 
   /**
@@ -89,7 +101,7 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
    * This method will read the config and then add all the required decorator to the resources.
    * The method is intended to be called from the generate method and thus marked as protected.
    * 
-   * @param group The group..
+   * @param group The group.
    * @param config The config.
    */
   protected void addDecorators(String group, C config) {
@@ -254,6 +266,34 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     resourceRegistry.decorate(group, new RemoveProbesFromInitContainerDecorator());
   }
 
+  protected void initializeRegistry(BaseConfig config) {
+    String group = getKey();
+    String deploymentKind = config.getDeploymentKind();
+
+    Optional<HasMetadata> existingDeployment = resourceRegistry.groups().getOrDefault(group, new KubernetesListBuilder())
+        .buildItems().stream()
+        .filter(i -> Strings.isNotNullOrEmpty(i.getKind()) && i.getKind().equalsIgnoreCase(deploymentKind))
+        .filter(i -> i.getMetadata().getName().equals(config.getName()))
+        .findAny();
+
+    if (!existingDeployment.isPresent()) {
+      Map<String, ResourceFactory> factories = loadFactories();
+      ResourceFactory factory = factories.get(deploymentKind);
+      if (factory == null) {
+        throw new RuntimeException(String.format("Unrecognised deployment kind '%s'. Options are: %s", deploymentKind,
+            factories.keySet()));
+      }
+
+      resourceRegistry.add(group, factory.create(this, config));
+    }
+  }
+
+  public ImageConfiguration getImageConfiguration(BaseConfig config) {
+    return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(getProject()))
+        .map(i -> merge(config, i))
+        .orElse(ImageConfiguration.from(config));
+  }
+
   protected static void validateVolume(SecretVolume volume) {
     if (Strings.isNullOrEmpty(volume.getVolumeName())) {
       throw new IllegalArgumentException("Secret volume requires volumeName().");
@@ -278,5 +318,33 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       throw new IllegalArgumentException("ConfigMap volume: " + volume.getVolumeName() + ". Illegal defaultMode: "
           + volume.getDefaultMode() + ". Should be between: 0000 and 0777!");
     }
+  }
+
+  private static Map<String, ResourceFactory> loadFactories() {
+    ServiceLoader<ResourceFactory> factories = ServiceLoader.load(ResourceFactory.class,
+        ResourceFactory.class.getClassLoader());
+    return StreamSupport.stream(factories.spliterator(), false)
+        .collect(Collectors.toMap(f -> f.kind(), f -> f));
+  }
+
+  private static ImageConfiguration merge(BaseConfig config, ImageConfiguration imageConfig) {
+    if (config == null) {
+      throw new NullPointerException("BaseConfig is null.");
+    }
+    if (imageConfig == null) {
+      return ImageConfiguration.from(config);
+    }
+    return new ImageConfigurationBuilder()
+        .withProject(imageConfig.getProject() != null ? imageConfig.getProject() : config.getProject())
+        .withImage(imageConfig.getImage() != null ? imageConfig.getImage() : null)
+        .withGroup(imageConfig.getGroup() != null ? imageConfig.getGroup() : null)
+        .withName(imageConfig.getName() != null ? imageConfig.getName() : config.getName())
+        .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : config.getVersion())
+        .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : null)
+        .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : "Dockerfile")
+        .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
+        .withAutoPushEnabled(
+            imageConfig.isAutoPushEnabled() && imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoPushEnabled() : false)
+        .build();
   }
 }

@@ -66,6 +66,14 @@ public @interface KubernetesApplication {
   String version() default "";
 
   /**
+   * The kind of the deployment resource to use.
+   * Supported values are 'Deployment', 'StatefulSet', 'Job' and 'CronJob' defaulting to the first.
+   * 
+   * @return The deployment kind resource.
+   */
+  String deploymentKind() default "Deployment";
+
+  /**
    * The init containers.
    * 
    * @return the init containers.

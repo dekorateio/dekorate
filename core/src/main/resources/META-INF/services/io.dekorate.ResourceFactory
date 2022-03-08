@@ -1,0 +1,4 @@
+io.dekorate.kubernetes.decorator.DeploymentResourceFactory
+io.dekorate.kubernetes.decorator.StatefulSetResourceFactory
+io.dekorate.kubernetes.decorator.JobResourceFactory
+io.dekorate.kubernetes.decorator.CronJobResourceFactory

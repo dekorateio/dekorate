@@ -30,7 +30,7 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
 
   private static final List<String> DEPLOYMENT_KINDS = Arrays.asList("Deployment", "DeploymentConfig", "Service", "StatefulSet",
-      "Pipeline", "Task");
+      "Pipeline", "Task", "Job", "CronJob");
 
   protected static final String ANY = null;
 
