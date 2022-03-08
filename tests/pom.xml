@@ -66,6 +66,10 @@
       <module>feat-856-kubernetes-jobs</module>
       <module>feat-856-openshift-jobs</module>
       <module>feat-857-kubernetes-grpc-probes</module>
+      <module>feat-886-kubernetes-deployment-kind-with-statefulset</module>
+      <module>feat-886-kubernetes-deployment-kind-with-job</module>
+      <module>feat-886-kubernetes-deployment-kind-with-cronjob</module>
+      <module>feat-886-openshift-deployment-kind-with-deployment</module>
     </modules>
 
 </project>

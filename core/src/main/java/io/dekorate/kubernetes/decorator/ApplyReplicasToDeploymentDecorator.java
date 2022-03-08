@@ -28,15 +28,16 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecFluent;
 
 @Description("Apply the number of replicas to the DeploymentSpec.")
-public class ApplyReplicasDecorator extends NamedResourceDecorator<DeploymentSpecFluent> implements WithConfigReferences {
+public class ApplyReplicasToDeploymentDecorator extends NamedResourceDecorator<DeploymentSpecFluent>
+    implements WithConfigReferences {
 
   private final int replicas;
 
-  public ApplyReplicasDecorator(int replicas) {
+  public ApplyReplicasToDeploymentDecorator(int replicas) {
     this(ANY, replicas);
   }
 
-  public ApplyReplicasDecorator(String deploymentName, int replicas) {
+  public ApplyReplicasToDeploymentDecorator(String deploymentName, int replicas) {
     super(deploymentName);
     this.replicas = replicas;
   }

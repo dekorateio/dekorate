@@ -69,6 +69,13 @@ import io.sundr.builder.annotations.Pojo;
   String version() default "";
 
   /**
+   * The kind of the deployment resource to use.
+   * 
+   * @return The deployment kind resource.
+   */
+  String deploymentKind() default "Deployment";
+
+  /**
    * Custom labels to add to all resources.
    * 
    * @return The labels.
