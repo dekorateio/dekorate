@@ -177,11 +177,11 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
             try {
               HasMetadata r = client.resource(i).fromServer().get();
               if (r == null) {
-                client.resource(i).apply();
+                client.resource(i).createOrReplace();
               } else if (r instanceof ImageStream) {
                 //let's not delete image streams at this point
               } else if (deleteAndWait(context, i, 1, TimeUnit.MINUTES)) {
-                client.resource(i).apply();
+                client.resource(i).createOrReplace();
               }
             } catch (Exception e) {
               e.printStackTrace(System.err);
