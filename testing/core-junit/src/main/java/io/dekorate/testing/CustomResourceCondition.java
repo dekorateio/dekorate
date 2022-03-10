@@ -18,6 +18,7 @@ package io.dekorate.testing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -28,10 +29,11 @@ import io.dekorate.utils.Pluralize;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.http.HttpClient;
+import io.fabric8.kubernetes.client.http.HttpRequest;
+import io.fabric8.kubernetes.client.http.HttpResponse;
 import io.fabric8.kubernetes.client.utils.URLUtils;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 
 public class CustomResourceCondition implements ExecutionCondition, WithKubernetesClient {
 
@@ -53,7 +55,8 @@ public class CustomResourceCondition implements ExecutionCondition, WithKubernet
 
       KubernetesClient client = getKubernetesClient(context);
       Config config = client.getConfiguration();
-      OkHttpClient http = client.adapt(OkHttpClient.class);
+
+      HttpClient httpClient = client.getHttpClient();
 
       List<String> parts = new ArrayList<>();
       parts.add(config.getMasterUrl());
@@ -71,9 +74,11 @@ public class CustomResourceCondition implements ExecutionCondition, WithKubernet
       }
       parts.add(plural);
       String requestUrl = URLUtils.join(parts.stream().toArray(s -> new String[s]));
-      Request request = new Request.Builder().get().url(requestUrl).build();
-      Response response = http.newCall(request).execute();
 
+      final HttpRequest request = httpClient.newHttpRequestBuilder()
+          .uri(requestUrl)
+          .build();
+      HttpResponse<String> response = httpClient.sendAsync(request, String.class).get(10, TimeUnit.SECONDS);
       if (!response.isSuccessful()) {
         return ConditionEvaluationResult.disabled("Could not lookup custom resource.");
       }

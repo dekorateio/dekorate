@@ -33,8 +33,8 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import io.dekorate.DekorateException;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.BaseClient;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 
 /**
@@ -88,7 +88,7 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
       return (KubernetesClient) client;
     }
 
-    client = new DefaultKubernetesClient();
+    client = new KubernetesClientBuilder().build();
     context.getStore(DEKORATE_STORE).put(KUBERNETES_CLIENT, client);
     return (KubernetesClient) client;
   }
