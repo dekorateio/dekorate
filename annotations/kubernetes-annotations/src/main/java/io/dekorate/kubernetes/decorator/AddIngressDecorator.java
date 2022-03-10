@@ -64,7 +64,7 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
         .withHost(config.getIngress().getHost())
         .withNewHttp()
         .addNewPath()
-        .withNewPathType("Prefix")
+        .withPathType("Prefix")
         .withPath(Strings.isNotNullOrEmpty(port.getPath()) ? port.getPath() : "/")
         .withNewBackend()
         .withNewService()
