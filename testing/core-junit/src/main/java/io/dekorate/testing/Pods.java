@@ -31,6 +31,7 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.ReplicaSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.FilterWatchListDeletable;
+import io.fabric8.kubernetes.client.dsl.PodResource;
 
 public class Pods {
 
@@ -80,7 +81,7 @@ public class Pods {
    * @param deployment The {@link Deployment}
    */
   protected PodList map(Deployment deployment) {
-    FilterWatchListDeletable<Pod, PodList> podLister = client.pods()
+    FilterWatchListDeletable<Pod, PodList, PodResource> podLister = client.pods()
         .inNamespace(deployment.getMetadata().getNamespace());
     if (deployment.getSpec().getSelector().getMatchLabels() != null) {
       podLister.withLabels(deployment.getSpec().getSelector().getMatchLabels());
@@ -112,7 +113,7 @@ public class Pods {
    * @param replicaSet The {@link ReplicaSet}
    */
   protected PodList map(ReplicaSet replicaSet) {
-    FilterWatchListDeletable<Pod, PodList> podLister = client.pods()
+    FilterWatchListDeletable<Pod, PodList, PodResource> podLister = client.pods()
         .inNamespace(replicaSet.getMetadata().getNamespace());
     if (replicaSet.getSpec().getSelector().getMatchLabels() != null) {
       podLister.withLabels(replicaSet.getSpec().getSelector().getMatchLabels());

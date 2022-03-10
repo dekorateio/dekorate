@@ -50,8 +50,8 @@ public class ApplyDeploymentStrategyDecorator extends NamedResourceDecorator<Dep
       spec.withNewStrategy()
           .withType("RollingUpdate")
           .withNewRollingUpdate()
-          .withNewMaxSurge().withNewStrVal(rollingUpdate.getMaxSurge()).endMaxSurge()
-          .withNewMaxUnavailable().withNewStrVal(rollingUpdate.getMaxUnavailable()).endMaxUnavailable()
+          .withNewMaxSurge().withValue(rollingUpdate.getMaxSurge()).endMaxSurge()
+          .withNewMaxUnavailable().withValue(rollingUpdate.getMaxUnavailable()).endMaxUnavailable()
           .endRollingUpdate()
           .endStrategy();
     }
