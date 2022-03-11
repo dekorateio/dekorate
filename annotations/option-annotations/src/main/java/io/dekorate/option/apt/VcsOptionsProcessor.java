@@ -19,6 +19,8 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -26,6 +28,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.option.annotation.VcsOptions;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @Description("Vcs options, which are used for the target deployment.")
 @SupportedAnnotationTypes("io.dekorate.option.annotation.VcsOptions")
 public class VcsOptionsProcessor extends AbstractAnnotationProcessor {
