@@ -19,6 +19,8 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -27,6 +29,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.option.annotation.GeneratorOptions;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @Description("Processing generator options, which are used for customizing the generation process")
 @SupportedAnnotationTypes({
     "io.dekorate.annotation.Dekorate",

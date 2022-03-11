@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -35,6 +37,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.config.SpringBootWebAnnotationGenerator;
 
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @Description("Detects Spring Boot web endpoints and registers the http port.")
 @SupportedAnnotationTypes({ "org.springframework.web.bind.annotation.RestController",
     "org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping",

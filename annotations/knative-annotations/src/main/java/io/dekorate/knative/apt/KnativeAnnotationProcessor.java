@@ -19,6 +19,8 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -28,6 +30,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.knative.annotation.KnativeApplication;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @Description("Generates knative manifests.")
 @SupportedAnnotationTypes("io.dekorate.knative.annotation.KnativeApplication")
 public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor {
