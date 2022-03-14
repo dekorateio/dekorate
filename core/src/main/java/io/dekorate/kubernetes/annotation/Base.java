@@ -225,4 +225,11 @@ import io.sundr.builder.annotations.Pojo;
    */
   boolean autoDeployEnabled() default false;
 
+  /**
+   * The Kubernetes Jobs.
+   *
+   * @return the jobs;
+   */
+  Job[] jobs() default {};
+
 }

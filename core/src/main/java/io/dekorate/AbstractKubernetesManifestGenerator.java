@@ -25,6 +25,7 @@ import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.HostAlias;
+import io.dekorate.kubernetes.config.Job;
 import io.dekorate.kubernetes.config.Mount;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.config.Port;
@@ -37,6 +38,7 @@ import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddHostAliasesDecorator;
 import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
+import io.dekorate.kubernetes.decorator.AddJobDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
@@ -145,28 +147,28 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
 
     for (SecretVolume volume : config.getSecretVolumes()) {
       validateVolume(volume);
-      resourceRegistry.decorate(group, new AddSecretVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddSecretVolumeDecorator(config.getName(), volume));
     }
 
     for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
       validateVolume(volume);
-      resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(config.getName(), volume));
     }
 
     for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
-      resourceRegistry.decorate(group, new AddPvcVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddPvcVolumeDecorator(config.getName(), volume));
     }
 
     for (AzureFileVolume volume : config.getAzureFileVolumes()) {
-      resourceRegistry.decorate(group, new AddAzureFileVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddAzureFileVolumeDecorator(config.getName(), volume));
     }
 
     for (AzureDiskVolume volume : config.getAzureDiskVolumes()) {
-      resourceRegistry.decorate(group, new AddAzureDiskVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddAzureDiskVolumeDecorator(config.getName(), volume));
     }
 
     for (AwsElasticBlockStoreVolume volume : config.getAwsElasticBlockStoreVolumes()) {
-      resourceRegistry.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(volume));
+      resourceRegistry.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(config.getName(), volume));
     }
 
     if (config.getCommand() != null && config.getCommand().length > 0) {
@@ -214,6 +216,38 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       if (Strings.isNotNullOrEmpty(config.getRequestResources().getMemory())) {
         resourceRegistry.decorate(group, new ApplyRequestsMemoryDecorator(config.getName(), config.getName(),
             config.getRequestResources().getMemory()));
+      }
+    }
+
+    for (Job job : config.getJobs()) {
+      String jobName = Strings.defaultIfEmpty(job.getName(), config.getName());
+
+      resourceRegistry.decorate(group, new AddJobDecorator(config, job));
+
+      for (PersistentVolumeClaimVolume volume : job.getPvcVolumes()) {
+        resourceRegistry.decorate(group, new AddPvcVolumeDecorator(jobName, volume));
+      }
+
+      for (SecretVolume volume : job.getSecretVolumes()) {
+        validateVolume(volume);
+        resourceRegistry.decorate(group, new AddSecretVolumeDecorator(jobName, volume));
+      }
+
+      for (ConfigMapVolume volume : job.getConfigMapVolumes()) {
+        validateVolume(volume);
+        resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(jobName, volume));
+      }
+
+      for (AwsElasticBlockStoreVolume volume : job.getAwsElasticBlockStoreVolumes()) {
+        resourceRegistry.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(jobName, volume));
+      }
+
+      for (AzureFileVolume volume : job.getAzureFileVolumes()) {
+        resourceRegistry.decorate(group, new AddAzureFileVolumeDecorator(jobName, volume));
+      }
+
+      for (AzureDiskVolume volume : job.getAzureDiskVolumes()) {
+        resourceRegistry.decorate(group, new AddAzureDiskVolumeDecorator(jobName, volume));
       }
     }
 

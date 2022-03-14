@@ -292,6 +292,34 @@ Currently, the supported annotations for specifying volumes are:
 - @AzureDiskVolume
 - @AzureFileVolume
 
+#### Adding Kubernetes Jobs
+
+To generate [Kubernetes Jobs](https://kubernetes.io/docs/concepts/workloads/controllers/job/), you can define them either using the `@KubernetesApplication` annotation:
+```java
+import io.dekorate.kubernetes.annotation.Container;
+import io.dekorate.kubernetes.annotation.Job;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+
+@KubernetesApplication(jobs = @Job(name = "say-hello", containers = @Container(image = "docker.io/user/hello")))
+public class Main {
+
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```    
+
+Or via configuration properties at the file `application.properties`:
+
+    dekorate.kubernetes.jobs[0].name=say-hello
+    dekorate.kubernetes.jobs[0].containers[0].image=docker.io/user/hello
+
+Currently, the supported annotations for adding jobs are:
+
+- @KubernetesApplication
+- @OpenShiftApplication
+- @KnativeApplication
+
 #### Vcs Options
 Most of the generated resources contain the kubernetes recommended annotations for specifying things like:
 
