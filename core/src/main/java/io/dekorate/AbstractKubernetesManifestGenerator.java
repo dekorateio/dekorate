@@ -29,11 +29,12 @@ import io.dekorate.kubernetes.config.AzureFileVolume;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Container;
+import io.dekorate.kubernetes.config.CronJob;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.HostAlias;
-import io.dekorate.kubernetes.config.Job;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.ImageConfigurationBuilder;
+import io.dekorate.kubernetes.config.Job;
 import io.dekorate.kubernetes.config.Mount;
 import io.dekorate.kubernetes.config.PersistentVolumeClaimVolume;
 import io.dekorate.kubernetes.config.Port;
@@ -43,6 +44,7 @@ import io.dekorate.kubernetes.decorator.AddAwsElasticBlockStoreVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureDiskVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureFileVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
+import io.dekorate.kubernetes.decorator.AddCronJobDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddHostAliasesDecorator;
 import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
@@ -235,6 +237,38 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       String jobName = Strings.defaultIfEmpty(job.getName(), config.getName());
 
       resourceRegistry.decorate(group, new AddJobDecorator(config, job));
+
+      for (PersistentVolumeClaimVolume volume : job.getPvcVolumes()) {
+        resourceRegistry.decorate(group, new AddPvcVolumeDecorator(jobName, volume));
+      }
+
+      for (SecretVolume volume : job.getSecretVolumes()) {
+        validateVolume(volume);
+        resourceRegistry.decorate(group, new AddSecretVolumeDecorator(jobName, volume));
+      }
+
+      for (ConfigMapVolume volume : job.getConfigMapVolumes()) {
+        validateVolume(volume);
+        resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(jobName, volume));
+      }
+
+      for (AwsElasticBlockStoreVolume volume : job.getAwsElasticBlockStoreVolumes()) {
+        resourceRegistry.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(jobName, volume));
+      }
+
+      for (AzureFileVolume volume : job.getAzureFileVolumes()) {
+        resourceRegistry.decorate(group, new AddAzureFileVolumeDecorator(jobName, volume));
+      }
+
+      for (AzureDiskVolume volume : job.getAzureDiskVolumes()) {
+        resourceRegistry.decorate(group, new AddAzureDiskVolumeDecorator(jobName, volume));
+      }
+    }
+
+    for (CronJob job : config.getCronJobs()) {
+      String jobName = Strings.defaultIfEmpty(job.getName(), config.getName());
+
+      resourceRegistry.decorate(group, new AddCronJobDecorator(config, job));
 
       for (PersistentVolumeClaimVolume volume : job.getPvcVolumes()) {
         resourceRegistry.decorate(group, new AddPvcVolumeDecorator(jobName, volume));

@@ -288,4 +288,11 @@ public @interface KubernetesApplication {
    * @return the jobs;
    */
   Job[] jobs() default {};
+
+  /**
+   * The Kubernetes CronJobs.
+   *
+   * @return the cronJobs;
+   */
+  CronJob[] cronJobs() default {};
 }
