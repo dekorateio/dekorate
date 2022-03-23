@@ -239,4 +239,11 @@ import io.sundr.builder.annotations.Pojo;
    */
   Job[] jobs() default {};
 
+  /**
+   * The Kubernetes CronJobs.
+   *
+   * @return the cronJobs;
+   */
+  CronJob[] cronJobs() default {};
+
 }

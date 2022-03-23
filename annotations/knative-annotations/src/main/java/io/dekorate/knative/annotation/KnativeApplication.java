@@ -29,6 +29,7 @@ import io.dekorate.kubernetes.annotation.AzureDiskVolume;
 import io.dekorate.kubernetes.annotation.AzureFileVolume;
 import io.dekorate.kubernetes.annotation.ConfigMapVolume;
 import io.dekorate.kubernetes.annotation.Container;
+import io.dekorate.kubernetes.annotation.CronJob;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.annotation.GitRepoVolume;
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
@@ -318,5 +319,12 @@ public @interface KnativeApplication {
    * @return the jobs;
    */
   Job[] jobs() default {};
+
+  /**
+   * The Kubernetes CronJobs.
+   *
+   * @return the cronJobs;
+   */
+  CronJob[] cronJobs() default {};
 
 }
