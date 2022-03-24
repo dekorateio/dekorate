@@ -114,7 +114,9 @@ Or via configuration properties at the file `application.properties`:
     dekorate.openshift.cron-jobs[0].name=say-hello
     dekorate.openshift.cron-jobs[0].schedule=* * * * *
     dekorate.openshift.cron-jobs[0].containers[0].image=docker.io/user/hello
+Dekorate CronJobs configuration follows the [Kubernetes CronJobs specification](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/cron-job-v1/#CronJobSpec). 
 
+If the user doesn't provide CronJob container image, the pod template image configuration will be used.
 Currently, the supported annotations for adding jobs are:
 
 - @KubernetesApplication
