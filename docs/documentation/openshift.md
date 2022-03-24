@@ -95,3 +95,28 @@ Currently, the supported annotations for adding jobs are:
 - @KubernetesApplication
 - @OpenShiftApplication
 - @KnativeApplication
+
+#### Adding Kubernetes CronJobs
+
+To generate [Kubernetes CronJobs](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/), you can define them either using the `@OpenshiftApplication` annotation:
+```java
+@OpenshiftApplication(cronJobs = @CronJob(name = "say-hello", schedule = "* * * * *", containers = @Container(image = "docker.io/user/hello")))
+public class Main {
+
+  public static void main(String[] args) {
+    //Your code goes here
+  }
+}
+```    
+
+Or via configuration properties at the file `application.properties`:
+
+    dekorate.openshift.cron-jobs[0].name=say-hello
+    dekorate.openshift.cron-jobs[0].schedule=* * * * *
+    dekorate.openshift.cron-jobs[0].containers[0].image=docker.io/user/hello
+
+Currently, the supported annotations for adding jobs are:
+
+- @KubernetesApplication
+- @OpenShiftApplication
+- @KnativeApplication
