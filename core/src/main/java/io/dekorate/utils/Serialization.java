@@ -189,7 +189,8 @@ public class Serialization {
 
     List<Map<Object, Object>> list = new ArrayList<>();
     for (String part : parts) {
-      if (part.trim().isEmpty()) {
+      part = part.trim();
+      if (part.isEmpty()) {
         continue;
       }
 
@@ -211,7 +212,8 @@ public class Serialization {
     String[] parts = splitDocument(content);
     List<HasMetadata> items = new ArrayList<>();
     for (String part : parts) {
-      if (part.trim().isEmpty()) {
+      part = part.trim();
+      if (part.isEmpty()) {
         continue;
       }
       Object resource = unmarshal(part);
