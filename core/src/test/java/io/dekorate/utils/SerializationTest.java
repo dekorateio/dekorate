@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.dekorate.DekorateException;
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 
 class SerializationTest {
@@ -60,4 +61,30 @@ class SerializationTest {
       }
     }
   }
+
+  @Test
+  public void shouldHandleByteArrayInputStreamBufferOverflow() throws Exception {
+    // The file contains enough initial whitespace to cause two buffer overflows
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream("single-resource-bis-overflow.yml")) {
+      KubernetesList list = Serialization.unmarshalAsList(is);
+      ConfigMap configMap = (ConfigMap)list.getItems().get(0);
+      assertEquals("dummyvalue", configMap.getData().get("dummykey"));
+    }
+  }
+
+  @Test
+  public void shouldProduceMeaningFullErrorWithByteArrayInputStreamBufferOverflow() throws Exception {
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream("single-resource-with-bis-overflow-and-errors.yml")) {
+      KubernetesList list = Serialization.unmarshalAsList(is);
+      fail();
+    } catch (DekorateException e) {
+      if (e.getCause() instanceof JsonProcessingException) {
+        JsonProcessingException jpe = (JsonProcessingException) e.getCause();
+        assertEquals(18614, jpe.getLocation().getLineNr());
+      } else {
+        fail();
+      }
+    }
+  }
+
 }
