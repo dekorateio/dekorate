@@ -48,7 +48,7 @@ Please note that the casings for these properties are:
 - camel case
 - kebab
 
-For example both of `dekorate.kubernetes.initCcontainers` and `dekorate.kubernetes.init-containers` are supported.
+For example both of `dekorate.kubernetes.initContainers` and `dekorate.kubernetes.init-containers` are supported.
 This document uses kebab.
 
 Below is a list of all the available options.
