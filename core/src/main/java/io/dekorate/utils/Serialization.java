@@ -259,11 +259,19 @@ public class Serialization {
    * @return
    */
   public static <T> T unmarshal(InputStream is, ObjectMapper mapper, Map<String, String> parameters) {
-    try (BufferedInputStream bis = new BufferedInputStream(is)) {
+    final int bufferSize = 8092; // BufferedInputStream's default
+    int currentMaxSize = bufferSize;
+    int pos = 0;
+    try (BufferedInputStream bis = new BufferedInputStream(is, bufferSize)) {
       bis.mark(-1);
       int intch;
       do {
         intch = bis.read();
+        if (pos >= currentMaxSize) {
+          bis.mark(-1);
+          currentMaxSize += bufferSize;
+        }
+        pos++;
       } while (intch > -1 && Character.isWhitespace(intch));
       bis.reset();
 
