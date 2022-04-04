@@ -12,8 +12,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <version.spring-boot>2.4.5</version.spring-boot>
-    <version.fabric8-maven-plugin>3.5.42</version.fabric8-maven-plugin>
+    <version.spring-boot>2.5.12</version.spring-boot>    <version.fabric8-maven-plugin>3.5.42</version.fabric8-maven-plugin>
     <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
     <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
     <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
