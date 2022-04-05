@@ -46,7 +46,7 @@ public class AddServiceMonitorResourceDecorator extends ResourceProvidingDecorat
         .endSelector()
         .addNewEndpoint()
         .withPort(config.getPort())
-        .withNewPath(config.getPath())
+        .withPath(config.getPath())
         .withInterval(config.getInterval() + "s")
         .withHonorLabels(config.isHonorLabels())
         .endEndpoint()

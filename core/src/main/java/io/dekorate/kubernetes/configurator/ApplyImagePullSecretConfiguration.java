@@ -34,6 +34,6 @@ public class ApplyImagePullSecretConfiguration extends Configurator<BaseConfigFl
     Arrays.stream(System.getProperty(IMAGE_PULL_SECRETS, EMPTY).split(COMA))
         .map(String::trim)
         .filter(Strings::isNotNullOrEmpty)
-        .forEach(s -> config.addNewImagePullSecret(s));
+        .forEach(s -> config.addToImagePullSecrets(s));
   }
 }
