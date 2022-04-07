@@ -15,6 +15,7 @@
  */
 package io.dekorate.knative.manifest;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesManifestGenerator;
@@ -46,6 +47,7 @@ import io.dekorate.knative.decorator.ApplyLocalContainerConcurrencyDecorator;
 import io.dekorate.knative.decorator.ApplyMaxScaleDecorator;
 import io.dekorate.knative.decorator.ApplyMinScaleDecorator;
 import io.dekorate.knative.decorator.ApplyRevisionNameDecorator;
+import io.dekorate.knative.decorator.ApplyServiceAccountToRevisionSpecDecorator;
 import io.dekorate.knative.decorator.ApplyTrafficDecorator;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
 import io.dekorate.kubernetes.config.AzureDiskVolume;
@@ -62,7 +64,9 @@ import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration
 import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapDataDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapResourceProvidingDecorator;
+import io.dekorate.kubernetes.decorator.AddImagePullSecretToServiceAccountDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
+import io.dekorate.kubernetes.decorator.AddServiceAccountResourceDecorator;
 import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
 import io.dekorate.option.config.VcsConfig;
@@ -280,6 +284,15 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
           .withValue(CLUSTER_LOCAL)
           .build()));
     }
+
+    if (config.getImagePullSecrets() != null && config.getImagePullSecrets().length != 0) {
+      String serviceAccount = Strings.isNotNullOrEmpty(config.getServiceAccount()) ? config.getServiceAccount()
+          : config.getName();
+      resourceRegistry.decorate(group, new AddServiceAccountResourceDecorator(config.getName(), serviceAccount));
+      resourceRegistry.decorate(group, new ApplyServiceAccountToRevisionSpecDecorator(config.getName(), serviceAccount));
+      resourceRegistry.decorate(group,
+          new AddImagePullSecretToServiceAccountDecorator(serviceAccount, Arrays.asList(config.getImagePullSecrets())));
+    }
   }
 
   public boolean accepts(Class<? extends Configuration> type) {
@@ -307,7 +320,8 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
                     imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     return new ServiceBuilder().withNewMetadata().withName(config.getName())
-        .endMetadata().withNewSpec().withNewTemplate().withNewSpec().addNewContainer().withName(config.getName())
+        .endMetadata().withNewSpec().withNewTemplate().withNewSpec()
+        .addNewContainer().withName(config.getName())
         .withImage(image).endContainer().endSpec().endTemplate().endSpec().build();
   }
 
