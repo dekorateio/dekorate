@@ -67,7 +67,7 @@ class SerializationTest {
     // The file contains enough initial whitespace to cause two buffer overflows
     try (InputStream is = getClass().getClassLoader().getResourceAsStream("single-resource-bis-overflow.yml")) {
       KubernetesList list = Serialization.unmarshalAsList(is);
-      ConfigMap configMap = (ConfigMap)list.getItems().get(0);
+      ConfigMap configMap = (ConfigMap) list.getItems().get(0);
       assertEquals("dummyvalue", configMap.getData().get("dummykey"));
     }
   }
