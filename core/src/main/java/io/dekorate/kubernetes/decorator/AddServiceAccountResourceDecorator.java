@@ -19,31 +19,38 @@ import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ServiceAccount;
 
 @Description("Add a ServiceAccount resource to the list of generated resources.")
 public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
-  private final String name;
+  private final String deploymentName;
+  private final String serviceAccountName;
 
   public AddServiceAccountResourceDecorator() {
-    this(null);
+    this(null, null);
   }
 
-  public AddServiceAccountResourceDecorator(String name) {
-    this.name = name;
+  public AddServiceAccountResourceDecorator(String deploymentName) {
+    this(deploymentName, deploymentName);
+  }
+
+  public AddServiceAccountResourceDecorator(String deploymentName, String serviceAccountName) {
+    this.deploymentName = deploymentName;
+    this.serviceAccountName = serviceAccountName;
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list, this.name);
-    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName();
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list, this.deploymentName);
+    String serviceAccountName = Strings.isNotNullOrEmpty(this.serviceAccountName) ? this.serviceAccountName : meta.getName();
 
-    if (contains(list, "v1", "ServiceAccount", name)) {
+    if (contains(list, "v1", "ServiceAccount", serviceAccountName)) {
       return;
     }
 
     list.addNewServiceAccountItem()
         .withNewMetadata()
-        .withName(name)
+        .withName(serviceAccountName)
         .withLabels(meta.getLabels())
         .endMetadata()
         .endServiceAccountItem();
