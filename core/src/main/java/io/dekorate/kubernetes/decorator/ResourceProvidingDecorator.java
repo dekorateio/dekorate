@@ -35,7 +35,7 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
   protected static final String ANY = null;
 
   public boolean contains(KubernetesListBuilder list, String apiVersion, String kind, String name) {
-    return list.getItems().stream().filter(i -> match(i, apiVersion, kind, name)).findAny().isPresent();
+    return list.buildItems().stream().filter(i -> match(i, apiVersion, kind, name)).findAny().isPresent();
   }
 
   public boolean match(HasMetadata h, String apiVersion, String kind, String name) {
@@ -57,7 +57,7 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
     // We need to get rid of such suffixes when present as we NEVER have thtem in `deployment` kinds.
     String trimedName = Strings.isNotNullOrEmpty(name) ? name.replaceAll("[:].*$", "") : name;
 
-    return list.getItems()
+    return list.buildItems()
         .stream()
         .filter(h -> DEPLOYMENT_KINDS.contains(h.getKind()))
         .filter(h -> trimedName == ANY || h.getMetadata().getName().equals(trimedName))
@@ -74,12 +74,15 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
   }
 
   public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list, String name) {
-    return getDeploymentMetadata(list, name).orElseThrow(() -> new IllegalStateException(
-        "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(",")) + " to be present."));
+    return getDeploymentMetadata(list, name).orElseThrow(() -> new IllegalStateException("Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))
+                                                                                         + (Strings.isNotNullOrEmpty(name) ? " with name:" + name : "")
+                                                                                         + " to be present."));
   }
 
   public HasMetadata getMandatoryDeploymentHasMetadata(KubernetesListBuilder list, String name) {
     return getDeploymentHasMetadata(list, name).orElseThrow(() -> new IllegalStateException(
-        "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(",")) + " to be present."));
+        "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))
+        + (Strings.isNotNullOrEmpty(name) ? " with name:" + name : "")
+        + " to be present."));
   }
 }
