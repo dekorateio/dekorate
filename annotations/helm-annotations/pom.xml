@@ -162,6 +162,7 @@
                     <include>io/dekorate/helm/configurator/**</include>
                     <include>io/dekorate/helm/manifest/**</include>
                     <include>io/dekorate/helm/util/**</include>
+                    <include>io/dekorate/helm/model/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
