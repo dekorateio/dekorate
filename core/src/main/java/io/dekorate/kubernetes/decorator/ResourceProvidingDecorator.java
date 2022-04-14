@@ -51,6 +51,10 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
     return true;
   }
 
+  public List<ObjectMeta> getDeploymentMetadataList(KubernetesListBuilder list) {
+    return getDeploymentMetadataList(list, ANY);
+  }
+
   public List<ObjectMeta> getDeploymentMetadataList(KubernetesListBuilder list, String name) {
     // In 99% of the cases we select metadata by name.
     // There are some edge cases (e.g. RoleBindings) where a suffix is added (e.g. <name>:deployer).
@@ -65,24 +69,41 @@ public abstract class ResourceProvidingDecorator<T> extends Decorator<T> {
         .collect(Collectors.toList());
   }
 
+  public Optional<ObjectMeta> getDeploymentMetadata(KubernetesListBuilder list) {
+    return getDeploymentMetadata(list, ANY);
+  }
+
   public Optional<ObjectMeta> getDeploymentMetadata(KubernetesListBuilder list, String name) {
     return getDeploymentMetadataList(list, name).stream().findFirst();
+  }
+
+  public Optional<HasMetadata> getDeploymentHasMetadata(KubernetesListBuilder list) {
+    return getDeploymentHasMetadata(list, ANY);
   }
 
   public Optional<HasMetadata> getDeploymentHasMetadata(KubernetesListBuilder list, String name) {
     return list.getItems().stream().filter(h -> DEPLOYMENT_KINDS.contains(h.getKind())).findFirst();
   }
 
+  public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list) {
+    return getMandatoryDeploymentMetadata(list, ANY);
+  }
+
   public ObjectMeta getMandatoryDeploymentMetadata(KubernetesListBuilder list, String name) {
-    return getDeploymentMetadata(list, name).orElseThrow(() -> new IllegalStateException("Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))
-                                                                                         + (Strings.isNotNullOrEmpty(name) ? " with name:" + name : "")
-                                                                                         + " to be present."));
+    return getDeploymentMetadata(list, name).orElseThrow(() -> new IllegalStateException(
+        "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))
+            + (Strings.isNotNullOrEmpty(name) ? " with name:" + name : "")
+            + " to be present."));
+  }
+
+  public HasMetadata getMandatoryDeploymentHasMetadata(KubernetesListBuilder list) {
+    return getMandatoryDeploymentHasMetadata(list, ANY);
   }
 
   public HasMetadata getMandatoryDeploymentHasMetadata(KubernetesListBuilder list, String name) {
     return getDeploymentHasMetadata(list, name).orElseThrow(() -> new IllegalStateException(
         "Expected at least one of: " + DEPLOYMENT_KINDS.stream().collect(Collectors.joining(","))
-        + (Strings.isNotNullOrEmpty(name) ? " with name:" + name : "")
-        + " to be present."));
+            + (Strings.isNotNullOrEmpty(name) ? " with name:" + name : "")
+            + " to be present."));
   }
 }
