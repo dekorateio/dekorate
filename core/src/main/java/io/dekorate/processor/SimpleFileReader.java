@@ -37,6 +37,7 @@ public class SimpleFileReader implements SessionReader {
 
   private static final String DOT_YML = ".yml";
   private static final String DOT_JSON = ".json";
+  private static final String COMMON = "common";
 
   private final Path path;
   private final Set<String> targets;
@@ -52,7 +53,11 @@ public class SimpleFileReader implements SessionReader {
     findApplicableResources().forEach((k, v) -> {
       v.getItems().forEach(i -> {
         LOGGER.info("Adding existing " + i.getKind() + " with name: " + i.getMetadata().getName() + ".");
-        session.getResourceRegistry().add(k, i);
+        if (COMMON.equals(k)) {
+          session.getResourceRegistry().common().addToItems(i);
+        } else {
+          session.getResourceRegistry().add(k, i);
+        }
       });
     });
   }

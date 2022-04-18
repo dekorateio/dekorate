@@ -43,6 +43,7 @@ public class AptReader implements SessionReader, WithProject {
 
   private static final String INPUT_FILE_INCLUDE_REGEX = "^(.*?)\\.(yml|yaml)$";
   private static final String INPUT_FILE_EXCLUDE_REGEX = "^.*?-cr\\.(yml|yaml)$";
+  private static final String COMMON = "common";
 
   private final ProcessingEnvironment processingEnv;
   private final Pattern inputFileIncludePattern;
@@ -76,7 +77,13 @@ public class AptReader implements SessionReader, WithProject {
   public void read(Session session) {
     if (canRead()) {
       listInputFiles().stream().map(this::read).filter(Objects::nonNull).map(Map::entrySet).flatMap(Set::stream)
-          .forEach(e -> e.getValue().getItems().forEach(item -> session.getResourceRegistry().add(e.getKey(), item)));
+          .forEach(e -> e.getValue().getItems().forEach(item -> {
+            if (COMMON.equals(e.getKey())) {
+              session.getResourceRegistry().common().addToItems(item);
+            } else {
+              session.getResourceRegistry().add(e.getKey(), item);
+            }
+          }));
     }
   }
 
