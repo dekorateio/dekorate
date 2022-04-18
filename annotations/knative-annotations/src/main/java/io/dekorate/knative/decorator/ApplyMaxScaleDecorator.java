@@ -19,7 +19,7 @@ package io.dekorate.knative.decorator;
 
 public class ApplyMaxScaleDecorator extends ApplyAnnotationsToServiceTemplate {
 
-  private static final String MAX_SCALE = "autoscaling.knative.dev/maxScale";
+  private static final String MAX_SCALE = "autoscaling.knative.dev/max-scale";
 
   public ApplyMaxScaleDecorator(String name, int scale) {
     super(name, MAX_SCALE, String.valueOf(scale));
