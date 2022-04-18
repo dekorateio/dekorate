@@ -44,6 +44,7 @@ import io.dekorate.knative.decorator.ApplyLocalAutoscalingClassDecorator;
 import io.dekorate.knative.decorator.ApplyLocalAutoscalingMetricDecorator;
 import io.dekorate.knative.decorator.ApplyLocalAutoscalingTargetDecorator;
 import io.dekorate.knative.decorator.ApplyLocalContainerConcurrencyDecorator;
+import io.dekorate.knative.decorator.ApplyLocalTargetUtilizationPercentageDecorator;
 import io.dekorate.knative.decorator.ApplyMaxScaleDecorator;
 import io.dekorate.knative.decorator.ApplyMinScaleDecorator;
 import io.dekorate.knative.decorator.ApplyRevisionNameDecorator;
@@ -187,7 +188,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
       }
       if (config.getRevisionAutoScaling().getTargetUtilizationPercentage() != null
           && config.getRevisionAutoScaling().getTargetUtilizationPercentage() != 70) {
-        resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
+        resourceRegistry.decorate(KNATIVE, new ApplyLocalTargetUtilizationPercentageDecorator(config.getName(),
             config.getRevisionAutoScaling().getTargetUtilizationPercentage()));
       }
     }
