@@ -19,7 +19,6 @@ import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.ServiceAccount;
 
 @Description("Add a ServiceAccount resource to the list of generated resources.")
 public class AddServiceAccountResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
