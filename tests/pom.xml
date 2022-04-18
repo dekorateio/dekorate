@@ -73,6 +73,7 @@
       <module>feat-886-kubernetes-deployment-kind-with-cronjob</module>
       <module>feat-886-openshift-deployment-kind-with-deployment</module>
       <module>issue-932-knative-image-pull-secrets</module>
+      <module>issue-939-knative-container-concurrency</module>
     </modules>
 
 </project>

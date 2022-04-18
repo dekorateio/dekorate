@@ -1,0 +1,19 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  labels:
+    foo: bar
+  name: issue-939-knative-container-concurrency
+spec:
+  template:
+    metadata:
+    spec:
+      containerConcurrency: 10
+      containers:
+        - image: iocanel/issue-939-knative-container-concurrency
+          name: issue-939-knative-container-concurrency
+          ports:
+            - containerPort: 8080
+              name: http1
+              protocol: TCP
