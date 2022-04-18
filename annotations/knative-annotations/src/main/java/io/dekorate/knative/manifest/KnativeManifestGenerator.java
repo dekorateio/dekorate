@@ -164,11 +164,6 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
             new ApplyLocalAutoscalingMetricDecorator(config.getName(), config.getRevisionAutoScaling().getMetric()));
       }
 
-      if (config.getRevisionAutoScaling().getContainerConcurrency() != null) {
-        resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
-            config.getRevisionAutoScaling().getContainerConcurrency()));
-      }
-
       // Local autoscaling configuration
       if (config.getRevisionAutoScaling().getAutoScalerClass() != null
           && config.getRevisionAutoScaling().getAutoScalerClass() != AutoScalerClass.kpa) {
@@ -180,12 +175,22 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
         resourceRegistry.decorate(KNATIVE,
             new ApplyLocalAutoscalingTargetDecorator(config.getName(), config.getRevisionAutoScaling().getTarget()));
       }
+
+      // Hard Limit
+      if (config.getRevisionAutoScaling().getContainerConcurrency() != null
+          && config.getRevisionAutoScaling().getContainerConcurrency() != 0) {
+        resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
+            config.getRevisionAutoScaling().getContainerConcurrency()));
+      }
+
+      // Soft Limit
       if (config.getRevisionAutoScaling().getTarget() != null
           && config.getRevisionAutoScaling().getTarget() != 200
           && config.getRevisionAutoScaling().getMetric() == AutoscalingMetric.rps) {
         resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
             config.getRevisionAutoScaling().getTarget()));
       }
+
       if (config.getRevisionAutoScaling().getTargetUtilizationPercentage() != null
           && config.getRevisionAutoScaling().getTargetUtilizationPercentage() != 70) {
         resourceRegistry.decorate(KNATIVE, new ApplyLocalTargetUtilizationPercentageDecorator(config.getName(),
