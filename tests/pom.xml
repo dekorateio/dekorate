@@ -74,6 +74,7 @@
       <module>feat-886-openshift-deployment-kind-with-deployment</module>
       <module>issue-932-knative-image-pull-secrets</module>
       <module>issue-939-knative-container-concurrency</module>
+      <module>feat-941-existing-common-resources</module>
     </modules>
 
 </project>

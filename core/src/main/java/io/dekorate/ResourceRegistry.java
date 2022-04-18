@@ -39,7 +39,7 @@ public class ResourceRegistry {
   private static final String DEFAULT_GROUP = "kubernetes";
   private static final Logger LOGGER = LoggerFactory.getLogger(ResourceRegistry.class);
   private final Map<String, KubernetesListBuilder> groups = new LinkedHashMap<>();
-  private final KubernetesListBuilder global = new KubernetesListBuilder();
+  private final KubernetesListBuilder common = new KubernetesListBuilder();
   private final Set<Decorator> globalDecorators = new HashSet<>();
 
   private final Map<String, Set<Decorator>> groupDecorators = new HashMap<>();
@@ -63,8 +63,8 @@ public class ResourceRegistry {
    * 
    * @return The groups map.
    */
-  public KubernetesListBuilder global() {
-    return this.global;
+  public KubernetesListBuilder common() {
+    return this.common;
   }
 
   /**
@@ -95,7 +95,7 @@ public class ResourceRegistry {
    * @param metadata
    */
   public void add(HasMetadata metadata) {
-    global.addToItems(metadata);
+    common.addToItems(metadata);
   }
 
   /**
@@ -152,14 +152,14 @@ public class ResourceRegistry {
    * @return A map of {@link KubernetesList} by group name.
    */
   protected Map<String, KubernetesList> generate() {
-    if (!this.global.getItems().isEmpty()) {
+    if (!this.common.getItems().isEmpty()) {
       if (this.groups.isEmpty()) {
         KubernetesListBuilder builder = new KubernetesListBuilder();
-        builder.addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()]));
+        builder.addToItems(common.buildItems().toArray(new HasMetadata[common.getItems().size()]));
         this.groups.put(DEFAULT_GROUP, builder);
       } else {
         this.groups.forEach((group, builder) -> builder
-            .addToItems(global.buildItems().toArray(new HasMetadata[global.getItems().size()])));
+            .addToItems(common.buildItems().toArray(new HasMetadata[common.getItems().size()])));
       }
     }
 
