@@ -19,7 +19,7 @@ package io.dekorate.knative.decorator;
 
 public class ApplyMinScaleDecorator extends ApplyAnnotationsToServiceTemplate {
 
-  private static final String MIN_SCALE = "autoscaling.knative.dev/minScale";
+  private static final String MIN_SCALE = "autoscaling.knative.dev/min-scale";
 
   public ApplyMinScaleDecorator(String name, int scale) {
     super(name, MIN_SCALE, String.valueOf(scale));

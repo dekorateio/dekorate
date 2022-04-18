@@ -19,7 +19,7 @@ package io.dekorate.knative.decorator;
 
 public class ApplyLocalTargetUtilizationPercentageDecorator extends ApplyAnnotationsToServiceTemplate {
 
-  private static final String UTILIZATION_PERCENTAGE = "autoscaling.knative.dev/targetUtilizationPercentage";
+  private static final String UTILIZATION_PERCENTAGE = "autoscaling.knative.dev/target-utilization-percentage";
 
   public ApplyLocalTargetUtilizationPercentageDecorator(String name, int target) {
     super(name, UTILIZATION_PERCENTAGE, String.valueOf(target));

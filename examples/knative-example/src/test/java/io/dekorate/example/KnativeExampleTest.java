@@ -40,8 +40,8 @@ class KnativeExampleTest {
     // Verify Knative Service
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException("No knative service found!"));
     assertNotNull(s);
-    assertEquals("1", s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/minScale"));
-    assertEquals("5", s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/maxScale"));
+    assertEquals("1", s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/min-scale"));
+    assertEquals("5", s.getSpec().getTemplate().getMetadata().getAnnotations().get("autoscaling.knative.dev/max-scale"));
     Container container = s.getSpec().getTemplate().getSpec().getContainers().get(0);
     assertEquals("http1", container.getPorts().get(0).getName());
 
