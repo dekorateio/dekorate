@@ -15,41 +15,32 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-public @interface SecretVolume {
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
+
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Pojo(relativePath = "../config", autobox = true, mutable = true, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
+public @interface Item {
 
   /**
-   * The volumeName name.
+   * The key name within the data section (in Secrets and ConfigMaps).
    * 
-   * @return The volumeName name.
+   * @return The key.
    */
-  String volumeName();
+  String key();
 
   /**
-   * The name of the secret to mount.
+   * The path where the file will be mounted.
    * 
-   * @return The name.
+   * @return The path.
    */
-  String secretName();
+  String path();
 
   /**
-   * Default mode.
-   * 
-   * @return The default mode.
-   */
-  int defaultMode() default 0600;
-
-  /**
-   * Optional
-   * 
-   * @return True if optional, False otherwise.
-   */
-  boolean optional() default false;
-
-  /**
-   * Optional
+   * It must be a value between 0000 and 0777. If not specified, the volume defaultMode will be used.
    *
-   * @return list of files to be mounted.
+   * @return The file mode.
    */
-  Item[] items() default {};
+  int mode() default -1;
 
 }

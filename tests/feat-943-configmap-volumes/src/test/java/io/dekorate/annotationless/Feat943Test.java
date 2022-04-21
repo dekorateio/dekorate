@@ -26,26 +26,26 @@ import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 
-public class Issue446Test {
+public class Feat943Test {
 
   @Test
   public void shouldContainComponent() {
     KubernetesList list = Serialization
-        .unmarshalAsList(Issue446Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+        .unmarshalAsList(Feat943Test.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     PodSpec p = d.getSpec().getTemplate().getSpec();
     assertNotNull(p);
     Volume firstVolume = p.getVolumes().get(0);
-    assertEquals("greeting-security", firstVolume.getSecret().getSecretName());
-    assertEquals("github-token", firstVolume.getName());
+    assertEquals("greeting-map", firstVolume.getConfigMap().getName());
+    assertEquals("test", firstVolume.getName());
 
     Volume secondVolume = p.getVolumes().get(1);
-    assertEquals("certs-secret", secondVolume.getSecret().getSecretName());
-    assertEquals(2, secondVolume.getSecret().getItems().size());
-    assertKeyPathItem("keystore", "keystore.jks", secondVolume.getSecret().getItems().get(0));
-    assertKeyPathItem("pass", "password", secondVolume.getSecret().getItems().get(1));
+    assertEquals("certs-map", secondVolume.getConfigMap().getName());
+    assertEquals(2, secondVolume.getConfigMap().getItems().size());
+    assertKeyPathItem("keystore", "keystore.jks", secondVolume.getConfigMap().getItems().get(0));
+    assertKeyPathItem("pass", "password", secondVolume.getConfigMap().getItems().get(1));
     assertEquals("certs", secondVolume.getName());
 
     Container c = p.getContainers().get(0);

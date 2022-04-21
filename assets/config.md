@@ -213,20 +213,22 @@ The section below describes all the available subtypes.
 | read-only | boolean | ReadOnly                                                                            | false         |
 
 #### ConfigMapVolume
-| Property        | Type    | Description                          | Default Value |
-|-----------------|---------|--------------------------------------|---------------|
-| volume-name     | String  | The volumeName name.                 |               |
-| config-map-name | String  | The name of the config map to mount. |               |
-| default-mode    | int     | Default mode.                        | 384           |
-| optional        | boolean | Optional                             | false         |
+| Property        | Type    | Description                            | Default Value |
+|-----------------|---------|----------------------------------------|---------------|
+| volume-name     | String  | The volumeName name.                   |               |
+| config-map-name | String  | The name of the config map to mount.   |               |
+| default-mode    | int     | Default mode.                          | 384           |
+| optional        | boolean | Optional                               | false         |
+| items           | Item[]  | List of files to be mounted. Optional. |               |
 
 #### SecretVolume
-| Property     | Type    | Description                      | Default Value |
-|--------------|---------|----------------------------------|---------------|
-| volume-name  | String  | The volumeName name.             |               |
-| secret-name  | String  | The name of the secret to mount. |               |
-| default-mode | int     | Default mode.                    | 384           |
-| optional     | boolean | Optional                         | false         |
+| Property     | Type    | Description                             | Default Value |
+|--------------|---------|-----------------------------------------|---------------|
+| volume-name  | String  | The volumeName name.                    |               |
+| secret-name  | String  | The name of the secret to mount.        |               |
+| default-mode | int     | Default mode.                           | 384           |
+| optional     | boolean | Optional                                | false         |
+| items        | Item[]  | List of files to be mounted. Optional.  |               |
 
 #### PersistentVolumeClaimVolume
 | Property    | Type    | Description                                | Default Value |
@@ -234,7 +236,6 @@ The section below describes all the available subtypes.
 | volume-name | String  | The volumeName name.                       |               |
 | claim-name  | String  | The persistent volumeName claim name.      |               |
 | read-only   | boolean | Wether the volumeName is read only or not. | false         |
-
 
 #### GitRepoVolume
 | Property    | Type   | Description                               | Default Value |
@@ -272,6 +273,13 @@ The section below describes all the available subtypes.
 | fs-type      | String  |             | ext4          |
 | read-only    | boolean |             | false         |
 
+#### Item
+
+| Property     | Type    | Description                                                        | Default Value |
+|--------------|---------|--------------------------------------------------------------------|---------------|
+| key          | String  | The key name within the data section (in Secrets and ConfigMaps).  |               |
+| path         | String  | The path where the file will be mounted.                           |               |
+| mode         | int     | File mode. If not specified, the volume defaultMode will be used.  |               |
 
 ## Generator Options
 
