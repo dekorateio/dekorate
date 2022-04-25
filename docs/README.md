@@ -23,18 +23,29 @@ These instructions will get you a copy of the project up and running on your loc
   - [Ubuntu Linux](https://jekyllrb.com/docs/installation/ubuntu/)
   - [Windows](https://jekyllrb.com/docs/installation/windows/)
     
-3. Fork this repository by clicking the _Fork_ button at the top right corner of this page.
-4. Clone your fork (please ensure you have current version of git installed) by running: 
-  `git clone git@github.com:YOUR_USER_NAME/community-theme.git`
-5. Change into the project directory
-  `cd community-theme`
-6. Build the site and make it available on a local server
+2. Fork this repository by clicking the _Fork_ button at the top right corner of this page.
+3. Clone your fork (please ensure you have current version of git installed) by running: 
+  `git clone git@github.com:YOUR_USER_NAME/dekorate.git`
+4. Change into the project directory
+  `cd dekorate/docs`
+5. Build the site and make it available on a local server
   `bundle exec jekyll serve`
-7. To preview your site, browse to http://localhost:4000
+6. To preview your site, browse to http://localhost:4000
 
 > If you encounter any unexpected errors during the above, please refer to the [troubleshooting](https://jekyllrb.com/docs/troubleshooting/#configuration-problems) page or the [requirements](https://jekyllrb.com/docs/installation/#requirements) page, as you might be missing development headers or other prerequisites.
 
 _For more information regarding the use of Jekyll, please refer to the [Jekyll Step by Step Tutorial](https://jekyllrb.com/docs/step-by-step/01-setup/)._
+
+### Installing the theme using Docker
+
+Alternatively, you can build the site and make it available on a local server using Docker without needing to install any tools in your local machine:
+
+```
+cd docs
+docker run -p 4000:4000 -v $(pwd):/site bretfisher/jekyll-serve
+```
+
+The site will be up and running in `localhost:4000`.
 
 ## Deployment on GitHub Pages
 
