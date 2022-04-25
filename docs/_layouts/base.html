@@ -36,12 +36,21 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script type="text/javascript" src="{{ '/assets/javascript/mobile-nav.js' | relative_url }}"></script>
   <script type="text/javascript" src="{{ '/assets/javascript/nav_mobilesubnav.js' | relative_url }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.3.0/anchor.min.js" integrity="sha512-G2OGlm41XXw+fcgDcRPjVYEn7qCY6qiKWNqDGT37SnKh0qtRXTuKZ5/UQR0kDN0PZRNWcGExd3lAeqEH0I36bQ==" crossorigin="anonymous"></script>
 
 <!--   <script type="text/javascript">
     if (("undefined" !== typeof _satellite) && ("function" === typeof _satellite.pageBottom)) {
         _satellite.pageBottom();
     }
   </script> -->
+  <!--
+  AnchorJs documentation: https://www.bryanbraun.com/anchorjs/
+  -->
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+      anchors.add('h1, h2, h3, h4, h5, h6');
+    });
+  </script>
 </body>
 
 </html>

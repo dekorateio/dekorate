@@ -95,3 +95,5 @@ crashlytics-build.properties
 _site
 .sass-cache
 .jekyll-metadata
+docs/.bundle
+docs/vendor
