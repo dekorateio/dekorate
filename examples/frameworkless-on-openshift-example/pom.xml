@@ -21,11 +21,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${version.jackson-databind}</version>
-    </dependency>
-    <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>openshift-annotations</artifactId>
       <version>${project.version}</version>
