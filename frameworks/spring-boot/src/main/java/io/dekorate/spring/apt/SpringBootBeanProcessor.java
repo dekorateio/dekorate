@@ -36,7 +36,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.BeanListener;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
 @SupportedAnnotationTypes({ "org.springframework.context.annotation.Bean" })
 public class SpringBootBeanProcessor extends AbstractAnnotationProcessor {

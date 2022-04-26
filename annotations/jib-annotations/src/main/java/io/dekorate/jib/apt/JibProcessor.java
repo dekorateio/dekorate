@@ -27,7 +27,7 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.jib.annotation.JibBuild;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @SupportedAnnotationTypes("io.dekorate.jib.annotation.JibBuild")
 public class JibProcessor extends AbstractAnnotationProcessor {
 

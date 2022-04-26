@@ -29,7 +29,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.option.annotation.JvmOptions;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Jvm options, which are used for the target deployment.")
 @SupportedAnnotationTypes("io.dekorate.option.annotation.JvmOptions")
 public class JvmOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {

@@ -30,7 +30,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Generates kubernetes manifests.")
 @SupportedAnnotationTypes("io.dekorate.kubernetes.annotation.KubernetesApplication")
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor {

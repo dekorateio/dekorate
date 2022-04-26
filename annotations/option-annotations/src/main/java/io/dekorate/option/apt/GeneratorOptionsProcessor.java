@@ -29,7 +29,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.option.annotation.GeneratorOptions;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Processing generator options, which are used for customizing the generation process")
 @SupportedAnnotationTypes({
     "io.dekorate.annotation.Dekorate",

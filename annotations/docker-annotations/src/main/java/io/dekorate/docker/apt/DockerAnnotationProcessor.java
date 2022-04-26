@@ -30,7 +30,7 @@ import io.dekorate.Session;
 import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @SupportedAnnotationTypes({ "io.dekorate.docker.annotation.DockerBuild" })
 public class DockerAnnotationProcessor extends AbstractAnnotationProcessor {
 

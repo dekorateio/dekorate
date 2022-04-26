@@ -38,7 +38,7 @@ import io.dekorate.config.DekorateConfig;
 import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Detects @Dekorate and configures application based on the specified configuration files.")
 @SupportedAnnotationTypes({ "io.dekorate.annotation.Dekorate" })
 public class DekorateProcessor extends AbstractAnnotationProcessor {

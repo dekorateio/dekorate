@@ -32,7 +32,7 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.helm.annotation.HelmChart;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @SupportedAnnotationTypes({ "io.dekorate.helm.annotation.HelmChart" })
 public class HelmAnnotationProcessor extends AbstractAnnotationProcessor {
 

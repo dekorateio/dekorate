@@ -30,7 +30,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.knative.annotation.KnativeApplication;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Generates knative manifests.")
 @SupportedAnnotationTypes("io.dekorate.knative.annotation.KnativeApplication")
 public class KnativeAnnotationProcessor extends AbstractAnnotationProcessor {

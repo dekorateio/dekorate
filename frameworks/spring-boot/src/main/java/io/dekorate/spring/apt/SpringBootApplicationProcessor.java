@@ -36,7 +36,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.config.SpringBootApplicationGenerator;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Detects Spring Boot and set the runtime attribute to Spring Boot.")
 @SupportedAnnotationTypes({ "org.springframework.boot.autoconfigure.SpringBootApplication" })
 public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor implements SpringBootApplicationGenerator {

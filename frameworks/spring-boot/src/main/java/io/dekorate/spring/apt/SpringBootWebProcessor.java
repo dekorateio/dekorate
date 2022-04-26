@@ -37,7 +37,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.spring.config.SpringBootWebAnnotationGenerator;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Detects Spring Boot web endpoints and registers the http port.")
 @SupportedAnnotationTypes({ "org.springframework.web.bind.annotation.RestController",
     "org.springframework.web.bind.annotation.RequestMapping", "org.springframework.web.bind.annotation.GetMapping",

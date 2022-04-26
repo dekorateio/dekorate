@@ -30,7 +30,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.minikube.annotation.Minikube;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Generates kubernetes manifests for Minikube.")
 @SupportedAnnotationTypes("io.dekorate.minikube.annotation.Minikube")
 public class MinikubeAnnotationProcessor extends AbstractAnnotationProcessor {

@@ -29,7 +29,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.tekton.annotation.TektonApplication;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Generates tekton manifests.")
 @SupportedAnnotationTypes("io.dekorate.tekton.annotation.TektonApplication")
 public class TektonAnnotationProcessor extends AbstractAnnotationProcessor {

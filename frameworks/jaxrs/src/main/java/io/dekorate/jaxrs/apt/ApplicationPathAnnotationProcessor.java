@@ -35,7 +35,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.utils.Strings;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Detects JAX-RS and servlet annotations and registers the http port.")
 @SupportedAnnotationTypes("javax.ws.rs.ApplicationPath")
 public class ApplicationPathAnnotationProcessor extends AbstractAnnotationProcessor {

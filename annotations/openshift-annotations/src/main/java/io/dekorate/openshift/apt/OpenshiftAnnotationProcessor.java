@@ -29,7 +29,7 @@ import io.dekorate.doc.Description;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @Description("Generates openshift manifests.")
 @SupportedAnnotationTypes("io.dekorate.openshift.annotation.OpenshiftApplication")
 public class OpenshiftAnnotationProcessor extends AbstractAnnotationProcessor {

@@ -29,7 +29,7 @@ import javax.lang.model.element.TypeElement;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.s2i.annotation.S2iBuild;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @SupportedAnnotationTypes({ "io.dekorate.s2i.annotation.S2iBuild" })
 public class S2iAnnotationProcessor extends AbstractAnnotationProcessor {
 
