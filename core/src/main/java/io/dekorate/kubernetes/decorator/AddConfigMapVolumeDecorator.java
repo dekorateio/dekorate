@@ -49,12 +49,12 @@ public class AddConfigMapVolumeDecorator extends NamedResourceDecorator<PodSpecF
         .withName(volume.getConfigMapName())
         .withDefaultMode(volume.getDefaultMode())
         .withOptional(volume.isOptional())
-        .withItems(toKeyToPathList(volume.getItems()))
+        .withItems(mapKeyToPathList(volume.getItems()))
         .endConfigMap()
         .endVolume();
   }
 
-  private List<KeyToPath> toKeyToPathList(Item[] items) {
+  private List<KeyToPath> mapKeyToPathList(Item[] items) {
     if (items == null || items.length == 0) {
       return Collections.emptyList();
     }
