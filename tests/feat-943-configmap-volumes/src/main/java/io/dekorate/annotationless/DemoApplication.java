@@ -13,43 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dekorate.kubernetes.annotation;
+package io.dekorate.annotationless;
 
-public @interface SecretVolume {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-  /**
-   * The volumeName name.
-   * 
-   * @return The volumeName name.
-   */
-  String volumeName();
+@SpringBootApplication
+public class DemoApplication {
 
-  /**
-   * The name of the secret to mount.
-   * 
-   * @return The name.
-   */
-  String secretName();
-
-  /**
-   * Default mode.
-   * 
-   * @return The default mode.
-   */
-  int defaultMode() default 0600;
-
-  /**
-   * Optional
-   * 
-   * @return True if optional, False otherwise.
-   */
-  boolean optional() default false;
-
-  /**
-   * Optional
-   *
-   * @return list of files to be mounted.
-   */
-  Item[] items() default {};
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
 
 }

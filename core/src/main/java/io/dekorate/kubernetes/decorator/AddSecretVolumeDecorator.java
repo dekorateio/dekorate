@@ -15,8 +15,15 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.config.Item;
 import io.dekorate.kubernetes.config.SecretVolume;
+import io.fabric8.kubernetes.api.model.KeyToPath;
+import io.fabric8.kubernetes.api.model.KeyToPathBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
@@ -42,7 +49,28 @@ public class AddSecretVolumeDecorator extends NamedResourceDecorator<PodSpecFlue
         .withSecretName(volume.getSecretName())
         .withDefaultMode(volume.getDefaultMode())
         .withOptional(volume.isOptional())
+        .withItems(toKeyToPathList(volume.getItems()))
         .endSecret()
         .endVolume();
+  }
+
+  private List<KeyToPath> toKeyToPathList(Item[] items) {
+    if (items == null || items.length == 0) {
+      return Collections.emptyList();
+    }
+
+    List<KeyToPath> keyToPathList = new ArrayList<>(items.length);
+    for (Item item : items) {
+      KeyToPathBuilder builder = new KeyToPathBuilder()
+          .withKey(item.getKey())
+          .withPath(item.getPath());
+      if (item.getMode() > 0) {
+        builder.withMode(item.getMode());
+      }
+
+      keyToPathList.add(builder.build());
+    }
+
+    return keyToPathList;
   }
 }

@@ -45,4 +45,11 @@ public @interface ConfigMapVolume {
    */
   boolean optional() default false;
 
+  /**
+   * Optional
+   *
+   * @return list of files to be mounted.
+   */
+  Item[] items() default {};
+
 }

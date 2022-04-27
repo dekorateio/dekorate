@@ -75,6 +75,7 @@
       <module>issue-932-knative-image-pull-secrets</module>
       <module>issue-939-knative-container-concurrency</module>
       <module>feat-941-existing-common-resources</module>
+      <module>feat-943-configmap-volumes</module>
     </modules>
 
 </project>
