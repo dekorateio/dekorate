@@ -127,14 +127,12 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/dekorate/s2i/adapter/**</include>
-                    <include>io/dekorate/s2i/annotation/**</include>
-                    <include>io/dekorate/s2i/apt/**</include>
-                    <include>io/dekorate/s2i/buildservice/**</include>
-                    <include>io/dekorate/s2i/config/**</include>
-                    <include>io/dekorate/s2i/configurator/**</include>
-                    <include>io/dekorate/s2i/resource/**</include>
-                    <include>io/dekorate/s2i/util/**</include>
+                    <include>io/dekorate/helm/annotation/**</include>
+                    <include>io/dekorate/helm/apt/**</include>
+                    <include>io/dekorate/helm/config/**</include>
+                    <include>io/dekorate/helm/listener/**</include>
+                    <include>io/dekorate/helm/model/**</include>
+                    <include>io/dekorate/helm/util/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
@@ -156,13 +154,10 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/dekorate/helm/adapter/**</include>
-                    <include>io/dekorate/helm/buildservice/**</include>
                     <include>io/dekorate/helm/config/**</include>
-                    <include>io/dekorate/helm/configurator/**</include>
-                    <include>io/dekorate/helm/manifest/**</include>
-                    <include>io/dekorate/helm/util/**</include>
+                    <include>io/dekorate/helm/listener/**</include>
                     <include>io/dekorate/helm/model/**</include>
+                    <include>io/dekorate/helm/util/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
