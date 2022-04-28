@@ -1,8 +1,8 @@
 ---
-title: Overview
-description: Overview
+title: Dekorate design
+description: Dekorate design
 layout: docs
-permalink: /docs/overview
+permalink: /docs/design
 ---
 
 

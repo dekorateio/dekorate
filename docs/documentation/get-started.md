@@ -1,22 +1,21 @@
 ---
-layout: base-with-padding
+layout: docs
 title: Get Started
-subtitle: Using Spring Boot
-permalink: /get-started/
+permalink: /docs/get-started/
 ---
 
-{% include title-band.html %}
+# Get started
 
+## Using Spring Boot
 The fast way to get started is to add the following dependency to your spring-boot application:
 
-- - - -
+```xml
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>2.6.0</version>
+  <version>2.9.3</version>
 </dependency>
-
-----
+```
 
 This should be enough to get dekorate to generate kubernets manifests under target/classes/META-INF/dekorate/.
 
@@ -45,23 +44,54 @@ To use the generated manifests, you need to create an image first.
 On Kubernetes using docker
 You can use a simple Dockerfile like:
 
+```
 FROM openjdk:8u171-alpine3.7
 COPY target/*.jar kubernetes-example.jar
 CMD java ${JAVA_OPTS} -jar kubernetes-example.jar
+```
+
 If such a Dockerfile is present in the module root it will be detected and used by dekorate, when specifying the option -Ddekorate.deploy=true.
 
 On Openshift using binary builds
 You will need to add dependency below as a supplement or replacement of kubernetes-spring-starter.
 
+```xml
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-spring-starter</artifactId>
-  <version>2.6.0</version>
+  <version>2.9.3</version>
 </dependency>
+```
+
 When -Ddekorate.deploy=true is detected and openshift-spring-starter is available, an binary build will take place. Note: In this case, no Dockerfile is required.
 
 Rebuilding an image
 To rebuild the image, without reapllying the manifests, you can simply use:
 
+```sh
 mvn clean package -Ddekorate.build=true
-Note: Both of these options -Ddekorate.build=true and -Ddekorate.deploy=true will use the corresponding binaries docker, oc and kubectl using a java shutdown hook.
+```
+Note: Both of these options `-Ddekorate.build=true` and `-Ddekorate.deploy=true` will use the corresponding binaries docker, oc and kubectl using a java shutdown hook.
+
+### Hello Spring 
+
+Checkout the [Hello Spring](./spring-boot) asciicast.
+
+## Using the Java Framework of your choice
+
+For generic java applications, you can use instead:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>kubernetes-annotations</artifactId>
+  <version>2.9.3</version>
+</dependency>
+```
+
+Then add `io.dekorate.annotation.Dekorate` to your any class on your project. Usually, people add that to the main class.
+
+### Hello Generic java
+
+Checkout the [Hello Generic Java / Vert.X](./generic-java-application) asciicast.
+
