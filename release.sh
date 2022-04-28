@@ -23,9 +23,9 @@ function set_version() {
 
 # Update the docs with the release version
 set_version readme.md io.dekorate $release_version
-set_version site/getting-started/index.md io.dekorate $release_version
-set_version site/kubernetes/index.md io.dekorate $release_version
-set_version site/openshift/index.md io.dekorate $release_version
+ls docs/documentation/*.md | while read doc; do
+  set_version $doc io.dekorate $release_version
+done
 
 git commit -m "doc: Update dekorate version in docs to $release_version"
 mvn versions:set -DnewVersion=$release_version -Pwith-examples
