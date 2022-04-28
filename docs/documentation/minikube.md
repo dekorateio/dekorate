@@ -7,7 +7,7 @@ permalink: /docs/minikube
 
 ### Minikube
 
-[@Minikube](annotations/minikube-annotations/src/main/java/io/dekorate/minikube/annotation/Minikube.java) is a more specialized form of [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java).
+[@Minikube](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/minikube-annotations/src/main/java/io/dekorate/minikube/annotation/Minikube.java) is a more specialized form of [@KubernetesApplication](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java).
 It can be added to your project like:
 
 ```java

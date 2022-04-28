@@ -34,7 +34,7 @@ The kubernetes extension can be used by adding the following dependency:
   <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```    
-This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
+This dependency gives access to [@KubernetesIntegrationTest](https://raw.githubusercontent.com/dekorateio/dekorate/main/testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
 
 By adding the annotation to your test class the following things will happen:
 
@@ -54,7 +54,7 @@ Supported items for injection:
 - Pod (the application pod)
 - KubernetesList (the list with all generated resources)
 
-To inject one of this you need a field in the code annotated with [@Inject](testing/core-junit/src/main/java/io/dekorate/testing/annotation/Inject.java).
+To inject one of this you need a field in the code annotated with [@Inject](https://raw.githubusercontent.com/dekorateio/dekorate/main/testing/core-junit/src/main/java/io/dekorate/testing/annotation/Inject.java).
 
 For example:
 ```java
@@ -119,7 +119,7 @@ class KubernetesIT {
 
 #### OpenShift extension for JUnit5
 
-Similarly, to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](testing/openshift-junit/src/main/java/io/dekorate/testing/openshift/annotation/OpenshiftIntegrationTest.java).
+Similarly, to using the [kubernetes junit extension](#kubernetes-extension-for-junit5) you can use the extension for OpenShift, by adding  [@OpenshiftIntegrationTest](https://raw.githubusercontent.com/dekorateio/dekorate/main/testing/openshift-junit/src/main/java/io/dekorate/testing/openshift/annotation/OpenshiftIntegrationTest.java).
 To use that you need to add:
 ```xml
 <dependency>
@@ -179,7 +179,7 @@ The knative extension can be used by adding the following dependency:
   <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```    
-This dependency gives access to [@KnativeIntegrationTest](testing/knative-junit/src/main/java/io/dekorate/testing/annotation/KnativeIntegrationTest.java) which is what enables the extension for your tests.
+This dependency gives access to [@KnativeIntegrationTest](https://raw.githubusercontent.com/dekorateio/dekorate/main/testing/knative-junit/src/main/java/io/dekorate/testing/annotation/KnativeIntegrationTest.java) which is what enables the extension for your tests.
 
 By adding the annotation to your test class the following things will happen:
 
@@ -199,7 +199,7 @@ In addition to the supported items from the Kubernetes JUnit 5 extension, the fo
 - Knative Service
 - Knative Route (or the URL of the Knative route)
 
-To inject one of this you need a field in the code annotated with [@Inject](testing/core-junit/src/main/java/io/dekorate/testing/annotation/Inject.java).
+To inject one of this you need a field in the code annotated with [@Inject](https://raw.githubusercontent.com/dekorateio/dekorate/main/testing/core-junit/src/main/java/io/dekorate/testing/annotation/Inject.java).
 
 For example:
 ```java

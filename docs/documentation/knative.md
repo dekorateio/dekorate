@@ -20,7 +20,7 @@ this feature you need to add:
 ```
 
 This module provides the
-[@KnativeApplication](annotations/knative-annotations/src/main/java/io/dekorate/knative/annotation/Knative.java) works exactly like  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `knative.yml` / `knative.json` instead.
+[@KnativeApplication](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/knative-annotations/src/main/java/io/dekorate/knative/annotation/KnativeApplication.java) works exactly like  [@KubernetesApplication](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) , but will generate resources in a file name `knative.yml` / `knative.json` instead.
 Also instead of creating a `Deployment` it will create a knative serving `Service`.
 
 #### Cluster local services

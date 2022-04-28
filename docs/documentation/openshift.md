@@ -66,7 +66,7 @@ The same can be achieved using plain old configuration (e.g.`application.propert
 dekorate.openshift.replicas=2
 ```
 
-**A complete reference on all the supported properties can be found in the [configuration options guide](/{{site.baseurl}}/configuration-guide).
+**A complete reference on all the supported properties can be found in the [configuration options guide]({{site.baseurl}}/configuration-guide).
 
 #### Adding Kubernetes Jobs
 

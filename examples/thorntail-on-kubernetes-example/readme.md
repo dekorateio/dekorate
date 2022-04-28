@@ -18,7 +18,7 @@ The application is using:
 
 Which contains all the required modules, including the annotation processors that detect Thorntail web applications.
 
-The [RestApplication.class](src/main/java/io/dekorate/example/thorntailonkubernetes/RestApplication.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
+The [RestApplication.class](src/main/java/io/dekorate/example/RestApplication.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
 This annotation allows the user to trigger a Docker build after the compilation, by passing the system property `dekorate.build=true` to the build:
 
     mvn clean install -Ddekorate.build=true
@@ -26,7 +26,7 @@ This annotation allows the user to trigger a Docker build after the compilation,
 Note: Dekorate is not going to generate a Dockerfile for you. It expects to find one in the root of the module.
 It also expects to find the `docker` binary pointing to a running Docker daemon.
 
-The Thorntail web application processor will detect our [HelloResource.java](src/main/java/io/dekorate/example/thorntailonkubernetes/HelloResource.java), and will:
+The Thorntail web application processor will detect our [HelloResource.java](src/main/java/io/dekorate/example/HelloResource.java), and will:
 
 - Add container port 9090.
 - Expose port 9090 as a service.
@@ -48,7 +48,7 @@ For the purpose of integration testing, the example includes:
     </dependency>
 
 This annotation will bring in the JUnit5 extension that Dekorate provides, that allows you to run integration tests via the '@KubernetesIntegrationTest' annotation.
-The integration test is [ThorntailOnKubernetesIT.java](src/test/java/io/dekorate/example/thorntailonkubernetes/ThorntailOnKubernetesIT.java) and it demonstrates:
+The integration test is [ThorntailOnKubernetesIT.java](src/test/java/io/dekorate/example/ThorntailOnKubernetesIT.java) and it demonstrates:
 
 - How you can deploy the application for end to end testing.
 - How use can use the Kubernetes client from within the test to connect to the application.

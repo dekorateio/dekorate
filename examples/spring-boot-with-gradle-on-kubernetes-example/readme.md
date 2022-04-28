@@ -22,7 +22,7 @@ The application is using:
 
 Which contains all the required modules, including the annotation processors that detect spring web applications.
 
-The [Main.java](src/main/java/io/dekorate/example/sbonkubernetes/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
+The [Main.java](src/main/java/io/dekorate/example/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
 This annotation allows the user to trigger an s2i build after the compilation, by passing the system property 
 `dekorate.build=true` to the build for example:
 
@@ -30,7 +30,7 @@ This annotation allows the user to trigger an s2i build after the compilation, b
 
 Note: To perform an actual build, the `oc` binary is required to be configured to point to an existing kubernetes environment.
 
-The spring web application processor will detect our [Controller.java](src/main/groovy/io/dekorate/example/sbonkubernetes/Controller.groovy), and will:
+The spring web application processor will detect our [Controller.java](src/main/java/io/dekorate/example/Controller.java), and will:
 
 - add container port 8080
 - expose port 8080 as a service
@@ -44,12 +44,8 @@ For the purpose of integration testing it includes:
     testImplementation("io.dekorate:kubernetes-junit:${dekorateVersion}")
 
 This annotation will bring in the junit5 extension that dekorate provides, that allows you to run integration tests via the '@KubernetesIntegrationTest' annotation.
-The integration test is [SpringBootOnKubernetesIT.java](src/test/groovy/io/dekorate/example/sbonkubernetes/SpringBootOnKubernetesIT.java) and it demonstrates:
 
-- how you can deploy the application for end to end testing
-- how use can use the kubernetes client from within the test to connect to the application.
-
-The test are going to be automatically run when building the application. For example:
+The tests annotated with `@KubernetesIntegrationTest` are going to be automatically run when building the application. For example:
 
      ./gradlew clean build
     

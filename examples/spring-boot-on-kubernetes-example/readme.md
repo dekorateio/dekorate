@@ -18,7 +18,7 @@ The application is using:
     
 Which contains all the required modules, including the annotation processors that detect spring web applications.
 
-The [Main.class](src/main/java/io/dekorate/example/sbonkubernetes/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
+The [Main.class](src/main/java/io/dekorate/example/Main.java) is annotated with `@KubernetesApplication` which triggers the resource generation.
 It's also annotated with `@EnableDockerBuild`. This annotation allows the user to trigger a docker build after the compilation, by passing the system property 
 `dekorate.build=true` to the build for example:
 
@@ -28,7 +28,7 @@ Note: Dekorate is not going to generate a Dockerfile for you. It expects to find
 pointing to a running docker daemon.
 
 
-The spring web application processor will detect our [Controller.java](src/main/java/io/dekorate/example/sbonkubernetes/Controller.java), and will:
+The spring web application processor will detect our [Controller.java](src/main/java/io/dekorate/example/Controller.java), and will:
 
 - add container port 8080
 - expose port 8080 as a service

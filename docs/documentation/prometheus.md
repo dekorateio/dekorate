@@ -7,10 +7,10 @@ permalink: /docs/prometheus
 ### Prometheus annotations
 
 The [prometheus](https://prometheus.io/) annotation processor provides annotations for generating prometheus related resources.
-In particular, it can generate [ServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/model/ServiceMonitor.java) which are used by the
+In particular, it can generate [ServiceMonitor](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/model/ServiceMonitor.java) which are used by the
 [Prometheus Operator](https://github.com/coreos/prometheus-operator) in order to configure [prometheus](https://prometheus.io/) to collect metrics from the target application.
 
-This is done with the use of [@EnableServiceMonitor](annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/annotation/EnableServiceMonitor.java) annotation.
+This is done with the use of [@EnableServiceMonitor](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/prometheus-annotations/src/main/java/io/dekorate/prometheus/annotation/EnableServiceMonitor.java) annotation.
 
 Here's an example:
 ```java

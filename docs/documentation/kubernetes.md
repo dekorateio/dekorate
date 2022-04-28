@@ -7,7 +7,7 @@ permalink: /docs/kubernetes
 
 ### Kubernetes
 
-[@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) is a more specialized form of [@Dekorate](core/src/main/java/io/dekorate/annotation/Dekorate.java).
+[@KubernetesApplication](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) is a more specialized form of [@Dekorate](https://raw.githubusercontent.com/dekorateio/dekorate/main/core/src/main/java/io/dekorate/annotation/Dekorate.java).
 It can be added to your project like:
 
 ```java
@@ -155,7 +155,7 @@ The output file name may be used in certain cases, to set the value of `JAVA_APP
 
 #### Adding extra ports and exposing them as services
 
-To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java):
+To add extra ports to the container, you can add one or more `@Port` into your  [@KubernetesApplication](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java):
 
 ```java
 import io.dekorate.kubernetes.annotation.Port;
@@ -186,7 +186,7 @@ This allows users to define the configuration using annotations and externalize 
 **REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide]({{site.baseurl}}/configuration-guide).
 
 #### Adding container environment variables
-To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
+To add extra environment variables to the container, you can add one or more `@EnvVar` into your  [@KubernetesApplication](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/kubernetes-annotations/src/main/java/io/dekorate/kubernetes/annotation/KubernetesApplication.java) :
 ```java
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;

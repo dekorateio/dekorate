@@ -22,10 +22,10 @@ public class Main {
   }
 }
 ```
-Check, if necessary, the [Main.java](src/main/java/io/dekorate/examples/kubernetes/Main.java).
+Check, if necessary, the [Main.java](src/main/java/io/dekorate/example/Main.java).
 
 You can also specify the permission mode for the volume with the `defaultMode` parameter in `@ConfigMapVolume` annotation.
-If you don’t specify any, [0600 is used by default](https://github.com/dekorateio/dekorate/blob/master/config.md#configmapvolume). Note that the JSON spec doesn’t support octal notation, so use the value 384 for 0600 permissions
+If you don’t specify any, [0600 is used by default](https://dekorate.io/configuration-guide/#configmapvolume). Note that the JSON spec doesn’t support octal notation, so use the value 384 for 0600 permissions
 Referenced `configMap` might be optional. By default this option will be false, so if `configMap` referenced is missing, kubernetes/openshift will lead to error. If `optional` parameter set to true, and referenced `configMap` not found, kubernetes/openshift will continue normally.
 
 Compile the project using:

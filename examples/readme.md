@@ -22,5 +22,5 @@ A collection of examples used for showcasing and testing `dekorate`.
 - [Spring Boot with gradle on OpenShift Example](spring-boot-with-gradle-on-openshift-example)
 
 # Extensions and Operators
-- [Spring Boot with Jaeger on Kubernetes Example](spring-boot-with-jaeger-on-kubernetes)
-- [Spring Boot with Prometheus on Kubernetes Example](spring-boot-with-prometheus-on-kubernetes)
+- [Spring Boot with Jaeger on Kubernetes Example](spring-boot-with-jaeger-on-kubernetes-example)
+- [Spring Boot with Prometheus on Kubernetes Example](spring-boot-with-prometheus-on-kubernetes-example)

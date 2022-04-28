@@ -1,7 +1,7 @@
 # Knative Example 
 
 A very simple example that demonstrates the use of `@KnativeApplication` in its simplest form.
-Check the [Main.java](src/main/java/io/dekorate/examples/knative/Main.java) which bears the annotation.
+Check the [Main.java](src/main/java/io/dekorate/example/Main.java) which bears the annotation.
 To access the `@KnativeApplication` annotation you just need to have the following dependency in your
 class path:
 

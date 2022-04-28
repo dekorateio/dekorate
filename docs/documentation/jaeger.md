@@ -8,7 +8,7 @@ permalink: /docs/jaeger
 
 The [jaeger](https://www.jaegertracing.io) annotation processor provides annotations for injecting the [jaeger-agent](https://www.jaegertracing.io/docs/1.10/deployment/#agent) into the application pod.
 
-Most of the work is done with the use of the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) annotation.
+Most of the work is done with the use of the [@EnableJaegerAgent](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) annotation.
 
 #### Using the Jaeger Operator
 
@@ -30,7 +30,7 @@ public class Main {
 ```    
 ##### Manually injection the agent sidecar
 
-For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
+For the cases, where the operator is not present, you can use the [@EnableJaegerAgent](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/jaeger-annotations/src/main/java/io/dekorate/jaeger/annotation/EnableJaegerAgent.java) to manually configure the sidecar.
 
 ```java
 import io.dekorate.kubernetes.annotation.KubernentesApplication;

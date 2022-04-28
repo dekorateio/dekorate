@@ -29,7 +29,7 @@ It also uses:
     
 Which enables docker builds.
 
-The [Main.java](src/main/java/io/dekorate/example/sbonopenshift/Main.java) is annotated with `@SpringBootApplication` which triggers the resource generation.
+The [Main.java](src/main/java/io/dekorate/example/Main.java) is annotated with `@SpringBootApplication` which triggers the resource generation.
 This annotation allows the user to trigger an s2i build after the compilation, by passing the system property 
 `dekorate.build=true` to the build for example:
 
@@ -37,7 +37,7 @@ This annotation allows the user to trigger an s2i build after the compilation, b
     
 Note: To perform an actual build, the `oc` binary is required to be configured to point to an existing openhisft environment.
 
-The spring web application processor will detect our [Controller.java](src/main/java/io/dekorate/example/sbonopenshift/Controller.java), and will:
+The spring web application processor will detect our [Controller.java](src/main/java/io/dekorate/example/Controller.java), and will:
 
 - add container port 8080
 - expose port 8080 as a service
@@ -66,7 +66,7 @@ For the purpose of integration testing it includes:
     </dependency>
 
 This annotation will bring in the junit5 extension that dekorate provides, that allows you to run integration tests via the '@OpenshiftIntegrationTest' annotation.
-The integration test is [SpringBootOnOpenshiftIT.java](src/test/java/io/dekorate/example/sbonopenshift/SpringBootOnOpenshiftIT.java) and it demonstrates:
+The integration test is [SpringBootOnOpenshiftIT.java](src/test/java/io/dekorate/example/SpringBootOnOpenshiftIT.java) and it demonstrates:
 
 - how you can deploy the application for end to end testing
 - how use can use the kubernetes client from within the test to connect to the application.

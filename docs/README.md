@@ -58,8 +58,6 @@ docker compose up
 
 To deploy your site using GitHub Pages you will need to add the [github-pages gem](https://github.com/github/pages-gem).
 
-> Note that GitHub Pages runs in `safe` mode and only allows a set of [whitelisted plugins](https://help.github.com/articles/configuring-jekyll-plugins/#default-plugins).
-
 To use the github-pages gem, you'll need to add the following on your `Gemfile`:
 
 ```
@@ -82,8 +80,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
+This project is licensed under the MIT License - see the [LICENSE.txt](../license.txt) file for details.
 
 ## Navigation
 

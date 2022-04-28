@@ -9,6 +9,6 @@ permalink: /docs/hello-world
 
 Checkout the hello world screencats for the following frameworks:
 
-- [Hello Spring](./spring-boot)
-- [Hello Generic Java / Vert.X](./generic-java-application)
-- [Hello Quarkus](./quarkus)
+- [Hello Spring]({{site.baseurl}}/docs/spring-boot)
+- [Hello Generic Java / Vert.X]({{site.baseurl}}/docs/generic-java-application)
+- [Hello Quarkus]({{site.baseurl}}/docs/quarkus)

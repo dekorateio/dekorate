@@ -8,7 +8,7 @@ This section describes some basic use cases of using `dekorate` annotations.
 
 #### Kubernetes
 
-When adding `kubernetes-annotations` to a generic java project no resource should be generated. (see #130:  [empty generic java projects](tests/annotations/kubernetes/src/it/issue-139-empty-generic-java-project)).
+When adding `kubernetes-annotations` to a generic java project no resource should be generated.
 
 ###### Basic options
 
