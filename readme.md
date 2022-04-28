@@ -5,9 +5,9 @@
 ![Integration Tests](https://github.com/dekorateio/dekorate/actions/workflows/integration-tests.yml/badge.svg)
 [![Maven Central](https://img.shields.io/maven-central/v/io.dekorate/kubernetes-annotations.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.dekorate%22%20AND%20a:%22kubernetes-annotations%22)
 
-Dekorate is a collection of Java compile-time generators and decorators for Kubernetes/OpenShift manifests.
+Dekorate is a one-stop jar to Kubernetes manifest generation that works for all jvm languages regardless of your build tool.
 
-It makes generating Kubernetes manifests as easy as adding a dependency to the classpath and customizing as simple as setting an annotation or application property.
+It makes generating Kubernetes manifests as easy as adding a dependency to the classpath.
 
 Stop wasting time editing xml, json and yml and customize the kubernetes manifests as you configure your java application.
 

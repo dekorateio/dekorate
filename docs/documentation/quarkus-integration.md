@@ -7,7 +7,7 @@ permalink: /docs/quarkus-integration
 
 #### Quarkus
 
-[quarkus](https://quarkus.io) provides rich set of [extensions](https://quarkus.io/extensions) including one for [kubernetes](https://quarkus.io/guides/deploying-to-kubernetes).
+[Quarkus](https://quarkus.io) provides rich set of [extensions](https://quarkus.io/extensions) including one for [kubernetes](https://quarkus.io/guides/deploying-to-kubernetes).
 The [kubernetes extension](https://quarkus.io/guides/deploying-to-kubernetes) uses internally [dekorate](https://github.com/dekorateio/dekorate) for generating and customizing manifests.
 
 The extension can be added to any [quarkus](https://quarkus.io) project:
