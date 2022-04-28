@@ -24,9 +24,20 @@ on:
   pull_request:
 
 jobs:
+  check:
+    name: Perform checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          config-file: '.github/markdown-link-check.json'
   build:
     name: Java ${{ matrix.java }} Maven
     runs-on: ubuntu-latest
+    needs: check
     strategy:
       matrix:
         java: [8,11,17]
