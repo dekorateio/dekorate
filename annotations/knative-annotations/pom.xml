@@ -165,7 +165,7 @@ limitations under the License.
                     <include>io/dekorate/knative/listener/**</include>
                     <include>io/dekorate/knative/manifest/**</include>
                     <include>io/dekorate/knative/util/**</include>
-                    <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/services/*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
