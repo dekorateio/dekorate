@@ -91,7 +91,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
   private static final String CONFIG_DEFAULTS = "config-defaults";
   private static final String DEFAULT_REGISTRY = "dev.local/";
 
-  private static final String KNATIVE_VISIBILITY = "serving.knative.dev/visibility";
+  private static final String KNATIVE_VISIBILITY = "networking.knative.dev/visibility";
   private static final String CLUSTER_LOCAL = "cluster-local";
 
   public KnativeManifestGenerator() {

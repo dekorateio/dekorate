@@ -37,7 +37,7 @@ public class Issue572Test {
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(s);
-    assertEquals("cluster-local", s.getMetadata().getLabels().get("serving.knative.dev/visibility"));
+    assertEquals("cluster-local", s.getMetadata().getLabels().get("networking.knative.dev/visibility"));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
