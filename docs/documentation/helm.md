@@ -36,7 +36,7 @@ dekorate.helm.version=1.0.0-SNAPSHOT
 dekorate.helm.description=Description of my Chart
 ```
 
-Or annotate one of your Java source files with the [@HelmChart](annotations/helm-annotations/src/main/java/io/dekorate/helm/annotation/HelmChart.java) annotation:
+Or annotate one of your Java source files with the [@HelmChart](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/helm-annotations/src/main/java/io/dekorate/helm/annotation/HelmChart.java) annotation:
 
 ```java
 @HelmChart(name = "myChart", version = "1.0.0-SNAPSHOT", description = "Description of my Chart")

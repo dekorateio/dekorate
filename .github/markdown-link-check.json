@@ -2,6 +2,12 @@
   "ignorePatterns": [
     {
       "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^{{site.baseurl}}"
+    },
+    {
+      "pattern": "^/docs/"
     }
   ]
 }

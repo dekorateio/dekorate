@@ -60,7 +60,7 @@ dekorate:
 ```
 
 
-Check, if necessary, the [Main.java](src/main/java/io/dekorate/examples/kubernetes/Main.java).
+Check, if necessary, the [Main.java](src/main/java/io/dekorate/example/Main.java).
 
 Compile the project using:
 

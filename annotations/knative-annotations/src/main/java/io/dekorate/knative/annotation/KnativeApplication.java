@@ -263,7 +263,7 @@ public @interface KnativeApplication {
   /**
    * Controls whether the application should be exposed (default: true).
    * Services that are not exposed with be labeled as cluster local (see
-   * https://knative.dev/docs/serving/cluster-local-route).
+   * https://knative.dev/docs/serving/services/private-services).
    */
   boolean expose() default true;
 

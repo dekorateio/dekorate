@@ -75,7 +75,7 @@ Note: Both of these options `-Ddekorate.build=true` and `-Ddekorate.deploy=true`
 
 ### Hello Spring 
 
-Checkout the [Hello Spring](./spring-boot) asciicast.
+Checkout the [Hello Spring]({{site.baseurl}}/docs/spring-boot) asciicast.
 
 ## Using the Java Framework of your choice
 
@@ -93,5 +93,5 @@ Then add `io.dekorate.annotation.Dekorate` to your any class on your project. Us
 
 ### Hello Generic java
 
-Checkout the [Hello Generic Java / Vert.X](./generic-java-application) asciicast.
+Checkout the [Hello Generic Java / Vert.X]({{site.baseurl}}/docs/generic-java-application) asciicast.
 

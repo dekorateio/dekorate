@@ -18,14 +18,14 @@ The application is using:
 
 Which contains all the required modules, including the annotation processors that detect Thorntail web applications.
 
-The [RestApplication.java](src/main/java/io/dekorate/example/thorntailonopenshift/RestApplication.java) is annotated with `@OpenshiftApplication` which triggers the resource generation.
+The [RestApplication.java](src/main/java/io/dekorate/example/RestApplication.java) is annotated with `@OpenshiftApplication` which triggers the resource generation.
 This annotation allows the user to trigger an S2I build after the compilation, by passing the system property `dekorate.build=true` to the build:
 
     mvn clean install -Ddekorate.build=true
 
 Note: To perform an actual build, the `oc` binary is required to be configured to point to an existing OpenShift environment.
 
-The Thorntail web application processor will detect our [HelloResource.java](src/main/java/io/dekorate/example/thorntailonopenshift/HelloResource.java), and will:
+The Thorntail web application processor will detect our [HelloResource.java](src/main/java/io/dekorate/example/HelloResource.java), and will:
 
 - Add container port 8080.
 - Expose port 8080 as a service.
@@ -44,7 +44,7 @@ For the purpose of integration testing, the example includes:
     </dependency>
 
 This dependency will bring in the JUnit5 extension that Dekorate provides, that allows you to run integration tests via the `@OpenshiftIntegrationTest` annotation.
-The integration test is [ThorntailOnOpenshiftIT.java](src/test/java/io/dekorate/example/thorntailonopenshift/ThorntailOnOpenshiftIT.java) and it demonstrates:
+The integration test is [ThorntailOnOpenshiftIT.java](src/test/java/io/dekorate/example/ThorntailOnOpenshiftIT.java) and it demonstrates:
 
 - How you can deploy the application for end to end testing.
 - How use can use the Kubernetes client from within the test to connect to the application.

@@ -80,7 +80,7 @@ or via `application.properties`:
     dekorate.kubernetes.init-containers[0].command=foo
 
 
-The [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
+The [@Container](https://raw.githubusercontent.com/dekorateio/dekorate/main/core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
 
 - Image
 - Image Pull Policy
@@ -113,7 +113,7 @@ or via `application.properties`:
     dekorate.kubernetes.sidecars[0].image=jaegertracing/jaeger-agent
     dekorate.kuberentes.args=--collector.host-port=jaeger-collector.jaeger-infra.svc:14267
 
-As in the case of [init containers](#init-containers) the [@Container](core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
+As in the case of [init containers](#init-containers) the [@Container](https://raw.githubusercontent.com/dekorateio/dekorate/main/core/src/main/java/io/dekorate/kubernetes/annotation/Container.java) supports the following fields:
 
 - Image
 - Image Pull Policy
