@@ -15,22 +15,22 @@
     dropdown:
       - title: Kubernetes
         url: /docs/kubernetes
-      - title: Container Resources
-        url: /docs/container-resources
+      - title: Knative
+        url: /docs/knative
       - title: Openshift
         url: /docs/openshift
       - title: Minikube
         url: /docs/minikube
       - title: Tekton
         url: /docs/tekton
-      - title: Knative
-        url: /docs/knative
       - title: Helm
         url: /docs/helm
       - title: Prometheus
         url: /docs/prometheus
       - title: Jaeger
         url: /docs/jaeger
+      - title: Container Resources
+        url: /docs/container-resources
       - title: ServiceBinding CRD
         url: /docs/service-binding
       - title: Using the BOM
@@ -57,36 +57,8 @@
         url: /docs/jib-build-hook
       - title: S2I Build Hook
         url: /docs/s2i-build-hook
-
-
-#
-#
-#    nav:
-#      - Overview: 'index.md'
-#      - Getting Started:
-#          - Spring Boot: 'gs-spring-boot.md'
-#          - Quarkus: 'gs-quarkus.md'
-#          - Thorntail: 'gs-thorntail.md'
-#          - Generic Java Application: 'gs-generic-java.md'
-#      - Usage:
-#          - Overview: 'usage.md'
-#          - Kubernetes: 'kubernetes.md'
-#          - Container resources: 'container-resources.md'
-#          - OpenShift: 'openshift.md'
-#          - Tekton: 'tekton.md'
-#          - Prometheus: 'prometheus.md'
-#          - Jaeger: 'jaeger.md'
-#          - ServiceBinding CRD: 'service-binding.md'
-#          - Using the BOM: 'using-bom.md'
-#      - Framework integration:
-#          - Overview: 'framework-integration-overview.md'
-#          - Spring Boot: 'spring-boot-integration.md'
-#          - Quarkus: 'quarkus-integration.md'
-#          - Thorntail: 'thorntail.md'
-#          - Annotation Less: 'annotation-less-configuration.md'
-#      - Experimental features:
-#          - Overview: 'experimental-features.md'
-#          - Docker Build Hook: 'docker-build-hook.md'
-#          - Source To Image Build Hook: 's2i-build-hook.md'
-#          - Jib Build Hook: 'jib-build-hook.md'
-#
+  - title: Contribute
+    url: /contribute
+    dropdown:
+      - title: Dekorate design
+        url: /docs/design

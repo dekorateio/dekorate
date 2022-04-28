@@ -7,6 +7,10 @@ permalink: /contribute/
 
 {% include title-band.html %}
 
+# Design
+
+To help you better understand how dekorate works under the hood, please check the [dekorate design](/docs/design).
+
 # Contributor guidelines
 
 To make both your and our life easier here are some tips:
