@@ -1,8 +1,8 @@
  # Navbar menu navigation links
-  - title: Dekorate
-    url: /docs/overview
   - title: Getting Started
-    url: /docs/getting-started
+    url: /docs/get-started
+  - title: Hello World
+    url: /docs/hello-world
     dropdown:
       - title: Spring Boot
         url: /docs/spring-boot
