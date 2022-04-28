@@ -21,11 +21,9 @@ jobs:
           git config --global user.name "Dekorate"
           git config --global user.email "cmoullia-staff@redhat.com"
           git add docs/_data/project.yml
-          git status
-          echo $GITHUB_REF_NAME
           git commit -m "chore: update project version for Dekorate docs."
-#      - name: Push changes
-#        uses: ad-m/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          branch: gh-pages
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
