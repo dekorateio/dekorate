@@ -29,6 +29,7 @@
         <module>spring-boot-on-kubernetes-without-annotations</module>
         <module>spring-boot-on-kubernetes-with-jib-example</module>
         <module>spring-boot-on-kubernetes-with-jib-custom-registry-example</module>
+        <module>spring-boot-on-knative-example</module>
         <module>spring-boot-on-openshift-example</module>
         <module>spring-boot-on-openshift-with-jib-custom-registry-example</module>
         <module>spring-boot-on-openshift-with-ocp-properties-example</module>
