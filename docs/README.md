@@ -47,6 +47,13 @@ docker run -p 4000:4000 -v $(pwd):/site bretfisher/jekyll-serve
 
 The site will be up and running in `localhost:4000`.
 
+Or you can just use docker compose:
+
+```
+docker compose up
+```
+
+
 ## Deployment on GitHub Pages
 
 To deploy your site using GitHub Pages you will need to add the [github-pages gem](https://github.com/github/pages-gem).
