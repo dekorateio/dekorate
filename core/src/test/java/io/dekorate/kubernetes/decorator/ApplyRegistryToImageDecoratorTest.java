@@ -23,7 +23,7 @@ public class ApplyRegistryToImageDecoratorTest {
 
   @Test
   public void shouldRespectAfter() {
-    ApplyRegistryToImageDecorator r = new ApplyRegistryToImageDecorator("docker.io", "test", "image", "latest");
+    ApplyRegistryToImageDecorator r = new ApplyRegistryToImageDecorator("docker.io");
     ApplyImageDecorator a = new ApplyImageDecorator("cnt", "image");
 
     assertEquals(1, r.compareTo(a));
