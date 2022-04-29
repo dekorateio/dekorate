@@ -19,7 +19,7 @@ The application is using:
 Which contains all the required modules, including the annotation processors that detect spring web applications.
 
 The [Main.class](src/main/java/io/dekorate/example/Main.java) is annotated with `@KnativeApplication` which triggers the resource generation.
-It's also annotated with `@EnableDockerBuild`. This annotation allows the user to trigger a docker build after the compilation, by passing the system property 
+Out of the box, the `kantive-spring-starter` comes with `docker` support. This allows the user to trigger a docker build after the compilation, by passing the system property 
 `dekorate.build=true` to the build for example:
 
     mvn clean install -Ddekorate.build=true
