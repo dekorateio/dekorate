@@ -25,14 +25,29 @@ public class Images {
    * Create an image from the individual parts.
    * 
    * @param registry The registry.
-   * @param repository The repository.
+   * @param group The repository.
    * @param name The name.
    * @param tag The tag.
    * @return The image.
    */
-  public static String getImage(String registry, String repository, String name, String tag) {
+  public static String getImage(String registry, String group, String name, String tag) {
     if (Strings.isNullOrEmpty(name)) {
-      throw new IllegalArgumentException("Docker image name cannot be null!");
+      throw new IllegalArgumentException("Docker image repository cannot be null!");
+    }
+    return getImage(registry, Strings.isNotNullOrEmpty(group) ? group + SLASH + name : name, tag);
+  }
+
+  /**
+   * Create an image from the individual parts.
+   * 
+   * @param registry The registry.
+   * @param repository The repository.
+   * @param tag The tag.
+   * @return The image.
+   */
+  public static String getImage(String registry, String repository, String tag) {
+    if (Strings.isNullOrEmpty(repository)) {
+      throw new IllegalArgumentException("Docker image repository cannot be null!");
     }
     if (Strings.isNullOrEmpty(tag)) {
       throw new IllegalArgumentException("Docker image tag cannot be null!");
@@ -44,10 +59,7 @@ public class Images {
         sb.append(SLASH);
       }
     }
-    if (Strings.isNotNullOrEmpty(repository)) {
-      sb.append(repository).append(SLASH);
-    }
-    sb.append(name).append(COLN).append(tag);
+    sb.append(repository).append(COLN).append(tag);
     return sb.toString();
   }
 
