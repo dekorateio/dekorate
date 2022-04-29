@@ -50,6 +50,7 @@ import io.dekorate.knative.decorator.ApplyMinScaleDecorator;
 import io.dekorate.knative.decorator.ApplyRevisionNameDecorator;
 import io.dekorate.knative.decorator.ApplyServiceAccountToRevisionSpecDecorator;
 import io.dekorate.knative.decorator.ApplyTrafficDecorator;
+import io.dekorate.knative.decorator.RemoveProbesFromRevisionSpecDecorator;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
 import io.dekorate.kubernetes.config.AzureDiskVolume;
 import io.dekorate.kubernetes.config.AzureFileVolume;
@@ -69,7 +70,9 @@ import io.dekorate.kubernetes.decorator.AddImagePullSecretToServiceAccountDecora
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceAccountResourceDecorator;
 import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
+import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
+import io.dekorate.kubernetes.decorator.ApplyRegistryToImageDecorator;
 import io.dekorate.option.config.VcsConfig;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
@@ -121,6 +124,8 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
       resourceRegistry.add(KNATIVE, createService(config));
     }
 
+    addDecorators(KNATIVE, config);
+
     Project project = getProject();
     Optional<VcsConfig> vcsConfig = configurationRegistry.get(VcsConfig.class);
     String remote = vcsConfig.map(VcsConfig::getRemote).orElse(Git.ORIGIN);
@@ -137,7 +142,6 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
         new ApplyPortNameDecorator(null, null,
             config.getHttpTransportVersion() != null ? config.getHttpTransportVersion().name().toLowerCase() : "http1",
             Ports.webPortNames().toArray(new String[Ports.webPortNames().size()])));
-    addDecorators(KNATIVE, config);
 
     if (config.getMinScale() != null && config.getMinScale() != 0) {
       resourceRegistry.decorate(KNATIVE, new ApplyMinScaleDecorator(config.getName(), config.getMinScale()));
@@ -284,6 +288,8 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
   @Override
   protected void addDecorators(String group, KnativeConfig config) {
     super.addDecorators(group, config);
+    resourceRegistry.decorate(group, new RemoveProbesFromRevisionSpecDecorator());
+    resourceRegistry.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
     if (!config.isExpose()) {
       resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), new LabelBuilder()
           .withKey(KNATIVE_VISIBILITY)
@@ -326,7 +332,8 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
                     imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
 
     return new ServiceBuilder().withNewMetadata().withName(config.getName())
-        .endMetadata().withNewSpec().withNewTemplate().withNewSpec()
+        .endMetadata().withNewSpec().withNewTemplate()
+        .withNewSpec()
         .addNewContainer().withName(config.getName())
         .withImage(image).endContainer().endSpec().endTemplate().endSpec().build();
   }
