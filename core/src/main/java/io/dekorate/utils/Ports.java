@@ -187,6 +187,10 @@ public class Ports {
     return Optional.empty();
   }
 
+  public static boolean isHttps(int port) {
+    return port == 443 || port == 8443;
+  }
+
   public static Integer calculateNodePort(String name, Port port) {
     // Check if ingress is enabled
     // TODO : Add ingress property to the Kubernetes config

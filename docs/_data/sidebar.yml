@@ -33,6 +33,8 @@
         url: /docs/container-resources
       - title: ServiceBinding CRD
         url: /docs/service-binding
+      - title: Cert-Manager
+        url: /docs/cert-manager
       - title: Using the BOM
         url: /docs/using-bom
   - title: Framework Integration
