@@ -6,7 +6,7 @@ permalink: /docs/cert-manager
 ---
 ### Cert-Manager
 
-Dekorate supports generating `Certificate` and `Issuer` resources using [Cert-Manager](https://cert-manager.io/). When these resources are loaded into the cluster, Cert-Manager will issue the certificates, issuers, and trust-store files that then can be used by final applications.
+Dekorate supports to generate a X.509 certificate with the help of the Certificate and Issuer CRD resources handled by the [Cert-Manager](https://cert-manager.io/). When these CRD resources are deployed on the cluster, the Cert-Manager will process them in order to populate a Secret containing by example a: CA certificate, private key, server certificate or java keystores, etc.
 
 To let Dekorate to generate the certificate and issuer resources, simply declare the following dependency part of your pom file:
 
@@ -18,13 +18,13 @@ To let Dekorate to generate the certificate and issuer resources, simply declare
 </dependency>
 ```
 
-And provide the certificate configuration. The minimal information that the Dekorate needs are:
-- `secretName` : the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will contain all the generated files by Cert-Manager.
+And provide the certificate configuration. The minimal information that the Dekorate needs is:
+- `secretName` : the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will include the Cert-Manager generated files.
 - the Issuer that represents certificate authorities (CAs). See all the supported options in [the Issuer](#issuers) section.
 
-For all the configuration options, please go to [the Configuration guide](https://dekorate.io/configuration-guide/#cert-manager) for Cert-Manager.
+For all the configuration options, please go to [the Configuration guide](https://dekorate.io/configuration-guide/#cert-manager) of the Cert-Manager.
 
-To provide the minimal configuration, we can do it via the properties file:
+The minimal configuration can be provided using the properties file and the following keys:
 
 ```
 dekorate.certificate.secret-name=tls-secret
@@ -64,7 +64,7 @@ spec:
   secretName: tls-secret
 ```
 
-Apart from these two resources, the Cert-Manager Dekorate extension will also configure the volumes that contain the generated files by Cert-Manager, so it's automatically accessible for applications:
+Apart from these two resources, the Cert-Manager Dekorate extension will also configure, part of the Deployment, a volume mounted from the secret that contain the Cert-Manager generated files to allow the application to access them and to configure the HTTPS/TLS endpoint:
 
 ```
 ---
@@ -91,15 +91,15 @@ spec:
 
 #### Usage
 
-After we configure the certificate properties, we need to update our applications to use the generated files by Cert-Manager that are mounted in the path `/etc/certs`.
+To let the application consume the path mounted, we have then to update also the properties of the application (Quarkus, Spring Boot, ...) to use Cert-Manager the generated files that are mounted in the folder `/etc/certs`.
 
 To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS keystore.
 
 #### Issuers
 
-The `Issuer` is a Kubernetes resource that represents certificate authorities (CAs) that are able to generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a referenced issuer that is in a ready condition to attempt to honor the request.
+The `Issuer` is a Kubernetes resource that represents a certificate issuing authority that are able to generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a referenced issuer that is in a ready condition to attempt to honor the request.
 
-The supported issuers in this extension are:
+The supported issuers of this extension are:
 
 - [SelfSigned](https://cert-manager.io/docs/configuration/selfsigned/)
 - [CA](https://cert-manager.io/docs/configuration/ca/)

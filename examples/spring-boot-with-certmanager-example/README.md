@@ -44,7 +44,7 @@ dekorate.certificate.keystores.pkcs12.passwordSecretRef.key=password
 
 Using this configuration, Dekorate will create the `Certificate` and `Issuer` resources that, once installed on the Kubernetes platform, will be used by Certificate Manager to generate a self-signed certificate and the Keystore files within the secret `tls-secret`. 
 
-About the Keystore password, we have configured our certificate resource to get the password from other secret resource named `pkcs12-pass` with a data key `password` and value in base 64 is `supersecret`, so let's create this secret in the file `src/main/resources/k8s/common.yml`:
+**NOTE**: As the keystore file (pkcs12, ...) is password protected, this is then the reason why we have to create a secret including the needed password. For that purpose, we are going to create, part of the file `src/main/resources/k8s/common.yml`, a secret named "pkcs12-pass". The data field will include the key password where the string `supersecret` will be encoded in base64:
 
 ```
 ---
@@ -58,7 +58,7 @@ data:
 type: Opaque
 ```
 
-In Dekorate, we can include the resources that are defined in the file `src/main/resources/k8s/common.yml` using the property `dekorate.options.input-path` which value is the folder name in `src/main/resources`:
+To tell to Dekorate where it can find the file `src/main/resources/k8s/common.yml`, we will then set the property `dekorate.options.input-path` to specify the name folder under `src/main/resources` where they can be found (e.g. k8s):
 
 ```
 dekorate.options.input-path=k8s
