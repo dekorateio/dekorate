@@ -76,6 +76,7 @@
       <module>issue-939-knative-container-concurrency</module>
       <module>feat-941-existing-common-resources</module>
       <module>feat-943-configmap-volumes</module>
+      <module>issue-963-docker-system-properties</module>
     </modules>
 
 </project>

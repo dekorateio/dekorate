@@ -1,0 +1,4 @@
+dekorate:
+  docker:
+    registry: localhost:3000
+    group: default
