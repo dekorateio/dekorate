@@ -87,6 +87,15 @@ jobs:
       - name: Install and Run Integration Tests
         run: |
           ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Pwith-knative-examples -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
+      - name: Zip Artifacts
+        if: failure()
+        run: |
+          zip -R manifests-k8s-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: ci-manifests
+          path: manifests-k8s-jvm${{ matrix.java }}.zip
 
   openshift:
     name: Openshift Build
@@ -128,3 +137,12 @@ jobs:
           oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
           oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
           ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
+      - name: Zip Artifacts
+        if: failure()
+        run: |
+          zip -R manifests-ocp-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: ci-manifests
+          path: manifests-ocp-jvm${{ matrix.java }}.zip
