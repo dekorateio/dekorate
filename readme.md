@@ -1249,7 +1249,7 @@ gradle build -Ddekorate.build=true
 When push is enabled, the registry can be specified as part of the annotation, or via system properties.
 Here's an example via annotation configuration:
 ```java
-@EnableDockerBuild(registry="quay.io")
+@DockerBuild(registry="quay.io")
 public class Main {
 }
 ```    
@@ -1350,7 +1350,7 @@ This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-
 By adding the annotation to your test class the following things will happen:
 
 1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
-2. If `@EnableDockerBuild` is present in the project, a docker build will be triggered.
+2. If `@DockerBuild` is present in the project, a docker build will be triggered.
 3. All generated manifests will be applied.
 4. Will wait until applied resources are ready.
 5. Dependencies will be injected (e.g. KubernetesClient, Pod etc)

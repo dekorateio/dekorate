@@ -22,16 +22,16 @@ or if you are using gradle:
 ```bash
 gradle build -Ddekorate.build=true   
 ```
-When push is enabled, the registry can be specified as part of the annotation, or via system properties.
+When push is enabled, the registry, the group and the version can be specified as part of the annotation, or via system properties. 
 Here's an example via annotation configuration:
 ```java
-@EnableDockerBuild(registry="quay.io")
+@DockerBuild(registry = "quay.io", group = "user", version = "1.0")
 public class Main {
 }
 ```    
 Here's how it can be done via build properties (system properties):
 ```bash
-mvn clean install -Ddekorate.docker.registry=quay.io -Ddekorate.push=true    
+mvn clean install -Ddekorate.docker.registry=quay.io -Ddekorate.docker.group=user -Ddekorate.docker.version=1.0 -Ddekorate.push=true    
 ```
 
 Note: Dekorate will **NOT** push images on its own. It will delegate to the `docker` binary. So the user needs to make sure

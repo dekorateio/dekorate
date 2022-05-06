@@ -39,7 +39,7 @@ This dependency gives access to [@KubernetesIntegrationTest](https://raw.githubu
 By adding the annotation to your test class the following things will happen:
 
 1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
-2. If `@EnableDockerBuild` is present in the project, a docker build will be triggered.
+2. If `@DockerBuild` is present in the project, a docker build will be triggered.
 3. All generated manifests will be applied.
 4. Will wait until applied resources are ready.
 5. Dependencies will be injected (e.g. KubernetesClient, Pod etc)
@@ -184,7 +184,7 @@ This dependency gives access to [@KnativeIntegrationTest](https://raw.githubuser
 By adding the annotation to your test class the following things will happen:
 
 1. The extension will check if a kubernetes cluster is available (if not tests will be skipped).
-2. If `@EnableDockerBuild` is present in the project, a docker build will be triggered.
+2. If `@DockerBuild` is present in the project, a docker build will be triggered.
 3. All generated manifests will be applied.
 4. Will wait until applied resources and the Knative services are ready.
 5. Dependencies will be injected (e.g. KnativeClient, Service, Knative Routes, etc)
