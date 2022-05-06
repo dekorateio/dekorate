@@ -95,23 +95,104 @@ To let the application consume the path mounted, we have then to update also the
 
 To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS keystore.
 
+#### Securing Resources
+
+When securing your resources, it's important to validate that the requests are coming from known host names. For this purpose, we can use the `dnsNames` property which is part of the certificate configuration. For example, by adding the following `dekorate.certificate.dnsNames` property (it's a comma separated list of strings):
+
+```
+dekorate.certificate.dnsNames=foo.bar.com
+```
+
+The certificate will only allow requests coming from the host `foo.bar.com`.
+
+Note that the applications in Kubernetes can be publicly exposed using [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) resources, for example:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-example
+spec:
+  rules:
+  - host: "foo.bar.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: kubernetes-example
+            port:
+              number: 8080
+```
+
+In Dekorate, you can generate the above Ingress resource by simply adding the following key properties:
+```
+dekorate.kubernetes.host=foo.bar.com
+dekorate.kubernetes.expose=true
+```
+
 #### Issuers
 
 The `Issuer` is a Kubernetes resource that represents a certificate issuing authority that are able to generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a referenced issuer that is in a ready condition to attempt to honor the request.
 
-The supported issuers of this extension are:
+The supported issuers of this extension are: SelfSigned, CA, Vault and IssuerRef. 
 
-- [SelfSigned](https://cert-manager.io/docs/configuration/selfsigned/)
-- [CA](https://cert-manager.io/docs/configuration/ca/)
-- [Vault](https://cert-manager.io/docs/configuration/vault/)
+**Note**: Only one issuer must be set between `selfSigned`, `ca`, `vault` and `issuerRef`.
 
-Alternatively, you can use an Issuer reference that is already installed in the cluster via the properties file:
+##### SelfSigned
+
+Using the [SelfSigned issuer](https://cert-manager.io/docs/configuration/selfsigned/), the certificate will sign itself using the given private key.
+To use the SelfSigned issuer, you need to add the following key property:
+```
+dekorate.certificate.selfSigned.enabled=true
+```
+
+##### CA
+
+Using the [CA issuer](https://cert-manager.io/docs/configuration/ca/), the certificate and private key are stored inside the cluster as a Kubernetes Secret, and will be used to sign incoming certificate requests.
+To use the CA issuer, you need to add the following key properties:
+
+```
+dekorate.certificate.ca.secretName=ca-key-pair
+```
+
+When this certificate is installed in the cluster, Cert-Manager will issue the certificate and generate the CA secret resource `ca-key-pair` which the following content:
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ca-key-pair
+data:
+  tls.crt: <auto generated encrypted data>
+  tls.key: <auto generated encrypted data>
+```
+
+##### Vault
+
+Using the [Vault issuer](https://cert-manager.io/docs/configuration/vault/), the certificate will be issued by the certificate authority [Vault](https://www.vaultproject.io/).
+To use the Vault issuer, you need to the following key properties:
+
+```
+dekorate.certificate.vault.server=https://vault.example.com:8200
+dekorate.certificate.vault.path=my_pki_mount/sign/my-role-name
+# Any of the auth mechanisms to login into Vault:
+## 1.- Via token secret resource reference:
+dekorate.certificate.vault.authTokenSecretRef...
+## 2.- Via using Application Role:
+dekorate.certificate.vault.authAppRole...
+## 3.- Via using Kubernetes service account:
+dekorate.certificate.vault.authKubernetes...
+```
+
+##### Using a pre-existing issuer
+
+To use a pre-existing issuer type that is separately installed in the cluster, you can use the `issuerRef` type. For example:
 
 ```
 dekorate.certificate.issuerRef.name=my-issuer
 dekorate.certificate.issuerRef.kind=ClusterIssuer
 ```
 
-In this example, we are using a [ClusterIssuer](https://cert-manager.io/docs/concepts/issuer/) resource that is part of the Cert-Manager API.
-
-**Note**: Only one issuer must be set between `selfSigned`, `ca`, `vault` and `issuerRef`
+In this example, we are using a [ClusterIssuer](https://cert-manager.io/docs/concepts/issuer/) resource that is part of the Cert-Manager API and that should have previously installed in the cluster.
