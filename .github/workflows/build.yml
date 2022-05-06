@@ -40,3 +40,12 @@ jobs:
           distribution: 'temurin'
       - name: Build Project
         run: ./mvnw ${MAVEN_ARGS} clean install
+      - name: Zip Artifacts
+        if: failure()
+        run: |
+          zip -R manifests-build-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: ci-manifests
+          path: manifests-build-jvm${{ matrix.java }}.zip

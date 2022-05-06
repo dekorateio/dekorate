@@ -40,7 +40,8 @@ class SpringBootOnOpenshiftTest {
     BuildConfig b = findFirst(list, BuildConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     assertNotNull(b);
-    assertTrue(d.getSpec().getTriggers().stream().filter(t -> t.getImageChangeParams().getFrom().getName().equals(b.getSpec().getOutput().getTo().getName())).findFirst().isPresent());
+    assertTrue(d.getSpec().getTriggers().stream().anyMatch(t -> t.getImageChangeParams().getFrom().getName().equals(b.getSpec().getOutput().getTo().getName())),
+      "Could not find trigger with image change params from: " + b.getSpec().getOutput().getTo().getName());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
