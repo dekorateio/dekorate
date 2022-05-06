@@ -20,7 +20,7 @@ To let Dekorate to generate the certificate and issuer resources, simply declare
 
 And provide the certificate configuration. The minimal information that the Dekorate needs is:
 - `secretName` : the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will include the Cert-Manager generated files.
-- the Issuer that represents certificate authorities (CAs). See all the supported options in [the Issuer](#issuers) section.
+- the Issuer that represents the certificate authority (CA). See all the supported options in [the Issuer](#issuers) section.
 
 For all the configuration options, please go to [the Configuration guide](https://dekorate.io/configuration-guide/#cert-manager) of the Cert-Manager.
 
@@ -91,7 +91,7 @@ spec:
 
 #### Usage
 
-To let the application consume the path mounted, we have then to update also the properties of the application (Quarkus, Spring Boot, ...) to use Cert-Manager the generated files that are mounted in the folder `/etc/certs`.
+To let the application access the path mounted, we have then to update also the properties of the application (Quarkus, Spring Boot, ...) to use the files that are mounted in the folder "/etc/certs" from the secret.
 
 To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS keystore.
 
@@ -103,7 +103,7 @@ When securing your resources, it's important to validate that the requests are c
 dekorate.certificate.dnsNames=foo.bar.com
 ```
 
-The certificate will only allow requests coming from the host `foo.bar.com`.
+The certificate will only allow requests accessing the server host `foo.bar.com`. Remark: If the DNS Host name do not exist, then you will get an error.
 
 Note that the applications in Kubernetes can be publicly exposed using [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) resources, for example:
 
@@ -114,7 +114,7 @@ metadata:
   name: kubernetes-example
 spec:
   rules:
-  - host: "foo.bar.com"
+  - host: foo.bar.com
     http:
       paths:
       - pathType: Prefix
@@ -124,17 +124,22 @@ spec:
             name: kubernetes-example
             port:
               number: 8080
+  tls:
+    - hosts:
+        - foo.bar.com
+      secretName: tls-secret # < cert-manager will store the created certificate in this secret.
 ```
 
 In Dekorate, you can generate the above Ingress resource by simply adding the following key properties:
 ```
 dekorate.kubernetes.host=foo.bar.com
 dekorate.kubernetes.expose=true
+TODO: Allow to configure TLS configuration in the Ingress: https://github.com/dekorateio/dekorate/issues/967
 ```
 
 #### Issuers
 
-The `Issuer` is a Kubernetes resource that represents a certificate issuing authority that are able to generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a referenced issuer that is in a ready condition to attempt to honor the request.
+The `Issuer` is a Kubernetes resource that represents a certificate issuing authority that are able to generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a referenced issuer to attempt to honor the request.
 
 The supported issuers of this extension are: SelfSigned, CA, Vault and IssuerRef. 
 
