@@ -91,7 +91,7 @@ spec:
 
 #### Usage
 
-To let the application access the path mounted, we have then to update also the properties of the application (Quarkus, Spring Boot, ...) to use the files that are mounted in the folder "/etc/certs" from the secret.
+To let the application (Quarkus, Spring Boot, ...) access the files mounted under the path "/etc/certs" from the secret, we have then to update also the properties of the application to access them.
 
 To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS keystore.
 

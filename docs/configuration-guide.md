@@ -625,7 +625,7 @@ The section below describes all the available subtypes.
 | dekorate.certificate.commonName       | String          | common name to be used on the Certificate                 |                      |  
 | dekorate.certificate.duration         | String          | the lifetime of the Certificate                           |                      |  
 | dekorate.certificate.renewBefore      | String          | the renewal before duration timestamp                     |                      |  
-| dekorate.certificate.dnsNames         | String[]        | the list of [Subject Alternative Names](https://en.wikipedia.org/wiki/Subject_Alternative_Name) to be associated with the certificate. Find more information in [the Cert-Manager Dekorate](https://dekorate.io/docs/cert-manager#securing-resources) documentation.                           |                      |  
+| dekorate.certificate.dnsNames         | String[]        | the list of [Subject Alternative Names](https://en.wikipedia.org/wiki/Subject_Alternative_Name). Find more information in [the Cert-Manager Dekorate](https://dekorate.io/docs/cert-manager#securing-resources) documentation.                           |                      |  
 | dekorate.certificate.ipAddresses      | String[]        | the list of IP address subjectAltNames                    |                      |  
 | dekorate.certificate.uris             | String[]        | the list of URI subjectAltNames                           |                      |  
 | dekorate.certificate.emailAddresses   | String[]        | the list of email subjectAltNames                         |                      |  

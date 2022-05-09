@@ -93,8 +93,7 @@ public @interface Certificate {
   String renewBefore() default "";
 
   /**
-   * @return the list of <a href="https://en.wikipedia.org/wiki/Subject_Alternative_Name">Subject Alternative Names</a> that
-   *         should be included as part of the Order validation process.
+   * @return the list of <a href="https://en.wikipedia.org/wiki/Subject_Alternative_Name">Subject Alternative Names</a>.
    */
   String[] dnsNames() default {};
 
