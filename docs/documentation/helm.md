@@ -97,7 +97,7 @@ kind: Deployment
 metadata:
   name: myModule
 spec:
-  replicas: {{ .Values.myModule.replicas }}
+  replicas: '{{ .Values.myModule.replicas }}'
 ```
 
 This is done transparently to users.
