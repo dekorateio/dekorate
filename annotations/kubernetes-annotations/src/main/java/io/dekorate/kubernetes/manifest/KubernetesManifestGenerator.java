@@ -35,6 +35,7 @@ import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration
 import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
 import io.dekorate.kubernetes.decorator.AddIngressRuleDecorator;
+import io.dekorate.kubernetes.decorator.AddIngressTlsDecorator;
 import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
 import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
@@ -141,6 +142,10 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
       resourceRegistry.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
       resourceRegistry.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
     });
+
+    if (config.getIngress() != null && Strings.isNotNullOrEmpty(config.getIngress().getTlsSecretName())) {
+      resourceRegistry.decorate(group, new AddIngressTlsDecorator(config.getName(), config.getIngress()));
+    }
 
     if (config.isHeadless()) {
       resourceRegistry.decorate(KUBERNETES, new ApplyHeadlessDecorator(config.getName()));

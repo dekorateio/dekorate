@@ -268,6 +268,11 @@ public @interface KubernetesApplication {
   boolean expose() default false;
 
   /**
+   * @return the TLS secret name to be used in the Ingress resource.
+   */
+  Ingress ingress() default @Ingress;
+
+  /**
    * Controls whether the generated {@link Service} will be headless.
    * 
    * @return true if headless.

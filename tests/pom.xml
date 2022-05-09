@@ -77,6 +77,7 @@
       <module>feat-941-existing-common-resources</module>
       <module>feat-943-configmap-volumes</module>
       <module>issue-963-docker-system-properties</module>
+      <module>feat-967-ingress-tls</module>
     </modules>
 
 </project>
