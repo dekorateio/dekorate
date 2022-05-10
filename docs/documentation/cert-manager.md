@@ -91,9 +91,7 @@ spec:
 
 #### Usage
 
-To let the application (Quarkus, Spring Boot, ...) access the files mounted under the path "/etc/certs" from the secret, we have then to update also the properties of the application to access them.
-
-To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS keystore.
+For an application (Quarkus, Spring Boot, ...) to be able to access the files mounted under `/etc/certs` from the secret, the application properties must also be updated. To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS keystore.
 
 #### Securing Resources
 
@@ -134,7 +132,7 @@ In Dekorate, you can generate the above Ingress resource by simply adding the fo
 ```
 dekorate.kubernetes.host=foo.bar.com
 dekorate.kubernetes.expose=true
-TODO: Allow to configure TLS configuration in the Ingress: https://github.com/dekorateio/dekorate/issues/967
+dekorate.kubernetes.ingress.tlsSecretName=tls-secret
 ```
 
 #### Issuers
