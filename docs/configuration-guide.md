@@ -169,8 +169,8 @@ The section below describes all the available subtypes.
 
 #### Probe
 
-| Property              | Type   | Description                                                                                                                                                                                                                                                                                                                 | Default Value |
-|-----------------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| Property          | Type            | Description                                     | Default Value |
+|-------------------|-----------------|-------------------------------------------------|---------------|
 | http-action-path      | String | The http path to use for the probe For this to work, the container port also needs to be set Assuming the container port has been set (as per above comment), if execAction or tcpSocketAction are not set, an http probe will be used automatically even if no path is set (which will result in the root path being used) |               |
 | exec-action           | String | The command to use for the probe.                                                                                                                                                                                                                                                                                           |               |
 | tcp-socket-action     | String | The tcp socket to use for the probe (the format is host:port).                                                                                                                                                                                                                                                              |               |
@@ -180,6 +180,7 @@ The section below describes all the available subtypes.
 | timeout-seconds       | int    | The amount of time to wait for each action.                                                                                                                                                                                                                                                                                 |            10 |
 | success-threshold     | int    | The success threshold to use.                                                                                                                                                                                                                                                                                               |             1 |
 | failure-threshold     | int    | The failure threshold to use.                                                                                                                                                                                                                                                                                               |             3 |
+
 #### Ingress
 
 | Property           | Type     | Description                                             | Default Value |
