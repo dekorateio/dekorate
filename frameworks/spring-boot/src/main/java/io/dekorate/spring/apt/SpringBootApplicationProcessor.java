@@ -74,7 +74,7 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
           resourceNames.add("application-" + profile + ".yml");
         });
 
-    getSession().addPropertyConfiguration(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
+    getSession().addPropertyConfiguration(readProperties(resourceNames));
     addPropertyConfiguration(SPRING_BOOT_APPLICATION);
     return false;
   }

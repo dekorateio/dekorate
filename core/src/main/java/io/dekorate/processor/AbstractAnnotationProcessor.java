@@ -28,6 +28,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -90,9 +91,23 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   }
 
   /**
-   * @return the application properties
+   * Read the properties from the application configuration (for example: from the application.properties file)
+   * and from the dekorate system properties (for example: -Ddekorate.kubernetes.replicas=5)
+   *
+   * @param resourceNames The resource files where to read the application configuration.
+   * @return all the properties from the configuration and the dekorate system properties.
    */
-  protected Map<String, Object> readApplicationConfig(String... resourceNames) {
+  protected Map<String, Object> readProperties(List<String> resourceNames) {
+    // Resolve properties:
+    Map<String, Object> props = new HashMap<>();
+    // - from application config
+    props.putAll(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
+    // - from system properties
+    props.putAll(readDekorateSystemProperties());
+    return props;
+  }
+
+  private Map<String, Object> readApplicationConfig(String... resourceNames) {
     Map<String, Object> result = new HashMap<>();
     for (String resourceName : resourceNames) {
       try (InputStream is = new FileInputStream(
@@ -114,6 +129,10 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
       }
     }
     return result;
+  }
+
+  private Map<String, Object> readDekorateSystemProperties() {
+    return Maps.fromProperties(System.getProperties());
   }
 
   /**

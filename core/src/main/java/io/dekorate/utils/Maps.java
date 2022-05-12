@@ -107,7 +107,7 @@ public class Maps {
   }
 
   /**
-   * Read a properties input stream and crate a configuration map.
+   * Read a properties input stream and create a configuration map.
    * The configuration map follows all the required conventions in order to be usable by a Generator.
    *
    * @return a {@link Map} with in the Generator format.
@@ -119,6 +119,16 @@ public class Maps {
     } catch (IOException e) {
       throw DekorateException.launderThrowable(e);
     }
+    return fromProperties(properties);
+  }
+
+  /**
+   * Read a properties instance and create a configuration map.
+   * The configuration map follows all the required conventions in order to be usable by a Generator.
+   *
+   * @return a {@link Map} with in the Generator format.
+   */
+  public static Map<String, Object> fromProperties(Properties properties) {
     return fromProperties(
         properties.entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), e -> e.getValue())));
   }

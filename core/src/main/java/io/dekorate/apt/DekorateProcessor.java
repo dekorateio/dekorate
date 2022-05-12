@@ -66,7 +66,7 @@ public class DekorateProcessor extends AbstractAnnotationProcessor {
         // resource names from active Dekorate features
         resourceNames.addAll(AdditionalResourcesLocator.getAdditionalResources());
 
-        getSession().addPropertyConfiguration(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
+        getSession().addPropertyConfiguration(readProperties(resourceNames));
       }
     }
     return false;
