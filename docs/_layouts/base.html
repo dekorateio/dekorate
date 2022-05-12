@@ -48,7 +48,12 @@
   -->
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(event) {
-      anchors.add('h1, h2, h3, h4, h5, h6');
+      anchors.add('h1:not(.no-anchor)')
+             .add('h2:not(.no-anchor)')
+             .add('h3:not(.no-anchor)')
+             .add('h4:not(.no-anchor)')
+             .add('h5:not(.no-anchor)')
+             .add('h6:not(.no-anchor)');
     });
   </script>
 </body>
