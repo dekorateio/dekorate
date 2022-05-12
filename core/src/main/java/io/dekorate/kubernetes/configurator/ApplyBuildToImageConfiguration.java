@@ -15,31 +15,21 @@
  */
 package io.dekorate.kubernetes.configurator;
 
+import static java.lang.Boolean.parseBoolean;
+
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Configurator;
 import io.dekorate.kubernetes.config.ImageConfigurationFluent;
-import io.dekorate.utils.Strings;
 
 @Description("Apply build related info to image configuration.")
 public class ApplyBuildToImageConfiguration extends Configurator<ImageConfigurationFluent> {
 
   private static final String DEKORATE_BUILD = "dekorate.build";
   private static final String DEKORATE_PUSH = "dekorate.push";
-  private static final String DEKORATE_DOCKER_REGISTRY = "dekorate.docker.registry";
-  private static final String DEKORATE_DOCKER_GROUP = "dekorate.docker.group";
-  private static final String DEKORATE_DOCKER_VERSION = "dekorate.docker.version";
 
   @Override
   public void visit(ImageConfigurationFluent config) {
-    String registry = Strings.defaultIfEmpty(System.getProperty(DEKORATE_DOCKER_REGISTRY), config.getRegistry());
-    String group = Strings.defaultIfEmpty(System.getProperty(DEKORATE_DOCKER_GROUP), config.getGroup());
-    String version = Strings.defaultIfEmpty(System.getProperty(DEKORATE_DOCKER_VERSION), config.getVersion());
-    config.withAutoBuildEnabled(
-        Boolean.parseBoolean(System.getProperty(DEKORATE_BUILD, String.valueOf(config.getAutoBuildEnabled()))))
-      .withAutoPushEnabled(
-        Boolean.parseBoolean(System.getProperty(DEKORATE_PUSH, String.valueOf(config.getAutoPushEnabled()))))
-      .withRegistry(registry)
-      .withGroup(group)
-      .withVersion(version);
+    config.withAutoBuildEnabled(parseBoolean(System.getProperty(DEKORATE_BUILD, String.valueOf(config.getAutoBuildEnabled()))))
+        .withAutoPushEnabled(parseBoolean(System.getProperty(DEKORATE_PUSH, String.valueOf(config.getAutoPushEnabled()))));
   }
 }

@@ -54,7 +54,7 @@ public class ThorntailProcessor extends AbstractAnnotationProcessor implements T
     // resource names from active Dekorate features
     resourceNames.addAll(AdditionalResourcesLocator.getAdditionalResources());
 
-    session.addPropertyConfiguration(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
+    session.addPropertyConfiguration(readProperties(resourceNames));
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
         add(mainClass);
