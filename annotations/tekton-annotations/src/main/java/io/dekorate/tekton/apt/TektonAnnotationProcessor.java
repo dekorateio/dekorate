@@ -20,8 +20,6 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -29,7 +27,6 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.tekton.annotation.TektonApplication;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @Description("Generates tekton manifests.")
 @SupportedAnnotationTypes("io.dekorate.tekton.annotation.TektonApplication")
 public class TektonAnnotationProcessor extends AbstractAnnotationProcessor {

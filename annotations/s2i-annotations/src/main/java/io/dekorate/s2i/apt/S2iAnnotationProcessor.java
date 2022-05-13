@@ -21,15 +21,12 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.s2i.annotation.S2iBuild;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({ "io.dekorate.s2i.annotation.S2iBuild" })
 public class S2iAnnotationProcessor extends AbstractAnnotationProcessor {
 

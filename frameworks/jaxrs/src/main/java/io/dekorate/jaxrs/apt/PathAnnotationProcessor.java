@@ -24,8 +24,6 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.ws.rs.Path;
@@ -35,7 +33,6 @@ import io.dekorate.doc.Description;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 import io.dekorate.utils.Strings;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @Description("Detects JAX-RS @Path annotation and registers the http port.")
 @SupportedAnnotationTypes("javax.ws.rs.Path")
 public class PathAnnotationProcessor extends AbstractAnnotationProcessor {

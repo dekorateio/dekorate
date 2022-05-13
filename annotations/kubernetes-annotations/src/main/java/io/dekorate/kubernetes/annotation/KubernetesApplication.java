@@ -270,7 +270,7 @@ public @interface KubernetesApplication {
   /**
    * @return the TLS secret name to be used in the Ingress resource.
    */
-  Ingress ingress() default @Ingress;
+  Ingress ingress() default @Ingress();
 
   /**
    * Controls whether the generated {@link Service} will be headless.
