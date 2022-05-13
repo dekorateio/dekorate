@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
@@ -57,7 +58,13 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
   protected static final String DOT = ".";
 
   protected Logger LOGGER;
+
   private final AtomicReference<ProcessingEnvironment> processingEnvRef = new AtomicReference<>();
+
+  @Override
+  public SourceVersion getSupportedSourceVersion() {
+    return SourceVersion.latest();
+  }
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {

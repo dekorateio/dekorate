@@ -19,8 +19,6 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -30,7 +28,6 @@ import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @Description("Generates kubernetes manifests.")
 @SupportedAnnotationTypes("io.dekorate.kubernetes.annotation.KubernetesApplication")
 public class KubernetesAnnotationProcessor extends AbstractAnnotationProcessor {
