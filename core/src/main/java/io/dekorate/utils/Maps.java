@@ -156,20 +156,23 @@ public class Maps {
     return result;
   }
 
-  public static <A extends Annotation> Map<String, Object> fromAnnotation(String root, A annotation,
-      Class<? extends A> type) {
+  public static <A extends Annotation> Map<String, Object> fromAnnotation(String root, A annotation, Class<? extends A> type) {
     Map<String, Object> result = new HashMap<>();
-    result.put(root, fromAnnotation(annotation, type));
+    result.put(root, fromAnnotation(annotation));
     return result;
   }
 
   public static <A extends Annotation> Map<String, Object> fromAnnotation(A annotation, Class<? extends A> type) {
+    return fromAnnotation(annotation);
+  }
+
+  public static <A extends Annotation> Map<String, Object> fromAnnotation(A annotation) {
     Map<String, Object> result = new HashMap<>();
     try {
-      for (Method m : type.getDeclaredMethods()) {
-        Object value = m.invoke(annotation);
+      for (Method m : annotation.annotationType().getDeclaredMethods()) {
         Class<?> clazz = m.getReturnType();
         if (clazz.isArray()) {
+          Object value = m.invoke(annotation);
           Class componentType = clazz.getComponentType();
           if (componentType.isAnnotation()) {
             List<Map<String, Object>> maps = new ArrayList<>();
@@ -185,11 +188,17 @@ public class Maps {
                 Arrays.stream((Object[]) value).map(String::valueOf).collect(Collectors.joining(",")));
           }
         } else if (clazz.isAnnotation()) {
-          result.put(m.getName(), fromAnnotation((Annotation) value, (Class) clazz));
+          try {
+            result.put(m.getName(), fromAnnotation((Annotation) m.invoke(annotation), (Class) clazz));
+          } catch (Exception e) {
+            //In JDK11+ and above there are some edge cases evolving around nesting annotations with arrays that are problematic.
+            //The error only occurs when the no explicit value is specified, so let's fall back to `m.getDefaultValue()`.
+            result.put(m.getName(), fromAnnotation((Annotation) m.getDefaultValue(), (Class) clazz));
+          }
         } else if (clazz.isPrimitive()) {
-          result.put(m.getName(), value);
+          result.put(m.getName(), m.invoke(annotation));
         } else {
-          result.put(m.getName(), String.valueOf(value));
+          result.put(m.getName(), String.valueOf(m.invoke(annotation)));
         }
       }
     } catch (Exception e) {
