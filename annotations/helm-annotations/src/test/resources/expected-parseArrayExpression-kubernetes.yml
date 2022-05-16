@@ -1,0 +1,35 @@
+---
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: example
+    spec:
+      ports:
+        - name: http
+          port: "{{ .Values.app.port }}"
+          targetPort: 8080
+      type: ClusterIP
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: example
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: example
+      template:
+        metadata:
+          app.kubernetes.io/name: example
+        spec:
+          containers:
+            - env:
+                - name: KUBERNETES_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+              name: example
+              ports:
+                - containerPort: 8080
+                  name: http
+                  protocol: TCP

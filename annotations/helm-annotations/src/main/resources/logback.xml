@@ -1,4 +1,0 @@
-<configuration>
-  <!-- In case of Logback dependencies are present (Spring boot examples), we need to configure jsonpath to only print INFO traces -->
-  <logger name="com.jayway.jsonpath" level="INFO"/>
-</configuration>

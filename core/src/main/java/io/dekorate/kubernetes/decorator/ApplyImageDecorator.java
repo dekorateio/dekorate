@@ -56,17 +56,17 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
 
   private ConfigReference buildConfigReferenceForImage() {
     String property = generateConfigReferenceName("image", getContainerName(), getDeploymentName());
-    String jsonPath = "$..spec.template.spec.containers..image";
+    String path = "spec.template.spec.containers.image";
     if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
-      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
-          + getContainerName() + "')].image";
+      path = "(metadata.name == " + getDeploymentName() + ")].spec.template.spec.containers"
+          + ".(name == " + getContainerName() + ").image";
     } else if (!Strings.equals(getDeploymentName(), ANY)) {
-      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers..image";
+      path = "(metadata.name == " + getDeploymentName() + ").spec.template.spec.containers.image";
     } else if (!Strings.equals(getContainerName(), ANY)) {
-      jsonPath = "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')].image";
+      path = "spec.template.spec.containers.(name == " + getContainerName() + ").image";
     }
 
-    return new ConfigReference(property, jsonPath, image);
+    return new ConfigReference(property, path, image);
   }
 
 }

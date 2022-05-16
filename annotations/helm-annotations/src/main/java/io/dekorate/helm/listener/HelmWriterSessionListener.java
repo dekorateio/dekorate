@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  **/
-
 package io.dekorate.helm.listener;
 
 import static io.dekorate.helm.config.HelmBuildConfigGenerator.HELM;
@@ -40,11 +39,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
-
 import io.dekorate.ConfigReference;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
@@ -58,6 +52,7 @@ import io.dekorate.helm.config.ValueReference;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
+import io.dekorate.helm.util.HelmExpressionParser;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
@@ -164,7 +159,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
   private ConfigReference toConfigReference(ValueReference valueReference) {
     return new ConfigReference(valueReference.getProperty(),
-        valueReference.getJsonPaths(),
+        valueReference.getPaths(),
         Strings.isNullOrEmpty(valueReference.getValue()) ? null : valueReference.getValue(), valueReference.getProfile());
   }
 
@@ -236,96 +231,68 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
     Path templatesDir = getChartOutputDir(helmConfig, outputDir).resolve(TEMPLATES);
     Files.createDirectories(templatesDir);
-    List<String> yamlsContent = replaceValuesInYamls(generatedFiles, valuesReferences, prodValues, valuesByProfile);
+    List<Map<Object, Object>> resources = replaceValuesInYamls(generatedFiles, valuesReferences, prodValues, valuesByProfile);
     // Split yamls in separated files by kind
-    for (String yamlContent : yamlsContent) {
-      List<Map<Object, Object>> resources = Serialization.unmarshalAsListOfMaps(yamlContent);
-      for (Map<Object, Object> resource : resources) {
-        String kind = (String) resource.get(KIND);
-        Path targetFile = templatesDir.resolve(kind.toLowerCase() + YAML);
+    for (Map<Object, Object> resource : resources) {
+      String kind = (String) resource.get(KIND);
+      Path targetFile = templatesDir.resolve(kind.toLowerCase() + YAML);
 
-        // Adapt the values tag to Helm standards:
-        String adaptedString = Serialization.yamlMapper().writeValueAsString(resource)
-            .replaceAll(Pattern.quote("\"" + VALUES_START_TAG), VALUES_START_TAG)
-            .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG);
+      // Adapt the values tag to Helm standards:
+      String adaptedString = Serialization.yamlMapper().writeValueAsString(resource)
+          .replaceAll(Pattern.quote("\"" + VALUES_START_TAG), VALUES_START_TAG)
+          .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG);
 
-        writeFile(adaptedString, targetFile);
-      }
+      writeFile(adaptedString, targetFile);
     }
 
     return Collections.emptyMap();
   }
 
-  private List<String> replaceValuesInYamls(Collection<File> generatedFiles, List<ConfigReference> valuesReferences,
-      Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile) throws IOException {
+  private List<Map<Object, Object>> replaceValuesInYamls(Collection<File> generatedFiles,
+      List<ConfigReference> valuesReferences,
+      Map<String, Object> prodValues,
+      Map<String, Map<String, Object>> valuesByProfile) throws IOException {
 
-    List<String> yamlsContent = new LinkedList<>();
+    List<Map<Object, Object>> allResources = new LinkedList<>();
     for (File generatedFile : generatedFiles) {
       if (!generatedFile.getName().toLowerCase().matches(YAML_REG_EXP)) {
         continue;
       }
 
-      // Read yaml
-      List<Map<Object, Object>> yaml = Serialization.unmarshalAsListOfMaps(generatedFile.toPath());
+      // Yaml as map of resources
+      List<Map<Object, Object>> resources = Serialization.unmarshalAsListOfMaps(generatedFile.toPath());
 
-      // Parse to json in order to process jsonpaths
-      String json = Serialization.jsonMapper().writeValueAsString(yaml);
+      // Read helm expression parsers
+      HelmExpressionParser parser = new HelmExpressionParser(resources);
+
       for (ConfigReference valueReference : valuesReferences) {
         String valueReferenceProperty = Strings.kebabToCamelCase(valueReference.getProperty());
 
-        DocumentContext jsonContext = JsonPath.parse(json);
-
         // Check whether path exists
-        Object currentValue = null;
-        for (String jsonPath : valueReference.getJsonPaths()) {
-          try {
-            currentValue = jsonContext.read(jsonPath, Object.class);
-          } catch (PathNotFoundException ex) {
-            LOGGER
-                .warning(String.format("Property '%s' is ignored in Helm generation because the json Path '%s' was not found. ",
-                    valueReferenceProperty, jsonPath));
-            continue;
-          }
+        for (String path : valueReference.getPaths()) {
+          Object found = parser.readAndSet(path, VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG);
 
-          json = jsonContext
-              .set(jsonPath, VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG)
-              .jsonString();
-
-          Object value = valueReference.getValue();
-          if (value == null) {
-            if (currentValue instanceof List && !((List) currentValue).isEmpty()) {
-              // We get the first value
-              value = ((List) currentValue).get(0);
-            } else {
-              value = currentValue;
+          Object value = Optional.ofNullable(valueReference.getValue()).orElse(found);
+          if (value != null) {
+            String valueProfile = valueReference.getProfile();
+            Map<String, Object> values = prodValues;
+            if (Strings.isNotNullOrEmpty(valueProfile)) {
+              values = valuesByProfile.get(valueProfile);
+              if (values == null) {
+                values = new HashMap<>();
+                valuesByProfile.putIfAbsent(valueProfile, values);
+              }
             }
-          }
 
-          String valueProfile = valueReference.getProfile();
-          Map<String, Object> values = prodValues;
-          if (Strings.isNotNullOrEmpty(valueProfile)) {
-            values = valuesByProfile.get(valueProfile);
-            if (values == null) {
-              values = new HashMap<>();
-              valuesByProfile.put(valueProfile, values);
-            }
+            values.putIfAbsent(valueReferenceProperty, value);
           }
-
-          values.put(valueReferenceProperty, value);
         }
       }
 
-      // Parse back to yaml and write to file
-      StringBuilder sb = new StringBuilder();
-      JsonNode jsonTree = Serialization.jsonMapper().readTree(json);
-      for (JsonNode jsonElement : jsonTree) {
-        sb.append(Serialization.yamlMapper().writeValueAsString(jsonElement));
-      }
-
-      yamlsContent.add(sb.toString());
+      allResources.addAll(resources);
     }
 
-    return yamlsContent;
+    return allResources;
   }
 
   private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Project project, Path outputDir) throws IOException {

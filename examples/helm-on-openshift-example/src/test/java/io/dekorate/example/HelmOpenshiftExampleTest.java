@@ -73,8 +73,6 @@ class HelmOpenshiftExampleTest {
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
-    // Should contain commit-id
-    assertNotNull(helmExampleValues.get("commitId"));
     // Should contain vcs-url with the overridden value from properties
     assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
   }
@@ -95,8 +93,6 @@ class HelmOpenshiftExampleTest {
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
-    // Should contain commit-id
-    assertNotNull(helmExampleValues.get("commitId"));
     // Should contain vcs-url with the value from properties
     assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
   }

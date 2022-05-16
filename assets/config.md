@@ -471,7 +471,7 @@ The section below describes all the available subtypes.
 | Property   | Type     | Description                                                                                                                                                                                | Default Value |
 |------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
 | property   | String   | The name of the property in the Helm values file.                                                                                                                                          |               |
-| jsonPaths  | String   | A comma-separated list of [JSONPath](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html) expressions to map the Dekorate auto-generated properties to the final Helm values file.        |               |
+| paths  | String   | A comma-separated list of path expressions to map the Dekorate auto-generated properties to the final Helm values file.        |               |
 | profile    | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
 | value      | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
 

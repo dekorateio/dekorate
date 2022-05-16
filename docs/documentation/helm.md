@@ -102,7 +102,7 @@ spec:
 
 This is done transparently to users.
 
-##### Mapping user properties using JSONPath expressions
+##### Mapping user properties using path expressions
 
 As we have introduced in the previous section, Dekorate will automatically map some properties like the `replicas` or the `images` to the Values helm file. Still, some users might need to map more properties. For example, let's see the following YAML resource:
 
@@ -115,11 +115,19 @@ metadata:
 ```
 
 The property at `metadata.name` will not be replaced with `{{ .Values.myModule.name }}` in the Helm templates.
-However, Dekorate allows users to define [JSONPath](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html) expressions to map properties into the Helm values file. Let's see how to do it using the above example to map the property `metadata.name` with `{{ .Values.myModule.name }}`.
+However, Dekorate allows users to define path expressions to map properties into the Helm values file. Let's see how to do it using the above example to map the property `metadata.name` with `{{ .Values.myModule.name }}`.
 
-**Note**: JSONPath works with JSON, not YAML. So, for testing your expressions, you first need to convert YAML files to JSON files using [this online tool](https://jsonformatter.org/yaml-to-json) and then use some JSONPath online evaluator like [https://jsonpath.com/](https://jsonpath.com/). Remember to wrap the json objects into lists.
+To build the right path you want to use, you simply need to loop over the YAML tree at the resource level:
 
-After getting familiar with JSONPath, the expression to map the metadata name value is `$..metadata.name`, so you need to add it to your configuration:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: helm-on-kubernetes-example
+...
+```
+
+Then, the expression to map the metadata name value is `metadata.name`, so you need to add it to your configuration:
 
 ```
 dekorate.helm.name=myChart
@@ -127,7 +135,7 @@ dekorate.helm.description=Description of my Chart
 
 # Map all the metadata name resources
 dekorate.helm.values[0].property=myModule.name
-dekorate.helm.values[0].jsonPaths=$..metadata.name
+dekorate.helm.values[0].paths=metadata.name
 ```
 
 The resulting `values.yaml` file will look like as:
@@ -145,7 +153,7 @@ dekorate.helm.description=Description of my Chart
 
 # Map all the metadata name resources
 dekorate.helm.values[0].property=myModule.name
-dekorate.helm.values[0].jsonPaths=$..metadata.name
+dekorate.helm.values[0].paths=metadata.name
 ## Overwrite value:
 dekorate.helm.values[0].value=this-is-another-name
 ```
@@ -155,6 +163,26 @@ And the `values.yaml` file will now contain:
 ```yaml
 myModule:
   name: this-is-another-name
+```
+
+- Escaping characters in path expressions
+
+If you want to select properties which key contains special characters like '.', you need to escape them using `'`, for example:
+
+```
+## To map the property only for Service resources:
+dekorate.helm.values[0].paths=spec.selector.matchLabels.'app.kubernetes.io/name'
+```
+
+- Filtering in path expressions
+
+If you want to only map properties of certain resource type, you can add as many conditions you need in the path such as:
+
+```
+## To map the property only for Service resources:
+dekorate.helm.values[0].paths=(kind == Service).metadata.name
+## To map the property only for Service resources AND resources that has an annotation 'key' with value 'some' 
+dekorate.helm.values[1].paths=(kind == Service && metadata.annotations.'key' == 'some.text').metadata.name
 ```
 
 ##### Mapping multiple properties at once

@@ -28,11 +28,9 @@ public @interface ValueReference {
   String property();
 
   /**
-   * The JSONPath expressions where to map the property.
-   *
-   * It uses <a href="https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html">JSONPath expression specification</a>.
+   * The path expressions where to map the property.
    */
-  String[] jsonPaths();
+  String[] paths();
 
   String profile() default "";
 

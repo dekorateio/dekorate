@@ -165,17 +165,17 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
   private ConfigReference buildConfigReferenceForEnvValue() {
     String property = generateConfigReferenceName("envs." + env.getName(), getContainerName());
-    String envFilter = ".env.[?(@.name == '" + env.getName() + "')].value";
-    String jsonPath = "$..spec.template.spec.containers." + envFilter;
+    String envFilter = ".env.(name == " + env.getName() + ").value";
+    String path = "spec.template.spec.containers." + envFilter;
     if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
-      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers[?(@.name == '"
-          + getContainerName() + "')]" + envFilter;
+      path = "(metadata.name == " + getDeploymentName() + ").spec.template.spec.containers.(name == "
+          + getContainerName() + ")" + envFilter;
     } else if (!Strings.equals(getDeploymentName(), ANY)) {
-      jsonPath = "$.[?(@.metadata.name == '" + getDeploymentName() + "')].spec.template.spec.containers." + envFilter;
+      path = "(metadata.name == " + getDeploymentName() + ").spec.template.spec.containers." + envFilter;
     } else if (!Strings.equals(getContainerName(), ANY)) {
-      jsonPath = "$..spec.template.spec.containers[?(@.name == '" + getContainerName() + "')]" + envFilter;
+      path = "spec.template.spec.containers.(name == " + getContainerName() + ")" + envFilter;
     }
 
-    return new ConfigReference(property, jsonPath, env.getValue());
+    return new ConfigReference(property, path, env.getValue());
   }
 }
