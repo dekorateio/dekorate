@@ -25,25 +25,25 @@ import io.dekorate.utils.Strings;
  */
 public class ConfigReference {
   private String property;
-  private String[] jsonPaths;
+  private String[] paths;
   private Object value;
   private String profile;
 
-  public ConfigReference(String property, String jsonPath) {
-    this(property, new String[] { jsonPath });
+  public ConfigReference(String property, String path) {
+    this(property, new String[] { path });
   }
 
-  public ConfigReference(String property, String[] jsonPaths) {
-    this(property, jsonPaths, null, null);
+  public ConfigReference(String property, String[] paths) {
+    this(property, paths, null, null);
   }
 
-  public ConfigReference(String property, String jsonPath, Object value) {
-    this(property, new String[] { jsonPath }, value, null);
+  public ConfigReference(String property, String path, Object value) {
+    this(property, new String[] { path }, value, null);
   }
 
-  public ConfigReference(String property, String[] jsonPaths, Object value, String profile) {
+  public ConfigReference(String property, String[] paths, Object value, String profile) {
     this.property = property;
-    this.jsonPaths = jsonPaths;
+    this.paths = paths;
     this.value = value;
     this.profile = profile;
   }
@@ -56,10 +56,10 @@ public class ConfigReference {
   }
 
   /**
-   * @return json path to resolve the property in the generated JSON manifest.
+   * @return the expression paths to resolve the property in the generated YAML manifest.
    */
-  public String[] getJsonPaths() {
-    return jsonPaths;
+  public String[] getPaths() {
+    return paths;
   }
 
   /**

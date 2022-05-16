@@ -178,7 +178,7 @@ public class Session {
         }
       } else {
         LOGGER.warning("Unknown generator '" + key + "' will be ignored. "
-          + "Known generators are: " + configurationGenerators.keySet());
+            + "Known generators are: " + configurationGenerators.keySet());
       }
     }
   }

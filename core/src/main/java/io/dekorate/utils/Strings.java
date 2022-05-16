@@ -124,7 +124,7 @@ public class Strings {
   /**
    * Convert kebab case to camel case.
    * 
-   * @param The input string.
+   * @param str The input string.
    * @return The camel cased string.
    */
   public static String kebabToCamelCase(String str) {

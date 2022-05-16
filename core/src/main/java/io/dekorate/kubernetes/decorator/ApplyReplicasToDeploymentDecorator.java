@@ -56,11 +56,11 @@ public class ApplyReplicasToDeploymentDecorator extends NamedResourceDecorator<D
 
   private ConfigReference buildConfigReferenceReplicas() {
     String property = generateConfigReferenceName("replicas", getName());
-    String jsonPath = "$.[?(@.kind == 'Deployment')].spec.replicas";
+    String path = "(kind == Deployment).spec.replicas";
     if (!Strings.equals(getName(), ANY)) {
-      jsonPath = "$.[?(@.kind == 'Deployment' && @.metadata.name == '" + getName() + "')].spec.replicas";
+      path = "(kind == Deployment && metadata.name == " + getName() + ").spec.replicas";
     }
 
-    return new ConfigReference(property, jsonPath);
+    return new ConfigReference(property, path);
   }
 }

@@ -1,6 +1,0 @@
-<Configuration>
-  <Loggers>
-    <!-- In case of Log4j2 dependencies are present, we need to configure jsonpath to only print INFO traces -->
-    <Logger name="com.jayway.jsonpath" level="info"/>
-  </Loggers>
-</Configuration>
