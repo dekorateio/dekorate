@@ -2,6 +2,7 @@ package io.dekorate.example;
 
 import com.sun.net.httpserver.HttpServer;
 
+import io.dekorate.kubernetes.annotation.Ingress;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.minikube.annotation.Minikube;
@@ -11,7 +12,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
 @Minikube
-@KubernetesApplication(expose = true, ports = @Port(name = "http", containerPort = 8080, nodePort=30123))
+@KubernetesApplication(ingress = @Ingress(expose = true), ports = @Port(name = "http", containerPort = 8080, nodePort=30123))
 public class App
 {
   public static void main(String[] args) throws IOException {

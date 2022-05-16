@@ -125,13 +125,6 @@ import io.sundr.builder.annotations.Pojo;
   String serviceAccount() default "";
 
   /**
-   * The host under which the application is going to be exposed.
-   * 
-   * @return The hostname.
-   */
-  String host() default "";
-
-  /**
    * The application ports.
    */
   Port[] ports() default {};
@@ -218,11 +211,6 @@ import io.sundr.builder.annotations.Pojo;
    * @return the sidecar containers.
    */
   Container[] sidecars() default {};
-
-  /**
-   * Controls whether the application should be exposed
-   */
-  boolean expose() default false;
 
   /**
    * Flag to trigger the registration of the deploy hook. It's generally

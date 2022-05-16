@@ -238,7 +238,7 @@ When adding `kubernetes-annotations` to a project and
     
 to application.properties,  I expect the generated container to contain `my-port` container port and also expose it as a `Service` named after the deployment. The service is expected to refer to both ports. 
 
-When adding `kubernetes-annotations` to a project and `dekorate.kubernetes.expose=true` to application.properties and also a port is defined (see above) or detected (provided known framework e.g. Spring Boot or Thorntail), I expect the generated manifest to contain an `Ingress`.
+When adding `kubernetes-annotations` to a project and `dekorate.kubernetes.ingress.expose=true` to application.properties and also a port is defined (see above) or detected (provided known framework e.g. Spring Boot or Thorntail), I expect the generated manifest to contain an `Ingress`.
 
 ###### Volumes and mounts
 

@@ -149,13 +149,6 @@ public @interface KubernetesApplication {
   String serviceAccount() default "";
 
   /**
-   * The host under which the application is going to be exposed.
-   * 
-   * @return The hostname.
-   */
-  String host() default "";
-
-  /**
    * The application ports.
    */
   Port[] ports() default {};
@@ -263,14 +256,9 @@ public @interface KubernetesApplication {
   Container[] sidecars() default {};
 
   /**
-   * Controls whether the application should be exposed via Ingress
+   * @return the Ingress resource configuration.
    */
-  boolean expose() default false;
-
-  /**
-   * @return the TLS secret name to be used in the Ingress resource.
-   */
-  Ingress ingress() default @Ingress;
+  Ingress ingress() default @Ingress();
 
   /**
    * Controls whether the generated {@link Service} will be headless.

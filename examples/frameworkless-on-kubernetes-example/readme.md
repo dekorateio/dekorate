@@ -24,7 +24,7 @@ The [App.java](src/main/java/io/dekorate/example/App.java) is annotated with `@K
 @KubernetesApplication(
         name = "frameworkless-k8s",        
         ports = @Port(name = "web", containerPort = 8080),  
-        expose = true, 
+        ingress = @Ingress(expose = true), 
         host = "fw-app.127.0.0.1.nip.io", 
         imagePullPolicy = ImagePullPolicy.Always 
 )

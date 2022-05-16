@@ -140,7 +140,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
 
     Ports.getHttpPort(config).ifPresent(p -> {
       resourceRegistry.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
-      resourceRegistry.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getHost(), p));
+      resourceRegistry.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getIngress().getHost(), p));
     });
 
     if (config.getIngress() != null && Strings.isNotNullOrEmpty(config.getIngress().getTlsSecretName())) {
