@@ -15,7 +15,22 @@
  */
 package io.dekorate.kubernetes.annotation;
 
+import io.sundr.builder.annotations.Pojo;
+
+@Pojo(relativePath = "../config", autobox = true, mutable = true, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
 public @interface Ingress {
+
+  /**
+   * The host under which the application is going to be exposed.
+   *
+   * @return The hostname.
+   */
+  String host() default "";
+
+  /**
+   * Controls whether the application should be exposed via Ingress
+   */
+  boolean expose() default false;
 
   /**
    * @return The name of the secret used to configure TLS.

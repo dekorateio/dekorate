@@ -1056,7 +1056,7 @@ That service will also be expose as an `Ingress` or `Route` (in case of Openshif
 An alternative way of configuration is via `application properties`:
 
 ```
-dekorate.kubernetes.expose=true
+dekorate.kubernetes.ingress.expose=true
 ```
 
 ###### Openshift 
@@ -1081,8 +1081,8 @@ There are cases where the `Ingress` or `Route` host needs to be customized. This
 An alternative way of configuration is via `application properties`:
 
 ```
-dekorate.kubernetes.expose=true
-dekorate.kubernetes.host=foo.bar.com
+dekorate.kubernetes.ingress.expose=true
+dekorate.kubernetes.ingress.host=foo.bar.com
 ```
 
 ###### Openshift 

@@ -46,7 +46,7 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
 
   public void visit(KubernetesListBuilder list) {
     Optional<Port> p = getHttpPort(config);
-    if (!p.isPresent() || !config.isExpose()) {
+    if (!p.isPresent() || !config.getIngress().isExpose()) {
       return;
     }
 
@@ -61,7 +61,7 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
         .endMetadata()
         .withNewSpec()
         .addNewRule()
-        .withHost(config.getHost())
+        .withHost(config.getIngress().getHost())
         .withNewHttp()
         .addNewPath()
         .withNewPathType("Prefix")
@@ -87,7 +87,7 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
 
   @Override
   public List<ConfigReference> getConfigReferences() {
-    if (!config.isExpose()) {
+    if (!config.getIngress().isExpose()) {
       return Collections.emptyList();
     }
 
@@ -97,6 +97,6 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
   private ConfigReference buildConfigReferenceHost() {
     String property = "host";
     String path = "(kind == Ingress && metadata.name == " + config.getName() + ").spec.rules.host";
-    return new ConfigReference(property, path, config.getHost());
+    return new ConfigReference(property, path, config.getIngress().getHost());
   }
 }

@@ -1,6 +1,7 @@
 dekorate:
   kubernetes:
-    expose: true
+    ingress:
+      expose: true
     ports:
       - name: HTTP
         container-port: 8080

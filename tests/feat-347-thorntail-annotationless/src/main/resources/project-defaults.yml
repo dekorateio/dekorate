@@ -1,6 +1,7 @@
 dekorate:
   kubernetes:
-    expose: true
+    ingress:
+      expose: true
   openshift:
     expose: true
 thorntail:

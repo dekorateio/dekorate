@@ -302,20 +302,20 @@ For example, let's say we have two environments: one for testing and another one
 We can configure our application as:
 
 ```
-dekorate.kubernetes.expose=true
+dekorate.kubernetes.ingress.expose=true
 # Mapped to `values.yaml` by the preconfigured Ingress decorator
-dekorate.kubernetes.host=my-host
+dekorate.kubernetes.ingress.host=my-host
 
 # Helm Chart
 dekorate.helm.name=myChart
-## Overwrite the value of `dekorate.kubernetes.host` to `values-<profile-name>.yaml`:
+## Overwrite the value of `dekorate.kubernetes.ingress.host` to `values-<profile-name>.yaml`:
 dekorate.helm.values[0].property=host
 dekorate.helm.values[0].jsonPaths=$.[?(@.kind == 'Ingress')].spec.rules..host
 dekorate.helm.values[0].value=my-test-host
 dekorate.helm.values[0].profile=test
 ```
 
-This configuration will generate the `values.yaml` using the property `dekorate.kubernetes.host`:
+This configuration will generate the `values.yaml` using the property `dekorate.kubernetes.ingress.host`:
 
 ```yaml
 app:
