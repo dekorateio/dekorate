@@ -15,9 +15,15 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import static io.dekorate.ConfigReference.generateConfigReferenceName;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import io.dekorate.ConfigReference;
+import io.dekorate.WithConfigReferences;
 import io.dekorate.kubernetes.config.Probe;
 import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
@@ -31,14 +37,20 @@ import io.fabric8.kubernetes.api.model.TCPSocketAction;
 /**
  * Base class for any kind of {@link Decorator} that acts on probes.
  */
-public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator<ContainerFluent<?>> {
+public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator<ContainerFluent<?>>
+    implements WithConfigReferences {
+
+  private static final String JSONPATH_CONTAINERS_EXPRESSION = "*.spec.containers.";
+  private static final Object AUTO_DISCOVER = null;
+
   protected final Probe probe;
 
   abstract protected void doCreateProbe(ContainerFluent<?> container, Actions actions);
 
+  abstract protected String getProbeName();
+
   public AbstractAddProbeDecorator(String containerName, Probe probe) {
-    super(null, containerName);
-    this.probe = probe;
+    this(null, containerName, probe);
   }
 
   public AbstractAddProbeDecorator(String deploymentName, String containerName, Probe probe) {
@@ -52,16 +64,52 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       return;
     }
 
-    final ExecAction execAction = execAction(probe);
-    final TCPSocketAction tcpSocketAction = tcpSocketAction(probe);
-    final GRPCAction grpcAction = grpcAction(probe);
-    final boolean defaultToHttpGetAction = (execAction == null) && (tcpSocketAction == null);
-    final HTTPGetAction httpGetAction = defaultToHttpGetAction ? httpGetAction(probe, container) : null;
-    if (defaultToHttpGetAction && (httpGetAction == null)) {
-      return;
+    ExecAction execAction = execAction(probe);
+    TCPSocketAction tcpSocketAction = tcpSocketAction(probe);
+    GRPCAction grpcAction = grpcAction(probe);
+    HTTPGetAction httpGetAction = null;
+    if (!isExecOrTcpOrGrpcActionSet()) {
+      httpGetAction = httpGetAction(probe, container);
     }
 
     doCreateProbe(container, new Actions(execAction, tcpSocketAction, httpGetAction, grpcAction));
+  }
+
+  @Override
+  public List<ConfigReference> getConfigReferences() {
+    List<ConfigReference> configReferences = new ArrayList<>();
+    configReferences.add(buildConfigReference("failureThreshold", probe.getFailureThreshold()));
+    configReferences.add(buildConfigReference("initialDelaySeconds", probe.getInitialDelaySeconds()));
+    configReferences.add(buildConfigReference("periodSeconds", probe.getPeriodSeconds()));
+    configReferences.add(buildConfigReference("successThreshold", probe.getSuccessThreshold()));
+    configReferences.add(buildConfigReference("timeoutSeconds", probe.getTimeoutSeconds()));
+    if (isExecOrTcpOrGrpcActionSet()) {
+      if (Strings.isNotNullOrEmpty(probe.getExecAction())) {
+        configReferences.add(buildConfigReference("exec.command", AUTO_DISCOVER));
+      } else if (Strings.isNotNullOrEmpty(probe.getGrpcAction())) {
+        configReferences.add(buildConfigReference("grpc.port", AUTO_DISCOVER));
+        configReferences.add(buildConfigReference("grpc.service", AUTO_DISCOVER));
+      } else if (Strings.isNotNullOrEmpty(probe.getTcpSocketAction())) {
+        configReferences.add(buildConfigReference("tcpSocket.host", AUTO_DISCOVER));
+        configReferences.add(buildConfigReference("tcpSocket.port", AUTO_DISCOVER));
+      }
+    } else {
+      // default to http action
+      configReferences.add(buildConfigReference("httpGet.path", probe.getHttpActionPath()));
+    }
+    return configReferences;
+  }
+
+  private ConfigReference buildConfigReference(String propertyName, Object value) {
+    String property = generateConfigReferenceName(propertyName, getDeploymentName(), getProbeName());
+    String jsonPath = JSONPATH_CONTAINERS_EXPRESSION + getProbeName() + "." + propertyName;
+    return new ConfigReference(property, jsonPath, value);
+  }
+
+  private boolean isExecOrTcpOrGrpcActionSet() {
+    return Strings.isNotNullOrEmpty(probe.getExecAction())
+        || Strings.isNotNullOrEmpty(probe.getTcpSocketAction())
+        || Strings.isNotNullOrEmpty(probe.getGrpcAction());
   }
 
   private ExecAction execAction(Probe probe) {

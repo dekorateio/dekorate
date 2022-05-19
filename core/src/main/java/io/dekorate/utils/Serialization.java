@@ -450,7 +450,7 @@ public class Serialization {
       } else {
         documents.add(builder.toString());
         builder.setLength(0);
-        //To have meaningfull line numbers, in jackson error messages, we need each resource
+        //To have meaningful line numbers, in jackson error messages, we need each resource
         //to retain its original position in the document.
         for (int i = 0; i <= nLine; i++) {
           builder.append(System.lineSeparator());

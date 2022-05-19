@@ -53,4 +53,8 @@ public class AddLivenessProbeDecorator extends AbstractAddProbeDecorator {
         .endLivenessProbe();
   }
 
+  @Override
+  protected String getProbeName() {
+    return "livenessProbe";
+  }
 }

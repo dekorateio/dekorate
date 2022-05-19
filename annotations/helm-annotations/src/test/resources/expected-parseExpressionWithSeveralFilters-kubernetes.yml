@@ -33,3 +33,6 @@
                 - containerPort: "{{ .Values.app.containerPort }}"
                   name: http
                   protocol: TCP
+              command:
+                - command1
+                - command2

@@ -2,6 +2,7 @@ package io.dekorate.helm.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,6 +113,17 @@ public class HelmExpressionParserTest {
         "{{ .Values.app.containerPort }}");
     assertEquals(8080, found);
     assertGeneratedYaml("parseExpressionWithSeveralFilters");
+  }
+
+  @Test
+  public void parseExpressionWithCommandArray() throws IOException {
+    Object found = parser.readAndSet(
+        "*.containers.command",
+        "{{ .Values.app.command }}");
+    assertTrue(found instanceof List);
+    assertEquals("command1", ((List) found).get(0));
+    assertEquals("command2", ((List) found).get(1));
+    assertGeneratedYaml("parseExpressionWithCommandArray");
   }
 
   private void assertGeneratedYaml(String method) throws IOException {

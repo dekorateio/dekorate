@@ -12,7 +12,7 @@
   - apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: "{{ .Values.app.name }}"
+      name: example
     spec:
       replicas: 3
       selector:
@@ -33,6 +33,4 @@
                 - containerPort: 8080
                   name: http
                   protocol: TCP
-              command:
-                - command1
-                - command2
+              command: "{{ .Values.app.command }}"
