@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import io.dekorate.utils.Strings;
 
@@ -173,21 +174,40 @@ public class HelmExpressionParser {
     }
   }
 
-  static class AndPathExpression implements PathProcessor {
-
-    private final List<PathProcessor> conditions;
+  static class AndPathExpression extends CompositeFilterPathExpression {
 
     AndPathExpression(String condition) {
-      this.conditions = new ArrayList<>();
-      String[] subConditions = condition.split(PathExpression.AND.getOperator());
-      for (String subCondition : subConditions) {
-        this.conditions.add(locateExpressionPathProcessor(subCondition));
-      }
+      super(PathExpression.AND.getOperator(), condition);
     }
 
     @Override
     public boolean canHandle(Map<Object, Object> resource) {
       return conditions.stream().allMatch(c -> c.canHandle(resource));
+    }
+  }
+
+  static class OrPathExpression extends CompositeFilterPathExpression {
+
+    OrPathExpression(String condition) {
+      super(PathExpression.OR.getOperator(), condition);
+    }
+
+    @Override
+    public boolean canHandle(Map<Object, Object> resource) {
+      return conditions.stream().anyMatch(c -> c.canHandle(resource));
+    }
+  }
+
+  static abstract class CompositeFilterPathExpression implements PathProcessor {
+
+    protected final List<PathProcessor> conditions;
+
+    CompositeFilterPathExpression(String operator, String condition) {
+      this.conditions = new ArrayList<>();
+      String[] subConditions = condition.split(Pattern.quote(operator));
+      for (String subCondition : subConditions) {
+        this.conditions.add(locateExpressionPathProcessor(subCondition));
+      }
     }
 
     @Override
@@ -226,7 +246,11 @@ public class HelmExpressionParser {
   }
 
   enum PathExpression {
-    AND("&&", AndPathExpression::new), IS_EQUAL("==", IsEqualPathExpression::new);
+    // @formatter:off
+    AND("&&", AndPathExpression::new),
+    OR("||", OrPathExpression::new),
+    IS_EQUAL("==", IsEqualPathExpression::new);
+    // @formatter:on
 
     String operator;
     Function<String, PathProcessor> supplier;

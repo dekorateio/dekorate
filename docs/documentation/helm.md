@@ -165,7 +165,9 @@ myModule:
   name: this-is-another-name
 ```
 
-- Escaping characters in path expressions
+**What features do path expressions support?**
+
+- Escape characters
 
 If you want to select properties which key contains special characters like '.', you need to escape them using `'`, for example:
 
@@ -174,16 +176,37 @@ If you want to select properties which key contains special characters like '.',
 dekorate.helm.values[0].paths=spec.selector.matchLabels.'app.kubernetes.io/name'
 ```
 
-- Filtering in path expressions
+- Filter
 
 If you want to only map properties of certain resource type, you can add as many conditions you need in the path such as:
 
 ```
 ## To map the property only for Service resources:
 dekorate.helm.values[0].paths=(kind == Service).metadata.name
-## To map the property only for Service resources AND resources that has an annotation 'key' with value 'some' 
-dekorate.helm.values[1].paths=(kind == Service && metadata.annotations.'key' == 'some.text').metadata.name
 ```
+
+Additionally, we can write the filter including the "and" operator using "&&" or the "or" operator using "||": 
+
+```
+## To map the property only for Service resources AND resources that has an annotation 'key' with value 'some' 
+dekorate.helm.values[0].paths=(kind == Service && metadata.annotations.'key' == 'some.text').metadata.name
+
+## To map the property only for either Deployment OR DeploymentConfig resources 
+dekorate.helm.values[1].paths=(kind == Deployment || kind == DeploymentConfig).metadata.name
+```
+
+Also, filters can be placed at any place in the path expression and also at multiple times. Let's see an example of this: we want to map the container port of containers with name `example` and only for Deployment resources:
+
+```
+## To map the property only for Deployment resource AND containers with a concrete name 
+dekorate.helm.values[0].paths=(kind == Deployment).spec.template.spec.containers.(name == example).ports.containerPort
+```
+
+**What is not supported using path expressions?**
+
+- We can't use wildcards or regular expressions.
+- We can't write complex filters that involves AND/OR conditions. For example: the filter `(kind == Deployment && kind == DeploymentConfig || name == example)` is not supported.
+- We can't select elements by index. For example, if we want to map the second container, we can't do: `spec.template.spec.containers.2.ports.containerPort`.
 
 ##### Mapping multiple properties at once
 
