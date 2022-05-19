@@ -56,7 +56,7 @@ public class HelmExpressionParserTest {
   }
 
   @Test
-  public void parseExpressionWithTwoEqualOperationsAndNotFound() throws IOException {
+  public void parseExpressionWithAndOperatorAndNotFound() throws IOException {
     Object found = parser.readAndSet("(kind == Deployment && metadata.name == notFound).metadata.name",
         "{{ .Values.app.name }}");
     assertNull(found);
@@ -64,11 +64,36 @@ public class HelmExpressionParserTest {
   }
 
   @Test
-  public void parseExpressionWithTwoEqualOperationsAndFound() throws IOException {
+  public void parseExpressionWithAndOperatorAndFound() throws IOException {
     Object found = parser.readAndSet("(kind == Deployment && metadata.name == example).metadata.name",
         "{{ .Values.app.name }}");
     assertEquals("example", found);
     assertGeneratedYaml("parseExpressionWithEqual");
+  }
+
+  @Test
+  public void parseExpressionWithOrOperatorAndNotFound() throws IOException {
+    Object found = parser.readAndSet("(metadata.name == notFound1 || metadata.name == notFound2).metadata.name",
+        "{{ .Values.app.name }}");
+    assertNull(found);
+    assertGeneratedYaml("no-changes");
+  }
+
+  @Test
+  public void parseExpressionWithOrOperatorAndFound() throws IOException {
+    Object found = parser.readAndSet("(metadata.name == example || metadata.name == notFound).metadata.name",
+        "{{ .Values.app.name }}");
+    assertEquals("example", found);
+    assertGeneratedYaml("parseExpressionWithOrOperatorAndFound");
+  }
+
+  @Test
+  public void parseExpressionWithSeveralFilters() throws IOException {
+    Object found = parser.readAndSet(
+        "(kind == Deployment && metadata.name == example).spec.template.spec.containers.(name == example).ports.containerPort",
+        "{{ .Values.app.containerPort }}");
+    assertEquals(8080, found);
+    assertGeneratedYaml("parseExpressionWithSeveralFilters");
   }
 
   private void assertGeneratedYaml(String method) throws IOException {
