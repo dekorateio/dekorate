@@ -32,6 +32,7 @@ import io.dekorate.utils.Strings;
 public class HelmExpressionParser {
 
   private static final String NO_REPLACEMENT = "no";
+  private static final String WILDCARD = "*.";
   private static final String ESCAPE = "'";
   private static final String DOT = ".";
 
@@ -65,6 +66,12 @@ public class HelmExpressionParser {
     String currentPart;
     int nextIndex;
     PathProcessor processor;
+
+    // if we have several dots, for example: "..spec.rest", we move the pointer to "spec.rest"
+    while (path.indexOf(DOT) == 0) {
+      path = path.substring(1);
+    }
+
     if (path.startsWith("(")) {
       // Handle expressions where path is "(kind == Service).rest":
       // increase pointer to ".rest":
@@ -80,13 +87,15 @@ public class HelmExpressionParser {
       // current part is now "a.b.c":
       currentPart = nextPart.substring(0, nextIndex);
       processor = new PartPathProcessor(currentPart);
+    } else if (path.startsWith(WILDCARD)) {
+      // if we found a wildcard means that we will find the current part at any position
+      path = path.substring(WILDCARD.length());
+      // increase pointer to ".rest":
+      nextIndex = path.indexOf(DOT);
+      // current part is now "spec":
+      currentPart = normalize(nextIndex > 0 ? path.substring(0, nextIndex) : path);
+      processor = new WildcardPartPathProcessor(currentPart);
     } else {
-      // Handle normal parts where path is "spec.rest"
-      // if we have several dots, for example: "..spec.rest", we move the pointer to "spec.rest"
-      while (path.indexOf(DOT) == 0) {
-        path = path.substring(1);
-      }
-
       // increase pointer to ".rest":
       nextIndex = path.indexOf(DOT);
       // current part is now "spec":
@@ -153,6 +162,48 @@ public class HelmExpressionParser {
     }
 
     return normalized;
+  }
+
+  static class WildcardPartPathProcessor implements PathProcessor {
+
+    private final String part;
+    private final List<Object> allFound = new ArrayList<>();
+
+    WildcardPartPathProcessor(String part) {
+      this.part = part;
+    }
+
+    @Override
+    public boolean canHandle(Map<Object, Object> resource) {
+      Object found = resource.get(part);
+      if (found != null) {
+        if (found instanceof List) {
+          allFound.addAll((List) found);
+        } else {
+          allFound.add(found);
+        }
+      }
+
+      for (Object child : resource.values()) {
+        if (child instanceof Map) {
+          canHandle((Map) child);
+        } else if (child instanceof List) {
+          List<Object> items = (List) child;
+          for (Object item : items) {
+            if (item instanceof Map) {
+              canHandle((Map) item);
+            }
+          }
+        }
+      }
+
+      return !allFound.isEmpty();
+    }
+
+    @Override
+    public Object handle(Map<Object, Object> resource) {
+      return allFound;
+    }
   }
 
   static class PartPathProcessor implements PathProcessor {

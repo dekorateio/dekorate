@@ -96,6 +96,24 @@ public class HelmExpressionParserTest {
     assertGeneratedYaml("parseExpressionWithSeveralFilters");
   }
 
+  @Test
+  public void parseExpressionWithWildcard() throws IOException {
+    Object found = parser.readAndSet(
+        "*.spec.containers.(name == example).ports.containerPort",
+        "{{ .Values.app.containerPort }}");
+    assertEquals(8080, found);
+    assertGeneratedYaml("parseExpressionWithSeveralFilters");
+  }
+
+  @Test
+  public void parseExpressionWithWildcardAndArrays() throws IOException {
+    Object found = parser.readAndSet(
+        "*.ports.containerPort",
+        "{{ .Values.app.containerPort }}");
+    assertEquals(8080, found);
+    assertGeneratedYaml("parseExpressionWithSeveralFilters");
+  }
+
   private void assertGeneratedYaml(String method) throws IOException {
     String actual = Serialization.yamlMapper().writeValueAsString(resources);
     String expected = new String(

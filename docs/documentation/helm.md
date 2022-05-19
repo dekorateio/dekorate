@@ -167,6 +167,54 @@ myModule:
 
 **What features do path expressions support?**
 
+- Wildcard: map properties at any level
+
+If we want to map a property that is placed at a very depth level, for example, the `containerPort` property:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: example
+  template:
+    metadata:
+        app.kubernetes.io/name: example
+    spec:
+      containers:
+        - env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          name: example
+          ports:
+            - containerPort: 8080 // we want to map this property!
+              name: http
+              protocol: TCP
+```
+
+If we want to map the property `containerPort`, we would need to write all the parent properties as in:
+
+```
+dekorate.helm.values[0].paths=spec.template.spec.containers.ports.containerPort
+```
+
+And what about if the `containerPort` property is at one place in the Deployment resources, but at another place in the DeploymentConfig resources? We would need to provide two expressions. 
+
+To ease up this use case, we can use wildcards. For example: 
+
+```
+## To map the container port property for containers with name "example"
+dekorate.helm.values[0].paths=*.spec.containers.(name == example).ports.containerPort
+## To map the container port property for all the resources at any position.
+dekorate.helm.values[1].paths=*.ports.containerPort
+```
+
 - Escape characters
 
 If you want to select properties which key contains special characters like '.', you need to escape them using `'`, for example:
@@ -204,7 +252,7 @@ dekorate.helm.values[0].paths=(kind == Deployment).spec.template.spec.containers
 
 **What is not supported using path expressions?**
 
-- We can't use wildcards or regular expressions.
+- We can't use regular expressions.
 - We can't write complex filters that involves AND/OR conditions. For example: the filter `(kind == Deployment && kind == DeploymentConfig || name == example)` is not supported.
 - We can't select elements by index. For example, if we want to map the second container, we can't do: `spec.template.spec.containers.2.ports.containerPort`.
 
