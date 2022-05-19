@@ -82,13 +82,7 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
 
   @Override
   public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-    Arrays.stream(testInstance.getClass().getDeclaredFields())
-        .forEach(f -> {
-          injectKubernetesClient(context, testInstance, f);
-          injectKubernetesResources(context, testInstance, f);
-          injectPod(context, testInstance, f);
-        });
-
+    injectTestInstances(testInstance, context);
     if (hasExtensionError(context)) {
       displayDiagnostics(context);
     }
@@ -218,5 +212,19 @@ public class KubernetesExtension implements ExecutionCondition, BeforeAllCallbac
       LOGGER.info("Deleting: " + r.getKind() + " name:" + r.getMetadata().getName() + ". Deleted:"
           + getKubernetesClient(context).resource(r).cascading(true).delete());
     });
+  }
+
+  private void injectTestInstances(Object testInstance, ExtensionContext context) {
+    Class<?> c = testInstance.getClass();
+    while (c != Object.class) {
+      Arrays.stream(c.getDeclaredFields())
+          .forEach(f -> {
+            injectKubernetesClient(context, testInstance, f);
+            injectKubernetesResources(context, testInstance, f);
+            injectPod(context, testInstance, f);
+          });
+
+      c = c.getSuperclass();
+    }
   }
 }

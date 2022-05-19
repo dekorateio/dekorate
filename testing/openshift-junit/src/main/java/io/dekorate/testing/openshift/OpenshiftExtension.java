@@ -92,14 +92,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
 
   @Override
   public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-    Arrays.stream(testInstance.getClass().getDeclaredFields())
-        .forEach(f -> {
-          injectKubernetesClient(context, testInstance, f);
-          injectOpenshiftResources(context, testInstance, f);
-          injectPod(context, testInstance, f);
-          injectRoute(context, testInstance, f);
-        });
-
+    injectTestInstances(testInstance, context);
     if (hasExtensionError(context)) {
       displayDiagnostics(context);
     }
@@ -240,6 +233,21 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
       client.resourceList(buildPods).delete();
       client.deploymentConfigs().withName(openshiftConfig.getName()).delete();
     } catch (Exception e) {
+    }
+  }
+
+  private void injectTestInstances(Object testInstance, ExtensionContext context) {
+    Class<?> c = testInstance.getClass();
+    while (c != Object.class) {
+      Arrays.stream(c.getDeclaredFields())
+          .forEach(f -> {
+            injectKubernetesClient(context, testInstance, f);
+            injectOpenshiftResources(context, testInstance, f);
+            injectPod(context, testInstance, f);
+            injectRoute(context, testInstance, f);
+          });
+
+      c = c.getSuperclass();
     }
   }
 }
