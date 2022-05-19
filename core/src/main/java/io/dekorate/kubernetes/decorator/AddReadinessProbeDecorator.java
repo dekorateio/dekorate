@@ -44,4 +44,9 @@ public class AddReadinessProbeDecorator extends AbstractAddProbeDecorator {
         .withFailureThreshold(probe.getFailureThreshold())
         .endReadinessProbe();
   }
+
+  @Override
+  protected String getProbeName() {
+    return "readinessProbe";
+  }
 }

@@ -33,3 +33,6 @@
                 - containerPort: 8080
                   name: http
                   protocol: TCP
+              command:
+                - command1
+                - command2

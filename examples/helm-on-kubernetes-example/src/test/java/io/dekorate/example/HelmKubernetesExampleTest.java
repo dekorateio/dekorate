@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -81,6 +82,26 @@ class HelmKubernetesExampleTest {
     assertNull(helmExampleValues.get("not-found"));
     // Should contain vcs-url with the overridden value from properties
     assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
+    // Should include health check properties:
+    // 1. tcp socket action
+    Map<String, Object> livenessValues = (Map<String, Object>) helmExampleValues.get("livenessProbe");
+    assertProbe(livenessValues, 11, 31);
+    Map<String, Object> tcpSocketValues = (Map<String, Object>) livenessValues.get("tcpSocket");
+    assertEquals("1111", tcpSocketValues.get("port"));
+    assertEquals("my-service", tcpSocketValues.get("host"));
+    // 2. http get action
+    Map<String, Object> readinessValues = (Map<String, Object>) helmExampleValues.get("readinessProbe");
+    assertProbe(readinessValues, 10, 30);
+    Map<String, Object> httpGetValues = (Map<String, Object>) readinessValues.get("httpGet");
+    assertEquals("/readiness", httpGetValues.get("path"));
+    // 3. exec action
+    Map<String, Object> startupValues = (Map<String, Object>) helmExampleValues.get("startupProbe");
+    assertProbe(startupValues, 12, 32);
+    Map<String, Object> execValues = (Map<String, Object>) startupValues.get("exec");
+    List<String> command = (List<String>) execValues.get("command");
+    assertEquals(2, command.size());
+    assertEquals("command1", command.get(0));
+    assertEquals("command2", command.get(1));
   }
 
   @Test
@@ -102,5 +123,13 @@ class HelmKubernetesExampleTest {
     assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
     // Should contain ingress with the value from properties
     assertEquals("my-test-host", helmExampleValues.get("host"));
+  }
+
+  private void assertProbe(Map<String, Object> probeValues, int expectedTimeoutSeconds, int expectedPeriodSeconds) {
+    assertEquals(3, probeValues.get("failureThreshold"));
+    assertEquals(expectedTimeoutSeconds, probeValues.get("timeoutSeconds"));
+    assertEquals(expectedPeriodSeconds, probeValues.get("periodSeconds"));
+    assertEquals(1, probeValues.get("successThreshold"));
+    assertEquals(0, probeValues.get("initialDelaySeconds"));
   }
 }

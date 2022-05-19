@@ -240,7 +240,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       // Adapt the values tag to Helm standards:
       String adaptedString = Serialization.yamlMapper().writeValueAsString(resource)
           .replaceAll(Pattern.quote("\"" + VALUES_START_TAG), VALUES_START_TAG)
-          .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG);
+          .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG)
+          // replace randomly escape characters that is entered by Jackson readTree method:
+          .replaceAll("\\\\\\n(\\s)*\\\\(\\s)*}}", " }}");
 
       writeFile(adaptedString, targetFile);
     }

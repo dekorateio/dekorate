@@ -106,21 +106,23 @@ public class HelmExpressionParser {
     Object result = null;
     if (processor.canHandle(resource)) {
       result = processor.handle(resource);
-      if (result instanceof Map) {
-        return readValuesForResource((Map) result, path.substring(nextIndex + 1), replacement);
-      } else if (result instanceof List) {
-        String nextPath = path.substring(nextIndex + 1);
-        Set<Object> values = new HashSet<>();
-        for (Object inner : (List) result) {
-          if (inner instanceof Map) {
-            Object value = readValuesForResource((Map) inner, nextPath, replacement);
-            if (value != null) {
-              values.add(value);
+      if (nextIndex >= 0) {
+        if (result instanceof Map) {
+          return readValuesForResource((Map) result, path.substring(nextIndex + 1), replacement);
+        } else if (result instanceof List) {
+          String nextPath = path.substring(nextIndex + 1);
+          Set<Object> values = new HashSet<>();
+          for (Object inner : (List) result) {
+            if (inner instanceof Map) {
+              Object value = readValuesForResource((Map) inner, nextPath, replacement);
+              if (value != null) {
+                values.add(value);
+              }
             }
           }
-        }
 
-        return uniqueResult(values, nextPath);
+          return uniqueResult(values, nextPath);
+        }
       }
 
       if (!NO_REPLACEMENT.equals(replacement)) {

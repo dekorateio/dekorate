@@ -44,4 +44,9 @@ public class AddStartupProbeDecorator extends AbstractAddProbeDecorator {
         .withFailureThreshold(probe.getFailureThreshold())
         .endStartupProbe();
   }
+
+  @Override
+  protected String getProbeName() {
+    return "startupProbe";
+  }
 }

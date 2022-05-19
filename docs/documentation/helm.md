@@ -63,9 +63,10 @@ Depending on the Dekorate extensions that you are using in your project, the Hel
 
 By default, Dekorate will generate the Helm values file (`values.yaml`) by mapping the following pre-configured properties:
 
-- The Kubernetes/Openshift replicas
-- The Kubernetes/Openshift image
-- The Kubernetes/Openshift Env Var values (only for plain values - secrets or configmaps are not supported yet)
+- The Kubernetes/OpenShift replicas
+- The Kubernetes/OpenShift image
+- The Kubernetes/OpenShift Env Var values (only for plain values - secrets or configmaps are not supported yet)
+- The Kubernetes/OpenShift health checks for Readiness, Liveness and Startup probes
 - The Kubernetes ingress host
 - The Openshift S2i builder image
 
