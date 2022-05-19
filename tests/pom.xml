@@ -78,6 +78,7 @@
       <module>feat-943-configmap-volumes</module>
       <module>issue-963-docker-system-properties</module>
       <module>feat-967-ingress-tls</module>
+      <module>issue-983-tests-inject-in-super-class</module>
     </modules>
 
 </project>
