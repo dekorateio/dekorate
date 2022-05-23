@@ -36,7 +36,7 @@ limitations under the License.
 
     <dependency>
       <groupId>io.fabric8</groupId>
-      <artifactId>certmanager-client</artifactId>
+      <artifactId>certmanager-model-v1</artifactId>
     </dependency>
 
     <dependency>
