@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
+import static io.dekorate.ConfigReference.joinProperties;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -164,7 +164,7 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
   }
 
   private ConfigReference buildConfigReferenceForEnvValue() {
-    String property = generateConfigReferenceName("envs." + env.getName(), getContainerName());
+    String property = joinProperties("envs." + env.getName());
     String envFilter = ".env.(name == " + env.getName() + ").value";
     String path = "spec.template.spec.containers." + envFilter;
     if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {

@@ -1,7 +1,5 @@
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class ApplyReplicasToStatefulSetDecorator extends NamedResourceDecorator<
   }
 
   private ConfigReference buildConfigReferenceReplicas() {
-    String property = generateConfigReferenceName("replicas", getName());
+    String property = "replicas";
     String path = "(kind == StatefulSet).spec.replicas";
     if (!Strings.equals(getName(), ANY)) {
       path = "(kind == StatefulSet && metadata.name == " + getName() + ").spec.replicas";

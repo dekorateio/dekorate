@@ -15,8 +15,6 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
   }
 
   private ConfigReference buildConfigReferenceForImage() {
-    String property = generateConfigReferenceName("image", getContainerName(), getDeploymentName());
+    String property = "image";
     String path = "spec.template.spec.containers.image";
     if (!Strings.equals(getDeploymentName(), ANY) && !Strings.equals(getContainerName(), ANY)) {
       path = "(metadata.name == " + getDeploymentName() + ")].spec.template.spec.containers"

@@ -37,6 +37,8 @@ public @interface HelmChart {
 
   String name();
 
+  String valuesRootAlias() default "app";
+
   String description() default "";
 
   String version() default "";
