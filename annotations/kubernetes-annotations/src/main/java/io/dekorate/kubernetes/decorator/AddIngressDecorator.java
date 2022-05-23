@@ -16,7 +16,6 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
 import static io.dekorate.utils.Ports.getHttpPort;
 
 import java.util.Arrays;
@@ -96,7 +95,7 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
   }
 
   private ConfigReference buildConfigReferenceHost() {
-    String property = generateConfigReferenceName("host", config.getName());
+    String property = "host";
     String path = "(kind == Ingress && metadata.name == " + config.getName() + ").spec.rules.host";
     return new ConfigReference(property, path, config.getHost());
   }

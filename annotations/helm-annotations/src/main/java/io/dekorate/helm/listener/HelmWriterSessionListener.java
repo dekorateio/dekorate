@@ -231,7 +231,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
     Path templatesDir = getChartOutputDir(helmConfig, outputDir).resolve(TEMPLATES);
     Files.createDirectories(templatesDir);
-    List<Map<Object, Object>> resources = replaceValuesInYamls(generatedFiles, valuesReferences, prodValues, valuesByProfile);
+    List<Map<Object, Object>> resources = replaceValuesInYamls(helmConfig, generatedFiles, valuesReferences, prodValues,
+        valuesByProfile);
     // Split yamls in separated files by kind
     for (Map<Object, Object> resource : resources) {
       String kind = (String) resource.get(KIND);
@@ -250,7 +251,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return Collections.emptyMap();
   }
 
-  private List<Map<Object, Object>> replaceValuesInYamls(Collection<File> generatedFiles,
+  private List<Map<Object, Object>> replaceValuesInYamls(HelmChartConfig helmConfig,
+      Collection<File> generatedFiles,
       List<ConfigReference> valuesReferences,
       Map<String, Object> prodValues,
       Map<String, Map<String, Object>> valuesByProfile) throws IOException {
@@ -268,7 +270,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       HelmExpressionParser parser = new HelmExpressionParser(resources);
 
       for (ConfigReference valueReference : valuesReferences) {
-        String valueReferenceProperty = Strings.kebabToCamelCase(valueReference.getProperty());
+        String valueReferenceProperty = Strings
+            .kebabToCamelCase(helmConfig.getValuesRootAlias() + "." + valueReference.getProperty());
 
         // Check whether path exists
         for (String path : valueReference.getPaths()) {

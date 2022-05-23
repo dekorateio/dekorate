@@ -15,8 +15,6 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class ApplyReplicasToDeploymentDecorator extends NamedResourceDecorator<D
   }
 
   private ConfigReference buildConfigReferenceReplicas() {
-    String property = generateConfigReferenceName("replicas", getName());
+    String property = "replicas";
     String path = "(kind == Deployment).spec.replicas";
     if (!Strings.equals(getName(), ANY)) {
       path = "(kind == Deployment && metadata.name == " + getName() + ").spec.replicas";

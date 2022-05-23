@@ -32,7 +32,7 @@ class HelmOpenshiftExampleTest {
 
   private static final String CHART_NAME = "myOcpChart";
   private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/" + CHART_NAME;
-  private static final String ROOT_CONFIG_NAME = "helmOnOpenshiftExample";
+  private static final String ROOT_CONFIG_NAME = "app";
 
   @Test
   public void shouldHelmManifestsBeGenerated() throws IOException {

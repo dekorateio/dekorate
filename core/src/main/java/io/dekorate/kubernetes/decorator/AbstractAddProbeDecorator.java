@@ -15,7 +15,7 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
+import static io.dekorate.ConfigReference.joinProperties;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,7 +101,7 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
   }
 
   private ConfigReference buildConfigReference(String propertyName, Object value) {
-    String property = generateConfigReferenceName(propertyName, getDeploymentName(), getProbeName());
+    String property = joinProperties(getProbeName(), propertyName);
     String jsonPath = JSONPATH_CONTAINERS_EXPRESSION + getProbeName() + "." + propertyName;
     return new ConfigReference(property, jsonPath, value);
   }

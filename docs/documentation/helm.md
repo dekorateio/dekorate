@@ -84,11 +84,11 @@ Dekorate will generate the next Helm values file at `target/classes/META-INF/dek
 
 ```yaml
 ---
-myModule:
+app:
   replicas: 3
 ```
 
-**Note**: `myModule` is the name of your project.
+**Note**: By default, the extension will map all the properties under `app`. This can be modified using `dekorate.helm.alias`.  
 
 And the Deployment file at `target/classes/META-INF/dekorate/helm/<chart name>/templates/deployment.yaml` will have a reference to this value:
 
@@ -98,7 +98,7 @@ kind: Deployment
 metadata:
   name: myModule
 spec:
-  replicas: '{{ .Values.myModule.replicas }}'
+  replicas: '{{ .Values.app.replicas }}'
 ```
 
 This is done transparently to users.
@@ -135,14 +135,14 @@ dekorate.helm.name=myChart
 dekorate.helm.description=Description of my Chart
 
 # Map all the metadata name resources
-dekorate.helm.values[0].property=myModule.name
+dekorate.helm.values[0].property=name
 dekorate.helm.values[0].paths=metadata.name
 ```
 
 The resulting `values.yaml` file will look like as:
 
 ```yaml
-myModule:
+app:
   name: helm-on-kubernetes-example
 ```
 
@@ -153,7 +153,7 @@ dekorate.helm.name=myChart
 dekorate.helm.description=Description of my Chart
 
 # Map all the metadata name resources
-dekorate.helm.values[0].property=myModule.name
+dekorate.helm.values[0].property=name
 dekorate.helm.values[0].paths=metadata.name
 ## Overwrite value:
 dekorate.helm.values[0].value=this-is-another-name
@@ -162,7 +162,7 @@ dekorate.helm.values[0].value=this-is-another-name
 And the `values.yaml` file will now contain:
 
 ```yaml
-myModule:
+app:
   name: this-is-another-name
 ```
 
@@ -288,7 +288,7 @@ dekorate.helm.name=myChart
 dekorate.helm.description=Description of my Chart
 
 # Map all the metadata name resources
-dekorate.helm.values[0].property=myModule.name
+dekorate.helm.values[0].property=name
 ## Comma separated list of JSONPath expressions:
 dekorate.helm.values[0].jsonPaths=$..metadata.name,$.[?(@.kind == 'Ingress')].spec.rules..http.paths..backend.service.name
 ```
@@ -309,7 +309,7 @@ dekorate.kubernetes.host=my-host
 # Helm Chart
 dekorate.helm.name=myChart
 ## Overwrite the value of `dekorate.kubernetes.host` to `values-<profile-name>.yaml`:
-dekorate.helm.values[0].property=myModule.host
+dekorate.helm.values[0].property=host
 dekorate.helm.values[0].jsonPaths=$.[?(@.kind == 'Ingress')].spec.rules..host
 dekorate.helm.values[0].value=my-test-host
 dekorate.helm.values[0].profile=test
@@ -318,14 +318,14 @@ dekorate.helm.values[0].profile=test
 This configuration will generate the `values.yaml` using the property `dekorate.kubernetes.host`:
 
 ```yaml
-myModule:
+app:
   host: my-host
 ```
 
 But as you are now using a profile named `test` in one of your mapped properties, it will also generate a `values-test.yaml` file with the content:
 
 ```yaml
-myModule:
+app:
   host: my-test-host
 ```
 
@@ -369,7 +369,7 @@ helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
 - Via the `set` option of Helm command line:
 
 ```shell
-helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --set helmOnKubernetesExample.replicas=1
+helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --set app.replicas=1
 ```
 
 How can we delete my deployment?

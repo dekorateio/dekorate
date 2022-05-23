@@ -17,7 +17,7 @@
 
 package io.dekorate.s2i.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
+import static io.dekorate.ConfigReference.joinProperties;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +68,7 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
   }
 
   private ConfigReference buildConfigReferenceBuilderImage() {
-    String property = generateConfigReferenceName("builder-image", config.getName(), getImageStreamName());
+    String property = joinProperties(getImageStreamName(), "builder-image");
     String path = "(kind == ImageStream && metadata.name == " + getImageStreamName() + ").spec.dockerImageRepository";
     String value = Images.removeTag(config.getBuilderImage());
     return new ConfigReference(property, path, value);

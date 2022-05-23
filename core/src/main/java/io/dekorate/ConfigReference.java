@@ -17,6 +17,9 @@ package io.dekorate;
 
 import static io.dekorate.kubernetes.decorator.Decorator.ANY;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import io.dekorate.utils.Strings;
 
 /**
@@ -79,21 +82,15 @@ public class ConfigReference {
   }
 
   /**
-   * Will generate a config reference name based on the value in `base` and appending also the properties
-   * if they are not null or any.
+   * Will generate a config reference name by appending the properties if they are not null or any.
    *
-   * For example, if `base` is `image` and `properties` are [`first`, null], it will generate: `first.image`.
+   * For example, if `properties` are [`first`, null, `image`], it will generate: `first.image`.
    */
-  public static String generateConfigReferenceName(String suffix, String... properties) {
-    StringBuilder sb = new StringBuilder();
-    for (String property : properties) {
-      if (!Strings.equals(ANY, property)) {
-        sb.append(property + ".");
-      }
+  public static String joinProperties(String... properties) {
+    if (properties == null) {
+      return null;
     }
 
-    sb.append(suffix);
-
-    return sb.toString();
+    return Stream.of(properties).filter(p -> !Strings.equals(ANY, p)).collect(Collectors.joining("."));
   }
 }

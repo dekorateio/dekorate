@@ -17,7 +17,7 @@
 
 package io.dekorate.s2i.decorator;
 
-import static io.dekorate.ConfigReference.generateConfigReferenceName;
+import static io.dekorate.ConfigReference.joinProperties;
 
 import java.util.Arrays;
 import java.util.List;
@@ -104,7 +104,7 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
   }
 
   private ConfigReference buildConfigReferenceTag() {
-    String property = generateConfigReferenceName("tag", config.getName(), getImageStreamName());
+    String property = joinProperties(getImageStreamName(), "tag");
     String path = "(kind == BuildConfig && metadata.name == " + config.getName() + ")].spec.strategy.sourceStrategy.from.name";
     return new ConfigReference(property, path);
   }

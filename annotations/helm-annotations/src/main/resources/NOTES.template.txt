@@ -63,7 +63,7 @@ helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name>
 - Via the `set` option of Helm command line:
 
 ```shell
-helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --set helmExample.replicas=1
+helm upgrade helm-example ./target/classes/META-INF/dekorate/helm/<chart name> --set app.replicas=1
 ```
 
 How can we delete my deployment?
