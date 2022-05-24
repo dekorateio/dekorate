@@ -15,6 +15,8 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import java.util.Collections;
+
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -54,18 +56,20 @@ public class AddRoleBindingResourceDecorator extends ResourceProvidingDecorator<
   }
 
   public void visit(KubernetesListBuilder list) {
-    ObjectMeta meta = getMandatoryDeploymentMetadata(list, this.name);
-    String name = Strings.isNotNullOrEmpty(this.name) ? this.name : meta.getName() + "-" + this.role;
-    String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount : meta.getName();
+    // If name is null, it will get the first deployment resource found.
+    ObjectMeta meta = getMandatoryDeploymentMetadata(list, name);
+    String actualName = Strings.isNotNullOrEmpty(name) ? name : meta.getName();
+    String roleBindingName = actualName + "-" + this.role;
+    String serviceAccount = Strings.isNotNullOrEmpty(this.serviceAccount) ? this.serviceAccount : actualName;
 
-    if (contains(list, "rbac.authorization.k8s.io/v1", "RoleBinding", name)) {
+    if (contains(list, "rbac.authorization.k8s.io/v1", "RoleBinding", roleBindingName)) {
       return;
     }
 
     list.addToItems(new RoleBindingBuilder()
         .withNewMetadata()
-        .withName(name)
-        .withLabels(meta.getLabels())
+        .withName(roleBindingName)
+        .withLabels(Strings.isNotNullOrEmpty(name) ? meta.getLabels() : Collections.emptyMap())
         .endMetadata()
         .withNewRoleRef()
         .withKind(kind.name())
