@@ -133,6 +133,16 @@ public class Strings {
         .map(s -> first.getAndSet(false) ? s : Strings.uppercaseFirst(s)).collect(Collectors.joining()) : str;
   }
 
+  /**
+   * Convert camel case to kebab case.
+   * 
+   * @param str The input string
+   * @return The kebab cased string
+   */
+  public static String camelToKebabCase(String str) {
+    return str.replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase();
+  }
+
   public static String read(Path path) {
     try {
       return new String(Files.readAllBytes(path));

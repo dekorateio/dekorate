@@ -43,7 +43,7 @@ public class Generators {
   }
 
   /**
-   * Change properties corresponding to primtives from String to the actual primitive value.
+   * Change properties corresponding to primitives from String to the actual primitive value.
    */
   public static void applyPrimitives(Class configClass, Map<String, Object> map) {
     for (Map.Entry<String, Object> entry : new HashMap<String, Object>(map).entrySet()) {

@@ -26,6 +26,7 @@ As the project now supports `decorating` of kubernetes manifests without the use
   - [Prometheus](#prometheus-annotations)
   - [Jaeger](#jaeger-annotations)
   - [ServiceBinding CRD](#servicebinding-crd)
+  - [Cert-Manager](#cert-manager)
 - Customize manifests using annotations
   - Kubernetes
     - labels
@@ -1734,6 +1735,27 @@ If the application's `bindingPath` needs to configured, `@BindingPath` annotatio
 ```
 **Note** : `ServiceBinding` annotations are already usuable though still highly experimental. The Service Binding operator is still in flux and may change in the near future.
 
+### Cert-Manager
+
+Dekorate supports to generate a X.509 certificate with the help of the Certificate and Issuer CRD resources handled by the [Cert-Manager](https://cert-manager.io/). When these CRD resources are deployed on the cluster, the Cert-Manager will process them in order to populate a Secret containing by example a: CA certificate, private key, server certificate or java keystores, etc.
+
+To let Dekorate to generate the certificate and issuer resources, simply declare the following dependency part of your pom file:
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>certmanager-annotations</artifactId>
+</dependency>
+```
+
+And provide the certificate configuration. The minimal information that the Dekorate needs is:
+- `secretName` : the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will include the Cert-Manager generated files.
+- the Issuer that represents the certificate authority (CA). See all the supported options in [the Issuer](#issuers) section.
+
+To know more about how to use the Cert-Manager extension, please go to [the Cert-Manager Dekorate documentation](https://dekorate.io/docs/cert-manager).
+
+#### related examples
+- [spring boot with cert_manager](examples/spring-boot-with-certmanager-example)
 
 #### External generator integration
 

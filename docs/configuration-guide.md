@@ -611,3 +611,123 @@ The section below describes all the available subtypes.
 |----------------|--------|-------------|---------------|
 | container-path | String | ""          |               |
 | secret-path    | String | ""          |               |  
+
+## Cert-Manager
+
+| Property                              | Type            | Description                                               | Default Value        |
+|---------------------------------------|-----------------|-----------------------------------------------------------|----------------------|
+| dekorate.certificate.name             | String          | Name of the certificate resource to be generated          | The application name |
+| dekorate.certificate.secretName       | String          | the name of the secret resource                           |                      |  
+| dekorate.certificate.issuerRef        | IssuerRef       | the reference to the issuer                               |                      |
+| dekorate.certificate.ca               | CA              | the CA issuer configuration                               |                      |
+| dekorate.certificate.vault            | Vault           | the Vault issuer configuration                            |                      |
+| dekorate.certificate.selfSigned       | SelfSigned      | the SelfSigned issuer configuration                       |                      |
+| dekorate.certificate.subject          | Subject         | the full X509 name specification                          |                      |
+| dekorate.certificate.commonName       | String          | common name to be used on the Certificate                 |                      |  
+| dekorate.certificate.duration         | String          | the lifetime of the Certificate                           |                      |  
+| dekorate.certificate.renewBefore      | String          | the renewal before duration timestamp                     |                      |  
+| dekorate.certificate.dnsNames         | String[]        | the list of [Subject Alternative Names](https://en.wikipedia.org/wiki/Subject_Alternative_Name). Find more information in [the Cert-Manager Dekorate](https://dekorate.io/docs/cert-manager#securing-resources) documentation.                           |                      |  
+| dekorate.certificate.ipAddresses      | String[]        | the list of IP address subjectAltNames                    |                      |  
+| dekorate.certificate.uris             | String[]        | the list of URI subjectAltNames                           |                      |  
+| dekorate.certificate.emailAddresses   | String[]        | the list of email subjectAltNames                         |                      |  
+| dekorate.certificate.keystores        | CertificateKeystores  | the Keystores generation configuration              |                      |  
+| dekorate.certificate.isCA             | Boolean         | if true, it will mark this Certificate as valid for certificate signing  |       |  
+| dekorate.certificate.usages           | String[]        | the set of x509 usages that are requested for the certificate            |       |
+| dekorate.certificate.privateKey       | CertificatePrivateKey | options to control private keys used for the Certificate           |       |
+| dekorate.certificate.encodeUsagesInRequest  | Boolean   | whether key usages should be present in the CertificateRequest           | false |
+| dekorate.certificate.volumeMountPath  | String          | the mount path where the generated certificate resources will be mounted | /etc/certs |
+
+### IssuerRef
+
+| Property       | Type   | Description | Default Value |
+|----------------|--------|-------------|---------------|
+| name           | String |             |               |
+| kind           | String |             |               |  
+| group          | String |             |               |  
+
+### CA
+
+| Property               | Type     | Description | Default Value |
+|------------------------|----------|-------------|---------------|
+| secretName             | String   |             |               |
+| crlDistributionPoints  | String[] |             |               | 
+
+### Vault
+
+| Property               | Type                   | Description | Default Value |
+|------------------------|------------------------|-------------|---------------|
+| server                 | String                 |             |               |
+| path                   | String                 |             |               | 
+| authTokenSecretRef     | LocalObjectReference   |             |               | 
+| authAppRole            | VaultAppRole           |             |               | 
+| authKubernetes         | VaultKubernetesAuth    |             |               | 
+| namespace              | String                 |             |               |
+| caBundle               | String                 |             |               | 
+
+**Note**: Only one auth mechanism can be set among `authTokenSecretRef`, `authAppRole` and `authKubernetes`.
+
+### SelfSigned
+
+| Property               | Type     | Description | Default Value |
+|------------------------|----------|-------------|---------------|
+| enabled                | boolean  |             | false         |
+| crlDistributionPoints  | String[] |             |               | 
+
+### LocalObjectReference
+
+| Property       | Type   | Description | Default Value |
+|----------------|--------|-------------|---------------|
+| name           | String |             |               |
+| key            | String |             |               |  
+
+### VaultAppRole
+
+| Property       | Type                 | Description | Default Value |
+|----------------|----------------------|-------------|---------------|
+| path           | String               |             |               |
+| roleId         | String               |             |               | 
+| secretRef      | LocalObjectReference |             |               | 
+
+### VaultKubernetesAuth
+
+| Property       | Type                 | Description | Default Value |
+|----------------|----------------------|-------------|---------------|
+| mountPath      | String               |             |               |
+| role           | String               |             |               | 
+| secretRef      | LocalObjectReference |             |               | 
+
+### Subject
+
+| Property               | Type     | Description | Default Value |
+|------------------------|----------|-------------|---------------|
+| organizations          | String[] |             |               |
+| countries              | String[] |             |               | 
+| organizationalUnits    | String[] |             |               |
+| localities             | String[] |             |               | 
+| provinces              | String[] |             |               |
+| streetAddresses        | String[] |             |               | 
+| postalCodes            | String[] |             |               |
+| serialNumber           | String   |             |               | 
+
+### CertificateKeystores
+
+| Property       | Type                 | Description                                                                      | Default Value |
+|----------------|----------------------|----------------------------------------------------------------------------------|---------------|
+| jks            | CertificateKeystore  | If set, a file named keystore.jks will be created in the target Secret resource  |               |
+| pkcs12         | CertificateKeystore  | If set, a file named keystore.p12 will be created in the target Secret resource  |               | 
+
+### CertificateKeystore
+
+| Property           | Type                 | Description | Default Value |
+|--------------------|----------------------|-------------|---------------|
+| create             | boolean              |             | false         |
+| passwordSecretRef  | LocalObjectReference |             |               | 
+
+### CertificatePrivateKey
+
+| Property       | Type   | Description | Default Value |
+|----------------|--------|-------------|---------------|
+| rotationPolicy | String |             |               |
+| encoding       | String |             |               | 
+| algorithm      | String |             |               | 
+| size           | String |             |               | 

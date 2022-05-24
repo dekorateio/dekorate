@@ -124,8 +124,15 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(8080), "HTTP");
     }
 
-    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(),
-        new IntOrString(Ports.getHttpPort(container).get().getContainerPort()), "HTTP");
+    int port = Ports.getHttpPort(container).get().getContainerPort();
+    String schema = "HTTP";
+    // Generally, if the port is either 443 or 8443, then we should use the schema HTTPS
+    // TODO: However, we should let users deciding what schema to use.
+    if (Ports.isHttps(port)) {
+      schema = "HTTPS";
+    }
+
+    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(port), schema);
   }
 
   private TCPSocketAction tcpSocketAction(Probe probe) {
