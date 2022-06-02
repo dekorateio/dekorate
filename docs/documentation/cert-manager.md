@@ -6,9 +6,9 @@ permalink: /docs/cert-manager
 ---
 ### Cert-Manager
 
-Dekorate supports to generate a X.509 certificate with the help of the Certificate and Issuer CRD resources handled by the [Cert-Manager](https://cert-manager.io/). When these CRD resources are deployed on the cluster, the Cert-Manager will process them in order to populate a Secret containing by example a: CA certificate, private key, server certificate or java keystores, etc.
+Dekorate supports generating an X.509 certificate with the help of the Certificate and Issuer CRD resources handled by the [Cert-Manager](https://cert-manager.io/). When these CRD resources are deployed on the cluster, the Cert-Manager will process them to populate a Secret containing for example a: CA certificate, private key, server certificate, or java keystores, etc.
 
-To let Dekorate to generate the certificate and issuer resources, simply declare the following dependency part of your pom file:
+To let Dekorate generate the certificate and issuer resources, simply declare the following dependency part of your pom file:
 
 ```xml
 <dependency>
@@ -18,8 +18,8 @@ To let Dekorate to generate the certificate and issuer resources, simply declare
 </dependency>
 ```
 
-And provide the certificate configuration. The minimal information that the Dekorate needs is:
-- `secretName` : the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will include the Cert-Manager generated files.
+And provide the certificate configuration. The minimal information that the Dekorate needs are:
+- `secretName`: the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will include the Cert-Manager generated files.
 - the Issuer that represents the certificate authority (CA). See all the supported options in [the Issuer](#issuers) section.
 
 For all the configuration options, please go to [the Configuration guide](https://dekorate.io/configuration-guide/#cert-manager) of the Cert-Manager.
@@ -41,9 +41,9 @@ public class Main {
 }
 ```
 
-This configuration will generate up to two resources under `target/classes/dekorate/kubernetes.yml` file that should look like this:
+This configuration will generate up to two resources under the `target/classes/dekorate/kubernetes.yml` file that should look like this:
 
-```
+```yaml
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
@@ -64,9 +64,9 @@ spec:
   secretName: tls-secret
 ```
 
-Apart from these two resources, the Cert-Manager Dekorate extension will also configure, part of the Deployment, a volume mounted from the secret that contain the Cert-Manager generated files to allow the application to access them and to configure the HTTPS/TLS endpoint:
+Apart from these two resources, the Cert-Manager Dekorate extension will also configure, part of the Deployment, a volume mounted from the secret that contains the Cert-Manager generated files to allow the application to access them and to configure the HTTPS/TLS endpoint:
 
-```
+```yaml
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -91,7 +91,7 @@ spec:
 
 #### Usage
 
-For an application (Quarkus, Spring Boot, ...) to be able to access the files mounted under `/etc/certs` from the secret, the application properties must also be updated. To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS keystore.
+For an application (Quarkus, Spring Boot, ...) to be able to access the files mounted under `/etc/certs` from the secret, the application properties must also be updated. To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS Keystore.
 
 #### Securing Resources
 
@@ -101,7 +101,7 @@ When securing your resources, it's important to validate that the requests are c
 dekorate.certificate.dnsNames=foo.bar.com
 ```
 
-The certificate will only allow requests accessing the server host `foo.bar.com`. Remark: If the DNS Host name do not exist, then you will get an error.
+The certificate will only allow requests accessing the server host `foo.bar.com`. Remark: If the DNS Host name does not exist, then you will get an error.
 
 Note that the applications in Kubernetes can be publicly exposed using [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) resources, for example:
 
@@ -130,18 +130,18 @@ spec:
 
 In Dekorate, you can generate the above Ingress resource by simply adding the following key properties:
 ```
-dekorate.kubernetes.host=foo.bar.com
-dekorate.kubernetes.expose=true
+dekorate.kubernetes.ingress.host=foo.bar.com
+dekorate.kubernetes.ingress.expose=true
 dekorate.kubernetes.ingress.tlsSecretName=tls-secret
 ```
 
 #### Issuers
 
-The `Issuer` is a Kubernetes resource that represents a certificate issuing authority that are able to generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a referenced issuer to attempt to honor the request.
+The `Issuer` is a Kubernetes resource that represents a certificate issuing authority that can generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a referenced issuer to attempt to honor the request.
 
-The supported issuers of this extension are: SelfSigned, CA, Vault and IssuerRef. 
+The supported issuers of this extension are SelfSigned, CA, Vault, and IssuerRef. 
 
-**Note**: Only one issuer must be set between `selfSigned`, `ca`, `vault` and `issuerRef`.
+**Note**: Only one issuer must be set between `selfSigned`, `ca`, `vault`, and `issuerRef`.
 
 ##### SelfSigned
 
@@ -153,7 +153,7 @@ dekorate.certificate.selfSigned.enabled=true
 
 ##### CA
 
-Using the [CA issuer](https://cert-manager.io/docs/configuration/ca/), the certificate and private key are stored inside the cluster as a Kubernetes Secret, and will be used to sign incoming certificate requests.
+Using the [CA issuer](https://cert-manager.io/docs/configuration/ca/), the certificate and private key are stored inside the cluster as a Kubernetes Secret and will be used to sign incoming certificate requests.
 To use the CA issuer, you need to add the following key properties:
 
 ```
@@ -162,7 +162,7 @@ dekorate.certificate.ca.secretName=ca-key-pair
 
 When this certificate is installed in the cluster, Cert-Manager will issue the certificate and generate the CA secret resource `ca-key-pair` which the following content:
 
-```
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -175,7 +175,7 @@ data:
 ##### Vault
 
 Using the [Vault issuer](https://cert-manager.io/docs/configuration/vault/), the certificate will be issued by the certificate authority [Vault](https://www.vaultproject.io/).
-To use the Vault issuer, you need to the following key properties:
+To use the Vault issuer, you need the following key properties:
 
 ```
 dekorate.certificate.vault.server=https://vault.example.com:8200
@@ -198,4 +198,4 @@ dekorate.certificate.issuerRef.name=my-issuer
 dekorate.certificate.issuerRef.kind=ClusterIssuer
 ```
 
-In this example, we are using a [ClusterIssuer](https://cert-manager.io/docs/concepts/issuer/) resource that is part of the Cert-Manager API and that should have previously installed in the cluster.
+In this example, we are using a [ClusterIssuer](https://cert-manager.io/docs/concepts/issuer/) resource that is part of the Cert-Manager API and that should have previously been installed in the cluster.

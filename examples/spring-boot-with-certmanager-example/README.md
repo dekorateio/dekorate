@@ -1,6 +1,6 @@
 # Spring Boot with Cert-Manager
 
-The purpose of this Spring Boot example is to demonstrate how we can configure a HTTPS/TLS microservice using the Cert-Manager Dekorate extension.
+The purpose of this Spring Boot example is to demonstrate how we can configure an HTTPS/TLS microservice using the Cert-Manager Dekorate extension.
 
 Apart from the Dekorate Kubernetes starter dependency, the application must declare the Cert-Manager dekorate dependency part of the pom.xml file:
 
@@ -31,7 +31,7 @@ Where is the `keystore.p12` Keystore and what is its password? This is where Cer
 
 ## Generate a Self-Signed Certificate and the Keystore
 
-Let's configure the different properties to request the generation of the Self-Signed certificate and the `keystore.p12` PKCS12 keystore file:
+Let's configure the different properties to request the generation of the Self-Signed certificate and the `keystore.p12` PKCS12 Keystore file:
 
 ```
 dekorate.certificate.secret-name=tls-secret
@@ -42,11 +42,11 @@ dekorate.certificate.keystores.pkcs12.passwordSecretRef.name=pkcs12-pass
 dekorate.certificate.keystores.pkcs12.passwordSecretRef.key=password
 ```
 
-Using this configuration, Dekorate will create the `Certificate` and `Issuer` resources that, once installed on the Kubernetes platform, will be used by Certificate Manager to generate a self-signed certificate and the Keystore files within the secret `tls-secret`. 
+Using this configuration, Dekorate will create the `Certificate` and `Issuer` resources that, once installed on the Kubernetes platform, will be used by the Certificate Manager to generate a self-signed certificate and the Keystore files within the secret `tls-secret`. 
 
-**NOTE**: As the keystore file (pkcs12, ...) is password protected, this is then the reason why we have to create a secret including the needed password. For that purpose, we are going to create, part of the file `src/main/resources/k8s/common.yml`, a secret named "pkcs12-pass". The data field will include the key password where the string `supersecret` will be encoded in base64:
+**NOTE**: As the Keystore file (pkcs12, ...) is password protected, this is then the reason why we have to create a secret including the needed password. For that purpose, we are going to create, part of the file `src/main/resources/k8s/common.yml`, a secret named "pkcs12-pass". The data field will include the key password where the string `supersecret` will be encoded in base64:
 
-```
+```yaml
 ---
 apiVersion: v1
 kind: Secret
@@ -64,7 +64,7 @@ To tell to Dekorate where it can find the file `src/main/resources/k8s/common.ym
 dekorate.options.input-path=k8s
 ```
 
-At this point, when we install the generated resources by Dekorate on the Kubernetes platform, Certificate Manager will generate the generated PKCS12 keystore file named `keystore.p12` within the secret `tls-secret`. Also, the Cert-Manager Dekorate extension will configure the Spring Boot application to automatically mount a volume using this secret `tls-secret` at the path `/etc/certs` (it can be configured using `dekorate.certificate.volume-mount-path`). Therefore, what we need to do next is to simply map the Keystore file and password into the Spring Boot properties `server.ssl.key-store` and `server.ssl.key-store-password`:
+At this point, when we install the generated resources by Dekorate on the Kubernetes platform, Certificate Manager will generate the generated PKCS12 Keystore file named `keystore.p12` within the secret `tls-secret`. Also, the Cert-Manager Dekorate extension will configure the Spring Boot application to automatically mount a volume using this secret `tls-secret` at the path `/etc/certs` (it can be configured using `dekorate.certificate.volume-mount-path`). Therefore, what we need to do next is to simply map the Keystore file and password into the Spring Boot properties `server.ssl.key-store` and `server.ssl.key-store-password`:
 
 ```
 dekorate.kubernetes.env-vars[0].name=SERVER_SSL_KEY_STORE
@@ -76,7 +76,7 @@ dekorate.kubernetes.env-vars[1].value=password
 
 ## Run the application in Kubernetes
 
-First, make sure you have access to a kubernetes cluster and that the [Cert-Manager](https://cert-manager.io/docs/installation/) is deployed.
+First, make sure you have access to a Kubernetes cluster and that the [Cert-Manager](https://cert-manager.io/docs/installation/) is deployed.
 
 Next, we need to generate the manifests and push the application container image to our container registry:
 
@@ -90,7 +90,7 @@ After executing the above command, the generated manifests, which are available 
 kubectl apply -f target/classes/META-INF/dekorate/kubernetes.yml
 ```
 
-After a few moment, we should be able to see the secret resource named `tls-secret` that the `Cert-Manager` has created like the pkcs12 keystore file:
+After a few moments, we should be able to see the secret resource named `tls-secret` that the `Cert-Manager` has created like the pkcs12 keystore file:
 
 ```
 kubectl get secret/tls-secret -o yaml | grep keystore.p12
