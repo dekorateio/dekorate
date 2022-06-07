@@ -19,7 +19,6 @@ import io.dekorate.ConfigurationRegistry;
 import io.dekorate.WithProject;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
-import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.kubernetes.configurator.PopulateWebPort;
 import io.dekorate.project.ApplyProjectInfo;
 
@@ -31,7 +30,6 @@ public class DefaultOpenshiftConfigGenerator implements OpenshiftConfigGenerator
     this.configurationRegistry = configurationRegistry;
     on(new DefaultConfiguration<OpenshiftConfig>(OpenshiftConfig.newOpenshiftConfigBuilderFromDefaults()));
 
-    this.configurationRegistry.add(new ApplyImagePullSecretConfiguration());
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
     this.configurationRegistry.add(new PopulateWebPort());
     this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
