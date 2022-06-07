@@ -188,6 +188,7 @@ limitations under the License.
                     <include>io/dekorate/doc/**</include>
                     <include>io/dekorate/hook/**</include>
                     <include>io/dekorate/kubernetes/**</include>
+                    <include>io/dekorate/option/**</include>
                     <include>io/dekorate/logger/**</include>
                     <include>io/dekorate/processor/**</include>
                     <include>io/dekorate/project/**</include>
@@ -218,6 +219,7 @@ limitations under the License.
                     <include>io/dekorate/doc/**</include>
                     <include>io/dekorate/hook/**</include>
                     <include>io/dekorate/kubernetes/**</include>
+                    <include>io/dekorate/option/**</include>
                     <include>io/dekorate/logger/**</include>
                     <include>io/dekorate/processor/**</include>
                     <include>io/dekorate/project/**</include>

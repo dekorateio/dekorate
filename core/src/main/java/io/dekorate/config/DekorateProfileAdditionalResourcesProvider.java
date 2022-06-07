@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DekorateProfileAdditionalResourcesProvider implements AdditionalResourcesProvider {
+import io.dekorate.Session;
+import io.dekorate.option.config.GeneratorConfig;
 
-  private final String DEKORATE_PROFILE = "dekorate.properties.profile";
+public class DekorateProfileAdditionalResourcesProvider implements AdditionalResourcesProvider {
 
   @Override
   public int order() {
@@ -34,7 +35,8 @@ public class DekorateProfileAdditionalResourcesProvider implements AdditionalRes
    */
   @Override
   public List<String> getResourceNames() {
-    String profile = System.getProperty(DEKORATE_PROFILE);
+    String profile = Session.getSession().getConfigurationRegistry().get(GeneratorConfig.class)
+        .map(GeneratorConfig::getPropertiesProfile).orElse(null);
     if (profile == null || profile.isEmpty()) {
       return Collections.emptyList();
     }

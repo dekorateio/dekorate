@@ -31,7 +31,7 @@ For example lets assume the object `Probe` that looks like:
 | http-action-path      | String |             |               |
 | exec-action           | String |             |               |
 | tcp-socket-action     | String |             |               |
-| grpc-action     | String |             |               |
+| grpc-action           | String |             |               |
 | initial-delay-seconds | int    |             |             0 |
 | period-seconds        | int    |             |            30 |
 | timeout-seconds       | int    |             |            10 |

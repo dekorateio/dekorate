@@ -55,6 +55,7 @@ public interface GeneratorConfigGenerator extends ConfigurationGenerator, WithPr
   }
 
   default void on(ConfigurationSupplier<GeneratorConfig> config) {
+    getConfigurationRegistry().add(config);
     GeneratorConfig c = config.get();
     configurePaths(c.getInputPath(), c.getOutputPath());
   }

@@ -64,7 +64,7 @@
             <configuration>
               <properties>
                 <property>
-                  <name>dekorate.properties.profile</name>
+                  <name>dekorate.properties-profile</name>
                   <value>foo</value>
                 </property>
               </properties>

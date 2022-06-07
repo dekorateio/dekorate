@@ -72,7 +72,6 @@ import io.dekorate.kubernetes.decorator.AddServiceAccountResourceDecorator;
 import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.ApplyImagePullPolicyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyPortNameDecorator;
-import io.dekorate.kubernetes.decorator.ApplyRegistryToImageDecorator;
 import io.dekorate.option.config.VcsConfig;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
