@@ -74,9 +74,19 @@ public class Maps {
         if (split.length == 1) {
           throw new IllegalArgumentException("Invalid entry '" + k + "=" + value + "'. Must provide generator key");
         }
-        final String[] parts = new String[split.length - 1];
-        System.arraycopy(split, 1, parts, 0, split.length - 1);
 
+        final String[] parts = new String[split.length == 2 ? 2 : split.length - 1];
+        if (split.length == 2) {
+          // The property is a dekorate options and should be mapped to options.
+          // Examples:
+          // -Dekorate.build=true
+          // -Dekorate.push=true
+          // -Dekorate.verbose=true
+          parts[0] = "options";
+          parts[1] = split[1];
+        } else {
+          System.arraycopy(split, 1, parts, 0, split.length - 1);
+        }
         Map<String, Object> kv = asMap(parts, value);
         merge(result, kv);
       }
