@@ -162,23 +162,17 @@ public class Session {
   }
 
   public void addConfiguration(Map<String, Object> map, BiConsumer<ConfigurationGenerator, Map<String, Object>> consumer) {
-    for (Map.Entry<String, Object> entry : map.entrySet()) {
-      String key = entry.getKey();
-      Object value = entry.getValue();
-      ConfigurationGenerator generator = configurationGenerators.get(key);
-      if (generator != null) {
-        if (value instanceof Map) {
-          Map<String, Object> generatorMap = new HashMap<>();
-          Class configClass = configtypes.get(key);
-          String newKey = configClass.getName();
-          Generators.applyPrimitives(configClass, (Map<String, Object>) value);
-          Generators.populateArrays(configClass, (Map<String, Object>) value);
-          generatorMap.put(newKey, value);
-          consumer.accept(generator, Maps.kebabToCamelCase(generatorMap));
-        }
-      } else {
-        LOGGER.warning("Unknown generator '" + key + "' will be ignored. "
-            + "Known generators are: " + configurationGenerators.keySet());
+    for (ConfigurationGenerator generator : configurationGenerators.values()) {
+      String key = generator.getKey();
+      Object value = map.get(key);
+      if (value instanceof Map) {
+        Map<String, Object> generatorMap = new HashMap<>();
+        Class configClass = configtypes.get(key);
+        String newKey = configClass.getName();
+        Generators.applyPrimitives(configClass, (Map<String, Object>) value);
+        Generators.populateArrays(configClass, (Map<String, Object>) value);
+        generatorMap.put(newKey, value);
+        consumer.accept(generator, Maps.kebabToCamelCase(generatorMap));
       }
     }
   }
