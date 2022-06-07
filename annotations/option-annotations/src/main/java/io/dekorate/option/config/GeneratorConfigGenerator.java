@@ -19,7 +19,6 @@ package io.dekorate.option.config;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Optional;
 
 import io.dekorate.ConfigurationGenerator;
 import io.dekorate.WithProject;
@@ -34,8 +33,6 @@ import io.dekorate.utils.Strings;
 public interface GeneratorConfigGenerator extends ConfigurationGenerator, WithProject {
 
   String OPTIONS = "options";
-  String INPUT_DIR = "dekorate.input.dir";
-  String OUTPUT_DIR = "dekorate.output.dir";
 
   @Override
   default String getKey() {
@@ -62,22 +59,18 @@ public interface GeneratorConfigGenerator extends ConfigurationGenerator, WithPr
     configurePaths(c.getInputPath(), c.getOutputPath());
   }
 
-  default void configurePaths(String defaultInputPath, String defaultOutputPath) {
-    final String inputPath = System.getProperty(INPUT_DIR, defaultInputPath);
-    final String outputPath = Optional.ofNullable(System.getProperty(OUTPUT_DIR)).map(path -> {
-      resolve(path).mkdirs();
-      return path;
-    }).orElse(defaultOutputPath);
+  default void configurePaths(String inputPath, String outputPath) {
     if (isInputPathValid(inputPath)) {
       applyToProject(p -> p.withDekorateInputDir(inputPath));
       getSession().getConfigurationRegistry().add(new ConfigurationSupplier<>(new GeneratorConfigBuilder()));
     }
 
     if (isOutputPathValid(outputPath)) {
+      resolve(outputPath).mkdirs();
       applyToProject(p -> p.withDekorateOutputDir(outputPath));
-      getSession().setWriter(new SimpleFileWriter(
-          getProject().getBuildInfo().getClassOutputDir().resolve(getProject().getDekorateMetaDir()),
-          resolve(outputPath).toPath()));
+      getSession().setWriter(
+          new SimpleFileWriter(getProject().getBuildInfo().getClassOutputDir().resolve(getProject().getDekorateMetaDir()),
+              resolve(outputPath).toPath()));
     }
   }
 

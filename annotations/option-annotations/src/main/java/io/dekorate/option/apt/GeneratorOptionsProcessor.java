@@ -37,9 +37,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 })
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
-  private static final String INPUT_DIR = "dekorate.input.dir";
-  private static final String OUTPUT_DIR = "dekorate.output.dir";
-
   private static final String FALLBACK_INPUT_DIR = "META-INF/fabric8";
   private static final String FALLBACK_OUTPUT_DIR = "META-INF/fabric8";
 
