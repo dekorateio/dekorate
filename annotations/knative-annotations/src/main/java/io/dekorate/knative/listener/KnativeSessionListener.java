@@ -24,11 +24,14 @@ import java.util.Optional;
 import io.dekorate.BuildService;
 import io.dekorate.BuildServiceFactories;
 import io.dekorate.DekorateException;
+import io.dekorate.ResourceRegistry;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.hook.ImageBuildHook;
+import io.dekorate.hook.ImageLoadHook;
+import io.dekorate.hook.ImagePushHook;
 import io.dekorate.hook.OrderedHook;
 import io.dekorate.hook.ProjectHook;
 import io.dekorate.hook.ResourcesApplyHook;
@@ -43,42 +46,50 @@ public class KnativeSessionListener implements SessionListener, WithProject, Wit
 
   @Override
   public void onClosed() {
-    //We need to set the TTCL, becuase the KubenretesClient used in this part of code, needs TTCL so that java.util.ServiceLoader can work.
-    ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+    Session session = getSession();
+    Project project = getProject();
+    Optional<KnativeConfig> optionalAppConfig = session.getConfigurationRegistry().get(KnativeConfig.class);
+    Optional<ImageConfiguration> optionalImageConfig = session.getConfigurationRegistry()
+        .getImageConfig(BuildServiceFactories.supplierMatches(project));
+    if (!optionalAppConfig.isPresent() || !optionalImageConfig.isPresent()) {
+      return;
+    }
+
+    KnativeConfig kubernetesConfig = optionalAppConfig.get();
+    ResourceRegistry resources = session.getResourceRegistry();
+    KubernetesList generated = session.getGeneratedResources().getOrDefault(KNATIVE, new KubernetesList());
+
+    BuildService buildService = null;
+    ImageConfiguration imageConfig = optionalImageConfig.get();
+    if (imageConfig.isAutoBuildEnabled() || imageConfig.isAutoPushEnabled() || kubernetesConfig.isAutoDeployEnabled()
+        || imageConfig.isAutoLoadEnabled()) {
+
+      try {
+        buildService = optionalImageConfig.map(BuildServiceFactories.create(getProject(), generated.getItems()))
+            .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
+      } catch (Exception e) {
+        BuildServiceFactories.log(project, session.getConfigurationRegistry().getAll(ImageConfiguration.class));
+        throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
+      }
+    }
+
     List<ProjectHook> hooks = new ArrayList<>();
-    try {
-      Session session = getSession();
-      Project project = getProject();
-      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-      KnativeConfig config = session.getConfigurationRegistry().get(KnativeConfig.class).get();
-      Optional<ImageConfiguration> imageConfiguration = session.getConfigurationRegistry()
-          .getImageConfig(BuildServiceFactories.supplierMatches(project));
-      imageConfiguration.ifPresent(i -> {
-        String name = i.getName();
-        if (i.isAutoBuildEnabled() || config.isAutoDeployEnabled()) {
-          KubernetesList generated = session.getGeneratedResources().get(KNATIVE);
-          BuildService buildService;
-          try {
-            buildService = imageConfiguration.map(BuildServiceFactories.create(getProject(), generated.getItems()))
-                .orElseThrow(() -> new IllegalStateException("No applicable BuildServiceFactory found."));
-          } catch (Exception e) {
-            throw DekorateException.launderThrowable("Failed to lookup BuildService.", e);
-          }
 
-          ImageBuildHook hook = new ImageBuildHook(getProject(), buildService);
-          hook.register();
-        }
-      });
+    if (imageConfig.isAutoPushEnabled()) {
+      hooks.add(new ImageBuildHook(getProject(), buildService));
+      hooks.add(new ImagePushHook(getProject(), buildService));
+    } else if (imageConfig.isAutoBuildEnabled() || kubernetesConfig.isAutoDeployEnabled()) {
+      hooks.add(new ImageBuildHook(getProject(), buildService));
+      hooks.add(new ImageLoadHook(getProject(), imageConfig));
+    }
 
-      if (config.isAutoDeployEnabled()) {
-        hooks.add(new ResourcesApplyHook(getProject(), KNATIVE, "kubectl"));
-      }
-    } finally {
-      Thread.currentThread().setContextClassLoader(tccl);
-      if (!hooks.isEmpty()) {
-        OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
-        hook.register();
-      }
+    if (kubernetesConfig.isAutoDeployEnabled()) {
+      hooks.add(new ResourcesApplyHook(getProject(), KNATIVE, "kubectl"));
+    }
+
+    if (!hooks.isEmpty()) {
+      OrderedHook hook = OrderedHook.create(hooks.toArray(new ProjectHook[hooks.size()]));
+      hook.register();
     }
   }
 }
