@@ -15,19 +15,20 @@
  */
 package io.dekorate.utils;
 
+import io.dekorate.Session;
+import io.dekorate.option.config.GeneratorConfig;
+
 /**
  * Development Tool utilities class.
  */
 public final class Development {
 
-  private static final boolean IS_VERBOSE = Boolean
-      .parseBoolean(System.getProperty("dekorate.verbose", Boolean.FALSE.toString()));
-
   private Development() {
-
+    //Utility class
   }
 
   public static boolean isVerbose() {
-    return IS_VERBOSE;
+    return Session.getSession().getConfigurationRegistry().get(GeneratorConfig.class).map(GeneratorConfig::isVerbose)
+        .orElse(false);
   }
 }

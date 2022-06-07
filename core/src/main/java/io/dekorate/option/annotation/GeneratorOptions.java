@@ -47,4 +47,39 @@ public @interface GeneratorOptions {
    * @return The path, or empty string.
    */
   String outputPath() default "";
+
+  /**
+   * Flag to enable verbose logging.
+   *
+   * @return true if verbose logging is enabled.
+   */
+  boolean verbose() default false;
+
+  /**
+   * The properties profile to use.
+   * 
+   * @reutrn the profile or empty string.
+   */
+  String propertiesProfile() default "";
+
+  /**
+   * Flag to enable build.
+   * 
+   * @return true if build is enabled.
+   */
+  boolean build() default false;
+
+  /**
+   * Flag to enable push.
+   * 
+   * @return true if push is enabled.
+   */
+  boolean push() default false;
+
+  /**
+   * Flag to enable deply.
+   * 
+   * @return true if deply is enabled.
+   */
+  boolean deploy() default false;
 }

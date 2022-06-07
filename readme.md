@@ -1136,10 +1136,10 @@ Then, for Spring Boot applications, it will also take into account the Spring pr
 2. `application-${spring.profiles.active}.yaml`
 3. `application-${spring.profiles.active}.yml`
 
-Finally, if the Dekorate profile property `dekorate.properties.profile` is set:
-1. if property `dekorate.properties.profile` is set, then `application-${dekorate.properties.profile}.properties`
-2. if property `dekorate.properties.profile` is set, then `application-${dekorate.properties.profile}.yaml`
-3. if property `dekorate.properties.profile` is set, then `application-${dekorate.properties.profile}.yml`
+Finally, if the Dekorate profile property `dekorate.properties-profile` is set:
+1. if property `dekorate.properties-profile` is set, then `application-${dekorate.properties-profile}.properties`
+2. if property `dekorate.properties-profile` is set, then `application-${dekorate.properties-profile}.yaml`
+3. if property `dekorate.properties-profile` is set, then `application-${dekorate.properties-profile}.yml`
 
 It's important to repeat that the override that occurs by *fully* replacing any lower-priority configuration and not via any kind
 of merge between the existing and higher-priority values. This means that if you choose to override the annotation-specified
