@@ -55,6 +55,8 @@ public class SpringBootApplicationProcessor extends AbstractAnnotationProcessor 
       }
     }
 
+    //Let's create the Session in order to make sure that Config generators have been initialized.
+    Session session = Session.getSession();
     List<String> resourceNames = new ArrayList<>();
     // default resource names:
     resourceNames.add("application.properties");

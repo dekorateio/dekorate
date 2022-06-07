@@ -132,6 +132,12 @@ public class Session {
         }
       }
     }
+
+    //Initialize configuration with System properites.
+    //The properties will get re-read after application configuration to enforce priorities.
+    //The reason we do that now, is that System properties may potentially affect where we read application configuration from
+    //Example: DekorateProfileAdditionalResourcesProvider
+    addPropertyConfiguration(Maps.fromProperties(System.getProperties()));
   }
 
   public void loadListeners() {
