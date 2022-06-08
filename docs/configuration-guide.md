@@ -54,12 +54,25 @@ This document uses kebab.
 Below is a list of all the available options.
 The document is structured as follows.
 
+- [dekorate options](#dekorate-options)
 - [kubernetes](#kubernetes)
   - [global types](#global-types)
   - [mounts and voulumes](#mounts-and-volumes)
 - [openshift](#openshift)
 - [knative](#knative)
 - [helm](#helm)
+
+## Dekorate options
+
+| Property           | Type    | Description                                                                                                                                                                                                                                                                                        | Default Value |
+|--------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| input-path         | String  | The path to input manifests. If the path is specified and the manifests are found, they will be used as input to the generator process. In this case, the instead of generating resources from scratch, the existing will be used and will be decarated according to the annotation configuration. |               |
+| output-path        | String  | The output path where the generated/decorated manifests will be stored.                                                                                                                                                                                                                            |               |
+| verbose            | boolean | Flag to enable verbose logging.                                                                                                                                                                                                                                                                    | false         |
+| properties-profile | String  | The properties profile to use.                                                                                                                                                                                                                                                                     |               |
+| build              | boolean | Flag to enable build.                                                                                                                                                                                                                                                                              | false         |
+| push               | boolean | Flag to enable push.                                                                                                                                                                                                                                                                               | false         |
+| deploy             | boolean | Flag to enable deply.                                                                                                                                                                                                                                                                              | false         |
 
 ## Kubernetes
 

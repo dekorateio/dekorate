@@ -23,7 +23,8 @@ import io.sundr.transform.annotations.TemplateTransformation;
 import io.sundr.transform.annotations.TemplateTransformations;
 
 @TemplateTransformations(value = @TemplateTransformation(value = "/annotation-doc.vm", outputPath = "annotation-table.org", gather = true), packages = {
-    @PackageSelector(value = "io.dekorate.kubernetes.annotation")
+    @PackageSelector(value = "io.dekorate.kubernetes.annotation"),
+    @PackageSelector(value = "io.dekorate.option.annotation")
 })
 public class CoreAnnotationsTableGenerator {
 
