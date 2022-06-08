@@ -37,9 +37,6 @@ import io.dekorate.processor.AbstractAnnotationProcessor;
 })
 public class GeneratorOptionsProcessor extends AbstractAnnotationProcessor implements WithSession {
 
-  private static final String FALLBACK_INPUT_DIR = "META-INF/fabric8";
-  private static final String FALLBACK_OUTPUT_DIR = "META-INF/fabric8";
-
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
       getSession().close();
