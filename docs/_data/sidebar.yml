@@ -35,6 +35,8 @@
         url: /docs/service-binding
       - title: Cert-Manager
         url: /docs/cert-manager
+      - title: Annotationless configuration
+        url: /docs/annotation-less-configuration
       - title: Using the BOM
         url: /docs/using-bom
   - title: Framework Integration
