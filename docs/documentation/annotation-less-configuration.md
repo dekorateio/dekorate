@@ -29,11 +29,21 @@ an `application` descriptor will override any existing annotation-specified conf
 6. `application-kubernetes.yaml`
 7. `application-kubernetes.yml`
 
+| Note that only the `openshift`, `kubernetes` and `knative` modules are providing additional properties files.
+
+Then, for Spring Boot applications, it will also take into account the Spring property `spring.profiles.active` if set:
+1. `application-${spring.profiles.active}.properties`
+2. `application-${spring.profiles.active}.yaml`
+3. `application-${spring.profiles.active}.yml`
+
+Finally, if the Dekorate profile property `dekorate.properties-profile` is set:
+1. if property `dekorate.properties-profile` is set, then `application-${dekorate.properties-profile}.properties`
+2. if property `dekorate.properties-profile` is set, then `application-${dekorate.properties-profile}.yaml`
+3. if property `dekorate.properties-profile` is set, then `application-${dekorate.properties-profile}.yml`
+
 It's important to repeat that the override that occurs by *fully* replacing any lower-priority configuration and not via any kind
 of merge between the existing and higher-priority values. This means that if you choose to override the annotation-specified
 configuration, you need to repeat all the configuration you want in the @Env annotation-less configuration.
-
-To support add property profiles one can use the following options: `dekorate.properties-profile` or `dekorate.options.properties-profile`.
 
 Here's the full list of supported [configuration options]({{site.baseurl}}/configuration-guide). Special attention should be paid to the path of these
 properties. The properties' path match the annotation properties and not what would end up in the manifest, meaning the
@@ -52,6 +62,7 @@ When no annotations are used, the kind of resources to be generated is determine
 |---------------------|------------------------------------|
 | kubernetes.json/yml | io.dekorate:kubernetes-annotations |
 | openshift.json/yml  | io.dekorate:openshift-annotations  |
+
 
 
 Note: that starter modules for `kubernetes` and `openshift` do transitively add `kubernetes-annotations` and `openshift-annotations` respectively.
