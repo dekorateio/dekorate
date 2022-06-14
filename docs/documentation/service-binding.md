@@ -76,7 +76,7 @@ No matter how good a generator/scaffolding tool is, its often desirable to handc
 Other times it might be desirable to combine different tools together (e.g. to generate the manifests using fmp but customize them via dekorate annotations)
 
 No matter what the reason is, dekorate supports working on existing resources and decorating them based on the provided annotation configuration.
-This is as simple as letting dekorate know where to read the existing manifests and where to store the generated ones. By adding the [@GeneratorOptions](https://raw.githubusercontent.com/dekorateio/dekorate/main/annotations/option-annotations/src/main/java/io/dekorate/option/annotation/GeneratorOptions.java).
+This is as simple as letting dekorate know where to read the existing manifests and where to store the generated ones. By adding the [@GeneratorOptions](https://raw.githubusercontent.com/dekorateio/dekorate/main/core/src/main/java/io/dekorate/option/annotation/GeneratorOptions.java).
 
 ##### Integration with Fabric8 Maven Plugin.
 
