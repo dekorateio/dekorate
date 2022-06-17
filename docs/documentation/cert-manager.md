@@ -14,7 +14,7 @@ To let Dekorate generate the certificate and issuer resources, simply declare th
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>certmanager-annotations</artifactId>
-  <version>{{site.data.project.release.current-version}}</version>
+  <version>2.10.0</version>
 </dependency>
 ```
 

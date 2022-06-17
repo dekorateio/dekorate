@@ -16,7 +16,7 @@ When the `tekton` module is added to the project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>tekton-annotations</artifactId>
-  <version>{{site.data.project.release.current-version}}</version>
+  <version>2.10.0</version>
 </dependency>
 ```
 

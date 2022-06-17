@@ -13,7 +13,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>{{site.data.project.release.current-version}}</version>
+  <version>2.10.0</version>
 </dependency>
 ```
 

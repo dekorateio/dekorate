@@ -13,7 +13,7 @@ With spring boot, we suggest you start with one of the provided starters:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>{{site.data.project.release.current-version}}</version>
+  <version>2.10.0</version>
 </dependency>
 ```
 
@@ -23,7 +23,7 @@ Or if you are on [OpenShift](https://openshift.com):
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshfit-spring-starter</artifactId>
-  <version>{{site.data.project.release.current-version}}</version>
+  <version>2.10.0</version>
 </dependency>
 ```
 

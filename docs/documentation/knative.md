@@ -15,7 +15,7 @@ this feature you need to add:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>knative-annotations</artifactId>
-  <version>{{site.data.project.release.current-version}}</version>
+  <version>2.10.0</version>
 </dependency>
 ```
 
