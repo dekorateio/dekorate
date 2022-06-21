@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # 
-name: Downstream project compatibility check
+name: Downstream projects compatibility check
 
 env:
   MAVEN_ARGS: -B -e
@@ -24,8 +24,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Java ${{ matrix.java }} Maven
+  quarkus:
+    name: Quarkus Main
     runs-on: ubuntu-latest
     strategy:
       matrix:
