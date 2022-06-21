@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # 
-name: Verify Dekorate with Quarkus
+name: Downstream project compatibility check
 
 env:
   MAVEN_ARGS: -B -e
