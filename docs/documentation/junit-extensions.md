@@ -31,7 +31,7 @@ The kubernetes extension can be used by adding the following dependency:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-junit</artifactId>
-  <version>2.10.0</version>
+  <version>2.11.0</version>
 </dependency>
 ```    
 This dependency gives access to [@KubernetesIntegrationTest](https://raw.githubusercontent.com/dekorateio/dekorate/main/testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
@@ -125,7 +125,7 @@ To use that you need to add:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-junit</artifactId>
-  <version>2.10.0</version>
+  <version>2.11.0</version>
 </dependency>
 ```    
 By adding the annotation to your test class the following things will happen:
@@ -176,7 +176,7 @@ The knative extension can be used by adding the following dependency:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>knative-junit</artifactId>
-  <version>2.10.0</version>
+  <version>2.11.0</version>
 </dependency>
 ```    
 This dependency gives access to [@KnativeIntegrationTest](https://raw.githubusercontent.com/dekorateio/dekorate/main/testing/knative-junit/src/main/java/io/dekorate/testing/annotation/KnativeIntegrationTest.java) which is what enables the extension for your tests.
