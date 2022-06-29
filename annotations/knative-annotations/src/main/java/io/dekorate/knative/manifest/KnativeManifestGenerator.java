@@ -23,6 +23,7 @@ import io.dekorate.ConfigurationRegistry;
 import io.dekorate.ResourceRegistry;
 import io.dekorate.config.ConfigurationSupplier;
 import io.dekorate.knative.config.AutoScalerClass;
+import io.dekorate.knative.config.AutoScaling;
 import io.dekorate.knative.config.AutoscalingMetric;
 import io.dekorate.knative.config.EditableKnativeConfig;
 import io.dekorate.knative.config.GlobalAutoScaling;
@@ -85,6 +86,12 @@ import io.fabric8.knative.serving.v1.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerator<KnativeConfig> {
+
+  private static final KnativeConfig DEFAULT_KNATIVE_CONFIG = KnativeConfig.newKnativeConfigBuilderFromDefaults().build();
+  private static final GlobalAutoScaling DEFAULT_GLOBAL_AUTOSCALING = GlobalAutoScaling.newBuilderFromDefaults().build();
+  private static final AutoScaling DEFAULT_AUTOSCALING = AutoScaling.newBuilderFromDefaults().build();
+
+  private static final Traffic DEFAULT_TRAFFIC = Traffic.newBuilderFromDefaults().build();
 
   private static final String KNATIVE = "knative";
   private static final String KNATIVE_SERVING = "knative-serving";
@@ -172,28 +179,31 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
             config.getRevisionAutoScaling().getAutoScalerClass()));
       }
 
-      if (config.getRevisionAutoScaling().getTarget() != null && config.getRevisionAutoScaling().getTarget() != 0) {
+      if (config.getRevisionAutoScaling().getTarget() != null
+          && config.getRevisionAutoScaling().getTarget().intValue() != DEFAULT_AUTOSCALING.getTarget().intValue()) {
         resourceRegistry.decorate(KNATIVE,
             new ApplyLocalAutoscalingTargetDecorator(config.getName(), config.getRevisionAutoScaling().getTarget()));
       }
 
       // Hard Limit
       if (config.getRevisionAutoScaling().getContainerConcurrency() != null
-          && config.getRevisionAutoScaling().getContainerConcurrency() != 0) {
+          && config.getRevisionAutoScaling().getContainerConcurrency().intValue() != DEFAULT_AUTOSCALING
+              .getContainerConcurrency().intValue()) {
         resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
             config.getRevisionAutoScaling().getContainerConcurrency()));
       }
 
       // Soft Limit
       if (config.getRevisionAutoScaling().getTarget() != null
-          && config.getRevisionAutoScaling().getTarget() != 200
+          && config.getRevisionAutoScaling().getTarget().intValue() != DEFAULT_AUTOSCALING.getTarget().intValue()
           && config.getRevisionAutoScaling().getMetric() == AutoscalingMetric.rps) {
         resourceRegistry.decorate(KNATIVE, new ApplyLocalContainerConcurrencyDecorator(config.getName(),
             config.getRevisionAutoScaling().getTarget()));
       }
 
       if (config.getRevisionAutoScaling().getTargetUtilizationPercentage() != null
-          && config.getRevisionAutoScaling().getTargetUtilizationPercentage() != 70) {
+          && config.getRevisionAutoScaling().getTargetUtilizationPercentage().intValue() != DEFAULT_AUTOSCALING
+              .getTargetUtilizationPercentage().intValue()) {
         resourceRegistry.decorate(KNATIVE, new ApplyLocalTargetUtilizationPercentageDecorator(config.getName(),
             config.getRevisionAutoScaling().getTargetUtilizationPercentage()));
       }
@@ -209,20 +219,22 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
               new ApplyGlobalAutoscalingClassDecorator(config.getGlobalAutoScaling().getAutoScalerClass()));
         }
 
-        if (config.getGlobalAutoScaling().getRequestsPerSecond() != null
-            && config.getGlobalAutoScaling().getRequestsPerSecond() != 200) {
+        if (config.getGlobalAutoScaling().getRequestsPerSecond() != null && config.getGlobalAutoScaling().getRequestsPerSecond()
+            .intValue() != DEFAULT_GLOBAL_AUTOSCALING.getRequestsPerSecond().intValue()) {
           resourceRegistry.decorate(KNATIVE,
               new ApplyGlobalRequestsPerSecondTargetDecorator(config.getGlobalAutoScaling().getRequestsPerSecond()));
         }
         if (config.getGlobalAutoScaling().getTargetUtilizationPercentage() != null
-            && config.getGlobalAutoScaling().getTargetUtilizationPercentage() != 70) {
+            && config.getGlobalAutoScaling().getTargetUtilizationPercentage().intValue() != DEFAULT_GLOBAL_AUTOSCALING
+                .getTargetUtilizationPercentage().intValue()) {
           resourceRegistry.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(
               config.getGlobalAutoScaling().getTargetUtilizationPercentage()));
         }
       }
 
       if (config.getGlobalAutoScaling().getContainerConcurrency() != null
-          && config.getGlobalAutoScaling().getContainerConcurrency() != 0) {
+          && config.getGlobalAutoScaling().getContainerConcurrency().intValue() != DEFAULT_GLOBAL_AUTOSCALING
+              .getContainerConcurrency().intValue()) {
         resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_DEFAULTS, KNATIVE_SERVING));
         resourceRegistry.decorate(KNATIVE,
             new ApplyGlobalContainerConcurrencyDecorator(config.getGlobalAutoScaling().getContainerConcurrency()));
@@ -285,7 +297,10 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
   @Override
   protected void addDecorators(String group, KnativeConfig config) {
     super.addDecorators(group, config);
-    resourceRegistry.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
+    if (config.getImagePullPolicy() != DEFAULT_KNATIVE_CONFIG.getImagePullPolicy()) {
+      resourceRegistry.decorate(group, new ApplyImagePullPolicyDecorator(config.getName(), config.getImagePullPolicy()));
+    }
+
     if (!config.isExpose()) {
       resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), new LabelBuilder()
           .withKey(KNATIVE_VISIBILITY)
@@ -337,13 +352,14 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
     if (autoScaling.getAutoScalerClass() != AutoScalerClass.kpa) {
       return false;
     }
-    if (autoScaling.getContainerConcurrency() != 0) {
+    if (autoScaling.getContainerConcurrency() != DEFAULT_GLOBAL_AUTOSCALING.getContainerConcurrency()) {
       return false;
     }
-    if (autoScaling.getRequestsPerSecond() != 200) {
+    if (autoScaling.getRequestsPerSecond() != DEFAULT_GLOBAL_AUTOSCALING.getRequestsPerSecond()) {
       return false;
     }
-    if (autoScaling.getTargetUtilizationPercentage() != 70) {
+    if (autoScaling.getTargetUtilizationPercentage() != DEFAULT_GLOBAL_AUTOSCALING
+        .getTargetUtilizationPercentage()) {
       return false;
     }
     return true;
