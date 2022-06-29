@@ -21,7 +21,6 @@ import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.config.Annotation;
 import io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume;
 import io.dekorate.kubernetes.config.AzureDiskVolume;
@@ -83,8 +82,11 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
  */
 public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> implements ManifestGenerator<C>, WithProject {
 
+  protected static final BaseConfig DEFAULT_BASE_CONFIG = BaseConfig.newBaseConfigBuilderFromDefaults().build();
+
   protected final ResourceRegistry resourceRegistry;
   protected final ConfigurationRegistry configurationRegistry;
+
 
   public AbstractKubernetesManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurators) {
     this.resourceRegistry = resources;
@@ -111,7 +113,7 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       resourceRegistry.decorate(new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
     }
 
-    if (config.getImagePullPolicy() != ImagePullPolicy.IfNotPresent) {
+    if (config.getImagePullPolicy() != DEFAULT_BASE_CONFIG.getImagePullPolicy()) {
       resourceRegistry.decorate(group, new ApplyImagePullPolicyDecorator(config.getImagePullPolicy()));
     }
 
@@ -132,10 +134,6 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
 
     if (Strings.isNotNullOrEmpty(config.getServiceAccount())) {
       resourceRegistry.decorate(group, new ApplyServiceAccountNamedDecorator(config.getName(), config.getServiceAccount()));
-    }
-
-    if (config.getImagePullPolicy() != ImagePullPolicy.IfNotPresent) {
-      resourceRegistry.decorate(group, new ApplyImagePullPolicyDecorator(config.getName(), config.getImagePullPolicy()));
     }
 
     for (String imagePullSecret : config.getImagePullSecrets()) {
