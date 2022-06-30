@@ -80,6 +80,7 @@
       <module>feat-967-ingress-tls</module>
       <module>issue-983-tests-inject-in-super-class</module>
       <module>issue-987-role-binding-name</module>
+      <module>issue-1006-defaults-handling</module>
     </modules>
 
 </project>
