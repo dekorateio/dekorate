@@ -50,8 +50,7 @@ public class ApplyApplicationContainerDecorator extends NamedResourceDecorator<P
     } else {
       ContainerBuilder builder = new ContainerBuilder(podSpec.buildMatchingContainer(p));
       podSpec.removeMatchingFromContainers(p);
-      ContainerAdapter.applyContainerToBuilder(builder, container);
-      podSpec.addToContainers(builder.build());
+      podSpec.addToContainers(builder.withName(container.getName()).build());
     }
   }
 
