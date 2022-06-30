@@ -23,7 +23,6 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.ResourceRegistry;
 import io.dekorate.config.ConfigurationSupplier;
-import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.ContainerBuilder;
@@ -108,7 +107,6 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
     Container appContainer = new ContainerBuilder()
         .withName(config.getName())
         .withImage(image)
-        .withImagePullPolicy(ImagePullPolicy.IfNotPresent)
         .addNewEnvVar()
         .withName(KUBERNETES_NAMESPACE)
         .withField(METADATA_NAMESPACE)
