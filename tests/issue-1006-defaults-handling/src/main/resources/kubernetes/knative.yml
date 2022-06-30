@@ -1,0 +1,21 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: test-app
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "10"
+        autoscaling.knative.dev/max-scale: "20"
+    spec:
+      containerConcurrency: 3
+      containers:
+        - image: iocanel/test-app:latest
+          imagePullPolicy: Never
+          name: test-app
+          ports:
+            - containerPort: 8080
+              name: http1
+              protocol: TCP
