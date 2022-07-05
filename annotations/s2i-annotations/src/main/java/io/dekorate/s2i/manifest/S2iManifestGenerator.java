@@ -30,7 +30,6 @@ import io.dekorate.kubernetes.config.EnvBuilder;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
-import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
 import io.dekorate.s2i.config.EditableS2iBuildConfig;
 import io.dekorate.s2i.config.S2iBuildConfig;
@@ -107,8 +106,6 @@ public class S2iManifestGenerator implements ManifestGenerator<S2iBuildConfig>, 
         Labels.createLabels(config).forEach(l -> {
           resourceRegistry.decorate(OPENSHIFT, new AddLabelDecorator(imageConfig.getName(), l));
           resourceRegistry.decorate(OPENSHIFT, new AddToSelectorDecorator(imageConfig.getName(), l.getKey(), l.getValue()));
-          resourceRegistry.decorate(OPENSHIFT,
-              new AddToMatchingLabelsDecorator(imageConfig.getName(), l.getKey(), l.getValue()));
         });
       }
     }

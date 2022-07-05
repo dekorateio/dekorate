@@ -57,7 +57,6 @@ import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.AddStartupProbeDecorator;
-import io.dekorate.kubernetes.decorator.AddToMatchingLabelsDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
 import io.dekorate.kubernetes.decorator.ApplyArgsDecorator;
 import io.dekorate.kubernetes.decorator.ApplyCommandDecorator;
@@ -86,7 +85,6 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
 
   protected final ResourceRegistry resourceRegistry;
   protected final ConfigurationRegistry configurationRegistry;
-
 
   public AbstractKubernetesManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurators) {
     this.resourceRegistry = resources;
@@ -125,7 +123,6 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     Labels.createLabels(config).forEach(l -> {
       resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), l));
       resourceRegistry.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
-      resourceRegistry.decorate(group, new AddToMatchingLabelsDecorator(config.getName(), l.getKey(), l.getValue()));
     });
 
     for (Annotation annotation : config.getAnnotations()) {
