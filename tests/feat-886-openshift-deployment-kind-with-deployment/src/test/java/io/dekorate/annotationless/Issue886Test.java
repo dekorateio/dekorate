@@ -38,6 +38,9 @@ public class Issue886Test {
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     assertEquals(2, d.getSpec().getReplicas());
+    assertEquals(2, d.getSpec().getSelector().getMatchLabels().size());
+    assertEquals("feat-886-openshift-deployment-kind-with-deployment",
+        d.getSpec().getSelector().getMatchLabels().get("app.kubernetes.io/name"));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

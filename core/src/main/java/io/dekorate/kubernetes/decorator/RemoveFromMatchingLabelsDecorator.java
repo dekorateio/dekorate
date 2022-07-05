@@ -7,10 +7,6 @@ public class RemoveFromMatchingLabelsDecorator extends NamedResourceDecorator<La
 
   private String key;
 
-  public RemoveFromMatchingLabelsDecorator(String key) {
-    this(ANY, key);
-  }
-
   public RemoveFromMatchingLabelsDecorator(String name, String key) {
     super(name);
     this.key = key;
@@ -27,7 +23,7 @@ public class RemoveFromMatchingLabelsDecorator extends NamedResourceDecorator<La
   }
 
   @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ApplyLabelSelectorDecorator.class, AddToMatchingLabelsDecorator.class };
+  public Class<? extends Decorator>[] before() {
+    return new Class[] { AddToMatchingLabelsDecorator.class };
   }
 }

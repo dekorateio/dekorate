@@ -9,10 +9,6 @@ public class AddToMatchingLabelsDecorator extends NamedResourceDecorator<LabelSe
   private String key;
   private String value;
 
-  public AddToMatchingLabelsDecorator(String key, String value) {
-    this(ANY, key, value);
-  }
-
   public AddToMatchingLabelsDecorator(String name, String key, String value) {
     super(name);
     this.key = key;
@@ -31,7 +27,7 @@ public class AddToMatchingLabelsDecorator extends NamedResourceDecorator<LabelSe
   }
 
   @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ApplyLabelSelectorDecorator.class };
+  public Class<? extends Decorator>[] before() {
+    return new Class[] { RemoveFromMatchingLabelsDecorator.class };
   }
 }
