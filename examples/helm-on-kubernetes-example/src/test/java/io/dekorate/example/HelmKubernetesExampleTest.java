@@ -78,6 +78,8 @@ class HelmKubernetesExampleTest {
     assertNotNull(helmExampleValues.get("image"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
+    // Should contain service type
+    assertEquals("ClusterIP", helmExampleValues.get("serviceType"));
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
     // Should contain vcs-url with the overridden value from properties
