@@ -52,10 +52,10 @@ import io.dekorate.helm.config.ValueReference;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
-import io.dekorate.helm.util.HelmExpressionParser;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
+import io.github.yamlpath.YamlExpressionParser;
 
 public class HelmWriterSessionListener implements SessionListener, WithProject, WithSession {
 
@@ -267,7 +267,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       List<Map<Object, Object>> resources = Serialization.unmarshalAsListOfMaps(generatedFile.toPath());
 
       // Read helm expression parsers
-      HelmExpressionParser parser = new HelmExpressionParser(resources);
+      YamlExpressionParser parser = new YamlExpressionParser(resources);
 
       for (ConfigReference valueReference : valuesReferences) {
         String valueReferenceProperty = Strings

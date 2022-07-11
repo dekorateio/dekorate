@@ -10,11 +10,21 @@
   <artifactId>helm-annotations</artifactId>
   <name>Dekorate :: Annotations :: Helm</name>
 
+  <properties>
+    <yaml-path.version>0.0.1</yaml-path.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.github.yaml-path</groupId>
+      <artifactId>yaml-path</artifactId>
+      <version>${yaml-path.version}</version>
     </dependency>
 
     <dependency>
