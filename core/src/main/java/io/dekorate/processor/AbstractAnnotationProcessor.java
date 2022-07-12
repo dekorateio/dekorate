@@ -110,7 +110,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
     // - from application config
     props.putAll(readApplicationConfig(resourceNames.toArray(new String[resourceNames.size()])));
     // - from system properties
-    props.putAll(readDekorateSystemProperties());
+    Maps.merge(props, readDekorateSystemProperties());
     return props;
   }
 
