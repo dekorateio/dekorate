@@ -48,9 +48,11 @@ jobs:
           ./mvnw ${MAVEN_ARGS} clean install -Dquickly -Ddekorate.version=$DEKORATE_VERSION
       - name: Tests Quarkus Kubernetes Tests
         run: |
+          DEKORATE_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           cd quarkus/extensions/kubernetes
           mvn ${MAVEN_ARGS} clean install -Ddekorate.version=$DEKORATE_VERSION
       - name: Tests Quarkus Kubernetes Integration Tests
         run: |
+          DEKORATE_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           cd quarkus/integration-tests/kubernetes
           mvn ${MAVEN_ARGS} clean verify -Ddekorate.version=$DEKORATE_VERSION
