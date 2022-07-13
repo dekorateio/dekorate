@@ -16,13 +16,14 @@
 **/
 package io.dekorate.knative.decorator;
 
+import static io.dekorate.knative.manifest.KnativeManifestGenerator.CONFIG_DEFAULTS;
+
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.fabric8.kubernetes.api.model.ConfigMapFluent;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 public class ApplyGlobalContainerConcurrencyDecorator extends NamedResourceDecorator<ConfigMapFluent<?>> {
 
-  public static final String CONFIG_DEFAULTS = "config-defaults";
   private static final String CONTAINER_CONCURRENCY = "container-concurrency";
 
   private final int target;

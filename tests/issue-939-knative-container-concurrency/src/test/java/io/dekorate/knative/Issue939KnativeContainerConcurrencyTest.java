@@ -18,6 +18,7 @@
 package io.dekorate.knative;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Optional;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import io.dekorate.utils.Serialization;
 import io.fabric8.knative.serving.v1.Service;
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 
@@ -38,6 +40,7 @@ public class Issue939KnativeContainerConcurrencyTest {
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertEquals(10, s.getSpec().getTemplate().getSpec().getContainerConcurrency());
+    assertFalse(list.getItems().stream().anyMatch(ConfigMap.class::isInstance));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

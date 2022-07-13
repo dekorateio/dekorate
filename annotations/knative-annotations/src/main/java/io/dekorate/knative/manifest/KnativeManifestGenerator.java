@@ -87,6 +87,9 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerator<KnativeConfig> {
 
+  public static final String CONFIG_AUTOSCALER = "config-autoscaler";
+  public static final String CONFIG_DEFAULTS = "config-defaults";
+
   private static final KnativeConfig DEFAULT_KNATIVE_CONFIG = KnativeConfig.newKnativeConfigBuilderFromDefaults().build();
   private static final GlobalAutoScaling DEFAULT_GLOBAL_AUTOSCALING = GlobalAutoScaling.newBuilderFromDefaults().build();
   private static final AutoScaling DEFAULT_AUTOSCALING = AutoScaling.newBuilderFromDefaults().build();
@@ -95,8 +98,6 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
 
   private static final String KNATIVE = "knative";
   private static final String KNATIVE_SERVING = "knative-serving";
-  private static final String CONFIG_AUTOSCALER = "config-autoscaler";
-  private static final String CONFIG_DEFAULTS = "config-defaults";
   private static final String DEFAULT_REGISTRY = "dev.local/";
 
   private static final String KNATIVE_VISIBILITY = "networking.knative.dev/visibility";
@@ -211,25 +212,25 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
 
     // Global autoscaling configuration
     if (config.getGlobalAutoScaling() != null) {
-      if (!isDefault(config.getGlobalAutoScaling())) {
+      if (config.getGlobalAutoScaling().getAutoScalerClass() != null
+          && config.getGlobalAutoScaling().getAutoScalerClass() != AutoScalerClass.kpa) {
         resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_AUTOSCALER, KNATIVE_SERVING));
-        if (config.getGlobalAutoScaling().getAutoScalerClass() != null
-            && config.getGlobalAutoScaling().getAutoScalerClass() != AutoScalerClass.kpa) {
-          resourceRegistry.decorate(KNATIVE,
-              new ApplyGlobalAutoscalingClassDecorator(config.getGlobalAutoScaling().getAutoScalerClass()));
-        }
+        resourceRegistry.decorate(KNATIVE,
+            new ApplyGlobalAutoscalingClassDecorator(config.getGlobalAutoScaling().getAutoScalerClass()));
+      }
 
-        if (config.getGlobalAutoScaling().getRequestsPerSecond() != null && config.getGlobalAutoScaling().getRequestsPerSecond()
-            .intValue() != DEFAULT_GLOBAL_AUTOSCALING.getRequestsPerSecond().intValue()) {
-          resourceRegistry.decorate(KNATIVE,
-              new ApplyGlobalRequestsPerSecondTargetDecorator(config.getGlobalAutoScaling().getRequestsPerSecond()));
-        }
-        if (config.getGlobalAutoScaling().getTargetUtilizationPercentage() != null
-            && config.getGlobalAutoScaling().getTargetUtilizationPercentage().intValue() != DEFAULT_GLOBAL_AUTOSCALING
-                .getTargetUtilizationPercentage().intValue()) {
-          resourceRegistry.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(
-              config.getGlobalAutoScaling().getTargetUtilizationPercentage()));
-        }
+      if (config.getGlobalAutoScaling().getRequestsPerSecond() != null && config.getGlobalAutoScaling().getRequestsPerSecond()
+          .intValue() != DEFAULT_GLOBAL_AUTOSCALING.getRequestsPerSecond().intValue()) {
+        resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_AUTOSCALER, KNATIVE_SERVING));
+        resourceRegistry.decorate(KNATIVE,
+            new ApplyGlobalRequestsPerSecondTargetDecorator(config.getGlobalAutoScaling().getRequestsPerSecond()));
+      }
+      if (config.getGlobalAutoScaling().getTargetUtilizationPercentage() != null
+          && config.getGlobalAutoScaling().getTargetUtilizationPercentage().intValue() != DEFAULT_GLOBAL_AUTOSCALING
+              .getTargetUtilizationPercentage().intValue()) {
+        resourceRegistry.decorate(KNATIVE, new AddConfigMapResourceProvidingDecorator(CONFIG_DEFAULTS, KNATIVE_SERVING));
+        resourceRegistry.decorate(KNATIVE, new ApplyGlobalContainerConcurrencyDecorator(
+            config.getGlobalAutoScaling().getTargetUtilizationPercentage()));
       }
 
       if (config.getGlobalAutoScaling().getContainerConcurrency() != null
@@ -346,22 +347,5 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
         .endMetadata().withNewSpec().withNewTemplate().withNewSpec()
         .addNewContainer().withName(config.getName())
         .withImage(image).endContainer().endSpec().endTemplate().endSpec().build();
-  }
-
-  public static boolean isDefault(GlobalAutoScaling autoScaling) {
-    if (autoScaling.getAutoScalerClass() != AutoScalerClass.kpa) {
-      return false;
-    }
-    if (autoScaling.getContainerConcurrency() != DEFAULT_GLOBAL_AUTOSCALING.getContainerConcurrency()) {
-      return false;
-    }
-    if (autoScaling.getRequestsPerSecond() != DEFAULT_GLOBAL_AUTOSCALING.getRequestsPerSecond()) {
-      return false;
-    }
-    if (autoScaling.getTargetUtilizationPercentage() != DEFAULT_GLOBAL_AUTOSCALING
-        .getTargetUtilizationPercentage()) {
-      return false;
-    }
-    return true;
   }
 }
