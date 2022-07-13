@@ -43,9 +43,6 @@ public class MavenInfoReader implements BuildInfoReader {
   private static final String PARENT = "parent";
   private static final String POM_XML = "pom.xml";
 
-  private static final String SRC = "src";
-  private static final String MAIN = "main";
-  private static final String RESOURCES = "resources";
   private static final String TARGET = "target";
   private static final String CLASSES = "classes";
   public static String OUTPUTFILE_FORMAT = "%s-%s.%s";
@@ -75,7 +72,7 @@ public class MavenInfoReader implements BuildInfoReader {
         .withBuildToolVersion(Maven.getVersion(root))
         .withOutputFile(root.resolve(TARGET).resolve(String.format(OUTPUTFILE_FORMAT, name, version, packaging)))
         .withClassOutputDir(root.resolve(TARGET).resolve(CLASSES))
-        .withResourceDir(root.resolve(SRC).resolve(MAIN).resolve(RESOURCES))
+        .withResourceDir(root.resolve(TARGET).resolve(CLASSES))
         .build();
   }
 
