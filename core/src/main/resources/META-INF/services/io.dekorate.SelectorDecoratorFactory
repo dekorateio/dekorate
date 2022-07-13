@@ -1,2 +1,3 @@
 io.dekorate.kubernetes.decorator.ServiceSelectorDecoratorFactory
 io.dekorate.kubernetes.decorator.DeploymentSelectorDecoratorFactory
+io.dekorate.kubernetes.decorator.StatefulSetSelectorDecoratorFactory

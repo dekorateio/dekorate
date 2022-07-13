@@ -3,7 +3,7 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.SelectorDecoratorFactory;
 
-public class DeploymentSelectorDecoratorFactory implements SelectorDecoratorFactory {
+public class StatefulSetSelectorDecoratorFactory implements SelectorDecoratorFactory {
 
   @Override
   public AddToMatchingLabelsDecorator createAddToSelectorDecorator(String name, String key, String value) {
@@ -17,6 +17,6 @@ public class DeploymentSelectorDecoratorFactory implements SelectorDecoratorFact
 
   @Override
   public String kind() {
-    return "Deployment";
+    return "StatefulSet";
   }
 }

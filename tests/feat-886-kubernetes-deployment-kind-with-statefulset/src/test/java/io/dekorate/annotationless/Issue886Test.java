@@ -38,6 +38,8 @@ public class Issue886Test {
     StatefulSet d = findFirst(list, StatefulSet.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     assertEquals(2, d.getSpec().getReplicas());
+    assertEquals("feat-886-kubernetes-deployment-kind-with-statefulset",
+        d.getSpec().getSelector().getMatchLabels().get("app.kubernetes.io/name"));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
