@@ -49,8 +49,8 @@ jobs:
       - name: Tests Quarkus Kubernetes Tests
         run: |
           cd quarkus/extensions/kubernetes
-          ./mvnw ${MAVEN_ARGS} clean install -Ddekorate.version=$DEKORATE_VERSION
+          mvn ${MAVEN_ARGS} clean install -Ddekorate.version=$DEKORATE_VERSION
       - name: Tests Quarkus Kubernetes Integration Tests
         run: |
           cd quarkus/integration-tests/kubernetes
-          ./mvnw ${MAVEN_ARGS} clean verify -Ddekorate.version=$DEKORATE_VERSION
+          mvn ${MAVEN_ARGS} clean verify -Ddekorate.version=$DEKORATE_VERSION
