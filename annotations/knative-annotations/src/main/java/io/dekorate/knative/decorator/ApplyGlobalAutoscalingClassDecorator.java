@@ -16,6 +16,8 @@
 **/
 package io.dekorate.knative.decorator;
 
+import static io.dekorate.knative.manifest.KnativeManifestGenerator.CONFIG_AUTOSCALER;
+
 import io.dekorate.knative.config.AutoScalerClass;
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.fabric8.kubernetes.api.model.ConfigMapFluent;
@@ -30,7 +32,7 @@ public class ApplyGlobalAutoscalingClassDecorator extends NamedResourceDecorator
   private final AutoScalerClass clazz;
 
   public ApplyGlobalAutoscalingClassDecorator(AutoScalerClass clazz) {
-    super("config-autoscaler");
+    super(CONFIG_AUTOSCALER);
     this.clazz = clazz;
   }
 
