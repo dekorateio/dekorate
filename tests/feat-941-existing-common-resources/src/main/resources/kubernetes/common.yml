@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: my-secret
+  name: ${property.secret.name}
 data:
   username: YWRtaW4=
   password: cGFzc3dvcmQK
