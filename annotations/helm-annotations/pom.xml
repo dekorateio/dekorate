@@ -128,6 +128,7 @@
                     <include>io/dekorate/helm/listener/**</include>
                     <include>io/dekorate/helm/model/**</include>
                     <include>io/dekorate/helm/util/**</include>
+                    <include>io/dekorate/helm/adapter/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
@@ -153,6 +154,7 @@
                     <include>io/dekorate/helm/listener/**</include>
                     <include>io/dekorate/helm/model/**</include>
                     <include>io/dekorate/helm/util/**</include>
+                    <include>io/dekorate/helm/adapter/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
