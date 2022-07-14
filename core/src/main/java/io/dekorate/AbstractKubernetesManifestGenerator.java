@@ -87,7 +87,6 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
   protected final ResourceRegistry resourceRegistry;
   protected final ConfigurationRegistry configurationRegistry;
 
-
   public AbstractKubernetesManifestGenerator(ResourceRegistry resources, ConfigurationRegistry configurators) {
     this.resourceRegistry = resources;
     this.configurationRegistry = configurators;

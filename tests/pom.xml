@@ -81,6 +81,7 @@
       <module>issue-983-tests-inject-in-super-class</module>
       <module>issue-987-role-binding-name</module>
       <module>issue-1006-defaults-handling</module>
+      <module>issue-1009-probe-tcp-socket</module>
     </modules>
 
 </project>
