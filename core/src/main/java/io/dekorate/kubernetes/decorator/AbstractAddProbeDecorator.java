@@ -141,12 +141,19 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     }
 
     String[] parts = probe.getTcpSocketAction().split(":");
-    if (parts.length != 2) {
-      throw new RuntimeException(
-          "Invalid format for tcp socket action! Expected: <host>:<port>. Found:" + probe.getTcpSocketAction() + ".");
+    if (parts.length == 1) {
+      try {
+        int port = Integer.parseInt(parts[0]);
+        return new TCPSocketAction(null, new IntOrString(port));
+      } catch (NumberFormatException e) {
+        throw new RuntimeException(
+            "Invalid port for tcp socket action! Expected: integer <port>. Found:" + probe.getTcpSocketAction() + ".");
+      }
+    } else if (parts.length == 2) {
+      return new TCPSocketAction(parts[0], new IntOrString(parts[1]));
     }
-
-    return new TCPSocketAction(parts[0], new IntOrString(parts[1]));
+    throw new RuntimeException(
+        "Invalid format for tcp socket action! Expected: <port> or <host>:<port>. Found:" + probe.getTcpSocketAction() + ".");
   }
 
   private GRPCAction grpcAction(Probe probe) {

@@ -39,7 +39,10 @@ public @interface Probe {
   String execAction() default "";
 
   /**
-   * The tcp socket to use for the probe (the format is host:port).
+   * The tcp socket to use for the probe (the format is port or host:port).
+   * Examples:
+   * - @Probe(tcpSocketAction="8080"))
+   * - @Probe(tcpSocketAction="myhost:8080"))
    * 
    * @return The string representation of the socket.
    */
