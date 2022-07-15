@@ -20,7 +20,7 @@ limitations under the License.
 
   <groupId>io.dekorate</groupId>
   <artifactId>helm-on-openshift-example</artifactId>
-  <version>2.9-SNAPSHOT</version>
+  <version>2.12-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Helm on Openshift</name>
 
   <properties>
