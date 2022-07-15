@@ -100,7 +100,6 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
       validateHelmConfig(helmConfig);
-      deleteOutputFolderIfExists(helmConfig, outputDir);
       List<ConfigReference> valuesReferences = getValuesReferences(helmConfig, session);
 
       try {
@@ -125,14 +124,6 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
 
     return artifacts;
-  }
-
-  private void deleteOutputFolderIfExists(HelmChartConfig helmConfig, Path outputDir) {
-    try {
-      Files.deleteIfExists(getChartOutputDir(helmConfig, outputDir));
-    } catch (IOException ignored) {
-
-    }
   }
 
   private void validateHelmConfig(HelmChartConfig helmConfig) {
