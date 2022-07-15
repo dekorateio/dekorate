@@ -86,7 +86,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Project project = getProject();
     Path outputDir = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir());
     session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(
-        helmConfig -> writeHelmFiles(session, project, helmConfig, outputDir, listYamls(outputDir)));
+        helmConfig -> writeHelmFiles(session, project, helmConfig, outputDir.resolve(helmConfig.getOutputFolder()),
+            listYamls(outputDir)));
   }
 
   /**
@@ -99,7 +100,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
       validateHelmConfig(helmConfig);
-
+      deleteOutputFolderIfExists(helmConfig, outputDir);
       List<ConfigReference> valuesReferences = getValuesReferences(helmConfig, session);
 
       try {
@@ -124,6 +125,14 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
 
     return artifacts;
+  }
+
+  private void deleteOutputFolderIfExists(HelmChartConfig helmConfig, Path outputDir) {
+    try {
+      Files.deleteIfExists(getChartOutputDir(helmConfig, outputDir));
+    } catch (IOException ignored) {
+
+    }
   }
 
   private void validateHelmConfig(HelmChartConfig helmConfig) {
@@ -212,7 +221,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private Map<String, String> createTarball(HelmChartConfig helmConfig, Project project, Path outputDir,
       Map<String, String> artifacts, Set<String> profiles) throws IOException {
 
-    File tarballFile = outputDir.resolve(HELM).resolve(String.format("%s-%s-%s.%s",
+    File tarballFile = outputDir.resolve(String.format("%s-%s-%s.%s",
         helmConfig.getName(), getVersion(helmConfig, project), getHelmClassifier(artifacts), helmConfig.getExtension()))
         .toFile();
 
@@ -363,7 +372,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   }
 
   private Path getChartOutputDir(HelmChartConfig helmConfig, Path outputDir) {
-    return outputDir.resolve(HELM).resolve(helmConfig.getName());
+    return outputDir.resolve(helmConfig.getName());
   }
 
   private static List<File> listYamls(Path directory) {

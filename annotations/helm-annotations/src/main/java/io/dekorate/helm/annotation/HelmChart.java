@@ -57,6 +57,8 @@ public @interface HelmChart {
 
   String notes() default "/NOTES.template.txt";
 
+  String outputFolder() default "helm";
+
   Maintainer[] maintainers() default {};
 
   HelmDependency[] dependencies() default {};
