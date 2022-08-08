@@ -22,11 +22,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Metadata;
@@ -213,7 +213,7 @@ public class ResourceRegistry {
   }
 
   public List<WithConfigReferences> getConfigReferences() {
-    List<WithConfigReferences> configReferences = new LinkedList<>();
+    Set<Decorator> configReferences = new HashSet<>();
 
     Set<Decorator> allDecorators = new HashSet<>();
     allDecorators.addAll(globalDecorators);
@@ -222,11 +222,14 @@ public class ResourceRegistry {
 
     for (Decorator decorator : allDecorators) {
       if (decorator instanceof WithConfigReferences) {
-        configReferences.add((WithConfigReferences) decorator);
+        configReferences.add(decorator);
       }
     }
 
-    return configReferences;
+    return applyConstraints(configReferences)
+        .stream()
+        .map(WithConfigReferences.class::cast)
+        .collect(Collectors.toList());
   }
 
   public List<Decorator> applyConstraints(Set<Decorator> decorators) {
