@@ -16,7 +16,6 @@
  **/
 package io.dekorate.helm.listener;
 
-import static io.dekorate.helm.config.HelmBuildConfigGenerator.HELM;
 import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
 
 import java.io.File;
@@ -303,11 +302,11 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
               values = valuesByProfile.get(valueProfile);
               if (values == null) {
                 values = new HashMap<>();
-                valuesByProfile.putIfAbsent(valueProfile, values);
+                valuesByProfile.put(valueProfile, values);
               }
             }
 
-            values.putIfAbsent(valueReferenceProperty, value);
+            values.put(valueReferenceProperty, value);
           }
         }
       }
