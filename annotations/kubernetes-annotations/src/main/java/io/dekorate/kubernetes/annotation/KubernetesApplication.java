@@ -174,6 +174,11 @@ public @interface KubernetesApplication {
   ConfigMapVolume[] configMapVolumes() default {};
 
   /**
+   * The EmptyDir volumes to add to all containers.
+   */
+  EmptyDirVolume[] emptyDirVolumes() default {};
+
+  /**
    * Git repo volumes to add to all containers.
    */
   GitRepoVolume[] gitRepoVolumes() default {};

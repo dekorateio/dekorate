@@ -29,6 +29,7 @@ import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.CronJob;
+import io.dekorate.kubernetes.config.EmptyDirVolume;
 import io.dekorate.kubernetes.config.Env;
 import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.kubernetes.config.ImageConfiguration;
@@ -44,6 +45,7 @@ import io.dekorate.kubernetes.decorator.AddAzureDiskVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddAzureFileVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddConfigMapVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddCronJobDecorator;
+import io.dekorate.kubernetes.decorator.AddEmptyDirVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddEnvVarDecorator;
 import io.dekorate.kubernetes.decorator.AddHostAliasesDecorator;
 import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
@@ -164,6 +166,10 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(config.getName(), volume));
     }
 
+    for (EmptyDirVolume volume : config.getEmptyDirVolumes()) {
+      resourceRegistry.decorate(group, new AddEmptyDirVolumeDecorator(config.getName(), volume));
+    }
+
     for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
       resourceRegistry.decorate(group, new AddPvcVolumeDecorator(config.getName(), volume));
     }
@@ -247,6 +253,10 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
         resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(jobName, volume));
       }
 
+      for (EmptyDirVolume volume : job.getEmptyDirVolumes()) {
+        resourceRegistry.decorate(group, new AddEmptyDirVolumeDecorator(jobName, volume));
+      }
+
       for (AwsElasticBlockStoreVolume volume : job.getAwsElasticBlockStoreVolumes()) {
         resourceRegistry.decorate(group, new AddAwsElasticBlockStoreVolumeDecorator(jobName, volume));
       }
@@ -277,6 +287,10 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       for (ConfigMapVolume volume : job.getConfigMapVolumes()) {
         validateVolume(volume);
         resourceRegistry.decorate(group, new AddConfigMapVolumeDecorator(jobName, volume));
+      }
+
+      for (EmptyDirVolume volume : job.getEmptyDirVolumes()) {
+        resourceRegistry.decorate(group, new AddEmptyDirVolumeDecorator(jobName, volume));
       }
 
       for (AwsElasticBlockStoreVolume volume : job.getAwsElasticBlockStoreVolumes()) {

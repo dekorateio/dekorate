@@ -82,6 +82,7 @@
       <module>issue-987-role-binding-name</module>
       <module>issue-1006-defaults-handling</module>
       <module>issue-1009-probe-tcp-socket</module>
+      <module>feat-kubernetes-emptydir-volumes</module>
     </modules>
 
 </project>

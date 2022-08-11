@@ -34,6 +34,7 @@ import io.dekorate.knative.decorator.AddAwsElasticBlockStoreVolumeToRevisionDeco
 import io.dekorate.knative.decorator.AddAzureDiskVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddAzureFileVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddConfigMapVolumeToRevisionDecorator;
+import io.dekorate.knative.decorator.AddEmptyDirVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddHostAliasesToRevisionDecorator;
 import io.dekorate.knative.decorator.AddPvcVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddSecretVolumeToRevisionDecorator;
@@ -57,6 +58,7 @@ import io.dekorate.kubernetes.config.AzureFileVolume;
 import io.dekorate.kubernetes.config.ConfigMapVolume;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.Container;
+import io.dekorate.kubernetes.config.EmptyDirVolume;
 import io.dekorate.kubernetes.config.HostAlias;
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.kubernetes.config.LabelBuilder;
@@ -264,6 +266,10 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
     for (ConfigMapVolume volume : config.getConfigMapVolumes()) {
       validateVolume(volume);
       resourceRegistry.decorate(KNATIVE, new AddConfigMapVolumeToRevisionDecorator(volume));
+    }
+
+    for (EmptyDirVolume volume : config.getEmptyDirVolumes()) {
+      resourceRegistry.decorate(KNATIVE, new AddEmptyDirVolumeToRevisionDecorator(volume));
     }
 
     for (PersistentVolumeClaimVolume volume : config.getPvcVolumes()) {
