@@ -98,6 +98,11 @@ public @interface Job {
   ConfigMapVolume[] configMapVolumes() default {};
 
   /**
+   * The EmptyDir volumes to add to all containers.
+   */
+  EmptyDirVolume[] emptyDirVolumes() default {};
+
+  /**
    * Aws elastic block store volumes to add to all containers
    */
   AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes() default {};

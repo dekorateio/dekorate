@@ -65,6 +65,7 @@ public class Feat855Test {
         && v.getAzureDisk().getDiskURI().equals("diskURI"));
     assertVolume(job, "azureFile", v -> v.getAzureFile().getShareName().equals("shareName")
         && v.getAzureFile().getSecretName().equals("secretName"));
+    assertVolume(job, "myEmptyDir", v -> v.getEmptyDir() != null);
   }
 
   private void assertVolume(CronJob job, String name, Predicate<Volume> assertion) {

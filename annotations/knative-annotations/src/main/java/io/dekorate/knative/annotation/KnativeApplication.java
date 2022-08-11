@@ -30,6 +30,7 @@ import io.dekorate.kubernetes.annotation.AzureFileVolume;
 import io.dekorate.kubernetes.annotation.ConfigMapVolume;
 import io.dekorate.kubernetes.annotation.Container;
 import io.dekorate.kubernetes.annotation.CronJob;
+import io.dekorate.kubernetes.annotation.EmptyDirVolume;
 import io.dekorate.kubernetes.annotation.Env;
 import io.dekorate.kubernetes.annotation.GitRepoVolume;
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
@@ -182,6 +183,11 @@ public @interface KnativeApplication {
    * ConfigMap volumues to add to all containers.
    */
   ConfigMapVolume[] configMapVolumes() default {};
+
+  /**
+   * The EmptyDir volumes to add to all containers.
+   */
+  EmptyDirVolume[] emptyDirVolumes() default {};
 
   /**
    * Git repo volumues to add to all containers.

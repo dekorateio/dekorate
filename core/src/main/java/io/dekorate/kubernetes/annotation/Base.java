@@ -140,6 +140,8 @@ import io.sundr.builder.annotations.Pojo;
 
   ConfigMapVolume[] configMapVolumes() default {};
 
+  EmptyDirVolume[] emptyDirVolumes() default {};
+
   GitRepoVolume[] gitRepoVolumes() default {};
 
   AwsElasticBlockStoreVolume[] awsElasticBlockStoreVolumes() default {};
