@@ -22,18 +22,16 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v3
-        with:
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
           java-version: 8
           distribution: 'temurin'
+          server-id: oss.sonatype.org
+          server-username: OSS_SONATYPE_USERNAME
+          server-password: OSS_SONATYPE_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Configure Git author
         run: |
@@ -42,12 +40,11 @@ jobs:
       - name: Maven release ${{steps.metadata.outputs.current-version}}
         run: |
           mvn clean install -DskipTests
-          gpg --quiet --batch --yes --decrypt --passphrase="${{secrets.GPG_PASSPHRASE}}" --output maven-settings.xml .github/release/maven-settings.xml.gpg
           git checkout -b release
-          mvn -X -Prelease -B release:clean release:prepare -DreleaseVersion=${{steps.metadata.outputs.current-version}} -DdevelopmentVersion=${{steps.metadata.outputs.next-version}} -s maven-settings.xml
+          mvn -X -Prelease -B release:clean release:prepare -DreleaseVersion=${{steps.metadata.outputs.current-version}} -DdevelopmentVersion=${{steps.metadata.outputs.next-version}}
           git checkout ${{github.base_ref}}
           git rebase release
-          mvn -X -Prelease -B release:perform -DskipTests -s maven-settings.xml
+          mvn -X -Prelease -B release:perform -DskipTests
 
           # update examples and tests
           mvn versions:set -DnewVersion=${{steps.metadata.outputs.next-version}} -Pwith-examples,with-tests -DgenerateBackupPoms=false -DoldVersion=* -DgroupId=* -DartifactId=*
@@ -57,6 +54,10 @@ jobs:
           git add readme.md
           # commit changes
           git commit -m "chore: Set examples and tests version to ${{steps.metadata.outputs.current-version}}"
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       - name: Push changes to ${{github.base_ref}}
         uses: ad-m/github-push-action@v0.6.0
         with:
