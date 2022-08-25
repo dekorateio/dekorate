@@ -1,5 +1,8 @@
 name: Release
 
+env:
+  MAVEN_ARGS: -B -e
+
 on:
   pull_request:
     types: [closed]
