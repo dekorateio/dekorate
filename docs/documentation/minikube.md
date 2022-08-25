@@ -63,7 +63,7 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: minikube-example
-    app.kubernetes.io/version: 2.9-SNAPSHOT
+    app.kubernetes.io/version: 2.12-SNAPSHOT
   name: minikube-example
 spec:
   ports:
@@ -73,7 +73,7 @@ spec:
       targetPort: 8080
   selector:
     app.kubernetes.io/name: minikube-example
-    app.kubernetes.io/version: 2.9-SNAPSHOT
+    app.kubernetes.io/version: 2.12-SNAPSHOT
   type: NodePort
 ---
 apiVersion: apps/v1
@@ -81,19 +81,19 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: minikube-example
-    app.kubernetes.io/version: 2.9-SNAPSHOT
+    app.kubernetes.io/version: 2.12-SNAPSHOT
   name: minikube-example
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: minikube-example
-      app.kubernetes.io/version: 2.9-SNAPSHOT
+      app.kubernetes.io/version: 2.12-SNAPSHOT
   template:
     metadata:
       labels:
         app.kubernetes.io/name: minikube-example
-        app.kubernetes.io/version: 2.9-SNAPSHOT
+        app.kubernetes.io/version: 2.12-SNAPSHOT
     spec:
       containers:
         - env:
@@ -101,7 +101,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          image: default/minikube-example:2.9-SNAPSHOT
+          image: default/minikube-example:2.12-SNAPSHOT
           imagePullPolicy: IfNotPresent
           name: minikube-example
           ports:
