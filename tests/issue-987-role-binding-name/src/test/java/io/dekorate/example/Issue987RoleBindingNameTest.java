@@ -19,7 +19,7 @@ package io.dekorate.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class Issue987RoleBindingNameTest {
     assertNotNull(list);
     RoleBinding s = findFirst(list, RoleBinding.class).orElseThrow(() -> new IllegalStateException());
     assertEquals("issue-987-role-binding-name-view", s.getMetadata().getName());
-    assertNull(s.getMetadata().getLabels());
+    assertTrue(s.getMetadata().getLabels().isEmpty());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
