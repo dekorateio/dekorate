@@ -19,15 +19,14 @@ import java.util.Arrays;
 
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Label;
-import io.dekorate.utils.Metadata;
-import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ObjectMetaFluent;
 
 /**
  * A decorator that adds a label to the matching resources (filtered by name and/or kinds).
  */
 @Description("Add a label to the matching resources (filtered by name and/or kinds).")
-public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> {
+public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaFluent> {
 
   private final Label label;
 
@@ -45,18 +44,6 @@ public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> 
     this.label = new Label(key, value, kinds);
   }
 
-  @Override
-  public void andThenVisit(VisitableBuilder builder, String kind, ObjectMeta resourceMeta) {
-    if (label.getKinds() == null || label.getKinds().length == 0 || Arrays.asList(label.getKinds()).contains(kind)) {
-      andThenVisit(builder, resourceMeta);
-    }
-  }
-
-  @Override
-  public void andThenVisit(VisitableBuilder builder, ObjectMeta resourceMeta) {
-    Metadata.addToLabels(builder, label.getKey(), label.getValue());
-  }
-
   public Label getLabel() {
     return label;
   }
@@ -68,6 +55,13 @@ public class AddLabelDecorator extends NamedResourceDecorator<VisitableBuilder> 
   @Override
   public Class<? extends Decorator>[] before() {
     return new Class[] { RemoveLabelDecorator.class };
+  }
+
+  @Override
+  public void andThenVisit(ObjectMetaFluent item, ObjectMeta resourceMeta) {
+    if (label.getKinds() == null || label.getKinds().length == 0 || Arrays.asList(label.getKinds()).contains(kind)) {
+      item.addToLabels(label.getKey(), label.getValue());
+    }
   }
 
   @Override
