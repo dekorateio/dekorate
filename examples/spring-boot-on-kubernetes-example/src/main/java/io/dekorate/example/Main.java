@@ -20,7 +20,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
-@KubernetesApplication
 @SpringBootApplication
 public class Main {
 

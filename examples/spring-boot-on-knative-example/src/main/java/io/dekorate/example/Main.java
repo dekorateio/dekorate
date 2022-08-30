@@ -20,7 +20,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.dekorate.knative.annotation.KnativeApplication;
 
-@KnativeApplication
 @SpringBootApplication
 public class Main {
 
