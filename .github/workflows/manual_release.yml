@@ -18,6 +18,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           metadata-file-path: '.github/project.yml'
+          local-file: true
 
       - uses: actions/checkout@v2
 
