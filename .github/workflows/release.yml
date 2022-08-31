@@ -58,8 +58,8 @@ jobs:
           # commit changes
           git commit -m "chore: Set examples and tests version to ${{steps.metadata.outputs.current-version}}"
         env:
-          MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       - name: Push changes to ${{github.base_ref}}
         uses: ad-m/github-push-action@v0.6.0
