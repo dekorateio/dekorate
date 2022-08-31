@@ -12,6 +12,9 @@ jobs:
     name: release
 
     steps:
+      - uses: actions/checkout@v2
+        name: Checkout 
+
       - uses: radcortez/project-metadata-action@main
         name: Retrieve project metadata
         id: metadata
@@ -19,8 +22,6 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           metadata-file-path: '.github/project.yml'
           local-file: true
-
-      - uses: actions/checkout@v2
 
       - name: Setup Java
         uses: actions/setup-java@v2
