@@ -499,7 +499,7 @@
             <extensions>true</extensions>
             <configuration>
               <serverId>oss-sonatype-staging</serverId>
-              <nexusUrl>https://oss.sonatype.org/service/local/staging/deploy/maven2</nexusUrl>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
               <autoReleaseAfterClose>true</autoReleaseAfterClose>
               <stagingProgressTimeoutMinutes>60</stagingProgressTimeoutMinutes>
             </configuration>
