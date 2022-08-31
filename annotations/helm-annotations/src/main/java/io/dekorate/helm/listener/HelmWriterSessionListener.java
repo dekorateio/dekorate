@@ -177,7 +177,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private ConfigReference toConfigReference(ValueReference valueReference) {
     return new ConfigReference(valueReference.getProperty(),
         valueReference.getPaths(),
-        Strings.isNullOrEmpty(valueReference.getValue()) ? null : valueReference.getValue(), valueReference.getProfile());
+        Strings.isNullOrEmpty(valueReference.getValue()) ? null : valueReference.getValue(), valueReference.getExpression(),
+        valueReference.getProfile());
   }
 
   private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Path outputDir, Map<String, Object> prodValues,
@@ -292,7 +293,11 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
         // Check whether path exists
         for (String path : valueReference.getPaths()) {
-          Object found = parser.readAndSet(path, VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG);
+          String expression = Optional.ofNullable(valueReference.getExpression())
+              .filter(Strings::isNotNullOrEmpty)
+              .orElse(VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG);
+
+          Object found = parser.readAndSet(path, expression);
 
           Object value = Optional.ofNullable(valueReference.getValue()).orElse(found);
           if (value != null) {

@@ -258,6 +258,21 @@ dekorate.helm.values[0].paths=(kind == Deployment).spec.template.spec.containers
 - We can't write complex filters that involves AND/OR conditions. For example: the filter `(kind == Deployment && kind == DeploymentConfig || name == example)` is not supported.
 - We can't select elements by index. For example, if we want to map the second container, we can't do: `spec.template.spec.containers.2.ports.containerPort`.
 
+##### Using Helm expressions
+
+We can also map the values using the exact Helm expression which allows using [Helm functions and pipelines](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/).
+To use it, we need to specify the `expression` when mapping the values, for example:
+
+```
+dekorate.helm.values[0].property=name
+dekorate.helm.values[0].paths=metadata.name
+dekorate.helm.values[0].expression={{ .Values.app.name | upper | quote }}
+```
+
+This expression will uppercase the value within the `app.name` and add the quotes. 
+
+**NOTE:** If the expression is not provided, it will simply use `{{ .Values.<root alias>.<property> }}` which for the above example is `{{ .Values.app.name }}`.
+
 ##### Mapping multiple properties at once
 
 What about if the properties are located in different places, for example:

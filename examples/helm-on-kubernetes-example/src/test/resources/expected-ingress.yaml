@@ -1,0 +1,22 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.dekorate.io/vcs-url: <<unknown>>
+  labels:
+    app.kubernetes.io/name: helm-on-kubernetes-example
+    app.kubernetes.io/version: {{ .Values.app.ingress.label.value }}
+  name: {{ .Values.app.name }}
+spec:
+  rules:
+    - host: {{ .Values.app.host }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ .Values.app.name }}
+                port:
+                  name: http
+            path: {{ .Values.app.path | default '/' }}
+            pathType: Prefix

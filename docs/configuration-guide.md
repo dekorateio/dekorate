@@ -545,6 +545,7 @@ The section below describes all the available subtypes.
 | paths  | String   | A comma-separated list of path expressions to map the Dekorate auto-generated properties to the final Helm values file.        |               |
 | profile    | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
 | value      | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
+| expression | String   | The complete Helm expression to be replaced with. If not provided, it will use `{{ .Values.<root alias>.<property> }}`.                                                                    | (empty)       |
 
 ## Tekton
 
