@@ -20,14 +20,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.helm.model.Chart;
 import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 
 class HelmKubernetesExampleTest {
 
@@ -37,7 +43,7 @@ class HelmKubernetesExampleTest {
 
   @Test
   public void shouldHelmManifestsBeGenerated() throws IOException {
-    Chart chart = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/Chart.yaml"), Chart.class);
+    Chart chart = read("/Chart.yaml", Chart.class);
     assertNotNull(chart, "Chart is null!");
     // Should be the same as in `dekorate.helm.chart` from properties.
     assertEquals(CHART_NAME, chart.getName());
@@ -67,7 +73,7 @@ class HelmKubernetesExampleTest {
 
   @Test
   public void valuesShouldContainExpectedData() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"), Map.class);
+    Map<String, Object> values = read("/values.yaml", Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
@@ -104,11 +110,13 @@ class HelmKubernetesExampleTest {
     assertEquals(2, command.size());
     assertEquals("command1", command.get(0));
     assertEquals("command2", command.get(1));
+    // 4. helm expression
+    assertEquals(readString("expected-ingress.yaml"), readString(CHART_OUTPUT_LOCATION + "/templates/ingress.yaml"));
   }
 
   @Test
   public void valuesShouldContainExpectedDataInDevProfile() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"), Map.class);
+    Map<String, Object> values = read("/values.dev.yaml", Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
@@ -133,5 +141,17 @@ class HelmKubernetesExampleTest {
     assertEquals(expectedPeriodSeconds, probeValues.get("periodSeconds"));
     assertEquals(1, probeValues.get("successThreshold"));
     assertEquals(0, probeValues.get("initialDelaySeconds"));
+  }
+
+  private static <T> T read(String path, Class<T> clazz) throws IOException {
+    return Serialization.yamlMapper().readValue(Main.class.getClassLoader()
+      .getResourceAsStream(CHART_OUTPUT_LOCATION + path), clazz);
+  }
+
+  private static String readString(String path) {
+    return new BufferedReader(
+      new InputStreamReader(Main.class.getClassLoader().getResourceAsStream(path), StandardCharsets.UTF_8))
+        .lines()
+        .collect(Collectors.joining(System.lineSeparator()));
   }
 }

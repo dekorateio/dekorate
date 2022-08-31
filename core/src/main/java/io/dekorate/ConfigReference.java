@@ -30,6 +30,7 @@ public class ConfigReference {
   private String property;
   private String[] paths;
   private Object value;
+  private String expression;
   private String profile;
 
   public ConfigReference(String property, String path) {
@@ -37,17 +38,18 @@ public class ConfigReference {
   }
 
   public ConfigReference(String property, String[] paths) {
-    this(property, paths, null, null);
+    this(property, paths, null, null, null);
   }
 
   public ConfigReference(String property, String path, Object value) {
-    this(property, new String[] { path }, value, null);
+    this(property, new String[] { path }, value, null, null);
   }
 
-  public ConfigReference(String property, String[] paths, Object value, String profile) {
+  public ConfigReference(String property, String[] paths, Object value, String expression, String profile) {
     this.property = property;
     this.paths = paths;
     this.value = value;
+    this.expression = expression;
     this.profile = profile;
   }
 
@@ -72,6 +74,15 @@ public class ConfigReference {
    */
   public Object getValue() {
     return value;
+  }
+
+  /**
+   * If not provided, it will use `{{ .Values.<root alias>.<property> }}`.
+   *
+   * @return The complete Helm expression to be replaced with.
+   */
+  public String getExpression() {
+    return expression;
   }
 
   /**

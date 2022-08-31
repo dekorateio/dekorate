@@ -35,4 +35,11 @@ public @interface ValueReference {
   String profile() default "";
 
   String value() default "";
+
+  /**
+   * If not provided, it will use `{{ .Values.<root alias>.<property> }}`.
+   * 
+   * @return The complete Helm expression to be replaced with.
+   */
+  String expression() default "";
 }
