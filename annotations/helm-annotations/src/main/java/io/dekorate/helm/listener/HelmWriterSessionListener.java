@@ -62,7 +62,6 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String YAML_REG_EXP = ".*?\\.ya?ml$";
   private static final String CHART_FILENAME = "Chart" + YAML;
   private static final String VALUES = "values";
-  private static final String CHART_API_VERSION = "v1";
   private static final String TEMPLATES = "templates";
   private static final String CHARTS = "charts";
   private static final String NOTES = "NOTES.txt";
@@ -324,7 +323,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
   private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Project project, Path outputDir) throws IOException {
     final Chart chart = new Chart();
-    chart.setApiVersion(CHART_API_VERSION);
+    chart.setApiVersion(helmConfig.getApiVersion());
     chart.setName(helmConfig.getName());
     chart.setVersion(getVersion(helmConfig, project));
     chart.setDescription(helmConfig.getDescription());
