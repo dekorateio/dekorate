@@ -45,6 +45,7 @@ class HelmKubernetesExampleTest {
   public void shouldHelmManifestsBeGenerated() throws IOException {
     Chart chart = read("/Chart.yaml", Chart.class);
     assertNotNull(chart, "Chart is null!");
+    assertEquals("v2", chart.getApiVersion());
     // Should be the same as in `dekorate.helm.chart` from properties.
     assertEquals(CHART_NAME, chart.getName());
     // Should contain expected dependencies
