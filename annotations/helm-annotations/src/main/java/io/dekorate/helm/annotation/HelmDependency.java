@@ -32,4 +32,8 @@ public @interface HelmDependency {
   String version();
 
   String repository();
+
+  String condition() default "";
+
+  String[] tags() default {};
 }
