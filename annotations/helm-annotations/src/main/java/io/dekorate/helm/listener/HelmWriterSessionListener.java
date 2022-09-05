@@ -70,6 +70,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String TEMPLATES = "templates";
   private static final String CHARTS = "charts";
   private static final String NOTES = "NOTES.txt";
+  private static final String README = "README.md";
+  private static final String LICENSE = "LICENSE";
   private static final String KUBERNETES_CLASSIFIER = "helm";
   private static final String OPENSHIFT_CLASSIFIER = "helmshift";
   private static final String OPENSHIFT = "openshift";
@@ -127,7 +129,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
         // To follow Helm file structure standards:
         artifacts.putAll(createEmptyChartFolder(helmConfig, outputDir));
-        artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig, outputDir));
+        artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig, inputDir, outputDir));
+        artifacts.putAll(addResourceIfExists(helmConfig, LICENSE, inputDir, outputDir));
+        artifacts.putAll(addResourceIfExists(helmConfig, README, inputDir, outputDir));
 
       } catch (IOException e) {
         throw new RuntimeException("Error writing resources", e);
@@ -143,12 +147,33 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
   }
 
-  private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig, Path outputDir) throws IOException {
-    if (Strings.isNullOrEmpty(helmConfig.getNotes())) {
+  private Map<String, String> addResourceIfExists(HelmChartConfig helmConfig, String resourceName, Path inputDir,
+      Path outputDir) throws IOException {
+    File file = inputDir.resolve(resourceName).toFile();
+    if (!file.exists()) {
       return Collections.emptyMap();
     }
 
-    InputStream notesInputStream = getResourceFromClasspath(helmConfig.getNotes());
+    Path chartOutputDir = getChartOutputDir(helmConfig, outputDir).resolve(resourceName);
+    Files.copy(new FileInputStream(file), chartOutputDir);
+    return Collections.singletonMap(chartOutputDir.toString(), EMPTY);
+  }
+
+  private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig, Path inputDir, Path outputDir)
+      throws IOException {
+    InputStream notesInputStream;
+
+    File notesInInputDir = inputDir.resolve(NOTES).toFile();
+    if (notesInInputDir.exists()) {
+      notesInputStream = new FileInputStream(notesInInputDir);
+    } else {
+      if (Strings.isNullOrEmpty(helmConfig.getNotes())) {
+        return Collections.emptyMap();
+      }
+
+      notesInputStream = getResourceFromClasspath(helmConfig.getNotes());
+    }
+
     if (notesInputStream == null) {
       throw new RuntimeException("Could not find the notes template file in the classpath at " + helmConfig.getNotes());
     }
