@@ -13,7 +13,7 @@ To let Dekorate to generate the Helm manifest files for a project, simply declar
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>helm-annotations</artifactId>
-  <version>2.11.1</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
