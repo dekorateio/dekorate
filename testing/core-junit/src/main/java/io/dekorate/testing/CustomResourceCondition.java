@@ -34,7 +34,6 @@ import io.fabric8.kubernetes.client.http.HttpRequest;
 import io.fabric8.kubernetes.client.http.HttpResponse;
 import io.fabric8.kubernetes.client.utils.URLUtils;
 
-
 public class CustomResourceCondition implements ExecutionCondition, WithKubernetesClient {
 
   @Override
