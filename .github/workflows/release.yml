@@ -16,14 +16,13 @@ jobs:
     if: ${{github.event.pull_request.merged == true}}
 
     steps:
+      - uses: actions/checkout@v2
       - uses: radcortez/project-metadata-action@master
         name: Retrieve project metadata
         id: metadata
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           metadata-file-path: '.github/project.yml'
-
-      - uses: actions/checkout@v2
 
       - name: Setup Java
         uses: actions/setup-java@v2
@@ -54,7 +53,7 @@ jobs:
           # update examples and tests
           ./mvnw versions:set -DnewVersion=${{steps.metadata.outputs.next-version}} -Pwith-examples,with-tests -DgenerateBackupPoms=false -DoldVersion=* -DgroupId=* -DartifactId=*
           # update readme.md
-          ./scripts/ChangeVersion.java readme.md io.dekorate ${{steps.metadata.outputs.next-version}} > readme.md.versionChanged
+          docker run -v `pwd`:/ws --workdir=/ws -ti quay.io/jbangdev/jbang-action ./scripts/ChangeVersion.java readme.md io.dekorate 0.0.1 | tail -n +3 > readme.md.versionChanged
           mv readme.md.versionChanged readme.md
           git add readme.md
           # commit changes
