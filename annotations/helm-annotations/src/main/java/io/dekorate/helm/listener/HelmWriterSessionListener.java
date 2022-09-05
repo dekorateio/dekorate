@@ -405,7 +405,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         .map(d -> new HelmDependency(d.getName(),
             Strings.defaultIfEmpty(d.getAlias(), d.getName()),
             d.getVersion(),
-            d.getRepository()))
+            d.getRepository(),
+            d.getCondition(),
+            d.getTags()))
         .collect(Collectors.toList()));
 
     Path yml = getChartOutputDir(helmConfig, outputDir).resolve(CHART_FILENAME).normalize();
