@@ -55,7 +55,7 @@ jobs:
           # update readme.md
           docker run -v `pwd`:/ws --workdir=/ws -ti quay.io/jbangdev/jbang-action ./scripts/ChangeVersion.java readme.md io.dekorate 0.0.1 | tail -n +3 > readme.md.versionChanged
           mv readme.md.versionChanged readme.md
-          git add readme.md
+          git add --all
           # commit changes
           git commit -m "chore: Set examples and tests version to ${{steps.metadata.outputs.current-version}}"
         env:

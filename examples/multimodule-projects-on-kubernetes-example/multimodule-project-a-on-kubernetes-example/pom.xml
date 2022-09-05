@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>multimodule-project-a-on-kubernetes-example</artifactId>
-  <version>2.12-SNAPSHOT</version>
+  <version>3.1-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Multi Module Project on Kubernetes :: Project A</name>
 
   <properties>

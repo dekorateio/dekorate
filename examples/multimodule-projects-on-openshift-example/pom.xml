@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>multimodule-project-parent-on-openshift-example</artifactId>
-  <version>2.12-SNAPSHOT</version>
+  <version>3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Dekorate :: Examples :: Multi Module Project on Openshift :: Parent</name>
 

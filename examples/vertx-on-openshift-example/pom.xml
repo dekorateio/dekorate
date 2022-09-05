@@ -20,7 +20,7 @@ limitations under the License.
 
   <groupId>io.dekorate</groupId>
   <artifactId>vertx-on-openshift-example</artifactId>
-  <version>2.12-SNAPSHOT</version>
+  <version>3.1-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Vertx on Openshift</name>
 
   <properties>
