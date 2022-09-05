@@ -38,6 +38,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+      - name: Setup jbang
+        run: curl -Ls https://sh.jbang.dev | bash -s - app setup
       - name: Maven release ${{steps.metadata.outputs.current-version}}
         run: |
           ./mvnw clean install -DskipTests
