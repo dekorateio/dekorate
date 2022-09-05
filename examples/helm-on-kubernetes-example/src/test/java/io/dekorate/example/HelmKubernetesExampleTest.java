@@ -49,13 +49,18 @@ class HelmKubernetesExampleTest {
     // Should be the same as in `dekorate.helm.chart` from properties.
     assertEquals(CHART_NAME, chart.getName());
     // Should contain expected dependencies
-    assertEquals(2, chart.getDependencies().size());
+    assertEquals(3, chart.getDependencies().size());
     assertEquals("dependencyNameA", chart.getDependencies().get(0).getName());
     assertEquals("dependencyNameA", chart.getDependencies().get(0).getAlias());
     assertEquals("0.0.1", chart.getDependencies().get(0).getVersion());
     assertEquals("http://localhost:8080", chart.getDependencies().get(0).getRepository());
     assertEquals("dependencyNameB", chart.getDependencies().get(1).getName());
     assertEquals("app", chart.getDependencies().get(1).getAlias());
+    assertEquals("dependencyNameC", chart.getDependencies().get(2).getName());
+    assertEquals("app.database.enabled", chart.getDependencies().get(2).getCondition());
+    assertEquals(2, chart.getDependencies().get(2).getTags().length);
+    assertEquals("web", chart.getDependencies().get(2).getTags()[0]);
+    assertEquals("frontend", chart.getDependencies().get(2).getTags()[1]);
     // Values.yaml manifest
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"));

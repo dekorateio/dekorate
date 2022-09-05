@@ -42,15 +42,23 @@ public class HelmDependency {
   @JsonProperty
   private String alias;
 
+  @JsonProperty
+  private String condition;
+
+  @JsonProperty
+  private String[] tags;
+
   public HelmDependency() {
 
   }
 
-  public HelmDependency(String name, String alias, String version, String repository) {
+  public HelmDependency(String name, String alias, String version, String repository, String condition, String[] tags) {
     this.name = name;
     this.alias = alias;
     this.version = version;
     this.repository = repository;
+    this.condition = condition;
+    this.tags = tags;
   }
 
   public String getName() {
@@ -83,5 +91,21 @@ public class HelmDependency {
 
   public void setRepository(String repository) {
     this.repository = repository;
+  }
+
+  public String getCondition() {
+    return condition;
+  }
+
+  public void setCondition(String condition) {
+    this.condition = condition;
+  }
+
+  public String[] getTags() {
+    return tags;
+  }
+
+  public void setTags(String[] tags) {
+    this.tags = tags;
   }
 }

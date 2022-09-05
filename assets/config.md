@@ -479,6 +479,8 @@ The section below describes all the available subtypes.
 | version    | String  | The dependency version.                                                             |                        |
 | repository | String  | The dependency repository.                                                          |                        |
 | alias      | String  | Alias of the the dependency                                                         | The dependency name    |
+| condition  | String  | (Optional) Condition to enable/disable the current Helm dependency.                 | The dependency name    |
+| tags       | String[]| (Optional) Tags associated with the current Helm dependency                         |                        |
 
 ### ValueReference
 
