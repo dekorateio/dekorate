@@ -38,6 +38,8 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
+      - name: Setup jbang
+        run: curl -Ls https://sh.jbang.dev | bash -s - app setup
       - name: Build Project
         run: ./mvnw ${MAVEN_ARGS} clean install
       - name: Zip Artifacts
