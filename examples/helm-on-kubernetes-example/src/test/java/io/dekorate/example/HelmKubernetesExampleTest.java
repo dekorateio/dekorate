@@ -50,11 +50,11 @@ class HelmKubernetesExampleTest {
     assertEquals(CHART_NAME, chart.getName());
     // Should contain expected dependencies
     assertEquals(2, chart.getDependencies().size());
-    assertEquals("dependency-name-a", chart.getDependencies().get(0).getName());
-    assertEquals("dependency-name-a", chart.getDependencies().get(0).getAlias());
+    assertEquals("dependencyNameA", chart.getDependencies().get(0).getName());
+    assertEquals("dependencyNameA", chart.getDependencies().get(0).getAlias());
     assertEquals("0.0.1", chart.getDependencies().get(0).getVersion());
     assertEquals("http://localhost:8080", chart.getDependencies().get(0).getRepository());
-    assertEquals("dependency-name-b", chart.getDependencies().get(1).getName());
+    assertEquals("dependencyNameB", chart.getDependencies().get(1).getName());
     assertEquals("app", chart.getDependencies().get(1).getAlias());
     // Values.yaml manifest
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
@@ -134,6 +134,18 @@ class HelmKubernetesExampleTest {
     assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
     // Should contain ingress with the value from properties
     assertEquals("my-test-host", helmExampleValues.get("host"));
+  }
+
+  @Test
+  public void valuesFileShouldContainDependencyValues() throws IOException {
+    Map<String, Object> values = read("/values.yaml", Map.class);
+    Map<String, Object> dependencyA = (Map<String, Object>) values.get("dependencyNameA");
+    assertEquals("aValue", dependencyA.get("config"));
+
+    Map<String, Object> dependencyApp = (Map<String, Object>) values.get("app");
+    Map<String, Object> config = (Map<String, Object>) dependencyApp.get("config");
+    assertEquals("John", config.get("user"));
+    assertEquals("mysql", config.get("database"));
   }
 
   private void assertProbe(Map<String, Object> probeValues, int expectedTimeoutSeconds, int expectedPeriodSeconds) {

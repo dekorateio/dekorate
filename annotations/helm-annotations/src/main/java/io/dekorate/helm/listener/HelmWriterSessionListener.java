@@ -19,6 +19,8 @@ package io.dekorate.helm.listener;
 import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +40,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import io.dekorate.ConfigReference;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
@@ -53,6 +57,7 @@ import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
 import io.dekorate.helm.util.HelmExpressionParser;
 import io.dekorate.project.Project;
+import io.dekorate.utils.Maps;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
 
@@ -83,9 +88,15 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Session session = getSession();
     Project project = getProject();
     Path outputDir = project.getBuildInfo().getClassOutputDir().resolve(project.getDekorateOutputDir());
-    session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(
-        helmConfig -> writeHelmFiles(session, project, helmConfig, outputDir.resolve(helmConfig.getOutputFolder()),
-            listYamls(outputDir)));
+    session.getConfigurationRegistry().get(HelmChartConfig.class).ifPresent(helmConfig -> {
+      Path baseDir = getProject().getBuildInfo().getResourceDir();
+      if (getProject().getDekorateInputDir() != null) {
+        baseDir = baseDir.resolve(getProject().getDekorateInputDir());
+      }
+      Path inputDir = baseDir.resolve(helmConfig.getInputFolder());
+      writeHelmFiles(session, project, helmConfig, inputDir, outputDir.resolve(helmConfig.getOutputFolder()),
+          listYamls(outputDir));
+    });
   }
 
   /**
@@ -93,7 +104,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
    * 
    * @return the list of the Helm generated files.
    */
-  public Map<String, String> writeHelmFiles(Session session, Project project, HelmChartConfig helmConfig, Path outputDir,
+  public Map<String, String> writeHelmFiles(Session session, Project project, HelmChartConfig helmConfig,
+      Path inputDir,
+      Path outputDir,
       Collection<File> generatedFiles) {
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
@@ -107,7 +120,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         artifacts.putAll(processSourceFiles(helmConfig, outputDir, generatedFiles, valuesReferences, prodValues,
             valuesByProfile));
         artifacts.putAll(createChartYaml(helmConfig, project, outputDir));
-        artifacts.putAll(createValuesYaml(helmConfig, outputDir, prodValues, valuesByProfile));
+        artifacts.putAll(createValuesYaml(helmConfig, inputDir, outputDir, prodValues, valuesByProfile));
         if (helmConfig.isCreateTarFile()) {
           artifacts.putAll(createTarball(helmConfig, project, outputDir, artifacts, valuesByProfile.keySet()));
         }
@@ -169,8 +182,13 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
 
     // From user
-    Stream.of(helmBuildConfig.getValues()).map(this::toConfigReference).forEach(configReferences::add);
+    Stream.of(helmBuildConfig.getValues()).filter(this::valueHasPath).map(this::toConfigReference)
+        .forEach(configReferences::add);
     return configReferences;
+  }
+
+  private boolean valueHasPath(ValueReference valueReference) {
+    return valueReference.getPaths() != null && valueReference.getPaths().length > 0;
   }
 
   private ConfigReference toConfigReference(ValueReference valueReference) {
@@ -180,8 +198,25 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         valueReference.getProfile());
   }
 
-  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Path outputDir, Map<String, Object> prodValues,
-      Map<String, Map<String, Object>> valuesByProfile) throws IOException {
+  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Path inputDir, Path outputDir,
+      Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile) throws IOException {
+
+    // Populate user prod values without expression from properties
+    for (ValueReference value : helmConfig.getValues()) {
+      if (!valueHasPath(value)) {
+        if (Strings.isNullOrEmpty(value.getValue())) {
+          throw new RuntimeException("The value mapping for " + value.getProperty() + " does not have "
+              + "either a path or a default value. ");
+        }
+
+        String property = value.getProperty();
+        if (!startWithDependencyPrefix(value.getProperty(), helmConfig.getDependencies())) {
+          property = helmConfig.getValuesRootAlias() + "." + value.getProperty();
+        }
+
+        prodValues.put(Strings.kebabToCamelCase(property), value.getValue());
+      }
+    }
 
     Map<String, String> artifacts = new HashMap<>();
 
@@ -197,15 +232,47 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       }
 
       // Create the values.<profile>.yaml file
-      artifacts.putAll(writeFileAsYaml(toMultiValueMap(values),
+      artifacts.putAll(writeFileAsYaml(mergeValues(inputDir, values),
           getChartOutputDir(helmConfig, outputDir).resolve(VALUES + "." + profile + YAML)));
     }
 
     // Next, we process the prod profile
-    artifacts.putAll(writeFileAsYaml(toMultiValueMap(prodValues),
+    artifacts.putAll(writeFileAsYaml(mergeValues(inputDir, prodValues),
         getChartOutputDir(helmConfig, outputDir).resolve(VALUES + YAML)));
 
     return artifacts;
+  }
+
+  private Map<String, Object> mergeValues(Path inputDir, Map<String, Object> values) throws FileNotFoundException {
+    Map<String, Object> valuesAsMultiValueMap = toMultiValueMap(values);
+    File templateValuesFile = inputDir.resolve(VALUES + YAML).toFile();
+    if (templateValuesFile.exists()) {
+      Map<String, Object> result = new HashMap<>();
+      Map<String, Object> yaml = Serialization.unmarshal(new FileInputStream(templateValuesFile),
+          new TypeReference<Map<String, Object>>() {
+          });
+      result.putAll(yaml);
+      Maps.merge(result, valuesAsMultiValueMap);
+      return result;
+    }
+
+    return valuesAsMultiValueMap;
+  }
+
+  private boolean startWithDependencyPrefix(String property, io.dekorate.helm.config.HelmDependency[] dependencies) {
+    if (dependencies == null || dependencies.length == 0) {
+      return false;
+    }
+
+    String[] parts = property.split(Pattern.quote("."));
+    if (parts.length <= 1) {
+      return false;
+    }
+
+    String name = parts[0];
+    return Stream.of(dependencies)
+        .map(d -> Strings.defaultIfEmpty(d.getAlias(), d.getName()))
+        .anyMatch(d -> Strings.equals(d, name));
   }
 
   private Map<String, String> createTarball(HelmChartConfig helmConfig, Project project, Path outputDir,
