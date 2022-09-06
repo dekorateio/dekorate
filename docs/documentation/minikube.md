@@ -33,7 +33,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>minikube-annotations</artifactId>
-  <version>3.0.0</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 
