@@ -13,7 +13,7 @@ The fast way to get started is to add the following dependency to your spring-bo
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>2.11.1</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 
@@ -59,7 +59,7 @@ You will need to add dependency below as a supplement or replacement of kubernet
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-spring-starter</artifactId>
-  <version>2.11.1</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 
@@ -85,7 +85,7 @@ For generic java applications, you can use instead:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>2.11.1</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 

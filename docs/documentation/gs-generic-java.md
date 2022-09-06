@@ -13,7 +13,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>2.11.1</version>
+  <version>{{site.data.project.release.current-version}}</version>
 </dependency>
 ```
 
