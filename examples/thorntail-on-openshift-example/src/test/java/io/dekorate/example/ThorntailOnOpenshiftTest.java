@@ -75,7 +75,7 @@ class ThorntailOnOpenshiftTest {
     Optional<Route> route = findFirst(list, Route.class);
     assertTrue(route.isPresent());
     RouteSpec r = route.get().getSpec();
-    assertEquals(8080, r.getPort().getTargetPort().getIntVal());
+    assertEquals("http", r.getPort().getTargetPort().getStrVal());
     assertEquals("/", r.getPath());
   }
 

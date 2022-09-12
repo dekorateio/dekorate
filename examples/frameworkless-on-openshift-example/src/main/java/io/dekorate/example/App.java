@@ -3,13 +3,14 @@ package io.dekorate.example;
 import com.sun.net.httpserver.HttpServer;
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
+import io.dekorate.openshift.annotation.Route;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
 @OpenshiftApplication(
-  expose = true,
+  route = @Route(expose = true),
   ports = @Port(name = "web", containerPort = 8080))
 public class App
 {

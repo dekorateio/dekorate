@@ -3,7 +3,8 @@ dekorate:
     ingress:
       expose: true
   openshift:
-    expose: true
+    route:
+      expose: true
 thorntail:
   http:
     port: 9090

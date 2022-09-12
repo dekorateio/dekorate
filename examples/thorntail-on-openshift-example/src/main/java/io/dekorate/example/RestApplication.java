@@ -17,6 +17,7 @@ package io.dekorate.example;
 
 import io.dekorate.kubernetes.annotation.Probe;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
+import io.dekorate.openshift.annotation.Route;
 import io.dekorate.option.annotation.JvmOptions;
 import io.dekorate.option.annotation.SecureRandomSource;
 
@@ -26,7 +27,7 @@ import javax.ws.rs.core.Application;
 @OpenshiftApplication(
   livenessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 180),
   readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 20),
-  expose = true
+  route = @Route(expose = true)
 )
 @JvmOptions(server = true, preferIPv4Stack = true, secureRandom = SecureRandomSource.NonBlocking)
 @ApplicationPath("/")
