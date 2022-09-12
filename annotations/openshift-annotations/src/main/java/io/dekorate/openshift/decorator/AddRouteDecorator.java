@@ -22,6 +22,8 @@ import java.util.Optional;
 
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.Port;
+import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
+import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.utils.Labels;
@@ -62,9 +64,14 @@ public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesList
         .withName(config.getName())
         .endTo()
         .withNewPort()
-        .withNewTargetPort(port.getContainerPort())
+        .withNewTargetPort(port.getName())
         .endPort()
         .endSpec()
         .build());
+  }
+
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { AddServiceResourceDecorator.class };
   }
 }
