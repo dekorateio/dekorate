@@ -38,6 +38,8 @@ public class Issue886Test {
     assertNotNull(list);
     Job d = findFirst(list, Job.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
+    assertEquals("feat-886-kubernetes-deployment-kind-with-job",
+        d.getSpec().getSelector().getMatchLabels().get("app.kubernetes.io/name"));
 
     Container c = d.getSpec().getTemplate().getSpec().getContainers().get(0);
     assertEquals(c.getArgs().get(0), "A");
