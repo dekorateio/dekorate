@@ -38,6 +38,8 @@ public class Issue886Test {
     assertNotNull(list);
     CronJob d = findFirst(list, CronJob.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
+    assertEquals("feat-886-kubernetes-deployment-kind-with-cronjob",
+        d.getSpec().getJobTemplate().getSpec().getSelector().getMatchLabels().get("app.kubernetes.io/name"));
 
     Container c = d.getSpec().getJobTemplate().getSpec().getTemplate().getSpec().getContainers().get(0);
     assertEquals(c.getArgs().get(0), "A");
