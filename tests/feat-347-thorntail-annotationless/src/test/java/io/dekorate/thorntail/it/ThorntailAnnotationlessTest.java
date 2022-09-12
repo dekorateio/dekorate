@@ -54,7 +54,7 @@ class ThorntailAnnotationlessTest {
 
     Optional<Route> route = findFirst(list, Route.class);
     assertTrue(route.isPresent());
-    assertEquals(9090, route.get().getSpec().getPort().getTargetPort().getIntVal().intValue());
+    assertEquals("http", route.get().getSpec().getPort().getTargetPort().getStrVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> type) {

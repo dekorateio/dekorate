@@ -159,13 +159,6 @@ public @interface OpenshiftApplication {
   String serviceAccount() default "";
 
   /**
-   * The host under which the application is going to be exposed.
-   * 
-   * @return The hostname.
-   */
-  String host() default "";
-
-  /**
    * The application ports.
    */
   Port[] ports() default {};
@@ -273,9 +266,9 @@ public @interface OpenshiftApplication {
   Container[] sidecars() default {};
 
   /**
-   * Controls whether the application should be exposed via Route
+   * @return the Ingress resource configuration.
    */
-  boolean expose() default false;
+  Route route() default @Route();
 
   /**
    * Controls whether the generated {@link Service} will be headless.

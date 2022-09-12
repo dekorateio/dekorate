@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.openshift.api.model.Route;
 
 public class IssueNamedPortTest {
@@ -36,10 +35,8 @@ public class IssueNamedPortTest {
     KubernetesList list = Serialization
         .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
-    Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
-    assertNotNull(s);
     Route r = findFirst(list, Route.class).orElseThrow(() -> new IllegalStateException());
-    assertEquals(s.getSpec().getPorts().get(0).getName(), r.getSpec().getPort().getTargetPort().getStrVal());
+    assertEquals("diff", r.getSpec().getPort().getTargetPort().getStrVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

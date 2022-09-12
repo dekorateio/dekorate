@@ -54,13 +54,13 @@ dekorate.kubernetes.ingress.expose=true
 
 ###### Openshift
 ```java
-@OpenshiftApplication(expose=true)
+@OpenshiftApplication(route=@Route(expose=true))
 ```
 
 An alternative way of configuration is via `application properties`:
 
 ```
-dekorate.openshift.expose=true
+dekorate.openshift.route.expose=true
 ```
 
 There are cases where the `Ingress` or `Route` host needs to be customized. This is done using the `host` parametes either via annotation or property configuration.
@@ -86,8 +86,8 @@ dekorate.kubernetes.ingress.host=foo.bar.com
 An alternative way of configuration is via `application properties`:
 
 ```
-dekorate.openshift.expose=true
-dekorate.openshift.host=foo.bar.com
+dekorate.openshift.route.expose=true
+dekorate.openshift.route.host=foo.bar.com
 ```
 
 

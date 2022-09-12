@@ -174,8 +174,7 @@ public class Ports {
       return Optional.of(config.getPorts()[0]);
     }
 
-    //Check the service name
-    Optional<Port> port = Arrays.stream(config.getPorts()).filter(p -> HTTP_PORT_NAMES.containsKey(p.getName())).findFirst();
+    Optional<Port> port = getPortByFilter(p -> HTTP_PORT_NAMES.containsKey(p.getName()), config);
     if (port.isPresent()) {
       return port;
     }
@@ -185,6 +184,10 @@ public class Ports {
       return port;
     }
     return Optional.empty();
+  }
+
+  public static Optional<Port> getPortByFilter(Predicate<Port> filter, BaseConfig config) {
+    return Arrays.stream(config.getPorts()).filter(filter).findFirst();
   }
 
   public static boolean isHttps(int port) {
