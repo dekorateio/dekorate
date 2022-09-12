@@ -83,6 +83,7 @@
       <module>issue-1006-defaults-handling</module>
       <module>issue-1009-probe-tcp-socket</module>
       <module>feat-kubernetes-emptydir-volumes</module>
+      <module>issue-spring-boot-openshift-named-port</module>
     </modules>
 
 </project>
