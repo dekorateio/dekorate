@@ -96,7 +96,12 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         baseDir = baseDir.resolve(getProject().getDekorateInputDir());
       }
       Path inputDir = baseDir.resolve(helmConfig.getInputFolder());
-      writeHelmFiles(session, project, helmConfig, inputDir, outputDir.resolve(helmConfig.getOutputFolder()),
+
+      List<ConfigReference> configReferences = Stream.of(helmConfig.getValues())
+          .map(this::toConfigReference)
+          .collect(Collectors.toList());
+
+      writeHelmFiles(session, project, helmConfig, configReferences, inputDir, outputDir.resolve(helmConfig.getOutputFolder()),
           listYamls(outputDir));
     });
   }
@@ -106,14 +111,15 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
    * 
    * @return the list of the Helm generated files.
    */
-  public Map<String, String> writeHelmFiles(Session session, Project project, HelmChartConfig helmConfig,
+  public Map<String, String> writeHelmFiles(Session session, Project project,
+      HelmChartConfig helmConfig, List<ConfigReference> configReferences,
       Path inputDir,
       Path outputDir,
       Collection<File> generatedFiles) {
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
       validateHelmConfig(helmConfig);
-      List<ConfigReference> valuesReferences = getValuesReferences(helmConfig, session);
+      List<ConfigReference> valuesReferences = mergeValuesReferencesFromDecorators(configReferences, session);
 
       try {
         LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
@@ -122,7 +128,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         artifacts.putAll(processSourceFiles(helmConfig, outputDir, generatedFiles, valuesReferences, prodValues,
             valuesByProfile));
         artifacts.putAll(createChartYaml(helmConfig, project, outputDir));
-        artifacts.putAll(createValuesYaml(helmConfig, inputDir, outputDir, prodValues, valuesByProfile));
+        artifacts.putAll(createValuesYaml(helmConfig, valuesReferences, inputDir, outputDir, prodValues, valuesByProfile));
         if (helmConfig.isCreateTarFile()) {
           artifacts.putAll(createTarball(helmConfig, project, outputDir, artifacts, valuesByProfile.keySet()));
         }
@@ -199,7 +205,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return Collections.singletonMap(emptyChartsDir.toString(), EMPTY);
   }
 
-  private List<ConfigReference> getValuesReferences(HelmChartConfig helmBuildConfig, Session session) {
+  private List<ConfigReference> mergeValuesReferencesFromDecorators(List<ConfigReference> configReferencesFromConfig,
+      Session session) {
     List<ConfigReference> configReferences = new LinkedList<>();
     // From decorators
     for (WithConfigReferences decorator : session.getResourceRegistry().getConfigReferences()) {
@@ -207,12 +214,12 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
 
     // From user
-    Stream.of(helmBuildConfig.getValues()).filter(this::valueHasPath).map(this::toConfigReference)
-        .forEach(configReferences::add);
+    configReferences.addAll(configReferencesFromConfig);
+
     return configReferences;
   }
 
-  private boolean valueHasPath(ValueReference valueReference) {
+  private boolean valueHasPath(ConfigReference valueReference) {
     return valueReference.getPaths() != null && valueReference.getPaths().length > 0;
   }
 
@@ -223,13 +230,14 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         valueReference.getProfile());
   }
 
-  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, Path inputDir, Path outputDir,
-      Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile) throws IOException {
+  private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, List<ConfigReference> configReferences,
+      Path inputDir, Path outputDir, Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile)
+      throws IOException {
 
     // Populate user prod values without expression from properties
-    for (ValueReference value : helmConfig.getValues()) {
+    for (ConfigReference value : configReferences) {
       if (!valueHasPath(value)) {
-        if (Strings.isNullOrEmpty(value.getValue())) {
+        if (value.getValue() == null) {
           throw new RuntimeException("The value mapping for " + value.getProperty() + " does not have "
               + "either a path or a default value. ");
         }
