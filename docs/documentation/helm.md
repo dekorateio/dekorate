@@ -342,10 +342,10 @@ Let's now see how you can add this configuration using the Dekorate Helm extensi
 
 `application.properties`:
 ```
-dekorate.helm.dependencies.postgresql.alias=database
-dekorate.helm.dependencies.postgresql.name=postgresql
-dekorate.helm.dependencies.postgresql.version=11.6.22
-dekorate.helm.dependencies.postgresql.repository=https://charts.bitnami.com/bitnami
+dekorate.helm.dependencies[0].postgresql.alias=database
+dekorate.helm.dependencies[0].postgresql.name=postgresql
+dekorate.helm.dependencies[0].postgresql.version=11.6.22
+dekorate.helm.dependencies[0].postgresql.repository=https://charts.bitnami.com/bitnami
 
 dekorate.helm.values[0].property=database.global.postgresql.auth.postgresPassword
 dekorate.helm.values[0].value=secret

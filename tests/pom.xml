@@ -84,6 +84,7 @@
       <module>issue-1009-probe-tcp-socket</module>
       <module>feat-kubernetes-emptydir-volumes</module>
       <module>issue-spring-boot-openshift-named-port</module>
+      <module>issue-fetch-helm-dependencies</module>
     </modules>
 
 </project>
