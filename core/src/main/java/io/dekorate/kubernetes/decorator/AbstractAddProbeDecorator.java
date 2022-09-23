@@ -40,7 +40,10 @@ import io.fabric8.kubernetes.api.model.TCPSocketAction;
 public abstract class AbstractAddProbeDecorator extends ApplicationContainerDecorator<ContainerFluent<?>>
     implements WithConfigReferences {
 
-  private static final String JSONPATH_CONTAINERS_EXPRESSION = "*.spec.containers.";
+  private static final String PATH_ALL_EXPRESSION = "*.spec.containers.";
+  private static final String PATH_DEPLOYMENT_CONTAINER_EXPRESSION = "(metadata.name == %s).spec.template.spec.containers.(name == %s).";
+  private static final String PATH_DEPLOYMENT_EXPRESSION = "(metadata.name == %s).spec.template.spec.containers.";
+  private static final String PATH_CONTAINER_EXPRESSION = "*.spec.containers.(name == %s).";
   private static final Object AUTO_DISCOVER = null;
 
   protected final Probe probe;
@@ -96,14 +99,24 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     } else {
       // default to http action
       configReferences.add(buildConfigReference("httpGet.path", probe.getHttpActionPath()));
+      configReferences.add(buildConfigReference("httpGet.port", AUTO_DISCOVER));
+      configReferences.add(buildConfigReference("httpGet.scheme", AUTO_DISCOVER));
     }
     return configReferences;
   }
 
   private ConfigReference buildConfigReference(String propertyName, Object value) {
+    String expression = PATH_ALL_EXPRESSION;
+    if (Strings.isNotNullOrEmpty(getDeploymentName()) && Strings.isNotNullOrEmpty(getContainerName())) {
+      expression = String.format(PATH_DEPLOYMENT_CONTAINER_EXPRESSION, getDeploymentName(), getContainerName());
+    } else if (Strings.isNotNullOrEmpty(getDeploymentName())) {
+      expression = String.format(PATH_DEPLOYMENT_EXPRESSION, getDeploymentName());
+    } else if (Strings.isNotNullOrEmpty(getContainerName())) {
+      expression = String.format(PATH_CONTAINER_EXPRESSION, getContainerName());
+    }
     String property = joinProperties(getProbeName(), propertyName);
-    String jsonPath = JSONPATH_CONTAINERS_EXPRESSION + getProbeName() + "." + propertyName;
-    return new ConfigReference(property, jsonPath, value);
+    String yamlPath = expression + getProbeName() + "." + propertyName;
+    return new ConfigReference(property, yamlPath, value);
   }
 
   private boolean isExecOrTcpOrGrpcActionSet() {

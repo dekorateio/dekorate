@@ -111,6 +111,8 @@ class HelmKubernetesExampleTest {
     assertProbe(readinessValues, 10, 30);
     Map<String, Object> httpGetValues = (Map<String, Object>) readinessValues.get("httpGet");
     assertEquals("/readiness", httpGetValues.get("path"));
+    assertEquals(8080, httpGetValues.get("port"));
+    assertEquals("HTTP", httpGetValues.get("scheme"));
     // 3. exec action
     Map<String, Object> startupValues = (Map<String, Object>) helmExampleValues.get("startupProbe");
     assertProbe(startupValues, 12, 32);

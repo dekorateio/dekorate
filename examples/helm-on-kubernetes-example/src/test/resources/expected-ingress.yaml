@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: helm-on-kubernetes-example
     app.kubernetes.io/version: {{ .Values.app.ingress.label.value }}
-  name: {{ .Values.app.name }}
+  name: helm-on-kubernetes-example
 spec:
   rules:
     - host: {{ .Values.app.host }}
