@@ -81,6 +81,9 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
         .withName(port.getName())
         .withNewTargetPort(port.getContainerPort())
         .withPort(calculateHostPort(port));
+    if (port.getProtocol() != null) {
+      servicePortBuilder = servicePortBuilder.withProtocol(port.getProtocol().name());
+    }
     if (isNodePort) {
       servicePortBuilder = servicePortBuilder.withNodePort(Ports.calculateNodePort(config.getName(), port));
     }
