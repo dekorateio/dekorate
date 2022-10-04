@@ -1,22 +1,7 @@
 # This custom template is used to reproduce https://github.com/dekorateio/dekorate/issues/1065
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: app
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: app
-  template:
-    metadata:
-      labels:
-        name: app
-    spec:
-      containers:
-        - image: app-image
-          readinessProbe:
-            httpGet:
-              path: /health/ready
-              port: 8080
-              scheme: HTTP
+  name: my-configmap
+data:
+  myvalue: "Hello World"

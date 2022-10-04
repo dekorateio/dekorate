@@ -68,6 +68,7 @@ class HelmKubernetesExampleTest {
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/deployment.yaml"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/ingress.yaml"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/service.yaml"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/_helpers.tpl"));
     // charts folder
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/charts"));
     // notes
@@ -120,6 +121,7 @@ class HelmKubernetesExampleTest {
     assertEquals("command2", command.get(1));
     // 4. helm expression
     assertEquals(readString("expected-ingress.yaml"), readString(CHART_OUTPUT_LOCATION + "/templates/ingress.yaml"));
+    assertEquals(readString("expected-configmap.yaml"), readString(CHART_OUTPUT_LOCATION + "/templates/configmap.yaml"));
   }
 
   @Test

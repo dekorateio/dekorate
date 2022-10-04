@@ -68,4 +68,6 @@ public @interface HelmChart {
   HelmDependency[] dependencies() default {};
 
   ValueReference[] values() default {};
+
+  HelmExpression[] expressions() default {};
 }

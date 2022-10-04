@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data: {{- range $key, $val := .Values.favorite }}
+{{ indent 2 $key }}: {{ $val | quote }}
+{{- end }}
