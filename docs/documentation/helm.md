@@ -311,6 +311,61 @@ dekorate.helm.values[0].jsonPaths=$..metadata.name,$.[?(@.kind == 'Ingress')].sp
 
 Now, Dekorate will first map the expression `$..metadata.name` and then the expression `$.[?(@.kind == 'Ingress')].spec.rules..http.paths..backend.service.name` (this expression only applies to `Ingress` resources - see more about filtering in JSONPath).
 
+#### Helm Expressions Support
+
+The Dekorate Helm extension partially supports Helm extensions via [Helm templates](https://helm.sh/docs/chart_template_guide/named_templates/) and [functions](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/). You can make use of the templates and more complex functions using Helm expressions:
+
+```properties
+# Example of expressions
+dekorate.helm.expressions[0].path=(kind == Service).metadata.annotations.'app.dekorate.io/commit-id'
+dekorate.helm.expressions[0].expression={{ .Values.favorite.drink | default "tea" | quote }}
+
+# Example of multiline expression
+dekorate.helm.expressions[1].path=(kind == ConfigMap && metadata.name == my-configmap).data
+dekorate.helm.expressions[1].expression={{- range $key, $val := .Values.favorite }}\n\
+{{ indent 2 $key }}: {{ $val | quote }}\n\
+{{- end }}
+```
+
+The Dekorate Helm extension will replace the specified path with the provided expression.
+
+To provide your custom templates, you can add them into the folder `<input folder>/helm/templates/_helpers.tpl`, for example:
+
+```
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "foo.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 5 }}
+{{- end }}
+```
+
+And next, you can use this function using the Helm include primitive:
+
+```properties
+dekorate.helm.expressions[0].path=(kind == Service).metadata.annotations.'app.dekorate.io/build-timestamp'
+dekorate.helm.expressions[0].expression={{ include "foo.name" . }}
+```
+
+Moreover, you can specify your Helm templates to only a concrete kind resource, for example, only for Service resources. To do this, you need to add the resource `<input folder>/helm/templates/<kind>.yaml` (following the example `<input folder>/helm/templates/service.yaml`). For example, the following resource will add two template functions called "mychart.labels" and "mychart.not-used":
+
+```
+{{- define "mychart.labels" }}
+generator: helm
+{{- end }}
+{{- define "mychart.not-used" }}
+not:
+used: !
+{{- end }}
+```
+
+And let's use the template "mychart.labels":
+
+```properties
+dekorate.helm.expressions[0].path=(kind == Service).metadata.labels
+dekorate.helm.expressions[0].expression={{- template "mychart.labels" }}
+```
+
 #### Dependencies
 
 Sometimes, your application requires of some other services to work. The typical scenario is when your application needs of a database to store the application data in. In this scenario, you need to declare the database service as a [Helm dependency](https://helm.sh/docs/helm/helm_dependency/). For example, let's declare [the Postgres Bitnami Helm](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) dependency as database instance:

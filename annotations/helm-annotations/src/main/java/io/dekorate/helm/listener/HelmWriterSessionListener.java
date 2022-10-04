@@ -51,6 +51,7 @@ import io.dekorate.WithConfigReferences;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.helm.config.HelmChartConfig;
+import io.dekorate.helm.config.HelmExpression;
 import io.dekorate.helm.config.ValueReference;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
@@ -78,10 +79,18 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String OPENSHIFT_CLASSIFIER = "helmshift";
   private static final String OPENSHIFT = "openshift";
   private static final String KIND = "kind";
-  private static final String VALUES_START_TAG = "{{ .Values.";
-  private static final String VALUES_END_TAG = " }}";
+  private static final String START_TAG = "{{";
+  private static final String END_TAG = "}}";
+  private static final String VALUES_START_TAG = START_TAG + " .Values.";
+  private static final String VALUES_END_TAG = " " + END_TAG;
   private static final String EMPTY = "";
+  private static final String TEMPLATE_FUNCTION_START_TAG = "{{- define";
+  private static final String TEMPLATE_FUNCTION_END_TAG = "{{- end }}";
+  private static final String HELM_HELPER_PREFIX = "_";
   private static final boolean APPEND = true;
+  private static final String SEPARATOR_TOKEN = ":LINE_SEPARATOR:";
+  private static final String START_EXPRESSION_TOKEN = "\":START:";
+  private static final String END_EXPRESSION_TOKEN = ":END:\"";
   private static final Logger LOGGER = LoggerFactory.getLogger();
 
   /**
@@ -127,7 +136,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
         Map<String, Object> prodValues = new HashMap<>();
         Map<String, Map<String, Object>> valuesByProfile = new HashMap<>();
-        artifacts.putAll(processSourceFiles(helmConfig, outputDir, generatedFiles, valuesReferences, prodValues,
+        artifacts.putAll(processTemplates(helmConfig, inputDir, outputDir, generatedFiles, valuesReferences, prodValues,
             valuesByProfile));
         artifacts.putAll(createChartYaml(helmConfig, project, outputDir));
         artifacts.putAll(createValuesYaml(helmConfig, valuesReferences, inputDir, outputDir, prodValues, valuesByProfile));
@@ -365,8 +374,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return helmConfig.getVersion();
   }
 
-  private Map<String, String> processSourceFiles(HelmChartConfig helmConfig, Path outputDir, Collection<File> generatedFiles,
-      List<ConfigReference> valuesReferences, Map<String, Object> prodValues,
+  private Map<String, String> processTemplates(HelmChartConfig helmConfig, Path inputDir, Path outputDir,
+      Collection<File> generatedFiles, List<ConfigReference> valuesReferences, Map<String, Object> prodValues,
       Map<String, Map<String, Object>> valuesByProfile) throws IOException {
 
     Map<String, String> templates = new HashMap<>();
@@ -374,23 +383,78 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Files.createDirectories(templatesDir);
     List<Map<Object, Object>> resources = replaceValuesInYamls(helmConfig, generatedFiles, valuesReferences, prodValues,
         valuesByProfile);
+    Map<String, String> functionsByResource = processUserDefinedTemplates(inputDir, templates, templatesDir);
     // Split yamls in separated files by kind
     for (Map<Object, Object> resource : resources) {
+      // Add user defined expressions
+      if (helmConfig.getExpressions() != null) {
+        HelmExpressionParser parser = new HelmExpressionParser(Arrays.asList(resource));
+        for (HelmExpression expressionConfig : helmConfig.getExpressions()) {
+          if (expressionConfig.getPath() != null && expressionConfig.getExpression() != null) {
+            readAndSet(parser, expressionConfig.getPath(), expressionConfig.getExpression());
+          }
+        }
+      }
+
       String kind = (String) resource.get(KIND);
       Path targetFile = templatesDir.resolve(kind.toLowerCase() + YAML);
+      String functions = functionsByResource.get(kind.toLowerCase() + YAML);
 
       // Adapt the values tag to Helm standards:
-      String adaptedString = Serialization.yamlMapper().writeValueAsString(resource)
-          .replaceAll(Pattern.quote("\"" + VALUES_START_TAG), VALUES_START_TAG)
-          .replaceAll(Pattern.quote(VALUES_END_TAG + "\""), VALUES_END_TAG)
+      String adaptedString = Serialization.yamlMapper().writeValueAsString(resource);
+      if (functions != null) {
+        adaptedString = functions + System.lineSeparator() + adaptedString;
+      }
+
+      adaptedString = adaptedString
+          .replaceAll(Pattern.quote("\"" + START_TAG), START_TAG)
+          .replaceAll(Pattern.quote(END_TAG + "\""), END_TAG)
+          .replaceAll(Pattern.quote("\\\""), "\"")
+          .replaceAll(SEPARATOR_TOKEN, System.lineSeparator())
+          .replaceAll(Pattern.quote("\"" + START_EXPRESSION_TOKEN), EMPTY)
+          .replaceAll(Pattern.quote(END_EXPRESSION_TOKEN + "\""), EMPTY)
           // replace randomly escape characters that is entered by Jackson readTree method:
-          .replaceAll("\\\\\\n(\\s)*\\\\(\\s)*}}", " }}");
+          .replaceAll("\\\\\\n(\\s)*\\\\", EMPTY);
 
       writeFile(adaptedString, targetFile);
       templates.put(targetFile.toString(), adaptedString);
     }
 
     return templates;
+  }
+
+  private Map<String, String> processUserDefinedTemplates(Path inputDir, Map<String, String> templates, Path templatesDir)
+      throws IOException {
+    Map<String, String> functionsByResource = new HashMap<>();
+
+    File inputTemplates = inputDir.resolve(TEMPLATES).toFile();
+    if (inputTemplates.exists()) {
+      File[] userTemplates = inputTemplates.listFiles();
+      for (File userTemplateFile : userTemplates) {
+        if (userTemplateFile.getName().startsWith(HELM_HELPER_PREFIX)) {
+          // it's a helper Helm file, include as it is
+          Path output = templatesDir.resolve(userTemplateFile.getName());
+          Files.copy(new FileInputStream(userTemplateFile), output);
+          templates.put(output.toString(), EMPTY);
+        } else {
+          // it's a resource template, let's extract only the template functions and include
+          // it into the generated file later.
+          String[] userResource = Strings.read(new FileInputStream(userTemplateFile)).split(System.lineSeparator());
+
+          StringBuilder sb = new StringBuilder();
+          boolean isFunction = false;
+          for (String lineUserResource : userResource) {
+            if (lineUserResource.contains(TEMPLATE_FUNCTION_START_TAG) || isFunction) {
+              isFunction = !lineUserResource.contains(TEMPLATE_FUNCTION_END_TAG);
+              sb.append(lineUserResource + System.lineSeparator());
+            }
+          }
+
+          functionsByResource.put(userTemplateFile.getName(), sb.toString());
+        }
+      }
+    }
+    return functionsByResource;
   }
 
   private List<Map<Object, Object>> replaceValuesInYamls(HelmChartConfig helmConfig,
@@ -421,7 +485,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
               .filter(Strings::isNotNullOrEmpty)
               .orElse(VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG);
 
-          Object found = parser.readAndSet(path, expression);
+          Object found = readAndSet(parser, path, expression);
 
           Object value = Optional.ofNullable(valueReference.getValue()).orElse(found);
           if (value != null) {
@@ -501,6 +565,12 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         .filter(File::isFile)
         .filter(f -> f.getName().toLowerCase().matches(YAML_REG_EXP))
         .collect(Collectors.toList());
+  }
+
+  private static Object readAndSet(HelmExpressionParser parser, String path, String expression) {
+    return parser.readAndSet(path, START_EXPRESSION_TOKEN +
+        expression.replaceAll(Pattern.quote(System.lineSeparator()), SEPARATOR_TOKEN) +
+        END_EXPRESSION_TOKEN);
   }
 
   private static Map<String, Object> toMultiValueMap(Map<String, Object> map) {

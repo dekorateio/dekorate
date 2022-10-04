@@ -1,0 +1,7 @@
+{{- define "mychart.labels" }}
+    generator: helm
+{{- end }}
+{{- define "mychart.not-used" }}
+not:
+  used: !
+{{- end }}
