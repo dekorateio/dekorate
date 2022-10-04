@@ -75,6 +75,7 @@ class HelmKubernetesExampleTest {
     // optional resources
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/LICENSE"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/README.md"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.schema.json"));
   }
 
   @Test

@@ -73,6 +73,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String NOTES = "NOTES.txt";
   private static final String README = "README.md";
   private static final String LICENSE = "LICENSE";
+  private static final String VALUES_SCHEMA_JSON = "values.schema.json";
   private static final String KUBERNETES_CLASSIFIER = "helm";
   private static final String OPENSHIFT_CLASSIFIER = "helmshift";
   private static final String OPENSHIFT = "openshift";
@@ -136,6 +137,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig, inputDir, outputDir));
         artifacts.putAll(addResourceIfExists(helmConfig, LICENSE, inputDir, outputDir));
         artifacts.putAll(addResourceIfExists(helmConfig, README, inputDir, outputDir));
+        artifacts.putAll(addResourceIfExists(helmConfig, VALUES_SCHEMA_JSON, inputDir, outputDir));
 
         // Final step: packaging
         if (helmConfig.isCreateTarFile()) {
