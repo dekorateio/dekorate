@@ -21,6 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import io.dekorate.kubernetes.annotation.ImagePullPolicy;
+import io.dekorate.kubernetes.annotation.Port;
+import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
@@ -40,5 +42,15 @@ public @interface Kind {
    * @return The image pull policy.
    */
   ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
+
+  /**
+   * The application ports.
+   */
+  Port[] ports() default {};
+
+  /**
+   * The type of service that will be generated for the application.
+   */
+  ServiceType serviceType() default ServiceType.NodePort;
 
 }
