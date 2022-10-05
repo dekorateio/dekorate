@@ -56,12 +56,13 @@ import io.dekorate.helm.config.ValueReference;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
-import io.dekorate.helm.util.HelmExpressionParser;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Exec;
 import io.dekorate.utils.Maps;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
+import io.github.yamlpath.YamlExpressionParser;
+import io.github.yamlpath.YamlPath;
 
 public class HelmWriterSessionListener implements SessionListener, WithProject, WithSession {
 
@@ -388,7 +389,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     for (Map<Object, Object> resource : resources) {
       // Add user defined expressions
       if (helmConfig.getExpressions() != null) {
-        HelmExpressionParser parser = new HelmExpressionParser(Arrays.asList(resource));
+        YamlExpressionParser parser = new YamlExpressionParser(Arrays.asList(resource));
         for (HelmExpression expressionConfig : helmConfig.getExpressions()) {
           if (expressionConfig.getPath() != null && expressionConfig.getExpression() != null) {
             readAndSet(parser, expressionConfig.getPath(), expressionConfig.getExpression());
@@ -469,11 +470,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         continue;
       }
 
-      // Yaml as map of resources
-      List<Map<Object, Object>> resources = Serialization.unmarshalAsListOfMaps(generatedFile.toPath());
-
       // Read helm expression parsers
-      HelmExpressionParser parser = new HelmExpressionParser(resources);
+      YamlExpressionParser parser = YamlPath.from(new FileInputStream(generatedFile));
 
       for (ConfigReference valueReference : valuesReferences) {
         String valueReferenceProperty = Strings
@@ -504,7 +502,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         }
       }
 
-      allResources.addAll(resources);
+      allResources.addAll(parser.getResources());
     }
 
     return allResources;
@@ -567,8 +565,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         .collect(Collectors.toList());
   }
 
-  private static Object readAndSet(HelmExpressionParser parser, String path, String expression) {
-    return parser.readAndSet(path, START_EXPRESSION_TOKEN +
+  private static Object readAndSet(YamlExpressionParser parser, String path, String expression) {
+    return parser.readSingleAndReplace(path, START_EXPRESSION_TOKEN +
         expression.replaceAll(Pattern.quote(System.lineSeparator()), SEPARATOR_TOKEN) +
         END_EXPRESSION_TOKEN);
   }
