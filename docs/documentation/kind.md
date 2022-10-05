@@ -38,7 +38,7 @@ This module can be added to the project using:
 </dependency>
 ```
 
-The `@Kind` annotation can be used in combination with `@KubernetesApplication`. In that case the `@Kind` configuration will be replaced by the one specified using `@KubernetesApplication`.
+The `@Kind` annotation can be used in combination with `@KubernetesApplication`. In that case the `@Kind` configuration will take precedence over the one specified using `@KubernetesApplication` in the generated Kind manifests.
 
 **REMINDER**: A complete reference on all the supported properties can be found in the [configuration options guide]({{site.baseurl}}/configuration-guide).
 
