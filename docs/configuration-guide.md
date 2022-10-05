@@ -126,6 +126,13 @@ The document is structured as follows.
 | dekorate.minikube.ports                               | Port[]                          | The application ports.                                            | {}                                                     |
 | dekorate.minikube.service-type                        | ServiceType                     | The type of service that will be generated for the application.   | io.dekorate.kubernetes.annotation.ServiceType.NodePort |
 
+### Kind
+
+| Property                                          | Type                            | Description                                                       | Default Value                                          |
+|-- ----------------------------------------------- | ------------------------------- | ----------------------------------------------------------------- | -----------------------                                |
+| dekorate.kind.image-pull-policy                   | ImagePullPolicy                 | Image pull policy.                                                | IfNotPresent                                           |
+| dekorate.kind.ports                               | Port[]                          | The application ports.                                            | {}                                                     |
+| dekorate.kind.service-type                        | ServiceType                     | The type of service that will be generated for the application.   | io.dekorate.kubernetes.annotation.ServiceType.NodePort |
 
 ### Global Types
 The section below describes all the available subtypes.

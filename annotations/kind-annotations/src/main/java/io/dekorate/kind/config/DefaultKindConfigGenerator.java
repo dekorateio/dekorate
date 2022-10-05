@@ -25,7 +25,7 @@ public class DefaultKindConfigGenerator implements KindConfigGenerator {
   public DefaultKindConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyKindImageAutoloadConfiguration());
-    add(new DefaultConfiguration<KindLoadConfig>(KindLoadConfig.newKindLoadConfigBuilderFromDefaults()));
+    add(new DefaultConfiguration<KindConfig>(KindConfig.newKindConfigBuilderFromDefaults()));
   }
 
   @Override

@@ -15,6 +15,9 @@
  */
 package io.dekorate.kind.apt;
 
+import static io.dekorate.kind.config.KindConfigGenerator.KIND;
+
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -22,28 +25,26 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import io.dekorate.Logger;
-import io.dekorate.LoggerFactory;
-import io.dekorate.doc.Description;
 import io.dekorate.kind.annotation.Kind;
 import io.dekorate.processor.AbstractAnnotationProcessor;
 
-@Description("Generates kubernetes manifests.")
 @SupportedAnnotationTypes("io.dekorate.kind.annotation.Kind")
 public class KindAnnotationProcessor extends AbstractAnnotationProcessor {
-
-  private final Logger LOGGER = LoggerFactory.getLogger();
 
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
       getSession().close();
       return true;
     }
+    Set<Element> mainClasses = new HashSet<>();
     for (TypeElement typeElement : annotations) {
       for (Element mainClass : roundEnv.getElementsAnnotatedWith(typeElement)) {
-        LOGGER.info("Found @Kind on: " + mainClass.toString());
-        process("kind", mainClass, Kind.class);
+        mainClasses.add(mainClass);
       }
+    }
+
+    for (Element mainClass : mainClasses) {
+      process(KIND, mainClass, Kind.class);
     }
     return false;
   }
