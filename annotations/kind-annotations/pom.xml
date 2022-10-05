@@ -43,7 +43,12 @@ limitations under the License.
       <artifactId>docker-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
-   <dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>kubernetes-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
       <scope>compile</scope>
@@ -60,7 +65,7 @@ limitations under the License.
       <artifactId>sundr-codegen-velocity</artifactId>
       <scope>compile</scope>
       <optional>true</optional>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>dekorate-templates</artifactId>
@@ -115,7 +120,7 @@ limitations under the License.
           </annotationProcessors>
         </configuration>
       </plugin>
-       <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>${version.maven-shade-plugin}</version>
@@ -138,7 +143,7 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/dekorate/kubernetes/annotation/**</include>
+                    <include>io/dekorate/kind/annotation/**</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
@@ -158,14 +163,14 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/dekorate/kubernetes/adapter/**</include>
-                    <include>io/dekorate/kubernetes/apt/**</include>
-                    <include>io/dekorate/kubernetes/config/**</include>
-                    <include>io/dekorate/kubernetes/configurator/**</include>
-                    <include>io/dekorate/kubernetes/decorator/**</include>
-                    <include>io/dekorate/kubernetes/manifest/**</include>
-                    <include>io/dekorate/kubernetes/hook/**</include>
-                    <include>io/dekorate/kubernetes/listener/**</include>
+                    <include>io/dekorate/kind/adapter/**</include>
+                    <include>io/dekorate/kind/apt/**</include>
+                    <include>io/dekorate/kind/config/**</include>
+                    <include>io/dekorate/kind/configurator/**</include>
+                    <include>io/dekorate/kind/decorator/**</include>
+                    <include>io/dekorate/kind/manifest/**</include>
+                    <include>io/dekorate/kind/hook/**</include>
+                    <include>io/dekorate/kind/listener/**</include>
                     <include>META-INF/services/*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
@@ -186,14 +191,14 @@ limitations under the License.
                 <filter>
                   <artifact>*:*</artifact>
                   <includes>
-                    <include>io/dekorate/kubernetes/adapter/**</include>
-                    <include>io/dekorate/kubernetes/annotation/**</include>
-                    <include>io/dekorate/kubernetes/config/**</include>
-                    <include>io/dekorate/kubernetes/configurator/**</include>
-                    <include>io/dekorate/kubernetes/decorator/**</include>
-                    <include>io/dekorate/kubernetes/manifest/**</include>
-                    <include>io/dekorate/kubernetes/hook/**</include>
-                    <include>io/dekorate/kubernetes/listener/**</include>
+                    <include>io/dekorate/kind/adapter/**</include>
+                    <include>io/dekorate/kind/annotation/**</include>
+                    <include>io/dekorate/kind/config/**</include>
+                    <include>io/dekorate/kind/configurator/**</include>
+                    <include>io/dekorate/kind/decorator/**</include>
+                    <include>io/dekorate/kind/manifest/**</include>
+                    <include>io/dekorate/kind/hook/**</include>
+                    <include>io/dekorate/kind/listener/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
@@ -203,6 +208,6 @@ limitations under the License.
           </execution>
         </executions>
       </plugin>
-   </plugins>
+    </plugins>
   </build>
 </project>

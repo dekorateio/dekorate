@@ -21,6 +21,8 @@
         url: /docs/openshift
       - title: Minikube
         url: /docs/minikube
+      - title: Kind
+        url: /docs/kind
       - title: Tekton
         url: /docs/tekton
       - title: Helm

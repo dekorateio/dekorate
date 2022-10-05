@@ -52,6 +52,7 @@
         <module>minikube-example-with-properties</module>
         <module>helm-on-kubernetes-example</module>
         <module>helm-on-openshift-example</module>
+        <module>kind-example</module>
       </modules>
     </profile>
     <profile>

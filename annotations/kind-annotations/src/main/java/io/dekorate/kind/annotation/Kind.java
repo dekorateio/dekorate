@@ -20,17 +20,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
-@Pojo(name = "KindLoadConfig", relativePath = "../config", autobox = true, mutable = true, superClass = BaseConfig.class, withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(name = "KindLoadConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
+@Pojo(name = "KindConfig", relativePath = "../config", autobox = true, mutable = true, superClass = BaseConfig.class, withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(name = "KindConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Kind {
 
   boolean enabled() default true;
+
+  /**
+   * Image pull policy.
+   *
+   * @return The image pull policy.
+   */
+  ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
 
 }
