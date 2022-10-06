@@ -4,6 +4,7 @@ env:
   MAVEN_ARGS: -B -e
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [closed]
     paths:
@@ -13,16 +14,18 @@ jobs:
   release:
     runs-on: ubuntu-latest
     name: release
-    if: ${{github.event.pull_request.merged == true}}
 
     steps:
       - uses: actions/checkout@v2
-      - uses: radcortez/project-metadata-action@master
+        name: Checkout 
+
+      - uses: radcortez/project-metadata-action@main
         name: Retrieve project metadata
         id: metadata
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           metadata-file-path: '.github/project.yml'
+          local-file: true
 
       - name: Setup Java
         uses: actions/setup-java@v2
@@ -39,8 +42,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-      - name: Setup jbang
-        run: curl -Ls https://sh.jbang.dev | bash -s - app setup
       - name: Maven release ${{steps.metadata.outputs.current-version}}
         run: |
           ./mvnw clean install -DskipTests
