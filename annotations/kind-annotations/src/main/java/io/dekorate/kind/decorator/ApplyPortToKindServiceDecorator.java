@@ -34,7 +34,7 @@ public class ApplyPortToKindServiceDecorator extends NamedResourceDecorator<Serv
 
   @Override
   public void andThenVisit(ServicePortFluent servicePort, ObjectMeta resourceMeta) {
-    if (port.getNodePort() > 0) {
+    if (port.getNodePort() != null && port.getNodePort() > 0) {
       servicePort.withNodePort(port.getNodePort());
     } else {
       servicePort.withNodePort(Ports.calculateNodePort(getName(), port));
