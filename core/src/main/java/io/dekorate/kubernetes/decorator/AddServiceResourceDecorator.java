@@ -19,6 +19,7 @@ package io.dekorate.kubernetes.decorator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -29,6 +30,7 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
+import io.dekorate.kubernetes.annotation.Protocol;
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Port;
@@ -81,9 +83,8 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
         .withName(port.getName())
         .withNewTargetPort(port.getContainerPort())
         .withPort(calculateHostPort(port));
-    if (port.getProtocol() != null) {
-      servicePortBuilder = servicePortBuilder.withProtocol(port.getProtocol().name());
-    }
+
+    servicePortBuilder = servicePortBuilder.withProtocol(Optional.ofNullable(port.getProtocol()).orElse(Protocol.TCP).name());
     if (isNodePort) {
       servicePortBuilder = servicePortBuilder.withNodePort(Ports.calculateNodePort(config.getName(), port));
     }
