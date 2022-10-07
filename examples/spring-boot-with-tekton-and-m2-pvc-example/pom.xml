@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-with-tekton-and-m2-pvc-example</artifactId>
-  <version>3.0.2</version>
+  <version>3.1-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot with Tekton and m2 PVC</name>
 
   <properties>

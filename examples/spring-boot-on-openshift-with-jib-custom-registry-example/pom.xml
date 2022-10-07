@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-on-openshift-with-jib-example</artifactId>
-  <version>3.0.2</version>
+  <version>3.1-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot on Openshift with Jib</name>
 
   <properties>

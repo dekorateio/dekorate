@@ -5,7 +5,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>dekorate-project</artifactId>
   <packaging>pom</packaging>
-  <version>3.0.2</version>
+  <version>3.1-SNAPSHOT</version>
   <name>Dekorate</name>
   <description>A collection of annotations and processors for Kubernetes</description>
 
@@ -354,7 +354,7 @@
             <dependency>
               <groupId>io.dekorate</groupId>
               <artifactId>dekorate-formatter</artifactId>
-              <version>3.0.2</version>
+              <version>3.1-SNAPSHOT</version>
             </dependency>
           </dependencies>
       </plugin>
