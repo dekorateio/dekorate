@@ -58,14 +58,31 @@
         <version>${version.properties-maven-plugin}</version>
         <executions>
           <execution>
+            <id>initialize-system-properties</id>
+            <phase>initialize</phase>
             <goals>
               <goal>set-system-properties</goal>
             </goals>
             <configuration>
               <properties>
                 <property>
-                  <name>dekorate.properties-profile</name>
+                  <name>dekorate.options.properties-profile</name>
                   <value>foo</value>
+                </property>
+              </properties>
+            </configuration>
+          </execution>
+          <execution>
+            <id>clear-system-properties</id>
+            <phase>install</phase>
+            <goals>
+              <goal>set-system-properties</goal>
+            </goals>
+            <configuration>
+              <properties>
+                <property>
+                  <name>dekorate.options.properties-profile</name>
+                  <value></value>
                 </property>
               </properties>
             </configuration>

@@ -18,29 +18,23 @@
 package io.dekorate.example;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.openshift.api.model.BuildConfig;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.dekorate.utils.Serialization;
+import io.fabric8.openshift.api.model.Route;
 
 class SpringBootOnOpenshiftTest {
 
   @Test
-  public void shouldHaveMatchingOutputImageAndTrigger() {
+  public void shouldHaveRouteExposeBecauseCustomPropertiesFileIsUsed() {
     KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
-    DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
-    BuildConfig b = findFirst(list, BuildConfig.class).orElseThrow(() -> new IllegalStateException());
-    assertNotNull(d);
-    assertNotNull(b);
-    assertTrue(d.getSpec().getTriggers().stream().filter(t -> t.getImageChangeParams().getFrom().getName().equals(b.getSpec().getOutput().getTo().getName())).findFirst().isPresent());
+    findFirst(list, Route.class).orElseThrow(() -> new IllegalStateException("Route was not generated!"));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
