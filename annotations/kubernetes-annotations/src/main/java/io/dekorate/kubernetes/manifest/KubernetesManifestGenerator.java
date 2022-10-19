@@ -28,6 +28,8 @@ import io.dekorate.kubernetes.config.Container;
 import io.dekorate.kubernetes.config.ContainerBuilder;
 import io.dekorate.kubernetes.config.EditableKubernetesConfig;
 import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.kubernetes.config.IngressRule;
+import io.dekorate.kubernetes.config.IngressRuleBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
@@ -138,11 +140,24 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
 
     Ports.getHttpPort(config).ifPresent(p -> {
       resourceRegistry.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
-      resourceRegistry.decorate(group, new AddIngressRuleDecorator(config.getName(), config.getIngress().getHost(), p));
+      resourceRegistry.decorate(group,
+          new AddIngressRuleDecorator(config, new IngressRuleBuilder()
+              .withHost(config.getIngress().getHost())
+              .withPath(p.getPath())
+              .withServicePortName(p.getName())
+              .withServicePortNumber(p.getHostPort()).build()));
     });
 
-    if (config.getIngress() != null && Strings.isNotNullOrEmpty(config.getIngress().getTlsSecretName())) {
-      resourceRegistry.decorate(group, new AddIngressTlsDecorator(config.getName(), config.getIngress()));
+    if (config.getIngress() != null) {
+      if (Strings.isNotNullOrEmpty(config.getIngress().getTlsSecretName())) {
+        resourceRegistry.decorate(group, new AddIngressTlsDecorator(config.getName(), config.getIngress()));
+      }
+
+      if (config.getIngress().getRules() != null) {
+        for (IngressRule ingressRule : config.getIngress().getRules()) {
+          resourceRegistry.decorate(group, new AddIngressRuleDecorator(config, ingressRule));
+        }
+      }
     }
 
     if (config.isHeadless()) {

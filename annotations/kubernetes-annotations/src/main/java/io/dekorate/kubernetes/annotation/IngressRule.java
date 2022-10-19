@@ -15,38 +15,40 @@
  */
 package io.dekorate.kubernetes.annotation;
 
-import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
 @Pojo(relativePath = "../config", autobox = true, mutable = true, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
-public @interface Ingress {
+public @interface IngressRule {
 
   /**
-   * The host under which the application is going to be exposed.
-   *
-   * @return The hostname.
+   * The host under which the rule is going to be used.
    */
-  String host() default "";
+  String host();
 
   /**
-   * Controls whether the application should be exposed via Ingress
+   * The path under which the rule is going to be used. Default is "/".
    */
-  boolean expose() default false;
+  String path() default "/";
 
   /**
-   * @return The name of the secret used to configure TLS.
+   * The path type strategy to use by the Ingress rule. Default is "Prefix".
    */
-  String tlsSecretName() default "";
+  String pathType() default "Prefix";
 
   /**
-   * @return The list of hosts to be included in the TLS certificate. By default, it will use the application host.
+   * The service name to be used by this Ingress rule. Default is the generated service name of the application.
    */
-  String[] tlsHosts() default {};
+  String serviceName() default "";
 
   /**
-   * Controls the generated ingress rules to be exposed as part of the Ingress resource.
+   * The service port name to be used by this Ingress rule. Default is the port name of the generated service
+   * of the application.
    */
-  IngressRule[] rules() default {};
+  String servicePortName() default "";
+
+  /**
+   * The service port number to be used by this Ingress rule. This is only used when the servicePortName is not set.
+   */
+  int servicePortNumber() default -1;
 
 }
