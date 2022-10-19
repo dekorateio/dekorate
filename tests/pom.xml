@@ -85,6 +85,7 @@
       <module>feat-kubernetes-emptydir-volumes</module>
       <module>issue-spring-boot-openshift-named-port</module>
       <module>issue-fetch-helm-dependencies</module>
+      <module>feat-1083-ingress-rules</module>
     </modules>
 
 </project>
