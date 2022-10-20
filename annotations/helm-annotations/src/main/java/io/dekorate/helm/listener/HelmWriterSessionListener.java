@@ -76,9 +76,6 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String README = "README.md";
   private static final String LICENSE = "LICENSE";
   private static final String VALUES_SCHEMA_JSON = "values.schema.json";
-  private static final String KUBERNETES_CLASSIFIER = "helm";
-  private static final String OPENSHIFT_CLASSIFIER = "helmshift";
-  private static final String OPENSHIFT = "openshift";
   private static final String KIND = "kind";
   private static final String START_TAG = "{{";
   private static final String END_TAG = "}}";
@@ -343,8 +340,11 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private Map<String, String> createTarball(HelmChartConfig helmConfig, Project project, Path outputDir,
       Map<String, String> artifacts) throws IOException {
 
-    File tarballFile = outputDir.resolve(String.format("%s-%s-%s.%s",
-        helmConfig.getName(), getVersion(helmConfig, project), getHelmClassifier(artifacts), helmConfig.getExtension()))
+    File tarballFile = outputDir.resolve(String.format("%s-%s%s.%s",
+        helmConfig.getName(),
+        getVersion(helmConfig, project),
+        Strings.isNullOrEmpty(helmConfig.getTarFileClassifier()) ? EMPTY : "-" + helmConfig.getTarFileClassifier(),
+        helmConfig.getExtension()))
         .toFile();
 
     LOGGER.debug(String.format("Creating Helm configuration Tarball: '%s'", tarballFile));
@@ -544,14 +544,6 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       writer.write(value);
       return Collections.singletonMap(file.toString(), value);
     }
-  }
-
-  private String getHelmClassifier(Map<String, String> artifacts) {
-    if (artifacts.keySet().stream().anyMatch(a -> a.contains(OPENSHIFT))) {
-      return OPENSHIFT_CLASSIFIER;
-    }
-
-    return KUBERNETES_CLASSIFIER;
   }
 
   private Path getChartOutputDir(HelmChartConfig helmConfig, Path outputDir) {

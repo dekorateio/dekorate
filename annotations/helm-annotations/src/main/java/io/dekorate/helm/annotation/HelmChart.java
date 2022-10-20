@@ -57,6 +57,8 @@ public @interface HelmChart {
 
   String extension() default "tar.gz";
 
+  String tarFileClassifier() default "";
+
   String notes() default "/NOTES.template.txt";
 
   String inputFolder() default "helm";
