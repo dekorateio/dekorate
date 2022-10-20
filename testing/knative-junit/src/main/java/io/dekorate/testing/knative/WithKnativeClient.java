@@ -26,7 +26,6 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import io.dekorate.DekorateException;
 import io.dekorate.testing.WithKubernetesClient;
 import io.fabric8.knative.client.KnativeClient;
-import io.fabric8.kubernetes.client.BaseClient;
 
 /**
  * Mixin for storing the knative client into the context.
@@ -87,7 +86,7 @@ public interface WithKnativeClient extends TestInstancePostProcessor, WithKubern
   default void closeKnativeClient(ExtensionContext context) {
     Object client = context.getStore(DEKORATE_STORE).remove(KNATIVE_CLIENT);
     if (client instanceof KnativeClient) {
-      ((BaseClient) client).close();
+      ((KnativeClient) client).close();
     }
   }
 
