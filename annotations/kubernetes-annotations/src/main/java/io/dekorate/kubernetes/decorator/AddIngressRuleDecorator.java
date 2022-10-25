@@ -15,12 +15,8 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.kubernetes.decorator.AddServiceResourceDecorator.distinct;
-
-import java.util.Arrays;
 import java.util.Optional;
 
-import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.IngressRule;
 import io.dekorate.kubernetes.config.Port;
 import io.dekorate.utils.Strings;
@@ -38,27 +34,24 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
   private static final String DEFAULT_PREFIX = "Prefix";
   private static final String DEFAULT_PATH = "/";
 
-  private final BaseConfig config;
+  private final Optional<Port> defaultHostPort;
   private final IngressRule rule;
 
-  public AddIngressRuleDecorator(BaseConfig config, IngressRule rule) {
-    super(config.getName());
-    this.config = config;
+  public AddIngressRuleDecorator(String name, Optional<Port> defaultHostPort, IngressRule rule) {
+    super(name);
+    this.defaultHostPort = defaultHostPort;
     this.rule = rule;
   }
 
   @Override
   public void andThenVisit(IngressSpecBuilder spec, ObjectMeta meta) {
-    Optional<Port> defaultHostPort = Arrays.asList(config.getPorts()).stream()
-        .filter(distinct(p -> p.getName()))
-        .findFirst();
     if (!spec.hasMatchingRule(existingRule -> Strings.equals(rule.getHost(), existingRule.getHost()))) {
       spec.addNewRule()
           .withHost(rule.getHost())
           .withNewHttp()
           .addNewPath()
-          .withPathType(Strings.defaultIfEmpty(rule.getPathType(), DEFAULT_PREFIX))
-          .withPath(Strings.defaultIfEmpty(rule.getPath(), DEFAULT_PATH))
+          .withPathType(pathType())
+          .withPath(path())
           .withNewBackend()
           .withNewService()
           .withName(serviceName())
@@ -75,6 +68,14 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
 
   private String serviceName() {
     return Strings.defaultIfEmpty(rule.getServiceName(), name);
+  }
+
+  private String path() {
+    return Strings.defaultIfEmpty(rule.getPath(), defaultHostPort.map(p -> p.getPath()).orElse(DEFAULT_PATH));
+  }
+
+  private String pathType() {
+    return Strings.defaultIfEmpty(rule.getPathType(), DEFAULT_PREFIX);
   }
 
   private ServiceBackendPort createPort(Optional<Port> defaultHostPort) {
@@ -111,8 +112,8 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
         if (!existingRule.hasHttp()) {
           existingRule.withNewHttp()
               .addNewPath()
-              .withPathType(Strings.defaultIfEmpty(rule.getPathType(), DEFAULT_PREFIX))
-              .withPath(Strings.defaultIfEmpty(rule.getPath(), DEFAULT_PATH))
+              .withPathType(pathType())
+              .withPath(path())
               .withNewBackend()
               .withNewService()
               .withName(serviceName())
@@ -120,11 +121,12 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
               .endService()
               .endBackend()
               .endPath().endHttp();
-        } else if (existingRule.getHttp().getPaths().stream().noneMatch(p -> Strings.equals(p.getPath(), rule.getPath()))) {
+        } else if (existingRule.getHttp().getPaths().stream()
+            .noneMatch(p -> Strings.equals(p.getPath(), path()) && Strings.equals(p.getPathType(), pathType()))) {
           existingRule.editHttp()
               .addNewPath()
-              .withPathType(Strings.defaultIfEmpty(rule.getPathType(), DEFAULT_PREFIX))
-              .withPath(Strings.defaultIfEmpty(rule.getPath(), DEFAULT_PATH))
+              .withPathType(pathType())
+              .withPath(path())
               .withNewBackend()
               .withNewService()
               .withName(serviceName())

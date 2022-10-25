@@ -15,6 +15,9 @@
  */
 package io.dekorate.kubernetes.manifest;
 
+import static io.dekorate.kubernetes.decorator.AddServiceResourceDecorator.distinct;
+
+import java.util.Arrays;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesManifestGenerator;
@@ -32,6 +35,7 @@ import io.dekorate.kubernetes.config.IngressRule;
 import io.dekorate.kubernetes.config.IngressRuleBuilder;
 import io.dekorate.kubernetes.config.KubernetesConfig;
 import io.dekorate.kubernetes.config.KubernetesConfigBuilder;
+import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.kubernetes.decorator.AddCommitIdAnnotationDecorator;
 import io.dekorate.kubernetes.decorator.AddIngressDecorator;
@@ -138,10 +142,14 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
       resourceRegistry.decorate(group, new AddServiceResourceDecorator(config));
     }
 
+    Optional<Port> defaultHostPort = Arrays.asList(config.getPorts()).stream()
+        .filter(distinct(p -> p.getName()))
+        .findFirst();
+
     Ports.getHttpPort(config).ifPresent(p -> {
       resourceRegistry.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
       resourceRegistry.decorate(group,
-          new AddIngressRuleDecorator(config, new IngressRuleBuilder()
+          new AddIngressRuleDecorator(config.getName(), defaultHostPort, new IngressRuleBuilder()
               .withHost(config.getIngress().getHost())
               .withPath(p.getPath())
               .withServicePortName(p.getName())
@@ -155,7 +163,7 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
 
       if (config.getIngress().getRules() != null) {
         for (IngressRule ingressRule : config.getIngress().getRules()) {
-          resourceRegistry.decorate(group, new AddIngressRuleDecorator(config, ingressRule));
+          resourceRegistry.decorate(group, new AddIngressRuleDecorator(config.getName(), defaultHostPort, ingressRule));
         }
       }
     }
