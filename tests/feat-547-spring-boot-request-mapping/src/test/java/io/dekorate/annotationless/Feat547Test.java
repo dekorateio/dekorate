@@ -16,6 +16,7 @@
 
 package io.dekorate.annotationless;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,6 +45,8 @@ public class Feat547Test {
     assertNotNull(c);
     assertTrue(c.getPorts().stream().filter(p -> "http".equals(p.getName())).findAny().isPresent());
     Ingress i = findFirst(list, Ingress.class).orElseThrow(() -> new IllegalStateException());
+    assertEquals(1, i.getSpec().getRules().size());
+    assertEquals(1, i.getSpec().getRules().get(0).getHttp().getPaths().size());
     assertTrue(i.getSpec().getRules().stream().flatMap(r -> r.getHttp().getPaths().stream())
         .anyMatch(p -> p.getPath().equals("/app")));
   }
