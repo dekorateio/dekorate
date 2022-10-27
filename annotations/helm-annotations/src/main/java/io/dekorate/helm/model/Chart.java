@@ -19,6 +19,7 @@ package io.dekorate.helm.model;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -26,13 +27,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents the <a href="https://github.com/helm/helm">Helm</a>
- * <a href="https://github.com/helm/helm/blob/v3.7.2/pkg/chart/metadata.go">Chart.yaml file</a>
+ * <a href="https://github.com/helm/helm/blob/v3.10.1/pkg/chart/metadata.go">Chart.yaml file</a>
  */
 @JsonInclude(NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Chart {
-  @JsonProperty
-  private String apiVersion;
   @JsonProperty
   private String name;
   @JsonProperty
@@ -50,7 +49,23 @@ public class Chart {
   @JsonProperty
   private String icon;
   @JsonProperty
+  private String apiVersion;
+  @JsonProperty
+  private String condition;
+  @JsonProperty
+  private String tags;
+  @JsonProperty
+  private String appVersion;
+  @JsonProperty
+  private Boolean deprecated;
+  @JsonProperty
+  private Map<String, String> annotations;
+  @JsonProperty
+  private String kubeVersion;
+  @JsonProperty
   private List<HelmDependency> dependencies;
+  @JsonProperty
+  private String type;
 
   public String getVersion() {
     return version;
@@ -104,6 +119,22 @@ public class Chart {
     return keywords;
   }
 
+  public String getCondition() {
+    return condition;
+  }
+
+  public void setCondition(String condition) {
+    this.condition = condition;
+  }
+
+  public String getTags() {
+    return tags;
+  }
+
+  public void setTags(String tags) {
+    this.tags = tags;
+  }
+
   public void setKeywords(List<String> keywords) {
     this.keywords = keywords;
   }
@@ -130,6 +161,46 @@ public class Chart {
 
   public void setIcon(String icon) {
     this.icon = icon;
+  }
+
+  public String getAppVersion() {
+    return appVersion;
+  }
+
+  public void setAppVersion(String appVersion) {
+    this.appVersion = appVersion;
+  }
+
+  public Boolean getDeprecated() {
+    return deprecated;
+  }
+
+  public void setDeprecated(Boolean deprecated) {
+    this.deprecated = deprecated;
+  }
+
+  public Map<String, String> getAnnotations() {
+    return annotations;
+  }
+
+  public void setAnnotations(Map<String, String> annotations) {
+    this.annotations = annotations;
+  }
+
+  public String getKubeVersion() {
+    return kubeVersion;
+  }
+
+  public void setKubeVersion(String kubeVersion) {
+    this.kubeVersion = kubeVersion;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   @Override

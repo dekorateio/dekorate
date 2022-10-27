@@ -37,21 +37,39 @@ public @interface HelmChart {
 
   String name();
 
-  String apiVersion() default "v2";
+  String home() default "";
 
-  String valuesRootAlias() default "app";
-
-  String description() default "";
+  String[] sources() default {};
 
   String version() default "";
 
-  String icon() default "";
-
-  String home() default "";
+  String description() default "";
 
   String[] keywords() default {};
 
-  String[] sources() default {};
+  Maintainer[] maintainers() default {};
+
+  String icon() default "";
+
+  String apiVersion() default "v2";
+
+  String condition() default "";
+
+  String tags() default "";
+
+  String appVersion() default "";
+
+  boolean deprecated() default false;
+
+  Annotation[] annotations() default {};
+
+  String kubeVersion() default "";
+
+  HelmDependency[] dependencies() default {};
+
+  String type() default "";
+
+  String valuesRootAlias() default "app";
 
   boolean createTarFile() default false;
 
@@ -64,10 +82,6 @@ public @interface HelmChart {
   String inputFolder() default "helm";
 
   String outputFolder() default "helm";
-
-  Maintainer[] maintainers() default {};
-
-  HelmDependency[] dependencies() default {};
 
   ValueReference[] values() default {};
 

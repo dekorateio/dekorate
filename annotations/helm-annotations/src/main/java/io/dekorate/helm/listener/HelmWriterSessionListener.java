@@ -50,6 +50,7 @@ import io.dekorate.SessionListener;
 import io.dekorate.WithConfigReferences;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
+import io.dekorate.helm.config.Annotation;
 import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.helm.config.HelmExpression;
 import io.dekorate.helm.config.ValueReference;
@@ -510,7 +511,6 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
   private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Project project, Path outputDir) throws IOException {
     final Chart chart = new Chart();
-    chart.setApiVersion(helmConfig.getApiVersion());
     chart.setName(helmConfig.getName());
     chart.setVersion(getVersion(helmConfig, project));
     chart.setDescription(helmConfig.getDescription());
@@ -520,6 +520,16 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         .map(m -> new Maintainer(m.getName(), m.getEmail(), m.getUrl()))
         .collect(Collectors.toList()));
     chart.setIcon(helmConfig.getIcon());
+    chart.setApiVersion(helmConfig.getApiVersion());
+    chart.setCondition(helmConfig.getCondition());
+    chart.setTags(helmConfig.getTags());
+    chart.setAppVersion(helmConfig.getAppVersion());
+    if (helmConfig.isDeprecated()) {
+      chart.setDeprecated(helmConfig.isDeprecated());
+    }
+    chart.setAnnotations(Arrays.stream(helmConfig.getAnnotations())
+        .collect(Collectors.toMap(Annotation::getKey, Annotation::getValue)));
+    chart.setKubeVersion(helmConfig.getKubeVersion());
     chart.setKeywords(Arrays.asList(helmConfig.getKeywords()));
     chart.setDependencies(Arrays.stream(helmConfig.getDependencies())
         .map(d -> new HelmDependency(d.getName(),
@@ -527,8 +537,10 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
             d.getVersion(),
             d.getRepository(),
             d.getCondition(),
-            d.getTags()))
+            d.getTags(),
+            d.isEnabled()))
         .collect(Collectors.toList()));
+    chart.setType(helmConfig.getType());
 
     Path yml = getChartOutputDir(helmConfig, outputDir).resolve(CHART_FILENAME).normalize();
     return writeFileAsYaml(chart, yml);
