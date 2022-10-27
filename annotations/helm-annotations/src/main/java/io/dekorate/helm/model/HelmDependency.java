@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents the <a href="https://github.com/helm/helm">Helm</a>
- * <a href="https://github.com/helm/helm/blob/v3.7.2/pkg/chart/dependency.go">Dependency object</a>
+ * <a href="https://github.com/helm/helm/blob/v3.10.1/pkg/chart/dependency.go">Dependency object</a>
  */
 @JsonInclude(NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,25 +40,32 @@ public class HelmDependency {
   private String repository;
 
   @JsonProperty
-  private String alias;
-
-  @JsonProperty
   private String condition;
 
   @JsonProperty
   private String[] tags;
 
+  @JsonProperty
+  private Boolean enabled;
+
+  @JsonProperty
+  private String alias;
+
   public HelmDependency() {
 
   }
 
-  public HelmDependency(String name, String alias, String version, String repository, String condition, String[] tags) {
+  public HelmDependency(String name, String alias, String version, String repository, String condition, String[] tags,
+      Boolean enabled) {
     this.name = name;
     this.alias = alias;
     this.version = version;
     this.repository = repository;
     this.condition = condition;
     this.tags = tags;
+    if (!enabled) {
+      this.enabled = false;
+    }
   }
 
   public String getName() {
@@ -107,5 +114,13 @@ public class HelmDependency {
 
   public void setTags(String[] tags) {
     this.tags = tags;
+  }
+
+  public Boolean getEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
   }
 }
