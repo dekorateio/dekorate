@@ -410,7 +410,7 @@ dekorate.helm.values[1].value=my_db_name
 
 The Dekorate Helm extension will check whether the property set in `dekorate.helm.values.xxx.property` starts with a dependency alias or name. If so, it will use directly the value set. Otherwise, it will interpret that the property is an application property and will add the prefix set in the property `dekorate.helm.values-root-alias` (default value is `app`).
 
-Alternatively, you can provide the properties of your dependency using your custom `values.yaml` file. You need to place this file at `src/main/helm` (the path is configurable using the property `dekorate.helm.inputFolder`).
+Alternatively, you can provide the properties of your dependency by providing the file `values.yaml` or the file `Chart.yaml` at `src/main/helm` (the path is configurable using the property `dekorate.helm.inputFolder`). Let's see an example:
 
 `src/main/helm/values.yaml`:
 ```yaml

@@ -1,0 +1,11 @@
+---
+name: my-chart-with-templates
+annotations:
+  links: |
+    - name: Source
+      url: https://github.com/quarkiverse/quarkus-helm
+    - name: Upstream Project
+      url: https://github.com/dekorateio/dekorate
+  type: app
+apiVersion: v2
+version: 0.1.3-SNAPSHOT

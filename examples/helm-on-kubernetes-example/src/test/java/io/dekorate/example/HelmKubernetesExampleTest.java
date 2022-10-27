@@ -80,6 +80,15 @@ class HelmKubernetesExampleTest {
   }
 
   @Test
+  public void chartsShouldContainExpectedData() throws IOException {
+    Map<String, Object> chart = read("/Chart.yaml", Map.class);
+    assertNotNull(chart, "Chart.yaml is null!");
+
+    assertNotNull(chart.containsKey("annotations"), "Does not contain `annotations` from the user Charts.yml!");
+    assertEquals(CHART_NAME, chart.get("name"), "The name was not replaced with the generated value!");
+  }
+
+  @Test
   public void valuesShouldContainExpectedData() throws IOException {
     Map<String, Object> values = read("/values.yaml", Map.class);
     assertNotNull(values, "Values is null!");
