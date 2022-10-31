@@ -123,6 +123,11 @@ limitations under the License.
               <goal>shade</goal>
             </goals>
             <configuration>
+              <archive>
+                <manifest>
+                  <addClasspath>true</addClasspath>
+                </manifest>
+              </archive>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>annotations</shadedClassifierName>
               <filters>
@@ -130,6 +135,7 @@ limitations under the License.
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/tekton/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
@@ -157,6 +163,7 @@ limitations under the License.
                     <include>io/dekorate/tekton/manifest/**</include>
                     <include>io/dekorate/tekton/util/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
               </filters>
