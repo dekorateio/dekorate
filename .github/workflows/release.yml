@@ -4,6 +4,7 @@ env:
   MAVEN_ARGS: -B -e
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [closed]
     paths:
@@ -13,16 +14,18 @@ jobs:
   release:
     runs-on: ubuntu-latest
     name: release
-    if: ${{github.event.pull_request.merged == true}}
 
     steps:
       - uses: actions/checkout@v2
-      - uses: radcortez/project-metadata-action@master
+        name: Checkout 
+
+      - uses: radcortez/project-metadata-action@main
         name: Retrieve project metadata
         id: metadata
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           metadata-file-path: '.github/project.yml'
+          local-file: true
 
       - name: Setup Java
         uses: actions/setup-java@v2
@@ -39,8 +42,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-      - name: Setup jbang
-        run: curl -Ls https://sh.jbang.dev | bash -s - app setup
       - name: Maven release ${{steps.metadata.outputs.current-version}}
         run: |
           ./mvnw clean install -DskipTests
@@ -53,7 +54,7 @@ jobs:
           # update examples and tests
           ./mvnw versions:set -DnewVersion=${{steps.metadata.outputs.next-version}} -Pwith-examples,with-tests -DgenerateBackupPoms=false -DoldVersion=* -DgroupId=* -DartifactId=*
           # update readme.md
-          docker run -v `pwd`:/ws --workdir=/ws -ti quay.io/jbangdev/jbang-action ./scripts/ChangeVersion.java readme.md io.dekorate 0.0.1 | tail -n +3 > readme.md.versionChanged
+          docker run -v `pwd`:/ws --workdir=/ws -i quay.io/jbangdev/jbang-action ./scripts/ChangeVersion.java readme.md io.dekorate ${{steps.metadata.outputs.next-version}} | tail -n +3 > readme.md.versionChanged
           mv readme.md.versionChanged readme.md
           git add readme.md
           # commit changes
