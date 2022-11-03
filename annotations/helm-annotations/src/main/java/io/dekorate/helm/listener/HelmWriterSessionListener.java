@@ -35,6 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -73,9 +74,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String TEMPLATES = "templates";
   private static final String CHARTS = "charts";
   private static final String NOTES = "NOTES.txt";
-  private static final String README = "README.md";
-  private static final String LICENSE = "LICENSE";
-  private static final String VALUES_SCHEMA_JSON = "values.schema.json";
+  private static final List<String> ADDITIONAL_CHART_FILES = Arrays.asList("README.md", "LICENSE", "values.schema.json",
+      "app-readme.md", "questions.yml", "questions.yaml", "requirements.yml", "requirements.yaml");
   private static final String KIND = "kind";
   private static final String START_TAG = "{{";
   private static final String END_TAG = "}}";
@@ -87,8 +87,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String HELM_HELPER_PREFIX = "_";
   private static final boolean APPEND = true;
   private static final String SEPARATOR_TOKEN = ":LINE_SEPARATOR:";
-  private static final String START_EXPRESSION_TOKEN = "\":START:";
-  private static final String END_EXPRESSION_TOKEN = ":END:\"";
+  private static final String SEPARATOR_QUOTES = ":DOUBLE_QUOTES";
+  private static final String START_EXPRESSION_TOKEN = ":START:";
+  private static final String END_EXPRESSION_TOKEN = ":END:";
   private static final Logger LOGGER = LoggerFactory.getLogger();
 
   /**
@@ -142,9 +143,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         // To follow Helm file structure standards:
         artifacts.putAll(createEmptyChartFolder(helmConfig, outputDir));
         artifacts.putAll(addNotesIntoTemplatesFolder(helmConfig, inputDir, outputDir));
-        artifacts.putAll(addResourceIfExists(helmConfig, LICENSE, inputDir, outputDir));
-        artifacts.putAll(addResourceIfExists(helmConfig, README, inputDir, outputDir));
-        artifacts.putAll(addResourceIfExists(helmConfig, VALUES_SCHEMA_JSON, inputDir, outputDir));
+        artifacts.putAll(addAdditionalResources(helmConfig, inputDir, outputDir));
 
         // Final step: packaging
         if (helmConfig.isCreateTarFile()) {
@@ -154,6 +153,24 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
       } catch (IOException e) {
         throw new RuntimeException("Error writing resources", e);
+      }
+    }
+
+    return artifacts;
+  }
+
+  private Map<String, String> addAdditionalResources(HelmChartConfig helmConfig, Path inputDir, Path outputDir)
+      throws IOException {
+    if (inputDir == null || !inputDir.toFile().exists()) {
+      return Collections.emptyMap();
+    }
+
+    Map<String, String> artifacts = new HashMap<>();
+    for (File resource : inputDir.toFile().listFiles()) {
+      if (ADDITIONAL_CHART_FILES.stream().anyMatch(resource.getName()::equalsIgnoreCase)) {
+        Path chartOutputDir = getChartOutputDir(helmConfig, outputDir).resolve(resource.getName());
+        Files.copy(new FileInputStream(resource), chartOutputDir);
+        artifacts.put(chartOutputDir.toString(), EMPTY);
       }
     }
 
@@ -180,18 +197,6 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     if (Strings.isNullOrEmpty(helmConfig.getName())) {
       throw new RuntimeException("Helm Chart name is required!");
     }
-  }
-
-  private Map<String, String> addResourceIfExists(HelmChartConfig helmConfig, String resourceName, Path inputDir,
-      Path outputDir) throws IOException {
-    File file = inputDir.resolve(resourceName).toFile();
-    if (!file.exists()) {
-      return Collections.emptyMap();
-    }
-
-    Path chartOutputDir = getChartOutputDir(helmConfig, outputDir).resolve(resourceName);
-    Files.copy(new FileInputStream(file), chartOutputDir);
-    return Collections.singletonMap(chartOutputDir.toString(), EMPTY);
   }
 
   private Map<String, String> addNotesIntoTemplatesFolder(HelmChartConfig helmConfig, Path inputDir, Path outputDir)
@@ -410,10 +415,10 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       adaptedString = adaptedString
           .replaceAll(Pattern.quote("\"" + START_TAG), START_TAG)
           .replaceAll(Pattern.quote(END_TAG + "\""), END_TAG)
-          .replaceAll(Pattern.quote("\\\""), "\"")
+          .replaceAll("\"" + START_EXPRESSION_TOKEN, EMPTY)
+          .replaceAll(END_EXPRESSION_TOKEN + "\"", EMPTY)
+          .replaceAll(SEPARATOR_QUOTES, "\"")
           .replaceAll(SEPARATOR_TOKEN, System.lineSeparator())
-          .replaceAll(Pattern.quote("\"" + START_EXPRESSION_TOKEN), EMPTY)
-          .replaceAll(Pattern.quote(END_EXPRESSION_TOKEN + "\""), EMPTY)
           // replace randomly escape characters that is entered by Jackson readTree method:
           .replaceAll("\\\\\\n(\\s)*\\\\", EMPTY);
 
@@ -472,10 +477,22 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
       // Read helm expression parsers
       YamlExpressionParser parser = YamlPath.from(new FileInputStream(generatedFile));
+      // Seen lookup by default values.yaml file.
+      Map<String, Object> seen = new HashMap<>();
 
       for (ConfigReference valueReference : valuesReferences) {
         String valueReferenceProperty = Strings
             .kebabToCamelCase(helmConfig.getValuesRootAlias() + "." + valueReference.getProperty());
+
+        if (seen.containsKey(valueReference.getProperty())) {
+          if (Strings.isNotNullOrEmpty(valueReference.getProfile())) {
+            Object value = Optional.ofNullable(valueReference.getValue())
+                .orElse(seen.get(valueReference.getProperty()));
+            getValues(prodValues, valuesByProfile, valueReference).put(valueReferenceProperty, value);
+          }
+
+          continue;
+        }
 
         // Check whether path exists
         for (String path : valueReference.getPaths()) {
@@ -487,17 +504,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
           Object value = Optional.ofNullable(valueReference.getValue()).orElse(found);
           if (value != null) {
-            String valueProfile = valueReference.getProfile();
-            Map<String, Object> values = prodValues;
-            if (Strings.isNotNullOrEmpty(valueProfile)) {
-              values = valuesByProfile.get(valueProfile);
-              if (values == null) {
-                values = new HashMap<>();
-                valuesByProfile.put(valueProfile, values);
-              }
-            }
-
-            values.put(valueReferenceProperty, value);
+            seen.put(valueReference.getProperty(), value);
+            getValues(prodValues, valuesByProfile, valueReference).put(valueReferenceProperty, value);
           }
         }
       }
@@ -506,6 +514,21 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
 
     return allResources;
+  }
+
+  private Map<String, Object> getValues(Map<String, Object> prodValues, Map<String, Map<String, Object>> valuesByProfile,
+      ConfigReference valueReference) {
+    String valueProfile = valueReference.getProfile();
+    Map<String, Object> values = prodValues;
+    if (Strings.isNotNullOrEmpty(valueProfile)) {
+      values = valuesByProfile.get(valueProfile);
+      if (values == null) {
+        values = new HashMap<>();
+        valuesByProfile.put(valueProfile, values);
+      }
+    }
+
+    return values;
   }
 
   private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Project project, Path inputDir, Path outputDir)
@@ -577,9 +600,11 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   }
 
   private static Object readAndSet(YamlExpressionParser parser, String path, String expression) {
-    return parser.readSingleAndReplace(path, START_EXPRESSION_TOKEN +
-        expression.replaceAll(Pattern.quote(System.lineSeparator()), SEPARATOR_TOKEN) +
-        END_EXPRESSION_TOKEN);
+    Set<Object> found = parser.readAndReplace(path, START_EXPRESSION_TOKEN +
+        expression.replaceAll(Pattern.quote(System.lineSeparator()), SEPARATOR_TOKEN)
+            .replaceAll(Pattern.quote("\""), SEPARATOR_QUOTES)
+        + END_EXPRESSION_TOKEN);
+    return found.stream().findFirst().orElse(null);
   }
 
   private static Map<String, Object> toMultiValueMap(Map<String, Object> map) {
