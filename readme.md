@@ -1,4 +1,3 @@
-![dekorate logo](assets/images/logo.png "Dekorate") 
 
 ![Build](https://github.com/dekorateio/dekorate/actions/workflows/build.yml/badge.svg)
 ![Integration Tests](https://github.com/dekorateio/dekorate/actions/workflows/integration-tests.yml/badge.svg)
