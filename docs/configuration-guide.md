@@ -409,7 +409,6 @@ The section below describes all the available subtypes.
 | dekorate.jib.group               | String  | The group of the application. This value will be use as image user.                                                                             |               |
 | dekorate.jib.name                | String  | The name of the application. This value will be used as name.                                                                                   |               |
 | dekorate.jib.version             | String  | The version of the application. This value be used as image tag.                                                                                |               |
-| dekorate.jib.image               | String  |                                                                                                                                                 |               |
 | dekorate.jib.image               | String  | The name of the image to be generated. This property overrides group, name and version.                                                         |               |
 | dekorate.jib.docker-build        | boolean | Flag that indicates whether to perform a docker build (build using the docker daemon) or not.                                                   | true          |
 | dekorate.jib.from                | String  | The base image to use.                                                                                                                          | openjdk:8-jdk |

@@ -26,7 +26,7 @@ When the project gets compiled, the annotation will trigger the generation of a 
 will end up under 'target/classes/META-INF/dekorate'.
 
 The annotation comes with a lot of parameters, which can be used in order to customize the `Deployment` and/or trigger
-the generations of addition resources, like `Service` and `Ingress`.
+the generations of additional resources, like `Service` and `Ingress`.
 
 
 #### Adding the kubernetes annotation processor to the classpath
