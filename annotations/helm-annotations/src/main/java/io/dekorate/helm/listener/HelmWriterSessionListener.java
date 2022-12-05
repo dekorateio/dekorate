@@ -242,13 +242,12 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private List<ConfigReference> mergeValuesReferencesFromDecorators(List<ConfigReference> configReferencesFromConfig,
       Session session) {
     List<ConfigReference> configReferences = new LinkedList<>();
+    // From user
+    configReferences.addAll(configReferencesFromConfig);
     // From decorators
     for (WithConfigReferences decorator : session.getResourceRegistry().getConfigReferences()) {
       configReferences.addAll(decorator.getConfigReferences());
     }
-
-    // From user
-    configReferences.addAll(configReferencesFromConfig);
 
     return configReferences;
   }
