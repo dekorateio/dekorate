@@ -50,6 +50,7 @@ import io.dekorate.SessionListener;
 import io.dekorate.WithConfigReferences;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
+import io.dekorate.helm.config.AddIfStatement;
 import io.dekorate.helm.config.Annotation;
 import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.helm.config.HelmExpression;
@@ -77,11 +78,14 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final List<String> ADDITIONAL_CHART_FILES = Arrays.asList("README.md", "LICENSE", "values.schema.json",
       "app-readme.md", "questions.yml", "questions.yaml", "requirements.yml", "requirements.yaml");
   private static final String KIND = "kind";
+  private static final String METADATA = "metadata";
+  private static final String NAME = "name";
   private static final String START_TAG = "{{";
   private static final String END_TAG = "}}";
   private static final String VALUES_START_TAG = START_TAG + " .Values.";
   private static final String VALUES_END_TAG = " " + END_TAG;
   private static final String EMPTY = "";
+  private static final String IF_STATEMENT_START_TAG = "{{- if .Values.%s }}";
   private static final String TEMPLATE_FUNCTION_START_TAG = "{{- define";
   private static final String TEMPLATE_FUNCTION_END_TAG = "{{- end }}";
   private static final String HELM_HELPER_PREFIX = "_";
@@ -129,7 +133,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
       validateHelmConfig(helmConfig);
-      List<ConfigReference> valuesReferences = mergeValuesReferencesFromDecorators(configReferences, session);
+      List<ConfigReference> valuesReferences = mergeValuesReferencesFromDecorators(configReferences,
+          helmConfig.getAddIfStatements(), session);
 
       try {
         LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
@@ -240,10 +245,14 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   }
 
   private List<ConfigReference> mergeValuesReferencesFromDecorators(List<ConfigReference> configReferencesFromConfig,
-      Session session) {
+      AddIfStatement[] addIfStatements, Session session) {
     List<ConfigReference> configReferences = new LinkedList<>();
     // From user
     configReferences.addAll(configReferencesFromConfig);
+    // From if statements: these are boolean values
+    for (AddIfStatement addIfStatement : addIfStatements) {
+      configReferences.add(new ConfigReference(addIfStatement.getProperty(), null, addIfStatement.getWithDefaultValue()));
+    }
     // From decorators
     for (WithConfigReferences decorator : session.getResourceRegistry().getConfigReferences()) {
       configReferences.addAll(decorator.getConfigReferences());
@@ -275,12 +284,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
               + "either a path or a default value. ");
         }
 
-        String property = value.getProperty();
-        if (!startWithDependencyPrefix(value.getProperty(), helmConfig.getDependencies())) {
-          property = helmConfig.getValuesRootAlias() + "." + value.getProperty();
-        }
-
-        prodValues.put(Strings.kebabToCamelCase(property), value.getValue());
+        prodValues.put(deductProperty(helmConfig, value.getProperty()), value.getValue());
       }
     }
 
@@ -307,6 +311,14 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         getChartOutputDir(helmConfig, outputDir).resolve(VALUES + YAML)));
 
     return artifacts;
+  }
+
+  private String deductProperty(HelmChartConfig helmConfig, String property) {
+    if (!startWithDependencyPrefix(property, helmConfig.getDependencies())) {
+      property = helmConfig.getValuesRootAlias() + "." + property;
+    }
+
+    return Strings.kebabToCamelCase(property);
   }
 
   private Map<String, Object> mergeWithFileIfExists(Path inputDir, String file, Map<String, Object> data) {
@@ -411,6 +423,22 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         adaptedString = functions + System.lineSeparator() + adaptedString;
       }
 
+      // Add if statements at resource level
+      for (AddIfStatement addIfStatement : helmConfig.getAddIfStatements()) {
+        if ((Strings.isNullOrEmpty(addIfStatement.getOnResourceKind())
+            || Strings.equals(addIfStatement.getOnResourceKind(), kind))
+            && (Strings.isNullOrEmpty(addIfStatement.getOnResourceName())
+                || Strings.equals(addIfStatement.getOnResourceName(), getNameFromResource(resource)))) {
+
+          adaptedString = String.format(IF_STATEMENT_START_TAG, deductProperty(helmConfig, addIfStatement.getProperty()))
+              + System.lineSeparator()
+              + adaptedString
+              + System.lineSeparator()
+              + TEMPLATE_FUNCTION_END_TAG
+              + System.lineSeparator();
+        }
+      }
+
       adaptedString = adaptedString
           .replaceAll(Pattern.quote("\"" + START_TAG), START_TAG)
           .replaceAll(Pattern.quote(END_TAG + "\""), END_TAG)
@@ -426,6 +454,18 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
 
     return templates;
+  }
+
+  private String getNameFromResource(Map<Object, Object> resource) {
+    Object metadata = resource.get(METADATA);
+    if (metadata != null && metadata instanceof Map) {
+      Object name = ((Map) metadata).get(NAME);
+      if (name != null) {
+        return name.toString();
+      }
+    }
+
+    return null;
   }
 
   private Map<String, String> processUserDefinedTemplates(Path inputDir, Map<String, String> templates, Path templatesDir)

@@ -86,4 +86,6 @@ public @interface HelmChart {
   ValueReference[] values() default {};
 
   HelmExpression[] expressions() default {};
+
+  AddIfStatement[] addIfStatements() default {};
 }
