@@ -1,3 +1,4 @@
+{{- if .Values.app.ingress.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -20,3 +21,5 @@ spec:
                   name: http
             path: {{ .Values.app.path | default '/' }}
             pathType: Prefix
+
+{{- end }}
