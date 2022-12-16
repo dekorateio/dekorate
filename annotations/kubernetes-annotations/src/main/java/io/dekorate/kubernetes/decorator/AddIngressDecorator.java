@@ -60,6 +60,7 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
         .withLabels(allLabels)
         .endMetadata()
         .withNewSpec()
+        .withIngressClassName(Strings.defaultIfEmpty(config.getIngress().getIngressClassName(), null))
         .addNewRule()
         .withHost(config.getIngress().getHost())
         .withNewHttp()
