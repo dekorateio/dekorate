@@ -30,6 +30,13 @@ public @interface Ingress {
   String host() default "";
 
   /**
+   * The class of the Ingress. If the ingressClassName is omitted, a default Ingress class is used.
+   *
+   * @return The class of the Ingress.
+   */
+  String ingressClassName() default "";
+
+  /**
    * Controls whether the application should be exposed via Ingress
    */
   boolean expose() default false;
