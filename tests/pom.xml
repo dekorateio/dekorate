@@ -86,6 +86,7 @@
       <module>issue-spring-boot-openshift-named-port</module>
       <module>issue-fetch-helm-dependencies</module>
       <module>feat-1083-ingress-rules</module>
+      <module>issue-existing-route-resource</module>
     </modules>
 
 </project>
