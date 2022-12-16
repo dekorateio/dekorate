@@ -45,7 +45,10 @@ import io.dekorate.openshift.OpenshiftLabels;
 import io.dekorate.openshift.config.EditableOpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigBuilder;
+import io.dekorate.openshift.decorator.AddHostToRouteDecorator;
+import io.dekorate.openshift.decorator.AddPortToRouteDecorator;
 import io.dekorate.openshift.decorator.AddRouteDecorator;
+import io.dekorate.openshift.decorator.AddServiceToRouteDecorator;
 import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasToDeploymentConfigDecorator;
 import io.dekorate.option.config.VcsConfig;
@@ -122,6 +125,9 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenera
     resourceRegistry.decorate(group,
         new ApplyDeploymentTriggerDecorator(config.getName(), imageConfig.getName() + ":" + imageConfig.getVersion()));
     resourceRegistry.decorate(group, new AddRouteDecorator(config));
+    resourceRegistry.decorate(group, new AddHostToRouteDecorator(config));
+    resourceRegistry.decorate(group, new AddPortToRouteDecorator(config));
+    resourceRegistry.decorate(group, new AddServiceToRouteDecorator(config));
 
     if (config.hasAttribute(RUNTIME_TYPE)) {
       resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(),

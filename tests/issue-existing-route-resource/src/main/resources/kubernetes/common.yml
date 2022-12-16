@@ -1,0 +1,8 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: issue-existitng-route-resource
+spec:
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

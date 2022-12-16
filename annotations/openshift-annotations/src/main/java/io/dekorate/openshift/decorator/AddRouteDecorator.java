@@ -16,24 +16,19 @@
 
 package io.dekorate.openshift.decorator;
 
-import static io.dekorate.utils.Ports.getHttpPort;
-import static io.dekorate.utils.Ports.getPortByFilter;
-
-import java.util.Optional;
-
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.config.Port;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.utils.Labels;
-import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.openshift.api.model.RouteBuilder;
 
 @Description("Add a route to the list.")
 public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
+
+  public static final String KIND_ROUTE = "Route";
 
   private final OpenshiftConfig config;
 
@@ -46,47 +41,18 @@ public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesList
       return;
     }
 
-    Optional<Port> port = getNamedHttpPort(config);
-    if (!port.isPresent()) {
-      return;
-    }
-
-    if (contains(list, "route.openshift.io/v1", "Route", config.getName())) {
+    if (contains(list, "route.openshift.io/v1", KIND_ROUTE, config.getName())) {
       return;
     }
 
     list.addToItems(new RouteBuilder()
         .withNewMetadata()
         .withName(config.getName())
-        .withLabels(Labels.createLabelsAsMap(config, "Route"))
+        .withLabels(Labels.createLabelsAsMap(config, KIND_ROUTE))
         .endMetadata()
         .withNewSpec()
-        .withHost(config.getRoute().getHost())
-        .withPath(port.get().getPath())
-        .withNewTo()
-        .withKind("Service")
-        .withName(config.getName())
-        .endTo()
-        .withNewPort()
-        .withNewTargetPort(port.get().getName())
-        .endPort()
         .endSpec()
         .build());
-  }
-
-  private Optional<Port> getNamedHttpPort(OpenshiftConfig config) {
-    String namedPortName = config.getRoute().getTargetPort();
-    if (Strings.isNotNullOrEmpty(namedPortName)) {
-      Optional<Port> port = getPortByFilter(p -> Strings.equals(p.getName(), namedPortName), config);
-      if (port.isPresent()) {
-        return port;
-      }
-
-      // Set the named port to the one provided by the user even though it was not found in the configured ports.
-      return Optional.of(Port.newBuilder().withName(namedPortName).build());
-    }
-
-    return getHttpPort(config);
   }
 
   @Override
