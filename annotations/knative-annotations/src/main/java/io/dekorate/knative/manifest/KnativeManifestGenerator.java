@@ -145,7 +145,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
     resourceRegistry.decorate(KNATIVE, new AddCommitIdAnnotationDecorator());
 
     resourceRegistry.decorate(KNATIVE,
-        new ApplyPortNameDecorator(null, null,
+        new ApplyPortNameDecorator(config.getName(), null,
             config.getHttpTransportVersion() != null ? config.getHttpTransportVersion().name().toLowerCase() : "http1",
             Ports.webPortNames().toArray(new String[Ports.webPortNames().size()])));
     addDecorators(KNATIVE, config);

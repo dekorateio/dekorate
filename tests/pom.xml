@@ -88,6 +88,7 @@
       <module>feat-1083-ingress-rules</module>
       <module>issue-existing-route-resource</module>
       <module>feat-ingress-class-name</module>
+      <module>issue-knative-existing-deployment-resource</module>
     </modules>
 
 </project>
