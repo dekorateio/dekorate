@@ -19,10 +19,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
@@ -32,12 +37,10 @@ import io.dekorate.SessionReader;
 import io.dekorate.WithProject;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.KubernetesResourceMappingProvider;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
-import io.fabric8.kubernetes.internal.KubernetesDeserializer;
 
 public class AptReader implements SessionReader, WithProject {
 
@@ -53,24 +56,6 @@ public class AptReader implements SessionReader, WithProject {
     this.processingEnv = processingEnv;
     this.inputFileIncludePattern = Pattern.compile(INPUT_FILE_INCLUDE_REGEX);
     this.inputFileExcludePattern = Pattern.compile(INPUT_FILE_EXCLUDE_REGEX);
-    hack();
-  }
-
-  private void hack() {
-    // InternalResourceMappingProvider not loaded in FMP probably due to Kubernetes-Client collisions
-    StreamSupport
-        .stream(ServiceLoader.load(KubernetesResourceMappingProvider.class, AptReader.class.getClassLoader())
-            .spliterator(), false)
-        .map(KubernetesResourceMappingProvider::getMappings)
-        .map(Map::entrySet).flatMap(Set::stream)
-        .forEach(e -> {
-          if (e.getKey().contains("#")) {
-            final String[] apiKind = e.getKey().split("#");
-            KubernetesDeserializer.registerCustomKind(apiKind[0], apiKind[1], e.getValue());
-          } else {
-            KubernetesDeserializer.registerCustomKind(e.getKey(), e.getValue());
-          }
-        });
   }
 
   @Override
