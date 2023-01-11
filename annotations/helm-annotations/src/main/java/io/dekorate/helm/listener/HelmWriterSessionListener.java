@@ -47,7 +47,6 @@ import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
 import io.dekorate.Session;
 import io.dekorate.SessionListener;
-import io.dekorate.WithConfigReferences;
 import io.dekorate.WithProject;
 import io.dekorate.WithSession;
 import io.dekorate.helm.config.AddIfStatement;
@@ -253,10 +252,15 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     for (AddIfStatement addIfStatement : addIfStatements) {
       configReferences.add(new ConfigReference(addIfStatement.getProperty(), null, addIfStatement.getWithDefaultValue()));
     }
-    // From decorators
-    for (WithConfigReferences decorator : session.getResourceRegistry().getConfigReferences()) {
-      configReferences.addAll(decorator.getConfigReferences());
-    }
+    // From decorators: We need to reverse the order as the latest decorator was the latest applied and hence the one
+    // we should use.
+    List<ConfigReference> configReferencesFromDecorators = session.getResourceRegistry().getConfigReferences()
+        .stream()
+        .flatMap(decorator -> decorator.getConfigReferences().stream())
+        .collect(Collectors.toList());
+
+    Collections.reverse(configReferencesFromDecorators);
+    configReferences.addAll(configReferencesFromDecorators);
 
     return configReferences;
   }
