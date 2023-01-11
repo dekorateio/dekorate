@@ -106,7 +106,7 @@ class HelmKubernetesExampleTest {
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
     // Should contain vcs-url with the overridden value from properties
-    assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
+    assertEquals("Overridden", helmExampleValues.get("vcs-url"));
     // Should include health check properties:
     // 1. tcp socket action
     Map<String, Object> livenessValues = (Map<String, Object>) helmExampleValues.get("livenessProbe");
@@ -150,7 +150,7 @@ class HelmKubernetesExampleTest {
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
     // Should contain vcs-url with the value from properties
-    assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
+    assertEquals("Only for DEV!", helmExampleValues.get("vcs-url"));
     // Should contain ingress with the value from properties
     assertEquals("my-test-host", helmExampleValues.get("host"));
   }

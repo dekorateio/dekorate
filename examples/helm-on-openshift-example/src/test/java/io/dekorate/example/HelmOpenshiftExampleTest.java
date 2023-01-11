@@ -67,14 +67,14 @@ class HelmOpenshiftExampleTest {
     Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
     // Should contain s2i configuration
-    assertNotNull(helmExampleValues.get("s2iJava"));
-    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2iJava")).get("builderImage"));
+    assertNotNull(helmExampleValues.get("s2i-java"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2i-java")).get("builder-image"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
     // Should contain vcs-url with the overridden value from properties
-    assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
+    assertEquals("Overridden", helmExampleValues.get("vcs-url"));
   }
 
   @Test
@@ -87,13 +87,13 @@ class HelmOpenshiftExampleTest {
     Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
     // Should contain s2i configuration
-    assertNotNull(helmExampleValues.get("s2iJava"));
-    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2iJava")).get("builderImage"));
+    assertNotNull(helmExampleValues.get("s2i-java"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2i-java")).get("builder-image"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain not-found: as this property is ignored
     assertNull(helmExampleValues.get("not-found"));
     // Should contain vcs-url with the value from properties
-    assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
+    assertEquals("Only for DEV!", helmExampleValues.get("vcs-url"));
   }
 }
