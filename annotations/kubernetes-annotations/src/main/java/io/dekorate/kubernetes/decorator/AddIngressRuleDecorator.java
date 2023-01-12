@@ -66,6 +66,11 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
     }
   }
 
+  @Override
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { AddIngressDecorator.class };
+  }
+
   private String serviceName() {
     return Strings.defaultIfEmpty(rule.getServiceName(), name);
   }

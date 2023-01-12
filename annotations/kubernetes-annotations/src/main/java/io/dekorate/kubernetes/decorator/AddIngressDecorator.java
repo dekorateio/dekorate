@@ -16,19 +16,15 @@
 
 package io.dekorate.kubernetes.decorator;
 
-import static io.dekorate.utils.Ports.getHttpPort;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import io.dekorate.ConfigReference;
 import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.config.KubernetesConfig;
-import io.dekorate.kubernetes.config.Port;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.networking.v1.IngressBuilder;
@@ -45,15 +41,13 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
   }
 
   public void visit(KubernetesListBuilder list) {
-    Optional<Port> p = getHttpPort(config);
-    if (!p.isPresent() || !config.getIngress().isExpose()) {
+    if (!config.getIngress().isExpose()) {
       return;
     }
 
     if (contains(list, ANY, "Ingress", config.getName())) {
       return;
     }
-    Port port = p.get();
     list.addToItems(new IngressBuilder()
         .withNewMetadata()
         .withName(config.getName())
@@ -63,24 +57,6 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
         .withIngressClassName(Strings.defaultIfEmpty(config.getIngress().getIngressClassName(), null))
         .addNewRule()
         .withHost(config.getIngress().getHost())
-        .withNewHttp()
-        .addNewPath()
-        .withPathType("Prefix")
-        .withPath(Strings.isNotNullOrEmpty(port.getPath()) ? port.getPath() : "/")
-        .withNewBackend()
-        .withNewService()
-        .withName(config.getName())
-        .withNewPort()
-        .withName(port.getName())
-        // If we have a name we don't need to also specify the number.
-        .withNumber(
-            Strings.isNullOrEmpty(port.getName()) && port.getHostPort() != null && port.getHostPort() > 0 ? port.getHostPort()
-                : null)
-        .endPort()
-        .endService()
-        .endBackend()
-        .endPath()
-        .endHttp()
         .endRule()
         .endSpec()
         .build());

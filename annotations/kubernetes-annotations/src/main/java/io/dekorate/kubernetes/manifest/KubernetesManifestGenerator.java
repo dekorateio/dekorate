@@ -15,9 +15,6 @@
  */
 package io.dekorate.kubernetes.manifest;
 
-import static io.dekorate.kubernetes.decorator.AddServiceResourceDecorator.distinct;
-
-import java.util.Arrays;
 import java.util.Optional;
 
 import io.dekorate.AbstractKubernetesManifestGenerator;
@@ -142,18 +139,16 @@ public class KubernetesManifestGenerator extends AbstractKubernetesManifestGener
       resourceRegistry.decorate(group, new AddServiceResourceDecorator(config));
     }
 
-    Optional<Port> defaultHostPort = Arrays.asList(config.getPorts()).stream()
-        .filter(distinct(p -> p.getName()))
-        .findFirst();
-
-    Ports.getHttpPort(config).ifPresent(p -> {
-      resourceRegistry.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
+    resourceRegistry.decorate(group, new AddIngressDecorator(config, Labels.createLabelsAsMap(config, "Ingress")));
+    Optional<Port> defaultHostPort = Ports
+        .getPortByFilter(p -> Strings.equals(p.getName(), config.getIngress().getTargetPort()), config);
+    defaultHostPort.ifPresent(port -> {
       resourceRegistry.decorate(group,
           new AddIngressRuleDecorator(config.getName(), defaultHostPort, new IngressRuleBuilder()
               .withHost(config.getIngress().getHost())
-              .withPath(p.getPath())
-              .withServicePortName(p.getName())
-              .withServicePortNumber(p.getHostPort()).build()));
+              .withPath(port.getPath())
+              .withServicePortName(port.getName())
+              .withServicePortNumber(port.getHostPort()).build()));
     });
 
     if (config.getIngress() != null) {
