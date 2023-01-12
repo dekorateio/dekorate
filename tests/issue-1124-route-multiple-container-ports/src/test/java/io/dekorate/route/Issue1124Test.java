@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.dekorate.ingress;
+package io.dekorate.route;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Optional;
 
@@ -25,27 +26,19 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.networking.v1.HTTPIngressPath;
-import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
-import io.fabric8.kubernetes.api.model.networking.v1.IngressRule;
+import io.fabric8.openshift.api.model.Route;
 
-public class Issue1123Test {
+public class Issue1124Test {
 
   @Test
   public void shouldUseCorrectPort() {
     KubernetesList list = Serialization
-        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
-    Ingress i = findFirst(list, Ingress.class).orElseThrow(() -> new IllegalStateException());
+    Route i = findFirst(list, Route.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(i);
-    assertEquals(1, i.getSpec().getRules().size());
-    IngressRule rule = i.getSpec().getRules().get(0);
-    assertEquals(1, rule.getHttp().getPaths().size());
-    HTTPIngressPath path = rule.getHttp().getPaths().get(0);
-    assertEquals("/secured", path.getPath());
-    assertEquals("issue-1123-ingress-multiple-container-ports", path.getBackend().getService().getName());
-    // from `dekorate.kubernetes.ingress.target-port`
-    assertEquals("https", path.getBackend().getService().getPort().getName());
+    assertEquals("https", i.getSpec().getPort().getTargetPort().getStrVal());
+    assertEquals("/secured", i.getSpec().getPath());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

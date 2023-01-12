@@ -16,7 +16,6 @@
 
 package io.dekorate.openshift.decorator;
 
-import static io.dekorate.utils.Ports.getHttpPort;
 import static io.dekorate.utils.Ports.getPortByFilter;
 
 import java.util.Arrays;
@@ -45,35 +44,15 @@ public class AddPortToRouteDecorator extends NamedResourceDecorator<RouteSpecFlu
 
   @Override
   public void andThenVisit(RouteSpecFluent<?> spec, ObjectMeta resourceMeta) {
-    Optional<Port> port = getNamedHttpPort(config);
-    if (!port.isPresent()) {
-      return;
-    }
-
-    if (!spec.hasPath()) {
+    String targetPortName = config.getRoute().getTargetPort();
+    Optional<Port> port = getPortByFilter(p -> Strings.equals(p.getName(), targetPortName), config);
+    if (port.isPresent() && !spec.hasPath()) {
       spec.withPath(port.get().getPath());
     }
 
-    if (!spec.hasPort()) {
-      spec.editOrNewPort()
-          .withNewTargetPort(port.get().getName())
-          .endPort();
+    if (Strings.isNotNullOrEmpty(targetPortName) && !spec.hasPort()) {
+      spec.editOrNewPort().withNewTargetPort(targetPortName).endPort();
     }
-  }
-
-  private Optional<Port> getNamedHttpPort(OpenshiftConfig config) {
-    String namedPortName = config.getRoute().getTargetPort();
-    if (Strings.isNotNullOrEmpty(namedPortName)) {
-      Optional<Port> port = getPortByFilter(p -> Strings.equals(p.getName(), namedPortName), config);
-      if (port.isPresent()) {
-        return port;
-      }
-
-      // Set the named port to the one provided by the user even though it was not found in the configured ports.
-      return Optional.of(Port.newBuilder().withName(namedPortName).build());
-    }
-
-    return getHttpPort(config);
   }
 
   @Override
