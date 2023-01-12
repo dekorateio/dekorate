@@ -35,6 +35,6 @@ public @interface Route {
   /**
    * @return The target named port. If not provided, it will be deducted from the Service resource ports.
    */
-  String targetPort() default "";
+  String targetPort() default "http";
 
 }

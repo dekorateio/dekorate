@@ -90,6 +90,7 @@
       <module>feat-ingress-class-name</module>
       <module>issue-knative-existing-deployment-resource</module>
       <module>issue-1123-ingress-multiple-container-ports</module>
+      <module>issue-1124-route-multiple-container-ports</module>
     </modules>
 
 </project>
