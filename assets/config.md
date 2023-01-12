@@ -122,14 +122,15 @@ The section below describes all the available subtypes.
 
 #### Ingress
 
-| Property           | Type          | Description                                                                          | Default Value         |
-|--------------------|---------------|--------------------------------------------------------------------------------------|-----------------------|
-| expose             | boolean       | Controls whether the application should be exposed via Ingress.                      | false                 |
-| host               | String        | The host under which the application is going to be exposed.                         |                       |
-| ingressClassName   | String        | The class of the Ingress.                                                            |                       |
-| tlsSecretName      | String        | The name of the secret used to configure TLS                                         |                       |
-| tlsHosts           | String[]      | The list of hosts to be included in the TLS certificate                              | The application host  |
-| rules              | IngressRule[] | Controls the generated ingress rules to be exposed as part of the Ingress resource.  |                       |
+| Property           | Type          | Description                                                                                   | Default Value         |
+|--------------------|---------------|-----------------------------------------------------------------------------------------------|-----------------------|
+| expose             | boolean       | Controls whether the application should be exposed via Ingress.                               | false                 |
+| host               | String        | The host under which the application is going to be exposed.                                  |                       |
+| targetPort         | String        | The target named port. If not provided, it will be deducted from the Service resource ports.  | http                  |
+| ingressClassName   | String        | The class of the Ingress.                                                                     |                       |
+| tlsSecretName      | String        | The name of the secret used to configure TLS                                                  |                       |
+| tlsHosts           | String[]      | The list of hosts to be included in the TLS certificate                                       | The application host  |
+| rules              | IngressRule[] | Controls the generated ingress rules to be exposed as part of the Ingress resource.           |                       |
 
 #### IngressRule
 | Property             | Type     | Description                                                                                                        | Default Value |

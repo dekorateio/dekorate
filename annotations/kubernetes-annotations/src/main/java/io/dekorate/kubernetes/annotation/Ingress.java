@@ -37,6 +37,11 @@ public @interface Ingress {
   String ingressClassName() default "";
 
   /**
+   * @return The target port name to use. If not provided, it will be deducted from the Service resource ports.
+   */
+  String targetPort() default "http";
+
+  /**
    * Controls whether the application should be exposed via Ingress
    */
   boolean expose() default false;
