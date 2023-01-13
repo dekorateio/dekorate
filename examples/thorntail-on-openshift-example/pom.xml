@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>thorntail-on-openshift-example</artifactId>
-  <version>3.1-SNAPSHOT</version>
+  <version>3.2-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Thorntail on Openshift</name>
   <packaging>war</packaging>
 
