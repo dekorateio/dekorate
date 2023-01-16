@@ -11,7 +11,7 @@
   <name>Dekorate :: Annotations :: Helm</name>
 
   <properties>
-    <yaml-path.version>0.0.4</yaml-path.version>
+    <yaml-path.version>0.0.5</yaml-path.version>
   </properties>
 
   <dependencies>
