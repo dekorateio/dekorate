@@ -20,7 +20,7 @@ limitations under the License.
 
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-with-configmap-volume-example</artifactId>
-  <version>3.2-SNAPSHOT</version>
+  <version>3.3-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Kubernetes with configmap volume</name>
 
   <properties>

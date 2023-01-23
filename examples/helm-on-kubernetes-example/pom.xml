@@ -20,7 +20,7 @@ limitations under the License.
 
   <groupId>io.dekorate</groupId>
   <artifactId>helm-on-kubernetes-example</artifactId>
-  <version>3.2-SNAPSHOT</version>
+  <version>3.3-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Helm on Kubernetes</name>
 
   <properties>
