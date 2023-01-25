@@ -49,7 +49,7 @@ public class SimpleFileReader implements SessionReader {
 
   @Override
   public void read(Session session) {
-    LOGGER.info("Checking for existing resources in: " + path.toAbsolutePath().normalize().toString() + ".");
+    LOGGER.debug("Checking for existing resources in: " + path.toAbsolutePath().normalize().toString() + ".");
     findApplicableResources().forEach((k, v) -> {
       v.getItems().forEach(i -> {
         LOGGER.info("Adding existing " + i.getKind() + " with name: " + i.getMetadata().getName() + ".");
