@@ -18,15 +18,14 @@
 package io.dekorate.example;
 
 import io.dekorate.annotation.Dekorate;
-
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 
 @Dekorate
 public class Main extends AbstractVerticle {
 
   @Override
-  public void start(Future<Void> future) {
+  public void start(Promise future) {
     vertx
         .createHttpServer()
         .requestHandler(r -> {

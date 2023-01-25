@@ -14,7 +14,7 @@
     <java.version>1.8</java.version>
 
     <version.thorntail>2.5.0.Final</version.thorntail>
-    <version.jackson>2.12.3</version.jackson>
+    <version.maven-war-plugin>3.3.1</version.maven-war-plugin>
     <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
     <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
     <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
@@ -24,13 +24,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>${version.jackson}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
       <dependency>
         <groupId>io.thorntail</groupId>
         <artifactId>bom</artifactId>
@@ -53,6 +46,16 @@
       <groupId>io.thorntail</groupId>
       <artifactId>jaxrs</artifactId>
       <version>${version.thorntail}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.jaxrs</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>io.thorntail</groupId>
@@ -71,6 +74,10 @@
 
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${version.maven-war-plugin}</version>
+      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
