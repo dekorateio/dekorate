@@ -31,7 +31,7 @@ limitations under the License.
   <name>Dekorate :: Tests :: Probes :: OpenShift</name>
 
   <properties>
-    <version.vertx>3.8.2</version.vertx>
+    <version.vertx>4.3.7</version.vertx>
   </properties>
 
   <dependencies>
