@@ -58,7 +58,7 @@
     <version.commons-codec>1.10</version.commons-codec>
     <version.commons-compress>1.21</version.commons-compress>
     <version.jansi>1.18</version.jansi>
-    <version.jackson>2.12.3</version.jackson>
+    <version.jackson>2.14.1</version.jackson>
     <version.kubernetes-client>6.4.0</version.kubernetes-client>
     <version.sundrio>0.92.1</version.sundrio>
     <version.jayway.jsonpath>2.6.0</version.jayway.jsonpath>
@@ -69,7 +69,8 @@
     <version.assertj>3.11.1</version.assertj>
     <!-- Other Testing Dependencies (frameworks, tools, etc) -->
     <!-- Note: Dekorate DOES NOT depend on these, just some integration tests -->
-    <version.spring-boot>2.5.12</version.spring-boot>    <version.thorntail>2.5.0.Final</version.thorntail>
+    <version.spring-boot>2.5.12</version.spring-boot>
+    <version.thorntail>2.5.0.Final</version.thorntail>
 
     <!-- Plugins -->
     <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
