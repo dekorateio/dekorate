@@ -1,4 +1,3 @@
-
 Dekorate is a one-stop jar to Kubernetes manifest generation that works for all jvm languages regardless of your build tool.
 
 It makes generating Kubernetes manifests as easy as adding a dependency to the classpath.
