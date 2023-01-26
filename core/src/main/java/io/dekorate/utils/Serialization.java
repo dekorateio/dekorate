@@ -92,7 +92,7 @@ public class Serialization {
   }
 
   public static ObjectMapper createJsonMapper(String[] enabledFeatures, String[] disabledFeatures) {
-    return new ObjectMapper() {
+    ObjectMapper mapper = new ObjectMapper() {
       {
 
         for (String name : enabledFeatures) {
@@ -110,6 +110,8 @@ public class Serialization {
 
       }
     };
+    mapper.findAndRegisterModules();
+    return mapper;
   }
 
   private static final ObjectMapper JSON_MAPPER = createJsonMapper(new String[] { INDENT_OUTPUT },
