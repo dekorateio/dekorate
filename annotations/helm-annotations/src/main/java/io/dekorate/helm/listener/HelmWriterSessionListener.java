@@ -288,7 +288,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
               + "either a path or a default value. ");
         }
 
-        prodValues.put(deductProperty(helmConfig, value.getProperty()), value.getValue());
+        getValues(prodValues, valuesByProfile, value)
+            .put(deductProperty(helmConfig, value.getProperty()), value.getValue());
       }
     }
 
