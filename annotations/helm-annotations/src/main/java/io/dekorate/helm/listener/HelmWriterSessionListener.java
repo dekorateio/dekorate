@@ -132,8 +132,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
       validateHelmConfig(helmConfig);
-      List<ConfigReference> valuesReferences = mergeValuesReferencesFromDecorators(configReferences,
-          helmConfig.getAddIfStatements(), session);
+      List<ConfigReference> valuesReferences = mergeValuesReferencesFromDecorators(helmConfig, configReferences, session);
 
       try {
         LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
@@ -243,14 +242,15 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return Collections.singletonMap(emptyChartsDir.toString(), EMPTY);
   }
 
-  private List<ConfigReference> mergeValuesReferencesFromDecorators(List<ConfigReference> configReferencesFromConfig,
-      AddIfStatement[] addIfStatements, Session session) {
+  private List<ConfigReference> mergeValuesReferencesFromDecorators(HelmChartConfig helmConfig,
+      List<ConfigReference> configReferencesFromConfig, Session session) {
     List<ConfigReference> configReferences = new LinkedList<>();
     // From user
     configReferences.addAll(configReferencesFromConfig);
     // From if statements: these are boolean values
-    for (AddIfStatement addIfStatement : addIfStatements) {
-      configReferences.add(new ConfigReference(addIfStatement.getProperty(), null, addIfStatement.getWithDefaultValue()));
+    for (AddIfStatement addIfStatement : helmConfig.getAddIfStatements()) {
+      configReferences.add(new ConfigReference(deductProperty(helmConfig, addIfStatement.getProperty()),
+          null, addIfStatement.getWithDefaultValue()));
     }
     // From decorators: We need to reverse the order as the latest decorator was the latest applied and hence the one
     // we should use.
@@ -319,7 +319,10 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
   private String deductProperty(HelmChartConfig helmConfig, String property) {
     if (!startWithDependencyPrefix(property, helmConfig.getDependencies())) {
-      property = helmConfig.getValuesRootAlias() + "." + property;
+      String prefix = helmConfig.getValuesRootAlias() + ".";
+      if (!property.startsWith(prefix)) {
+        property = prefix + property;
+      }
     }
 
     return property;
@@ -524,12 +527,12 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       Map<String, Object> seen = new HashMap<>();
 
       for (ConfigReference valueReference : valuesReferences) {
-        String valueReferenceProperty = helmConfig.getValuesRootAlias() + "." + valueReference.getProperty();
+        String valueReferenceProperty = deductProperty(helmConfig, valueReference.getProperty());
 
-        if (seen.containsKey(valueReference.getProperty())) {
+        if (seen.containsKey(valueReferenceProperty)) {
           if (Strings.isNotNullOrEmpty(valueReference.getProfile())) {
             Object value = Optional.ofNullable(valueReference.getValue())
-                .orElse(seen.get(valueReference.getProperty()));
+                .orElse(seen.get(valueReferenceProperty));
             getValues(prodValues, valuesByProfile, valueReference).put(valueReferenceProperty, value);
           }
 
@@ -546,7 +549,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
           Object value = Optional.ofNullable(valueReference.getValue()).orElse(found);
           if (value != null) {
-            seen.put(valueReference.getProperty(), value);
+            seen.put(valueReferenceProperty, value);
             getValues(prodValues, valuesByProfile, valueReference).put(valueReferenceProperty, value);
           }
         }
