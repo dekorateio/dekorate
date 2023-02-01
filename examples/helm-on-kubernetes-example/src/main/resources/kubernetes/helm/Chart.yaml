@@ -1,5 +1,4 @@
 ---
-name: my-chart-with-templates
 annotations:
   links: |
     - name: Source
