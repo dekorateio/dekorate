@@ -43,6 +43,6 @@ public class AddConfigMapDataDecorator extends NamedResourceDecorator<ConfigMapF
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, AddConfigMapDataDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 }
