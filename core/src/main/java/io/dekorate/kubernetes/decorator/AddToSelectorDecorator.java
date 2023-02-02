@@ -59,10 +59,4 @@ public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuil
   public void andThenVisit(VisitableBuilder item, ObjectMeta resourceMeta) {
     //Not needed
   }
-
-  @Override
-  public Class<? extends Decorator>[] before() {
-    return new Class[] { AddToSelectorDecorator.class };
-  }
-
 }
