@@ -40,6 +40,11 @@ public abstract class BaseAddIssuerResourceDecorator extends ResourceProvidingDe
     return new Class[] { ResourceProvidingDecorator.class };
   }
 
+  @Override
+  public Class<? extends Decorator>[] before() {
+    return new Class[] { AddCertificateResourceDecorator.class };
+  }
+
   private String getName(HasMetadata meta) {
     if (Strings.isNullOrEmpty(certificateName)) {
       return meta.getMetadata().getName();

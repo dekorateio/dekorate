@@ -78,6 +78,10 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     doCreateProbe(container, new Actions(execAction, tcpSocketAction, httpGetAction, grpcAction));
   }
 
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddPortDecorator.class };
+  }
+
   @Override
   public List<ConfigReference> getConfigReferences() {
     List<ConfigReference> configReferences = new ArrayList<>();

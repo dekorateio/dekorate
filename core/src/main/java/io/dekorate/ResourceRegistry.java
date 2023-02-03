@@ -17,7 +17,6 @@ package io.dekorate;
 
 import static io.dekorate.utils.Development.isVerbose;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +29,7 @@ import java.util.stream.Collectors;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Metadata;
+import io.dekorate.utils.TopologicalSort;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -233,34 +233,6 @@ public class ResourceRegistry {
   }
 
   public List<Decorator> applyConstraints(Set<Decorator> decorators) {
-    List<Decorator> result = new ArrayList<>();
-    Decorator[] array = decorators.toArray(new Decorator[decorators.size()]);
-    // We can't guarantee that `when `decorator a < b and b < c then a < c``.
-    // Why?
-    // Because our comparators express constraints on particular pairs and can't express the global order.
-    // So, in order to be accurate we need to compare each decorator, with ALL OTHER decorators.
-    // In other words we don't ANY sorting algorithm, we need bubble sort.
-    bubbleSort(array);
-    for (Decorator d : array) {
-      result.add(d);
-    }
-    return result;
-  }
-
-  /**
-   * Bubble sort for decorators.
-   */
-  public void bubbleSort(Decorator[] decorators) {
-    int n = decorators.length;
-    Decorator temp = null;
-    for (int i = 0; i < n; i++) {
-      for (int j = 1; j < (n - i); j++) {
-        if (decorators[j].compareTo(decorators[j - 1]) < 0) {
-          temp = decorators[j - 1];
-          decorators[j - 1] = decorators[j];
-          decorators[j] = temp;
-        }
-      }
-    }
+    return TopologicalSort.sortDecorators(decorators);
   }
 }
