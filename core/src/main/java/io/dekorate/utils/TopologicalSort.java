@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -96,7 +97,7 @@ public final class TopologicalSort {
   private static List<Decorator> sortNodes(Collection<Node> items) {
     List<Decorator> ordered = new ArrayList<>(items.size());
     Set<Class> visited = new HashSet<>();
-    Set<Node> cycle = new HashSet<>();
+    List<Node> cycle = new LinkedList<>();
     // First, we loop over each node in order of insertion.
     ArrayDeque<Node> back = new ArrayDeque<>();
     back.addAll(items);
@@ -131,33 +132,7 @@ public final class TopologicalSort {
           visited.add(identity);
           ordered.addAll(node.references);
         } else if (cycle.contains(node)) {
-          // Let's add the item with more dependants resolved.
-          Node nodeToAdd = null;
-          Long maxResolvedDependants = null;
-          for (Node nodeInCycle : cycle) {
-            long currentResolvedDependants = nodeInCycle.depends.stream().filter(visited::contains).count();
-            if (nodeToAdd == null || maxResolvedDependants < currentResolvedDependants) {
-              nodeToAdd = nodeInCycle;
-              maxResolvedDependants = currentResolvedDependants;
-            }
-          }
-
-          if (isVerbose()) {
-            LOGGER.info("[sort] Warning. Cycle found: " + cycle);
-            LOGGER.info("[sort] Warning. Cycle found. Adding: " + nodeToAdd.value);
-          }
-
-          cycle.clear();
-          if (nodeToAdd.value.equals(identity)) {
-            visited.add(identity);
-            ordered.addAll(node.references);
-          } else {
-            back.addLast(node);
-
-            visited.add(nodeToAdd.value);
-            ordered.addAll(nodeToAdd.references);
-          }
-
+          throwCycleDetectedException(cycle);
         } else {
           // If there are still missing dependencies, put back the current node into the back of the queue and continue.
           cycle.add(node);
@@ -182,6 +157,15 @@ public final class TopologicalSort {
     return node;
   }
 
+  private static void throwCycleDetectedException(List<Node> cycle) {
+    StringBuilder sb = new StringBuilder("Cycle detected when ordering decorators: " + System.lineSeparator());
+    for (Node node : cycle) {
+      sb.append("- " + node + System.lineSeparator());
+    }
+
+    throw new RuntimeException(sb.toString());
+  }
+
   /**
    * This class is internally used to represent a node of decorators and its dependencies.
    */
@@ -193,6 +177,11 @@ public final class TopologicalSort {
 
     public Node(Class value) {
       this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value.getName();
     }
   }
 
