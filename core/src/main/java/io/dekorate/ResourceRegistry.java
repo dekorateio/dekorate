@@ -16,8 +16,8 @@
 package io.dekorate;
 
 import static io.dekorate.utils.Development.isVerbose;
+import static io.dekorate.utils.TopologicalSort.sortDecorators;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Metadata;
-import io.dekorate.utils.TopologicalSort;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
@@ -45,9 +44,6 @@ public class ResourceRegistry {
   private final Map<String, Set<Decorator>> groupDecorators = new HashMap<>();
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
-
-  private static final Comparator<Decorator> DECORATOR_COMPARATOR = (a, b) -> a.compareTo(b) == 0 ? b.compareTo(a)
-      : a.equals(b) ? 0 : 1;
 
   /**
    * Get all registered groups.
@@ -175,10 +171,10 @@ public class ResourceRegistry {
 
     groupDecorators.forEach((group, decorators) -> {
       if (groups.containsKey(group)) {
-        Set<Decorator> union = new TreeSet<>(DECORATOR_COMPARATOR);
+        Set<Decorator> union = new TreeSet<>();
         union.addAll(decorators);
         union.addAll(globalDecorators);
-        for (Decorator d : applyConstraints(union)) {
+        for (Decorator d : sortDecorators(union)) {
           if (isVerbose()) {
             LOGGER.info("Applying decorator '%s'", d.getClass().getName());
           }
@@ -195,10 +191,10 @@ public class ResourceRegistry {
 
     customDecorators.forEach((group, decorators) -> {
       if (customGroups.containsKey(group)) {
-        Set<Decorator> union = new TreeSet<>(DECORATOR_COMPARATOR);
+        Set<Decorator> union = new TreeSet<>();
         union.addAll(decorators);
         union.addAll(globalDecorators);
-        for (Decorator d : applyConstraints(union)) {
+        for (Decorator d : sortDecorators(union)) {
           if (isVerbose()) {
             LOGGER.info("Applying decorator '%s'", d.getClass().getName());
           }
@@ -226,13 +222,9 @@ public class ResourceRegistry {
       }
     }
 
-    return applyConstraints(configReferences)
+    return sortDecorators(configReferences)
         .stream()
         .map(WithConfigReferences.class::cast)
         .collect(Collectors.toList());
-  }
-
-  public List<Decorator> applyConstraints(Set<Decorator> decorators) {
-    return TopologicalSort.sortDecorators(decorators);
   }
 }

@@ -39,7 +39,7 @@ public class KindManifestGenerator extends KubernetesManifestGenerator {
     initializeRegistry(kubernetesConfig);
     Optional<KindConfig> kindConfig = configurationRegistry.get(KindConfig.class);
 
-    super.addDecorators(KIND, new KubernetesConfigBuilder(kubernetesConfig)
+    addDecorators(KIND, new KubernetesConfigBuilder(kubernetesConfig)
         .withImagePullPolicy(kindConfig.map(c -> c.getImagePullPolicy()).orElse(kubernetesConfig.getImagePullPolicy()))
         .build());
 
