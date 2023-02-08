@@ -25,9 +25,7 @@ import java.util.List;
 import io.dekorate.ConfigReference;
 import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
-import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
-import io.dekorate.kubernetes.decorator.RemoveLabelDecorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.s2i.config.S2iBuildConfig;
 import io.dekorate.utils.Images;
@@ -95,7 +93,7 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, AddLabelDecorator.class, RemoveLabelDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class };
   }
 
   @Override
