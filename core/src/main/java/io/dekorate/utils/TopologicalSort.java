@@ -106,9 +106,6 @@ public final class TopologicalSort {
       // Get the first node.
       Node node = back.pop();
       Class identity = node.value;
-      if (isVerbose()) {
-        LOGGER.info("[sort] Sort " + identity);
-      }
       List<Class> dependants = node.depends;
       if (dependants == null) {
         cycle.clear();
@@ -157,6 +154,9 @@ public final class TopologicalSort {
     return node;
   }
 
+  /**
+   * Throw RuntimeException containing the cycle that was detected.
+   */
   private static void throwCycleDetectedException(List<Node> cycle) {
     StringBuilder sb = new StringBuilder("Cycle detected when ordering decorators: " + System.lineSeparator());
     for (Node node : cycle) {
