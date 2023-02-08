@@ -75,7 +75,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String CHARTS = "charts";
   private static final String NOTES = "NOTES.txt";
   private static final List<String> ADDITIONAL_CHART_FILES = Arrays.asList("README.md", "LICENSE", "values.schema.json",
-      "app-readme.md", "questions.yml", "questions.yaml", "requirements.yml", "requirements.yaml");
+      "app-readme.md", "questions.yml", "questions.yaml", "requirements.yml", "requirements.yaml", "crds");
   private static final String KIND = "kind";
   private static final String METADATA = "metadata";
   private static final String NAME = "name";
@@ -169,11 +169,19 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     }
 
     Map<String, String> artifacts = new HashMap<>();
-    for (File resource : inputDir.toFile().listFiles()) {
-      if (ADDITIONAL_CHART_FILES.stream().anyMatch(resource.getName()::equalsIgnoreCase)) {
-        Path chartOutputDir = getChartOutputDir(helmConfig, outputDir).resolve(resource.getName());
-        Files.copy(new FileInputStream(resource), chartOutputDir);
-        artifacts.put(chartOutputDir.toString(), EMPTY);
+    for (File source : inputDir.toFile().listFiles()) {
+      if (ADDITIONAL_CHART_FILES.stream().anyMatch(source.getName()::equalsIgnoreCase)) {
+        Path destination = getChartOutputDir(helmConfig, outputDir).resolve(source.getName());
+        if (source.isDirectory()) {
+          Files.createDirectory(destination);
+          for (File file : source.listFiles()) {
+            Files.copy(new FileInputStream(file), destination.resolve(file.getName()));
+          }
+        } else {
+          Files.copy(new FileInputStream(source), destination);
+        }
+
+        artifacts.put(destination.toString(), EMPTY);
       }
     }
 
