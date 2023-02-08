@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>issue-791-missing-imagestream-with-default-configuration</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>3.4-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot on Openshift with Jib</name>
 
   <properties>

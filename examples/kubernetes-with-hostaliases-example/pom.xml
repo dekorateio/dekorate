@@ -20,7 +20,7 @@ limitations under the License.
 
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-with-hostaliases-example</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>3.4-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Kubernetes with hostAliases</name>
 
   <properties>

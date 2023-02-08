@@ -19,7 +19,7 @@ limitations under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
-  <version>3.3-SNAPSHOT</version>
+  <version>3.4-SNAPSHOT</version>
   <artifactId>vertx-on-kubernetes-example</artifactId>
   <name>Dekorate :: Examples :: Vertx on Kuberentes</name>
 

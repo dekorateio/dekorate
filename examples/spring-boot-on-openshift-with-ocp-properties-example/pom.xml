@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-on-openshift-with-ocp-properties-example</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>3.4-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot on Openshift with application-openshift.properties</name>
 
   <properties>
