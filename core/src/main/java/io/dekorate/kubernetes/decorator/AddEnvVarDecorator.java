@@ -145,7 +145,6 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
   @Override
   public int hashCode() {
-
     return Objects.hash(env);
   }
 
@@ -156,7 +155,7 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
   @Override
   public List<ConfigReference> getConfigReferences() {
-    if (Strings.isNotNullOrEmpty(env.getValue())) {
+    if (env.getValue() != null) {
       return Arrays.asList(buildConfigReferenceForEnvValue());
     }
 
