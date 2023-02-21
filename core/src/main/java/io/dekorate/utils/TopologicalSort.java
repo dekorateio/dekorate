@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
@@ -32,7 +33,8 @@ public final class TopologicalSort {
    */
   public static List<Decorator> sortDecorators(Collection<Decorator> items) {
     Collection<Node> nodes = adaptToNodes(items);
-    return sortNodes(nodes);
+    // Order the nodes by the decorator class to guarantee the initial order.
+    return sortNodes(new TreeSet<>(nodes));
   }
 
   /**
@@ -169,7 +171,7 @@ public final class TopologicalSort {
   /**
    * This class is internally used to represent a node of decorators and its dependencies.
    */
-  private static class Node {
+  private static class Node implements Comparable<Node> {
     private final Class value;
 
     private List<Decorator> references = new ArrayList<>();
@@ -182,6 +184,11 @@ public final class TopologicalSort {
     @Override
     public String toString() {
       return value.getName();
+    }
+
+    @Override
+    public int compareTo(Node o) {
+      return value.getName().compareTo(o.value.getName());
     }
   }
 
