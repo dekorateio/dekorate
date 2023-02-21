@@ -171,14 +171,12 @@ public class ResourceRegistry {
 
     groupDecorators.forEach((group, decorators) -> {
       if (groups.containsKey(group)) {
+        log("Handling group '%s'", group);
         Set<Decorator> union = new TreeSet<>();
         union.addAll(decorators);
         union.addAll(globalDecorators);
         for (Decorator d : sortDecorators(union)) {
-          if (isVerbose()) {
-            LOGGER.info("Applying decorator '%s'", d.getClass().getName());
-          }
-
+          log("Applying decorator '%s'", d.getClass().getName());
           groups.get(group).accept(d);
         }
       }
@@ -191,14 +189,12 @@ public class ResourceRegistry {
 
     customDecorators.forEach((group, decorators) -> {
       if (customGroups.containsKey(group)) {
+        log("Handling group '%s'", group);
         Set<Decorator> union = new TreeSet<>();
         union.addAll(decorators);
         union.addAll(globalDecorators);
         for (Decorator d : sortDecorators(union)) {
-          if (isVerbose()) {
-            LOGGER.info("Applying decorator '%s'", d.getClass().getName());
-          }
-
+          log("Applying decorator '%s'", d.getClass().getName());
           customGroups.get(group).accept(d);
         }
       }
@@ -226,5 +222,11 @@ public class ResourceRegistry {
         .stream()
         .map(WithConfigReferences.class::cast)
         .collect(Collectors.toList());
+  }
+
+  private void log(String format, Object... args) {
+    if (isVerbose()) {
+      LOGGER.info(format, args);
+    }
   }
 }
