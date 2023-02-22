@@ -23,12 +23,15 @@ import io.dekorate.option.config.GeneratorConfig;
  */
 public final class Development {
 
+  private static final boolean IS_VERBOSE = Session.getSession()
+      .getConfigurationRegistry().get(GeneratorConfig.class).map(GeneratorConfig::isVerbose)
+      .orElse(false);
+
   private Development() {
     //Utility class
   }
 
   public static boolean isVerbose() {
-    return Session.getSession().getConfigurationRegistry().get(GeneratorConfig.class).map(GeneratorConfig::isVerbose)
-        .orElse(false);
+    return IS_VERBOSE;
   }
 }
