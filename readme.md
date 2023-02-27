@@ -1,4 +1,3 @@
-
 It makes generating Kubernetes manifests as easy as adding a dependency to the classpath.
 
 Stop wasting time editing xml, json and yml and customize the kubernetes manifests as you configure your java application.
