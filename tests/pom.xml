@@ -92,6 +92,7 @@
       <module>issue-1120-kind-multiple-container-ports</module>
       <module>issue-1123-ingress-multiple-container-ports</module>
       <module>issue-1124-route-multiple-container-ports</module>
+      <module>issue-1158-spring-boot-certmanager-with-annotations</module>
     </modules>
 
 </project>
