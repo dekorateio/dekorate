@@ -266,7 +266,7 @@ public @interface OpenshiftApplication {
   Container[] sidecars() default {};
 
   /**
-   * @return the Ingress resource configuration.
+   * @return the Route resource configuration.
    */
   Route route() default @Route();
 
