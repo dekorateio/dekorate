@@ -15,31 +15,36 @@
  */
 package io.dekorate.openshift.annotation;
 
-import io.sundr.builder.annotations.Pojo;
-
-@Pojo(relativePath = "../config", autobox = true, mutable = true, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
-public @interface Route {
+public @interface TLSConfig {
 
   /**
-   * Controls whether the application should be exposed via Route
+   * @return the cert authority certificate contents.
    */
-  boolean expose() default false;
+  String caCertificate() default "";
 
   /**
-   * The host under which the application is going to be exposed.
-   *
-   * @return The hostname.
+   * @return the certificate contents.
    */
-  String host() default "";
+  String certificate() default "";
 
   /**
-   * @return The target named port. If not provided, it will be deducted from the Service resource ports.
+   * @return the contents of the ca certificate of the final destination.
    */
-  String targetPort() default "http";
+  String destinationCACertificate() default "";
 
   /**
-   * @return the TLS configuration.
+   * @return the desired behavior for insecure connections to a route. Options are: `allow`, `disable`, and `redirect`.
    */
-  TLSConfig tls() default @TLSConfig();
+  String insecureEdgeTerminationPolicy() default "";
+
+  /**
+   * @return the key file contents.
+   */
+  String key() default "";
+
+  /**
+   * @return the termination type.
+   */
+  String termination() default "";
 
 }
