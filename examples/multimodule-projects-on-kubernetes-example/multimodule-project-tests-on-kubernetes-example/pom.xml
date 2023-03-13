@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>multimodule-project-tests-on-kubernetes-example</artifactId>
-  <version>3.4-SNAPSHOT</version>
+  <version>3.5-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Multi Module Project on Kubernetes :: Project Tests</name>
 
   <properties>

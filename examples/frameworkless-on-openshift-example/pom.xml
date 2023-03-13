@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>frameworkless-on-openshift-example</artifactId>
-  <version>3.4-SNAPSHOT</version>
+  <version>3.5-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Frameworkless Rest API on Openshift</name>
 
   <properties>

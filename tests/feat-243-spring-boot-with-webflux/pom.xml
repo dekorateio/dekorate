@@ -5,7 +5,7 @@
     <parent>
     <artifactId>dekorate-tests</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>3.4-SNAPSHOT</version>
+    <version>3.5-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
 
