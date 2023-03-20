@@ -61,8 +61,8 @@ public class AddToSelectorDecorator extends NamedResourceDecorator<VisitableBuil
   }
 
   @Override
-  public Class<? extends Decorator>[] before() {
-    return new Class[] { AddToSelectorDecorator.class };
+  public Class<? extends Decorator>[] after() {
+    return new Class[] { AddSelectorToDeploymentSpecDecorator.class };
   }
 
 }
