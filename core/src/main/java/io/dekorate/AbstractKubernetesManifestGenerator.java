@@ -52,11 +52,13 @@ import io.dekorate.kubernetes.decorator.AddImagePullSecretDecorator;
 import io.dekorate.kubernetes.decorator.AddJobDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
+import io.dekorate.kubernetes.decorator.AddMetadataToTemplateDecorator;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
 import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
+import io.dekorate.kubernetes.decorator.AddSelectorToDeploymentSpecDecorator;
 import io.dekorate.kubernetes.decorator.AddSidecarDecorator;
 import io.dekorate.kubernetes.decorator.AddStartupProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddToSelectorDecorator;
@@ -124,7 +126,12 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
     //Metadata handling
     Labels.createLabels(config).forEach(l -> {
       resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(), l));
+      // Ensure that metadata exists
+      resourceRegistry.decorate(group, new AddMetadataToTemplateDecorator());
+
       resourceRegistry.decorate(group, new AddToSelectorDecorator(config.getName(), l.getKey(), l.getValue()));
+      // Selectors have some additional requirements
+      resourceRegistry.decorate(group, new AddSelectorToDeploymentSpecDecorator());
     });
 
     for (Annotation annotation : config.getAnnotations()) {

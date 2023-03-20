@@ -15,14 +15,11 @@
  */
 package io.dekorate.kubernetes.decorator;
 
-import java.util.HashMap;
-
 import io.dekorate.AbstractKubernetesManifestGenerator;
 import io.dekorate.ResourceFactory;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 
 public class DeploymentResourceFactory implements ResourceFactory {
@@ -42,12 +39,9 @@ public class DeploymentResourceFactory implements ResourceFactory {
         .endMetadata()
         .withNewSpec()
         .withReplicas(1)
-        .withNewSelector() //We need to have at least an empty selector so that the decorator can work with it.
-        .withMatchLabels(new HashMap<String, String>())
-        .endSelector()
-        .withTemplate(new PodTemplateSpecBuilder()
-            .withSpec(new PodSpecBuilder().build())
-            .withNewMetadata().endMetadata().build())
+        .withNewTemplate()
+        .withSpec(new PodSpecBuilder().build())
+        .endTemplate()
         .endSpec().build();
   }
 }
