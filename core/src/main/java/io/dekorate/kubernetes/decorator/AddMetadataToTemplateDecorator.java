@@ -14,6 +14,6 @@ public class AddMetadataToTemplateDecorator extends NamedResourceDecorator<PodTe
 
   @Override
   public Class<? extends Decorator>[] before() {
-    return new Class[] { AddLabelDecorator.class, RemoveLabelDecorator.class };
+    return new Class[] { AddLabelDecorator.class, RemoveLabelDecorator.class, AddAnnotationDecorator.class, RemoveAnnotationDecorator.class };
   }
 }
