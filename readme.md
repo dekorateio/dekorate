@@ -1,4 +1,3 @@
-
 Stop wasting time editing xml, json and yml and customize the kubernetes manifests as you configure your java application.
 
 ## Rebranding Notice
