@@ -75,6 +75,8 @@ public @interface HelmChart {
 
   boolean createValuesSchemaFile() default true;
 
+  boolean createReadmeFile() default true;
+
   String extension() default "tar.gz";
 
   String tarFileClassifier() default "";

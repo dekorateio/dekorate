@@ -62,6 +62,7 @@ import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
 import io.dekorate.helm.util.HelmValueHolder;
+import io.dekorate.helm.util.ReadmeBuilder;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Exec;
 import io.dekorate.utils.Maps;
@@ -80,7 +81,8 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String CHARTS = "charts";
   private static final String NOTES = "NOTES.txt";
   private static final String VALUES_SCHEMA = "values.schema.json";
-  private static final List<String> ADDITIONAL_CHART_FILES = Arrays.asList("README.md", "LICENSE", "app-readme.md",
+  private static final String README = "README.md";
+  private static final List<String> ADDITIONAL_CHART_FILES = Arrays.asList("LICENSE", "app-readme.md",
       "questions.yml", "questions.yaml", "requirements.yml", "requirements.yaml", "crds");
   private static final String KIND = "kind";
   private static final String METADATA = "metadata";
@@ -177,21 +179,30 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Map<String, String> artifacts = new HashMap<>();
     for (File source : inputDir.toFile().listFiles()) {
       if (ADDITIONAL_CHART_FILES.stream().anyMatch(source.getName()::equalsIgnoreCase)) {
-        Path destination = getChartOutputDir(helmConfig, outputDir).resolve(source.getName());
-        if (source.isDirectory()) {
-          Files.createDirectory(destination);
-          for (File file : source.listFiles()) {
-            Files.copy(new FileInputStream(file), destination.resolve(file.getName()));
-          }
-        } else {
-          Files.copy(new FileInputStream(source), destination);
-        }
-
-        artifacts.put(destination.toString(), EMPTY);
+        artifacts.putAll(addAdditionalResource(helmConfig, outputDir, source));
       }
     }
 
     return artifacts;
+  }
+
+  private Map<String, String> addAdditionalResource(HelmChartConfig helmConfig, Path outputDir, File source)
+      throws IOException {
+    if (!source.exists()) {
+      return Collections.emptyMap();
+    }
+
+    Path destination = getChartOutputDir(helmConfig, outputDir).resolve(source.getName());
+    if (source.isDirectory()) {
+      Files.createDirectory(destination);
+      for (File file : source.listFiles()) {
+        Files.copy(new FileInputStream(file), destination.resolve(file.getName()));
+      }
+    } else {
+      Files.copy(new FileInputStream(source), destination);
+    }
+
+    return Collections.singletonMap(destination.toString(), EMPTY);
   }
 
   private void fetchDependencies(HelmChartConfig helmConfig, Path outputDir) {
@@ -339,11 +350,21 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     artifacts.putAll(writeFileAsYaml(mergeWithFileIfExists(inputDir, VALUES + YAML, toValuesMap(prodValues)),
         getChartOutputDir(helmConfig, outputDir).resolve(VALUES + YAML)));
 
-    // And the "values.schema.json" file
+    // Next, the "values.schema.json" file
     if (helmConfig.isCreateValuesSchemaFile()) {
       Map<String, Object> schemaAsMap = createSchema(helmConfig, prodValues);
       artifacts.putAll(writeFileAsJson(mergeWithFileIfExists(inputDir, VALUES_SCHEMA, toMultiValueSortedMap(schemaAsMap)),
           getChartOutputDir(helmConfig, outputDir).resolve(VALUES_SCHEMA)));
+    } else {
+      artifacts.putAll(addAdditionalResource(helmConfig, outputDir, inputDir.resolve(VALUES_SCHEMA).toFile()));
+    }
+
+    // Next, the "README.md" file
+    if (helmConfig.isCreateReadmeFile()) {
+      String readmeContent = ReadmeBuilder.build(helmConfig, prodValues);
+      artifacts.putAll(writeFile(readmeContent, getChartOutputDir(helmConfig, outputDir).resolve(README)));
+    } else {
+      artifacts.putAll(addAdditionalResource(helmConfig, outputDir, inputDir.resolve(README).toFile()));
     }
 
     return artifacts;
