@@ -17,6 +17,9 @@ package io.dekorate;
 
 import static io.dekorate.kubernetes.decorator.Decorator.ANY;
 
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,30 +30,31 @@ import io.dekorate.utils.Strings;
  * This can be handy for some extensions like Helm.
  */
 public class ConfigReference {
-  private String property;
-  private String[] paths;
-  private Object value;
-  private String expression;
-  private String profile;
+  private final String property;
+  private final String[] paths;
+  private final Object value;
+  private final String expression;
+  private final String profile;
+  private final String description;
+  private final Integer minimum;
+  private final Integer maximum;
+  private final String pattern;
+  private final Set<String> enumValues;
+  private final boolean required;
 
-  public ConfigReference(String property, String path) {
-    this(property, new String[] { path });
-  }
-
-  public ConfigReference(String property, String[] paths) {
-    this(property, paths, null, null, null);
-  }
-
-  public ConfigReference(String property, String path, Object value) {
-    this(property, new String[] { path }, value, null, null);
-  }
-
-  public ConfigReference(String property, String[] paths, Object value, String expression, String profile) {
+  private ConfigReference(String property, String[] paths, String description, Object value, String expression,
+      String profile, Integer minimum, Integer maximum, String pattern, Set<String> enumValues, boolean required) {
     this.property = property;
     this.paths = paths;
+    this.description = description;
     this.value = value;
     this.expression = expression;
     this.profile = profile;
+    this.minimum = minimum;
+    this.maximum = maximum;
+    this.pattern = pattern;
+    this.enumValues = enumValues;
+    this.required = required;
   }
 
   /**
@@ -93,6 +97,33 @@ public class ConfigReference {
   }
 
   /**
+   * @return the description of the config reference.
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  public Integer getMinimum() {
+    return minimum;
+  }
+
+  public Integer getMaximum() {
+    return maximum;
+  }
+
+  public String getPattern() {
+    return pattern;
+  }
+
+  public Set<String> getEnumValues() {
+    return enumValues;
+  }
+
+  public boolean isRequired() {
+    return required;
+  }
+
+  /**
    * Will generate a config reference name by appending the properties if they are not null or any.
    *
    * For example, if `properties` are [`first`, null, `image`], it will generate: `first.image`.
@@ -103,5 +134,92 @@ public class ConfigReference {
     }
 
     return Stream.of(properties).filter(p -> !Strings.equals(ANY, p)).collect(Collectors.joining("."));
+  }
+
+  public static class Builder {
+    private final String property;
+    private final String[] paths;
+    private String description;
+    private Object value;
+    private String expression;
+    private String profile;
+    private Integer minimum;
+    private Integer maximum;
+    private String pattern;
+    private Set<String> enumValues;
+    private boolean required = false;
+
+    public Builder(String property, String path) {
+      this(property, new String[] { path });
+    }
+
+    public Builder(String property, String[] paths) {
+      this.property = property;
+      this.paths = paths;
+    }
+
+    public Builder withDescription(String description) {
+      this.description = description;
+      return this;
+    }
+
+    public Builder withValue(Object value) {
+      this.value = value;
+      return this;
+    }
+
+    public Builder withExpression(String expression) {
+      this.expression = expression;
+      return this;
+    }
+
+    public Builder withProfile(String profile) {
+      this.profile = profile;
+      return this;
+    }
+
+    public Builder withMinimum(int minimum) {
+      if (minimum != Integer.MIN_VALUE) {
+        this.minimum = minimum;
+      }
+
+      return this;
+    }
+
+    public Builder withMaximum(int maximum) {
+      if (maximum != Integer.MAX_VALUE) {
+        this.maximum = maximum;
+      }
+
+      return this;
+    }
+
+    public Builder withPattern(String pattern) {
+      if (Strings.isNotNullOrEmpty(pattern)) {
+        this.pattern = pattern;
+      }
+
+      return this;
+    }
+
+    public Builder withRequired(boolean required) {
+      this.required = required;
+
+      return this;
+    }
+
+    public <E extends Enum<E>> Builder withEnum(Class<E> enumType) {
+      this.enumValues = new HashSet<>();
+      for (E value : EnumSet.allOf(enumType)) {
+        this.enumValues.add(value.name());
+      }
+
+      return this;
+    }
+
+    public ConfigReference build() {
+      return new ConfigReference(property, paths, description, value, expression, profile, minimum, maximum, pattern,
+          enumValues, required);
+    }
   }
 }

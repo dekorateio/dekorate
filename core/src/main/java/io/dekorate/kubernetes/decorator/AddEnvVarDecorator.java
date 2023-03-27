@@ -175,6 +175,6 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
       path = "spec.template.spec.containers.(name == " + getContainerName() + ")" + envFilter;
     }
 
-    return new ConfigReference(property, path, env.getValue());
+    return new ConfigReference.Builder(property, path).withValue(env.getValue()).build();
   }
 }

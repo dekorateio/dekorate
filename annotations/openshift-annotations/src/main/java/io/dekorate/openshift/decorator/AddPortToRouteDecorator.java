@@ -68,6 +68,8 @@ public class AddPortToRouteDecorator extends NamedResourceDecorator<RouteSpecFlu
   private ConfigReference buildConfigReferencePath() {
     String property = "path";
     String path = "(kind == Route && metadata.name == " + getName() + ").spec.path";
-    return new ConfigReference(property, path);
+    return new ConfigReference.Builder(property, path)
+        .withDescription("The target named port. If not provided, it will be deducted from the Service resource ports.")
+        .build();
   }
 }

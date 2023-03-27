@@ -74,6 +74,9 @@ public class AddIngressDecorator extends ResourceProvidingDecorator<KubernetesLi
   private ConfigReference buildConfigReferenceHost() {
     String property = "host";
     String path = "(kind == Ingress && metadata.name == " + config.getName() + ").spec.rules.host";
-    return new ConfigReference(property, path, config.getIngress().getHost());
+    return new ConfigReference.Builder(property, path)
+        .withDescription("The host under which the application is going to be exposed.")
+        .withValue(config.getIngress().getHost())
+        .build();
   }
 }

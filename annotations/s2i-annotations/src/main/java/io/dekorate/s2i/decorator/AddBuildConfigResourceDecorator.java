@@ -104,7 +104,9 @@ public class AddBuildConfigResourceDecorator extends ResourceProvidingDecorator<
   private ConfigReference buildConfigReferenceTag() {
     String property = joinProperties(getImageStreamName(), "tag");
     String path = "(kind == BuildConfig && metadata.name == " + config.getName() + ")].spec.strategy.sourceStrategy.from.name";
-    return new ConfigReference(property, path);
+    return new ConfigReference.Builder(property, path)
+        .withDescription("The base image version to be used when a container image is being built.")
+        .build();
   }
 
   private String getImageStreamName() {

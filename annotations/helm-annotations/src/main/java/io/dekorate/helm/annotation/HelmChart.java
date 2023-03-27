@@ -73,6 +73,8 @@ public @interface HelmChart {
 
   boolean createTarFile() default false;
 
+  boolean createValuesSchemaFile() default true;
+
   String extension() default "tar.gz";
 
   String tarFileClassifier() default "";
@@ -84,6 +86,8 @@ public @interface HelmChart {
   String outputFolder() default "helm";
 
   ValueReference[] values() default {};
+
+  ValuesSchema valuesSchema() default @ValuesSchema;
 
   HelmExpression[] expressions() default {};
 

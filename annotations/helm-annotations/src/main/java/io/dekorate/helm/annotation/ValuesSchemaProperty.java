@@ -21,17 +21,26 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Pojo;
+
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Pojo(relativePath = "../config", autobox = true, mutable = true, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AddIfStatement {
+public @interface ValuesSchemaProperty {
 
-  String property();
+  String name();
 
-  String onResourceKind() default "";
+  String description();
 
-  String onResourceName() default "";
+  String type() default "string";
 
-  boolean withDefaultValue() default true;
+  int minimum() default Integer.MIN_VALUE;
 
-  String description() default "";
+  int maximum() default Integer.MAX_VALUE;
+
+  String pattern() default "";
+
+  boolean required() default false;
 }

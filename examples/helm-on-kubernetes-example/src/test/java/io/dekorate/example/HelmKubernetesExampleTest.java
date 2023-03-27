@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +33,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.helm.model.Chart;
+import io.dekorate.helm.model.ValuesSchema;
+import io.dekorate.helm.model.ValuesSchemaProperty;
+import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 
@@ -160,6 +164,36 @@ class HelmKubernetesExampleTest {
 
   @Test
   public void valuesFileShouldContainDependencyValues() throws IOException {
+    ValuesSchema schema = read("/values.schema.json", ValuesSchema.class);
+    // From properties
+    assertEquals("My Values", schema.getTitle());
+    // From the provided values schema json
+    assertEquals(2, schema.getRequired().size());
+    Iterator<String> requirements = schema.getRequired().iterator();
+    assertEquals("protocol", requirements.next());
+    assertEquals("port", requirements.next());
+    ValuesSchemaProperty image = schema.getProperties().get("image");
+    assertNotNull(image);
+    assertEquals("Container Image", image.getDescription());
+    assertEquals(2, image.getProperties().size());
+    // From config references
+    ValuesSchemaProperty app = schema.getProperties().get("app");
+    assertNotNull(app);
+    assertEquals(1, app.getRequired().size());
+    assertEquals("serviceType", app.getRequired().iterator().next());
+    ValuesSchemaProperty replicas = app.getProperties().get("replicas");
+    assertNotNull(replicas);
+    assertEquals(3, replicas.getMinimum());
+    assertEquals(5, replicas.getMaximum());
+    assertEquals("Overwrite default description!", replicas.getDescription());
+    ValuesSchemaProperty serviceType = app.getProperties().get("serviceType");
+    assertNotNull(serviceType);
+    assertEquals("The service type to use.", serviceType.getDescription());
+    assertEquals(ServiceType.values().length, serviceType.getEnumValues().size());
+  }
+
+  @Test
+  public void validateValuesSchemaFile() throws IOException {
     Map<String, Object> values = read("/values.yaml", Map.class);
     Map<String, Object> dependencyA = (Map<String, Object>) values.get("dependencyNameA");
     assertEquals("aValue", dependencyA.get("config"));
