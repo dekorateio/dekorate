@@ -23,15 +23,8 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AddIfStatement {
+public @interface ValuesSchema {
+  String title() default "Values";
 
-  String property();
-
-  String onResourceKind() default "";
-
-  String onResourceName() default "";
-
-  boolean withDefaultValue() default true;
-
-  String description() default "";
+  ValuesSchemaProperty[] properties() default {};
 }

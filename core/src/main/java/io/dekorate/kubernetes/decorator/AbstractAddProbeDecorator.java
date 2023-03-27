@@ -85,31 +85,39 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
   @Override
   public List<ConfigReference> getConfigReferences() {
     List<ConfigReference> configReferences = new ArrayList<>();
-    configReferences.add(buildConfigReference("failureThreshold", probe.getFailureThreshold()));
-    configReferences.add(buildConfigReference("initialDelaySeconds", probe.getInitialDelaySeconds()));
-    configReferences.add(buildConfigReference("periodSeconds", probe.getPeriodSeconds()));
-    configReferences.add(buildConfigReference("successThreshold", probe.getSuccessThreshold()));
-    configReferences.add(buildConfigReference("timeoutSeconds", probe.getTimeoutSeconds()));
+    configReferences
+        .add(buildConfigReference("failureThreshold", probe.getFailureThreshold(), "The failure threshold to use."));
+    configReferences.add(buildConfigReference("initialDelaySeconds", probe.getInitialDelaySeconds(),
+        "The amount of time to wait before starting to probe."));
+    configReferences.add(
+        buildConfigReference("periodSeconds", probe.getPeriodSeconds(), "The period in which the action should be called."));
+    configReferences
+        .add(buildConfigReference("successThreshold", probe.getSuccessThreshold(), "The success threshold to use."));
+    configReferences
+        .add(buildConfigReference("timeoutSeconds", probe.getTimeoutSeconds(), "The amount of time to wait for each action."));
     if (isExecOrTcpOrGrpcActionSet()) {
       if (Strings.isNotNullOrEmpty(probe.getExecAction())) {
-        configReferences.add(buildConfigReference("exec.command", AUTO_DISCOVER));
+        configReferences.add(buildConfigReference("exec.command", AUTO_DISCOVER, "The command to use for the probe."));
       } else if (Strings.isNotNullOrEmpty(probe.getGrpcAction())) {
-        configReferences.add(buildConfigReference("grpc.port", AUTO_DISCOVER));
-        configReferences.add(buildConfigReference("grpc.service", AUTO_DISCOVER));
+        configReferences.add(buildConfigReference("grpc.port", AUTO_DISCOVER, "The grpc port to use for the probe."));
+        configReferences.add(buildConfigReference("grpc.service", AUTO_DISCOVER, "The grpc service to use for the probe."));
       } else if (Strings.isNotNullOrEmpty(probe.getTcpSocketAction())) {
-        configReferences.add(buildConfigReference("tcpSocket.host", AUTO_DISCOVER));
-        configReferences.add(buildConfigReference("tcpSocket.port", AUTO_DISCOVER));
+        configReferences
+            .add(buildConfigReference("tcpSocket.host", AUTO_DISCOVER, "The tcp host socket to use for the probe."));
+        configReferences
+            .add(buildConfigReference("tcpSocket.port", AUTO_DISCOVER, "The tcp port socket to use for the probe."));
       }
     } else {
       // default to http action
-      configReferences.add(buildConfigReference("httpGet.path", probe.getHttpActionPath()));
-      configReferences.add(buildConfigReference("httpGet.port", AUTO_DISCOVER));
-      configReferences.add(buildConfigReference("httpGet.scheme", AUTO_DISCOVER));
+      configReferences
+          .add(buildConfigReference("httpGet.path", probe.getHttpActionPath(), "The http path to use for the probe."));
+      configReferences.add(buildConfigReference("httpGet.port", AUTO_DISCOVER, "The http port to use for the probe."));
+      configReferences.add(buildConfigReference("httpGet.scheme", AUTO_DISCOVER, "The http schema to use for the probe."));
     }
     return configReferences;
   }
 
-  private ConfigReference buildConfigReference(String propertyName, Object value) {
+  private ConfigReference buildConfigReference(String propertyName, Object value, String description) {
     String expression = PATH_ALL_EXPRESSION;
     if (Strings.isNotNullOrEmpty(getDeploymentName()) && Strings.isNotNullOrEmpty(getContainerName())) {
       expression = String.format(PATH_DEPLOYMENT_CONTAINER_EXPRESSION, getDeploymentName(), getContainerName());
@@ -120,7 +128,7 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     }
     String property = joinProperties(getProbeName(), propertyName);
     String yamlPath = expression + getProbeName() + "." + propertyName;
-    return new ConfigReference(property, yamlPath, value);
+    return new ConfigReference.Builder(property, yamlPath).withDescription(description).withValue(value).build();
   }
 
   private boolean isExecOrTcpOrGrpcActionSet() {

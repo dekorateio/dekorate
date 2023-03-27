@@ -59,6 +59,6 @@ public class ApplyReplicasToDeploymentDecorator extends NamedResourceDecorator<D
       path = "(kind == Deployment && metadata.name == " + getName() + ").spec.replicas";
     }
 
-    return new ConfigReference(property, path);
+    return new ConfigReference.Builder(property, path).withDescription("The number of desired pods.").withMinimum(0).build();
   }
 }

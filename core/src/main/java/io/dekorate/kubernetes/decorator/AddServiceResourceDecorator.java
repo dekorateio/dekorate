@@ -125,6 +125,10 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
   private ConfigReference buildConfigReferenceServiceType() {
     String property = "serviceType";
     String path = "(kind == Service && metadata.name == " + config.getName() + ").spec.type";
-    return new ConfigReference(property, path, config.getServiceType() != null ? config.getServiceType().name() : "ClusterIP");
+    return new ConfigReference.Builder(property, path)
+        .withDescription("The service type to use.")
+        .withValue(config.getServiceType() != null ? config.getServiceType().name() : "ClusterIP")
+        .withEnum(ServiceType.class)
+        .build();
   }
 }

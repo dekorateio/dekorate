@@ -64,7 +64,7 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
       path = "spec.template.spec.containers.(name == " + getContainerName() + ").image";
     }
 
-    return new ConfigReference(property, path, image);
+    return new ConfigReference.Builder(property, path).withDescription("The container image to use.").withValue(image).build();
   }
 
 }

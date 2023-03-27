@@ -71,7 +71,10 @@ public class AddBuilderImageStreamResourceDecorator extends ResourceProvidingDec
     String property = joinProperties(getImageStreamName(), "builder-image");
     String path = "(kind == ImageStream && metadata.name == " + getImageStreamName() + ").spec.dockerImageRepository";
     String value = Images.removeTag(config.getBuilderImage());
-    return new ConfigReference(property, path, value);
+    return new ConfigReference.Builder(property, path)
+        .withDescription("The base image to be used when a container image is being built.")
+        .withValue(value)
+        .build();
   }
 
   private String getImageStreamName() {
