@@ -17,6 +17,8 @@
 package io.dekorate.helm.listener;
 
 import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
+import static io.dekorate.helm.util.MapUtils.toMultiValueSortedMap;
+import static io.dekorate.helm.util.MapUtils.toMultiValueUnsortedMap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -315,12 +317,12 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       }
 
       // Create the values.<profile>.yaml file
-      artifacts.putAll(writeFileAsYaml(mergeWithFileIfExists(inputDir, VALUES + YAML, values),
+      artifacts.putAll(writeFileAsYaml(mergeWithFileIfExists(inputDir, VALUES + YAML, toMultiValueSortedMap(values)),
           getChartOutputDir(helmConfig, outputDir).resolve(VALUES + "." + profile + YAML)));
     }
 
     // Next, we process the prod profile
-    artifacts.putAll(writeFileAsYaml(mergeWithFileIfExists(inputDir, VALUES + YAML, prodValues),
+    artifacts.putAll(writeFileAsYaml(mergeWithFileIfExists(inputDir, VALUES + YAML, toMultiValueSortedMap(prodValues)),
         getChartOutputDir(helmConfig, outputDir).resolve(VALUES + YAML)));
 
     return artifacts;
@@ -337,8 +339,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return property;
   }
 
-  private Map<String, Object> mergeWithFileIfExists(Path inputDir, String file, Map<String, Object> data) {
-    Map<String, Object> valuesAsMultiValueMap = toMultiValueMap(data);
+  private Map<String, Object> mergeWithFileIfExists(Path inputDir, String file, Map<String, Object> valuesAsMultiValueMap) {
     File templateValuesFile = inputDir.resolve(file).toFile();
     if (templateValuesFile.exists()) {
       Map<String, Object> result = new HashMap<>();
@@ -627,7 +628,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     Object chartContent = chart;
     if (userChartFile.exists()) {
       chartContent = mergeWithFileIfExists(inputDir, CHART_FILENAME,
-          Serialization.yamlMapper().readValue(Serialization.asYaml(chart), Map.class));
+          toMultiValueUnsortedMap(Serialization.yamlMapper().readValue(Serialization.asYaml(chart), Map.class)));
     }
 
     return writeFileAsYaml(chartContent, yml);
@@ -662,32 +663,5 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
             .replaceAll(Pattern.quote("\""), SEPARATOR_QUOTES)
         + END_EXPRESSION_TOKEN);
     return found.stream().findFirst().orElse(null);
-  }
-
-  private static Map<String, Object> toMultiValueMap(Map<String, Object> map) {
-    Map<String, Object> multiValueMap = new HashMap<>();
-    map.forEach((k, v) -> {
-
-      String[] nodes = k.split(Pattern.quote("."));
-      if (nodes.length == 1) {
-        multiValueMap.put(k, v);
-      } else {
-        Map<String, Object> auxKeyValue = multiValueMap;
-        for (int index = 0; index < nodes.length - 1; index++) {
-          String nodeName = nodes[index];
-          Object nodeKeyValue = auxKeyValue.get(nodeName);
-          if (nodeKeyValue == null || !(nodeKeyValue instanceof Map)) {
-            nodeKeyValue = new HashMap<>();
-          }
-
-          auxKeyValue.put(nodes[index], nodeKeyValue);
-          auxKeyValue = (Map<String, Object>) nodeKeyValue;
-        }
-
-        auxKeyValue.put(nodes[nodes.length - 1], v);
-      }
-    });
-
-    return multiValueMap;
   }
 }
