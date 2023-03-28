@@ -1,4 +1,3 @@
-
 ## Rebranding Notice
 
 This project was originally called `ap4k` which stood for `Annotation Processors for Kubernetes`.
