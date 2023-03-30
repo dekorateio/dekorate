@@ -102,34 +102,37 @@ class HelmKubernetesExampleTest {
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
     assertNotNull(values.get(ROOT_CONFIG_NAME) instanceof Map, "Value `" + ROOT_CONFIG_NAME + "` is not a map!");
-    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
+    // Rootless properties
+    assertEquals("rootless-property", values.get("prop"));
+
+    Map<String, Object> app = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
     // Should contain image
-    assertNotNull(helmExampleValues.get("image"));
+    assertNotNull(app.get("image"));
     // Should contain replicas
-    assertEquals(3, helmExampleValues.get("replicas"));
+    assertEquals(3, app.get("replicas"));
     // Should contain service type
-    assertEquals("NodePort", helmExampleValues.get("serviceType"));
+    assertEquals("NodePort", app.get("serviceType"));
     // Should NOT contain not-found: as this property is ignored
-    assertNull(helmExampleValues.get("not-found"));
+    assertNull(app.get("not-found"));
     // Should contain vcs-url with the overridden value from properties
-    assertEquals("Overridden", helmExampleValues.get("vcs-url"));
+    assertEquals("Overridden", app.get("vcs-url"));
     // Should include health check properties:
     // 1. tcp socket action
-    Map<String, Object> livenessValues = (Map<String, Object>) helmExampleValues.get("livenessProbe");
+    Map<String, Object> livenessValues = (Map<String, Object>) app.get("livenessProbe");
     assertProbe(livenessValues, 11, 31);
     Map<String, Object> tcpSocketValues = (Map<String, Object>) livenessValues.get("tcpSocket");
     assertEquals("1111", tcpSocketValues.get("port"));
     assertEquals("my-service", tcpSocketValues.get("host"));
     // 2. http get action
-    Map<String, Object> readinessValues = (Map<String, Object>) helmExampleValues.get("readinessProbe");
+    Map<String, Object> readinessValues = (Map<String, Object>) app.get("readinessProbe");
     assertProbe(readinessValues, 10, 30);
     Map<String, Object> httpGetValues = (Map<String, Object>) readinessValues.get("httpGet");
     assertEquals("/readiness", httpGetValues.get("path"));
     assertEquals(8080, httpGetValues.get("port"));
     assertEquals("HTTP", httpGetValues.get("scheme"));
     // 3. exec action
-    Map<String, Object> startupValues = (Map<String, Object>) helmExampleValues.get("startupProbe");
+    Map<String, Object> startupValues = (Map<String, Object>) app.get("startupProbe");
     assertProbe(startupValues, 12, 32);
     Map<String, Object> execValues = (Map<String, Object>) startupValues.get("exec");
     List<String> command = (List<String>) execValues.get("command");
