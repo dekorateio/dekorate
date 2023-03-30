@@ -585,14 +585,14 @@ The section below describes all the available subtypes.
 | repository | String  | The dependency repository.                                                          |                        |
 | alias      | String  | Alias of the the dependency.                                                        | The dependency name    |
 | enabled    | Boolean | Enabled bool determines if chart should be loaded.                                  | true                   |
-| condition  | String  | (Optional) Condition to enable/disable the current Helm dependency.                 | The dependency name    |
+| condition  | String  | (Optional) Condition to enable/disable the current Helm dependency. If the property starts with `@.`, then the property won't be added under the root element in the generated `values.yaml` file.                | The dependency name    |
 | tags       | String[]| (Optional) Tags associated with the current Helm dependency                         |                        |
 
 ### ValueReference
 
 | Property   | Type     | Description                                                                                                                                                                                | Default Value |
 |------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| property   | String   | The name of the property in the Helm values file.                                                                                                                                          |               |
+| property   | String   | The name of the property in the Helm values file. If the property starts with `@.`, then the property won't be added under the root element in the generated `values.yaml` file.                                            |               |
 | paths  | String   | A comma-separated list of path expressions to map the Dekorate auto-generated properties to the final Helm values file.        |               |
 | profile    | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
 | value      | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
@@ -602,7 +602,7 @@ The section below describes all the available subtypes.
 
 | Property           | Type     | Description                                                       | Default Value |
 |--------------------|----------|-------------------------------------------------------------------|---------------|
-| property           | String   | The property to use in the if statement.                          |               |
+| property           | String   | The property to use in the if statement. If the property starts with `@.`, then the property won't be added under the root element in the generated `values.yaml` file.                         |               |
 | onResourceKind     | String   | The resource kind where to include the if statement.              |               |
 | onResourceName     | String   | The resource name where to include the if statement.              | (empty)       |
 | withDefaultValue   | Boolean  | The default value of the property                                 | true          |

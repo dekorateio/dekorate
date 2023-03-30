@@ -1,5 +1,7 @@
 package io.dekorate.helm.util;
 
+import static io.github.yamlpath.utils.StringUtils.EMPTY;
+
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -7,11 +9,18 @@ import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.utils.Strings;
 
 public final class HelmConfigUtils {
+
+  private static final String ROOTLESS_PROPERTY = "@.";
+
   private HelmConfigUtils() {
 
   }
 
   public static String deductProperty(HelmChartConfig helmConfig, String property) {
+    if (property.startsWith(ROOTLESS_PROPERTY)) {
+      return property.replaceFirst(Pattern.quote(ROOTLESS_PROPERTY), EMPTY);
+    }
+
     if (!startWithDependencyPrefix(property, helmConfig.getDependencies())) {
       String prefix = helmConfig.getValuesRootAlias() + ".";
       if (!property.startsWith(prefix)) {
