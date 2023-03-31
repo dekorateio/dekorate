@@ -96,6 +96,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String TEMPLATE_FUNCTION_START_TAG = "{{- define";
   private static final String TEMPLATE_FUNCTION_END_TAG = "{{- end }}";
   private static final String HELM_HELPER_PREFIX = "_";
+  private static final List<String> HELM_INVALID_CHARACTERS = Arrays.asList("-");
   private static final boolean APPEND = true;
   private static final String SEPARATOR_TOKEN = ":LINE_SEPARATOR:";
   private static final String SEPARATOR_QUOTES = ":DOUBLE_QUOTES";
@@ -224,6 +225,35 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private void validateHelmConfig(HelmChartConfig helmConfig) {
     if (Strings.isNullOrEmpty(helmConfig.getName())) {
       throw new RuntimeException("Helm Chart name is required!");
+    }
+
+    for (AddIfStatement addIfStatement : helmConfig.getAddIfStatements()) {
+      if (addIfStatement.getOnResourceKind().isEmpty() && addIfStatement.getOnResourceName().isEmpty()) {
+        throw new IllegalStateException(String.format("Either 'on-resource-kind' or 'on-resource-kind' must be provided "
+            + "when adding `addIfStatement` properties. Problematic: `addIfStatement` uses the property `%s`",
+            addIfStatement.getProperty()));
+      }
+
+      if (HELM_INVALID_CHARACTERS.stream().anyMatch(addIfStatement.getProperty()::contains)) {
+        throw new RuntimeException(
+            String.format("The property of the `addIfStatement` '%s' is invalid. Can't use '-' characters.",
+                addIfStatement.getProperty()));
+      }
+    }
+
+    for (io.dekorate.helm.config.HelmDependency dependency : helmConfig.getDependencies()) {
+      if (Strings.isNotNullOrEmpty(dependency.getCondition())
+          && HELM_INVALID_CHARACTERS.stream().anyMatch(dependency.getCondition()::contains)) {
+        throw new RuntimeException(
+            String.format("Condition of the dependency '%s' is invalid. Can't use '-' characters.", dependency.getName()));
+      }
+    }
+
+    for (ValueReference value : helmConfig.getValues()) {
+      if (HELM_INVALID_CHARACTERS.stream().anyMatch(value.getProperty()::contains)) {
+        throw new RuntimeException(
+            String.format("Property of the value '%s' is invalid. Can't use '-' characters.", value.getProperty()));
+      }
     }
   }
 

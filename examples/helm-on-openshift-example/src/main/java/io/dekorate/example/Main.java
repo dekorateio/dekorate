@@ -23,9 +23,9 @@ import io.dekorate.helm.annotation.ValueReference;
 import io.dekorate.openshift.annotation.OpenshiftApplication;
 
 @HelmChart(name = "myOcpChart",
-  values = { @ValueReference(property = "not-found", paths = "metadata.not-found"),
-    @ValueReference(property = "vcs-url", paths = "(kind == DeploymentConfig).spec.template.metadata.annotations.'app.dekorate.io/vcs-url'", value = "Overridden"),
-    @ValueReference(property = "vcs-url", paths = "(kind == DeploymentConfig).spec.template.metadata.annotations.'app.dekorate.io/vcs-url'", value = "Only for DEV!", profile = "dev")
+  values = { @ValueReference(property = "notFound", paths = "metadata.not-found"),
+    @ValueReference(property = "vcsUrl", paths = "(kind == DeploymentConfig).spec.template.metadata.annotations.'app.dekorate.io/vcs-url'", value = "Overridden"),
+    @ValueReference(property = "vcsUrl", paths = "(kind == DeploymentConfig).spec.template.metadata.annotations.'app.dekorate.io/vcs-url'", value = "Only for DEV!", profile = "dev")
 })
 @SpringBootApplication
 public class Main {
