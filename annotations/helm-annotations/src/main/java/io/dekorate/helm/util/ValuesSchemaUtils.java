@@ -21,12 +21,12 @@ public final class ValuesSchemaUtils {
   }
 
   public static Map<String, Object> createSchema(HelmChartConfig helmConfig,
-      Map<String, HelmValueHolder> prodValues) {
+      Map<String, ValuesHolder.HelmValueHolder> prodValues) {
     ValuesSchema schema = new ValuesSchema();
     schema.setTitle(helmConfig.getValuesSchema().getTitle());
 
     // from value references
-    for (Map.Entry<String, HelmValueHolder> value : prodValues.entrySet()) {
+    for (Map.Entry<String, ValuesHolder.HelmValueHolder> value : prodValues.entrySet()) {
       ConfigReference configReference = value.getValue().configReference;
       String[] tree = deductProperty(helmConfig, value.getKey()).split(Pattern.quote("."));
       ValuesSchemaProperty parent = null;

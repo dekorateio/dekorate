@@ -149,6 +149,10 @@ public class ConfigReference {
     private Set<String> enumValues;
     private boolean required = false;
 
+    public Builder(String property) {
+      this(property, new String[0]);
+    }
+
     public Builder(String property, String path) {
       this(property, new String[] { path });
     }
