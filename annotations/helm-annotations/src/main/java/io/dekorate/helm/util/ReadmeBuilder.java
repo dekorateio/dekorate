@@ -12,7 +12,7 @@ public final class ReadmeBuilder {
   private static final String H1 = "# ";
   private static final String H2 = "## ";
   private static final String TABLE_SEPARATOR = "|";
-  private static final String TABLE_HEADER_LINE = " - ";
+  private static final String TABLE_HEADER_LINE = " --- ";
   private static final String SPACE = " ";
   private static final String CODE_BLOCK = "```";
   private static final String TIP = "> **Tip**: ";
@@ -85,10 +85,14 @@ public final class ReadmeBuilder {
     // Title:
     // # {chart.name}
     builder.writeHeader(H1, helmConfig.getName());
-    builder.writeLine(helmConfig.getDescription());
+    if (Strings.isNotNullOrEmpty(helmConfig.getDescription())) {
+      builder.writeLine(helmConfig.getDescription());
+    }
+
     // Configuration:
     builder.writeHeader(H2, "Configuration");
     builder.writeLine("The following table lists the configurable parameters and their default values.");
+    builder.writeLine();
     builder.writeTableHeader("Parameter", "Description", "Default");
     SortedSet<String> keys = new TreeSet<>(values.keySet());
     for (String key : keys) {
@@ -96,6 +100,7 @@ public final class ReadmeBuilder {
       builder.writeTableRow(literal(key), value.configReference.getDescription(), value.value);
     }
 
+    builder.writeLine();
     builder.writeLine("Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.");
     builder.writeLine("Alternatively, a YAML file that specifies the values for the above parameters can be provided while "
         + "installing the chart. For example,");

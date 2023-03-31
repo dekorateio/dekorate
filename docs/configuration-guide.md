@@ -597,6 +597,11 @@ The section below describes all the available subtypes.
 | profile    | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
 | value      | String   | The dependency repository.                                                                                                                                                                 | (empty)       |
 | expression | String   | The complete Helm expression to be replaced with. If not provided, it will use `{{ .Values.<root alias>.<property> }}`.                                                                    | (empty)       |
+| description        | String   | Description of the property. Optional.                            |               |
+| minimum            | integer  | Minimum value allowed for this property.                          |               |
+| maximum            | integer  | Maximum value allowed for this property.                          |               |
+| pattern            | String   | Pattern to validate the value of this property.                   |               |
+| required           | Boolean  | If true, then this property is mandatory.                         | false         |
 
 ### AddIfStatement
 
