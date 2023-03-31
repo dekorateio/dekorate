@@ -133,7 +133,9 @@ public class ConfigReference {
       return null;
     }
 
-    return Stream.of(properties).filter(p -> !Strings.equals(ANY, p)).collect(Collectors.joining("."));
+    return Strings.kebabToCamelCase(Stream.of(properties)
+        .filter(p -> !Strings.equals(ANY, p))
+        .collect(Collectors.joining(".")));
   }
 
   public static class Builder {

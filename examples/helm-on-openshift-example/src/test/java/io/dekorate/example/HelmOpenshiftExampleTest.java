@@ -67,8 +67,8 @@ class HelmOpenshiftExampleTest {
     Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
     // Should contain s2i configuration
-    assertNotNull(helmExampleValues.get("s2i-java"));
-    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2i-java")).get("builder-image"));
+    assertNotNull(helmExampleValues.get("s2iJava"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2iJava")).get("builderImage"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain notFound: as this property is ignored
@@ -87,8 +87,8 @@ class HelmOpenshiftExampleTest {
     Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
     // Should contain s2i configuration
-    assertNotNull(helmExampleValues.get("s2i-java"));
-    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2i-java")).get("builder-image"));
+    assertNotNull(helmExampleValues.get("s2iJava"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2iJava")).get("builderImage"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
     // Should NOT contain notFound: as this property is ignored
