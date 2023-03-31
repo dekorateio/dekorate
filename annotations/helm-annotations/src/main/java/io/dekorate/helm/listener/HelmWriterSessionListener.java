@@ -21,6 +21,12 @@ import static io.dekorate.helm.util.HelmTarArchiver.createTarBall;
 import static io.dekorate.helm.util.MapUtils.toMultiValueSortedMap;
 import static io.dekorate.helm.util.MapUtils.toMultiValueUnsortedMap;
 import static io.dekorate.helm.util.ValuesSchemaUtils.createSchema;
+import static io.dekorate.helm.util.YamlExpressionParserUtils.END_EXPRESSION_TOKEN;
+import static io.dekorate.helm.util.YamlExpressionParserUtils.SEPARATOR_QUOTES;
+import static io.dekorate.helm.util.YamlExpressionParserUtils.SEPARATOR_TOKEN;
+import static io.dekorate.helm.util.YamlExpressionParserUtils.START_EXPRESSION_TOKEN;
+import static io.dekorate.helm.util.YamlExpressionParserUtils.readAndSet;
+import static io.dekorate.helm.util.YamlExpressionParserUtils.set;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,7 +45,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -61,8 +66,8 @@ import io.dekorate.helm.config.ValueReference;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.HelmDependency;
 import io.dekorate.helm.model.Maintainer;
-import io.dekorate.helm.util.HelmValueHolder;
 import io.dekorate.helm.util.ReadmeBuilder;
+import io.dekorate.helm.util.ValuesHolder;
 import io.dekorate.project.Project;
 import io.dekorate.utils.Exec;
 import io.dekorate.utils.Maps;
@@ -92,16 +97,13 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   private static final String VALUES_START_TAG = START_TAG + " .Values.";
   private static final String VALUES_END_TAG = " " + END_TAG;
   private static final String EMPTY = "";
+  private static final String ENVIRONMENT_PROPERTY_GROUP = "envs.";
   private static final String IF_STATEMENT_START_TAG = "{{- if .Values.%s }}";
   private static final String TEMPLATE_FUNCTION_START_TAG = "{{- define";
   private static final String TEMPLATE_FUNCTION_END_TAG = "{{- end }}";
   private static final String HELM_HELPER_PREFIX = "_";
   private static final List<String> HELM_INVALID_CHARACTERS = Arrays.asList("-");
   private static final boolean APPEND = true;
-  private static final String SEPARATOR_TOKEN = ":LINE_SEPARATOR:";
-  private static final String SEPARATOR_QUOTES = ":DOUBLE_QUOTES";
-  private static final String START_EXPRESSION_TOKEN = ":START:";
-  private static final String END_EXPRESSION_TOKEN = ":END:";
   private static final Logger LOGGER = LoggerFactory.getLogger();
 
   /**
@@ -145,12 +147,10 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
       try {
         LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
-        Map<String, HelmValueHolder> prodValues = new HashMap<>();
-        Map<String, Map<String, HelmValueHolder>> valuesByProfile = new HashMap<>();
-        artifacts.putAll(processTemplates(helmConfig, inputDir, outputDir, generatedFiles, valuesReferences, prodValues,
-            valuesByProfile));
+        ValuesHolder values = populateValues(helmConfig, valuesReferences);
+        artifacts.putAll(processTemplates(helmConfig, inputDir, outputDir, generatedFiles, valuesReferences, values));
         artifacts.putAll(createChartYaml(helmConfig, project, inputDir, outputDir));
-        artifacts.putAll(createValuesYaml(helmConfig, valuesReferences, inputDir, outputDir, prodValues, valuesByProfile));
+        artifacts.putAll(createValuesYaml(helmConfig, valuesReferences, inputDir, outputDir, values));
 
         // To follow Helm file structure standards:
         artifacts.putAll(createEmptyChartFolder(helmConfig, outputDir));
@@ -341,31 +341,19 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
   private Map<String, String> createValuesYaml(HelmChartConfig helmConfig, List<ConfigReference> configReferences,
       Path inputDir, Path outputDir,
-      Map<String, HelmValueHolder> prodValues,
-      Map<String, Map<String, HelmValueHolder>> valuesByProfile)
-      throws IOException {
+      ValuesHolder valuesHolder) throws IOException {
 
-    // Populate user prod values without expression from properties
-    for (ConfigReference value : configReferences) {
-      if (!valueHasPath(value)) {
-        if (value.getValue() == null) {
-          throw new RuntimeException("The value mapping for " + value.getProperty() + " does not have "
-              + "either a path or a default value. ");
-        }
-
-        getValues(prodValues, valuesByProfile, value)
-            .put(deductProperty(helmConfig, value.getProperty()), new HelmValueHolder(value.getValue(), value));
-      }
-    }
+    Map<String, ValuesHolder.HelmValueHolder> prodValues = valuesHolder.getProdValues();
+    Map<String, Map<String, ValuesHolder.HelmValueHolder>> valuesByProfile = valuesHolder.getValuesByProfile();
 
     Map<String, String> artifacts = new HashMap<>();
 
     // first, we process the values in each profile
-    for (Map.Entry<String, Map<String, HelmValueHolder>> valuesInProfile : valuesByProfile.entrySet()) {
+    for (Map.Entry<String, Map<String, ValuesHolder.HelmValueHolder>> valuesInProfile : valuesByProfile.entrySet()) {
       String profile = valuesInProfile.getKey();
-      Map<String, HelmValueHolder> values = valuesInProfile.getValue();
+      Map<String, ValuesHolder.HelmValueHolder> values = valuesInProfile.getValue();
       // Populate the profiled values with the one from prod if the key does not exist
-      for (Map.Entry<String, HelmValueHolder> prodValue : prodValues.entrySet()) {
+      for (Map.Entry<String, ValuesHolder.HelmValueHolder> prodValue : prodValues.entrySet()) {
         if (!values.containsKey(prodValue.getKey())) {
           values.put(prodValue.getKey(), prodValue.getValue());
         }
@@ -400,9 +388,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return artifacts;
   }
 
-  private Map<String, Object> toValuesMap(Map<String, HelmValueHolder> holder) {
+  private Map<String, Object> toValuesMap(Map<String, ValuesHolder.HelmValueHolder> holder) {
     Map<String, Object> values = new HashMap<>();
-    for (Map.Entry<String, HelmValueHolder> value : holder.entrySet()) {
+    for (Map.Entry<String, ValuesHolder.HelmValueHolder> value : holder.entrySet()) {
       values.put(value.getKey(), value.getValue().value);
     }
 
@@ -466,14 +454,12 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   }
 
   private Map<String, String> processTemplates(HelmChartConfig helmConfig, Path inputDir, Path outputDir,
-      Collection<File> generatedFiles, List<ConfigReference> valuesReferences, Map<String, HelmValueHolder> prodValues,
-      Map<String, Map<String, HelmValueHolder>> valuesByProfile) throws IOException {
+      Collection<File> generatedFiles, List<ConfigReference> valuesReferences, ValuesHolder values) throws IOException {
 
     Map<String, String> templates = new HashMap<>();
     Path templatesDir = getChartOutputDir(helmConfig, outputDir).resolve(TEMPLATES);
     Files.createDirectories(templatesDir);
-    List<Map<Object, Object>> resources = replaceValuesInYamls(helmConfig, generatedFiles, valuesReferences, prodValues,
-        valuesByProfile);
+    List<Map<Object, Object>> resources = replaceValuesInYamls(helmConfig, generatedFiles, valuesReferences, values);
     Map<String, String> functionsByResource = processUserDefinedTemplates(inputDir, templates, templatesDir);
     // Split yamls in separated files by kind
     for (Map<Object, Object> resource : resources) {
@@ -578,12 +564,39 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return functionsByResource;
   }
 
-  private List<Map<Object, Object>> replaceValuesInYamls(HelmChartConfig helmConfig,
+  private ValuesHolder populateValues(io.dekorate.helm.config.HelmChartConfig helmConfig,
+      List<ConfigReference> valuesReferences) {
+    ValuesHolder values = new ValuesHolder();
+
+    // Populate user prod values without expression from properties
+    for (ConfigReference value : valuesReferences) {
+      if (!valueHasPath(value)) {
+        if (value.getValue() == null) {
+          throw new RuntimeException("The value mapping for " + value.getProperty() + " does not have "
+              + "either a path or a default value. ");
+        }
+
+        values.put(deductProperty(helmConfig, value.getProperty()), value);
+      }
+    }
+
+    // Populate expressions from conditions
+    for (io.dekorate.helm.config.HelmDependency dependency : helmConfig.getDependencies()) {
+      if (Strings.isNotNullOrEmpty(dependency.getCondition())) {
+        ConfigReference configReference = new ConfigReference.Builder(dependency.getCondition())
+            .withDescription("Flag to enable/disable the dependency '" + dependency.getName() + "'")
+            .build();
+        values.put(deductProperty(helmConfig, dependency.getCondition()), configReference, true);
+      }
+    }
+
+    return values;
+  }
+
+  private List<Map<Object, Object>> replaceValuesInYamls(io.dekorate.helm.config.HelmChartConfig helmConfig,
       Collection<File> generatedFiles,
       List<ConfigReference> valuesReferences,
-      Map<String, HelmValueHolder> prodValues,
-      Map<String, Map<String, HelmValueHolder>> valuesByProfile) throws IOException {
-
+      ValuesHolder values) throws IOException {
     List<Map<Object, Object>> allResources = new LinkedList<>();
     for (File generatedFile : generatedFiles) {
       if (!generatedFile.getName().toLowerCase().matches(YAML_REG_EXP)) {
@@ -592,37 +605,39 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
       // Read helm expression parsers
       YamlExpressionParser parser = YamlPath.from(new FileInputStream(generatedFile));
+
       // Seen lookup by default values.yaml file.
       Map<String, Object> seen = new HashMap<>();
 
+      // First, process the non-environmental properties
       for (ConfigReference valueReference : valuesReferences) {
-        String valueReferenceProperty = deductProperty(helmConfig, valueReference.getProperty());
+        if (!valueIsEnvironmentProperty(valueReference)) {
+          String valueReferenceProperty = deductProperty(helmConfig, valueReference.getProperty());
 
-        if (seen.containsKey(valueReferenceProperty)) {
-          if (Strings.isNotNullOrEmpty(valueReference.getProfile())) {
-            Object value = Optional.ofNullable(valueReference.getValue())
-                .orElse(seen.get(valueReferenceProperty));
-            getValues(prodValues, valuesByProfile, valueReference).put(valueReferenceProperty,
-                new HelmValueHolder(value, valueReference));
-          }
-
-          continue;
+          processValueReference(valueReferenceProperty, valueReference.getValue(), valueReference, values, parser,
+              seen);
         }
+      }
 
-        // Check whether path exists
-        for (String path : valueReference.getPaths()) {
-          String expression = Optional.ofNullable(valueReference.getExpression())
-              .filter(Strings::isNotNullOrEmpty)
-              .orElse(VALUES_START_TAG + valueReferenceProperty + VALUES_END_TAG);
+      // Next, process the environmental properties, so we can decide if it's a property coming from values.yaml or not.
+      for (ConfigReference valueReference : valuesReferences) {
+        if (valueIsEnvironmentProperty(valueReference)) {
+          String valueReferenceProperty = deductProperty(helmConfig, valueReference.getProperty());
+          Object valueReferenceValue = valueReference.getValue();
+          String environmentProperty = getEnvironmentPropertyName(valueReference);
 
-          Object found = readAndSet(parser, path, expression);
-
-          Object value = Optional.ofNullable(valueReference.getValue()).orElse(found);
-          if (value != null) {
-            seen.put(valueReferenceProperty, value);
-            getValues(prodValues, valuesByProfile, valueReference).put(valueReferenceProperty,
-                new HelmValueHolder(value, valueReference));
+          // Try to find the value from the current values
+          Map<String, ValuesHolder.HelmValueHolder> current = values.get(valueReference.getProfile());
+          for (Map.Entry<String, ValuesHolder.HelmValueHolder> currentValue : current.entrySet()) {
+            if (currentValue.getKey().endsWith(environmentProperty)) {
+              // found, we use this value instead of generating an additional envs.xxx=yyy property
+              valueReferenceProperty = currentValue.getKey();
+              valueReferenceValue = currentValue.getValue().value;
+              break;
+            }
           }
+
+          processValueReference(valueReferenceProperty, valueReferenceValue, valueReference, values, parser, seen);
         }
       }
 
@@ -632,20 +647,50 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     return allResources;
   }
 
-  private Map<String, HelmValueHolder> getValues(Map<String, HelmValueHolder> prodValues,
-      Map<String, Map<String, HelmValueHolder>> valuesByProfile,
-      ConfigReference valueReference) {
-    String valueProfile = valueReference.getProfile();
-    Map<String, HelmValueHolder> values = prodValues;
-    if (Strings.isNotNullOrEmpty(valueProfile)) {
-      values = valuesByProfile.get(valueProfile);
-      if (values == null) {
-        values = new HashMap<>();
-        valuesByProfile.put(valueProfile, values);
-      }
+  private boolean valueIsEnvironmentProperty(ConfigReference valueReference) {
+    return valueReference.getProperty().contains(ENVIRONMENT_PROPERTY_GROUP);
+  }
+
+  private String getEnvironmentPropertyName(ConfigReference valueReference) {
+    String property = valueReference.getProperty();
+    int index = valueReference.getProperty().indexOf(ENVIRONMENT_PROPERTY_GROUP);
+    if (index >= 0) {
+      property = property.substring(index + ENVIRONMENT_PROPERTY_GROUP.length());
     }
 
-    return values;
+    return property;
+  }
+
+  private void processValueReference(String property, Object value, ConfigReference valueReference, ValuesHolder values,
+      YamlExpressionParser parser, Map<String, Object> seen) {
+
+    String profile = valueReference.getProfile();
+    String expression = Optional.ofNullable(valueReference.getExpression())
+        .filter(Strings::isNotNullOrEmpty)
+        .orElse(VALUES_START_TAG + property + VALUES_END_TAG);
+
+    if (seen.containsKey(property)) {
+      if (Strings.isNotNullOrEmpty(profile)) {
+        values.putIfAbsent(property, valueReference, Optional.ofNullable(value).orElse(seen.get(property)), profile);
+      }
+
+      for (String path : valueReference.getPaths()) {
+        set(parser, path, expression);
+      }
+
+      return;
+    }
+
+    // Check whether path exists
+    for (String path : valueReference.getPaths()) {
+      Object found = readAndSet(parser, path, expression);
+
+      Object actualValue = Optional.ofNullable(value).orElse(found);
+      if (actualValue != null) {
+        seen.put(property, actualValue);
+        values.putIfAbsent(property, valueReference, actualValue, profile);
+      }
+    }
   }
 
   private Map<String, String> createChartYaml(HelmChartConfig helmConfig, Project project, Path inputDir, Path outputDir)
@@ -720,13 +765,4 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
         .filter(f -> f.getName().toLowerCase().matches(YAML_REG_EXP))
         .collect(Collectors.toList());
   }
-
-  private static Object readAndSet(YamlExpressionParser parser, String path, String expression) {
-    Set<Object> found = parser.readAndReplace(path, START_EXPRESSION_TOKEN +
-        expression.replaceAll(Pattern.quote(System.lineSeparator()), SEPARATOR_TOKEN)
-            .replaceAll(Pattern.quote("\""), SEPARATOR_QUOTES)
-        + END_EXPRESSION_TOKEN);
-    return found.stream().findFirst().orElse(null);
-  }
-
 }

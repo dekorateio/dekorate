@@ -80,7 +80,7 @@ public final class ReadmeBuilder {
     writeLine(TIP + message);
   }
 
-  public static String build(HelmChartConfig helmConfig, Map<String, HelmValueHolder> values) {
+  public static String build(HelmChartConfig helmConfig, Map<String, ValuesHolder.HelmValueHolder> values) {
     ReadmeBuilder builder = new ReadmeBuilder();
     // Title:
     // # {chart.name}
@@ -92,7 +92,7 @@ public final class ReadmeBuilder {
     builder.writeTableHeader("Parameter", "Description", "Default");
     SortedSet<String> keys = new TreeSet<>(values.keySet());
     for (String key : keys) {
-      HelmValueHolder value = values.get(key);
+      ValuesHolder.HelmValueHolder value = values.get(key);
       builder.writeTableRow(literal(key), value.configReference.getDescription(), value.value);
     }
 
