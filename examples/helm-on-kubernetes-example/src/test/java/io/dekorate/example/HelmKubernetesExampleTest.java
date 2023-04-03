@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,12 +36,11 @@ import io.dekorate.helm.model.ValuesSchema;
 import io.dekorate.helm.model.ValuesSchemaProperty;
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.utils.Serialization;
-import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 
 class HelmKubernetesExampleTest {
 
   private static final String CHART_NAME = "myChart";
-  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/" + CHART_NAME;
+  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/kubernetes/" + CHART_NAME;
   private static final String ROOT_CONFIG_NAME = "app";
 
   @Test

@@ -31,7 +31,7 @@ import io.dekorate.utils.Serialization;
 class HelmOpenshiftExampleTest {
 
   private static final String CHART_NAME = "myOcpChart";
-  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/" + CHART_NAME;
+  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/openshift/" + CHART_NAME;
   private static final String ROOT_CONFIG_NAME = "app";
 
   @Test

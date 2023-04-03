@@ -121,12 +121,21 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
       }
       Path inputDir = baseDir.resolve(helmConfig.getInputFolder());
 
-      List<ConfigReference> configReferences = Stream.of(helmConfig.getValues())
+      List<ConfigReference> configReferencesFromConfig = Stream.of(helmConfig.getValues())
           .map(this::toConfigReference)
           .collect(Collectors.toList());
 
-      writeHelmFiles(session, project, helmConfig, configReferences, inputDir, outputDir.resolve(helmConfig.getOutputFolder()),
-          listYamls(outputDir));
+      for (String group : session.getGeneratedResources().keySet()) {
+        List<ConfigReference> configReferencesFromDecorators = session.getResourceRegistry().getConfigReferences(group)
+            .stream()
+            .flatMap(decorator -> decorator.getConfigReferences().stream())
+            .collect(Collectors.toList());
+
+        Collections.reverse(configReferencesFromDecorators);
+
+        writeHelmFiles(project, helmConfig, configReferencesFromConfig, configReferencesFromDecorators, inputDir,
+            outputDir.resolve(helmConfig.getOutputFolder()).resolve(group), listYamls(outputDir));
+      }
     });
   }
 
@@ -135,15 +144,18 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
    * 
    * @return the list of the Helm generated files.
    */
-  public Map<String, String> writeHelmFiles(Session session, Project project,
-      HelmChartConfig helmConfig, List<ConfigReference> configReferences,
+  public Map<String, String> writeHelmFiles(Project project,
+      HelmChartConfig helmConfig,
+      List<ConfigReference> configReferencesFromConfig,
+      List<ConfigReference> configReferencesFromDecorators,
       Path inputDir,
       Path outputDir,
       Collection<File> generatedFiles) {
     Map<String, String> artifacts = new HashMap<>();
     if (helmConfig.isEnabled()) {
       validateHelmConfig(helmConfig);
-      List<ConfigReference> valuesReferences = mergeValuesReferencesFromDecorators(helmConfig, configReferences, session);
+      List<ConfigReference> valuesReferences = mergeValuesReferencesFromDecorators(helmConfig, configReferencesFromConfig,
+          configReferencesFromDecorators);
 
       try {
         LOGGER.info(String.format("Creating Helm Chart \"%s\"", helmConfig.getName()));
@@ -298,7 +310,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
   }
 
   private List<ConfigReference> mergeValuesReferencesFromDecorators(HelmChartConfig helmConfig,
-      List<ConfigReference> configReferencesFromConfig, Session session) {
+      List<ConfigReference> configReferencesFromConfig, List<ConfigReference> configReferencesFromDecorators) {
     List<ConfigReference> configReferences = new LinkedList<>();
     // From user
     configReferences.addAll(configReferencesFromConfig);
@@ -309,14 +321,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
           .withValue(addIfStatement.getWithDefaultValue())
           .build());
     }
-    // From decorators: We need to reverse the order as the latest decorator was the latest applied and hence the one
-    // we should use.
-    List<ConfigReference> configReferencesFromDecorators = session.getResourceRegistry().getConfigReferences()
-        .stream()
-        .flatMap(decorator -> decorator.getConfigReferences().stream())
-        .collect(Collectors.toList());
-
-    Collections.reverse(configReferencesFromDecorators);
+    // From decorators
     configReferences.addAll(configReferencesFromDecorators);
 
     return configReferences;

@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -204,14 +205,30 @@ public class ResourceRegistry {
     return resources;
   }
 
+  /**
+   * @deprecated since 3.5.3. Use `getConfigReferences(group)` instead.
+   */
+  @Deprecated
   public List<WithConfigReferences> getConfigReferences() {
-    Set<Decorator> configReferences = new HashSet<>();
-
     Set<Decorator> allDecorators = new HashSet<>();
     allDecorators.addAll(globalDecorators);
     groupDecorators.values().forEach(allDecorators::addAll);
     customDecorators.values().forEach(allDecorators::addAll);
 
+    return extractConfigReferences(allDecorators);
+  }
+
+  public List<WithConfigReferences> getConfigReferences(String group) {
+    Set<Decorator> allDecorators = new HashSet<>();
+    allDecorators.addAll(globalDecorators);
+    Optional.ofNullable(groupDecorators.get(group)).ifPresent(allDecorators::addAll);
+    Optional.ofNullable(customDecorators.get(group)).ifPresent(allDecorators::addAll);
+
+    return extractConfigReferences(allDecorators);
+  }
+
+  private List<WithConfigReferences> extractConfigReferences(Set<Decorator> allDecorators) {
+    Set<Decorator> configReferences = new HashSet<>();
     for (Decorator decorator : allDecorators) {
       if (decorator instanceof WithConfigReferences) {
         configReferences.add(decorator);
