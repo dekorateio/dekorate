@@ -63,7 +63,6 @@ public class ApplyReplicasToDeploymentConfigDecorator extends NamedResourceDecor
 
     return new ConfigReference.Builder(property, path)
         .withDescription("The number of desired pods.")
-        .withValue(replicas)
         .withMinimum(0)
         .build();
   }
