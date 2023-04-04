@@ -20,6 +20,11 @@ public final class YamlExpressionParserUtils {
     parser.write(path, adaptExpression(expression));
   }
 
+  public static Object read(YamlExpressionParser parser, String path) {
+    Set<Object> found = parser.read(path);
+    return found.stream().findFirst().orElse(null);
+  }
+
   public static Object readAndSet(YamlExpressionParser parser, String path, String expression) {
     Set<Object> found = parser.readAndReplace(path, adaptExpression(expression));
     return found.stream().findFirst().orElse(null);
