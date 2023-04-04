@@ -42,7 +42,7 @@ public class ConfigReference {
   private final Set<String> enumValues;
   private final boolean required;
 
-  private ConfigReference(String property, String[] paths, String description, Object value, String expression,
+  protected ConfigReference(String property, String[] paths, String description, Object value, String expression,
       String profile, Integer minimum, Integer maximum, String pattern, Set<String> enumValues, boolean required) {
     this.property = property;
     this.paths = paths;

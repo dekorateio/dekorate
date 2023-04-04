@@ -94,6 +94,7 @@
       <module>issue-1124-route-multiple-container-ports</module>
       <module>issue-1158-spring-boot-certmanager-with-annotations</module>
       <module>feat-openshift-secure-routes</module>
+      <module>issue-knative-probes-helm</module>
     </modules>
 
 </project>
