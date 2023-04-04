@@ -1,4 +1,3 @@
-## Rebranding Notice
 
 This project was originally called `ap4k` which stood for `Annotation Processors for Kubernetes`.
 As the project now supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project has been renamed to `dekorate`.
