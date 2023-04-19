@@ -3,16 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.dekorate</groupId>
-  <artifactId>spring-boot-with-certmanager-example</artifactId>
+  <artifactId>spring-boot-on-openshift-with-certmanager-example</artifactId>
   <version>3.5-SNAPSHOT</version>
-  <name>Dekorate :: Examples :: Spring Boot with CertManager</name>
+  <name>Dekorate :: Examples :: Spring Boot on Openshift with CertManager</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <version.spring-boot>2.5.12</version.spring-boot>    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
+    <version.spring-boot>2.5.12</version.spring-boot>
+    <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
     <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
     <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
   </properties>
@@ -20,7 +21,7 @@
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>
-      <artifactId>kubernetes-spring-starter</artifactId>
+      <artifactId>openshift-spring-starter</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
