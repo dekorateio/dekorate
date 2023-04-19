@@ -41,7 +41,8 @@
         <module>spring-boot-with-jaeger-on-kubernetes-example</module>
         <module>spring-boot-with-tekton-example</module>
         <module>spring-boot-with-tekton-and-m2-pvc-example</module>
-        <module>spring-boot-with-certmanager-example</module>
+        <module>spring-boot-on-kubernetes-with-certmanager-example</module>
+        <module>spring-boot-on-openshift-with-certmanager-example</module>
         <module>thorntail-on-kubernetes-example</module>
         <module>thorntail-on-openshift-example</module>
         <module>vertx-on-kubernetes-example</module>

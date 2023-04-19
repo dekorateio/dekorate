@@ -1,5 +1,7 @@
 package io.dekorate.certmanager.manifest;
 
+import static io.dekorate.utils.Strings.defaultIfEmpty;
+
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -14,12 +16,12 @@ import io.dekorate.certmanager.decorator.AddCaIssuerResourceDecorator;
 import io.dekorate.certmanager.decorator.AddCertificateResourceDecorator;
 import io.dekorate.certmanager.decorator.AddSelfSignedIssuerResourceDecorator;
 import io.dekorate.certmanager.decorator.AddVaultIssuerResourceDecorator;
+import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.Configuration;
 import io.dekorate.kubernetes.config.MountBuilder;
 import io.dekorate.kubernetes.config.SecretVolumeBuilder;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
 import io.dekorate.kubernetes.decorator.AddSecretVolumeDecorator;
-import io.dekorate.utils.Strings;
 
 public class CertificateResourceGenerator implements ManifestGenerator<CertificateConfig> {
 
@@ -56,27 +58,31 @@ public class CertificateResourceGenerator implements ManifestGenerator<Certifica
     LOGGER.info("Processing certificate config.");
     validate(config);
 
+    String defaultName = configurationRegistry.get(BaseConfig.class).map(BaseConfig::getName)
+        .orElse(config.getProject().getBuildInfo().getName());
+    String name = defaultIfEmpty(config.getName(), defaultName);
+
     // issuers
     if (config.getVault() != null) {
-      resourceRegistry.decorate(new AddVaultIssuerResourceDecorator(config.getVault(), config.getName()));
+      resourceRegistry.decorate(new AddVaultIssuerResourceDecorator(config.getVault(), name));
     }
 
     if (config.getCa() != null) {
-      resourceRegistry.decorate(new AddCaIssuerResourceDecorator(config.getCa(), config.getName()));
+      resourceRegistry.decorate(new AddCaIssuerResourceDecorator(config.getCa(), name));
     }
 
     if (config.getSelfSigned() != null) {
-      resourceRegistry.decorate(new AddSelfSignedIssuerResourceDecorator(config.getSelfSigned(), config.getName()));
+      resourceRegistry.decorate(new AddSelfSignedIssuerResourceDecorator(config.getSelfSigned(), name));
     }
 
     // certificate
-    resourceRegistry.decorate(new AddCertificateResourceDecorator(config));
+    resourceRegistry.decorate(new AddCertificateResourceDecorator(name, config));
 
     // volumes
-    String volumeName = getStringOrDefault(config.getName(), DEFAULT_VOLUME_NAME);
+    String volumeName = defaultIfEmpty(config.getName(), DEFAULT_VOLUME_NAME);
     resourceRegistry.decorate(new AddMountDecorator(new MountBuilder()
-        .withName(getStringOrDefault(config.getName(), DEFAULT_VOLUME_NAME))
-        .withPath(getStringOrDefault(config.getVolumeMountPath(), DEFAULT_VOLUME_MOUNT_PATH))
+        .withName(defaultIfEmpty(config.getName(), DEFAULT_VOLUME_NAME))
+        .withPath(defaultIfEmpty(config.getVolumeMountPath(), DEFAULT_VOLUME_MOUNT_PATH))
         .withReadOnly(true)
         .build()));
 
@@ -107,9 +113,5 @@ public class CertificateResourceGenerator implements ManifestGenerator<Certifica
 
   private boolean noneIssuerIsSet(Object... issuers) {
     return Stream.of(issuers).noneMatch(Objects::nonNull);
-  }
-
-  private String getStringOrDefault(String value, String defaultStr) {
-    return Strings.isNullOrEmpty(value) ? defaultStr : value;
   }
 }

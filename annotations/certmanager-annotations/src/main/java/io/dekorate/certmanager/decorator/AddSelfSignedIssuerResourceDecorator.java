@@ -11,8 +11,8 @@ public class AddSelfSignedIssuerResourceDecorator extends BaseAddIssuerResourceD
 
   private final SelfSigned config;
 
-  public AddSelfSignedIssuerResourceDecorator(SelfSigned config, String certificateName) {
-    super(certificateName);
+  public AddSelfSignedIssuerResourceDecorator(SelfSigned config, String name) {
+    super(name);
     this.config = config;
   }
 

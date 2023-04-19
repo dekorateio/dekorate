@@ -19,8 +19,8 @@ public class AddVaultIssuerResourceDecorator extends BaseAddIssuerResourceDecora
 
   private final Vault config;
 
-  public AddVaultIssuerResourceDecorator(Vault config, String certificateName) {
-    super(certificateName);
+  public AddVaultIssuerResourceDecorator(Vault config, String name) {
+    super(name);
     this.config = config;
   }
 
