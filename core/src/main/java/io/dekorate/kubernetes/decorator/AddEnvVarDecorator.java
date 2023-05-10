@@ -148,11 +148,6 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
     return Objects.hash(env);
   }
 
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
-  }
-
   @Override
   public List<ConfigReference> getConfigReferences() {
     if (env.getValue() != null) {

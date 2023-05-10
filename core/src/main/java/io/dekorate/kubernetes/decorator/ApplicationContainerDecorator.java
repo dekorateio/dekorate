@@ -80,7 +80,8 @@ public abstract class ApplicationContainerDecorator<T> extends Decorator<Visitab
   public abstract void andThenVisit(T item);
 
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class,
+        AddInitContainerDecorator.class };
   }
 
   private class DeploymentVisitor extends TypedVisitor<ContainerBuilder> {
