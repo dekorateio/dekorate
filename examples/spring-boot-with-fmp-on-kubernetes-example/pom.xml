@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-with-fmp-on-kubernetes-example</artifactId>
-  <version>3.5-SNAPSHOT</version>
+  <version>3.6-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot with FMP on Kubernetes</name>
 
   <properties>

@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-on-openshift-example</artifactId>
-  <version>3.5-SNAPSHOT</version>
+  <version>3.6-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot on Openshift</name>
 
   <properties>

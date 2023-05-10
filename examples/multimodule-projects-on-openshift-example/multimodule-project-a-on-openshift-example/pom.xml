@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>multimodule-project-a-on-openshift-example</artifactId>
-  <version>3.5-SNAPSHOT</version>
+  <version>3.6-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Multi Module Project on Openshift :: Project A</name>
 
   <properties>
