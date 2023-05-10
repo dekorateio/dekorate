@@ -71,6 +71,8 @@ public @interface HelmChart {
 
   String valuesRootAlias() default "app";
 
+  String valuesProfileSeparator() default ".";
+
   boolean createTarFile() default false;
 
   boolean createValuesSchemaFile() default true;
