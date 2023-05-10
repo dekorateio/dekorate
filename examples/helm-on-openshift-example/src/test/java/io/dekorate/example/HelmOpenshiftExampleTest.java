@@ -64,17 +64,21 @@ class HelmOpenshiftExampleTest {
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
     assertNotNull(values.get(ROOT_CONFIG_NAME) instanceof Map, "Value `" + ROOT_CONFIG_NAME + "` is not a map!");
-    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
+    Map<String, Object> app = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
+    // Should map ports:
+    Map<String, Object> ports = (Map<String, Object>) app.get("ports");
+    assertNotNull(ports);
+    assertEquals(8080, ports.get("http"));
     // Should contain s2i configuration
-    assertNotNull(helmExampleValues.get("s2iJava"));
-    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2iJava")).get("builderImage"));
+    assertNotNull(app.get("s2iJava"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) app.get("s2iJava")).get("builderImage"));
     // Should contain replicas
-    assertEquals(3, helmExampleValues.get("replicas"));
+    assertEquals(3, app.get("replicas"));
     // Should NOT contain notFound: as this property is ignored
-    assertNull(helmExampleValues.get("notFound"));
+    assertNull(app.get("notFound"));
     // Should contain vcsUrl with the overridden value from properties
-    assertEquals("Overridden", helmExampleValues.get("vcsUrl"));
+    assertEquals("Overridden", app.get("vcsUrl"));
   }
 
   @Test

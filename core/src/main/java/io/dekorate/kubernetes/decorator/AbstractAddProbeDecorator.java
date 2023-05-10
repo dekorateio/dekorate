@@ -28,6 +28,7 @@ import io.dekorate.kubernetes.config.Probe;
 import io.dekorate.utils.Ports;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
+import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.fabric8.kubernetes.api.model.ExecAction;
 import io.fabric8.kubernetes.api.model.GRPCAction;
 import io.fabric8.kubernetes.api.model.HTTPGetAction;
@@ -51,6 +52,8 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
   abstract protected void doCreateProbe(ContainerFluent<?> container, Actions actions);
 
   abstract protected String getProbeName();
+
+  private ContainerPort httpPort;
 
   public AbstractAddProbeDecorator(String containerName, Probe probe) {
     this(null, containerName, probe);
@@ -79,7 +82,8 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
   }
 
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddPortDecorator.class };
+    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddPortDecorator.class,
+        ApplyPortNameDecorator.class };
   }
 
   @Override
@@ -111,13 +115,23 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       // default to http action
       configReferences
           .add(buildConfigReference("httpGet.path", probe.getHttpActionPath(), "The http path to use for the probe."));
-      configReferences.add(buildConfigReference("httpGet.port", AUTO_DISCOVER, "The http port to use for the probe."));
       configReferences.add(buildConfigReference("httpGet.scheme", AUTO_DISCOVER, "The http schema to use for the probe."));
+      if (httpPort != null) {
+        configReferences.add(buildConfigReference(joinProperties("ports." + httpPort.getName()),
+            "httpGet.port", httpPort.getContainerPort(), "The http port to use for the probe."));
+      } else {
+        configReferences.add(buildConfigReference("httpGet.port", AUTO_DISCOVER, "The http port to use for the probe."));
+      }
     }
     return configReferences;
   }
 
   private ConfigReference buildConfigReference(String propertyName, Object value, String description) {
+    String property = joinProperties(getProbeName(), propertyName);
+    return buildConfigReference(property, propertyName, value, description);
+  }
+
+  private ConfigReference buildConfigReference(String property, String probeField, Object value, String description) {
     String expression = PATH_ALL_EXPRESSION;
     if (Strings.isNotNullOrEmpty(getDeploymentName()) && Strings.isNotNullOrEmpty(getContainerName())) {
       expression = String.format(PATH_DEPLOYMENT_CONTAINER_EXPRESSION, getDeploymentName(), getContainerName());
@@ -126,8 +140,7 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     } else if (Strings.isNotNullOrEmpty(getContainerName())) {
       expression = String.format(PATH_CONTAINER_EXPRESSION, getContainerName());
     }
-    String property = joinProperties(getProbeName(), propertyName);
-    String yamlPath = expression + getProbeName() + "." + propertyName;
+    String yamlPath = expression + getProbeName() + "." + probeField;
     return new ConfigReference.Builder(property, yamlPath).withDescription(description).withValue(value).build();
   }
 
@@ -149,7 +162,8 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(8080), "HTTP");
     }
 
-    int port = Ports.getHttpPort(container).get().getContainerPort();
+    httpPort = Ports.getHttpPort(container).get();
+    int port = httpPort.getContainerPort();
     String schema = "HTTP";
     // Generally, if the port is either 443 or 8443, then we should use the schema HTTPS
     // TODO: However, we should let users deciding what schema to use.
