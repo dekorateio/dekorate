@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.dekorate.utils.Decorators;
 import io.fabric8.kubernetes.api.model.ContainerPortFluent;
 
 public class ApplyPortNameDecorator extends ApplicationContainerDecorator<ContainerPortFluent<?>> {
@@ -43,7 +44,6 @@ public class ApplyPortNameDecorator extends ApplicationContainerDecorator<Contai
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class,
-        AddPortDecorator.class };
+    return Decorators.append(super.after(), AddPortDecorator.class);
   }
 }

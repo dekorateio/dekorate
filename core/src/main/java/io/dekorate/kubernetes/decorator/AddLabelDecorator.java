@@ -65,12 +65,6 @@ public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaFluent> 
   }
 
   @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
-  }
-
-  @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1 + getClass().hashCode();

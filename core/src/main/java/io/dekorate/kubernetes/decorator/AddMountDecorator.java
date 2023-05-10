@@ -44,10 +44,4 @@ public class AddMountDecorator extends ApplicationContainerDecorator<ContainerBu
         .withReadOnly(mount.isReadOnly())
         .endVolumeMount();
   }
-
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class, AddInitContainerDecorator.class };
-  }
-
 }

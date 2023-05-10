@@ -42,11 +42,6 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
     container.withImage(image);
   }
 
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
-  }
-
   @Override
   public List<ConfigReference> getConfigReferences() {
     return Arrays.asList(buildConfigReferenceForImage());

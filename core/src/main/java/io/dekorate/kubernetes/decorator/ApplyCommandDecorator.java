@@ -39,10 +39,4 @@ public class ApplyCommandDecorator extends ApplicationContainerDecorator<Contain
       container.withCommand(command);
     }
   }
-
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
-  }
-
 }
