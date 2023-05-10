@@ -17,6 +17,7 @@
 
 package io.dekorate.knative.helm;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
@@ -39,15 +40,19 @@ public class KnativeWithHelmTest {
         .readValue(getResource("/helm/knative/example/values.yaml"), Map.class);
     Map<String, Object> app = (Map<String, Object>) values.get("app");
     assertNotNull(app);
-    assertPortIsNotNullForProbe(app, "livenessProbe");
-    assertPortIsNotNullForProbe(app, "readinessProbe");
+    assertPathIsNotNullForProbe(app, "livenessProbe");
+    assertPathIsNotNullForProbe(app, "readinessProbe");
+
+    Map<String, Object> ports = (Map<String, Object>) app.get("ports");
+    assertNotNull(ports);
+    assertEquals(8080, ports.get("http1"));
   }
 
-  private static void assertPortIsNotNullForProbe(Map<String, Object> app, String probeName) {
+  private static void assertPathIsNotNullForProbe(Map<String, Object> app, String probeName) {
     Map<String, Object> probe = (Map<String, Object>) app.get(probeName);
     assertNotNull(probe);
     Map<String, Object> httpGet = (Map<String, Object>) probe.get("httpGet");
-    assertNotNull(httpGet.get("port"));
+    assertNotNull(httpGet.get("path"));
   }
 
   private static InputStream getResource(String resource) {

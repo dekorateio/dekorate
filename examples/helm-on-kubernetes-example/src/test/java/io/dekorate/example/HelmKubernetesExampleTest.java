@@ -115,6 +115,10 @@ class HelmKubernetesExampleTest {
     assertNull(app.get("notFound"));
     // Should contain vcsUrl with the overridden value from properties
     assertEquals("Overridden", app.get("vcsUrl"));
+    // Should map ports:
+    Map<String, Object> ports = (Map<String, Object>) app.get("ports");
+    assertNotNull(ports);
+    assertEquals(8080, ports.get("http"));
     // Should include health check properties:
     // 1. tcp socket action
     Map<String, Object> livenessValues = (Map<String, Object>) app.get("livenessProbe");
@@ -127,7 +131,8 @@ class HelmKubernetesExampleTest {
     assertProbe(readinessValues, 10, 30);
     Map<String, Object> httpGetValues = (Map<String, Object>) readinessValues.get("httpGet");
     assertEquals("/readiness", httpGetValues.get("path"));
-    assertEquals(8080, httpGetValues.get("port"));
+    // It should be null because it's now mapped with app.ports.http;
+    assertNull(httpGetValues.get("port"));
     assertEquals("HTTP", httpGetValues.get("scheme"));
     // 3. exec action
     Map<String, Object> startupValues = (Map<String, Object>) app.get("startupProbe");
