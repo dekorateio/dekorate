@@ -42,7 +42,7 @@ class HelmOpenshiftExampleTest {
     assertEquals(CHART_NAME, chart.getName());
     // Values.yaml manifest
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
-    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values-dev.yaml"));
     // templates
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/buildconfig.yaml"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/deploymentconfig.yaml"));
@@ -79,7 +79,7 @@ class HelmOpenshiftExampleTest {
 
   @Test
   public void valuesShouldContainExpectedDataInDevProfile() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"), Map.class);
+    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values-dev.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");

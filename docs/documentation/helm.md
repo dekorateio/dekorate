@@ -490,12 +490,14 @@ app:
   host: my-host
 ```
 
-But as you are now using a profile named `test` in one of your mapped properties, it will also generate a `values-test.yaml` file with the content:
+But as you are now using a profile named `test` in one of your mapped properties, it will also generate a `values.test.yaml` file with the content:
 
 ```yaml
 app:
   host: my-test-host
 ```
+
+**TIP**: By default, Dekorate Helm uses the "." character in the filename of profile specific values files i.e. `values.test.yaml`. You can configure this separator using the property `dekorate.helm.valuesProfileSeparator`. For example, using `dekorate.helm.valuesProfileSeparator=-` would generate `values-test.yaml` instead.
 
 #### Helm Usage
 

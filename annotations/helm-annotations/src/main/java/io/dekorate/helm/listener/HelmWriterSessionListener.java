@@ -405,7 +405,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
       // Create the values.<profile>.yaml file
       artifacts.putAll(writeFileAsYaml(mergeWithFileIfExists(inputDir, VALUES + YAML, toValuesMap(values)),
-          getChartOutputDir(helmConfig, outputDir).resolve(VALUES + "." + profile + YAML)));
+          getChartOutputDir(helmConfig, outputDir).resolve(VALUES + helmConfig.getValuesProfileSeparator() + profile + YAML)));
     }
 
     // Next, we process the prod profile
