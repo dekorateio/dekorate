@@ -37,7 +37,6 @@ public class ApplyRequestsCpuDecorator extends ApplicationContainerDecorator<Con
 
   @Override
   public void andThenVisit(ContainerFluent<?> container) {
-    System.out.println("Apply requests cpu to:" + container.getName());
     container.editOrNewResources().addToRequests(CPU, new Quantity(amount)).endResources();
   }
 }

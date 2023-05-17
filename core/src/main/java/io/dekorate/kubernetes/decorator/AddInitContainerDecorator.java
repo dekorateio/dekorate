@@ -18,8 +18,10 @@ package io.dekorate.kubernetes.decorator;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.adapter.ContainerAdapter;
 import io.dekorate.kubernetes.config.Container;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.PodSpecFluent;
 
 /**
  * A decorator that adds an init container to a pod template.
@@ -36,6 +38,55 @@ public class AddInitContainerDecorator extends NamedResourceDecorator<PodSpecBui
 
   @Override
   public void andThenVisit(PodSpecBuilder podSpec, ObjectMeta resourceMeta) {
-    podSpec.addToInitContainers(ContainerAdapter.adapt(container));
+    io.fabric8.kubernetes.api.model.Container resource = ContainerAdapter.adapt(container);
+    if (podSpec.hasMatchingInitContainer(this::existsContainerByName)) {
+      update(podSpec, resource);
+    } else {
+      add(podSpec, resource);
+    }
+  }
+
+  private void add(PodSpecBuilder podSpec, io.fabric8.kubernetes.api.model.Container resource) {
+    podSpec.addToInitContainers(resource);
+  }
+
+  private void update(PodSpecBuilder podSpec, io.fabric8.kubernetes.api.model.Container resource) {
+    PodSpecFluent.InitContainersNested<PodSpecBuilder> matching = podSpec
+        .editMatchingInitContainer(this::existsContainerByName);
+
+    if (resource.getImage() != null) {
+      matching.withImage(resource.getImage());
+    }
+
+    if (resource.getWorkingDir() != null) {
+      matching.withWorkingDir(resource.getWorkingDir());
+    }
+
+    if (resource.getCommand() != null && !resource.getCommand().isEmpty()) {
+      matching.withCommand(resource.getCommand());
+    }
+
+    if (resource.getArgs() != null && !resource.getArgs().isEmpty()) {
+      matching.withArgs(resource.getArgs());
+    }
+
+    if (resource.getReadinessProbe() != null) {
+      matching.withReadinessProbe(resource.getReadinessProbe());
+    }
+
+    if (resource.getLivenessProbe() != null) {
+      matching.withLivenessProbe(resource.getLivenessProbe());
+    }
+
+    matching.addAllToEnv(resource.getEnv());
+    if (resource.getPorts() != null && !resource.getPorts().isEmpty()) {
+      matching.withPorts(resource.getPorts());
+    }
+
+    matching.endInitContainer();
+  }
+
+  private boolean existsContainerByName(ContainerBuilder containerBuilder) {
+    return containerBuilder.getName().equals(container.getName());
   }
 }
