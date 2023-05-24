@@ -58,6 +58,10 @@ public class AddInitContainerDecorator extends NamedResourceDecorator<PodSpecBui
       matching.withImage(resource.getImage());
     }
 
+    if (resource.getImagePullPolicy() != null) {
+      matching.withImagePullPolicy(resource.getImagePullPolicy());
+    }
+
     if (resource.getWorkingDir() != null) {
       matching.withWorkingDir(resource.getWorkingDir());
     }
