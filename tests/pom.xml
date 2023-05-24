@@ -96,6 +96,7 @@
       <module>feat-openshift-secure-routes</module>
       <module>issue-knative-probes-helm</module>
       <module>feat-overwrite-init-containers</module>
+      <module>feat-overwrite-sidecar-containers</module>
     </modules>
 
 </project>
