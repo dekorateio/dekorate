@@ -25,7 +25,7 @@ public class ApplyReplicasToStatefulSetDecorator extends NamedResourceDecorator<
   }
 
   public void andThenVisit(StatefulSetSpecFluent statefulSetSpec, ObjectMeta resourceMeta) {
-    if (this.replicas > 0) {
+    if (this.replicas >= 0) {
       statefulSetSpec.withReplicas(this.replicas);
     }
   }

@@ -44,7 +44,7 @@ public class ApplyReplicasToDeploymentConfigDecorator extends NamedResourceDecor
 
   @Override
   public void andThenVisit(DeploymentConfigSpecFluent deploymentSpec, ObjectMeta resourceMeta) {
-    if (replicas > 0) {
+    if (replicas >= 0) {
       deploymentSpec.withReplicas(replicas);
     }
   }
