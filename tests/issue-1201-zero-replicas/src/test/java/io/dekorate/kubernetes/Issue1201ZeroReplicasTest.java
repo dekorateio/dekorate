@@ -33,7 +33,7 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 public class Issue1201ZeroReplicasTest {
 
   @Test
-  public void shouldContainRequestsPerSecond() {
+  public void shouldContainExpectedReplicas() {
     KubernetesList list = Serialization
         .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
