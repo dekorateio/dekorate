@@ -40,6 +40,7 @@ public class FeatOverwriteInitContainersTest {
     assertEquals("feat-overwrite-init-containers", s.getMetadata().getName());
     assertEquals(1, s.getSpec().getTemplate().getSpec().getInitContainers().size());
     assertEquals("foo", s.getSpec().getTemplate().getSpec().getInitContainers().get(0).getName());
+    assertEquals("sh updated", s.getSpec().getTemplate().getSpec().getInitContainers().get(0).getCommand().get(0));
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
