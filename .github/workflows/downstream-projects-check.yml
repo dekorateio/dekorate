@@ -22,11 +22,14 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [ labeled ]
 
 jobs:
   dekorate:
     name: Build Latest Dekorate
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'downstream-check') || github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     outputs:
       dekorate-version: ${{ steps.dekorate-version-step.outputs.dekorate-version }}
     strategy:
