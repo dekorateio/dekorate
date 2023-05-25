@@ -1739,7 +1739,7 @@ And provide the certificate configuration. The minimal information that the Deko
 To know more about how to use the Cert-Manager extension, please go to [the Cert-Manager Dekorate documentation](https://dekorate.io/docs/cert-manager).
 
 #### related examples
-- [spring boot with cert_manager](examples/spring-boot-with-certmanager-example)
+- [spring boot with cert_manager](examples/spring-boot-on-kubernetes-with-certmanager-example)
 
 #### External generator integration
 

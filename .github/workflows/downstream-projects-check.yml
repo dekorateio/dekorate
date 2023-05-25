@@ -112,6 +112,7 @@ jobs:
     name: Snowdrop Examples with Helm in Kubernetes
     runs-on: ubuntu-latest
     needs: dekorate
+    if: ${{ false }}  # disable until we can upgrade these snowdrop examples to the latest Dekorate version
     strategy:
       matrix:
         java: [11]
