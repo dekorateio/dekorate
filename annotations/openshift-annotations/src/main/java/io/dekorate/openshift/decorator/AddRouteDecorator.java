@@ -62,6 +62,8 @@ public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesList
         .withName(config.getName())
         .endTo()
         .withNewPort()
+        //A service should be consumed without requiring consumers to know the container port.
+        //In the same spirit the route should not refer to container port (as the mapping needs to happen on Service level).
         .withNewTargetPort(port.getHostPort())
         .endPort()
         .endSpec()
