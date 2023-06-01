@@ -62,7 +62,7 @@ public class AddRouteDecorator extends ResourceProvidingDecorator<KubernetesList
         .withName(config.getName())
         .endTo()
         .withNewPort()
-        .withNewTargetPort(port.getContainerPort())
+        .withNewTargetPort(port.getHostPort())
         .endPort()
         .endSpec()
         .build());
