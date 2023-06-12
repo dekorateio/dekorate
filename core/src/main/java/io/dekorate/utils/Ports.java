@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +37,7 @@ import io.fabric8.kubernetes.api.model.ContainerPort;
 
 public class Ports {
 
-  private static final Map<String, Integer> HTTP_PORT_NAMES = Collections.unmodifiableMap(new HashMap<String, Integer>() {
+  private static final Map<String, Integer> HTTP_PORT_NAMES = Collections.unmodifiableMap(new LinkedHashMap<String, Integer>() {
     {
       put("http", 80);
       put("https", 443);
@@ -46,14 +46,15 @@ public class Ports {
     }
   });
 
-  private static final Map<Integer, Integer> HTTP_PORT_NUMBERS = Collections.unmodifiableMap(new HashMap<Integer, Integer>() {
-    {
-      put(80, 80);
-      put(8080, 80);
-      put(443, 443);
-      put(8443, 443);
-    }
-  });
+  private static final Map<Integer, Integer> HTTP_PORT_NUMBERS = Collections
+      .unmodifiableMap(new LinkedHashMap<Integer, Integer>() {
+        {
+          put(80, 80);
+          put(8080, 80);
+          put(443, 443);
+          put(8443, 443);
+        }
+      });
 
   public static final String DEFAULT_HTTP_PORT_PATH = "/";
   public static final int MIN_PORT_NUMBER = 1;
@@ -62,7 +63,6 @@ public class Ports {
   public static final int MAX_NODE_PORT_VALUE = 31999;
 
   public static final Predicate<PortBuilder> PORT_PREDICATE = p -> HTTP_PORT_NAMES.containsKey(p.getName())
-      || HTTP_PORT_NAMES.containsKey(p.getName())
       || HTTP_PORT_NUMBERS.containsKey(p.getContainerPort());
 
   public static final Map<String, Integer> webPortNameMappings() {
@@ -134,17 +134,22 @@ public class Ports {
       return Optional.of(container.getPorts().get(0));
     }
 
-    //Check the service name
-    Optional<ContainerPort> port = container.getPorts().stream().filter(p -> HTTP_PORT_NAMES.containsKey(p.getName()))
-        .findFirst();
-    if (port.isPresent()) {
-      return port;
+    for (String portName : HTTP_PORT_NAMES.keySet()) {
+      Optional<ContainerPort> port = container.getPorts().stream().filter(p -> portName.equals(p.getName()))
+          .findFirst();
+      if (port.isPresent()) {
+        return port;
+      }
     }
 
-    port = container.getPorts().stream().filter(p -> HTTP_PORT_NUMBERS.containsKey(p.getHostPort())).findFirst();
-    if (port.isPresent()) {
-      return port;
+    for (Integer portNumber : HTTP_PORT_NUMBERS.keySet()) {
+      Optional<ContainerPort> port = container.getPorts().stream().filter(p -> portNumber.equals(p.getHostPort()))
+          .findFirst();
+      if (port.isPresent()) {
+        return port;
+      }
     }
+
     return Optional.empty();
   }
 
@@ -205,8 +210,6 @@ public class Ports {
     // If not hostPort exists, then we will return the containerPort to follow
     // the same convention as kubernetes suggests
     return getStablePortNumberInRange(name, MIN_NODE_PORT_VALUE, MAX_NODE_PORT_VALUE);
-    //    return new PortBuilder(port).withHostPort(calculateHostPort(port))
-    //      .withNodePort(stablePortNumberInRange).build();
   }
 
   /**
