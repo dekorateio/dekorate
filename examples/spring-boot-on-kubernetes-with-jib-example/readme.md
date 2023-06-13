@@ -2,7 +2,7 @@
 
 The purpose of this example is to demonstrate the following:
 
-- How you can use the kubernetes-spring-stater.
+- How you can use the kubernetes-spring-starter.
 - How dekorate detects that this is a web app and automatically configures services and probe.
 - How you can perform end-to-end testing of the application.
 - How you can trigger a docker build after the compilation.
