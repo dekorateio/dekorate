@@ -92,6 +92,7 @@ public class Git {
             String remoteLine = linesIter.next();
             if (remoteLine.startsWith(URL) && remoteLine.contains(EQUALS)) {
               result.put(remote, remoteLine.split(EQUALS)[1].trim());
+              break;
             }
           }
         });
