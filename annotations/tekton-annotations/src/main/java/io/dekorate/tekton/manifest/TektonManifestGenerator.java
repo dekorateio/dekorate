@@ -16,6 +16,7 @@
 package io.dekorate.tekton.manifest;
 
 import static io.dekorate.tekton.util.TektonUtils.getContextPath;
+import static io.dekorate.utils.Git.REMOTE_PATTERN;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +24,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import io.dekorate.BuildImage;
@@ -411,6 +414,31 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     ScmInfo scm = Optional.ofNullable(config.getProject().getScmInfo())
         .orElseThrow(() -> new IllegalStateException("No scm info found!"));
 
+    String repoUrl = null;
+    if (scm.getRemote() != null) {
+      // Try to find the Origin remote
+      Pattern remotePattern = Pattern.compile(REMOTE_PATTERN);
+      for (Map.Entry<String, String> remote : scm.getRemote().entrySet()) {
+        Matcher m = remotePattern.matcher(remote.getKey());
+        if (m.matches()) {
+          String remoteValue = m.group(1);
+          if (Git.ORIGIN.equals(remoteValue)) {
+            repoUrl = remote.getValue();
+            break;
+          }
+        }
+      }
+
+      // if not found, let's pick up the first remote
+      if (repoUrl == null) {
+        repoUrl = scm.getRemote().values().iterator().next();
+      }
+    }
+
+    if (repoUrl == null) {
+      throw new IllegalStateException("Could not find the repository URL from the scm info!");
+    }
+
     return new PipelineResourceBuilder()
         .withNewMetadata()
         .withName(gitResourceName(config))
@@ -419,7 +447,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withType(GIT)
         .addNewParam()
         .withName(URL)
-        .withValue(scm.getRemote().get(Git.ORIGIN))
+        .withValue(repoUrl)
         .endParam()
         .addNewParam()
         .withName(REVISION)
