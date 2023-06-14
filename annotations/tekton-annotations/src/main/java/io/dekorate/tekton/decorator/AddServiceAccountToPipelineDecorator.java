@@ -21,16 +21,16 @@ import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.tekton.pipeline.v1beta1.PipelineRunSpecFluent;
 
-public class AddServiceAccountToTaskDecorator extends NamedResourceDecorator<PipelineRunSpecFluent> {
+public class AddServiceAccountToPipelineDecorator extends NamedResourceDecorator<PipelineRunSpecFluent> {
 
   private final String task;
   private final String serviceAccount;
 
-  public AddServiceAccountToTaskDecorator(String task, String serviceAccount) {
+  public AddServiceAccountToPipelineDecorator(String task, String serviceAccount) {
     this(ANY, task, serviceAccount);
   }
 
-  public AddServiceAccountToTaskDecorator(String name, String task, String serviceAccount) {
+  public AddServiceAccountToPipelineDecorator(String name, String task, String serviceAccount) {
     super(name);
     this.task = task;
     this.serviceAccount = serviceAccount;

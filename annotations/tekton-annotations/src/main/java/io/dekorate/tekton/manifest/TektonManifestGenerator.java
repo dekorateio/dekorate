@@ -63,7 +63,7 @@ import io.dekorate.tekton.decorator.AddPvcToTaskRunDecorator;
 import io.dekorate.tekton.decorator.AddResourceInputToTaskDecorator;
 import io.dekorate.tekton.decorator.AddResourceOutputToTaskDecorator;
 import io.dekorate.tekton.decorator.AddResourceToPipelineDecorator;
-import io.dekorate.tekton.decorator.AddServiceAccountToTaskDecorator;
+import io.dekorate.tekton.decorator.AddServiceAccountToPipelineDecorator;
 import io.dekorate.tekton.decorator.AddStringParamToTaskDecorator;
 import io.dekorate.tekton.decorator.AddToArgsDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToPipelineDecorator;
@@ -315,11 +315,11 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
 
     if (Strings.isNotNullOrEmpty(config.getImagePushServiceAccount())) {
       resourceRegistry.decorate(group + DASH + RUN,
-          new AddServiceAccountToTaskDecorator(IMAGE + DASH + BUILD, config.getImagePushServiceAccount()));
+          new AddServiceAccountToPipelineDecorator(IMAGE + DASH + BUILD, config.getImagePushServiceAccount()));
     } else {
       String generatedServiceAccount = config.getName();
       resourceRegistry.decorate(group + DASH + RUN,
-          new AddServiceAccountToTaskDecorator(IMAGE + DASH + BUILD, generatedServiceAccount));
+          new AddServiceAccountToPipelineDecorator(IMAGE + DASH + BUILD, generatedServiceAccount));
       if (Strings.isNotNullOrEmpty(config.getImagePushSecret())) {
         resourceRegistry.decorate(group,
             new AddSecretToServiceAccountDecorator(generatedServiceAccount, config.getImagePushSecret()));
