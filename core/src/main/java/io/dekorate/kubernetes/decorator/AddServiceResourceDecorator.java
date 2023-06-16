@@ -17,7 +17,6 @@
 package io.dekorate.kubernetes.decorator;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,10 +24,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import io.dekorate.ConfigReference;
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
-import io.dekorate.WithConfigReferences;
 import io.dekorate.doc.Description;
 import io.dekorate.kubernetes.annotation.Protocol;
 import io.dekorate.kubernetes.annotation.ServiceType;
@@ -41,8 +38,7 @@ import io.fabric8.kubernetes.api.model.ServicePort;
 import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 
 @Description("Add a service to the list.")
-public class AddServiceResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder>
-    implements WithConfigReferences {
+public class AddServiceResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger();
   public static final int MIN_PORT_NUMBER = 1;
@@ -115,20 +111,5 @@ public class AddServiceResourceDecorator extends ResourceProvidingDecorator<Kube
         return map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
       }
     };
-  }
-
-  @Override
-  public List<ConfigReference> getConfigReferences() {
-    return Arrays.asList(buildConfigReferenceServiceType());
-  }
-
-  private ConfigReference buildConfigReferenceServiceType() {
-    String property = "serviceType";
-    String path = "(kind == Service && metadata.name == " + config.getName() + ").spec.type";
-    return new ConfigReference.Builder(property, path)
-        .withDescription("The service type to use.")
-        .withValue(config.getServiceType() != null ? config.getServiceType().name() : "ClusterIP")
-        .withEnum(ServiceType.class)
-        .build();
   }
 }
