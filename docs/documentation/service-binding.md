@@ -8,13 +8,16 @@ permalink: /docs/service-binding
 [Service Binding Operator](https://github.com/redhat-developer/service-binding-operator) enables the application developers to bind the services that are backed by Kubernetes operators to an application that is deployed in kubernetes without having to perform manual configuration.
 Dekorate supports generation of ServiceBinding CR.
 The generation of ServiceBinding CR is triggered by annotating one of your classes with `@ServiceBinding` annotation and by adding the below dependency to the project and when the project gets compiled, the annotation will trigger the generation of ServiceBinding CR in both json and yml formats under the `target/classes/META-INF/dekorate`. The name of the ServiceBinding CR would be the name of the `applicationName + "-binding"`, for example if the application name is `sample-app`, the binding name would be `sample-app-binding`
+
 ```
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>servicebinding-annotations</artifactId>
 </dependency>
 ```
+
 Here is the simple example of using ServiceBinding annotations in SpringBoot application.
+
 ```
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,14 +34,18 @@ public class Main {
   }
 }
 ```
+
 For someone who wants to configure the ServiceBinding CR using system properties, they can do it in the application.properties. The ServiceBinding CR can be customized either via annotation parameters or via system properties. The parameter values provided via annotations can be overrided by configuring the ServiceBinding CR in application.properties.
+
 ```
 dekorate.servicebinding.services[0].name=demo-database
 dekorate.servicebinding.services[0].group=postgresql.dev
 dekorate.servicebinding.services[0].kind=Database
 dekorate.servicebinding.services[0].id=postgresDB
 ```
+
 Generated ServiceBinding CR would look something like this:
+
 ```
 apiVersion: operators.coreos.com/v1beta1
 kind: ServiceBinding
@@ -59,7 +66,9 @@ spec:
   detectBindingResources: false
   bindAsFiles: false
 ```
+
 If the application's `bindingPath` needs to configured, `@BindingPath` annotation can be used directly under `@ServicingBinding` annotation. For example:
+
 ```
 @ServiceBinding(
   bindingPath = @BindingPath(containerPath="spec.template.spec.containers")
@@ -67,8 +76,8 @@ If the application's `bindingPath` needs to configured, `@BindingPath` annotatio
     @Service(group = "postgresql.dev", name = "demo-database", kind = "Database", version = "v1alpha1", id = "postgresDB") }, envVarPrefix = "postgresql")
 @SpringBootApplication
 ```
-**Note** : `ServiceBinding` annotations are already usuable though still highly experimental. The Service Binding operator is still in flux and may change in the near future.
 
+**Note** : `ServiceBinding` annotations are already usuable though still highly experimental. The Service Binding operator is still in flux and may change in the near future.
 
 #### External generator integration
 
@@ -88,15 +97,14 @@ An example could be to expose an additional port:
 This can be done by configuring dekorate to read the fmp generated manifests
 from `META-INF/fabric8` which is where fmp stores them and save them back
 there once decoration is finished.
+
 ```java
 @GeneratorOptions(inputPath = "META-INF/fabric8", outputPath = "META-INF/fabric8")
-@KubernetesApplication(port = @Port(name="srv", containerPort=8181)
+@KubernetesApplication(port = @Port(name="srv", containerPort=8181))
 public class Main {
-   ... 
+   // ... 
 }
 ```
+
 #### related examples
-- [spring boot with fmp on openshift example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-fmp-on-kubernetes-example)
-
-
-
+- [spring boot with fmp on kubernetes example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-fmp-on-kubernetes-example)

@@ -116,6 +116,11 @@ public class BuildahBuildStep extends ImageBuildStep<BuildahBuildStep> {
   }
 
   @Override
+  public BuildahBuildStep withRegistryInsecure(boolean insecure) {
+    throw new IllegalArgumentException("The registry insecure configuration is not supported in Buildah yet!");
+  }
+
+  @Override
   public boolean isPushRequired() {
     return true;
   }

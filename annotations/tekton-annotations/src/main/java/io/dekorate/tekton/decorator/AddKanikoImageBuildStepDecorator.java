@@ -17,6 +17,8 @@
 
 package io.dekorate.tekton.decorator;
 
+import static io.dekorate.tekton.step.KanikoBuildStep.FORCE_ARG;
+
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
@@ -61,7 +63,7 @@ public class AddKanikoImageBuildStepDecorator extends NamedTaskDecorator impleme
     this.image = Strings.isNotNullOrEmpty(image) ? image : BUILDER_IMAGE_REF;
     this.command = Strings.isNotNullOrEmpty(command) ? command : KANIKO_CMD;
     this.args = args != null && args.length != 0 ? args
-        : new String[] { DOCKERFILE_ARG, CONTEXT_ARG, IMAGE_DESTINATION_ARG, VERBOSITY_DEBUG };
+        : new String[] { FORCE_ARG, DOCKERFILE_ARG, CONTEXT_ARG, IMAGE_DESTINATION_ARG, VERBOSITY_DEBUG };
   }
 
   @Override

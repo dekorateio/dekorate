@@ -101,7 +101,6 @@ jobs:
         with:
           name: ci-manifests
           path: manifests-k8s-jvm${{ matrix.java }}.zip
-
   openshift:
     name: Openshift Build
     needs: cache
@@ -151,3 +150,82 @@ jobs:
         with:
           name: ci-manifests
           path: manifests-ocp-jvm${{ matrix.java }}.zip
+  tekton:
+    name: Tekton Build
+    needs: cache
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tekton: [ v0.39.0 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
+        shell: bash
+      - name: Cache .m2 registry
+        uses: actions/cache@v2.1.6
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ steps.get-date.outputs.date }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Kubernetes KinD Cluster
+        uses: container-tools/kind-action@v1
+        with:
+          version: v0.18.0
+          registry: true
+      - name: Setup Java 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Install Tekton
+        run: |
+          kubectl apply -f https://github.com/tektoncd/pipeline/releases/download/${{ matrix.tekton }}/release.yaml || true
+      - name: Build
+        run: |
+          ./mvnw -B clean install -Dformat.skip=true -DskipTests
+      - name: Run Tekton Integration Tests
+        run: |
+          kubectl create namespace tekton
+          kubectl config set-context --current --namespace=tekton
+          cd examples/spring-boot-with-tekton-example
+          # Build example
+          mvn clean install -DskipTests -Ddekorate.docker.registry=$KIND_REGISTRY -Ddekorate.tekton.imageRegistryInsecure=true -Ddekorate.tekton.projectBuilderArguments=clean,install,-Pwith-examples,-DskipTests,-Dformat.skip=true,-pl,examples/spring-boot-with-tekton-example,-am
+          # Install Tekton Task manifests
+          kubectl apply -f target/classes/META-INF/dekorate/tekton-task.yml
+          # Trigger Task workflow
+          kubectl apply -f target/classes/META-INF/dekorate/tekton-task-run.yml
+          # Wait to finish
+          kubectl wait --for=condition=Succeeded --timeout=800s TaskRun/spring-boot-with-tekton-example-run-now
+          kubectl wait deployment spring-boot-with-tekton-example --for condition=Available=True --timeout=180s
+          # Verify application
+          RESULT=$(kubectl exec $(kubectl get pod -l app.kubernetes.io/name=spring-boot-with-tekton-example -o name) -- wget -qO- http://localhost:9090)
+          if [[ "$RESULT" = *"Hello world"* ]]
+          then
+            exit 0
+          fi
+          echo "Application is not working. Result was: $RESULT"
+          exit 1
+      - name: Print logs at failures
+        if: failure()
+        run: |
+          kubectl config set-context --current --namespace=tekton
+          echo "kubectl get pods: "
+          kubectl get pods
+          echo "kubectl describe TaskRun/spring-boot-with-tekton-example-run-now: "
+          kubectl describe TaskRun/spring-boot-with-tekton-example-run-now
+          echo "kubectl logs spring-boot-with-tekton-example-run-now-pod --all-containers --max-log-requests 10: "
+          kubectl logs spring-boot-with-tekton-example-run-now-pod --all-containers --max-log-requests 10
+      - name: Zip Artifacts
+        if: failure()
+        run: |
+          zip -R manifests-tekton-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: ci-manifests
+          path: manifests-tekton-jvm${{ matrix.java }}.zip

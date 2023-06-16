@@ -131,7 +131,7 @@ public class Git {
     }
   }
 
-  static String sanitizeRemoteUrl(String remoteUrl) {
+  public static String sanitizeRemoteUrl(String remoteUrl) {
     final int atSign = remoteUrl.indexOf('@');
     if (atSign > 0) {
       remoteUrl = remoteUrl.substring(atSign + 1);

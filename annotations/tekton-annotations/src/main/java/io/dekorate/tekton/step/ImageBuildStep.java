@@ -98,7 +98,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
    * @param buildArguments the specified build arguments.
    * @return the updated step.
    */
-  public abstract T withBuildArguments(String[] buildArugments);
+  public abstract T withBuildArguments(String[] buildArguments);
 
   /**
    * Create a new step using the specified push image.
@@ -123,6 +123,14 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
    * @return the updated step.
    */
   public abstract T withPushArguments(String[] pushArguments);
+
+  /**
+   * Create a new step using an unsecure registry.
+   *
+   * @param insecure if to use an unsecure registry.
+   * @return the updated step.
+   */
+  public abstract T withRegistryInsecure(boolean insecure);
 
   /**
    * Returns true if the current build step requires an explicit push.
