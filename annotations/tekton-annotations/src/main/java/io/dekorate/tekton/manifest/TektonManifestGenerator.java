@@ -139,7 +139,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   private static final String DASH = "-";
 
   private static final String MAVEN_LOCAL_REPO_SYS_PROPERTY = "-Dmaven.repo.local=%s";
-  private static final String IMAGE_PULL_SECRETS_SYS_PROPERTY = "-Ddekorate.%s.image-pull-secrets=";
+  private static final String IMAGE_PULL_SECRETS_SYS_PROPERTY = "-Ddekorate.image-pull-secrets=";
   private static final String USER_NAME_SYS_PROP = "-Duser.name=";
 
   private static final String TEKTON = "tekton";
@@ -327,7 +327,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         resourceRegistry.decorate(group,
             new AddSecretToServiceAccountDecorator(generatedServiceAccount, config.getImagePushSecret()));
         resourceRegistry.decorate(group, new AddToArgsDecorator(projectBuildTaskName, projectBuildStepName,
-            String.format(IMAGE_PULL_SECRETS_SYS_PROPERTY, group) + config.getImagePushSecret()));
+            IMAGE_PULL_SECRETS_SYS_PROPERTY + config.getImagePushSecret()));
       } else if (config.isUseLocalDockerConfigJson()) {
         String generatedSecret = config.getName() + "-registry-credentials";
         Path dockerConfigJson = Paths.get(System.getProperty("user.home"), ".docker", "config.json");
@@ -339,7 +339,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
               + " is going to be added as part of Secret: " + generatedSecret);
         }
         resourceRegistry.decorate(group, new AddToArgsDecorator(projectBuildTaskName, projectBuildStepName,
-            String.format(IMAGE_PULL_SECRETS_SYS_PROPERTY, group) + generatedSecret));
+            IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
         resourceRegistry.decorate(group,
             new AddDockerConfigJsonSecretDecorator(generatedSecret, dockerConfigJson, annotations));
         resourceRegistry.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
@@ -347,7 +347,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
           && Strings.isNotNullOrEmpty(config.getRegistryPassword())) {
         String generatedSecret = config.getName() + "-registry-credentials";
         resourceRegistry.decorate(group, new AddToArgsDecorator(projectBuildTaskName, projectBuildStepName,
-            String.format(IMAGE_PULL_SECRETS_SYS_PROPERTY, group) + generatedSecret));
+            IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
         resourceRegistry.decorate(group, new AddDockerConfigJsonSecretDecorator(generatedSecret, config.getRegistry(),
             config.getRegistryUsername(), config.getRegistryPassword(), annotations));
         resourceRegistry.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
