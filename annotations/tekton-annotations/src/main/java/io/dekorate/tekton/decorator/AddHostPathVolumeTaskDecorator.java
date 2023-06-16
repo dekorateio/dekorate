@@ -23,13 +23,13 @@ import io.fabric8.kubernetes.api.model.VolumeBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 @Description("Add a persistent host path volume to the specified task.")
-public class AddHostPathVolumeDecorator extends NamedTaskDecorator {
+public class AddHostPathVolumeTaskDecorator extends NamedTaskDecorator {
 
   private final String name;
   private final String path;
   private final String type;
 
-  public AddHostPathVolumeDecorator(String taskName, String name, String path, String type) {
+  public AddHostPathVolumeTaskDecorator(String taskName, String name, String path, String type) {
     super(taskName);
     this.name = name;
     this.path = path;

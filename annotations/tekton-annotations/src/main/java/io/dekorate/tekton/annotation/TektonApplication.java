@@ -207,6 +207,13 @@ public @interface TektonApplication {
    */
   String[] imagePushArguments() default {};
 
+  /*
+   * If to use an unsecure registry or not.
+   *
+   * @return The container image will be configured to work with an insecure registry.
+   */
+  boolean imageRegistryInsecure() default false;
+
   /**
    * The relative path to the Dockerfile.
    * 

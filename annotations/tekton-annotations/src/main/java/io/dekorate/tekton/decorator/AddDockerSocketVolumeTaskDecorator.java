@@ -19,13 +19,13 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.tekton.step.ImageStep;
 
-public class AddDockerSocketVolumeDecorator extends AddHostPathVolumeDecorator {
+public class AddDockerSocketVolumeTaskDecorator extends AddHostPathVolumeTaskDecorator {
 
-  public AddDockerSocketVolumeDecorator(String taskName) {
+  public AddDockerSocketVolumeTaskDecorator(String taskName) {
     super(taskName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, ImageStep.DOCKER_SOCKET_TYPE);
   }
 
-  public AddDockerSocketVolumeDecorator(String taskName, String name, String path, String type) {
+  public AddDockerSocketVolumeTaskDecorator(String taskName, String name, String path, String type) {
     super(taskName, name, path, type);
   }
 }

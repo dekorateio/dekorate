@@ -60,7 +60,7 @@ public class AddProjectBuildStepDecorator extends NamedTaskDecorator implements 
         .withImage(image)
         .withCommand(command)
         .withArgs(arguments)
-        .withWorkingDir(sourcePath(projectName))
+        .withWorkingDir(sourcePath())
         .endStep();
   }
 

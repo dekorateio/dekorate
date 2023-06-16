@@ -17,6 +17,8 @@
 
 package io.dekorate.tekton.decorator;
 
+import java.nio.file.Path;
+
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.tekton.step.ImageBuildStep;
 import io.dekorate.utils.Strings;
@@ -33,24 +35,24 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
   private static final String DOCKER_CONFIG_DEFAULT = "/tekton/home/.docker";
 
   private final String stepName;
-  private final String projectName;
+  private final Path relativePath;
   private final String image;
   private final String command;
   private final String[] args;
 
-  public AddImageBuildStepDecorator(String taskName, String projectName) {
-    this(taskName, ImageBuildStep.ID, projectName);
+  public AddImageBuildStepDecorator(String taskName, Path relativePath) {
+    this(taskName, ImageBuildStep.ID, relativePath);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, String projectName) {
-    this(taskName, stepName, projectName, BUILDER_IMAGE_REF, BUILDER_COMMAND_REF, BUILDER_ARGS_REF);
+  public AddImageBuildStepDecorator(String taskName, String stepName, Path relativePath) {
+    this(taskName, stepName, relativePath, BUILDER_IMAGE_REF, BUILDER_COMMAND_REF, BUILDER_ARGS_REF);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, String projectName, String image, String command,
+  public AddImageBuildStepDecorator(String taskName, String stepName, Path relativePath, String image, String command,
       String... args) {
     super(taskName);
     this.stepName = stepName;
-    this.projectName = projectName;
+    this.relativePath = relativePath;
     this.image = Strings.isNotNullOrEmpty(image) ? image : BUILDER_IMAGE_REF;
     this.command = Strings.isNotNullOrEmpty(command) ? command : BUILDER_COMMAND_REF;
     this.args = args != null && args.length != 0 ? args : new String[] { BUILDER_ARGS_REF };
@@ -64,7 +66,7 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
         .addToEnv(new EnvVarBuilder().withName(DOCKER_CONFIG).withValue(DOCKER_CONFIG_DEFAULT).build())
         .withCommand(command)
         .withArgs(args)
-        .withWorkingDir(sourcePath(projectName))
+        .withWorkingDir(sourcePath())
         .endStep();
   }
 

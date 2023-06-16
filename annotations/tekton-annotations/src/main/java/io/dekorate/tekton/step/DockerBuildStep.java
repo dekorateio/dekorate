@@ -117,6 +117,11 @@ public class DockerBuildStep extends ImageBuildStep<DockerBuildStep> {
   }
 
   @Override
+  public DockerBuildStep withRegistryInsecure(boolean insecure) {
+    throw new IllegalArgumentException("The registry insecure configuration is not supported in Docker yet!");
+  }
+
+  @Override
   public boolean isPushRequired() {
     return true;
   }
