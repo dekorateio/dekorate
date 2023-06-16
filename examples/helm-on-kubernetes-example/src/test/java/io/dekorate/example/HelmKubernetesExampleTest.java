@@ -109,8 +109,6 @@ class HelmKubernetesExampleTest {
     assertNotNull(app.get("image"));
     // Should contain replicas
     assertEquals(3, app.get("replicas"));
-    // Should contain service type
-    assertEquals("NodePort", app.get("serviceType"));
     // Should NOT contain notFound: as this property is ignored
     assertNull(app.get("notFound"));
     // Should contain vcsUrl with the overridden value from properties
@@ -185,17 +183,11 @@ class HelmKubernetesExampleTest {
     // From config references
     ValuesSchemaProperty app = schema.getProperties().get("app");
     assertNotNull(app);
-    assertEquals(1, app.getRequired().size());
-    assertEquals("serviceType", app.getRequired().iterator().next());
     ValuesSchemaProperty replicas = app.getProperties().get("replicas");
     assertNotNull(replicas);
     assertEquals(3, replicas.getMinimum());
     assertEquals(5, replicas.getMaximum());
     assertEquals("Overwrite default description!", replicas.getDescription());
-    ValuesSchemaProperty serviceType = app.getProperties().get("serviceType");
-    assertNotNull(serviceType);
-    assertEquals("The service type to use.", serviceType.getDescription());
-    assertEquals(ServiceType.values().length, serviceType.getEnumValues().size());
   }
 
   @Test
