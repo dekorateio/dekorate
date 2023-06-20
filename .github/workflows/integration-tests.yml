@@ -195,6 +195,8 @@ jobs:
           cd examples/spring-boot-with-tekton-example
           # Build example
           mvn clean install -DskipTests -Ddekorate.docker.registry=$KIND_REGISTRY -Ddekorate.tekton.imageRegistryInsecure=true -Ddekorate.tekton.projectBuilderArguments=clean,install,-Pwith-examples,-DskipTests,-Dformat.skip=true,-pl,examples/spring-boot-with-tekton-example,-am
+          cat target/classes/META-INF/dekorate/tekton-task.yml
+          cat target/classes/META-INF/dekorate/tekton-task-run.yml
           # Install Tekton Task manifests
           kubectl apply -f target/classes/META-INF/dekorate/tekton-task.yml
           # Trigger Task workflow
