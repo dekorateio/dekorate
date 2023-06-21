@@ -15,19 +15,21 @@
  */
 package io.dekorate.tekton.manifest;
 
+import static io.dekorate.tekton.decorator.AddImageBuildStepDecorator.DOCKER_CONFIG;
+import static io.dekorate.tekton.step.DeployStep.getYamlPath;
+import static io.dekorate.tekton.step.ImageBuildStep.getImageTarget;
 import static io.dekorate.tekton.util.TektonUtils.getContextPath;
-import static io.dekorate.utils.Git.REMOTE_PATTERN;
-import static io.dekorate.utils.Git.sanitizeRemoteUrl;
 import static io.dekorate.utils.Maps.getDekoratePropertyFromSystem;
+import static io.dekorate.utils.Strings.isNotNullOrEmpty;
+import static io.dekorate.utils.Strings.isNullOrEmpty;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import io.dekorate.BuildImage;
@@ -51,23 +53,22 @@ import io.dekorate.kubernetes.decorator.AddServiceAccountResourceDecorator;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.BuildInfo;
 import io.dekorate.project.Project;
-import io.dekorate.project.ScmInfo;
 import io.dekorate.tekton.annotation.TektonImageBuildStrategy;
 import io.dekorate.tekton.config.EditableTektonConfig;
 import io.dekorate.tekton.config.TektonConfig;
 import io.dekorate.tekton.config.TektonConfigBuilder;
 import io.dekorate.tekton.decorator.AddArrayParamToTaskDecorator;
+import io.dekorate.tekton.decorator.AddConfigJsonToDockerConfigJsonSecretDecorator;
 import io.dekorate.tekton.decorator.AddDeployStepDecorator;
 import io.dekorate.tekton.decorator.AddDockerSocketMountDecorator;
 import io.dekorate.tekton.decorator.AddDockerSocketVolumeTaskDecorator;
+import io.dekorate.tekton.decorator.AddEnvVarStepDecorator;
+import io.dekorate.tekton.decorator.AddGitCloneStepDecorator;
 import io.dekorate.tekton.decorator.AddImageBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddImagePushStepDecorator;
 import io.dekorate.tekton.decorator.AddProjectBuildStepDecorator;
 import io.dekorate.tekton.decorator.AddPvcToPipelineRunDecorator;
 import io.dekorate.tekton.decorator.AddPvcToTaskRunDecorator;
-import io.dekorate.tekton.decorator.AddResourceInputToTaskDecorator;
-import io.dekorate.tekton.decorator.AddResourceOutputToTaskDecorator;
-import io.dekorate.tekton.decorator.AddResourceToPipelineDecorator;
 import io.dekorate.tekton.decorator.AddServiceAccountToPipelineDecorator;
 import io.dekorate.tekton.decorator.AddStringParamToTaskDecorator;
 import io.dekorate.tekton.decorator.AddToArgsDecorator;
@@ -75,11 +76,10 @@ import io.dekorate.tekton.decorator.AddWorkspaceToPipelineDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToPipelineTaskDecorator;
 import io.dekorate.tekton.decorator.AddWorkspaceToTaskDecorator;
 import io.dekorate.tekton.step.DeployStep;
+import io.dekorate.tekton.step.GitCloneStep;
 import io.dekorate.tekton.step.ImageBuildStep;
 import io.dekorate.tekton.step.ImagePushStep;
 import io.dekorate.tekton.step.ProjectBuildStep;
-import io.dekorate.utils.Git;
-import io.dekorate.utils.Images;
 import io.dekorate.utils.Jvm;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.Duration;
@@ -102,8 +102,6 @@ import io.fabric8.tekton.pipeline.v1beta1.Task;
 import io.fabric8.tekton.pipeline.v1beta1.TaskBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskRun;
 import io.fabric8.tekton.pipeline.v1beta1.TaskRunBuilder;
-import io.fabric8.tekton.resource.v1alpha1.PipelineResource;
-import io.fabric8.tekton.resource.v1alpha1.PipelineResourceBuilder;
 
 public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>, WithProject {
 
@@ -115,27 +113,22 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   private static final String TEKTON_TASK = "tekton-task";
   private static final String TEKTON_TASK_RUN = "tekton-task-run";
 
+  private static final String TEKTON_CREDS_SECRETS = "/tekton/creds-secrets/";
+
   private static final String AND = "and";
 
   private static final String GIT = "git";
-  private static final String REVISION = "revision";
-  private static final String URL = "url";
+  private static final String CLONE = "clone";
   private static final String IMAGE = "image";
   private static final String BUILD = "build";
   private static final String PUSH = "push";
   private static final String DEPLOY = "deploy";
-  private static final String WORKSPACE = "workspace";
   private static final String RUN = "run";
   private static final String NOW = "now";
 
-  private static final String GIT_SOURCE = "git-source";
-  private static final String OUTPUT_IMAGE = "out-image";
-
   private static final String PIPELINE_SOURCE_WS = "pipeline-source-ws";
-  private static final String PIPELINE_SOURCE_WS_DECSCRIPTION = "The workspace to share between pipeline steps";
 
   private static final String PIPELINE_M2_WS = "pipeline-m2-ws";
-  private static final String PIPELINE_M2_WS_DECSCRIPTION = "The workspace to store m2 artifacts";
 
   private static final String PROJECT = "project";
   private static final String DASH = "-";
@@ -182,21 +175,18 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   }
 
   public void generateCommon(String group, TektonConfig config, ImageConfiguration imageConfiguration) {
-    if (Strings.isNotNullOrEmpty(config.getExternalGitPipelineResource())) {
-      //Do nothing
+    if (isNotNullOrEmpty(config.getExternalGitPipelineResource())) {
+      // Do nothing
       LOGGER.info("Tekton " + group.split("-")[1] + " expects existing git pipeline resource named: "
           + config.getExternalGitPipelineResource() + "!");
-    } else if (config.getProject().getScmInfo() != null) {
-      resourceRegistry.add(group, createGitResource(config));
-    } else {
+    } else if (config.getProject().getScmInfo() == null) {
       throw new IllegalStateException(
           "Project is not under version control, or unsupported version control system. Aborting generation of tekton resources!");
     }
 
-    resourceRegistry.add(group, createOutputImageResource(config, imageConfiguration));
     resourceRegistry.add(group, createRole(config));
 
-    //All Tasks
+    // All Tasks
     resourceRegistry.decorate(group, new AddWorkspaceToTaskDecorator(null, config.getSourceWorkspace(),
         "The workspace to hold all project sources", false, null));
     resourceRegistry.decorate(group,
@@ -206,29 +196,43 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
 
     String monolithTaskName = monolithTaskName(config);
 
+    String gitCloneTaskName = gitCloneTaskName(config);
     String projectBuildTaskName = projectBuildTaskName(config);
     String projectBuildStepName = projectBuildStepName(config);
     String imageBuildTaskName = imageBuildTaskName(config);
     String imagePushTaskName = imagePushTaskName(config);
     String deployTaskName = deployTaskName(config);
 
-    if (group.equals(TEKTON_TASK)) { //We just a single task
+    if (group.equals(TEKTON_TASK)) { // We just a single task
+      gitCloneTaskName = monolithTaskName;
       projectBuildTaskName = monolithTaskName;
       imageBuildTaskName = monolithTaskName;
       imagePushTaskName = monolithTaskName;
       deployTaskName = monolithTaskName;
     }
 
+    // git clone build
+    if (isNullOrEmpty(config.getExternalGitPipelineResource())) {
+      resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(projectBuildTaskName, GitCloneStep.IMAGE_PARAM_NAME,
+          GitCloneStep.IMAGE_PARAM_DESCRIPTION, GitCloneStep.IMAGE_PARAM_DEFAULT_VALUE));
+      resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(projectBuildTaskName, GitCloneStep.REPO_URL_PARAM_NAME,
+          GitCloneStep.REPO_URL_PARAM_DESCRIPTION, GitCloneStep.getRepoUrl(config)));
+      resourceRegistry.decorate(group,
+          new AddStringParamToTaskDecorator(projectBuildTaskName, GitCloneStep.REVISION_PARAM_NAME,
+              GitCloneStep.REVISION_PARAM_DESCRIPTION,
+              Strings.defaultIfEmpty(config.getProject().getScmInfo().getCommit(), "")));
+
+      resourceRegistry.decorate(group, new AddGitCloneStepDecorator(gitCloneTaskName, GitCloneStep.ID));
+    }
+
     //Java Build
     BuildInfo build = config.getProject().getBuildInfo();
-    BuildImage projectBuildImage = Strings.isNotNullOrEmpty(config.getProjectBuilderImage())
-        && Strings.isNotNullOrEmpty(config.getProjectBuilderCommand())
+    BuildImage projectBuildImage = isNotNullOrEmpty(config.getProjectBuilderImage())
+        && isNotNullOrEmpty(config.getProjectBuilderCommand())
             ? new BuildImage(config.getProjectBuilderImage(), config.getProjectBuilderCommand())
             : BuildImage.find(build.getBuildTool(), build.getBuildToolVersion(), Jvm.getVersion(), null)
                 .orElseThrow(() -> new IllegalStateException("No project builder image was found!"));
 
-    resourceRegistry.decorate(group,
-        new AddResourceInputToTaskDecorator(projectBuildTaskName, GIT, GIT_SOURCE, "/source"));
     resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(projectBuildTaskName, ProjectBuildStep.IMAGE_PARAM_NAME,
         ProjectBuildStep.IMAGE_PARAM_DESCRIPTION, projectBuildImage.getImage()));
     resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(projectBuildTaskName,
@@ -263,6 +267,9 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     String imageBuildCommand = imageBuildStep.getBuildCommand();
     String[] imageBuildArgs = imageBuildStep.getBuildArguments();
 
+    resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.IMAGE_TARGET_NAME,
+        ImageBuildStep.IMAGE_TARGET_DESCRIPTION, getImageTarget(imageConfiguration)));
+
     resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.IMAGE_PARAM_NAME,
         ImageBuildStep.IMAGE_PARAM_DESCRIPTION, imageBuildImage));
     resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.COMMAND_PARAM_NAME,
@@ -270,16 +277,12 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     resourceRegistry.decorate(group, new AddArrayParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.ARGS_PARAM_NAME,
         ImageBuildStep.ARGS_PARAM_DESCRIPTION, imageBuildArgs));
     resourceRegistry.decorate(group,
+        new AddToArgsDecorator(imageBuildTaskName, ImageBuildStep.ID, imageBuildStep.getImageTargetArgument()));
+    resourceRegistry.decorate(group,
         new AddStringParamToTaskDecorator(imageBuildTaskName, ImageBuildStep.PATH_TO_DOCKERFILE_PARAM_NAME,
             ImageBuildStep.PATH_TO_DOCKERFILE_PARAM_DESCRIPTION, config.getDockerfile()));
 
-    Path relativePath = Paths.get(config.getName());
-    if (config.getProject().getScmInfo() != null) {
-      relativePath = config.getProject().getScmInfo().getRoot().relativize(config.getProject().getRoot());
-    }
-
-    resourceRegistry.decorate(group, new AddImageBuildStepDecorator(imageBuildTaskName, relativePath));
-    resourceRegistry.decorate(group, new AddResourceOutputToTaskDecorator(imageBuildTaskName, IMAGE, IMAGE));
+    resourceRegistry.decorate(group, new AddImageBuildStepDecorator(imageBuildTaskName));
 
     if (imageBuildStep.isDockerSocketRequired()) {
       resourceRegistry.decorate(group, new AddDockerSocketMountDecorator(imageBuildTaskName, ImageBuildStep.ID));
@@ -305,10 +308,10 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
       }
     }
 
-    //Deploy Task
+    // Deploy Task
     resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(deployTaskName, DeployStep.PATH_TO_YML_PARAM_NAME,
-        DeployStep.PATH_TO_YML_PARAM_DESCRIPTION, DeployStep.PATH_TO_YML_PARAM_DEFAULT));
-    resourceRegistry.decorate(group, new AddDeployStepDecorator(deployTaskName, relativePath, config.getDeployerImage()));
+        DeployStep.PATH_TO_YML_PARAM_DESCRIPTION, getYamlPath(getProject())));
+    resourceRegistry.decorate(group, new AddDeployStepDecorator(deployTaskName, config.getDeployerImage()));
 
     Map<String, String> annotations = new HashMap<String, String>() {
       {
@@ -317,7 +320,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     };
 
     String m2WorkspaceClaimName = m2WorkspaceClaimName(config);
-    if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
+    if (isNotNullOrEmpty(m2WorkspaceClaimName)) {
       String m2Path = "/workspaces/" + config.getM2Workspace();
       resourceRegistry.add(group, createM2WorkspacePvc(config));
       resourceRegistry.decorate(group, new AddWorkspaceToTaskDecorator(projectBuildTaskName, config.getM2Workspace(),
@@ -333,41 +336,45 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         new AddRoleBindingResourceDecorator(generatedDeploymentName + ":deployer",
             generatedServiceAccount, "pipeline-deployer", AddRoleBindingResourceDecorator.RoleKind.Role));
 
-    if (Strings.isNotNullOrEmpty(config.getImagePushServiceAccount())) {
+    if (isNotNullOrEmpty(config.getImagePushServiceAccount())) {
       resourceRegistry.decorate(group + DASH + RUN,
           new AddServiceAccountToPipelineDecorator(IMAGE + DASH + BUILD, config.getImagePushServiceAccount()));
     } else {
-      if (Strings.isNotNullOrEmpty(config.getImagePushSecret())) {
+      if (isNotNullOrEmpty(config.getImagePushSecret())) {
         resourceRegistry.decorate(group,
             new AddSecretToServiceAccountDecorator(generatedServiceAccount, config.getImagePushSecret()));
         resourceRegistry.decorate(group, new AddToArgsDecorator(projectBuildTaskName, projectBuildStepName,
             IMAGE_PULL_SECRETS_SYS_PROPERTY + config.getImagePushSecret()));
-      } else if (config.isUseLocalDockerConfigJson()) {
-        String generatedSecret = getGeneratedSecretWithRegistryCredentials(config);
-        Path dockerConfigJson = Paths.get(System.getProperty("user.home"), ".docker", "config.json");
-        if (!dockerConfigJson.toFile().exists()) {
-          throw new IllegalStateException(
-              "User requested to use the local `.docker/config.json` file, but it doesn't exist!");
-        } else {
-          LOGGER.warning(dockerConfigJson.toAbsolutePath().normalize()
-              + " is going to be added as part of Secret: " + generatedSecret);
-        }
-        resourceRegistry.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
-        resourceRegistry.decorate(group, new AddToArgsDecorator(projectBuildTaskName, projectBuildStepName,
-            IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
-        resourceRegistry.decorate(group,
-            new AddDockerConfigJsonSecretDecorator(generatedSecret, dockerConfigJson, annotations));
-      } else if (Strings.isNotNullOrEmpty(config.getRegistryUsername())
-          && Strings.isNotNullOrEmpty(config.getRegistryPassword())) {
-        String generatedSecret = getGeneratedSecretWithRegistryCredentials(config);
-        resourceRegistry.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
-        resourceRegistry.decorate(group, new AddToArgsDecorator(projectBuildTaskName, projectBuildStepName,
-            IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
-        resourceRegistry.decorate(group, new AddDockerConfigJsonSecretDecorator(generatedSecret, config.getRegistry(),
-            config.getRegistryUsername(), config.getRegistryPassword(), annotations));
-      } else {
+      } else if (!config.isUseLocalDockerConfigJson() && isNullOrEmpty(config.getRegistryUsername())
+          && isNullOrEmpty(config.getRegistryPassword())) {
         LOGGER.error(
             "An existing builder image service account or secret is required! Alternatively, you can specify a registry username and password!");
+      } else {
+        String generatedSecret = config.getName() + "-registry-credentials";
+        if (config.isUseLocalDockerConfigJson()) {
+          Path dockerConfigJson = Paths.get(System.getProperty("user.home"), ".docker", "config.json");
+          if (!dockerConfigJson.toFile().exists()) {
+            throw new IllegalStateException(
+                "User requested to use the local `.docker/config.json` file, but it doesn't exist!");
+          } else {
+            LOGGER.warning(dockerConfigJson.toAbsolutePath().normalize()
+                + " is going to be added as part of Secret: " + generatedSecret);
+          }
+
+          resourceRegistry.decorate(group,
+              new AddDockerConfigJsonSecretDecorator(generatedSecret, dockerConfigJson, annotations));
+
+        } else if (isNotNullOrEmpty(config.getRegistryUsername()) && isNotNullOrEmpty(config.getRegistryPassword())) {
+          resourceRegistry.decorate(group, new AddDockerConfigJsonSecretDecorator(generatedSecret, config.getRegistry(),
+              config.getRegistryUsername(), config.getRegistryPassword(), annotations));
+        }
+
+        resourceRegistry.decorate(group, new AddConfigJsonToDockerConfigJsonSecretDecorator(generatedSecret));
+        resourceRegistry.decorate(group, new AddEnvVarStepDecorator(imageBuildTaskName, ImageBuildStep.ID, DOCKER_CONFIG,
+            TEKTON_CREDS_SECRETS + generatedSecret));
+        resourceRegistry.decorate(group, new AddSecretToServiceAccountDecorator(generatedServiceAccount, generatedSecret));
+        resourceRegistry.decorate(group, new AddToArgsDecorator(projectBuildTaskName, projectBuildStepName,
+            IMAGE_PULL_SECRETS_SYS_PROPERTY + generatedSecret));
       }
     }
 
@@ -382,22 +389,23 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
 
     String m2WorkspaceClaimName = m2WorkspaceClaimName(config);
 
+    if (isNullOrEmpty(config.getExternalGitPipelineResource())) {
+      resourceRegistry.add(TEKTON_PIPELINE, createTask(gitCloneTaskName(config)));
+    }
+
     resourceRegistry.add(TEKTON_PIPELINE, createTask(projectBuildTaskName));
     resourceRegistry.add(TEKTON_PIPELINE, createTask(imageBuildTaskName));
     resourceRegistry.add(TEKTON_PIPELINE, createTask(deployTaskName));
 
-    String pipelineName = config.getName();
     resourceRegistry.add(TEKTON_PIPELINE, createPipeline(config));
-    resourceRegistry.decorate(TEKTON_PIPELINE, new AddResourceToPipelineDecorator(pipelineName, GIT, GIT_SOURCE, false));
-    resourceRegistry.decorate(TEKTON_PIPELINE, new AddResourceToPipelineDecorator(pipelineName, IMAGE, OUTPUT_IMAGE, false));
 
-    if (Strings.isNullOrEmpty(config.getExternalSourceWorkspaceClaim())) {
+    if (isNullOrEmpty(config.getExternalSourceWorkspaceClaim())) {
       resourceRegistry.add(TEKTON_PIPELINE, createSourceWorkspacePvc(config));
     }
 
     resourceRegistry.add(TEKTON_PIPELINE_RUN, createPipelineRun(config));
 
-    if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
+    if (isNotNullOrEmpty(m2WorkspaceClaimName)) {
       resourceRegistry.decorate(TEKTON_PIPELINE,
           new AddWorkspaceToPipelineTaskDecorator(null, PROJECT + DASH + BUILD, config.getM2Workspace(), PIPELINE_M2_WS));
       resourceRegistry.decorate(TEKTON_PIPELINE,
@@ -413,75 +421,10 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     resourceRegistry.add(TEKTON_TASK, createTask(monolithTaskName));
     resourceRegistry.add(TEKTON_TASK_RUN, createTaskRun(config));
 
-    if (Strings.isNotNullOrEmpty(m2WorkspaceClaimName)) {
+    if (isNotNullOrEmpty(m2WorkspaceClaimName)) {
       resourceRegistry.decorate(TEKTON_TASK_RUN,
           new AddPvcToTaskRunDecorator(null, config.getM2Workspace(), m2WorkspaceClaimName, false));
     }
-  }
-
-  public PipelineResource createGitResource(TektonConfig config) {
-    ScmInfo scm = Optional.ofNullable(config.getProject().getScmInfo())
-        .orElseThrow(() -> new IllegalStateException("No scm info found!"));
-
-    String repoUrl = null;
-    if (scm.getRemote() != null) {
-      // Try to find the Origin remote
-      Pattern remotePattern = Pattern.compile(REMOTE_PATTERN);
-      for (Map.Entry<String, String> remote : scm.getRemote().entrySet()) {
-        Matcher m = remotePattern.matcher(remote.getKey());
-        if (m.matches()) {
-          String remoteValue = m.group(1);
-          if (Git.ORIGIN.equals(remoteValue)) {
-            repoUrl = remote.getValue();
-            break;
-          }
-        }
-      }
-
-      // if not found, let's pick up the first remote
-      if (repoUrl == null) {
-        repoUrl = scm.getRemote().values().iterator().next();
-      }
-    }
-
-    if (repoUrl == null) {
-      throw new IllegalStateException("Could not find the repository URL from the scm info!");
-    }
-
-    return new PipelineResourceBuilder()
-        .withNewMetadata()
-        .withName(gitResourceName(config))
-        .endMetadata()
-        .withNewSpec()
-        .withType(GIT)
-        .addNewParam()
-        .withName(URL)
-        .withValue(sanitizeRemoteUrl(repoUrl))
-        .endParam()
-        .addNewParam()
-        .withName(REVISION)
-        .withValue(scm.getCommit())
-        .endParam()
-        .endSpec()
-        .build();
-  }
-
-  public PipelineResource createOutputImageResource(TektonConfig config, ImageConfiguration imageConfig) {
-    String image = Images.getImage(
-        Strings.isNotNullOrEmpty(imageConfig.getRegistry()) ? imageConfig.getRegistry() : "docker.io",
-        imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
-    return new PipelineResourceBuilder()
-        .withNewMetadata()
-        .withName(outputImageResourceName(config))
-        .endMetadata()
-        .withNewSpec()
-        .withType(IMAGE)
-        .addNewParam()
-        .withName(URL)
-        .withValue(image)
-        .endParam()
-        .endSpec()
-        .build();
   }
 
   public Task createTask(String name) {
@@ -489,17 +432,31 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withNewMetadata().withName(name).endMetadata().withNewSpec().endSpec().build();
   }
 
-  public PipelineTask createProjectBuildPipelineTask(TektonConfig config) {
+  public PipelineTask createGitClonePipelineTask(TektonConfig config) {
     return new PipelineTaskBuilder()
+        .withName(GIT + DASH + CLONE)
+        .withNewTaskRef()
+        .withName(gitCloneTaskName(config))
+        .endTaskRef()
+        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+        .build();
+  }
+
+  public PipelineTask createProjectBuildPipelineTask(TektonConfig config) {
+    PipelineTaskBuilder builder = new PipelineTaskBuilder()
         .withName(PROJECT + DASH + BUILD)
         .withNewTaskRef()
         .withName(projectBuildTaskName(config))
         .endTaskRef()
         .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
-        .withNewResources().addNewInput().withName(GIT_SOURCE).withResource(GIT_SOURCE).endInput().endResources()
         .addNewParam().withName(ProjectBuildStep.PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject()))
-        .endParam()
-        .build();
+        .endParam();
+
+    if (isNullOrEmpty(config.getExternalGitPipelineResource())) {
+      builder.withRunAfter(GIT + DASH + CLONE);
+    }
+
+    return builder.build();
   }
 
   public PipelineTask createImageBuildPipelineTask(TektonConfig config) {
@@ -508,11 +465,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withNewTaskRef()
         .withName(imageBuildTaskName(config))
         .endTaskRef()
-        .withNewResources()
-        .addNewOutput().withName(IMAGE).withResource(OUTPUT_IMAGE).endOutput()
-        .endResources()
         .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
-        .addNewParam().withName(ImageBuildStep.PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
         .withRunAfter(PROJECT + DASH + BUILD)
         .build();
   }
@@ -531,22 +484,22 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   }
 
   public Pipeline createPipeline(TektonConfig config) {
+    List<PipelineTask> tasks = new ArrayList<>();
+    tasks.add(createProjectBuildPipelineTask(config));
+    tasks.add(createImageBuildPipelineTask(config));
+    tasks.add(createDeployPipelineTask(config));
+
+    if (isNullOrEmpty(config.getExternalGitPipelineResource())) {
+      tasks.add(0, createGitClonePipelineTask(config));
+    }
+
     return new PipelineBuilder()
         .withNewMetadata()
         .withName(config.getName())
         .endMetadata()
         .withNewSpec()
         .addNewWorkspace().withName(PIPELINE_SOURCE_WS).endWorkspace()
-        .addNewResource()
-        .withType(GIT)
-        .withName(GIT_SOURCE)
-        .endResource()
-        .addNewResource()
-        .withType(IMAGE)
-        .withName(OUTPUT_IMAGE)
-        .endResource()
-        .addToTasks(createProjectBuildPipelineTask(config), createImageBuildPipelineTask(config),
-            createDeployPipelineTask(config))
+        .addAllToTasks(tasks)
         .endSpec()
         .build();
   }
@@ -577,10 +530,6 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
           .withNewPersistentVolumeClaim(sourceWorkspaceClaimName(config), false)
           .endWorkspace()
           .withNewPipelineRef().withName(config.getName()).endPipelineRef()
-          .addNewResource().withName(GIT_SOURCE).withNewResourceRef().withName(gitResourceName(config)).endResourceRef()
-          .endResource()
-          .addNewResource().withName(OUTPUT_IMAGE).withNewResourceRef().withName(outputImageResourceName(config))
-          .endResourceRef().endResource()
           .withTimeout(Duration.parse(DEFAULT_TIMEOUT))
           .endSpec()
           .build();
@@ -600,12 +549,6 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
           .addNewWorkspace().withName(config.getSourceWorkspace())
           .withEmptyDir(new EmptyDirVolumeSourceBuilder().withMedium("Memory").build()).endWorkspace()
           .withNewTaskRef().withName(monolithTaskName(config)).endTaskRef()
-          .withNewResources()
-          .addNewInput().withName(GIT_SOURCE).withNewResourceRef().withName(gitResourceName(config)).endResourceRef()
-          .endInput()
-          .addNewOutput().withName(IMAGE).withNewResourceRef().withName(outputImageResourceName(config)).endResourceRef()
-          .endOutput()
-          .endResources()
           .withTimeout(Duration.parse(DEFAULT_TIMEOUT))
           .endSpec()
           .build();
@@ -695,10 +638,6 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     }
   }
 
-  private static String getGeneratedSecretWithRegistryCredentials(TektonConfig config) {
-    return config.getName() + "-registry-credentials";
-  }
-
   private static ImageConfiguration getImageConfiguration(Project project, TektonConfig tektonConfig,
       ConfigurationRegistry configurationRegistry) {
     return configurationRegistry.getImageConfig(BuildServiceFactories.supplierMatches(project)).map(i -> merge(tektonConfig, i))
@@ -719,92 +658,51 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withVersion(imageConfig.getVersion() != null ? imageConfig.getVersion() : tektonConfig.getVersion())
         .withRegistry(imageConfig.getRegistry() != null ? imageConfig.getRegistry() : "docker.io")
         .withDockerFile(imageConfig.getDockerFile() != null ? imageConfig.getDockerFile() : "Dockerfile")
-        .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() ? imageConfig.isAutoBuildEnabled() : false)
-        .withAutoPushEnabled(imageConfig.isAutoPushEnabled() ? imageConfig.isAutoPushEnabled() : false)
+        .withAutoBuildEnabled(imageConfig.isAutoBuildEnabled() && imageConfig.isAutoBuildEnabled())
+        .withAutoPushEnabled(imageConfig.isAutoPushEnabled() && imageConfig.isAutoPushEnabled())
         .build();
   }
 
-  public static final String getDefaultBuildImage(TektonConfig config) {
-    return null;
-  }
-
-  public static final String getDefaultBuildCommand(TektonConfig config) {
-    return null;
-  }
-
-  public static final String[] getDefaultBuildArguments(TektonConfig config, String dockerfile, String context) {
-    return null;
-  }
-
-  public static final boolean requiresPushStep(TektonConfig config) {
-    return true;
-  }
-
-  public static final String getDefaultPushCommand(TektonConfig config) {
-    return null;
-  }
-
-  public static final String[] getDefaultPushArguments(TektonConfig config, String dockerfile, String context) {
-    return null;
-  }
-
-  public static final String getYamlPath(Project project) {
-    Path root = project != null && project.getScmInfo() != null ? project.getScmInfo().getRoot() : null;
-    Path module = project != null ? project.getRoot() : null;
-
-    if (root != null && module != null) {
-      return module.toAbsolutePath().resolve(DeployStep.PATH_TO_YML_PARAM_DEFAULT).toAbsolutePath().toString()
-          .substring(root.toAbsolutePath().toString().length() + 1);
-    } else {
-      return DeployStep.PATH_TO_YML_PARAM_DEFAULT;
-    }
-  }
-
-  public static final String gitResourceName(TektonConfig config) {
-    return Strings.isNotNullOrEmpty(config.getExternalGitPipelineResource()) ? config.getExternalGitPipelineResource()
-        : config.getName() + DASH + GIT;
-  }
-
-  public static final String sourceWorkspaceClaimName(TektonConfig config) {
-    return Strings.isNotNullOrEmpty(config.getExternalSourceWorkspaceClaim())
+  public static String sourceWorkspaceClaimName(TektonConfig config) {
+    return isNotNullOrEmpty(config.getExternalSourceWorkspaceClaim())
         ? config.getExternalSourceWorkspaceClaim()
-        : (Strings.isNotNullOrEmpty(config.getSourceWorkspaceClaim().getName())
+        : (isNotNullOrEmpty(config.getSourceWorkspaceClaim().getName())
             ? config.getSourceWorkspaceClaim().getName()
             : config.getName());
   }
 
-  public static final String m2WorkspaceClaimName(TektonConfig config) {
-    return Strings.isNotNullOrEmpty(config.getExternalM2WorkspaceClaim())
+  public static String m2WorkspaceClaimName(TektonConfig config) {
+    return isNotNullOrEmpty(config.getExternalM2WorkspaceClaim())
         ? config.getExternalM2WorkspaceClaim()
-        : (Strings.isNotNullOrEmpty(config.getM2WorkspaceClaim().getName()) ? config.getM2WorkspaceClaim().getName()
+        : (isNotNullOrEmpty(config.getM2WorkspaceClaim().getName()) ? config.getM2WorkspaceClaim().getName()
             : null);
   }
 
-  public static final String projectBuildStepName(TektonConfig config) {
+  public static String projectBuildStepName(TektonConfig config) {
     return ProjectBuildStep.ID;
   }
 
-  public static final String outputImageResourceName(TektonConfig config) {
-    return config.getName() + DASH + IMAGE;
+  public static String gitCloneTaskName(TektonConfig config) {
+    return config.getName() + DASH + GIT + DASH + CLONE;
   }
 
-  public static final String imageBuildTaskName(TektonConfig config) {
+  public static String imageBuildTaskName(TektonConfig config) {
     return config.getName() + DASH + IMAGE + DASH + BUILD;
   }
 
-  public static final String imagePushTaskName(TektonConfig config) {
+  public static String imagePushTaskName(TektonConfig config) {
     return config.getName() + DASH + IMAGE + DASH + PUSH;
   }
 
-  public static final String projectBuildTaskName(TektonConfig config) {
+  public static String projectBuildTaskName(TektonConfig config) {
     return config.getName() + DASH + PROJECT + DASH + BUILD;
   }
 
-  public static final String deployTaskName(TektonConfig config) {
+  public static String deployTaskName(TektonConfig config) {
     return config.getName() + DASH + DEPLOY;
   }
 
-  public static final String monolithTaskName(TektonConfig config) {
+  public static String monolithTaskName(TektonConfig config) {
     return config.getName() + DASH + BUILD + DASH + AND + DASH + DEPLOY;
   }
 }

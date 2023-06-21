@@ -16,6 +16,10 @@
  **/
 package io.dekorate.tekton.decorator;
 
+import static io.dekorate.tekton.step.ImagePushStep.ARGS_PARAM_REF;
+import static io.dekorate.tekton.step.ImagePushStep.COMMAND_PARAM_REF;
+import static io.dekorate.tekton.step.ImagePushStep.IMAGE_PARAM_REF;
+
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.tekton.step.ImagePushStep;
 import io.dekorate.utils.Strings;
@@ -23,10 +27,6 @@ import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 public class AddImagePushStepDecorator extends NamedTaskDecorator implements StepDecorator {
-
-  private static final String PUSH_IMAGE_REF = "$(inputs.params.imagePushImage)";
-  private static final String PUSH_COMMAND_REF = "$(inputs.params.imagePushCommand)";
-  private static final String PUSH_ARGS_REF = "$(inputs.params.imagePushArgs[*])";
 
   private static final String DOCKER_CONFIG = "DOCKER_CONFIG";
   private static final String DOCKER_CONFIG_DEFAULT = "/tekton/home/.docker";
@@ -42,7 +42,7 @@ public class AddImagePushStepDecorator extends NamedTaskDecorator implements Ste
   }
 
   public AddImagePushStepDecorator(String taskName, String stepName, String projectName) {
-    this(taskName, stepName, projectName, PUSH_IMAGE_REF, PUSH_COMMAND_REF, PUSH_ARGS_REF);
+    this(taskName, stepName, projectName, IMAGE_PARAM_REF, COMMAND_PARAM_REF, ARGS_PARAM_REF);
   }
 
   public AddImagePushStepDecorator(String taskName, String stepName, String projectName, String image, String command,
@@ -50,9 +50,9 @@ public class AddImagePushStepDecorator extends NamedTaskDecorator implements Ste
     super(taskName);
     this.stepName = stepName;
     this.projectName = projectName;
-    this.image = Strings.isNotNullOrEmpty(image) ? image : PUSH_IMAGE_REF;
-    this.command = Strings.isNotNullOrEmpty(command) ? command : PUSH_COMMAND_REF;
-    this.args = args != null && args.length != 0 ? args : new String[] { PUSH_ARGS_REF };
+    this.image = Strings.isNotNullOrEmpty(image) ? image : IMAGE_PARAM_REF;
+    this.command = Strings.isNotNullOrEmpty(command) ? command : COMMAND_PARAM_REF;
+    this.args = args != null && args.length != 0 ? args : new String[] { ARGS_PARAM_REF };
   }
 
   @Override

@@ -24,19 +24,14 @@ import io.dekorate.utils.Strings;
 public class KanikoBuildStep extends ImageBuildStep<KanikoBuildStep> {
 
   public static final String DOCKERFILE_FORMAT = "--dockerfile=%s";
-  public static final String DOCKERFILE_ARG = "--dockerfile=$(inputs.params." + PATH_TO_DOCKERFILE_PARAM_NAME + ")";
   public static final String CONTEXT_FORMAT = "--context=%s";
-  public static final String CONTEXT_ARG = "--context=$(params." + PATH_TO_CONTEXT_PARAM_NAME + ")";
   public static final String WORKSPACE_SOURCE = "/workspace/source";
   public static final String FORCE_ARG = "--force";
   public static final String INSECURE_ARG = "--insecure";
-  public static final String IMAGE_DESTINATION_ARG = "--destination=$(resources.outputs.image.url)";
+  public static final String IMAGE_DESTINATION_ARG = "--destination=%s";
 
-  public static final String BUILD_IMAGE_PARAM_DEFAULT = "gcr.io/kaniko-project/executor:v1.3.0";
+  public static final String BUILD_IMAGE_PARAM_DEFAULT = "gcr.io/kaniko-project/executor:v1.5.1";
   public static final String BUILD_COMMAND_PARAM_DEFAULT = "/kaniko/executor";
-
-  public static final String PUSH_IMAGE_PARAM_DEFAULT = BUILD_COMMAND_PARAM_DEFAULT;
-  public static final String PUSH_COMMAND_PARAM_DEFAULT = "/kaniko/executor";
 
   private boolean registryInsecure;
 
@@ -150,10 +145,15 @@ public class KanikoBuildStep extends ImageBuildStep<KanikoBuildStep> {
     return false;
   }
 
+  @Override
+  public String getImageTargetArgument() {
+    return String.format(IMAGE_DESTINATION_ARG, super.getImageTargetArgument());
+  }
+
   private static String[] getDefaultBuildArguments(String context, String dockerfile) {
     return new String[] { String.format(DOCKERFILE_FORMAT, dockerfile),
         String.format(CONTEXT_FORMAT, WORKSPACE_SOURCE + context),
-        FORCE_ARG, IMAGE_DESTINATION_ARG };
+        FORCE_ARG };
   }
 
   private static String[] appendArgumentTo(String[] existing) {

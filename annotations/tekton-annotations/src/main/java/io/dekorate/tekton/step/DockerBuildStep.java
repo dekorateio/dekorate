@@ -27,11 +27,6 @@ public class DockerBuildStep extends ImageBuildStep<DockerBuildStep> {
   public static final String PUSH = "push";
   public static final String TARGET = "--target";
   public static final String FILE = "--file";
-  public static final String DOT = ".";
-
-  public static final String DOCKERFILE_ARG = "$(inputs.params." + PATH_TO_DOCKERFILE_PARAM_NAME + ")";
-  public static final String CONTEXT_ARG = "$(inputs.params." + PATH_TO_CONTEXT_PARAM_NAME + ")";
-  public static final String IMAGE_TARGET_ARG = "$(resources.outputs.image.url)";
 
   public static final String BUILD_IMAGE_PARAM_DEFAULT = "docker.io/docker:19.03.13";
   public static final String BUILD_COMMAND_PARAM_DEFAULT = "docker";
@@ -132,11 +127,11 @@ public class DockerBuildStep extends ImageBuildStep<DockerBuildStep> {
   }
 
   private static String[] getDefaultBuildArguments(String context, String dockerfile) {
-    return new String[] { BUILD, TARGET, IMAGE_TARGET_ARG, FILE, dockerfile, context };
+    return new String[] { BUILD, TARGET, FILE, dockerfile, context };
   }
 
   private static String[] getDefaultPushArguments(String context, String dockerfile) {
-    return new String[] { PUSH, IMAGE_TARGET_ARG };
+    return new String[] { PUSH };
   }
 
 }

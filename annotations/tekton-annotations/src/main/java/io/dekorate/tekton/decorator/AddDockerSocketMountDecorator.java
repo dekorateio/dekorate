@@ -17,7 +17,7 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.dekorate.tekton.step.ImageStep;
+import io.dekorate.tekton.step.ImageBuildStep;
 
 public class AddDockerSocketMountDecorator extends AddMountDecorator {
 
@@ -26,7 +26,7 @@ public class AddDockerSocketMountDecorator extends AddMountDecorator {
   }
 
   public AddDockerSocketMountDecorator(String taskName, String stepName) {
-    this(taskName, stepName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, null, false);
+    this(taskName, stepName, ImageBuildStep.DOCKER_SOCKET_NAME, ImageBuildStep.DOCKER_SOCKET_PATH, null, false);
   }
 
   public AddDockerSocketMountDecorator(String taskName, String stepName, String name, String path, String subPath,

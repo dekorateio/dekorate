@@ -17,7 +17,7 @@
 
 package io.dekorate.tekton.decorator;
 
-import java.nio.file.Path;
+import static io.dekorate.tekton.step.DeployStep.PATH_TO_YML_PARAM_NAME;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.fabric8.tekton.pipeline.v1beta1.Step;
@@ -28,21 +28,18 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   private static final String STEP_NAME = "deploy";
   private static final String DEPLOY_CMD = "kubectl";
-  private static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
 
   private final String stepName;
-  private final Path relativePath;
   private final String deployerImage;
 
-  public AddDeployStepDecorator(String taskName, String stepName, Path relativePath, String deployerImage) {
-    super(taskName);
-    this.stepName = stepName;
-    this.relativePath = relativePath;
-    this.deployerImage = deployerImage;
+  public AddDeployStepDecorator(String taskName, String deployerImage) {
+    this(taskName, STEP_NAME, deployerImage);
   }
 
-  public AddDeployStepDecorator(String taskName, Path relativePath, String deployerImage) {
-    this(taskName, STEP_NAME, relativePath, deployerImage);
+  public AddDeployStepDecorator(String taskName, String stepName, String deployerImage) {
+    super(taskName);
+    this.stepName = stepName;
+    this.deployerImage = deployerImage;
   }
 
   @Override
@@ -53,7 +50,7 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
   public Step createDeployStep() {
     return new StepBuilder().withName(stepName).withImage(deployerImage).withCommand(DEPLOY_CMD)
         .withArgs(new String[] { "apply", "-f", param(PATH_TO_YML_PARAM_NAME) })
-        .withWorkingDir(sourcePath(relativePath.toString()))
+        .withWorkingDir(sourcePath())
         .build();
   }
 

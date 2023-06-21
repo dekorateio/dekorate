@@ -42,9 +42,9 @@ To use Tekton, it is needed to have a k8s cluster (>= 1.24) & local docker regis
 curl -s -L "https://raw.githubusercontent.com/snowdrop/k8s-infra/main/kind/kind.sh" | bash -s install --registry-name kind-registry.local
 ```
 
-Next, let's install the release 0.39.0 of Tekton (or a specific release):
+Next, let's install the release 0.47.0 of Tekton (or a specific release):
 ```bash
-kubectl apply -f https://github.com/tektoncd/pipeline/releases/download/v0.39.0/release.yaml
+kubectl apply -f https://github.com/tektoncd/pipeline/releases/download/v0.47.0/release.yaml
 ```
 
 1. Build the manifests:

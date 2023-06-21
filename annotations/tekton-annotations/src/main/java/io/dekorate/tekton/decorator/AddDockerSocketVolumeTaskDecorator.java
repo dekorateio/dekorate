@@ -17,12 +17,12 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.dekorate.tekton.step.ImageStep;
+import io.dekorate.tekton.step.ImageBuildStep;
 
 public class AddDockerSocketVolumeTaskDecorator extends AddHostPathVolumeTaskDecorator {
 
   public AddDockerSocketVolumeTaskDecorator(String taskName) {
-    super(taskName, ImageStep.DOCKER_SOCKET_NAME, ImageStep.DOCKER_SOCKET_PATH, ImageStep.DOCKER_SOCKET_TYPE);
+    super(taskName, ImageBuildStep.DOCKER_SOCKET_NAME, ImageBuildStep.DOCKER_SOCKET_PATH, ImageBuildStep.DOCKER_SOCKET_TYPE);
   }
 
   public AddDockerSocketVolumeTaskDecorator(String taskName, String name, String path, String type) {
