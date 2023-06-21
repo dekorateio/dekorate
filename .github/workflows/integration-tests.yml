@@ -157,7 +157,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tekton: [ v0.39.0 ]
+        tekton: [ v0.47.0 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
@@ -195,6 +195,7 @@ jobs:
           cd examples/spring-boot-with-tekton-example
           # Build example
           mvn clean install -DskipTests -Ddekorate.docker.registry=$KIND_REGISTRY -Ddekorate.tekton.imageRegistryInsecure=true -Ddekorate.tekton.projectBuilderArguments=clean,install,-Pwith-examples,-DskipTests,-Dformat.skip=true,-pl,examples/spring-boot-with-tekton-example,-am
+          cat target/classes/META-INF/dekorate/tekton-task.yml
           # Install Tekton Task manifests
           kubectl apply -f target/classes/META-INF/dekorate/tekton-task.yml
           # Trigger Task workflow

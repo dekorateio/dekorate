@@ -26,12 +26,6 @@ public class BuildahBuildStep extends ImageBuildStep<BuildahBuildStep> {
   public static final String PUSH = "bud";
   public static final String TARGET = "-t";
   public static final String FILE = "--file";
-  public static final String DOT = ".";
-  public static final String AND = "&&";
-
-  public static final String DOCKERFILE_ARG = "$(inputs.params." + PATH_TO_DOCKERFILE_PARAM_NAME + ")";
-  public static final String CONTEXT_ARG = "$(inputs.params." + PATH_TO_CONTEXT_PARAM_NAME + ")";
-  public static final String IMAGE_TARGET_ARG = "$(resources.outputs.image.url)";
 
   public static final String BUILD_IMAGE_PARAM_DEFAULT = "quay.io/buildah/stable:v1.15.1";
   public static final String BUILD_COMMAND_PARAM_DEFAULT = "buildah";
@@ -131,10 +125,10 @@ public class BuildahBuildStep extends ImageBuildStep<BuildahBuildStep> {
   }
 
   private static String[] getDefaultBuildArguments(String context, String dockerfile) {
-    return new String[] { BUG, TARGET, IMAGE_TARGET_ARG, FILE, dockerfile, context };
+    return new String[] { BUG, TARGET, FILE, dockerfile, context };
   }
 
   private static String[] getDefaultPushArguments(String context, String dockerfile) {
-    return new String[] { PUSH, IMAGE_TARGET_ARG };
+    return new String[] { PUSH };
   }
 }

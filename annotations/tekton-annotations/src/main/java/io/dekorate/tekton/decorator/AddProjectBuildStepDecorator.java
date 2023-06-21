@@ -66,6 +66,6 @@ public class AddProjectBuildStepDecorator extends NamedTaskDecorator implements 
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class };
+    return new Class[] { AddInitStepDecorator.class, AddGitCloneStepDecorator.class };
   }
 }

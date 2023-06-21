@@ -17,6 +17,10 @@
 
 package io.dekorate.tekton.step;
 
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.utils.Images;
+import io.dekorate.utils.Strings;
+
 public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   public static final String ID = "image-build";
@@ -36,6 +40,14 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
   public static final String ARGS_PARAM_NAME = "imageBuilderArgs";
   public static final String ARGS_PARAM_DESCRIPTION = "The command arguments to use for performing project build";
   public static final String ARGS_PARAM_REF = "$(inputs.params." + ARGS_PARAM_NAME + "[*])";
+
+  public static final String DOCKER_SOCKET_NAME = "docker-socket";
+  public static final String DOCKER_SOCKET_PATH = "/var/run/docker.sock";
+  public static final String DOCKER_SOCKET_TYPE = "Socket";
+
+  public static final String IMAGE_TARGET_NAME = "imageUrl";
+  public static final String IMAGE_TARGET_DESCRIPTION = "The container image to build";
+  public static final String IMAGE_TARGET_REF = "$(inputs.params." + IMAGE_TARGET_NAME + ")";
 
   protected final String context;
   protected final String dockerfile;
@@ -220,5 +232,18 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
    */
   public String[] getPushArguments() {
     return pushArguments;
+  }
+
+  /**
+   * @return the image target argument.
+   */
+  public String getImageTargetArgument() {
+    return IMAGE_TARGET_REF;
+  }
+
+  public static String getImageTarget(ImageConfiguration imageConfig) {
+    return Images.getImage(
+        Strings.isNotNullOrEmpty(imageConfig.getRegistry()) ? imageConfig.getRegistry() : "docker.io",
+        imageConfig.getGroup(), imageConfig.getName(), imageConfig.getVersion());
   }
 }

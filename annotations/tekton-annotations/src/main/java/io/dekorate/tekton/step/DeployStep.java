@@ -17,10 +17,26 @@
 
 package io.dekorate.tekton.step;
 
+import java.nio.file.Path;
+
+import io.dekorate.project.Project;
+
 public class DeployStep implements Step {
 
   public static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
   public static final String PATH_TO_YML_PARAM_DESCRIPTION = "Path to yml";
-  public static final String PATH_TO_YML_PARAM_DEFAULT = "target/classes/META-INF/dekorate/kubernetes.yml";
+  private static final String PATH_TO_YML_PARAM_DEFAULT = "target/classes/META-INF/dekorate/kubernetes.yml";
+
+  public static final String getYamlPath(Project project) {
+    Path root = project != null && project.getScmInfo() != null ? project.getScmInfo().getRoot() : null;
+    Path module = project != null ? project.getRoot() : null;
+
+    if (root != null && module != null) {
+      return module.toAbsolutePath().resolve(PATH_TO_YML_PARAM_DEFAULT).toAbsolutePath().toString()
+          .substring(root.toAbsolutePath().toString().length() + 1);
+    } else {
+      return PATH_TO_YML_PARAM_DEFAULT;
+    }
+  }
 
 }

@@ -30,8 +30,8 @@ import io.fabric8.kubernetes.api.model.SecretBuilder;
 
 public class AddDockerConfigJsonSecretDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
+  public static final String DOT_DOCKER_CONFIG_JSON = ".dockerconfigjson";
   private static final String TYPE = "kubernetes.io/dockerconfigjson";
-  private static final String DOT_DOCKER_CONFIG_JSON = ".dockerconfigjson";
   private static final String DOCKER_CONFIG_STR = "{\n \t\"auths\": {\n\t\t\"%s\": {\n \t\t\t\"auth\":\"%s\"\n\t\t}\n\t}\n}";
   private static final Charset CHARSET = Charset.defaultCharset();
 

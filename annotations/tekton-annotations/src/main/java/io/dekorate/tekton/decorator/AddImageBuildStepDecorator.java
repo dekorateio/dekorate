@@ -17,7 +17,9 @@
 
 package io.dekorate.tekton.decorator;
 
-import java.nio.file.Path;
+import static io.dekorate.tekton.step.ImageBuildStep.ARGS_PARAM_REF;
+import static io.dekorate.tekton.step.ImageBuildStep.COMMAND_PARAM_REF;
+import static io.dekorate.tekton.step.ImageBuildStep.IMAGE_PARAM_REF;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.tekton.step.ImageBuildStep;
@@ -27,35 +29,28 @@ import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
 
 public class AddImageBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 
-  private static final String BUILDER_IMAGE_REF = "$(inputs.params.imageBuilderImage)";
-  private static final String BUILDER_COMMAND_REF = "$(inputs.params.imageBuilderCommand)";
-  private static final String BUILDER_ARGS_REF = "$(inputs.params.imageBuilderArgs[*])";
-
-  private static final String DOCKER_CONFIG = "DOCKER_CONFIG";
+  public static final String DOCKER_CONFIG = "DOCKER_CONFIG";
   private static final String DOCKER_CONFIG_DEFAULT = "/tekton/home/.docker";
 
   private final String stepName;
-  private final Path relativePath;
   private final String image;
   private final String command;
   private final String[] args;
 
-  public AddImageBuildStepDecorator(String taskName, Path relativePath) {
-    this(taskName, ImageBuildStep.ID, relativePath);
+  public AddImageBuildStepDecorator(String taskName) {
+    this(taskName, ImageBuildStep.ID);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, Path relativePath) {
-    this(taskName, stepName, relativePath, BUILDER_IMAGE_REF, BUILDER_COMMAND_REF, BUILDER_ARGS_REF);
+  public AddImageBuildStepDecorator(String taskName, String stepName) {
+    this(taskName, stepName, IMAGE_PARAM_REF, COMMAND_PARAM_REF, ARGS_PARAM_REF);
   }
 
-  public AddImageBuildStepDecorator(String taskName, String stepName, Path relativePath, String image, String command,
-      String... args) {
+  public AddImageBuildStepDecorator(String taskName, String stepName, String image, String command, String... args) {
     super(taskName);
     this.stepName = stepName;
-    this.relativePath = relativePath;
-    this.image = Strings.isNotNullOrEmpty(image) ? image : BUILDER_IMAGE_REF;
-    this.command = Strings.isNotNullOrEmpty(command) ? command : BUILDER_COMMAND_REF;
-    this.args = args != null && args.length != 0 ? args : new String[] { BUILDER_ARGS_REF };
+    this.image = Strings.isNotNullOrEmpty(image) ? image : IMAGE_PARAM_REF;
+    this.command = Strings.isNotNullOrEmpty(command) ? command : COMMAND_PARAM_REF;
+    this.args = args != null && args.length != 0 ? args : new String[] { ARGS_PARAM_REF };
   }
 
   @Override
