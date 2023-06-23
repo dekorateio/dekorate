@@ -136,7 +136,7 @@ public @interface KubernetesApplication {
 
   /**
    * Specifies rolling update configuration.
-   * The configuration is applied when DeploymentStrategy == Rolling update, or
+   * The configuration is applied when DeploymentStrategy == RollingUpdate, or
    * when explicit configuration has been provided. In the later case RollingUpdate is assumed.
    */
   RollingUpdate rollingUpdate() default @RollingUpdate;
