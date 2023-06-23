@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-with-prometheus-on-kubernetes-example</artifactId>
-  <version>3.6-SNAPSHOT</version>
+  <version>3.7-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot with Prometheus on Kubernetes</name>
 
   <properties>

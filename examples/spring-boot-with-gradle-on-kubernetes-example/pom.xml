@@ -5,7 +5,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-with-gradle-on-kubernetes-example</artifactId>
   <name>Dekorate :: Examples :: Spring Boot with Gradle on Kubernetes</name>
-  <version>3.6-SNAPSHOT</version>
+  <version>3.7-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
