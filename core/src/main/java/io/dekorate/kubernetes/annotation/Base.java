@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
+import io.dekorate.kubernetes.config.DeploymentStrategy;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Pojo;
 
@@ -168,6 +169,18 @@ import io.sundr.builder.annotations.Pojo;
    * The image pull secret
    */
   String[] imagePullSecrets() default {};
+
+  /**
+   * Specifies the deployment strategy.
+   */
+  DeploymentStrategy deploymentStrategy() default DeploymentStrategy.None;
+
+  /**
+   * Specifies rolling update configuration.
+   * The configuration is applied when DeploymentStrategy == Rolling update, or
+   * when explicit configuration has been provided. In the later case RollingUpdate is assumed.
+   */
+  RollingUpdate rollingUpdate() default @RollingUpdate;
 
   /**
    * Host aliases

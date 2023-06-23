@@ -23,6 +23,12 @@
     </dependency>
 
     <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>openshift-spring-starter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
       <scope>compile</scope>

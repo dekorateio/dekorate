@@ -17,6 +17,7 @@ package io.dekorate.kubernetes.decorator;
 
 import io.dekorate.kubernetes.config.DeploymentStrategy;
 import io.dekorate.kubernetes.config.RollingUpdate;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecFluent;
 
@@ -37,7 +38,7 @@ public class ApplyDeploymentStrategyDecorator extends NamedResourceDecorator<Dep
 
   @Override
   public void andThenVisit(final DeploymentSpecFluent<?> spec, final ObjectMeta resourceMeta) {
-    boolean hasCustomRollingUpdate = hasCusomRollingUpdateConfig(rollingUpdate);
+    boolean hasCustomRollingUpdate = hasCustomRollingUpdateConfig(rollingUpdate);
     if (strategy == DeploymentStrategy.Recreate) {
       if (hasCustomRollingUpdate) {
         throw new IllegalStateException(
@@ -57,9 +58,9 @@ public class ApplyDeploymentStrategyDecorator extends NamedResourceDecorator<Dep
     }
   }
 
-  private boolean hasCusomRollingUpdateConfig(RollingUpdate rollingUpdate) {
-    return rollingUpdate != null &&
-        ((rollingUpdate.getMaxUnavailable() != null && !rollingUpdate.getMaxUnavailable().equals("25%")) ||
-            (rollingUpdate.getMaxSurge() != null && !rollingUpdate.getMaxSurge().equals("25%")));
+  private boolean hasCustomRollingUpdateConfig(RollingUpdate rollingUpdate) {
+    return rollingUpdate != null
+        && (!Strings.equals(rollingUpdate.getMaxUnavailable(), "25%")
+            || !Strings.equals(rollingUpdate.getMaxSurge(), "25%"));
   }
 }
