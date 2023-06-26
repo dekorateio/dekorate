@@ -8,20 +8,14 @@ import io.dekorate.utils.Strings;
 public class ApplyTektonSourceWorkspaceConfigurator extends Configurator<TektonConfigFluent<?>> {
 
   private final String workspace;
-  private final String claim;
   private final PersistentVolumeClaim pvc;
 
   public ApplyTektonSourceWorkspaceConfigurator(String workspace) {
-    this(workspace, null, null);
+    this(workspace, null);
   }
 
-  public ApplyTektonSourceWorkspaceConfigurator(String workspace, String claim) {
-    this(workspace, claim, null);
-  }
-
-  public ApplyTektonSourceWorkspaceConfigurator(String workspace, String claim, PersistentVolumeClaim pvc) {
+  public ApplyTektonSourceWorkspaceConfigurator(String workspace, PersistentVolumeClaim pvc) {
     this.workspace = workspace;
-    this.claim = claim;
     this.pvc = pvc;
   }
 
@@ -29,10 +23,6 @@ public class ApplyTektonSourceWorkspaceConfigurator extends Configurator<TektonC
   public void visit(TektonConfigFluent<?> config) {
     if (!Strings.isNotNullOrEmpty(workspace)) {
       config.withSourceWorkspace(workspace);
-    }
-
-    if (!Strings.isNotNullOrEmpty(claim)) {
-      config.withExternalSourceWorkspaceClaim(claim);
     }
 
     if (pvc != null) {

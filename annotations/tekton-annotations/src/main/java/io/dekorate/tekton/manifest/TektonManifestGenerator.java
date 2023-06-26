@@ -395,7 +395,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
 
     resourceRegistry.add(TEKTON_PIPELINE, createPipeline(config));
 
-    if (isNullOrEmpty(config.getExternalSourceWorkspaceClaim())) {
+    if (isNotNullOrEmpty(config.getSourceWorkspaceClaim().getName())) {
       resourceRegistry.add(TEKTON_PIPELINE, createSourceWorkspacePvc(config));
     }
 
@@ -660,18 +660,12 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   }
 
   public static String sourceWorkspaceClaimName(TektonConfig config) {
-    return isNotNullOrEmpty(config.getExternalSourceWorkspaceClaim())
-        ? config.getExternalSourceWorkspaceClaim()
-        : (isNotNullOrEmpty(config.getSourceWorkspaceClaim().getName())
-            ? config.getSourceWorkspaceClaim().getName()
-            : config.getName());
+    return isNotNullOrEmpty(config.getSourceWorkspaceClaim().getName()) ? config.getSourceWorkspaceClaim().getName()
+        : config.getName();
   }
 
   public static String m2WorkspaceClaimName(TektonConfig config) {
-    return isNotNullOrEmpty(config.getExternalM2WorkspaceClaim())
-        ? config.getExternalM2WorkspaceClaim()
-        : (isNotNullOrEmpty(config.getM2WorkspaceClaim().getName()) ? config.getM2WorkspaceClaim().getName()
-            : null);
+    return isNotNullOrEmpty(config.getM2WorkspaceClaim().getName()) ? config.getM2WorkspaceClaim().getName() : null;
   }
 
   public static String projectBuildStepName(TektonConfig config) {

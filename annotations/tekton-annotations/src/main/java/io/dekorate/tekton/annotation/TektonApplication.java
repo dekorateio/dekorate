@@ -100,13 +100,6 @@ public @interface TektonApplication {
    */
   String sourceWorkspace() default "source";
 
-  /**
-   * The name of an external PVC to be used for the source workspace.
-   * 
-   * @return the name or empty String if the PVC is meant to be generated.
-   */
-  String externalSourceWorkspaceClaim() default "";
-
   /*
    * The persistent volume claim configuration for the source workspace.
    * The option only makes sense when the PVC is going to be generated (no external pvc specified).
@@ -121,13 +114,6 @@ public @interface TektonApplication {
    * @return the workspace name.
    */
   String m2Workspace() default "m2";
-
-  /**
-   * The name of an external PVC to be used for the m2 artifact repository.
-   * 
-   * @return the name or empty String if the PVC is meant to be generated.
-   */
-  String externalM2WorkspaceClaim() default "";
 
   /*
    * The persistent volume claim configuration for the artifact repository.
