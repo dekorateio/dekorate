@@ -27,13 +27,11 @@ public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator 
 
   private final String taskName;
   private final String id;
-  private final String workspace;
 
-  public AddWorkspaceToPipelineTaskDecorator(String pipelineName, String taskName, String id, String workspace) {
+  public AddWorkspaceToPipelineTaskDecorator(String pipelineName, String taskName, String id) {
     super(pipelineName);
     this.taskName = taskName;
     this.id = id;
-    this.workspace = workspace;
   }
 
   @Override
@@ -47,7 +45,7 @@ public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator 
 
     //If no task name is specified we need to add the workspace to all pipeline tasks.
     if (spec.hasMatchingTask(predicate)) {
-      spec.editMatchingTask(predicate).addNewWorkspace().withName(id).withWorkspace(workspace).endWorkspace().endTask();
+      spec.editMatchingTask(predicate).addNewWorkspace().withName(id).withWorkspace(id).endWorkspace().endTask();
     }
   }
 }

@@ -126,10 +126,6 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   private static final String RUN = "run";
   private static final String NOW = "now";
 
-  private static final String PIPELINE_SOURCE_WS = "pipeline-source-ws";
-
-  private static final String PIPELINE_M2_WS = "pipeline-m2-ws";
-
   private static final String PROJECT = "project";
   private static final String DASH = "-";
 
@@ -407,11 +403,11 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
 
     if (isNotNullOrEmpty(m2WorkspaceClaimName)) {
       resourceRegistry.decorate(TEKTON_PIPELINE,
-          new AddWorkspaceToPipelineTaskDecorator(null, PROJECT + DASH + BUILD, config.getM2Workspace(), PIPELINE_M2_WS));
+          new AddWorkspaceToPipelineTaskDecorator(null, PROJECT + DASH + BUILD, config.getM2Workspace()));
       resourceRegistry.decorate(TEKTON_PIPELINE,
-          new AddWorkspaceToPipelineDecorator(null, PIPELINE_M2_WS, "Local maven repository workspace"));
+          new AddWorkspaceToPipelineDecorator(null, config.getM2Workspace(), "Local maven repository workspace"));
       resourceRegistry.decorate(TEKTON_PIPELINE_RUN,
-          new AddPvcToPipelineRunDecorator(null, PIPELINE_M2_WS, m2WorkspaceClaimName, false));
+          new AddPvcToPipelineRunDecorator(null, config.getM2Workspace(), m2WorkspaceClaimName, false));
     }
   }
 
@@ -438,7 +434,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withNewTaskRef()
         .withName(gitCloneTaskName(config))
         .endTaskRef()
-        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(config.getSourceWorkspace()).endWorkspace()
         .build();
   }
 
@@ -448,7 +444,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withNewTaskRef()
         .withName(projectBuildTaskName(config))
         .endTaskRef()
-        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(config.getSourceWorkspace()).endWorkspace()
         .addNewParam().withName(ProjectBuildStep.PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject()))
         .endParam();
 
@@ -465,7 +461,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withNewTaskRef()
         .withName(imageBuildTaskName(config))
         .endTaskRef()
-        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(config.getSourceWorkspace()).endWorkspace()
         .withRunAfter(PROJECT + DASH + BUILD)
         .build();
   }
@@ -476,7 +472,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withNewTaskRef()
         .withName(deployTaskName(config))
         .endTaskRef()
-        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(PIPELINE_SOURCE_WS).endWorkspace()
+        .addNewWorkspace().withName(config.getSourceWorkspace()).withWorkspace(config.getSourceWorkspace()).endWorkspace()
         .addNewParam().withName(DeployStep.PATH_TO_YML_PARAM_NAME).withNewValue(getYamlPath(getProject())).endParam()
         .addNewParam().withName(DeployStep.PATH_TO_CONTEXT_PARAM_NAME).withNewValue(getContextPath(getProject())).endParam()
         .withRunAfter(PROJECT + DASH + BUILD, IMAGE + DASH + BUILD)
@@ -498,7 +494,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         .withName(config.getName())
         .endMetadata()
         .withNewSpec()
-        .addNewWorkspace().withName(PIPELINE_SOURCE_WS).endWorkspace()
+        .addNewWorkspace().withName(config.getSourceWorkspace()).endWorkspace()
         .addAllToTasks(tasks)
         .endSpec()
         .build();
@@ -526,7 +522,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
           .endMetadata()
           .withNewSpec()
           .withServiceAccountName(config.getName())
-          .addNewWorkspace().withName(PIPELINE_SOURCE_WS)
+          .addNewWorkspace().withName(config.getSourceWorkspace())
           .withNewPersistentVolumeClaim(sourceWorkspaceClaimName(config), false)
           .endWorkspace()
           .withNewPipelineRef().withName(config.getName()).endPipelineRef()

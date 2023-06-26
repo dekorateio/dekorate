@@ -17,6 +17,7 @@ package io.dekorate.example;
 
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.PersistentVolumeClaim;
 import io.fabric8.tekton.pipeline.v1beta1.Pipeline;
 import io.fabric8.tekton.pipeline.v1beta1.PipelineRun;
 import io.fabric8.tekton.pipeline.v1beta1.PipelineTask;
@@ -38,55 +39,75 @@ class SpringBootWithTektonTest {
   public void shouldContainPipelineWithM2Workspace() {
     KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline.yml"));
     assertNotNull(list);
-    Pipeline p = findFirst(list, Pipeline.class).orElseThrow(() -> new IllegalStateException());
-    assertNotNull(p);
-    assertTrue(p.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("pipeline-m2-ws")).findAny().isPresent(), "Pipeline should contain workspace named 'pipeline-m2-ws'");
+    Pipeline p = findFirst(list, Pipeline.class);
+    assertTrue(p.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("m2")).findAny().isPresent(), "Pipeline should contain workspace named 'm2'");
     Optional<PipelineTask> buildTask = findTask("project-build", p);
     assertTrue(buildTask.isPresent());
 
-    assertTrue(buildTask.get().getWorkspaces().stream().filter(w -> w.getName().equals("m2") && w.getWorkspace().equals("pipeline-m2-ws")).findAny().isPresent(), "Build task should contain workspace 'm2 -> pipeline-m2-ws'");
+    assertTrue(buildTask.get().getWorkspaces().stream().filter(w -> w.getName().equals("m2") && w.getWorkspace().equals("m2")).findAny().isPresent());
   }
 
   @Test
   public void shouldContainPipelineRun() {
     KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline-run.yml"));
     assertNotNull(list);
-    PipelineRun p = findFirst(list, PipelineRun.class).orElseThrow(() -> new IllegalStateException());
-    assertNotNull(p);
-    Optional<WorkspaceBinding> binding  = p.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("pipeline-m2-ws")).findAny();
-    assertTrue(binding.isPresent(), "PipelineRun should contain workspace binding named 'pipeline-m2-ws'");
-    assertEquals(binding.get().getPersistentVolumeClaim().getClaimName(), "m2-pvc");
+    PipelineRun p = findFirst(list, PipelineRun.class);
+    Optional<WorkspaceBinding> binding  = p.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("m2")).findAny();
+    assertTrue(binding.isPresent(), "PipelineRun should contain workspace binding named 'm2'");
+    assertEquals("m2-pvc", binding.get().getPersistentVolumeClaim().getClaimName());
   }
 
   @Test
   public void shouldContainTaskWithM2Workspace() {
     KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task.yml"));
     assertNotNull(list);
-    Task t = findFirst(list, Task.class).orElseThrow(() -> new IllegalStateException());
-    assertNotNull(t);
-    assertTrue(t.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("m2")).findAny().isPresent(), "Pipeline should contain workspace named 'pipeline-m2-ws'");
+    Task t = findFirst(list, Task.class);
+    assertTrue(t.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("m2")).findAny().isPresent());
   }
 
   @Test
   public void shouldContainTaskRunWithM2PvcBinding() {
     KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task-run.yml"));
     assertNotNull(list);
-    TaskRun t = findFirst(list, TaskRun.class).orElseThrow(() -> new IllegalStateException());
-    assertNotNull(t);
+    TaskRun t = findFirst(list, TaskRun.class);
 
     Optional<WorkspaceBinding> binding  = t.getSpec().getWorkspaces().stream().filter(w -> w.getName().equals("m2")).findAny();
-    assertTrue(binding.isPresent(), "PipelineRun should contain workspace binding named 'pipeline-m2-ws'");
+    assertTrue(binding.isPresent(), "PipelineRun should contain workspace binding named 'm2'");
     assertEquals(binding.get().getPersistentVolumeClaim().getClaimName(), "m2-pvc");
   }
 
+  @Test
+  public void shouldContainPersistentVolumeClaimInPipeline() {
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline.yml"));
+    assertNotNull(list);
+    assertGeneratedPersistentVolumeClaim(list);
+  }
+
+  @Test
+  public void shouldContainPersistentVolumeClaimInTask() {
+    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task.yml"));
+    assertNotNull(list);
+    assertGeneratedPersistentVolumeClaim(list);
+  }
+
+  private void assertGeneratedPersistentVolumeClaim(KubernetesList list) {
+    PersistentVolumeClaim v = findFirst(list, PersistentVolumeClaim.class);
+    assertEquals("m2-pvc", v.getMetadata().getName());
+    assertEquals("m2", v.getSpec().getSelector().getMatchLabels().get("volume-type"));
+    assertEquals("standard", v.getSpec().getStorageClassName());
+    assertEquals("1Gi", v.getSpec().getResources().getRequests().get("storage").toString());
+    assertTrue(v.getSpec().getAccessModes().contains("ReadWriteOnce"));
+  }
 
   Optional<PipelineTask> findTask(String name, Pipeline p) {
     return p.getSpec().getTasks().stream().filter(t -> name.equals(t.getName())).findFirst();
   }
 
-  <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
-    return (Optional<T>) list.getItems().stream()
+  <T extends HasMetadata> T findFirst(KubernetesList list, Class<T> t) {
+    return list.getItems().stream()
       .filter(i -> t.isInstance(i))
-      .findFirst();
+      .map(t::cast)
+      .findFirst()
+      .orElseThrow(() -> new IllegalStateException());
   }
 }
