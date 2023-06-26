@@ -28,7 +28,6 @@ public class AddGitCloneStepDecorator extends NamedTaskDecorator implements Step
   private static final String GIT_CLONE_SCRIPT = "/git-clone-script.sh";
   private static final String URL = "PARAM_URL";
   private static final String REVISION = "PARAM_REVISION";
-  private static final String SUBDIRECTORY = "PARAM_SUBDIRECTORY";
 
   private final String stepName;
 

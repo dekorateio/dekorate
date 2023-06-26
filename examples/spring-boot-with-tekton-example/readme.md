@@ -58,8 +58,9 @@ Moreover, by default, the project will be built by Tekton using the command `mvn
 
 2. Run Tekton to build and start the application
 
-There are two ways to do this: via pipelines and via tasks. We'll proceed with installing the app via tasks, which it's simpler procedure because Pipelines 
-require to configure a `PersistentVolumeClaim` volume in order to share the workspace between steps.
+There are two ways to do this: via pipelines and via tasks. 
+
+### Installing Using Tasks
 
 We need first to install the Tekton tasks manifests:
 
@@ -78,6 +79,37 @@ Let's wait until the pipeline is finished by doing:
 
 ```bash
 kubectl wait --for=condition=Succeeded --timeout=800s TaskRun/spring-boot-with-tekton-example-run-now
+```
+
+**TIP:** You can see the logs of the workflow using `kubectl logs -f spring-boot-with-tekton-example-run-now-pod --all-containers --max-log-requests 10`.
+
+After the Tekton task is finished, we can see our example is up and running using `kubectl get pods` and call our Hello World endpoint:
+
+```bash
+kubectl port-forward svc/spring-boot-with-tekton-example 8000:80
+wget -qO- http://localhost:8000
+> Hello world
+```
+
+### Installing Using Pipelines
+
+We need first to install the Tekton pipelines manifests:
+
+```bash
+kubectl apply -f target/classes/META-INF/dekorate/tekton-pipeline.yml
+```
+
+And next, run the pipeline workflow:
+```bash
+kubectl apply -f target/classes/META-INF/dekorate/tekton-pipeline-run.yml
+```
+
+This workflow will download the sources, build the project and the image into your quay.io account and start the application.
+
+Let's wait until the pipeline is finished by doing:
+
+```bash
+kubectl wait --for=condition=Succeeded --timeout=800s PipelineRun/spring-boot-with-tekton-example-run-now
 ```
 
 **TIP:** You can see the logs of the workflow using `kubectl logs -f spring-boot-with-tekton-example-run-now-pod --all-containers --max-log-requests 10`.
