@@ -102,8 +102,8 @@ after the application will be generated and used.
 
 The generated pvc can be customized using the following properties:
 
-- dekorate.tekton.source-workspace-size (defaults to `1Gi`)
-- dekorate.tekton.source-workspace-storage-class (defaults to `standard`)
+- dekorate.tekton.source-workspace-claim.size (defaults to `1Gi`)
+- dekorate.tekton.source-workspace-claim.storage-class (defaults to `standard`)
 
 The option to provide an existing pvc (by name) instead of generating one is also
 provided, using `dekorate.tekton.source-workspace-claim`.

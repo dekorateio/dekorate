@@ -209,12 +209,12 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
 
     // git clone build
     if (isNullOrEmpty(config.getExternalGitPipelineResource())) {
-      resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(projectBuildTaskName, GitCloneStep.IMAGE_PARAM_NAME,
+      resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(gitCloneTaskName, GitCloneStep.IMAGE_PARAM_NAME,
           GitCloneStep.IMAGE_PARAM_DESCRIPTION, GitCloneStep.IMAGE_PARAM_DEFAULT_VALUE));
-      resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(projectBuildTaskName, GitCloneStep.REPO_URL_PARAM_NAME,
+      resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(gitCloneTaskName, GitCloneStep.REPO_URL_PARAM_NAME,
           GitCloneStep.REPO_URL_PARAM_DESCRIPTION, GitCloneStep.getRepoUrl(config)));
       resourceRegistry.decorate(group,
-          new AddStringParamToTaskDecorator(projectBuildTaskName, GitCloneStep.REVISION_PARAM_NAME,
+          new AddStringParamToTaskDecorator(gitCloneTaskName, GitCloneStep.REVISION_PARAM_NAME,
               GitCloneStep.REVISION_PARAM_DESCRIPTION,
               Strings.defaultIfEmpty(config.getProject().getScmInfo().getCommit(), "")));
 
