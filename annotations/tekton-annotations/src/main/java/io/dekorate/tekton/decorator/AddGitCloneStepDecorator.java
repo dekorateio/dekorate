@@ -17,7 +17,6 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.tekton.step.GitCloneStep;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
@@ -46,10 +45,5 @@ public class AddGitCloneStepDecorator extends NamedTaskDecorator implements Step
         .addToEnv(new EnvVarBuilder().withName(REVISION).withValue(GitCloneStep.REVISION_PARAM_REF).build())
         .withWorkingDir(sourcePath())
         .endStep();
-  }
-
-  @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class };
   }
 }

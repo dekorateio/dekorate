@@ -69,6 +69,6 @@ public class AddImagePushStepDecorator extends NamedTaskDecorator implements Ste
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class, AddProjectBuildStepDecorator.class };
+    return new Class[] { AddProjectBuildStepDecorator.class };
   }
 }

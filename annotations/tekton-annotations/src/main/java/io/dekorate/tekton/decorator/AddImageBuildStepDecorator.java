@@ -67,6 +67,6 @@ public class AddImageBuildStepDecorator extends NamedTaskDecorator implements St
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class, AddProjectBuildStepDecorator.class };
+    return new Class[] { AddProjectBuildStepDecorator.class };
   }
 }
