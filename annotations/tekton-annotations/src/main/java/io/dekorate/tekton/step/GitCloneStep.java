@@ -17,6 +17,7 @@
 
 package io.dekorate.tekton.step;
 
+import static io.dekorate.tekton.step.StepUtils.param;
 import static io.dekorate.utils.Git.REMOTE_PATTERN;
 import static io.dekorate.utils.Git.sanitizeRemoteUrl;
 
@@ -35,15 +36,15 @@ public final class GitCloneStep implements Step {
 
   public static final String REPO_URL_PARAM_NAME = "repoUrl";
   public static final String REPO_URL_PARAM_DESCRIPTION = "Repository URL to clone from.";
-  public static final String REPO_URL_PARAM_REF = "$(inputs.params." + REPO_URL_PARAM_NAME + ")";
+  public static final String REPO_URL_PARAM_REF = param(REPO_URL_PARAM_NAME);
 
   public static final String REVISION_PARAM_NAME = "revision";
   public static final String REVISION_PARAM_DESCRIPTION = "Revision to checkout. (branch, tag, sha, ref, etc...)";
-  public static final String REVISION_PARAM_REF = "$(inputs.params." + REVISION_PARAM_NAME + ")";
+  public static final String REVISION_PARAM_REF = param(REVISION_PARAM_NAME);
 
   public static final String IMAGE_PARAM_NAME = "gitCloneInitImage";
   public static final String IMAGE_PARAM_DESCRIPTION = "The image providing the git-init binary that this Task runs.";
-  public static final String IMAGE_PARAM_REF = "$(inputs.params." + IMAGE_PARAM_NAME + ")";
+  public static final String IMAGE_PARAM_REF = param(IMAGE_PARAM_NAME);
   public static final String IMAGE_PARAM_DEFAULT_VALUE = "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.40.2";
 
   public static String getRepoUrl(TektonConfig config) {

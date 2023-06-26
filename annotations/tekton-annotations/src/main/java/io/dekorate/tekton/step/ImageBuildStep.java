@@ -17,6 +17,8 @@
 
 package io.dekorate.tekton.step;
 
+import static io.dekorate.tekton.step.StepUtils.param;
+
 import io.dekorate.kubernetes.config.ImageConfiguration;
 import io.dekorate.utils.Images;
 import io.dekorate.utils.Strings;
@@ -31,15 +33,15 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   public static final String IMAGE_PARAM_NAME = "imageBuilderImage";
   public static final String IMAGE_PARAM_DESCRIPTION = "The image to use for performing project build";
-  public static final String IMAGE_PARAM_REF = "$(inputs.params." + IMAGE_PARAM_NAME + ")";
+  public static final String IMAGE_PARAM_REF = param(IMAGE_PARAM_NAME);
 
   public static final String COMMAND_PARAM_NAME = "imageBuilderCommand";
   public static final String COMMAND_PARAM_DESCRIPTION = "The command to use for performing project build";
-  public static final String COMMAND_PARAM_REF = "$(inputs.params." + COMMAND_PARAM_NAME + ")";
+  public static final String COMMAND_PARAM_REF = param(COMMAND_PARAM_NAME);
 
   public static final String ARGS_PARAM_NAME = "imageBuilderArgs";
   public static final String ARGS_PARAM_DESCRIPTION = "The command arguments to use for performing project build";
-  public static final String ARGS_PARAM_REF = "$(inputs.params." + ARGS_PARAM_NAME + "[*])";
+  public static final String ARGS_PARAM_REF = param(ARGS_PARAM_NAME);
 
   public static final String DOCKER_SOCKET_NAME = "docker-socket";
   public static final String DOCKER_SOCKET_PATH = "/var/run/docker.sock";
@@ -47,7 +49,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   public static final String IMAGE_TARGET_NAME = "imageUrl";
   public static final String IMAGE_TARGET_DESCRIPTION = "The container image to build";
-  public static final String IMAGE_TARGET_REF = "$(inputs.params." + IMAGE_TARGET_NAME + ")";
+  public static final String IMAGE_TARGET_REF = param(IMAGE_TARGET_NAME);
 
   protected final String context;
   protected final String dockerfile;

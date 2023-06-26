@@ -18,6 +18,7 @@
 package io.dekorate.tekton.decorator;
 
 import static io.dekorate.tekton.step.DeployStep.PATH_TO_YML_PARAM_NAME;
+import static io.dekorate.tekton.step.StepUtils.param;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.fabric8.tekton.pipeline.v1beta1.Step;
@@ -56,6 +57,6 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class, AddProjectBuildStepDecorator.class, AddImageBuildStepDecorator.class };
+    return new Class[] { AddProjectBuildStepDecorator.class, AddImageBuildStepDecorator.class };
   }
 }
