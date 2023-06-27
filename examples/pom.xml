@@ -47,8 +47,6 @@
         <module>thorntail-on-openshift-example</module>
         <module>vertx-on-kubernetes-example</module>
         <module>vertx-on-openshift-example</module>
-        <module>multimodule-projects-on-kubernetes-example</module>
-        <module>multimodule-projects-on-openshift-example</module>
         <module>minikube-example</module>
         <module>minikube-example-with-properties</module>
         <module>helm-on-kubernetes-example</module>
@@ -56,6 +54,7 @@
         <module>kind-example</module>
       </modules>
     </profile>
+
     <profile>
       <id>with-dockerio</id>
       <activation>
@@ -96,6 +95,20 @@
       <id>with-knative-examples</id>
       <modules>
         <module>knative-example</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>with-openshift-specific-examples</id>
+      <modules>
+        <module>multimodule-projects-on-openshift-example</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>with-kubernetes-specific-examples</id>
+      <modules>
+        <module>multimodule-projects-on-kubernetes-example</module>
       </modules>
     </profile>
   </profiles>
