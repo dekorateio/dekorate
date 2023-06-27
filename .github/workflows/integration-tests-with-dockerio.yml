@@ -84,7 +84,7 @@ jobs:
           kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-core.yaml
       - name: Install and Run Integration Tests
         run: |
-          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Pwith-knative-examples -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Pwith-knative-examples -Pwith-kubernetes-specific-examples -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
       - name: Zip Artifacts
         if: failure()
         run: |
@@ -134,7 +134,7 @@ jobs:
           oc new-project itests
           oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
           oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-openshift-specific-examples -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
       - name: Zip Artifacts
         if: failure()
         run: |
