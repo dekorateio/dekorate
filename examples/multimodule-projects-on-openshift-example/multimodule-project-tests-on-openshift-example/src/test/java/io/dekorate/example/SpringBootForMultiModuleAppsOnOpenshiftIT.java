@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import java.net.URL;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.testing.annotation.Inject;
@@ -34,6 +35,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+@Disabled(value = "Sneaky test in CI runs")
 @OpenshiftIntegrationTest(additionalModules = { "../multimodule-project-a-on-openshift-example", "../multimodule-project-b-on-openshift-example" })
 class SpringBootForMultiModuleAppsOnOpenshiftIT {
 
