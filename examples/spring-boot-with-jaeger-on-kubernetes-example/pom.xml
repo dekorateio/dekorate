@@ -12,7 +12,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <version.spring-boot>2.5.12</version.spring-boot>    <version.jaeger>0.18.0</version.jaeger>
+    <version.spring-boot>2.5.12</version.spring-boot>
+    <version.jaeger>0.18.0</version.jaeger>
     <version.opentracing-spring-web>1.0.2</version.opentracing-spring-web>
 
     <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
