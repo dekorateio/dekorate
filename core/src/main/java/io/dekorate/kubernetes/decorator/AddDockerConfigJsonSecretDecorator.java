@@ -77,7 +77,7 @@ public class AddDockerConfigJsonSecretDecorator extends ResourceProvidingDecorat
         .addToData(DOT_DOCKER_CONFIG_JSON, this.content)
         .build();
 
-    list.addToSecretItems(secret);
+    list.addToItems(secret);
   }
 
 }

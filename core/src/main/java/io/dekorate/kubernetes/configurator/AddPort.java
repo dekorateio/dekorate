@@ -40,12 +40,12 @@ public class AddPort extends Configurator<BaseConfigFluent> {
 
   /**
    * Check if the {@link io.dekorate.kubernetes.config.BaseConfig} already has port.
-   * 
+   *
    * @param config The port.
    * @return True if port with same container port exists.
    */
   private boolean hasPort(BaseConfigFluent config) {
-    for (Port p : config.getPorts()) {
+    for (Port p : config.buildPorts()) {
       if (p.getContainerPort() == port.getContainerPort()) {
         return true;
       }

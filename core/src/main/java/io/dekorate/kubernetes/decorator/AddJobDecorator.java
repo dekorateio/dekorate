@@ -57,7 +57,7 @@ public class AddJobDecorator extends ResourceProvidingDecorator<KubernetesListBu
       return;
     }
 
-    JobFluent.SpecNested<JobBuilder> jobBuilder = new JobBuilder()
+    JobFluent<JobBuilder>.SpecNested<JobBuilder> jobBuilder = new JobBuilder()
         .withApiVersion(API_VERSION)
         .withNewMetadata()
         .withName(name)

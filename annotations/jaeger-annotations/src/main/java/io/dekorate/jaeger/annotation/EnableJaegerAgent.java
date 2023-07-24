@@ -22,11 +22,17 @@ import java.lang.annotation.Target;
 
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Pojo;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class)
+})
 @Pojo(name = "JaegerAgentConfig", autobox = true, mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(name = "JaegerAgentConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -34,14 +40,14 @@ public @interface EnableJaegerAgent {
 
   /**
    * Flag to specify if Jaeger operator is available / enabled.
-   * 
+   *
    * @return True, if operator is available / enabled.
    */
   boolean operatorEnabled() default false;
 
   /**
    * The jaeger agent version.
-   * 
+   *
    * @return The version, or default to 1.10
    */
   String version() default "1.10";

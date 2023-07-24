@@ -8,7 +8,7 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 public abstract class BaseAddIssuerResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
-  protected abstract void visitIssuerSpec(IssuerFluent.SpecNested<IssuerBuilder> spec);
+  protected abstract void visitIssuerSpec(IssuerFluent<?>.SpecNested<IssuerBuilder> spec);
 
   private final String name;
 
@@ -24,7 +24,7 @@ public abstract class BaseAddIssuerResourceDecorator extends ResourceProvidingDe
         .withName(name)
         .endMetadata();
 
-    IssuerFluent.SpecNested<IssuerBuilder> spec = builder.withNewSpec();
+    IssuerFluent<?>.SpecNested<IssuerBuilder> spec = builder.withNewSpec();
 
     visitIssuerSpec(spec);
 

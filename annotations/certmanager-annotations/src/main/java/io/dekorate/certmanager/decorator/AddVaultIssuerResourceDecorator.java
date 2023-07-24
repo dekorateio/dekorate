@@ -25,7 +25,7 @@ public class AddVaultIssuerResourceDecorator extends BaseAddIssuerResourceDecora
   }
 
   @Override
-  protected void visitIssuerSpec(IssuerFluent.SpecNested<IssuerBuilder> spec) {
+  protected void visitIssuerSpec(IssuerFluent<?>.SpecNested<IssuerBuilder> spec) {
     if (noneAuthIsSet(config.getAuthAppRole(), config.getAuthKubernetes(), config.getAuthTokenSecretRef())) {
       throw new IllegalArgumentException("No auth mechanism has been set in the Vault Issuer configuration");
     }

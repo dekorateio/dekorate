@@ -43,11 +43,19 @@ import io.dekorate.kubernetes.annotation.SecretVolume;
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.DeploymentStrategy;
+import io.dekorate.kubernetes.config.HostAlias;
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Pojo;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class),
+    @BuildableReference(HostAlias.class)
+})
 @Pojo(name = "OpenshiftConfig", autobox = true, mutable = true, superClass = BaseConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -57,7 +65,7 @@ public @interface OpenshiftApplication {
    * The name of the collection of componnet this component belongs to.
    * This value will be use as:
    * - labeling resources
-   * 
+   *
    * @return The specified group name.
    */
   String partOf() default "";
@@ -74,7 +82,7 @@ public @interface OpenshiftApplication {
    * Else if the system property app.name is present it will be used.
    * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until
    * .git is found).
-   * 
+   *
    * @return The specified application name.
    */
   String name() default "";
@@ -84,7 +92,7 @@ public @interface OpenshiftApplication {
    * This value be used for things like:
    * - The docker image tag.
    * If no value specified it will attempt to determine the name using the following rules:
-   * 
+   *
    * @return The version.
    */
   String version() default "";
@@ -99,56 +107,56 @@ public @interface OpenshiftApplication {
 
   /**
    * The init containers.
-   * 
+   *
    * @return the init containers.
    */
   Container[] initContainers() default {};
 
   /**
    * Custom labels to add to all resources.
-   * 
+   *
    * @return The labels.
    */
   Label[] labels() default {};
 
   /**
    * Custom annotations to add to all resources.
-   * 
+   *
    * @return The annotations.
    */
   Annotation[] annotations() default {};
 
   /**
    * Environment variables to add to all containers.
-   * 
+   *
    * @return The environment variables.
    */
   Env[] envVars() default {};
 
   /**
    * Working directory.
-   * 
+   *
    * @return The working directory if specified, else empty string.
    */
   String workingDir() default "";
 
   /**
    * The commands
-   * 
+   *
    * @return The commands.
    */
   String[] command() default {};
 
   /**
    * The arguments
-   * 
+   *
    * @return The arguments.
    */
   String[] arguments() default {};
 
   /**
    * The number of replicas to use.
-   * 
+   *
    * @return The number of replicas.
    */
   int replicas() default 1;
@@ -167,7 +175,7 @@ public @interface OpenshiftApplication {
 
   /**
    * The service account.
-   * 
+   *
    * @return The service account or empty string if not specified.
    */
   String serviceAccount() default "";
@@ -224,14 +232,14 @@ public @interface OpenshiftApplication {
 
   /**
    * Mounts to add to all containers.
-   * 
+   *
    * @return The mounts.
    */
   Mount[] mounts() default {};
 
   /**
    * Image pull policy.
-   * 
+   *
    * @return The image pull policy.
    */
   ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
@@ -243,14 +251,14 @@ public @interface OpenshiftApplication {
 
   /**
    * The liveness probe.
-   * 
+   *
    * @return The probe.
    */
   Probe livenessProbe() default @Probe();
 
   /**
    * The readiness probe.
-   * 
+   *
    * @return The probe.
    */
   Probe readinessProbe() default @Probe();
@@ -274,7 +282,7 @@ public @interface OpenshiftApplication {
 
   /**
    * The sidecars.
-   * 
+   *
    * @return the sidecar containers.
    */
   Container[] sidecars() default {};
@@ -286,7 +294,7 @@ public @interface OpenshiftApplication {
 
   /**
    * Controls whether the generated {@link Service} will be headless.
-   * 
+   *
    * @return true if headless.
    */
   boolean headless() default false;
@@ -294,7 +302,7 @@ public @interface OpenshiftApplication {
   /**
    * Flag to trigger the registration of the deploy hook.
    * It's generally preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
-   * 
+   *
    * @return True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;

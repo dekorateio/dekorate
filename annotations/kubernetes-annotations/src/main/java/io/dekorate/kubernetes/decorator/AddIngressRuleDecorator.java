@@ -126,7 +126,7 @@ public class AddIngressRuleDecorator extends NamedResourceDecorator<IngressSpecB
               .endService()
               .endBackend()
               .endPath().endHttp();
-        } else if (existingRule.getHttp().getPaths().stream()
+        } else if (existingRule.buildHttp().getPaths().stream()
             .noneMatch(p -> Strings.equals(p.getPath(), path()) && Strings.equals(p.getPathType(), pathType()))) {
           existingRule.editHttp()
               .addNewPath()

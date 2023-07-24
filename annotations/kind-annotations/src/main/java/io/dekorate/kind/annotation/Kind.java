@@ -24,11 +24,34 @@ import io.dekorate.kubernetes.annotation.ImagePullPolicy;
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Pojo;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class),
+    @BuildableReference(io.dekorate.kubernetes.config.Label.class),
+    @BuildableReference(io.dekorate.kubernetes.config.Annotation.class),
+    @BuildableReference(io.dekorate.kubernetes.config.Env.class),
+    @BuildableReference(io.dekorate.kubernetes.config.PersistentVolumeClaimVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.SecretVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.ConfigMapVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.EmptyDirVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.GitRepoVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.AwsElasticBlockStoreVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.AzureDiskVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.AzureFileVolume.class),
+    @BuildableReference(io.dekorate.kubernetes.config.Mount.class),
+    @BuildableReference(io.dekorate.kubernetes.config.RollingUpdate.class),
+    @BuildableReference(io.dekorate.kubernetes.config.HostAlias.class),
+    @BuildableReference(io.dekorate.kubernetes.config.Container.class),
+    @BuildableReference(io.dekorate.kubernetes.config.Job.class),
+    @BuildableReference(io.dekorate.kubernetes.config.CronJob.class)
+})
 @Pojo(name = "KindConfig", relativePath = "../config", autobox = true, mutable = true, superClass = BaseConfig.class, withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(name = "KindConfigAdapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

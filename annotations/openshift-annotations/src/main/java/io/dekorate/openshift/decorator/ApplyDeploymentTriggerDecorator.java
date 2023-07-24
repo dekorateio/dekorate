@@ -58,7 +58,7 @@ public class ApplyDeploymentTriggerDecorator extends NamedResourceDecorator<Depl
 
   @Override
   public void andThenVisit(DeploymentConfigSpecFluent<?> deploymentConfigSpec, ObjectMeta resourceMeta) {
-    DeploymentConfigSpecFluent.TriggersNested<?> target;
+    DeploymentConfigSpecFluent<?>.TriggersNested<?> target;
 
     if (deploymentConfigSpec.buildMatchingTrigger(predicate) != null) {
       target = deploymentConfigSpec.editMatchingTrigger(predicate);

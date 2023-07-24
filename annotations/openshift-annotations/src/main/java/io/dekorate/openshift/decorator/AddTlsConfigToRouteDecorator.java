@@ -45,7 +45,7 @@ public class AddTlsConfigToRouteDecorator extends NamedResourceDecorator<RouteSp
       return;
     }
 
-    RouteSpecFluent.TlsNested<?> tlsSpec = spec.editOrNewTls();
+    RouteSpecFluent<?>.TlsNested<?> tlsSpec = spec.editOrNewTls();
     TLSConfig tls = config.getRoute().getTls();
     if (Strings.isNotNullOrEmpty(tls.getCaCertificate())) {
       tlsSpec.withCaCertificate(tls.getCaCertificate());

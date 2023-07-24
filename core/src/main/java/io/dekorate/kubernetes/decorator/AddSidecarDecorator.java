@@ -55,7 +55,8 @@ public class AddSidecarDecorator extends NamedResourceDecorator<PodSpecBuilder> 
   }
 
   private void update(PodSpecBuilder podSpec, io.fabric8.kubernetes.api.model.Container resource) {
-    PodSpecFluent.ContainersNested<PodSpecBuilder> matching = podSpec.editMatchingContainer(this::existsContainerByName);
+    PodSpecFluent<PodSpecBuilder>.ContainersNested<PodSpecBuilder> matching = podSpec
+        .editMatchingContainer(this::existsContainerByName);
 
     if (resource.getImage() != null) {
       matching.withImage(resource.getImage());

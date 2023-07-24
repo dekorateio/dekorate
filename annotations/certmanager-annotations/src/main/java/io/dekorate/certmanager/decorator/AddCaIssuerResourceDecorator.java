@@ -17,7 +17,7 @@ public class AddCaIssuerResourceDecorator extends BaseAddIssuerResourceDecorator
   }
 
   @Override
-  protected void visitIssuerSpec(IssuerFluent.SpecNested<IssuerBuilder> spec) {
+  protected void visitIssuerSpec(IssuerFluent<?>.SpecNested<IssuerBuilder> spec) {
     CAIssuerBuilder builder = new CAIssuerBuilder()
         .withSecretName(config.getSecretName());
 
