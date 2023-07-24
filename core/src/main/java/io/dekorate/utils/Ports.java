@@ -130,12 +130,12 @@ public class Ports {
 
   public static Optional<ContainerPort> getHttpPort(ContainerFluent<?> container) {
     //If we have a single port, return that no matter what.
-    if (container.getPorts().size() == 1) {
-      return Optional.of(container.getPorts().get(0));
+    if (container.buildPorts().size() == 1) {
+      return Optional.of(container.buildPorts().get(0));
     }
 
     for (String portName : HTTP_PORT_NAMES.keySet()) {
-      Optional<ContainerPort> port = container.getPorts().stream().filter(p -> portName.equals(p.getName()))
+      Optional<ContainerPort> port = container.buildPorts().stream().filter(p -> portName.equals(p.getName()))
           .findFirst();
       if (port.isPresent()) {
         return port;
@@ -143,7 +143,7 @@ public class Ports {
     }
 
     for (Integer portNumber : HTTP_PORT_NUMBERS.keySet()) {
-      Optional<ContainerPort> port = container.getPorts().stream().filter(p -> portNumber.equals(p.getHostPort()))
+      Optional<ContainerPort> port = container.buildPorts().stream().filter(p -> portNumber.equals(p.getHostPort()))
           .findFirst();
       if (port.isPresent()) {
         return port;

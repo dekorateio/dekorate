@@ -48,7 +48,7 @@ public class ResourceRegistry {
 
   /**
    * Get all registered groups.
-   * 
+   *
    * @return The groups map.
    */
   public Map<String, KubernetesListBuilder> groups() {
@@ -57,7 +57,7 @@ public class ResourceRegistry {
 
   /**
    * Get the global builder
-   * 
+   *
    * @return The groups map.
    */
   public KubernetesListBuilder common() {
@@ -66,7 +66,7 @@ public class ResourceRegistry {
 
   /**
    * Add a {@link Decorator}.
-   * 
+   *
    * @param decorator The decorator.
    */
   public void decorate(Decorator decorator) {
@@ -75,7 +75,7 @@ public class ResourceRegistry {
 
   /**
    * Add a {@link Decorator} to the specified resource group.
-   * 
+   *
    * @param group The group.
    * @param decorator The decorator.
    */
@@ -88,7 +88,7 @@ public class ResourceRegistry {
 
   /**
    * Add a resource to all groups.
-   * 
+   *
    * @param metadata
    */
   public void add(HasMetadata metadata) {
@@ -97,7 +97,7 @@ public class ResourceRegistry {
 
   /**
    * Add a resource to the specified group.
-   * 
+   *
    * @param group The group.
    * @param metadata The resource.
    */
@@ -115,7 +115,7 @@ public class ResourceRegistry {
    * Add a {@link Decorator} to the specified custom group.
    * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
    * To add a custom decorator, you need to explicitly specify it using this method.
-   * 
+   *
    * @param group The group.
    * @param decorator The decorator.
    */
@@ -130,7 +130,7 @@ public class ResourceRegistry {
    * Add a resource to the specified custom group.
    * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
    * To add a custom resource, you need to explicitly specify it using this method.
-   * 
+   *
    * @param group The group.
    * @param metadata The resource.
    */
@@ -145,18 +145,18 @@ public class ResourceRegistry {
 
   /**
    * Generate all resources.
-   * 
+   *
    * @return A map of {@link KubernetesList} by group name.
    */
   protected Map<String, KubernetesList> generate() {
-    if (!this.common.getItems().isEmpty()) {
+    if (!this.common.buildItems().isEmpty()) {
       if (this.groups.isEmpty()) {
         KubernetesListBuilder builder = new KubernetesListBuilder();
-        builder.addToItems(common.buildItems().toArray(new HasMetadata[common.getItems().size()]));
+        builder.addToItems(common.buildItems().toArray(new HasMetadata[common.buildItems().size()]));
         this.groups.put(DEFAULT_GROUP, builder);
       } else {
         this.groups.forEach((group, builder) -> builder
-            .addToItems(common.buildItems().toArray(new HasMetadata[common.getItems().size()])));
+            .addToItems(common.buildItems().toArray(new HasMetadata[common.buildItems().size()])));
       }
     }
 

@@ -17,7 +17,7 @@ public class AddSelfSignedIssuerResourceDecorator extends BaseAddIssuerResourceD
   }
 
   @Override
-  protected void visitIssuerSpec(IssuerFluent.SpecNested<IssuerBuilder> spec) {
+  protected void visitIssuerSpec(IssuerFluent<?>.SpecNested<IssuerBuilder> spec) {
     SelfSignedIssuerBuilder builder = new SelfSignedIssuerBuilder();
 
     Optional.ofNullable(config.getCrlDistributionPoints()).ifPresent(builder::withCrlDistributionPoints);

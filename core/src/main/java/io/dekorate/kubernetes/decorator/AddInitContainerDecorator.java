@@ -51,7 +51,7 @@ public class AddInitContainerDecorator extends NamedResourceDecorator<PodSpecBui
   }
 
   private void update(PodSpecBuilder podSpec, io.fabric8.kubernetes.api.model.Container resource) {
-    PodSpecFluent.InitContainersNested<PodSpecBuilder> matching = podSpec
+    PodSpecFluent<PodSpecBuilder>.InitContainersNested<PodSpecBuilder> matching = podSpec
         .editMatchingInitContainer(this::existsContainerByName);
 
     if (resource.getImage() != null) {

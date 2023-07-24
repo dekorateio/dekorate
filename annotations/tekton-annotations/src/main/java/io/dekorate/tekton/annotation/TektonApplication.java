@@ -24,11 +24,17 @@ import io.dekorate.kubernetes.annotation.Annotation;
 import io.dekorate.kubernetes.annotation.Label;
 import io.dekorate.kubernetes.annotation.PersistentVolumeClaim;
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Adapter;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Pojo;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class)
+})
 @Pojo(name = "TektonConfig", autobox = true, mutable = true, superClass = ApplicationConfiguration.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -40,7 +46,7 @@ public @interface TektonApplication {
    * The name of the collection of componnet this component belongs to.
    * This value will be use as:
    * - labeling resources
-   * 
+   *
    * @return The specified group name.
    */
   String partOf() default "";
@@ -57,7 +63,7 @@ public @interface TektonApplication {
    * Else if the system property app.name is present it will be used.
    * Else find the project root folder and use its name (root folder detection is done by moving to the parent folder until
    * .git is found).
-   * 
+   *
    * @return The specified application name.
    */
   String name() default "";
@@ -67,35 +73,35 @@ public @interface TektonApplication {
    * This value be used for things like:
    * - The docker image tag.
    * If no value specified it will attempt to determine the name using the following rules:
-   * 
+   *
    * @return The version.
    */
   String version() default "";
 
   /**
    * Custom labels to add to all resources.
-   * 
+   *
    * @return The labels.
    */
   Label[] labels() default {};
 
   /**
    * Custom annotations to add to all resources.
-   * 
+   *
    * @return The annotations.
    */
   Annotation[] annotations() default {};
 
   /*
    * The name of an external git pipeline resource.
-   * 
+   *
    * @return The name of the resource, or empty if none is specified.
    */
   String externalGitPipelineResource() default "";
 
   /*
    * The name of the source workspace.
-   * 
+   *
    * @return the name, or 'source' if no name specified.
    */
   String sourceWorkspace() default "source";
@@ -103,14 +109,14 @@ public @interface TektonApplication {
   /*
    * The persistent volume claim configuration for the source workspace.
    * The option only makes sense when the PVC is going to be generated (no external pvc specified).
-   * 
+   *
    * @return The PVC configuration.
    */
   PersistentVolumeClaim sourceWorkspaceClaim() default @PersistentVolumeClaim();
 
   /**
    * The name of workspace to use as a maven artifact repository.
-   * 
+   *
    * @return the workspace name.
    */
   String m2Workspace() default "m2";
@@ -118,77 +124,77 @@ public @interface TektonApplication {
   /*
    * The persistent volume claim configuration for the artifact repository.
    * The option only makes sense when the PVC is going to be generated (no external pvc specified).
-   * 
+   *
    * @return The PVC configuration.
    */
   PersistentVolumeClaim m2WorkspaceClaim() default @PersistentVolumeClaim();
 
   /**
    * The builder image to use.
-   * 
+   *
    * @return The builder image, or empty if the image should be inferred.
    */
   String projectBuilderImage() default "";
 
   /*
    * The builder command to use.
-   * 
+   *
    * @return The builder command or empty if the command is to be inferred
    */
   String projectBuilderCommand() default "";
 
   /*
    * The builder command arguments to use.
-   * 
+   *
    * @return The builder command arguments or empty if the command is to be inferred
    */
   String[] projectBuilderArguments() default {};
 
   /**
    * The image builder strategy to use.
-   * 
+   *
    * @return the strategy.
    */
   TektonImageBuildStrategy imageBuildStrategy() default TektonImageBuildStrategy.kaniko;
 
   /**
    * The container image builder image to use.
-   * 
+   *
    * @return The container image builder image, or empty if the image should be inferred.
    */
   String imageBuildImage() default "";
 
   /*
    * The container image builder command to use.
-   * 
+   *
    * @return The container image builder command or empty if the command is to be inferred
    */
   String imageBuildCommand() default "";
 
   /*
    * The container image builder command arguments to use.
-   * 
+   *
    * @return The container image builder command arguments or empty if the command is to be inferred
    */
   String[] imageBuildArguments() default {};
 
   /**
    * The container image push image to use.
-   * 
+   *
    * @return The container image push image, or empty if the image should be inferred.
    */
   String imagePushImage() default "";
 
   /*
    * The container image push command to use.
-   * 
+   *
    * @return The container image push command or empty if the command is to be inferred
    */
   String imagePushCommand() default "";
 
   /*
    * The container image push command arguments to use.
-   * 
+   *
    * @return The container image push command arguments or empty if the command is to be inferred
    */
   String[] imagePushArguments() default {};
@@ -202,7 +208,7 @@ public @interface TektonApplication {
 
   /**
    * The relative path to the Dockerfile.
-   * 
+   *
    * @return the path to the Dockerfile.
    */
   String dockerfile() default "Dockerfile";
@@ -210,7 +216,7 @@ public @interface TektonApplication {
   /**
    * The docker image to be used for the deployment task.
    * Such image needs to have kubectl available.
-   * 
+   *
    * @return The image, if specified or fallback to the default otherwise.
    */
   String deployerImage() default DEFAULT_DEPLOYER_IMAGE;
@@ -219,7 +225,7 @@ public @interface TektonApplication {
    * The service account to use for the image pushing tasks.
    * An existing or a generated service account can be used.
    * If no existing service account is provided one will be generated based on the context.
-   * 
+   *
    * @return An existing service account, or empty if we just need to generate one.
    */
   String imagePushServiceAccount() default "";
@@ -228,35 +234,35 @@ public @interface TektonApplication {
    * The secret to use when generating an image push service account.
    * When no existing service account is provided, one will be generated.
    * The generated service account may or may not use an existing secret.
-   * 
+   *
    * @return The existing secret, or empty string if the secret needs to be generated.
    */
   String imagePushSecret() default "";
 
   /*
    * Wether to upload the local `.docker/config.json` to automatically create the secret.
-   * 
+   *
    * @return
    */
   boolean useLocalDockerConfigJson() default false;
 
   /*
    * The username to use for generating image builder secrets.
-   * 
+   *
    * @return The username.
    */
   String registry() default "docker.io";
 
   /*
    * The username to use for generating image builder secrets.
-   * 
+   *
    * @return The username.
    */
   String registryUsername() default "";
 
   /*
    * The password to use for generating image builder secrets.
-   * 
+   *
    * @return The password.
    */
   String registryPassword() default "";

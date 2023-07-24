@@ -47,7 +47,7 @@ public class AddCertificateResourceDecorator extends ResourceProvidingDecorator<
         .endMetadata();
 
     // mandatory configuration
-    CertificateFluent.SpecNested<CertificateBuilder> spec = builder.withNewSpec().withSecretName(config.getSecretName());
+    CertificateFluent<?>.SpecNested<CertificateBuilder> spec = builder.withNewSpec().withSecretName(config.getSecretName());
 
     // issuer ref: it can be set or be auto generated (when it's auto generated, the name is the same as the Certificate res
     if (config.getIssuerRef() != null) {

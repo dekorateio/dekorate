@@ -22,7 +22,10 @@ import java.lang.annotation.Target;
 
 import io.dekorate.kubernetes.config.ApplicationConfiguration;
 import io.dekorate.kubernetes.config.DeploymentStrategy;
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Pojo;
 
 /**
@@ -31,7 +34,10 @@ import io.sundr.builder.annotations.Pojo;
  * {@link io.dekorate.kubernetes.config.KubernetesConfig} class that is used as
  * a base for the rest of the config classes.
  */
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class)
+})
 @Pojo(name = "BaseConfig", relativePath = "../config", autobox = true, mutable = true, superClass = ApplicationConfiguration.class, withStaticBuilderMethod = true, withStaticAdapterMethod = false)
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
@@ -42,7 +48,7 @@ import io.sundr.builder.annotations.Pojo;
    * This value will be use as:
    * - docker image repo
    * - labeling resources
-   * 
+   *
    * @return The specified group name.
    */
   String partOf() default "";
@@ -55,7 +61,7 @@ import io.sundr.builder.annotations.Pojo;
    * name. Else if the system property app.name is present it will be used. Else
    * find the project root folder and use its name (root folder detection is done
    * by moving to the parent folder until .git is found).
-   * 
+   *
    * @return The specified application name.
    */
   String name() default "";
@@ -64,63 +70,63 @@ import io.sundr.builder.annotations.Pojo;
    * The version of the application. This value be used for things like: - The
    * docker image tag. If no value specified it will attempt to determine the name
    * using the following rules:
-   * 
+   *
    * @return The version.
    */
   String version() default "";
 
   /**
    * The kind of the deployment resource to use.
-   * 
+   *
    * @return The deployment kind resource.
    */
   String deploymentKind() default "Deployment";
 
   /**
    * Custom labels to add to all resources.
-   * 
+   *
    * @return The labels.
    */
   Label[] labels() default {};
 
   /**
    * Custom annotations to add to all resources.
-   * 
+   *
    * @return The annotations.
    */
   Annotation[] annotations() default {};
 
   /**
    * Environment variables to add to all containers.
-   * 
+   *
    * @return The environment variables.
    */
   Env[] envVars() default {};
 
   /**
    * Working directory.
-   * 
+   *
    * @return The working directory if specified, else empty string.
    */
   String workingDir() default "";
 
   /**
    * The commands
-   * 
+   *
    * @return The commands.
    */
   String[] command() default {};
 
   /**
    * The arguments
-   * 
+   *
    * @return The arguments.
    */
   String[] arguments() default {};
 
   /**
    * The service account.
-   * 
+   *
    * @return The service account or empty string if not specified.
    */
   String serviceAccount() default "";
@@ -153,14 +159,14 @@ import io.sundr.builder.annotations.Pojo;
 
   /**
    * Mounts to add to all containers.
-   * 
+   *
    * @return The mounts.
    */
   Mount[] mounts() default {};
 
   /**
    * Image pull policy.
-   * 
+   *
    * @return The image pull policy.
    */
   ImagePullPolicy imagePullPolicy() default ImagePullPolicy.IfNotPresent;
@@ -191,14 +197,14 @@ import io.sundr.builder.annotations.Pojo;
 
   /**
    * The liveness probe.
-   * 
+   *
    * @return The probe.
    */
   Probe livenessProbe() default @Probe();
 
   /**
    * The readiness probe.
-   * 
+   *
    * @return The probe.
    */
   Probe readinessProbe() default @Probe();
@@ -222,7 +228,7 @@ import io.sundr.builder.annotations.Pojo;
 
   /**
    * The sidecars.
-   * 
+   *
    * @return the sidecar containers.
    */
   Container[] sidecars() default {};
@@ -230,7 +236,7 @@ import io.sundr.builder.annotations.Pojo;
   /**
    * Flag to trigger the registration of the deploy hook. It's generally
    * preferable to use `-Ddekorate.deploy=true` instead of hardcoding this here.
-   * 
+   *
    * @return True for automatic registration of the build hook.
    */
   boolean autoDeployEnabled() default false;

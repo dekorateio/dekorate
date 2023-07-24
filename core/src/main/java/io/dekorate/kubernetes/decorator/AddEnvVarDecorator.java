@@ -62,9 +62,9 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
     Predicate<EnvFromSourceBuilder> matchingEnvFrom = new Predicate<EnvFromSourceBuilder>() {
       public boolean test(EnvFromSourceBuilder e) {
-        if (e.getSecretRef() != null && e.getSecretRef().getName() != null) {
-          return e.getSecretRef().getName().equals(env.getSecret());
-        } else if (e.getConfigMapRef() != null && e.editConfigMapRef().getName() != null) {
+        if (e.buildSecretRef() != null && e.buildSecretRef().getName() != null) {
+          return e.buildSecretRef().getName().equals(env.getSecret());
+        } else if (e.buildConfigMapRef() != null && e.editConfigMapRef().getName() != null) {
           return e.editConfigMapRef().getName().equals(env.getConfigmap());
         }
         return false;

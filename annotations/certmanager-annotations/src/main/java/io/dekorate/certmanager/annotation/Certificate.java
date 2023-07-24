@@ -22,10 +22,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.BuildableReference;
 import io.sundr.builder.annotations.Pojo;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class)
+})
 @Pojo(name = "CertificateConfig", autobox = true, mutable = true, superClass = Configuration.class, relativePath = "../config", withStaticBuilderMethod = true, withStaticAdapterMethod = false)
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
 @Retention(RetentionPolicy.SOURCE)
@@ -39,7 +45,7 @@ public @interface Certificate {
   /**
    * SecretName is the name of the secret resource that will be automatically created and managed by this Certificate resource.
    * It will be populated with a private key and certificate, signed by the denoted issuer.
-   * 
+   *
    * @return the name of the secret resource that will be automatically created and managed by this Certificate resource.
    */
   String secretName();
@@ -66,7 +72,7 @@ public @interface Certificate {
 
   /**
    * Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
-   * 
+   *
    * @return the full X509 name specification
    */
   Subject subject() default @Subject;
@@ -74,7 +80,7 @@ public @interface Certificate {
   /**
    * CommonName is a common name to be used on the Certificate. The CommonName should have a length of 64 characters or fewer
    * to avoid generating invalid CSRs.
-   * 
+   *
    * @return the common name.
    */
   String commonName() default "";

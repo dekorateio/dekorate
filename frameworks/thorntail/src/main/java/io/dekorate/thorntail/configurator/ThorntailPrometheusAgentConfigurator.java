@@ -30,7 +30,7 @@ public class ThorntailPrometheusAgentConfigurator extends Configurator<BaseConfi
 
   @Override
   public void visit(BaseConfigFluent<?> openshiftConfig) {
-    boolean alreadyExists = Arrays.stream(openshiftConfig.getEnvVars())
+    boolean alreadyExists = Arrays.stream(openshiftConfig.buildEnvVars())
         .anyMatch(e -> AB_PROMETHEUS_OFF.equals(e.getName()));
 
     if (alreadyExists) {

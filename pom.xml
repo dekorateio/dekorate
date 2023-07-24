@@ -59,8 +59,8 @@
     <version.commons-compress>1.21</version.commons-compress>
     <version.jansi>1.18</version.jansi>
     <version.jackson>2.14.1</version.jackson>
-    <version.kubernetes-client>6.7.2</version.kubernetes-client>
-    <version.sundrio>0.92.1</version.sundrio>
+    <version.kubernetes-client>6.8.0</version.kubernetes-client>
+    <version.sundrio>0.100.3</version.sundrio>
     <version.jayway.jsonpath>2.6.0</version.jayway.jsonpath>
 
     <!-- Testing Dependencies -->
@@ -342,7 +342,7 @@
       <url>https://repo.gradle.org/gradle/libs-releases-local/</url>
     </repository>
   </repositories>
-  
+
   <pluginRepositories>
     <pluginRepository>
       <id>gradle</id>
