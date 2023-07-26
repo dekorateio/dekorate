@@ -42,7 +42,8 @@ public class FeatOverwriteSidecarContainersTest {
     Deployment s = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertEquals(NAME, s.getMetadata().getName());
     assertEquals(2, s.getSpec().getTemplate().getSpec().getContainers().size());
-    assertTrue(s.getSpec().getTemplate().getSpec().getContainers().stream().anyMatch(c -> c.getName().equals("foo")));
+    assertTrue(s.getSpec().getTemplate().getSpec().getContainers().stream().anyMatch(c -> c.getName().equals("foo")
+        && c.getWorkingDir().equals("/work")));
     assertTrue(s.getSpec().getTemplate().getSpec().getContainers().stream().anyMatch(c -> c.getName().equals(NAME)));
   }
 
