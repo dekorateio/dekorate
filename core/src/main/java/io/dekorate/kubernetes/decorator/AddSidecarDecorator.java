@@ -26,7 +26,7 @@ import io.fabric8.kubernetes.api.model.PodSpecFluent;
 /**
  * A decorator that adds an init container to a pod template.
  */
-@Description("Add an init container to a pod template.")
+@Description("Add an sidecar container to a pod template.")
 public class AddSidecarDecorator extends NamedResourceDecorator<PodSpecBuilder> {
 
   private final Container container;
