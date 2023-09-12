@@ -18,6 +18,7 @@ package io.dekorate.tekton.config;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.WithProject;
 import io.dekorate.config.DefaultConfiguration;
+import io.dekorate.kubernetes.config.PersistentVolumeClaim;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
 import io.dekorate.project.ApplyProjectInfo;
 
@@ -29,7 +30,9 @@ public class DefaultTektonConfigGenerator implements TektonConfigGenerator, With
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
     this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
-    on(new DefaultConfiguration<TektonConfig>(TektonConfig.newTektonConfigBuilderFromDefaults()));
+    on(new DefaultConfiguration<TektonConfig>(TektonConfig.newTektonConfigBuilderFromDefaults()
+         .withM2WorkspaceClaim(new PersistentVolumeClaim())
+        .withSourceWorkspaceClaim(new PersistentVolumeClaim())));
   }
 
   public ConfigurationRegistry getConfigurationRegistry() {
