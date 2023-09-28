@@ -51,6 +51,11 @@ jobs:
           git rebase release
           ./mvnw -X -Prelease -B release:perform -DskipTests
 
+          #
+          # checkout release tag
+          #
+
+          git checkout ${{steps.metadata.outputs.current-version}}
           # update examples and tests
           ./mvnw versions:set -DnewVersion=${{steps.metadata.outputs.next-version}} -Pwith-examples,with-tests -DgenerateBackupPoms=false -DoldVersion=* -DgroupId=* -DartifactId=* -Pwith-examples,with-tests,with-knative-examples,with-gradle-examples,with-dockerio,with-internal-registry,with-service-binding-examples
 
@@ -62,8 +67,37 @@ jobs:
           cp .github/project.yml docs/_data/project.yml
 
           git add --all
-          # commit changes
-          git commit -m "chore: Set docs, examples and tests version to ${{steps.metadata.outputs.current-version}}"
+          # Check if there are changes to commit
+          if git diff-index --quiet HEAD --; then
+              echo "No changes to commit."
+          else
+            git commit -m "chore: Set docs, examples and tests version to ${{steps.metadata.outputs.current-version}}"
+            git push origin ${{steps.metadata.outputs.current-version}}
+          fi
+
+          #
+          # checkout release branch
+          #
+
+          git checkout ${{github.base_ref}}
+          # update examples and tests
+          ./mvnw versions:set -DnewVersion=${{steps.metadata.outputs.next-version}} -Pwith-examples,with-tests -DgenerateBackupPoms=false -DoldVersion=* -DgroupId=* -DartifactId=* -Pwith-examples,with-tests,with-knative-examples,with-gradle-examples,with-dockerio,with-internal-registry,with-service-binding-examples
+
+          # update readme.md
+          docker run -v `pwd`:/ws --workdir=/ws -i quay.io/jbangdev/jbang-action ./scripts/ChangeVersion.java readme.md io.dekorate ${{steps.metadata.outputs.next-version}} | tail -n +3 > readme.md.versionChanged
+          mv readme.md.versionChanged readme.md
+
+          # update site version
+          cp .github/project.yml docs/_data/project.yml
+
+          git add --all
+          # Check if there are changes to commit
+          if git diff-index --quiet HEAD --; then
+              echo "No changes to commit."
+          else
+            git commit -m "chore: Set docs, examples and tests version to ${{steps.metadata.outputs.current-version}}"
+            git push origin ${{github.base_ref}}
+          fi
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
@@ -74,11 +108,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{github.base_ref}}
           force: true
-
-      - name: Push tags
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          branch: ${{github.base_ref}}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tags: true
-          force_with_lease: true
