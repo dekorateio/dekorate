@@ -31,7 +31,7 @@ public class DefaultTektonConfigGenerator implements TektonConfigGenerator, With
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
     this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
     on(new DefaultConfiguration<TektonConfig>(TektonConfig.newTektonConfigBuilderFromDefaults()
-         .withM2WorkspaceClaim(new PersistentVolumeClaim())
+        .withM2WorkspaceClaim(new PersistentVolumeClaim())
         .withSourceWorkspaceClaim(new PersistentVolumeClaim())));
   }
 
