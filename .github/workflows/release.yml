@@ -56,6 +56,7 @@ jobs:
           #
 
           git checkout ${{steps.metadata.outputs.current-version}}
+          git checkout -b "br-${{steps.metadata.outputs.current-version}}"
           # update examples and tests
           ./mvnw versions:set -DnewVersion=${{steps.metadata.outputs.next-version}} -Pwith-examples,with-tests -DgenerateBackupPoms=false -DoldVersion=* -DgroupId=* -DartifactId=* -Pwith-examples,with-tests,with-knative-examples,with-gradle-examples,with-dockerio,with-internal-registry,with-service-binding-examples
 
@@ -72,6 +73,8 @@ jobs:
               echo "No changes to commit."
           else
             git commit -m "chore: Set docs, examples and tests version to ${{steps.metadata.outputs.current-version}}"
+            git tag -d ${{steps.metadata.outputs.current-version}}
+            git tag ${{steps.metadata.outputs.current-version}}
             git push origin ${{steps.metadata.outputs.current-version}}
           fi
 
