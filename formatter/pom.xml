@@ -5,7 +5,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>dekorate-formatter</artifactId>
   <name>Dekorate :: Code Formatter</name>
-  <version>3.7-SNAPSHOT</version>
+  <version>3.7.3</version>
   <packaging>jar</packaging>
   <description>Dekorate code formatter settings</description>
 
@@ -40,7 +40,7 @@
     <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
     <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
     <url>http://github.com/dekorateio/dekorate</url>
-    <tag>${project.version}</tag>
+    <tag>3.7.3</tag>
   </scm>
 
   <distributionManagement>
