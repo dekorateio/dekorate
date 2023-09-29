@@ -46,7 +46,7 @@ jobs:
         run: |
           ./mvnw clean install -DskipTests -Prelease
           git checkout -b release
-          ./mvnw -X -Prelease -B release:clean release:prepare -DreleaseVersion=${{steps.metadata.outputs.current-version}} -DdevelopmentVersion=${{steps.metadata.outputs.next-version}} -Pwith-examples,with-tests,with-knative-examples,with-gradle-examples,with-dockerio,with-internal-registry,with-service-binding-examples,with-kubernetes-specific-examples,with-openshift-specific-examples
+          ./mvnw -X -Prelease -B release:clean release:prepare -DreleaseVersion=${{steps.metadata.outputs.current-version}} -DdevelopmentVersion=${{steps.metadata.outputs.next-version}}
           git checkout ${{github.base_ref}}
           git rebase release
           ./mvnw -X -Prelease -B release:perform -DskipTests
