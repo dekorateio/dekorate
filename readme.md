@@ -1,4 +1,3 @@
-## Features
 
 - Generates manifest via annotation processing
   - [Kubernetes](#kubernetes)
