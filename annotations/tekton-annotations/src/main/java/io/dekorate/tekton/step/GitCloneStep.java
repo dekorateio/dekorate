@@ -47,7 +47,7 @@ public final class GitCloneStep implements Step {
   public static final String IMAGE_PARAM_REF = param(IMAGE_PARAM_NAME);
   public static final String IMAGE_PARAM_DEFAULT_VALUE = "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.40.2";
 
-  public static String getRepoUrl(TektonConfig config) {
+  public static Optional<String> getRepoUrl(TektonConfig config) {
     ScmInfo scm = Optional.ofNullable(config.getProject().getScmInfo())
         .orElseThrow(() -> new IllegalStateException("No scm info found!"));
 
@@ -76,6 +76,6 @@ public final class GitCloneStep implements Step {
       throw new IllegalStateException("Could not find the repository URL from the scm info!");
     }
 
-    return sanitizeRemoteUrl(repoUrl);
+    return Optional.of(sanitizeRemoteUrl(repoUrl));
   }
 }
