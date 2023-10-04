@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -65,6 +66,15 @@ class GitTest {
     final File configFile = Urls.toFile(configURL);
     configFile.toPath().getParent().toFile().renameTo(getDotGit(configFile).toFile());
     configurationNameToConfigRoot.put(gitConfig, getRoot(configFile));
+  }
+
+  @Test
+  void shouldParseRemote() {
+    assertEquals("origin", Git.remoteValue("[remote \"origin\"]").get());
+    assertEquals("origin", Git.remoteValue(" [remote \"origin\"]").get());
+    assertEquals("origin", Git.remoteValue(" [remote  \"origin\"]").get());
+    assertEquals("origin", Git.remoteValue(" [remote  \"origin\" ]").get());
+    assertEquals("origin", Git.remoteValue(" [remote  \"origin\" ] ").get());
   }
 
   @ParameterizedTest
@@ -142,7 +152,7 @@ class GitTest {
     final Path root = getRootFor(configFile);
     Map<String, String> remotes = Git.getRemotes(root);
     assertNotNull(remotes);
-    assertTrue(remotes.containsKey("[remote \"origin\"]"));
+    assertTrue(remotes.containsKey("origin"));
     assertEquals(1, remotes.size());
   }
 }

@@ -46,7 +46,7 @@ public class Git {
   public static final String URL = "url";
   public static final String REF = "ref";
 
-  public static final String REMOTE_PATTERN = "^\\[remote \"([a-zA-Z0-9_-]+)\"\\]";
+  public static final String REMOTE_PATTERN = "^\\s*\\[remote\\s*\"([a-zA-Z0-9_-]+)\"\\s*\\]\\s*";
 
   /**
    * Get the git root.
@@ -204,7 +204,7 @@ public class Git {
     Pattern p = Pattern.compile(REMOTE_PATTERN);
     Matcher m = p.matcher(line);
     if (m.matches()) {
-      return Optional.of(m.group());
+      return Optional.of(m.group(1));
     } else {
       return Optional.empty();
     }
