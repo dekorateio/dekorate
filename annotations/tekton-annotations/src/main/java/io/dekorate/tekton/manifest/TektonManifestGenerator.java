@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.dekorate.BuildImage;
@@ -160,7 +161,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
   }
 
   public void generate(TektonConfig config) {
-
+    LOGGER.info("Processing tekton configuration.");
     ImageConfiguration imageConfiguration = getImageConfiguration(getProject(), config, configurationRegistry);
 
     generateCommon(TEKTON_PIPELINE, config, imageConfiguration);
@@ -178,7 +179,11 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     } else if (config.getProject().getScmInfo() == null) {
       throw new IllegalStateException(
           "Project is not under version control, or unsupported version control system. Aborting generation of tekton resources!");
-    }
+    } else if (config.getProject().getScmInfo().getRemote() == null
+        || !config.getProject().getScmInfo().getRemote().containsKey("origin")) {
+      throw new IllegalStateException(
+          "Project is under version control, but no remote has been specified. Aborting generation of tekton resources!");
+    } 
 
     resourceRegistry.add(group, createRole(config));
 
@@ -211,8 +216,15 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
     if (isNullOrEmpty(config.getExternalGitPipelineResource())) {
       resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(gitCloneTaskName, GitCloneStep.IMAGE_PARAM_NAME,
           GitCloneStep.IMAGE_PARAM_DESCRIPTION, GitCloneStep.IMAGE_PARAM_DEFAULT_VALUE));
+
+      Optional<String> repoUrl = GitCloneStep.getRepoUrl(config);
+      if (!repoUrl.isPresent()) {
+        throw new IllegalStateException("Could not find the repository URL for origin from the scm info!");
+      }
+
       resourceRegistry.decorate(group, new AddStringParamToTaskDecorator(gitCloneTaskName, GitCloneStep.REPO_URL_PARAM_NAME,
-          GitCloneStep.REPO_URL_PARAM_DESCRIPTION, GitCloneStep.getRepoUrl(config)));
+          GitCloneStep.REPO_URL_PARAM_DESCRIPTION, GitCloneStep.getRepoUrl(config).get()));
+
       resourceRegistry.decorate(group,
           new AddStringParamToTaskDecorator(gitCloneTaskName, GitCloneStep.REVISION_PARAM_NAME,
               GitCloneStep.REVISION_PARAM_DESCRIPTION,
@@ -344,7 +356,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
       } else if (!config.isUseLocalDockerConfigJson() && isNullOrEmpty(config.getRegistryUsername())
           && isNullOrEmpty(config.getRegistryPassword())) {
         LOGGER.error(
-            "An existing builder image service account or secret is required! Alternatively, you can specify a registry username and password!");
+            "An existing builder image, service account or secret is required! Alternatively, you can specify a registry username and password!");
       } else {
         String generatedSecret = config.getName() + "-registry-credentials";
         if (config.isUseLocalDockerConfigJson()) {
