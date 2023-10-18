@@ -44,7 +44,7 @@ jobs:
           git config --local user.name "GitHub Action"
       - name: Maven release ${{steps.metadata.outputs.current-version}}
         run: |
-          ./release --release-version ${{steps.metadata.outputs.current-version}}
+          ./release.sh --release-version ${{steps.metadata.outputs.current-version}}
            git push origin ${{github.base_ref}}
            git push origin --tags
         env:
