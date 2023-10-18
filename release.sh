@@ -2,6 +2,7 @@
 
 if [ ! -f "$HOME/bin/grab" ]; then
   curl -o $HOME/bin/grab -L https://github.com/shellib/grab/raw/master/grab.sh && chmod +x $HOME/bin/grab
+  rehash
 fi
 
 source $(grab github.com/shellib/cli)
