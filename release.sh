@@ -1,9 +1,8 @@
 #!/bin/bash
 
-#
-# Script requires `grab`. To install it:
-# curl -s https://raw.githubusercontent.com/shellib/grab/master/install.sh | bash
-#
+if [ ! -f "$HOME/bin/grab" ]; then
+  curl -o $HOME/bin/grab -L https://github.com/shellib/grab/raw/master/grab.sh && chmod +x $HOME/bin/grab
+fi
 
 source $(grab github.com/shellib/cli)
 source $(grab github.com/shellib/maven as maven)
@@ -16,7 +15,7 @@ fi
 
 function set_version() {
   local file=$1
-  ./scripts/ChangeVersion.java ${file} io.dekorate $release_version > ${file}.versionChanged
+  docker run -v `pwd`:/ws --workdir=/ws -i quay.io/jbangdev/jbang-action ./scripts/ChangeVersion.java ${file} io.dekorate $release_version > ${file}.versionChanged
   mv ${file}.versionChanged ${file} 
   git add ${file}
 }
@@ -27,6 +26,10 @@ ls docs/documentation/*.md | while read doc; do
   set_version $doc io.dekorate $release_version
 done
 
+# Update site version
+cp .github/project.yml docs/_data/project.yml
+
+git add docs
 git commit -m "doc: Update dekorate version in docs to $release_version"
 mvn versions:set -DnewVersion=$release_version -Pwith-examples
 git add examples
