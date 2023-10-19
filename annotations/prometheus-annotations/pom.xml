@@ -3,7 +3,7 @@
   <parent>
     <artifactId>annotations</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>3.7.4</version>
+    <version>3.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
