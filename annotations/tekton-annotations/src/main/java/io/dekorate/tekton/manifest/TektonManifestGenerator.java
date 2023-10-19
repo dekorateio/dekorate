@@ -183,7 +183,7 @@ public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>,
         || !config.getProject().getScmInfo().getRemote().containsKey("origin")) {
       throw new IllegalStateException(
           "Project is under version control, but no remote has been specified. Aborting generation of tekton resources!");
-    } 
+    }
 
     resourceRegistry.add(group, createRole(config));
 
