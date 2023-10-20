@@ -22,6 +22,13 @@ function set_version() {
   git add ${file}
 }
 
+# Regenerate boms and set release version
+mvn io.sundr:sundr-maven-plugin:0.92.1:generate-bom
+cp -r target/classes/dekorate-bom/pom.xml boms/dekorate-bom/pom.xml
+set_version boms/dekorate-bom/pom.xml
+cp -r target/classes/dekorate-spring-bom/pom.xml boms/dekorate-spring-bom/pom.xml
+set_version boms/dekorate-spring-bom/pom.xml
+
 # Update the docs with the release version
 set_version readme.md io.dekorate $release_version
 ls docs/documentation/*.md | while read doc; do

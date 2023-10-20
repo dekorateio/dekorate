@@ -103,6 +103,7 @@
     <module>annotations</module>
     <module>testing</module>
     <module>starters</module>
+    <module>boms</module>
   </modules>
 
   <dependencyManagement>
@@ -238,9 +239,6 @@
             <bom>
               <artifactId>dekorate-bom</artifactId>
               <name>Dekorate :: Bom</name>
-              <properties>
-                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
-              </properties>
             </bom>
             <bom>
               <artifactId>dekorate-spring-bom</artifactId>
@@ -251,19 +249,9 @@
                   <exclude>io.dekorate:*micronaut*</exclude>
                 </excludes>
               </modules>
-              <properties>
-                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
-              </properties>
             </bom>
           </boms>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate-bom</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
