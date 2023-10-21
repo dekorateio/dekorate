@@ -18,7 +18,8 @@ fi
 function set_version() {
   local file=$1
   docker run -v `pwd`:/ws --workdir=/ws -i quay.io/jbangdev/jbang-action ./scripts/ChangeVersion.java ${file} io.dekorate $release_version > ${file}.versionChanged
-  mv ${file}.versionChanged ${file} 
+  tail -n +2 ${file}.versionChanged > ${file} 
+  rm ${file}.versionChanged
   git add ${file}
 }
 
