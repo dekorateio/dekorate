@@ -1,4 +1,5 @@
 jbang ./scripts/ChangeVersion.java docs/documentation/annotation-less-configuration.md io.dekorate 3.7.5
+jbang ./scripts/ChangeVersion.java docs/documentation/annotation-less-configuration.md io.dekorate 3.7.5
 jbang ./scripts/ChangeVersion.java docs/documentation/annotation-less-configuration.md io.dekorate 3.7.4
 ---
 title: Annotationless configuration

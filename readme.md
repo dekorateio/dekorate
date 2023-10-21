@@ -1,4 +1,5 @@
 jbang ./scripts/ChangeVersion.java readme.md io.dekorate 3.7.5
+jbang ./scripts/ChangeVersion.java readme.md io.dekorate 3.7.5
 jbang ./scripts/ChangeVersion.java readme.md io.dekorate 3.7.4
 ## Features
 
