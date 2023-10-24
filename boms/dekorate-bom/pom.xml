@@ -4,7 +4,7 @@
 
     <groupId>io.dekorate</groupId>
     <artifactId>dekorate-bom</artifactId>
-    <version>3.7-SNAPSHOT</version>
+    <version>3.7.5</version>
     <name>Dekorate :: Bom</name>
     <packaging>pom</packaging>
     <description>Generated Bom</description>
@@ -23,7 +23,7 @@
         <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
         <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
         <url>http://github.com/dekorateio/dekorate</url>
-        <tag>3.7-SNAPSHOT</tag>
+        <tag>3.7.5</tag>
     </scm>
         
     <distributionManagement>
