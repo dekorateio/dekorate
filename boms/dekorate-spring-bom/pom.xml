@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.dekorate</groupId>
@@ -11,31 +9,42 @@
     <packaging>pom</packaging>
     <description>Generated Bom</description>
     
-        <url>https://dekorate.io</url>    
-        <licenses>
-            <license>
-                <name>Apache License, Version 2.0</name>
-                <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-                <distribution>repo</distribution>
-            </license>
-        </licenses>
+    <url>https://dekorate.io</url>    
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     
     
-        <scm>
-            <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
-            <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
-            <url>http://github.com/dekorateio/dekorate</url>
-            <tag>3.7-SNAPSHOT</tag>
-        </scm>
-    
-            <developers>
-            <developer>
-                <id>geeks</id>
-                <name>Snowdrop Development Team</name>
-                <organization>snowdrop</organization>
-                <organizationUrl>http://snowdrop.me/</organizationUrl>
-            </developer>
-        </developers>
+    <scm>
+        <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
+        <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
+        <url>http://github.com/dekorateio/dekorate</url>
+        <tag>3.7-SNAPSHOT</tag>
+    </scm>
+        
+    <distributionManagement>
+      
+      <repository>
+        <id>oss-sonatype-staging</id>
+        <name>Sonatype Staging Repository</name>
+        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        <layout>default</layout>
+      </repository>
+            
+    </distributionManagement>
+        
+    <developers>
+        <developer>
+            <id>geeks</id>
+            <name>Snowdrop Development Team</name>
+            <organization>snowdrop</organization>
+            <organizationUrl>http://snowdrop.me/</organizationUrl>
+        </developer>
+    </developers>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -205,12 +214,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
-        <build>
-            <pluginManagement>
-                <plugins>
-                </plugins>
-            </pluginManagement>
-        </build>
-    
 </project>
