@@ -34,6 +34,13 @@ limitations under the License.
       <artifactId>kubernetes-client</artifactId>
     </dependency>
 
+    <!-- Work around oktthp scope as migrating to vert.x requires more work -->
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-httpclient-okhttp</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- Compression -->
     <dependency>
       <groupId>org.apache.commons</groupId>
