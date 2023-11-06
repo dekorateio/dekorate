@@ -15,11 +15,19 @@
  */
 package io.dekorate.kubernetes.decorator;
 
+import java.util.stream.Collectors;
+
 import io.dekorate.AbstractKubernetesManifestGenerator;
 import io.dekorate.ResourceFactory;
 import io.dekorate.kubernetes.config.BaseConfig;
+import io.dekorate.kubernetes.config.ImageConfiguration;
+import io.dekorate.utils.Images;
+import io.dekorate.utils.Labels;
 import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.PodSpec;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
+import io.fabric8.kubernetes.api.model.PodTemplateSpec;
+import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 
 public class DeploymentResourceFactory implements ResourceFactory {
@@ -36,12 +44,41 @@ public class DeploymentResourceFactory implements ResourceFactory {
     return new DeploymentBuilder()
         .withNewMetadata()
         .withName(config.getName())
+        .withLabels(Labels.createLabels(config).stream().collect(Collectors.toMap(l -> l.getKey(), l -> l.getValue())))
+
         .endMetadata()
         .withNewSpec()
         .withReplicas(1)
-        .withNewTemplate()
-        .withSpec(new PodSpecBuilder().build())
-        .endTemplate()
+        .withTemplate(createPodTemplateSpec(generator, config))
         .endSpec().build();
+  }
+
+  private PodTemplateSpec createPodTemplateSpec(AbstractKubernetesManifestGenerator<?> generator, BaseConfig config) {
+    return new PodTemplateSpecBuilder()
+        .withSpec(createPodSpec(generator, config))
+        .withNewMetadata()
+        .endMetadata()
+        .build();
+  }
+
+  private PodSpec createPodSpec(AbstractKubernetesManifestGenerator<?> generator, BaseConfig config) {
+    ImageConfiguration imageConfig = generator.getImageConfiguration(config);
+
+    String image = Images.getImage(imageConfig.getRegistry(), imageConfig.getGroup(), imageConfig.getName(),
+        imageConfig.getVersion());
+
+    return new PodSpecBuilder()
+        .addNewContainer()
+        .withName(config.getName())
+        .withImage(image)
+        .withImagePullPolicy("IfNotPresent")
+        .addNewEnv()
+        .withName("KUBERNETES_NAMESPACE")
+        .withNewValueFrom()
+        .withNewFieldRef(null, "metadata.namespace")
+        .endValueFrom()
+        .endEnv()
+        .endContainer()
+        .build();
   }
 }
