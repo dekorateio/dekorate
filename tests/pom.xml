@@ -98,6 +98,7 @@
       <module>feat-overwrite-init-containers</module>
       <module>feat-overwrite-sidecar-containers</module>
       <module>issue-1201-zero-replicas</module>
+      <module>issue-1271-containers-empty-in-deployment</module>
     </modules>
 
 </project>

@@ -164,8 +164,8 @@ public class GradleInfoReader implements BuildInfoReader {
               if (key.startsWith(ROOT_PROJECT_PREFIX)) {
                 key = key.substring(ROOT_PROJECT_PREFIX.length());
                 String value = l.substring(l.lastIndexOf(EQUALS) + 1)
-                                .replaceAll(QUOTE, "")
-                                .replaceAll(DOUBLE_QUOTE, "");
+                    .replaceAll(QUOTE, "")
+                    .replaceAll(DOUBLE_QUOTE, "");
                 properties.put(key, value);
               }
             });
