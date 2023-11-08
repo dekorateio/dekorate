@@ -50,182 +50,182 @@
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-formatter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-templates</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-core</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>option-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>docker-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>kubernetes-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>s2i-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>openshift-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>knative-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>tekton-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>prometheus-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-spring-boot</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-thorntail</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-doc</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-jaxrs</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>dekorate-nodejs</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>minikube-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>kubernetes-spring-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>servicebinding-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>jaeger-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>jib-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>kind-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>helm-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>certmanager-annotations</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>core-junit</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>openshift-junit</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>kubernetes-junit</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>knative-junit</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>kubernetes-thorntail-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>kubernetes-junit-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>openshift-spring-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>openshift-thorntail-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>openshift-junit-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>knative-spring-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>knative-junit-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
             <dependency>
                 <groupId>io.dekorate</groupId>
                 <artifactId>servicebinding-spring-starter</artifactId>
-                <version>3.7-SNAPSHOT</version>
+                <version>4.0.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
