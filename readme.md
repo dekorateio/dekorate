@@ -1269,10 +1269,11 @@ This hook will just trigger a jib build in order to perform a container build.
 In order to use it, one needs to add the `jib-annotations` dependency.
 
 ```xml
-<dependencies>
-  <groupId>io.dekorate</groupId>
-  <artifactId>jib-annotations</artifactId>
-</dependencies>
+<dependency>
+    <groupId>io.dekorate</groupId>
+    <artifactId>jib-annotations</artifactId>
+    <version>{{site.data.project.release.current-version}}</version>
+</dependency>
 ```
 
 Without the need of any additional configuration, one trigger the hook by passing `-Ddekorate.build=true`  as an argument to the build, for example:
