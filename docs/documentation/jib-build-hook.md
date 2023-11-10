@@ -13,10 +13,10 @@ In order to use it, one needs to add the `jib-annotations` dependency.
 ```xml
 <dependencies>
   <dependency>
-			<groupId>io.dekorate</groupId>
-			<artifactId>jib-annotations</artifactId>
-			<version>{{site.data.project.release.current-version}}</version>
-		</dependency>
+    <groupId>io.dekorate</groupId>
+    <artifactId>jib-annotations</artifactId>
+    <version>{{site.data.project.release.current-version}}</version>
+  </dependency>
 </dependencies>
 ```
 
