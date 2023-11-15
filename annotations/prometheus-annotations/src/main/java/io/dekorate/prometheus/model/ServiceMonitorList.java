@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,17 +37,13 @@ import io.fabric8.kubernetes.api.model.ListMeta;
 @JsonDeserialize(using = JsonDeserializer.None.class)
 public class ServiceMonitorList implements KubernetesResource, KubernetesResourceList<ServiceMonitor> {
 
-  @NotNull
   @JsonProperty("apiVersion")
   private String apiVersion = "app.k8s.io/v1beta1";
   @JsonProperty("items")
-  @Valid
   private List<ServiceMonitor> items = new ArrayList();
-  @NotNull
   @JsonProperty("kind")
   private String kind = "ServiceMonitorList";
   @JsonProperty("metadata")
-  @Valid
   private ListMeta metadata;
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap();

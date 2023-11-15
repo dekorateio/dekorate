@@ -17,8 +17,6 @@ package io.dekorate.prometheus.model;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.fabric8.kubernetes.api.model.LabelSelector;
@@ -30,11 +28,9 @@ import io.sundr.builder.annotations.BuildableReference;
 public class ServiceMonitorSpec {
 
   @JsonProperty("selector")
-  @Valid
   private LabelSelector selector;
 
   @JsonProperty("endpoints")
-  @Valid
   List<Endpoint> endpoints;
 
   public ServiceMonitorSpec() {
