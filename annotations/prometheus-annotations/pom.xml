@@ -133,6 +133,8 @@
                     <include>io/dekorate/prometheus/adapter/**</include>
                     <include>io/dekorate/prometheus/apt/**</include>
                     <include>io/dekorate/prometheus/config/**</include>
+                    <include>io/dekorate/prometheus/client/**</include>
+                    <include>io/dekorate/prometheus/decorator/**</include>
                     <include>io/dekorate/prometheus/manifest/**</include>
                     <include>io/dekorate/prometheus/model/**</include>
                     <include>META-INF/services/javax.annotation.processing.Processor</include>
@@ -158,6 +160,8 @@
                     <include>io/dekorate/prometheus/adapter/**</include>
                     <include>io/dekorate/prometheus/annotation/**</include>
                     <include>io/dekorate/prometheus/config/**</include>
+                    <include>io/dekorate/prometheus/client/**</include>
+                    <include>io/dekorate/prometheus/decorator/**</include>
                     <include>io/dekorate/prometheus/manifest/**</include>
                     <include>io/dekorate/prometheus/model/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
