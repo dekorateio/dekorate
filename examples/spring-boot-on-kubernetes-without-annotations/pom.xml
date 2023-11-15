@@ -20,7 +20,7 @@ limitations under the License.
 
   <groupId>io.dekorate</groupId>
   <artifactId>spring-boot-on-kubernetes-without-annotations</artifactId>
-  <version>3.7-SNAPSHOT</version>
+  <version>999-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Kubernetes</name>
 
   <properties>
