@@ -22,7 +22,7 @@ import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
 
 @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.fabric8.kubernetes.api.builder", refs = @BuildableReference(ObjectMeta.class))
-class Endpoint {
+public class Endpoint {
 
   @JsonProperty("port")
   String port;

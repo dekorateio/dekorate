@@ -18,13 +18,6 @@
       <artifactId>dekorate-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
-    </dependency>
-
     <dependency>
       <groupId>io.sundr</groupId>
       <artifactId>builder-annotations</artifactId>
@@ -137,7 +130,7 @@
                     <include>io/dekorate/prometheus/decorator/**</include>
                     <include>io/dekorate/prometheus/manifest/**</include>
                     <include>io/dekorate/prometheus/model/**</include>
-                    <include>META-INF/services/javax.annotation.processing.Processor</include>
+                    <include>META-INF/services/*</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
@@ -165,6 +158,7 @@
                     <include>io/dekorate/prometheus/manifest/**</include>
                     <include>io/dekorate/prometheus/model/**</include>
                     <include>META-INF/services/io.dekorate.*</include>
+                    <include>META-INF/services/io.fabric8.kubernetes.api.model.KubernetesResource</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>

@@ -18,8 +18,6 @@ package io.dekorate.prometheus.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -28,6 +26,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.model.annotation.Group;
+import io.fabric8.kubernetes.model.annotation.Version;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
 
@@ -41,6 +41,8 @@ import io.sundr.builder.annotations.BuildableReference;
 @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
     @BuildableReference(ObjectMeta.class), @BuildableReference(LabelSelector.class) })
+@Group("monitoring.coreos.com")
+@Version("v1")
 public class ServiceMonitor implements HasMetadata {
 
   /**
@@ -48,7 +50,6 @@ public class ServiceMonitor implements HasMetadata {
    * (Required)
    *
    */
-  @NotNull
   @JsonProperty("apiVersion")
   private String apiVersion = "monitoring.coreos.com/v1";
   /**
@@ -56,7 +57,6 @@ public class ServiceMonitor implements HasMetadata {
    * (Required)
    *
    */
-  @NotNull
   @JsonProperty("kind")
   private String kind = "ServiceMonitor";
   /**
