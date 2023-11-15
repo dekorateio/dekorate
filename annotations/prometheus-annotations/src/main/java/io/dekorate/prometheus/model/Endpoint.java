@@ -17,6 +17,7 @@ package io.dekorate.prometheus.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
@@ -26,6 +27,15 @@ public class Endpoint {
 
   @JsonProperty("port")
   String port;
+
+  @JsonProperty("proxyUrl")
+  String proxyUrl;
+
+  @JsonProperty("scheme")
+  String scheme;
+
+  @JsonProperty("targetPort")
+  IntOrString targetPort;
 
   @JsonProperty("path")
   String path;
@@ -39,8 +49,12 @@ public class Endpoint {
   public Endpoint() {
   }
 
-  public Endpoint(String port, String path, String interval, boolean honorLabels) {
+  public Endpoint(String port, String proxyUrl, String scheme, IntOrString targetPort, String path, String interval,
+      boolean honorLabels) {
     this.port = port;
+    this.proxyUrl = proxyUrl;
+    this.scheme = scheme;
+    this.targetPort = targetPort;
     this.path = path;
     this.interval = interval;
     this.honorLabels = honorLabels;
@@ -52,6 +66,30 @@ public class Endpoint {
 
   public void setPort(String port) {
     this.port = port;
+  }
+
+  public String getProxyUrl() {
+    return proxyUrl;
+  }
+
+  public void setProxyUrl(String proxyUrl) {
+    this.proxyUrl = proxyUrl;
+  }
+
+  public String getScheme() {
+    return scheme;
+  }
+
+  public void setScheme(String scheme) {
+    this.scheme = scheme;
+  }
+
+  public IntOrString getTargetPort() {
+    return targetPort;
+  }
+
+  public void setTargetPort(IntOrString targetPort) {
+    this.targetPort = targetPort;
   }
 
   public String getPath() {
