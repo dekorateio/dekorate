@@ -19,8 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.JsonDeserializer.None;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -31,14 +33,14 @@ import io.fabric8.kubernetes.model.annotation.Version;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonDeserialize(using = None.class)
+@JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({
     "apiVersion",
     "kind",
     "metadata",
     "spec",
 })
-@JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
 @Buildable(editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
     @BuildableReference(ObjectMeta.class), @BuildableReference(LabelSelector.class) })
 @Group("monitoring.coreos.com")
