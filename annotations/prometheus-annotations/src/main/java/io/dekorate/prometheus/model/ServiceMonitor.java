@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.LabelSelector;
+import io.fabric8.kubernetes.api.model.Namespaced;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.model.annotation.Group;
 import io.fabric8.kubernetes.model.annotation.Version;
@@ -45,7 +46,7 @@ import io.sundr.builder.annotations.BuildableReference;
     @BuildableReference(ObjectMeta.class), @BuildableReference(LabelSelector.class) })
 @Group("monitoring.coreos.com")
 @Version("v1")
-public class ServiceMonitor implements HasMetadata {
+public class ServiceMonitor implements HasMetadata, Namespaced {
 
   /**
    *
