@@ -120,6 +120,26 @@
             </configuration>
           </execution>
           <execution>
+            <id>model</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>model</shadedClassifierName>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <includes>
+                    <include>io/dekorate/helm/model/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+          <execution>
             <id>processor</id>
             <phase>package</phase>
             <goals>
