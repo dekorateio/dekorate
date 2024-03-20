@@ -101,7 +101,8 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
       builder.addNewEnv().withName(env.getName()).withNewValueFrom()
           .withNewSecretKeyRef(env.getValue(), env.getSecret(), null).endValueFrom().endEnv();
     } else {
-      builder.addNewEnvFrom().withNewSecretRef(env.getSecret(), null).endEnvFrom();
+      builder.addNewEnvFrom().withNewSecretRef(env.getSecret(), null)
+          .withPrefix(env.getPrefix()).endEnvFrom();
     }
   }
 
@@ -119,7 +120,8 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
       builder.addNewEnv().withName(env.getName()).withNewValueFrom()
           .withNewConfigMapKeyRef(env.getValue(), env.getConfigmap(), null).endValueFrom().endEnv();
     } else {
-      builder.addNewEnvFrom().withNewConfigMapRef(env.getConfigmap(), null).endEnvFrom();
+      builder.addNewEnvFrom().withNewConfigMapRef(env.getConfigmap(), null)
+          .withPrefix(env.getPrefix()).endEnvFrom();
     }
   }
 
