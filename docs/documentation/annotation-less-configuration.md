@@ -1,4 +1,3 @@
-jbang ./scripts/ChangeVersion.java docs/documentation/annotation-less-configuration.md io.dekorate 4.0.1
 ---
 title: Annotationless configuration
 description:  Annotationless configuration
