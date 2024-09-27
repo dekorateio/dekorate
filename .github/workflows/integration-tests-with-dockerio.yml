@@ -89,7 +89,7 @@ jobs:
         if: failure()
         run: |
           zip -R manifests-k8s-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ci-manifests
@@ -139,7 +139,7 @@ jobs:
         if: failure()
         run: |
           zip -R manifests-ocp-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ci-manifests
@@ -228,7 +228,7 @@ jobs:
         if: failure()
         run: |
           zip -R manifests-tekton-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ci-manifests
