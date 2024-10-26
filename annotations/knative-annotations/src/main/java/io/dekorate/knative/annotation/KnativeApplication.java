@@ -45,6 +45,7 @@ import io.dekorate.kubernetes.annotation.SecretVolume;
 import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.HostAlias;
+import io.dekorate.kubernetes.config.NodeSelector;
 import io.dekorate.kubernetes.config.RollingUpdate;
 import io.dekorate.project.BuildInfo;
 import io.dekorate.project.Project;
@@ -57,7 +58,8 @@ import io.sundr.builder.annotations.Pojo;
     @BuildableReference(Project.class),
     @BuildableReference(BuildInfo.class),
     @BuildableReference(HostAlias.class),
-    @BuildableReference(RollingUpdate.class)
+    @BuildableReference(RollingUpdate.class),
+    @BuildableReference(NodeSelector.class)
 })
 @Pojo(name = "KnativeConfig", autobox = true, mutable = true, superClass = BaseConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })

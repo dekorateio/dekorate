@@ -196,6 +196,13 @@ import io.sundr.builder.annotations.Pojo;
   HostAlias[] hostAliases() default {};
 
   /**
+   * Node Selector
+   *
+   * @return The nodeSelector
+   */
+  NodeSelector nodeSelector();
+
+  /**
    * The liveness probe.
    *
    * @return The probe.

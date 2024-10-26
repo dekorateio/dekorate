@@ -229,6 +229,11 @@ public @interface KubernetesApplication {
   HostAlias[] hostAliases() default {};
 
   /**
+   * The nodeSelector
+   */
+  NodeSelector nodeSelector() default @NodeSelector();
+
+  /**
    * The liveness probe.
    *
    * @return The probe.
