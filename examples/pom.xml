@@ -23,6 +23,7 @@
         <module>kubernetes-with-configmap-volume-example</module>
         <module>kubernetes-with-custom-image-name-example</module>
         <module>kubernetes-with-hostaliases-example</module>
+        <module>kubernetes-with-nodeselectors-example</module>
         <module>frameworkless-on-kubernetes-example</module>
         <module>frameworkless-on-openshift-example</module>
         <module>spring-boot-on-kubernetes-example</module>

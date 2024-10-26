@@ -44,6 +44,7 @@ import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.kubernetes.config.BaseConfig;
 import io.dekorate.kubernetes.config.DeploymentStrategy;
 import io.dekorate.kubernetes.config.HostAlias;
+import io.dekorate.kubernetes.config.NodeSelector;
 import io.dekorate.project.BuildInfo;
 import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Adapter;
@@ -54,7 +55,8 @@ import io.sundr.builder.annotations.Pojo;
 @Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
     @BuildableReference(Project.class),
     @BuildableReference(BuildInfo.class),
-    @BuildableReference(HostAlias.class)
+    @BuildableReference(HostAlias.class),
+    @BuildableReference(NodeSelector.class)
 })
 @Pojo(name = "OpenshiftConfig", autobox = true, mutable = true, superClass = BaseConfig.class, relativePath = "../config", withStaticAdapterMethod = false, adapter = @Adapter(relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
