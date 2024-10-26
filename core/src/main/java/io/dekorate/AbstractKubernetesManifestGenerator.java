@@ -54,6 +54,7 @@ import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddLivenessProbeDecorator;
 import io.dekorate.kubernetes.decorator.AddMetadataToTemplateDecorator;
 import io.dekorate.kubernetes.decorator.AddMountDecorator;
+import io.dekorate.kubernetes.decorator.AddNodeSelectorDecorator;
 import io.dekorate.kubernetes.decorator.AddPortDecorator;
 import io.dekorate.kubernetes.decorator.AddPvcVolumeDecorator;
 import io.dekorate.kubernetes.decorator.AddReadinessProbeDecorator;
@@ -80,7 +81,7 @@ import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 /**
  * An abstract generator.
  * A generator is meant to populate the initial resources to the {@link Session} as well as adding decorator etc.
- * 
+ *
  * @param <C> The config type (its expected to vary between processors).
  */
 public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> implements ManifestGenerator<C>, WithProject {
@@ -97,7 +98,7 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
 
   /**
    * Generate / populate the resources.
-   * 
+   *
    * @param config
    */
   public abstract void generate(C config);
@@ -106,7 +107,7 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
    * Add all decorator to the resources.
    * This method will read the config and then add all the required decorator to the resources.
    * The method is intended to be called from the generate method and thus marked as protected.
-   * 
+   *
    * @param group The group.
    * @param config The config.
    */
@@ -150,15 +151,22 @@ public abstract class AbstractKubernetesManifestGenerator<C extends BaseConfig> 
       resourceRegistry.decorate(new AddHostAliasesDecorator(config.getName(), hostAlias));
     }
 
+    if (config.getNodeSelector() != null) {
+      resourceRegistry.decorate(new AddNodeSelectorDecorator(config.getName(), config.getNodeSelector()));
+    }
+
     for (Container container : config.getSidecars()) {
       resourceRegistry.decorate(group, new AddSidecarDecorator(config.getName(), container));
     }
+
     for (Env env : config.getEnvVars()) {
       resourceRegistry.decorate(group, new AddEnvVarDecorator(config.getName(), config.getName(), env));
     }
+
     for (Port port : config.getPorts()) {
       resourceRegistry.decorate(group, new AddPortDecorator(config.getName(), config.getName(), port));
     }
+
     for (Mount mount : config.getMounts()) {
       resourceRegistry.decorate(group, new AddMountDecorator(config.getName(), config.getName(), mount));
     }
