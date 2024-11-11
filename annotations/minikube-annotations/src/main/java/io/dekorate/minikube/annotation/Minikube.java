@@ -48,7 +48,8 @@ import io.sundr.builder.annotations.Pojo;
     @BuildableReference(io.dekorate.kubernetes.config.HostAlias.class),
     @BuildableReference(io.dekorate.kubernetes.config.Container.class),
     @BuildableReference(io.dekorate.kubernetes.config.Job.class),
-    @BuildableReference(io.dekorate.kubernetes.config.CronJob.class)
+    @BuildableReference(io.dekorate.kubernetes.config.CronJob.class),
+    @BuildableReference(io.dekorate.kubernetes.config.NodeSelector.class)
 })
 @Pojo(name = "MinikubeConfig", relativePath = "../config", autobox = true, mutable = true, superClass = BaseConfig.class, withStaticBuilderMethod = true, withStaticAdapterMethod = false, adapter = @Adapter(suffix = "Adapter", relativePath = "../adapter", withMapAdapterMethod = true))
 @Target({ ElementType.CONSTRUCTOR, ElementType.TYPE })
