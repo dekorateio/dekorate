@@ -4,7 +4,7 @@
 
     <groupId>io.dekorate</groupId>
     <artifactId>dekorate-spring-bom</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>4.1.5</version>
     <name>Dekorate :: Bom :: Spring</name>
     <packaging>pom</packaging>
     <description>Generated Bom</description>
@@ -23,7 +23,7 @@
         <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
         <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
         <url>http://github.com/dekorateio/dekorate</url>
-        <tag>999-SNAPSHOT</tag>
+        <tag>4.1.5</tag>
     </scm>
         
     <distributionManagement>
