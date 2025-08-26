@@ -9,51 +9,51 @@ on:
     types: [closed]
     paths:
       - '.github/project.yml'
-
 jobs:
   release:
     runs-on: ubuntu-latest
     name: release
-
+    strategy:
+      matrix:
+        java: [17]
+        profile: [normal]
+    if: ${{github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true}}
     steps:
       - uses: actions/checkout@v2
-        name: Checkout 
-
-      - uses: radcortez/project-metadata-action@1.1
+        name: Checkout
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+      - uses: radcortez/project-metadata-action@main
         name: Retrieve project metadata
         id: metadata
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{secrets.ADMIN_GITHUB_TOKEN}}
           metadata-file-path: '.github/project.yml'
           local-file: true
-
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          java-version: 8
+          java-version: 17
           distribution: 'temurin'
-          server-id: oss-sonatype-staging
+          server-id: central
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
       - name: Configure Git author
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
       - name: Maven release ${{steps.metadata.outputs.current-version}}
         run: |
-          ./release.sh --release-version ${{steps.metadata.outputs.current-version}} --dev-version ${{steps.metadata.outputs.next-version}}
-           git push origin ${{github.base_ref}}
-           git push origin --tags
+          ./mvnw clean install -DskipTests -Prelease -Pwith-examples -Pwith-tests -Dformat.skip=true
+          ./mvnw -Prelease release:clean release:prepare release:perform \
+            -DreleaseVersion=${{steps.metadata.outputs.current-version}} \
+            -DdevelopmentVersion=${{steps.metadata.outputs.next-version}} \
+            -DskipTests -Dformat.skip=true -Pwith-examples -Pwith-tests \
+            -Darguments="-DskipTests -Dformat.skip=true"
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-      - name: Push changes to ${{github.base_ref}}
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{github.base_ref}}
-          force: true
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
