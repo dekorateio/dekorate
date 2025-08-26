@@ -34,7 +34,7 @@ jobs:
       dekorate-version: ${{ steps.dekorate-version-step.outputs.dekorate-version }}
     strategy:
       matrix:
-        java: [ 11 ]
+        java: [ 17 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -55,7 +55,7 @@ jobs:
     needs: dekorate
     strategy:
       matrix:
-        java: [11]
+        java: [17]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -84,7 +84,7 @@ jobs:
     needs: dekorate
     strategy:
       matrix:
-        java: [11]
+        java: [17]
         example: [ rest-http-example, crud-example, cache-example ]
     steps:
       - name: Checkout
@@ -115,7 +115,7 @@ jobs:
     if: ${{ false }}  # disable until we can upgrade these snowdrop examples to the latest Dekorate version
     strategy:
       matrix:
-        java: [11]
+        java: [17]
         example: [ rest-http-example, crud-example, cache-example ]
     steps:
       - name: Checkout
