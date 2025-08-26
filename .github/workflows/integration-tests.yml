@@ -73,11 +73,11 @@ jobs:
           github token: ${{ secrets.GITHUB_TOKEN }}
           driver: 'docker'
           start args: '--force'
-      - name: Setup Java 8
+      - name: Setup Java 17
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
-          distribution: 'adopt'
+          java-version: '17'
+          distribution: 'temurin'
       - name: Install the Service Binding Operator
         run: |
           curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.18.3/install.sh | bash -s v0.18.3
@@ -129,11 +129,11 @@ jobs:
         with:
           oc version: ${{ matrix.openshift }}
           github token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup Java 8
+      - name: Setup Java 17
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
-          distribution: 'adopt'
+          java-version: '17'
+          distribution: 'temurin'
       - name: Integration Tests
         run: |
           oc login -u admin -p admin
@@ -177,11 +177,11 @@ jobs:
         with:
           version: v0.18.0
           registry: true
-      - name: Setup Java 8
+      - name: Setup Java 17
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
-          distribution: 'adopt'
+          java-version: '17'
+          distribution: 'temurin'
       - name: Install Tekton
         run: |
           kubectl apply -f https://github.com/tektoncd/pipeline/releases/download/${{ matrix.tekton }}/release.yaml || true
