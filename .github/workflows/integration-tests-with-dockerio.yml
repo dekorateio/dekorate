@@ -30,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
       - name: Cache .m2 registry
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
@@ -57,7 +57,7 @@ jobs:
           driver: 'docker'
           start args: '--force'
       - name: Cache .m2 registry
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
@@ -113,7 +113,7 @@ jobs:
           oc version: ${{ matrix.openshift }}
           github token: ${{ secrets.GITHUB_TOKEN }}
       - name: Cache .m2 registry
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
@@ -163,7 +163,7 @@ jobs:
           echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
         shell: bash
       - name: Cache .m2 registry
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ steps.get-date.outputs.date }}
