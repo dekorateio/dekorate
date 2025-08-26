@@ -86,8 +86,8 @@ jobs:
           kubectl get csv -n operators | grep service-binding-operator | awk -F" " '{print $7}'
       - name: Install Knative
         run: |
-          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-crds.yaml
-          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-core.yaml
+          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.15.1/serving-crds.yaml
+          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.15.1/serving-core.yaml
       - name: Install and Run Integration Tests
         run: |
           eval $(minikube docker-env)
