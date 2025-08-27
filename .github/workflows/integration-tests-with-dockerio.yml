@@ -49,7 +49,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
       - name: Setup Minikube-Kubernetes
-        uses: manusa/actions-setup-minikube@v2.13.0
+        uses: manusa/actions-setup-minikube@0e8062ceff873bd77979f39cf8fd3621416afe4d
         with:
           minikube version: v1.34.0
           kubernetes version: ${{ matrix.kubernetes }}
@@ -119,7 +119,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ steps.get-date.outputs.date }}
           restore-keys: ${{ runner.os }}-maven-
       - name: Setup Minikube-Kubernetes
-        uses: manusa/actions-setup-minikube@v2.13.0
+        uses: manusa/actions-setup-minikube@0e8062ceff873bd77979f39cf8fd3621416afe4d
         with:
           minikube version: v1.34.0
           kubernetes version: ${{ matrix.kubernetes }}
