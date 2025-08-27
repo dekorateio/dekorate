@@ -56,7 +56,7 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <release>${java.version}</release>
+          <release>${java.release}</release>
         </configuration>
       </plugin>
       <plugin>

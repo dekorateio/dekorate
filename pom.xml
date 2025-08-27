@@ -264,7 +264,7 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <release>${java.version}</release>
+          <release>${java.release}</release>
         </configuration>
       </plugin>
       <plugin>
@@ -526,6 +526,7 @@
       </activation>
       <properties>
         <java.version>1.8</java.version>
+        <java.release>8</java.release>
       </properties>
     </profile>
     <profile>
@@ -535,6 +536,7 @@
       </activation>
       <properties>
         <java.version>11</java.version>
+        <java.release>11</java.release>
       </properties>
     </profile>
     <profile>
