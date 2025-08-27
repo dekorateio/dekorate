@@ -1,5 +1,12 @@
 name: Release
 
+# Required secrets:
+# - CENTRAL_TOKEN_USERNAME: Maven Central Portal username
+# - CENTRAL_TOKEN_PASSWORD: Maven Central Portal token
+# - MAVEN_GPG_PRIVATE_KEY: GPG private key for signing
+# - MAVEN_GPG_PASSPHRASE: GPG passphrase
+# - ADMIN_GITHUB_TOKEN: GitHub token with admin permissions
+
 env:
   MAVEN_ARGS: -B -e
 
@@ -36,14 +43,16 @@ jobs:
           java-version: 17
           distribution: 'temurin'
           server-id: central
-          server-username: OSS_SONATYPE_USERNAME
-          server-password: OSS_SONATYPE_PASSWORD
+          server-username: CENTRAL_TOKEN_USERNAME
+          server-password: CENTRAL_TOKEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Configure Git author
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+      - name: Setup jbang
+        run: curl -Ls https://sh.jbang.dev | bash -s - app setup
       - name: Maven release ${{steps.metadata.outputs.current-version}}
         run: |
           ./mvnw clean install -DskipTests -Prelease -Pwith-examples -Pwith-tests -Dformat.skip=true
@@ -53,7 +62,7 @@ jobs:
             -DskipTests -Dformat.skip=true -Pwith-examples -Pwith-tests \
             -Darguments="-DskipTests -Dformat.skip=true"
         env:
-          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
