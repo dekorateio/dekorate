@@ -260,9 +260,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
+        <inherited>true</inherited>
         <configuration>
-          <source>${java.source}</source>
-          <target>${java.target}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.version}</release>
         </configuration>
       </plugin>
       <plugin>
@@ -523,8 +525,7 @@
         <jdk>[1,1.9)</jdk>
       </activation>
       <properties>
-        <java.source>1.8</java.source>
-        <java.target>1.8</java.target>
+        <java.version>1.8</java.version>
       </properties>
     </profile>
     <profile>
@@ -533,8 +534,7 @@
         <jdk>[11,)</jdk>
       </activation>
       <properties>
-        <java.source>11</java.source>
-        <java.target>11</java.target>
+        <java.version>11</java.version>
       </properties>
     </profile>
     <profile>
