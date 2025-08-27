@@ -94,8 +94,9 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
         <configuration>
-          <source>${java.source}</source>
-          <target>${java.target}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.version}</release>
           <!-- Disable annotation processing for ourselves. -->
           <compilerArgument>-proc:none</compilerArgument>
         </configuration>
