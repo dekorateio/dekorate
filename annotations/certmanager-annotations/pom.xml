@@ -115,7 +115,7 @@ limitations under the License.
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <release>${java.version}</release>
+          <release>${java.release}</release>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
             <processor>io.sundr.transform.internal.TemplateTransformationProcessor</processor>

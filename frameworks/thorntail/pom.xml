@@ -96,7 +96,7 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <release>${java.version}</release>
+          <release>${java.release}</release>
           <!-- Disable annotation processing for ourselves. -->
           <compilerArgument>-proc:none</compilerArgument>
         </configuration>
