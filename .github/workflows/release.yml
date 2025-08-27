@@ -30,7 +30,7 @@ jobs:
         name: Checkout
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-      - uses: radcortez/project-metadata-action@main
+      - uses: radcortez/project-metadata-action@874c89bea2ee8282008328c3418eec4d219013f3
         name: Retrieve project metadata
         id: metadata
         with:
