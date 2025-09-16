@@ -39,7 +39,7 @@ public class JibBuildService implements BuildService {
 
   private final Logger LOGGER = LoggerFactory.getLogger();
 
-  private final String JIB_VERSION = "3.1.4";
+  private final String JIB_VERSION = "3.4.5";
   private final String BUILD = "build";
   private final String DOCKER_BUILD = "dockerBuild";
   private final String MAVEN_GOAL = "com.google.cloud.tools:jib-maven-plugin:%s:%s";
