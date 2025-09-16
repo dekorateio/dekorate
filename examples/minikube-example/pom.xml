@@ -3,7 +3,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>minikube-example</artifactId>
-  <version>4.1.6</version>
+  <version>999-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Frameworkless Rest API on Minikube</name>
 
   <properties>
