@@ -37,19 +37,24 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
-    <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
-    <url>http://github.com/dekorateio/dekorate</url>
-    <tag>${project.version}</tag>
+    <connection>scm:git:https://github.com/dekorateio/dekorate.git</connection>
+    <developerConnection>scm:git:https://github.com/dekorateio/dekorate.git</developerConnection>
+    <url>https://github.com/dekoreteio/dekorate</url>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
-    <repository>
-      <id>oss-sonatype-staging</id>
-      <name>Sonatype Staging Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
+      <repository>
+        <id>central</id>
+        <url>https://central.sonatype.com/repository/maven-releases/</url>
+      </repository>
+      <snapshotRepository>
+        <id>central</id>
+        <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+      </snapshotRepository>
   </distributionManagement>
+
+
 
   <properties>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
@@ -58,8 +63,8 @@
     <version.maven-source-plugin>2.4</version.maven-source-plugin>
 
     <!-- release -->
-    <version.maven-release-plugin>2.5.3</version.maven-release-plugin>
-    <version.nexus-staging-maven-plugin>1.6.13</version.nexus-staging-maven-plugin>
+    <version.maven-release-plugin>3.1.1</version.maven-release-plugin>
+    <version.maven-central-publishing-plugin>0.8.0</version.maven-central-publishing-plugin>
   </properties>
 
   <profiles>
@@ -156,22 +161,21 @@
             <configuration>
               <autoVersionSubmodules>true</autoVersionSubmodules>
               <tagNameFormat>@{project.version}</tagNameFormat>
-              <pushChanges>false</pushChanges>
               <localCheckout>true</localCheckout>
-              <remoteTagging>false</remoteTagging>
+              <pushChanges>true</pushChanges>
+              <remoteTagging>true</remoteTagging>
+              <updateWorkingCopyVersions>false</updateWorkingCopyVersions>
               <arguments>-DskipTests=true</arguments>
             </configuration>
           </plugin>
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>${version.nexus-staging-maven-plugin}</version>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${version.maven-central-publishing-plugin}</version>
             <extensions>true</extensions>
             <configuration>
-              <serverId>oss-sonatype-staging</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-              <stagingProgressTimeoutMinutes>60</stagingProgressTimeoutMinutes>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
             </configuration>
           </plugin>
         </plugins>
