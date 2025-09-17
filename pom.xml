@@ -55,6 +55,7 @@
   </distributionManagement>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <format.skip>false</format.skip>
     <java.version>1.8</java.version>
     <java.release>8</java.release>
