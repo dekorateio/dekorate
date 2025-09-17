@@ -21,7 +21,7 @@ limitations under the License.
   <parent>
     <artifactId>dekorate-tests</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>4.1.6</version>
+    <version>999-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
 
