@@ -17,25 +17,26 @@
 
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 import java.util.Optional;
 
-import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.api.model.extensions.Ingress;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.dekorate.utils.Serialization;
-
-import static org.junit.jupiter.api.Assertions.*;
+import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.extensions.Ingress;
 
 class RestApiFrameworklessOnK8sTest {
 
   @Test
   public void shouldContainDeploymentAndImage() {
-    KubernetesList list = Serialization.unmarshalAsList(RestApiFrameworklessOnK8sTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        RestApiFrameworklessOnK8sTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -46,10 +47,10 @@ class RestApiFrameworklessOnK8sTest {
     assertTrue(Strings.isNotNullOrEmpty(container.getImage()));
   }
 
-
   @Test
   public void shouldContainService() {
-    KubernetesList list = Serialization.unmarshalAsList(RestApiFrameworklessOnK8sTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        RestApiFrameworklessOnK8sTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Service service = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(service);
@@ -57,23 +58,23 @@ class RestApiFrameworklessOnK8sTest {
     List<ServicePort> ports = service.getSpec().getPorts();
     assertEquals(1, ports.size());
     ServicePort servicePort = ports.get(0);
-    assertEquals("http",servicePort.getName());
-    assertEquals(80,servicePort.getPort());
+    assertEquals("http", servicePort.getName());
+    assertEquals(80, servicePort.getPort());
   }
 
   @Test
   @Disabled
   public void shouldContainIngress() {
-    KubernetesList list = Serialization.unmarshalAsList(RestApiFrameworklessOnK8sTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        RestApiFrameworklessOnK8sTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Ingress ingress = findFirst(list, Ingress.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(ingress);
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

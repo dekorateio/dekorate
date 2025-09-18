@@ -30,7 +30,8 @@ class KubernetesExampleTest {
 
   @Test
   public void shouldUseCustomImageName() {
-    KubernetesList list = Serialization.unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     Deployment deployment = (Deployment) list.getItems().get(0);

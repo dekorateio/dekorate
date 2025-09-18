@@ -15,10 +15,11 @@
  */
 package io.dekorate.example;
 
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.annotation.NodeSelector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+import io.dekorate.kubernetes.annotation.NodeSelector;
 
 @KubernetesApplication(nodeSelector = @NodeSelector(key = "diskType", value = "ssd"))
 @SpringBootApplication

@@ -34,7 +34,6 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.helm.model.Chart;
 import io.dekorate.helm.model.ValuesSchema;
 import io.dekorate.helm.model.ValuesSchemaProperty;
-import io.dekorate.kubernetes.annotation.ServiceType;
 import io.dekorate.utils.Serialization;
 
 class HelmKubernetesExampleTest {
@@ -81,7 +80,8 @@ class HelmKubernetesExampleTest {
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.schema.json"));
     // crds
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/crds"));
-    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/crds/crontabs.stable.example.com.yaml"));
+    assertNotNull(
+        Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/crds/crontabs.stable.example.com.yaml"));
   }
 
   @Test
@@ -212,13 +212,13 @@ class HelmKubernetesExampleTest {
 
   private static <T> T read(String path, Class<T> clazz) throws IOException {
     return Serialization.yamlMapper().readValue(Main.class.getClassLoader()
-      .getResourceAsStream(CHART_OUTPUT_LOCATION + path), clazz);
+        .getResourceAsStream(CHART_OUTPUT_LOCATION + path), clazz);
   }
 
   private static String readString(String path) {
     return new BufferedReader(
-      new InputStreamReader(Main.class.getClassLoader().getResourceAsStream(path), StandardCharsets.UTF_8))
-        .lines()
-        .collect(Collectors.joining(System.lineSeparator()));
+        new InputStreamReader(Main.class.getClassLoader().getResourceAsStream(path), StandardCharsets.UTF_8))
+            .lines()
+            .collect(Collectors.joining(System.lineSeparator()));
   }
 }

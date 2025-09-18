@@ -2,9 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.dekorate</groupId>
+  <parent>
+    <groupId>io.dekorate</groupId>
+    <artifactId>examples</artifactId>
+    <version>999-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
   <artifactId>spring-boot-on-openshift-with-ocp-properties-example</artifactId>
-  <version>999-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot on Openshift with application-openshift.properties</name>
 
   <properties>

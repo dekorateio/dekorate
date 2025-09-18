@@ -20,25 +20,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.dekorate.kubernetes.annotation.ServiceType;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.Service;
-import io.fabric8.kubernetes.api.model.ServicePort;
-import org.junit.jupiter.api.Test;
-
-import io.dekorate.utils.Serialization;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.kubernetes.annotation.ServiceType;
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServicePort;
 
 class MinikubeExampleTest {
 
   @Test
   public void shouldContainNodePortService() {
-    KubernetesList list = Serialization.unmarshalAsList(MinikubeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/minikube.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(MinikubeExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/minikube.yml"));
     assertNotNull(list);
     Service service = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(service);
@@ -48,15 +47,15 @@ class MinikubeExampleTest {
     assertEquals(1, ports.size());
     ServicePort servicePort = ports.get(0);
     assertNotNull(servicePort.getNodePort());
-    assertTrue(servicePort.getNodePort()>=30000);
-    assertTrue(servicePort.getNodePort()<=31999);
-    assertEquals(80,servicePort.getPort());
-    assertEquals(8080,servicePort.getTargetPort().getIntVal());
+    assertTrue(servicePort.getNodePort() >= 30000);
+    assertTrue(servicePort.getNodePort() <= 31999);
+    assertEquals(80, servicePort.getPort());
+    assertEquals(8080, servicePort.getTargetPort().getIntVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

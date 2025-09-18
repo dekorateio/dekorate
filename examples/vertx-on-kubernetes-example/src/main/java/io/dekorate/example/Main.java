@@ -29,7 +29,7 @@ public class Main extends AbstractVerticle {
     vertx
         .createHttpServer()
         .requestHandler(r -> {
-            r.response().end("hello world!");
+          r.response().end("hello world!");
         })
         .listen(8080, result -> {
           if (result.succeeded()) {

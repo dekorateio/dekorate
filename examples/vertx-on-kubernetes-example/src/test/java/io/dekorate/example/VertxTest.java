@@ -17,15 +17,15 @@
 
 package io.dekorate.example;
 
+import static io.dekorate.testing.KubernetesResources.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 
 import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Service;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static io.dekorate.testing.KubernetesResources.*;
 
 class VertxTest {
 
@@ -36,4 +36,3 @@ class VertxTest {
     assertTrue(service.isPresent());
   }
 }
-

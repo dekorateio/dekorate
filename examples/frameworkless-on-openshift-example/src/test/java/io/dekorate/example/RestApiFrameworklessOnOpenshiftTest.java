@@ -17,39 +17,43 @@
 
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 import java.util.Optional;
 
-import io.dekorate.utils.Strings;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.openshift.api.model.ImageStream;
 import org.junit.jupiter.api.Test;
 
+import io.dekorate.utils.Serialization;
+import io.dekorate.utils.Strings;
+import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.openshift.api.model.BuildConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.dekorate.utils.Serialization;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.fabric8.openshift.api.model.ImageStream;
 
 class RestApiFrameworklessOnOpenshiftTest {
 
   @Test
   public void shouldHaveMatchingOutputImageAndTrigger() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     ImageStream is = findFirst(list, ImageStream.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(is);
-    assertTrue(d.getSpec().getTriggers().stream().filter(t -> t.getImageChangeParams().getFrom().getName().contains(is.getMetadata().getName())).findFirst().isPresent());
+    assertTrue(d.getSpec().getTriggers().stream()
+        .filter(t -> t.getImageChangeParams().getFrom().getName().contains(is.getMetadata().getName())).findFirst()
+        .isPresent());
   }
 
   @Test
   public void shouldNotHaveBuildConfig() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     BuildConfig b = findFirst(list, BuildConfig.class).orElse(null);
     assertNull(b);
@@ -57,7 +61,8 @@ class RestApiFrameworklessOnOpenshiftTest {
 
   @Test
   public void shouldHaveImage() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -70,7 +75,7 @@ class RestApiFrameworklessOnOpenshiftTest {
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

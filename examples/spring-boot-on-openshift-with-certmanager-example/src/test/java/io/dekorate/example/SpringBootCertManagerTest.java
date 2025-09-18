@@ -58,23 +58,24 @@ public class SpringBootCertManagerTest {
 
     PodSpec podTemplate = deployment.getSpec().getTemplate().getSpec();
     assertTrue(podTemplate.getVolumes().stream()
-      .anyMatch(v -> v.getName().equals(EXPECTED_VOLUME_NAME) && v.getSecret().getSecretName().equals(EXPECTED_SECRET_NAME)));
+        .anyMatch(v -> v.getName().equals(EXPECTED_VOLUME_NAME) && v.getSecret().getSecretName().equals(EXPECTED_SECRET_NAME)));
     assertTrue(podTemplate.getContainers().stream()
-      .allMatch(c -> c.getVolumeMounts().stream().anyMatch(m -> m.getName().equals(EXPECTED_VOLUME_NAME))));
+        .allMatch(c -> c.getVolumeMounts().stream().anyMatch(m -> m.getName().equals(EXPECTED_VOLUME_NAME))));
     assertTrue(podTemplate.getContainers().stream()
-      .allMatch(c -> c.getReadinessProbe().getHttpGet().getScheme().equals(HTTPS)));
+        .allMatch(c -> c.getReadinessProbe().getHttpGet().getScheme().equals(HTTPS)));
     assertTrue(podTemplate.getContainers().stream()
-      .allMatch(c -> c.getLivenessProbe().getHttpGet().getScheme().equals(HTTPS)));
+        .allMatch(c -> c.getLivenessProbe().getHttpGet().getScheme().equals(HTTPS)));
   }
 
   <T extends HasMetadata> T findFirst(Class<T> clazz) {
     KubernetesList list = Serialization
-      .unmarshalAsList(SpringBootCertManagerTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+        .unmarshalAsList(
+            SpringBootCertManagerTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
 
     return (T) list.getItems().stream()
-      .filter(clazz::isInstance)
-      .findFirst()
-      .orElseThrow(IllegalStateException::new);
+        .filter(clazz::isInstance)
+        .findFirst()
+        .orElseThrow(IllegalStateException::new);
   }
 }

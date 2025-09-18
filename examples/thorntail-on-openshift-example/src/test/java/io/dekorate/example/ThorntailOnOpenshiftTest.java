@@ -15,6 +15,16 @@
  */
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HTTPGetAction;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -24,20 +34,12 @@ import io.fabric8.kubernetes.api.model.ServiceSpec;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteSpec;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ThorntailOnOpenshiftTest {
   @Test
   void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshalAsList(ThorntailOnOpenshiftTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization.unmarshalAsList(
+        ThorntailOnOpenshiftTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
 
     Optional<DeploymentConfig> deploymentConfig = findFirst(list, DeploymentConfig.class);
@@ -81,9 +83,9 @@ class ThorntailOnOpenshiftTest {
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> type) {
     return list.getItems()
-      .stream()
-      .filter(type::isInstance)
-      .map(type::cast)
-      .findFirst();
+        .stream()
+        .filter(type::isInstance)
+        .map(type::cast)
+        .findFirst();
   }
 }
