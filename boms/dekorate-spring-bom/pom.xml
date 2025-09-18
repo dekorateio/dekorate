@@ -20,21 +20,21 @@
     
     
     <scm>
-        <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
-        <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
-        <url>http://github.com/dekorateio/dekorate</url>
-        <tag>999-SNAPSHOT</tag>
+        <connection>scm:git:https://github.com/dekorateio/dekorate.git</connection>
+        <developerConnection>scm:git:https://github.com/dekorateio/dekorate.git</developerConnection>
+        <url>https://github.com/dekorateio/dekorate</url>
+        <tag>HEAD</tag>
     </scm>
         
     <distributionManagement>
-      
-      <repository>
-        <id>oss-sonatype-staging</id>
-        <name>Sonatype Staging Repository</name>
-        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        <layout>default</layout>
-      </repository>
-            
+        <repository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
         
     <developers>
