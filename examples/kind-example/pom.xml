@@ -3,7 +3,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>kind-example</artifactId>
-  <version>4.1.6</version>
+  <version>999-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Kind cluster</name>
 
   <properties>
