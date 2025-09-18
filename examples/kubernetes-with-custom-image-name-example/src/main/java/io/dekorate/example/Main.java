@@ -18,8 +18,8 @@ package io.dekorate.example;
 import io.dekorate.docker.annotation.DockerBuild;
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
-@KubernetesApplication(partOf="mygroup")
-@DockerBuild(image="foo/bar:baz")
+@KubernetesApplication(partOf = "mygroup")
+@DockerBuild(image = "foo/bar:baz")
 public class Main {
 
   public static void main(String[] args) {

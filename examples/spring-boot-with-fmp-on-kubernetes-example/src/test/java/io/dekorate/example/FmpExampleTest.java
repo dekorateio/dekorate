@@ -15,54 +15,57 @@
  */
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FmpExampleTest {
 
   @Test
   void shouldHaveFabric8KubernetesManifest() {
-    final KubernetesList list = Serialization.unmarshalAsList(FmpExampleTest.class.getClassLoader().getResourceAsStream("META-INF/fabric8/kubernetes.yml"));
+    final KubernetesList list = Serialization
+        .unmarshalAsList(FmpExampleTest.class.getClassLoader().getResourceAsStream("META-INF/fabric8/kubernetes.yml"));
 
     assertNotNull(list);
     assertFalse(list.getItems().isEmpty());
     final Optional<Deployment> deployment = list.getItems().stream()
-      .filter(Deployment.class::isInstance)
-      .map(Deployment.class::cast)
-      .filter(hasLabel("provider", "fabric8"))
-      .filter(hasLabel("decorated-by", "dekorate").negate())
-      .findAny();
+        .filter(Deployment.class::isInstance)
+        .map(Deployment.class::cast)
+        .filter(hasLabel("provider", "fabric8"))
+        .filter(hasLabel("decorated-by", "dekorate").negate())
+        .findAny();
     assertTrue(deployment.isPresent());
   }
 
   @Test
   void shouldHaveMergedOpenshiftManifests() {
-    final KubernetesList list = Serialization.unmarshalAsList(FmpExampleTest.class.getClassLoader().getResourceAsStream("META-INF/fabric8/openshift.yml"));
+    final KubernetesList list = Serialization
+        .unmarshalAsList(FmpExampleTest.class.getClassLoader().getResourceAsStream("META-INF/fabric8/openshift.yml"));
 
     assertNotNull(list);
     assertFalse(list.getItems().isEmpty());
     final Optional<DeploymentConfig> deploymentConfig = list.getItems().stream()
-      .filter(DeploymentConfig.class::isInstance)
-      .map(DeploymentConfig.class::cast)
-      .filter(hasLabel("provider", "fabric8"))
-      .filter(hasLabel("decorated-by", "dekorate"))
-      .findAny();
+        .filter(DeploymentConfig.class::isInstance)
+        .map(DeploymentConfig.class::cast)
+        .filter(hasLabel("provider", "fabric8"))
+        .filter(hasLabel("decorated-by", "dekorate"))
+        .findAny();
     assertTrue(deploymentConfig.isPresent());
   }
 
   private static Predicate<? super HasMetadata> hasLabel(String key, String value) {
-    return hasMetadata ->  hasMetadata.getMetadata().getLabels().entrySet().stream()
-      .anyMatch(e -> e.getKey().equals(key) && e.getValue().equals(value));
+    return hasMetadata -> hasMetadata.getMetadata().getLabels().entrySet().stream()
+        .anyMatch(e -> e.getKey().equals(key) && e.getValue().equals(value));
   }
 }

@@ -20,11 +20,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.dekorate.helm.annotation.HelmChart;
 import io.dekorate.helm.annotation.ValueReference;
-import io.dekorate.openshift.annotation.OpenshiftApplication;
 
-@HelmChart(name = "myOcpChart",
-  valuesProfileSeparator = "-",
-  values = { @ValueReference(property = "notFound", paths = "metadata.not-found"),
+@HelmChart(name = "myOcpChart", valuesProfileSeparator = "-", values = {
+    @ValueReference(property = "notFound", paths = "metadata.not-found"),
     @ValueReference(property = "vcsUrl", paths = "(kind == DeploymentConfig).spec.template.metadata.annotations.'app.dekorate.io/vcs-url'", value = "Overridden"),
     @ValueReference(property = "vcsUrl", paths = "(kind == DeploymentConfig).spec.template.metadata.annotations.'app.dekorate.io/vcs-url'", value = "Only for DEV!", profile = "dev")
 })

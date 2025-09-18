@@ -15,11 +15,12 @@
  */
 package io.dekorate.example;
 
-import io.dekorate.option.annotation.GeneratorOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.dekorate.option.annotation.GeneratorOptions;
 
 @GeneratorOptions(inputPath = "existing-manifests")
 @RestController

@@ -16,19 +16,20 @@
 
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Map;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.PodSpec;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
-import org.junit.jupiter.api.Test;
-
-import java.util.Map;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NodeSelectorTest {
 
@@ -36,7 +37,7 @@ public class NodeSelectorTest {
   public void shouldContainNodeSelector() {
     KubernetesList list = Serialization
         .unmarshalAsList(
-          NodeSelectorTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+            NodeSelectorTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
 
     Deployment d = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());

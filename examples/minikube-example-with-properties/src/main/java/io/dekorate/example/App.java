@@ -1,5 +1,9 @@
 package io.dekorate.example;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+
 import com.sun.net.httpserver.HttpServer;
 
 import io.dekorate.kubernetes.annotation.Ingress;
@@ -7,14 +11,9 @@ import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Port;
 import io.dekorate.minikube.annotation.Minikube;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-
 @Minikube
-@KubernetesApplication(ingress = @Ingress(expose = true), ports = @Port(name = "http", containerPort = 8080, nodePort=30123))
-public class App
-{
+@KubernetesApplication(ingress = @Ingress(expose = true), ports = @Port(name = "http", containerPort = 8080, nodePort = 30123))
+public class App {
   public static void main(String[] args) throws IOException {
     int serverPort = 8080;
     HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
@@ -27,7 +26,7 @@ public class App
       exchange.close();
     }));
     server.setExecutor(null); // creates a default executor
-    System.out.println("Listening in port "+serverPort);
+    System.out.println("Listening in port " + serverPort);
     server.start();
   }
 

@@ -15,18 +15,19 @@
  */
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.net.URL;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.testing.annotation.Inject;
+import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
 import io.fabric8.openshift.api.model.Route;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import io.dekorate.testing.annotation.Inject;
-import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
-import org.junit.jupiter.api.Test;
-
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @OpenshiftIntegrationTest
 class SpringBootOnOpenshiftIT {

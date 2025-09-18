@@ -36,7 +36,8 @@ class HelmOpenshiftExampleTest {
 
   @Test
   public void shouldHelmManifestsBeGenerated() throws IOException {
-    Chart chart = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/Chart.yaml"), Chart.class);
+    Chart chart = Serialization.yamlMapper()
+        .readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/Chart.yaml"), Chart.class);
     assertNotNull(chart, "Chart is null!");
     // Should be the same as in `dekorate.helm.chart` from properties.
     assertEquals(CHART_NAME, chart.getName());
@@ -59,7 +60,8 @@ class HelmOpenshiftExampleTest {
 
   @Test
   public void valuesShouldContainExpectedData() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"), Map.class);
+    Map<String, Object> values = Serialization.yamlMapper()
+        .readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
@@ -83,7 +85,8 @@ class HelmOpenshiftExampleTest {
 
   @Test
   public void valuesShouldContainExpectedDataInDevProfile() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values-dev.yaml"), Map.class);
+    Map<String, Object> values = Serialization.yamlMapper()
+        .readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values-dev.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");

@@ -15,41 +15,43 @@
  */
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Optional;
 
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.batch.v1.Job;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExistingManifestsExampleTest {
 
   @Test
   void shouldContainExistingManifestEntries() {
-    final KubernetesList list = Serialization.unmarshalAsList(ExistingManifestsExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    final KubernetesList list = Serialization.unmarshalAsList(
+        ExistingManifestsExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     final Optional<Job> job = list.getItems().stream().filter(Job.class::isInstance).map(Job.class::cast).findAny();
     assertTrue(job.isPresent());
     assertEquals(job.get().getMetadata().getName(), "Example Job");
     assertEquals(job.get().getSpec().getTemplate().getMetadata().getName(), "Example Job");
     Optional<Container> container = job.get().getSpec().getTemplate().getSpec().getContainers().stream()
-      .filter(c -> c.getName().equals("countdown"))
-      .filter(c -> c.getImage().equals("alpine:3.10"))
-      .findAny();
+        .filter(c -> c.getName().equals("countdown"))
+        .filter(c -> c.getImage().equals("alpine:3.10"))
+        .findAny();
     assertTrue(container.isPresent());
 
-
-    final Optional<Deployment> deployment = list.getItems().stream().filter(Deployment.class::isInstance).map(Deployment.class::cast).findAny();
+    final Optional<Deployment> deployment = list.getItems().stream().filter(Deployment.class::isInstance)
+        .map(Deployment.class::cast).findAny();
     assertTrue(deployment.isPresent());
     container = deployment.get().getSpec().getTemplate().getSpec().getContainers().stream()
-      .filter(c -> "spring-boot-with-existing-manifests-example".equals(c.getName()))
-      .findAny();
+        .filter(c -> "spring-boot-with-existing-manifests-example".equals(c.getName()))
+        .findAny();
     assertTrue(container.isPresent());
     assertEquals(123, container.get().getSecurityContext().getRunAsUser());
     assertEquals(789, container.get().getSecurityContext().getRunAsGroup());

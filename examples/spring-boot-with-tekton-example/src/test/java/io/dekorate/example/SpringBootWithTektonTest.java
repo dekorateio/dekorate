@@ -15,24 +15,26 @@
  */
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.tekton.pipeline.v1beta1.Pipeline;
 import io.fabric8.tekton.pipeline.v1beta1.PipelineRun;
 import io.fabric8.tekton.pipeline.v1beta1.Task;
 import io.fabric8.tekton.pipeline.v1beta1.TaskRun;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SpringBootWithTektonTest {
 
   @Test
   public void shouldContainPipeline() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline.yml"));
     assertNotNull(list);
     Pipeline p = findFirst(list, Pipeline.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(p);
@@ -40,7 +42,8 @@ class SpringBootWithTektonTest {
 
   @Test
   public void shouldContainPipelineRun() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline-run.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-pipeline-run.yml"));
     assertNotNull(list);
     PipelineRun p = findFirst(list, PipelineRun.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(p);
@@ -48,7 +51,8 @@ class SpringBootWithTektonTest {
 
   @Test
   public void shouldContainTask() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task.yml"));
     assertNotNull(list);
     Task p = findFirst(list, Task.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(p);
@@ -56,16 +60,16 @@ class SpringBootWithTektonTest {
 
   @Test
   public void shouldContainTaskRun() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task-run.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/tekton-task-run.yml"));
     assertNotNull(list);
     TaskRun p = findFirst(list, TaskRun.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(p);
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }
