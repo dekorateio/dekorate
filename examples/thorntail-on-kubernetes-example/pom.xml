@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>thorntail-on-kubernetes-example</artifactId>
-  <version>999-SNAPSHOT</version>
+  <version>4.1.6</version>
   <name>Dekorate :: Examples :: Thorntail on Kubernetes</name>
   <packaging>war</packaging>
 
