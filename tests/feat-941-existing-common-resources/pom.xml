@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>feat-941-existitng-common-resources</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Existing common resources #941</name>
-  <description />
+  <description>feat-941-existitng-common-resources</description>
 
   <properties>
     <property.secret.name>my-secret</property.secret.name>

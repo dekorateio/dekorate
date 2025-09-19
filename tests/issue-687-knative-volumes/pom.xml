@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-687-knative-volumes</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Knative :: Volumes #687</name>
-  <description />
+  <description>issue-687-knative-volumes</description>
 
   <dependencies>
     <dependency>

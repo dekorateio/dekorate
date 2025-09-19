@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-fetch-helm-dependencies</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Helm :: Fetch dependencies</name>
-  <description />
+  <description>issue-fetch-helm-dependencies</description>
 
   <dependencies>
     <dependency>

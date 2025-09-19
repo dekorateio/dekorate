@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-987-role-binding-name</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Role Binding Name #987</name>
-  <description />
+  <description>issue-987-role-binding-name</description>
 
   <dependencies>
     <dependency>

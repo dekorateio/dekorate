@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-939-knative-container-concurrency</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Knative :: Container concurrency #939</name>
-  <description />
+  <description>issue-939-knative-container-concurrency</description>
 
   <dependencies>
     <dependency>

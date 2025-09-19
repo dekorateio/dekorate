@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-586-knative-scale-bounds</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Knative :: Scale bounds #586</name>
-  <description />
+  <description>issue-586-knative-scale-bounds</description>
 
   <dependencies>
     <dependency>

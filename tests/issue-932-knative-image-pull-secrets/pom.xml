@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-932-knative-image-pull-secrets</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Knative :: Image pull secrets #932</name>
-  <description />
+  <description>issue-932-knative-image-pull-secrets</description>
 
   <dependencies>
     <dependency>

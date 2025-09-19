@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>feat-575-knative-scale-to-zero</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Knative :: Scale to zero #575</name>
-  <description />
+  <description>feat-575-knative-scale-to-zero</description>
 
   <dependencies>
     <dependency>
