@@ -21,12 +21,12 @@ limitations under the License.
   <parent>
     <artifactId>dekorate-tests</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>999-SNAPSHOT</version>
+    <version>4.1.6</version>
     <relativePath>../</relativePath>
   </parent>
 
   <groupId>io.dekorate</groupId>
-  <version>999-SNAPSHOT</version>
+  <version>4.1.6</version>
   <artifactId>feat-probes-knative</artifactId>
   <name>Dekorate :: Tests :: Probes :: Knative</name>
 
