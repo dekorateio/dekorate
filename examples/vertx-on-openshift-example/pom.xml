@@ -21,7 +21,7 @@ limitations under the License.
   <parent>
     <groupId>io.dekorate</groupId>
     <artifactId>examples</artifactId>
-    <version>4.1.6</version>
+    <version>999-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
