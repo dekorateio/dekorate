@@ -20,12 +20,12 @@ limitations under the License.
   <parent>
     <groupId>io.dekorate</groupId>
     <artifactId>dekorate-tests</artifactId>
-    <version>4.1.6</version>
+    <version>999-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
 
   <groupId>io.dekorate</groupId>
-  <version>4.1.6</version>
+  <version>999-SNAPSHOT</version>
   <artifactId>feat-kubernetes-nodeselector-properties</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Kubernetes :: NodeSelector through application.properties</name>
 

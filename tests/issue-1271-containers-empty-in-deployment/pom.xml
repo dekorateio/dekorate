@@ -4,7 +4,7 @@
 
   <groupId>io.dekorate</groupId>
   <artifactId>issue-1271-containers-empty-in-deployment</artifactId>
-  <version>4.1.6</version>
+  <version>999-SNAPSHOT</version>
   <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Specs empty when kind is Deployment #1271</name>
 
   <properties>
