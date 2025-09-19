@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-1201-zero-replicas</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Kubernetes :: Zero Repliacs #1201</name>
-  <description />
+  <description>issue-1201-zero-replicas</description>
 
   <dependencies>
     <dependency>

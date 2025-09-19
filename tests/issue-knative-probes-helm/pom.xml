@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-knative-probes-helm</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Helm :: Generate Knative probes</name>
-  <description />
+  <description>issue-knative-probes-helm</description>
 
   <properties>
     <property.secret.name>my-secret</property.secret.name>

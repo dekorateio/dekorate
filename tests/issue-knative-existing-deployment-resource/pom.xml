@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-knative-existing-deployment-resource</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Knative :: Existing Deployment resource</name>
-  <description />
+  <description>issue-knative-existing-deployment-resource</description>
 
   <properties>
     <property.secret.name>my-secret</property.secret.name>

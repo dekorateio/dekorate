@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-1009-probe-tcp-socket</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Probe with tcp socket #1009</name>
-  <description />
+  <description>issue-1009-probe-tcp-socket</description>
 
   <dependencies>
     <dependency>

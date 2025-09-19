@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>feat-642-knative-traffic-splitting</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Knative :: Traffic #642</name>
-  <description />
+  <description>feat-642-knative-traffic-splitting</description>
 
   <dependencies>
     <dependency>

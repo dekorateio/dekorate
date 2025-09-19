@@ -12,7 +12,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>issue-1006-defaults-handling</artifactId>
   <name>Dekorate :: Tests :: Annotations :: Defaults handling #1006</name>
-  <description />
+  <description>issue-1006-defaults-handling</description>
 
   <dependencies>
     <dependency>
