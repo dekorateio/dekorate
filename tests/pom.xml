@@ -3,7 +3,7 @@
     <parent>
       <groupId>io.dekorate</groupId>
       <artifactId>dekorate-project</artifactId>
-      <version>999-SNAPSHOT</version>
+      <version>4.1.6</version>
       <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
