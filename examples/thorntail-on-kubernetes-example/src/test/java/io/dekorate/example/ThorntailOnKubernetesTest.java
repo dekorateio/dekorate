@@ -33,6 +33,7 @@ import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceSpec;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 
+@Deprecated
 class ThorntailOnKubernetesTest {
   @Test
   void shouldContainDeployment() {

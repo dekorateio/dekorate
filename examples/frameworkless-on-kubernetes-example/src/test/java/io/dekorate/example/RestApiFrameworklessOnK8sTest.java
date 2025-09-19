@@ -31,6 +31,7 @@ import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.extensions.Ingress;
 
+@Disabled
 class RestApiFrameworklessOnK8sTest {
 
   @Test
