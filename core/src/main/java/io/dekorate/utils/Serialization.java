@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
@@ -110,7 +111,9 @@ public class Serialization {
 
       }
     };
-    mapper.findAndRegisterModules();
+    ClassLoader projectClassLoader = ObjectMapper.class.getClassLoader();
+    List<Module> modules = ObjectMapper.findModules(projectClassLoader);
+    mapper.registerModules(modules);
     return mapper;
   }
 
