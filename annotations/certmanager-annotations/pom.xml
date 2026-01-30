@@ -169,7 +169,8 @@ limitations under the License.
                     <include>io/dekorate/certmanager/generator/**</include>
                     <include>io/dekorate/certmanager/manifest/**</include>
                     <include>io/dekorate/certmanager/model/**</include>
-                    <include>META-INF/services/*</include>
+                    <include>META-INF/services/io.dekorate.*</include>
+                    <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
