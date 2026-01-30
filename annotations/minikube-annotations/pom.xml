@@ -170,7 +170,8 @@ limitations under the License.
                     <include>io/dekorate/minikube/configurator/**</include>
                     <include>io/dekorate/minikube/decorator/**</include>
                     <include>io/dekorate/minikube/manifest/**</include>
-                    <include>META-INF/services/*</include>
+                    <include>META-INF/services/io.dekorate.*</include>
+                    <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>
