@@ -66,9 +66,16 @@ limitations under the License.
     </dependency>
 
     <!-- Misc -->
+    <!-- This project is deprecated : https://github.com/fusesource/jansi
+     <dependency>
+       <groupId>org.fusesource.jansi</groupId>
+       <artifactId>jansi</artifactId>
+       <version>${version.jansi}</version>
+     </dependency>
+     -->
     <dependency>
-      <groupId>org.fusesource.jansi</groupId>
-      <artifactId>jansi</artifactId>
+      <groupId>org.jline</groupId>
+      <artifactId>jline</artifactId>
     </dependency>
 
     <dependency>

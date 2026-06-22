@@ -17,14 +17,14 @@
 
 package io.dekorate.logger;
 
-import static org.fusesource.jansi.Ansi.*;
-import static org.fusesource.jansi.Ansi.Color.*;
+import static org.jline.jansi.Ansi.*;
+import static org.jline.jansi.Ansi.Color.*;
 
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import org.fusesource.jansi.*;
+import org.jline.jansi.*;
 
 import io.dekorate.Logger;
 import io.dekorate.LoggerFactory;
@@ -39,12 +39,12 @@ public class AnsiLogger extends LoggerFactory<PrintStream> implements Logger {
 
   //Should not be used by user code. Only needed for Java SPI.
   public AnsiLogger() {
-    this.stream = AnsiConsole.out;
+    this.stream = AnsiConsole.out();
   }
 
   public AnsiLogger(PrintStream stream) {
     check();
-    this.stream = stream != null ? AnsiConsole.wrapPrintStream(stream, 0) : AnsiConsole.out;
+    this.stream = stream != null ? stream : AnsiConsole.out();
   }
 
   @Override
