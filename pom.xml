@@ -63,7 +63,7 @@
     <version.application-crd-client>1.1.1</version.application-crd-client>
     <version.commons-codec>1.10</version.commons-codec>
     <version.commons-compress>1.21</version.commons-compress>
-    <version.jansi>1.18</version.jansi>
+    <version.jline>4.0.0</version.jline>
     <version.jackson>2.14.1</version.jackson>
     <version.kubernetes-client>6.13.0</version.kubernetes-client>
     <version.sundrio>0.101.3</version.sundrio>
@@ -180,10 +180,17 @@
       </dependency>
 
       <!-- Misc -->
+      <!-- This project is deprecated : https://github.com/fusesource/jansi
       <dependency>
         <groupId>org.fusesource.jansi</groupId>
         <artifactId>jansi</artifactId>
         <version>${version.jansi}</version>
+      </dependency>
+      -->
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>${version.jline}</version>
       </dependency>
 
       <!-- Testing -->
