@@ -63,7 +63,7 @@
     <version.application-crd-client>1.1.1</version.application-crd-client>
     <version.commons-codec>1.10</version.commons-codec>
     <version.commons-compress>1.21</version.commons-compress>
-    <version.jline>4.0.0</version.jline>
+    <version.jline-jansi>4.2.1</version.jline-jansi>
     <version.jackson>2.14.1</version.jackson>
     <version.kubernetes-client>6.13.0</version.kubernetes-client>
     <version.sundrio>0.101.3</version.sundrio>
@@ -189,8 +189,8 @@
       -->
       <dependency>
         <groupId>org.jline</groupId>
-        <artifactId>jline</artifactId>
-        <version>${version.jline}</version>
+        <artifactId>jansi</artifactId>
+        <version>${version.jline-jansi}</version>
       </dependency>
 
       <!-- Testing -->
