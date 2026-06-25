@@ -75,7 +75,7 @@ limitations under the License.
      -->
     <dependency>
       <groupId>org.jline</groupId>
-      <artifactId>jline</artifactId>
+      <artifactId>jansi</artifactId>
     </dependency>
 
     <dependency>
