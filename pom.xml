@@ -72,7 +72,7 @@
     <!-- Testing Dependencies -->
     <version.junit-jupiter>5.5.0</version.junit-jupiter>
     <version.junit-platform>1.4.0</version.junit-platform>
-    <version.assertj>3.11.1</version.assertj>
+    <version.assertj>3.27.7</version.assertj>
     <!-- Other Testing Dependencies (frameworks, tools, etc) -->
     <!-- Note: Dekorate DOES NOT depend on these, just some integration tests -->
     <version.spring-boot>2.5.12</version.spring-boot>
