@@ -31,7 +31,7 @@ limitations under the License.
   <name>Dekorate :: Tests :: OpenShift :: Secure Routes</name>
 
   <properties>
-    <version.vertx>4.3.7</version.vertx>
+    <version.vertx>4.5.27</version.vertx>
   </properties>
 
   <dependencies>
