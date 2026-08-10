@@ -62,7 +62,7 @@
     <!-- Dependencies -->
     <version.application-crd-client>1.1.1</version.application-crd-client>
     <version.commons-codec>1.10</version.commons-codec>
-    <version.commons-compress>1.21</version.commons-compress>
+    <version.commons-compress>1.26.0</version.commons-compress>
     <version.jline-jansi>4.2.1</version.jline-jansi>
     <version.jackson>2.14.1</version.jackson>
     <version.kubernetes-client>6.13.0</version.kubernetes-client>
