@@ -43,6 +43,7 @@ class GitTest {
   private static final String GIT_SUB = "git-sub";
   private static final String GIT_SSH = "git-ssh";
   private static final String GIT_GITLAB = "git-gitlab";
+  private static final String GIT_DETACHED = "git-detached";
   private static final Map<String, Path> configurationNameToConfigRoot = new HashMap<>(7);
 
   @BeforeAll
@@ -51,6 +52,7 @@ class GitTest {
     setup(GIT_SUB);
     setup(GIT_SSH);
     setup(GIT_GITLAB);
+    setup(GIT_DETACHED);
   }
 
   private static Path getDotGit(File configFile) {
@@ -86,7 +88,10 @@ class GitTest {
   }
 
   @ParameterizedTest(name = "{0} should have \"{1}\" as remote url")
-  @CsvSource({ GIT_SIMPLE + ", git@github.com:myorg/myproject.git" })
+  @CsvSource({
+      GIT_SIMPLE + ", git@github.com:myorg/myproject.git",
+      GIT_DETACHED + ", git@github.com:myorg/myproject.git",
+  })
   void shouldGetRemoteUrl(String configFile, String expected) throws Exception {
     final Path root = getRootFor(configFile);
     Optional<String> repoUrl = Git.getRemoteUrl(root, Git.ORIGIN);
@@ -127,9 +132,18 @@ class GitTest {
     assertEquals(expected, branch.get());
   }
 
+  @ParameterizedTest(name = "{0} should not have a branch")
+  @ValueSource(strings = { GIT_DETACHED })
+  void shouldNotGetBranch(String configFile) {
+    final Path root = getRootFor(configFile);
+    Optional<String> branch = Git.getBranch(root);
+    assertNotNull(branch);
+    assertFalse(branch.isPresent());
+  }
+
   @ParameterizedTest(name = "{0} should have \"{1}\" as commit sha")
-  @CsvSource({ GIT_SIMPLE + ", myawesomegitsha" })
-  void shouldGetCommitSHA(String configFile, String expected) throws Exception {
+  @CsvSource({ GIT_SIMPLE + ", myawesomegitsha", GIT_DETACHED + ", myawesomegitsha" })
+  void shouldGetCommitSHA(String configFile, String expected) {
     final Path root = getRootFor(configFile);
     Optional<String> sha = Git.getCommitSHA(root);
     assertNotNull(sha);
