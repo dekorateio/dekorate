@@ -125,12 +125,12 @@ There are a few page layouts:
 
 [comment]: <> (* `default` this can be reused for any other pages. Mention the title in the Front Matter and omit it in the content of your page.)
 
-## Documetation pages
+## Documentation pages
 
 All documentation files should be added to the `documentation/` folder and for the navigation to have `/docs/page-name` in the url.
 
 
-## Github api
+## GitHub api
 
 The website uses the [jekyll-github-metadata](https://github.com/jekyll/github-metadata) plugin in order to display new releases automatically,
-this can be use for other purposes if need arises
+this can be used for other purposes if need arises

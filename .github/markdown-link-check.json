@@ -4,10 +4,13 @@
       "pattern": "^http://localhost"
     },
     {
-      "pattern": "^{{site.baseurl}}"
+      "pattern": "site.baseurl"
     },
     {
       "pattern": "^/docs/"
+    },
+    {
+      "pattern": "^#"
     }
   ]
 }
