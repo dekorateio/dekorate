@@ -34,7 +34,7 @@ As all maven projects, this project can be manually released with a command sequ
     
 After these steps are performed:
 
-- log in to https://oss.sonatype.org
+- log in to https://central.sonatype.com
 - find the staging repository
 - click `close`
 - click `release`
