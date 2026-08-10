@@ -597,7 +597,7 @@ The section below describes all the available subtypes.
 | paths  | String   | A comma-separated list of path expressions to map the Dekorate auto-generated properties to the final Helm values file.        |               |
 | profile    | String   | The profile where this value reference will be mapped to. For example, if the profile is `dev`, then a `values.dev.yml` file will be created with the value.              | (empty)       |
 | value      | String   | The value that the property will have in the Helm values file. If not set, the extension will resolve it from the generated artifacts.                      | (empty)       |
-| expression | String   | The complete Helm expression to be replaced with. If not provided, it will use `{{ .Values.<root alias>.<property> }}`.                                                                    | (empty)       |
+| expression | String   | The complete Helm expression to be replaced with. If not provided, it will use {% raw %}`{{ .Values.<root alias>.<property> }}`{% endraw %}.                                                                    | (empty)       |
 | description        | String   | Description of the property. Optional.                            |               |
 | minimum            | integer  | Minimum value allowed for this property.                          |               |
 | maximum            | integer  | Maximum value allowed for this property.                          |               |

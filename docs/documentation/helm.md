@@ -100,7 +100,7 @@ kind: Deployment
 metadata:
   name: myModule
 spec:
-  replicas: '{{ .Values.app.replicas }}'
+  replicas: '{% raw %}{{ .Values.app.replicas }}{% endraw %}'
 ```
 
 This is done transparently to users.
@@ -117,8 +117,8 @@ metadata:
 ...
 ```
 
-The property at `metadata.name` will not be replaced with `{{ .Values.myModule.name }}` in the Helm templates.
-However, Dekorate allows users to define path expressions to map properties into the Helm values file. Let's see how to do it using the above example to map the property `metadata.name` with `{{ .Values.myModule.name }}`.
+The property at `metadata.name` will not be replaced with {% raw %}`{{ .Values.myModule.name }}`{% endraw %} in the Helm templates.
+However, Dekorate allows users to define path expressions to map properties into the Helm values file. Let's see how to do it using the above example to map the property `metadata.name` with {% raw %}`{{ .Values.myModule.name }}`{% endraw %}.
 
 To build the right path you want to use, you simply need to loop over the YAML tree at the resource level:
 
@@ -267,12 +267,12 @@ To use it, we need to specify the `expression` when mapping the values, for exam
 ```
 dekorate.helm.values[0].property=name
 dekorate.helm.values[0].paths=metadata.name
-dekorate.helm.values[0].expression={{ .Values.app.name | upper | quote }}
+dekorate.helm.values[0].expression={% raw %}{{ .Values.app.name | upper | quote }}{% endraw %}
 ```
 
 This expression will uppercase the value within the `app.name` and add the quotes. 
 
-**NOTE:** If the expression is not provided, it will simply use `{{ .Values.<root alias>.<property> }}` which for the above example is `{{ .Values.app.name }}`.
+**NOTE:** If the expression is not provided, it will simply use {% raw %}`{{ .Values.<root alias>.<property> }}`{% endraw %} which for the above example is {% raw %}`{{ .Values.app.name }}`{% endraw %}.
 
 ##### Mapping multiple properties at once
 
@@ -319,13 +319,13 @@ The Dekorate Helm extension partially supports Helm extensions via [Helm templat
 ```properties
 # Example of expressions
 dekorate.helm.expressions[0].path=(kind == Service).metadata.annotations.'app.dekorate.io/commit-id'
-dekorate.helm.expressions[0].expression={{ .Values.favorite.drink | default "tea" | quote }}
+dekorate.helm.expressions[0].expression={% raw %}{{ .Values.favorite.drink | default "tea" | quote }}{% endraw %}
 
 # Example of multiline expression
 dekorate.helm.expressions[1].path=(kind == ConfigMap && metadata.name == my-configmap).data
-dekorate.helm.expressions[1].expression={{- range $key, $val := .Values.favorite }}\n\
+{% raw %}dekorate.helm.expressions[1].expression={{- range $key, $val := .Values.favorite }}\n\
 {{ indent 2 $key }}: {{ $val | quote }}\n\
-{{- end }}
+{{- end }}{% endraw %}
 ```
 
 The Dekorate Helm extension will replace the specified path with the provided expression.
