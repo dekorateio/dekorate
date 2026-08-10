@@ -12,7 +12,7 @@
         <b>{{ item.title }}</b>
         <ul class="footer-links width-1-12">
           {% for entry in item.subfolderitems %}
-            <li><a href="{{ entry.url }}">{{ entry.page }}</a></li>
+            <li><a href="{% if entry.url contains 'http' %}{{ entry.url }}{% else %}{{ entry.url | relative_url }}{% endif %}">{{ entry.page }}</a></li>
           {% endfor %}
         </ul>
       </div>
