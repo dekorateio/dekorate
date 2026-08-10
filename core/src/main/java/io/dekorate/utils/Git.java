@@ -171,19 +171,19 @@ public class Git {
   public static Optional<String> getCommitSHA(Path path) {
     try (Stream<String> lines = Files.lines(getHead(path))) {
       Optional<String> reference = lines
-        .map(String::trim)
-        .filter(line -> !line.isEmpty())
-        .findFirst();
+          .map(String::trim)
+          .filter(line -> !line.isEmpty())
+          .findFirst();
       if (!reference.filter(l -> l.startsWith(REF) && l.contains(COLN)).isPresent()) {
         // the repo is in detached HEAD mode
         return reference;
       }
       return reference
-        .map(s -> s.substring(s.lastIndexOf(COLN) + 1).trim())
-        .map(ref -> path.resolve(DOT_GIT).resolve(ref))
-        .filter(ref -> ref.toFile().exists())
-        .map(Strings::read)
-        .map(String::trim);
+          .map(s -> s.substring(s.lastIndexOf(COLN) + 1).trim())
+          .map(ref -> path.resolve(DOT_GIT).resolve(ref))
+          .filter(ref -> ref.toFile().exists())
+          .map(Strings::read)
+          .map(String::trim);
     } catch (Exception e) {
       return Optional.empty();
     }
