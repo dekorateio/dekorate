@@ -88,8 +88,8 @@
     <version.maven-central-publishing-plugin>0.8.0</version.maven-central-publishing-plugin>
 
     <!-- Formatting Plugins -->
-    <version.formatter-maven-plugin>2.12.2</version.formatter-maven-plugin>
-    <version.impsort-maven-plugin>1.12.0</version.impsort-maven-plugin>
+    <version.formatter-maven-plugin>2.29.0</version.formatter-maven-plugin>
+    <version.impsort-maven-plugin>1.13.0</version.impsort-maven-plugin>
 
     <!-- Release Plugins -->
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
