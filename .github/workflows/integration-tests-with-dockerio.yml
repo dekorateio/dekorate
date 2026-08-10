@@ -30,9 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v7
       - name: Cache .m2 registry
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
@@ -49,7 +49,7 @@ jobs:
         kubernetes: [v1.31.1]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v7
       - name: Setup Minikube-Kubernetes
         uses: manusa/actions-setup-minikube@0e8062ceff873bd77979f39cf8fd3621416afe4d
         with:
@@ -59,7 +59,7 @@ jobs:
           driver: 'docker'
           start args: '--force'
       - name: Cache .m2 registry
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
@@ -108,14 +108,14 @@ jobs:
         tekton: [ v0.47.0 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v7
       - name: Get Date
         id: get-date
         run: |
           echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
         shell: bash
       - name: Cache .m2 registry
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ steps.get-date.outputs.date }}

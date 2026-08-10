@@ -41,7 +41,7 @@ jobs:
         java: [ 17 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -62,7 +62,7 @@ jobs:
         java: [21]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -92,7 +92,7 @@ jobs:
         example: [ rest-http-example, crud-example, cache-example ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -123,7 +123,7 @@ jobs:
         example: [ rest-http-example, crud-example, cache-example ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Setup Java
         uses: actions/setup-java@v3
         with:

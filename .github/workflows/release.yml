@@ -26,7 +26,7 @@ jobs:
         profile: [normal]
     if: ${{github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
         name: Checkout
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
