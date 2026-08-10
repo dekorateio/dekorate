@@ -19,7 +19,7 @@ limitations under the License.
   <parent>
     <artifactId>dekorate-project</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>3.3-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -66,8 +66,15 @@ limitations under the License.
     </dependency>
 
     <!-- Misc -->
+    <!-- This project is deprecated : https://github.com/fusesource/jansi
+     <dependency>
+       <groupId>org.fusesource.jansi</groupId>
+       <artifactId>jansi</artifactId>
+       <version>${version.jansi}</version>
+     </dependency>
+     -->
     <dependency>
-      <groupId>org.fusesource.jansi</groupId>
+      <groupId>org.jline</groupId>
       <artifactId>jansi</artifactId>
     </dependency>
 
@@ -136,8 +143,9 @@ limitations under the License.
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
         <configuration>
-          <source>${java.source}</source>
-          <target>${java.target}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.release}</release>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
             <processor>io.sundr.transform.internal.TemplateTransformationProcessor</processor>
@@ -194,7 +202,8 @@ limitations under the License.
                     <include>io/dekorate/processor/**</include>
                     <include>io/dekorate/project/**</include>
                     <include>io/dekorate/utils/**</include>
-                    <include>META-INF/services/*</include>
+                    <include>META-INF/services/io.dekorate.*</include>
+                    <include>META-INF/services/javax.annotation.processing.Processor</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>

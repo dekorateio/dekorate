@@ -5,7 +5,7 @@
   <groupId>io.dekorate</groupId>
   <artifactId>dekorate-project</artifactId>
   <packaging>pom</packaging>
-  <version>3.3-SNAPSHOT</version>
+  <version>999-SNAPSHOT</version>
   <name>Dekorate</name>
   <description>A collection of annotations and processors for Kubernetes</description>
 
@@ -37,36 +37,42 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:dekorateio/dekorate.git</connection>
-    <developerConnection>scm:git:git@github.com:dekorateio/dekorate.git</developerConnection>
-    <url>http://github.com/dekorateio/dekorate</url>
-    <tag>${project.version}</tag>
+    <connection>scm:git:https://github.com/dekorateio/dekorate.git</connection>
+    <developerConnection>scm:git:https://github.com/dekorateio/dekorate.git</developerConnection>
+    <url>https://github.com/dekoreteio/dekorate</url>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
-    <repository>
-      <id>oss-sonatype-staging</id>
-      <name>Sonatype Staging Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
+      <repository>
+        <id>central</id>
+        <url>https://central.sonatype.com/repository/maven-releases/</url>
+      </repository>
+      <snapshotRepository>
+        <id>central</id>
+        <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+      </snapshotRepository>
   </distributionManagement>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <format.skip>false</format.skip>
+    <java.version>1.8</java.version>
+    <java.release>8</java.release>
     <!-- Dependencies -->
     <version.application-crd-client>1.1.1</version.application-crd-client>
     <version.commons-codec>1.10</version.commons-codec>
     <version.commons-compress>1.21</version.commons-compress>
-    <version.jansi>1.18</version.jansi>
+    <version.jline-jansi>4.2.1</version.jline-jansi>
     <version.jackson>2.14.1</version.jackson>
-    <version.kubernetes-client>6.4.0</version.kubernetes-client>
-    <version.sundrio>0.92.1</version.sundrio>
+    <version.kubernetes-client>6.13.0</version.kubernetes-client>
+    <version.sundrio>0.101.3</version.sundrio>
     <version.jayway.jsonpath>2.6.0</version.jayway.jsonpath>
 
     <!-- Testing Dependencies -->
     <version.junit-jupiter>5.5.0</version.junit-jupiter>
     <version.junit-platform>1.4.0</version.junit-platform>
-    <version.assertj>3.11.1</version.assertj>
+    <version.assertj>3.27.7</version.assertj>
     <!-- Other Testing Dependencies (frameworks, tools, etc) -->
     <!-- Note: Dekorate DOES NOT depend on these, just some integration tests -->
     <version.spring-boot>2.5.12</version.spring-boot>
@@ -78,12 +84,12 @@
     <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
     <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
     <version.maven-shade-plugin>3.0.0</version.maven-shade-plugin>
-    <version.maven-release-plugin>2.5.3</version.maven-release-plugin>
-    <version.nexus-staging-maven-plugin>1.6.13</version.nexus-staging-maven-plugin>
+    <version.maven-release-plugin>3.1.1</version.maven-release-plugin>
+    <version.maven-central-publishing-plugin>0.8.0</version.maven-central-publishing-plugin>
 
     <!-- Formatting Plugins -->
     <version.formatter-maven-plugin>2.12.2</version.formatter-maven-plugin>
-    <version.impsort-maven-plugin>1.6.2</version.impsort-maven-plugin>
+    <version.impsort-maven-plugin>1.12.0</version.impsort-maven-plugin>
 
     <!-- Release Plugins -->
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
@@ -103,6 +109,7 @@
     <module>annotations</module>
     <module>testing</module>
     <module>starters</module>
+    <module>boms</module>
   </modules>
 
   <dependencyManagement>
@@ -173,10 +180,17 @@
       </dependency>
 
       <!-- Misc -->
+      <!-- This project is deprecated : https://github.com/fusesource/jansi
       <dependency>
         <groupId>org.fusesource.jansi</groupId>
         <artifactId>jansi</artifactId>
         <version>${version.jansi}</version>
+      </dependency>
+      -->
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jansi</artifactId>
+        <version>${version.jline-jansi}</version>
       </dependency>
 
       <!-- Testing -->
@@ -238,9 +252,6 @@
             <bom>
               <artifactId>dekorate-bom</artifactId>
               <name>Dekorate :: Bom</name>
-              <properties>
-                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
-              </properties>
             </bom>
             <bom>
               <artifactId>dekorate-spring-bom</artifactId>
@@ -251,27 +262,19 @@
                   <exclude>io.dekorate:*micronaut*</exclude>
                 </excludes>
               </modules>
-              <properties>
-                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
-              </properties>
             </bom>
           </boms>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate-bom</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
+        <inherited>true</inherited>
         <configuration>
-          <source>${java.source}</source>
-          <target>${java.target}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.release}</release>
         </configuration>
       </plugin>
       <plugin>
@@ -333,50 +336,6 @@
           </includes>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>net.revelc.code.formatter</groupId>
-        <artifactId>formatter-maven-plugin</artifactId>
-        <version>${version.formatter-maven-plugin}</version>
-        <inherited>true</inherited>
-        <executions>
-          <execution>
-            <goals>
-              <goal>format</goal>
-            </goals>
-            <configuration>
-              <configFile>code-format.xml</configFile>
-              <lineEnding>LF</lineEnding>
-              <skip>${format.skip}</skip>
-              <encoding>UTF-8</encoding>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-            <dependency>
-              <groupId>io.dekorate</groupId>
-              <artifactId>dekorate-formatter</artifactId>
-              <version>3.3-SNAPSHOT</version>
-            </dependency>
-          </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>net.revelc.code</groupId>
-        <artifactId>impsort-maven-plugin</artifactId>
-        <version>${version.impsort-maven-plugin}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>sort</goal>
-            </goals>
-            <configuration>
-              <groups>java.,javax.,org.,com.</groups>
-              <staticGroups>*</staticGroups>
-              <skip>${format.skip}</skip>
-              <removeUnused>true</removeUnused>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
@@ -393,9 +352,71 @@
       <url>https://repo.gradle.org/gradle/libs-releases-local/</url>
     </pluginRepository>
   </pluginRepositories>
+
   <profiles>
     <profile>
+      <id>format</id>
+      <activation>
+        <property>
+          <name>!release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>net.revelc.code.formatter</groupId>
+            <artifactId>formatter-maven-plugin</artifactId>
+            <version>${version.formatter-maven-plugin}</version>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>format</goal>
+                </goals>
+                <configuration>
+                  <configFile>code-format.xml</configFile>
+                  <lineEnding>LF</lineEnding>
+                  <skip>${format.skip}</skip>
+                  <encoding>UTF-8</encoding>
+                </configuration>
+              </execution>
+            </executions>
+            <dependencies>
+                <dependency>
+                  <groupId>io.dekorate</groupId>
+                  <artifactId>dekorate-formatter</artifactId>
+                  <version>${project.version}</version>
+                </dependency>
+              </dependencies>
+          </plugin>
+          <plugin>
+            <groupId>net.revelc.code</groupId>
+            <artifactId>impsort-maven-plugin</artifactId>
+            <version>${version.impsort-maven-plugin}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>sort</goal>
+                </goals>
+                <configuration>
+                  <groups>java.,javax.,org.,com.</groups>
+                  <staticGroups>*</staticGroups>
+                  <skip>${format.skip}</skip>
+                  <removeUnused>true</removeUnused>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
       <properties>
         <skipITs>true</skipITs>
         <format.skip>true</format.skip>
@@ -484,25 +505,26 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-release-plugin</artifactId>
             <version>${version.maven-release-plugin}</version>
+            <inherited>true</inherited>
             <configuration>
               <autoVersionSubmodules>true</autoVersionSubmodules>
               <tagNameFormat>@{project.version}</tagNameFormat>
-              <pushChanges>false</pushChanges>
               <localCheckout>true</localCheckout>
-              <remoteTagging>false</remoteTagging>
+              <pushChanges>true</pushChanges>
+              <remoteTagging>true</remoteTagging>
+              <updateWorkingCopyVersions>false</updateWorkingCopyVersions>
               <arguments>-DskipTests=true</arguments>
             </configuration>
           </plugin>
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>${version.nexus-staging-maven-plugin}</version>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${version.maven-central-publishing-plugin}</version>
+            <inherited>true</inherited>
             <extensions>true</extensions>
             <configuration>
-              <serverId>oss-sonatype-staging</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-              <stagingProgressTimeoutMinutes>60</stagingProgressTimeoutMinutes>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
             </configuration>
           </plugin>
         </plugins>
@@ -514,18 +536,8 @@
         <jdk>[1,1.9)</jdk>
       </activation>
       <properties>
-        <java.source>1.8</java.source>
-        <java.target>1.8</java.target>
-      </properties>
-    </profile>
-    <profile>
-      <id>jdk11</id>
-      <activation>
-        <jdk>[11,)</jdk>
-      </activation>
-      <properties>
-        <java.source>11</java.source>
-        <java.target>11</java.target>
+        <java.version>1.8</java.version>
+        <java.release>8</java.release>
       </properties>
     </profile>
     <profile>

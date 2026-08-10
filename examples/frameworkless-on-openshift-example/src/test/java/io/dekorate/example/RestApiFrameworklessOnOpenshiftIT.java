@@ -15,6 +15,15 @@
  */
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.net.URL;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.testing.annotation.Inject;
+import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -22,14 +31,6 @@ import io.fabric8.kubernetes.client.LocalPortForward;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import io.dekorate.testing.annotation.Inject;
-import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
-import org.junit.jupiter.api.Test;
-
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @OpenshiftIntegrationTest(pushEnabled = true)
 class RestApiFrameworklessOnOpenshiftIT {
@@ -49,13 +50,13 @@ class RestApiFrameworklessOnOpenshiftIT {
     System.out.println("Forwarding port");
     try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
       assertTrue(p.isAlive());
-      URL url = new URL("http://localhost:"+p.getLocalPort()+"/api/hello");
+      URL url = new URL("http://localhost:" + p.getLocalPort() + "/api/hello");
 
       OkHttpClient client = new OkHttpClient();
       Request request = new Request.Builder().get().url(url).build();
       Response response = client.newCall(request).execute();
       assertEquals(response.body().string(), "Hello from OpenShift FrameworkLess world!");
-    } catch (Exception e)  {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

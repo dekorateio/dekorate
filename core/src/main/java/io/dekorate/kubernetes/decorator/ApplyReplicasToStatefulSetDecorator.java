@@ -25,7 +25,7 @@ public class ApplyReplicasToStatefulSetDecorator extends NamedResourceDecorator<
   }
 
   public void andThenVisit(StatefulSetSpecFluent statefulSetSpec, ObjectMeta resourceMeta) {
-    if (this.replicas > 0) {
+    if (this.replicas >= 0) {
       statefulSetSpec.withReplicas(this.replicas);
     }
   }
@@ -42,6 +42,6 @@ public class ApplyReplicasToStatefulSetDecorator extends NamedResourceDecorator<
       path = "(kind == StatefulSet && metadata.name == " + getName() + ").spec.replicas";
     }
 
-    return new ConfigReference(property, path);
+    return new ConfigReference.Builder(property, path).withDescription("The number of desired pods.").withMinimum(0).build();
   }
 }

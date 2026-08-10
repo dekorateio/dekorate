@@ -40,9 +40,4 @@ public class ApplyLimitsCpuDecorator extends ApplicationContainerDecorator<Conta
   public void andThenVisit(ContainerFluent<?> container) {
     container.editOrNewResources().addToLimits(CPU, new Quantity(amount)).endResources();
   }
-
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class, AddInitContainerDecorator.class };
-  }
 }

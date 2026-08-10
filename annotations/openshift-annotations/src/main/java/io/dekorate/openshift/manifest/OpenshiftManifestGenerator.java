@@ -34,6 +34,7 @@ import io.dekorate.kubernetes.decorator.AddInitContainerDecorator;
 import io.dekorate.kubernetes.decorator.AddLabelDecorator;
 import io.dekorate.kubernetes.decorator.AddServiceResourceDecorator;
 import io.dekorate.kubernetes.decorator.AddVcsUrlAnnotationDecorator;
+import io.dekorate.kubernetes.decorator.ApplyDeploymentStrategyDecorator;
 import io.dekorate.kubernetes.decorator.ApplyHeadlessDecorator;
 import io.dekorate.kubernetes.decorator.ApplyReplicasToDeploymentDecorator;
 import io.dekorate.kubernetes.decorator.ApplyReplicasToStatefulSetDecorator;
@@ -49,8 +50,11 @@ import io.dekorate.openshift.decorator.AddHostToRouteDecorator;
 import io.dekorate.openshift.decorator.AddPortToRouteDecorator;
 import io.dekorate.openshift.decorator.AddRouteDecorator;
 import io.dekorate.openshift.decorator.AddServiceToRouteDecorator;
+import io.dekorate.openshift.decorator.AddTlsConfigToRouteDecorator;
+import io.dekorate.openshift.decorator.ApplyDeploymentConfigStrategyDecorator;
 import io.dekorate.openshift.decorator.ApplyDeploymentTriggerDecorator;
 import io.dekorate.openshift.decorator.ApplyReplicasToDeploymentConfigDecorator;
+import io.dekorate.openshift.decorator.DeploymentConfigResourceFactory;
 import io.dekorate.option.config.VcsConfig;
 import io.dekorate.project.ApplyProjectInfo;
 import io.dekorate.project.Project;
@@ -128,6 +132,7 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenera
     resourceRegistry.decorate(group, new AddHostToRouteDecorator(config));
     resourceRegistry.decorate(group, new AddPortToRouteDecorator(config));
     resourceRegistry.decorate(group, new AddServiceToRouteDecorator(config));
+    resourceRegistry.decorate(group, new AddTlsConfigToRouteDecorator(config));
 
     if (config.hasAttribute(RUNTIME_TYPE)) {
       resourceRegistry.decorate(group, new AddLabelDecorator(config.getName(),
@@ -138,14 +143,23 @@ public class OpenshiftManifestGenerator extends AbstractKubernetesManifestGenera
     Project project = getProject();
     Optional<VcsConfig> vcsConfig = configurationRegistry.get(VcsConfig.class);
     String remote = vcsConfig.map(VcsConfig::getRemote).orElse(Git.ORIGIN);
-    boolean httpsPrefered = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
+    boolean httpsPreferred = vcsConfig.map(VcsConfig::isHttpsPreferred).orElse(false);
 
     String vcsUrl = project.getScmInfo() != null && Strings.isNotNullOrEmpty(project.getScmInfo().getRemote().get(Git.ORIGIN))
-        ? Git.getRemoteUrl(project.getRoot(), remote, httpsPrefered).orElse(Labels.UNKNOWN)
+        ? Git.getRemoteUrl(project.getRoot(), remote, httpsPreferred).orElse(Labels.UNKNOWN)
         : Labels.UNKNOWN;
 
     resourceRegistry.decorate(group, new AddVcsUrlAnnotationDecorator(config.getName(), OpenshiftAnnotations.VCS_URL, vcsUrl));
     resourceRegistry.decorate(group, new AddCommitIdAnnotationDecorator());
+    if (DeploymentResourceFactory.KIND.equalsIgnoreCase(config.getDeploymentKind())) {
+      resourceRegistry.decorate(group,
+          new ApplyDeploymentStrategyDecorator(config.getName(), config.getDeploymentStrategy(),
+              config.getRollingUpdate()));
+    } else if (DeploymentConfigResourceFactory.KIND.equalsIgnoreCase(config.getDeploymentKind())) {
+      resourceRegistry.decorate(group,
+          new ApplyDeploymentConfigStrategyDecorator(config.getName(), config.getDeploymentStrategy(),
+              config.getRollingUpdate()));
+    }
   }
 
   public boolean accepts(Class<? extends Configuration> type) {

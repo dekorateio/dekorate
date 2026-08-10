@@ -11,13 +11,13 @@ public class AddSelfSignedIssuerResourceDecorator extends BaseAddIssuerResourceD
 
   private final SelfSigned config;
 
-  public AddSelfSignedIssuerResourceDecorator(SelfSigned config, String certificateName) {
-    super(certificateName);
+  public AddSelfSignedIssuerResourceDecorator(SelfSigned config, String name) {
+    super(name);
     this.config = config;
   }
 
   @Override
-  protected void visitIssuerSpec(IssuerFluent.SpecNested<IssuerBuilder> spec) {
+  protected void visitIssuerSpec(IssuerFluent<?>.SpecNested<IssuerBuilder> spec) {
     SelfSignedIssuerBuilder builder = new SelfSignedIssuerBuilder();
 
     Optional.ofNullable(config.getCrlDistributionPoints()).ifPresent(builder::withCrlDistributionPoints);

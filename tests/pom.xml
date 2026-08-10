@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>io.dekorate</groupId>
-        <artifactId>dekorate-project</artifactId>
-        <version>3.3-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-project</artifactId>
+      <version>999-SNAPSHOT</version>
+      <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -92,6 +90,15 @@
       <module>issue-1120-kind-multiple-container-ports</module>
       <module>issue-1123-ingress-multiple-container-ports</module>
       <module>issue-1124-route-multiple-container-ports</module>
+      <module>issue-1158-spring-boot-certmanager-with-annotations</module>
+      <module>feat-openshift-secure-routes</module>
+      <module>issue-knative-probes-helm</module>
+      <module>feat-overwrite-init-containers</module>
+      <module>feat-overwrite-sidecar-containers</module>
+      <module>issue-1201-zero-replicas</module>
+      <module>issue-1271-containers-empty-in-deployment</module>
+      <module>feat-kubernetes-nodeselector-annotation</module>
+      <module>feat-kubernetes-nodeselector-properties</module>
     </modules>
 
 </project>

@@ -63,6 +63,7 @@ public abstract class Decorator<T> extends TypedVisitor<T> implements Comparable
     if (this.equals(o)) {
       return 0;
     }
-    return -1;
+
+    return 1;
   }
 }

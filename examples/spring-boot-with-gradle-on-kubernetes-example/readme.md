@@ -5,7 +5,7 @@ This is a simple example of using dekorate with gradle.
 The purpose of this example is to demonstrate the following:
 
 - How to use dekorate with gradle
-- How you can use the kubernetes-spring-stater.
+- How you can use the kubernetes-spring-starter.
 - How dekorate detects that this is a web app and automatically configures services and probes.
 - How you can end-to-end test the application.
 - How you can trigger an docker build after the compilation.

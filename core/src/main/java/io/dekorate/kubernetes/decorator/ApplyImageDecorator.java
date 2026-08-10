@@ -42,11 +42,6 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
     container.withImage(image);
   }
 
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
-  }
-
   @Override
   public List<ConfigReference> getConfigReferences() {
     return Arrays.asList(buildConfigReferenceForImage());
@@ -64,7 +59,7 @@ public class ApplyImageDecorator extends ApplicationContainerDecorator<Container
       path = "spec.template.spec.containers.(name == " + getContainerName() + ").image";
     }
 
-    return new ConfigReference(property, path, image);
+    return new ConfigReference.Builder(property, path).withDescription("The container image to use.").build();
   }
 
 }

@@ -38,6 +38,19 @@ public class Maps {
   private static final String PROPERTY_PREFIX = "dekorate";
   private static final String MULTIPART_SEPARATOR_PATTERN = Pattern.quote(".");
 
+  public static Map<String, String> getDekoratePropertyFromSystem() {
+    Map<String, String> dekorateProperties = new HashMap<>();
+    for (Map.Entry<Object, Object> property : System.getProperties().entrySet()) {
+      if (property.getKey() instanceof String
+          && ((String) property.getKey()).startsWith(PROPERTY_PREFIX)
+          && property.getValue() instanceof String) {
+        dekorateProperties.put((String) property.getKey(), (String) property.getValue());
+      }
+    }
+
+    return dekorateProperties;
+  }
+
   public static Map<String, String> from(String... values) {
     if (values.length == 0) {
       return Collections.emptyMap();

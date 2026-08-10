@@ -27,11 +27,12 @@ import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.openshift.api.model.DeploymentConfig;
 
 public class Feat590Test {
 
   @Test
-  public void shouldHaveRollingUpdateStrategy() {
+  public void shouldHaveRollingUpdateStrategyInKubernetes() {
     KubernetesList list = Serialization
         .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
@@ -40,6 +41,18 @@ public class Feat590Test {
     assertEquals("RollingUpdate", d.getSpec().getStrategy().getType());
     assertEquals("40%", d.getSpec().getStrategy().getRollingUpdate().getMaxSurge().getStrVal());
     assertEquals("30%", d.getSpec().getStrategy().getRollingUpdate().getMaxUnavailable().getStrVal());
+  }
+
+  @Test
+  public void shouldHaveRollingUpdateStrategyInOpenShift() {
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    assertNotNull(list);
+    DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
+    assertNotNull(d);
+    assertEquals("RollingUpdate", d.getSpec().getStrategy().getType());
+    assertEquals("41%", d.getSpec().getStrategy().getRollingParams().getMaxSurge().getStrVal());
+    assertEquals("32%", d.getSpec().getStrategy().getRollingParams().getMaxUnavailable().getStrVal());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {

@@ -51,10 +51,4 @@ public class ApplyImagePullPolicyDecorator extends ApplicationContainerDecorator
   public void andThenVisit(ContainerFluent<?> container) {
     container.withImagePullPolicy(imagePullPolicy != null ? imagePullPolicy.name() : "IfNotPresent");
   }
-
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class, AddSidecarDecorator.class,
-        AddInitContainerDecorator.class };
-  }
-
 }

@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Git {
 
@@ -46,7 +47,7 @@ public class Git {
   public static final String URL = "url";
   public static final String REF = "ref";
 
-  public static final String REMOTE_PATTERN = "^\\[remote \"([a-zA-Z0-9_-]+)\"\\]";
+  public static final String REMOTE_PATTERN = "^\\s*\\[remote\\s*\"([a-zA-Z0-9_-]+)\"\\s*\\]\\s*";
 
   /**
    * Get the git root.
@@ -92,6 +93,7 @@ public class Git {
             String remoteLine = linesIter.next();
             if (remoteLine.startsWith(URL) && remoteLine.contains(EQUALS)) {
               result.put(remote, remoteLine.split(EQUALS)[1].trim());
+              break;
             }
           }
         });
@@ -130,7 +132,7 @@ public class Git {
     }
   }
 
-  static String sanitizeRemoteUrl(String remoteUrl) {
+  public static String sanitizeRemoteUrl(String remoteUrl) {
     final int atSign = remoteUrl.indexOf('@');
     if (atSign > 0) {
       remoteUrl = remoteUrl.substring(atSign + 1);
@@ -161,21 +163,27 @@ public class Git {
   }
 
   /**
-   * Get the git branch.
-   * 
+   * Get the git commit.
+   *
    * @param path the path to the git config.
-   * @return The an {@link Optional} String with the branch.
+   * @return The an {@link Optional} String with the SHA.
    */
   public static Optional<String> getCommitSHA(Path path) {
-    try {
-      return Files.lines(getHead(path)).map(String::trim)
-          .filter(l -> l.startsWith(REF) && l.contains(COLN))
+    try (Stream<String> lines = Files.lines(getHead(path))) {
+      Optional<String> reference = lines
+          .map(String::trim)
+          .filter(line -> !line.isEmpty())
+          .findFirst();
+      if (!reference.filter(l -> l.startsWith(REF) && l.contains(COLN)).isPresent()) {
+        // the repo is in detached HEAD mode
+        return reference;
+      }
+      return reference
           .map(s -> s.substring(s.lastIndexOf(COLN) + 1).trim())
           .map(ref -> path.resolve(DOT_GIT).resolve(ref))
           .filter(ref -> ref.toFile().exists())
           .map(Strings::read)
-          .map(String::trim)
-          .findAny();
+          .map(String::trim);
     } catch (Exception e) {
       return Optional.empty();
     }
@@ -203,7 +211,7 @@ public class Git {
     Pattern p = Pattern.compile(REMOTE_PATTERN);
     Matcher m = p.matcher(line);
     if (m.matches()) {
-      return Optional.of(m.group());
+      return Optional.of(m.group(1));
     } else {
       return Optional.empty();
     }

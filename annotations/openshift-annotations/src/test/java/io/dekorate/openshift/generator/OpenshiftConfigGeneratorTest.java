@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ import io.dekorate.openshift.config.OpenshiftConfig;
 import io.dekorate.openshift.config.OpenshiftConfigGenerator;
 import io.dekorate.processor.SimpleFileWriter;
 import io.dekorate.project.FileProjectFactory;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 
@@ -76,14 +78,21 @@ class OpenshiftConfigGeneratorTest {
     final Map<String, String> result = session.close();
     KubernetesList list = session.getGeneratedResources().get("openshift");
     assertThat(list).isNotNull();
-    assertThat(list.getItems())
-        .filteredOn(i -> "DeploymentConfig".equals(i.getKind()))
-        .filteredOn(i -> ((DeploymentConfig) i).getSpec().getReplicas() == 2)
-        .isNotEmpty();
+
+    DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
+    assertThat(d.getSpec().getReplicas()).isEqualTo(2);
+    assertThat(d.getSpec().getTemplate().getSpec().getContainers()).isNotEmpty();
 
     assertThat(tempDir.resolve("openshift.json")).exists();
     assertThat(tempDir.resolve("openshift.yml")).exists();
 
     assertThat(result).hasSize(5);
+    session.close();
+  }
+
+  <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
+    return (Optional<T>) list.getItems().stream()
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

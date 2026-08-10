@@ -11,13 +11,13 @@ public class AddCaIssuerResourceDecorator extends BaseAddIssuerResourceDecorator
 
   private final CA config;
 
-  public AddCaIssuerResourceDecorator(CA config, String certificateName) {
-    super(certificateName);
+  public AddCaIssuerResourceDecorator(CA config, String name) {
+    super(name);
     this.config = config;
   }
 
   @Override
-  protected void visitIssuerSpec(IssuerFluent.SpecNested<IssuerBuilder> spec) {
+  protected void visitIssuerSpec(IssuerFluent<?>.SpecNested<IssuerBuilder> spec) {
     CAIssuerBuilder builder = new CAIssuerBuilder()
         .withSecretName(config.getSecretName());
 

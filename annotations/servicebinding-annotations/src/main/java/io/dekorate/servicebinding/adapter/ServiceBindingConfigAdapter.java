@@ -55,7 +55,7 @@ public class ServiceBindingConfigAdapter {
                 .toArray(ServiceConfig[]::new),
             instance.envVarPrefix(), instance.detectBindingResources(), instance.bindAsFiles(), instance.mountPath(),
             Arrays.stream(instance.customEnvVar())
-                .map(c -> new Env(c.name(), c.value(), c.secret(), c.configmap(), c.field(), c.resourceField()))
+                .map(c -> new Env(c.name(), c.value(), c.secret(), c.configmap(), c.field(), c.resourceField(), c.prefix()))
                 .toArray(Env[]::new),
             new BindingPathConfig(null, null, bindingPath.containerPath(), bindingPath.secretPath())));
   }
@@ -114,7 +114,8 @@ public class ServiceBindingConfigAdapter {
   private static Env getCustomEnvVarConfig(Map i) {
     return new Env((String) i.getOrDefault("name", null), (String) i.getOrDefault("value", null),
         (String) i.getOrDefault("secret", null), (String) i.getOrDefault("configmap", null),
-        (String) i.getOrDefault("field", null), (String) i.getOrDefault("resourceField", null));
+        (String) i.getOrDefault("field", null), (String) i.getOrDefault("resourceField", null),
+        (String) i.getOrDefault("prefix", null));
   }
 
   private static BindingPathConfig getBindingPathConfig(Map i) {

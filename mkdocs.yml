@@ -1,0 +1,13 @@
+site_name: Dekorate
+site_url: https://dekorateio
+site_description: Dekorate is a collection of Java annotations and processors that simplify the generation of Kubernetes and OpenShift manifests.
+
+docs_dir: docs/documentation
+
+nav:
+  - Home: index.md
+  - Get Started: get-started.md
+  - Kubernetes: kubernetes.md
+  - OpenShift: openshift.md
+  - Knative: knative.md
+  - Helm: helm.md

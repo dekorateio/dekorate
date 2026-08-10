@@ -3,7 +3,7 @@
   <parent>
     <artifactId>annotations</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>3.3-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -78,8 +78,9 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
         <configuration>
-          <source>${java.source}</source>
-          <target>${java.target}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.release}</release>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
             <processor>io.sundr.transform.internal.TemplateTransformationProcessor</processor>

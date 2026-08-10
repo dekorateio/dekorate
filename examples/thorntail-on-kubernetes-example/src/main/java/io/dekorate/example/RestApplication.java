@@ -15,17 +15,14 @@
  */
 package io.dekorate.example;
 
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+
 import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import io.dekorate.kubernetes.annotation.Probe;
 import io.dekorate.option.annotation.JvmOptions;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-
-@KubernetesApplication(
-  livenessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 180),
-  readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 20)
-)
+@KubernetesApplication(livenessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 180), readinessProbe = @Probe(httpActionPath = "/health", initialDelaySeconds = 20))
 @JvmOptions(preferIPv4Stack = true)
 @ApplicationPath("/")
 public class RestApplication extends Application {

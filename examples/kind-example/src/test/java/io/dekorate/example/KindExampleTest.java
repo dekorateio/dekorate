@@ -33,20 +33,26 @@ class KindExampleTest {
 
   @Test
   public void shouldExpectedConfiguration() {
-    KubernetesList kindList = Serialization.unmarshalAsList(KindExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kind.yml"));
+    KubernetesList kindList = Serialization
+        .unmarshalAsList(KindExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kind.yml"));
     assertNotNull(kindList);
-    Deployment kindDeployment = findFirst(kindList, Deployment.class).orElseThrow(() -> new IllegalStateException("Deployment not found in kind.yml!"));
-    assertEquals(ImagePullPolicy.Never.name(), kindDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImagePullPolicy());
+    Deployment kindDeployment = findFirst(kindList, Deployment.class)
+        .orElseThrow(() -> new IllegalStateException("Deployment not found in kind.yml!"));
+    assertEquals(ImagePullPolicy.Never.name(),
+        kindDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImagePullPolicy());
 
-    KubernetesList kubernetes = Serialization.unmarshalAsList(KindExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList kubernetes = Serialization
+        .unmarshalAsList(KindExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(kubernetes);
-    Deployment kubernetesDeployment = findFirst(kubernetes, Deployment.class).orElseThrow(() -> new IllegalStateException("Deployment not found in kubernetes.yml!"));
-    assertEquals(ImagePullPolicy.Always.name(), kubernetesDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImagePullPolicy());
+    Deployment kubernetesDeployment = findFirst(kubernetes, Deployment.class)
+        .orElseThrow(() -> new IllegalStateException("Deployment not found in kubernetes.yml!"));
+    assertEquals(ImagePullPolicy.Always.name(),
+        kubernetesDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImagePullPolicy());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

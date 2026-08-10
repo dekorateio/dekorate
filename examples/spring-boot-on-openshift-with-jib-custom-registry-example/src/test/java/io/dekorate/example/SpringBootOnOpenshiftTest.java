@@ -17,32 +17,31 @@
 
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Optional;
 
-import io.fabric8.openshift.api.model.ImageStream;
 import org.junit.jupiter.api.Test;
 
+import io.dekorate.utils.Serialization;
+import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.openshift.api.model.BuildConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.dekorate.utils.Serialization;
-import io.dekorate.utils.Strings;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.fabric8.openshift.api.model.ImageStream;
 
 class SpringBootOnOpenshiftTest {
 
   @Test
   public void shouldNotHaveBuildConfig() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -52,7 +51,8 @@ class SpringBootOnOpenshiftTest {
 
   @Test
   public void shouldHaveImage() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
@@ -65,19 +65,22 @@ class SpringBootOnOpenshiftTest {
 
   @Test
   public void shouldHaveMatchingOutputImageAndTrigger() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     ImageStream is = findFirst(list, ImageStream.class).orElseThrow(() -> new IllegalStateException());
     assertTrue(is.getSpec().getDockerImageRepository().contains("quay.io"));
     assertNotNull(is);
-    assertTrue(d.getSpec().getTriggers().stream().filter(t -> t.getImageChangeParams().getFrom().getName().contains(is.getMetadata().getName())).findFirst().isPresent());
+    assertTrue(d.getSpec().getTriggers().stream()
+        .filter(t -> t.getImageChangeParams().getFrom().getName().contains(is.getMetadata().getName())).findFirst()
+        .isPresent());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

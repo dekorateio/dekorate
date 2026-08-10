@@ -19,13 +19,13 @@ public class AddVaultIssuerResourceDecorator extends BaseAddIssuerResourceDecora
 
   private final Vault config;
 
-  public AddVaultIssuerResourceDecorator(Vault config, String certificateName) {
-    super(certificateName);
+  public AddVaultIssuerResourceDecorator(Vault config, String name) {
+    super(name);
     this.config = config;
   }
 
   @Override
-  protected void visitIssuerSpec(IssuerFluent.SpecNested<IssuerBuilder> spec) {
+  protected void visitIssuerSpec(IssuerFluent<?>.SpecNested<IssuerBuilder> spec) {
     if (noneAuthIsSet(config.getAuthAppRole(), config.getAuthKubernetes(), config.getAuthTokenSecretRef())) {
       throw new IllegalArgumentException("No auth mechanism has been set in the Vault Issuer configuration");
     }

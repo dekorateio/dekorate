@@ -61,6 +61,8 @@ public class AddHostToRouteDecorator extends NamedResourceDecorator<RouteSpecFlu
   private ConfigReference buildConfigReferenceHost() {
     String property = "host";
     String path = "(kind == Route && metadata.name == " + getName() + ").spec.host";
-    return new ConfigReference(property, path);
+    return new ConfigReference.Builder(property, path)
+        .withDescription("The host under which the application is going to be exposed.")
+        .build();
   }
 }

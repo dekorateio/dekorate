@@ -25,18 +25,6 @@ public interface StepDecorator {
   String SOURCE = "source";
   String WORKSPACE_PATH = "$(workspaces.%s.path)";
 
-  String PARAMS_FORMAT = "$(params.%s)";
-  String RESOURCES_INPUTS_FORMAT = "$(resources.inputs.%s.path)";
-  String PATH_TO_FILE_FORMAT = "$(resources.inputs.source.path)/%s/$(inputs.params.pathToContext)/%s";
-
-  default String param(String name) {
-    return String.format(PARAMS_FORMAT, name);
-  }
-
-  default String resourceInputPath(String name) {
-    return String.format(RESOURCES_INPUTS_FORMAT, name);
-  }
-
   default String sourcePath(String... path) {
     return workspacePath(SOURCE, path);
   }

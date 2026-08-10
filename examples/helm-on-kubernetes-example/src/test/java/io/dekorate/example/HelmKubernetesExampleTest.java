@@ -24,7 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,13 +32,14 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.helm.model.Chart;
+import io.dekorate.helm.model.ValuesSchema;
+import io.dekorate.helm.model.ValuesSchemaProperty;
 import io.dekorate.utils.Serialization;
-import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 
 class HelmKubernetesExampleTest {
 
   private static final String CHART_NAME = "myChart";
-  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/" + CHART_NAME;
+  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/kubernetes/" + CHART_NAME;
   private static final String ROOT_CONFIG_NAME = "app";
 
   @Test
@@ -77,6 +78,10 @@ class HelmKubernetesExampleTest {
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/LICENSE"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/README.md"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.schema.json"));
+    // crds
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/crds"));
+    assertNotNull(
+        Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/crds/crontabs.stable.example.com.yaml"));
   }
 
   @Test
@@ -95,34 +100,40 @@ class HelmKubernetesExampleTest {
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
     assertNotNull(values.get(ROOT_CONFIG_NAME) instanceof Map, "Value `" + ROOT_CONFIG_NAME + "` is not a map!");
-    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
+    // Rootless properties
+    assertEquals("rootless-property", values.get("prop"));
+
+    Map<String, Object> app = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
     // Should contain image
-    assertNotNull(helmExampleValues.get("image"));
+    assertNotNull(app.get("image"));
     // Should contain replicas
-    assertEquals(3, helmExampleValues.get("replicas"));
-    // Should contain service type
-    assertEquals("ClusterIP", helmExampleValues.get("serviceType"));
-    // Should NOT contain not-found: as this property is ignored
-    assertNull(helmExampleValues.get("not-found"));
-    // Should contain vcs-url with the overridden value from properties
-    assertEquals("Overridden", helmExampleValues.get("vcs-url"));
+    assertEquals(3, app.get("replicas"));
+    // Should NOT contain notFound: as this property is ignored
+    assertNull(app.get("notFound"));
+    // Should contain vcsUrl with the overridden value from properties
+    assertEquals("Overridden", app.get("vcsUrl"));
+    // Should map ports:
+    Map<String, Object> ports = (Map<String, Object>) app.get("ports");
+    assertNotNull(ports);
+    assertEquals(8080, ports.get("http"));
     // Should include health check properties:
     // 1. tcp socket action
-    Map<String, Object> livenessValues = (Map<String, Object>) helmExampleValues.get("livenessProbe");
+    Map<String, Object> livenessValues = (Map<String, Object>) app.get("livenessProbe");
     assertProbe(livenessValues, 11, 31);
     Map<String, Object> tcpSocketValues = (Map<String, Object>) livenessValues.get("tcpSocket");
     assertEquals("1111", tcpSocketValues.get("port"));
     assertEquals("my-service", tcpSocketValues.get("host"));
     // 2. http get action
-    Map<String, Object> readinessValues = (Map<String, Object>) helmExampleValues.get("readinessProbe");
+    Map<String, Object> readinessValues = (Map<String, Object>) app.get("readinessProbe");
     assertProbe(readinessValues, 10, 30);
     Map<String, Object> httpGetValues = (Map<String, Object>) readinessValues.get("httpGet");
     assertEquals("/readiness", httpGetValues.get("path"));
-    assertEquals(8080, httpGetValues.get("port"));
+    // It should be null because it's now mapped with app.ports.http;
+    assertNull(httpGetValues.get("port"));
     assertEquals("HTTP", httpGetValues.get("scheme"));
     // 3. exec action
-    Map<String, Object> startupValues = (Map<String, Object>) helmExampleValues.get("startupProbe");
+    Map<String, Object> startupValues = (Map<String, Object>) app.get("startupProbe");
     assertProbe(startupValues, 12, 32);
     Map<String, Object> execValues = (Map<String, Object>) startupValues.get("exec");
     List<String> command = (List<String>) execValues.get("command");
@@ -147,16 +158,40 @@ class HelmKubernetesExampleTest {
     assertNotNull(helmExampleValues.get("image"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
-    // Should NOT contain not-found: as this property is ignored
-    assertNull(helmExampleValues.get("not-found"));
-    // Should contain vcs-url with the value from properties
-    assertEquals("Only for DEV!", helmExampleValues.get("vcs-url"));
+    // Should NOT contain notFound: as this property is ignored
+    assertNull(helmExampleValues.get("notFound"));
+    // Should contain vcsUrl with the value from properties
+    assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
     // Should contain ingress with the value from properties
     assertEquals("my-test-host", helmExampleValues.get("host"));
   }
 
   @Test
   public void valuesFileShouldContainDependencyValues() throws IOException {
+    ValuesSchema schema = read("/values.schema.json", ValuesSchema.class);
+    // From properties
+    assertEquals("My Values", schema.getTitle());
+    // From the provided values schema json
+    assertEquals(2, schema.getRequired().size());
+    Iterator<String> requirements = schema.getRequired().iterator();
+    assertEquals("protocol", requirements.next());
+    assertEquals("port", requirements.next());
+    ValuesSchemaProperty image = schema.getProperties().get("image");
+    assertNotNull(image);
+    assertEquals("Container Image", image.getDescription());
+    assertEquals(2, image.getProperties().size());
+    // From config references
+    ValuesSchemaProperty app = schema.getProperties().get("app");
+    assertNotNull(app);
+    ValuesSchemaProperty replicas = app.getProperties().get("replicas");
+    assertNotNull(replicas);
+    assertEquals(3, replicas.getMinimum());
+    assertEquals(5, replicas.getMaximum());
+    assertEquals("Overwrite default description!", replicas.getDescription());
+  }
+
+  @Test
+  public void validateValuesSchemaFile() throws IOException {
     Map<String, Object> values = read("/values.yaml", Map.class);
     Map<String, Object> dependencyA = (Map<String, Object>) values.get("dependencyNameA");
     assertEquals("aValue", dependencyA.get("config"));
@@ -177,13 +212,13 @@ class HelmKubernetesExampleTest {
 
   private static <T> T read(String path, Class<T> clazz) throws IOException {
     return Serialization.yamlMapper().readValue(Main.class.getClassLoader()
-      .getResourceAsStream(CHART_OUTPUT_LOCATION + path), clazz);
+        .getResourceAsStream(CHART_OUTPUT_LOCATION + path), clazz);
   }
 
   private static String readString(String path) {
     return new BufferedReader(
-      new InputStreamReader(Main.class.getClassLoader().getResourceAsStream(path), StandardCharsets.UTF_8))
-        .lines()
-        .collect(Collectors.joining(System.lineSeparator()));
+        new InputStreamReader(Main.class.getClassLoader().getResourceAsStream(path), StandardCharsets.UTF_8))
+            .lines()
+            .collect(Collectors.joining(System.lineSeparator()));
   }
 }

@@ -17,20 +17,22 @@
 
 package io.dekorate.tekton.step;
 
+import static io.dekorate.tekton.step.StepUtils.param;
+
 public class ImagePushStep implements Step {
 
   public static final String ID = "image-push";
 
   public static final String IMAGE_PARAM_NAME = "imagePushImage";
   public static final String IMAGE_PARAM_DESCRIPTION = "The image to use for performing project push";
-  public static final String IMAGE_PARAM_REF = "$(inputs.params." + IMAGE_PARAM_NAME + ")";
+  public static final String IMAGE_PARAM_REF = param(IMAGE_PARAM_NAME);
 
   public static final String COMMAND_PARAM_NAME = "imagePushCommand";
   public static final String COMMAND_PARAM_DESCRIPTION = "The command to use for performing project push";
-  public static final String COMMAND_PARAM_REF = "$(inputs.params." + COMMAND_PARAM_NAME + ")";
+  public static final String COMMAND_PARAM_REF = param(COMMAND_PARAM_NAME);
 
   public static final String ARGS_PARAM_NAME = "imagePushArgs";
   public static final String ARGS_PARAM_DESCRIPTION = "The command arguments to use for performing project push";
-  public static final String ARGS_PARAM_REF = "$(inputs.params." + ARGS_PARAM_NAME + "[*])";
+  public static final String ARGS_PARAM_REF = param(ARGS_PARAM_NAME);
 
 }

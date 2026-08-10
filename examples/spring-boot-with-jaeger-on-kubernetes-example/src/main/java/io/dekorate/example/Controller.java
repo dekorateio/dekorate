@@ -27,7 +27,6 @@ public class Controller {
   @Autowired
   private RestTemplate restTemplate;
 
-
   @RequestMapping("/")
   public String chaining() {
     ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/hello", String.class);

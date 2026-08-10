@@ -37,20 +37,21 @@ public class Issue446Test {
     assertNotNull(d);
     PodSpec p = d.getSpec().getTemplate().getSpec();
     assertNotNull(p);
-    Volume firstVolume = p.getVolumes().get(0);
+    Volume firstVolume = p.getVolumes().stream().filter(v -> "github-token".equals(v.getName())).findFirst()
+        .orElseThrow(() -> new IllegalStateException());
     assertEquals("greeting-security", firstVolume.getSecret().getSecretName());
-    assertEquals("github-token", firstVolume.getName());
 
-    Volume secondVolume = p.getVolumes().get(1);
+    Volume secondVolume = p.getVolumes().stream().filter(v -> "certs".equals(v.getName())).findFirst()
+        .orElseThrow(() -> new IllegalStateException());
     assertEquals("certs-secret", secondVolume.getSecret().getSecretName());
     assertEquals(2, secondVolume.getSecret().getItems().size());
     assertKeyPathItem("keystore", "keystore.jks", secondVolume.getSecret().getItems().get(0));
     assertKeyPathItem("pass", "password", secondVolume.getSecret().getItems().get(1));
-    assertEquals("certs", secondVolume.getName());
 
     Container c = p.getContainers().get(0);
     assertNotNull(c);
-    VolumeMount mount = c.getVolumeMounts().get(0);
+    VolumeMount mount = c.getVolumeMounts().stream().filter(v -> "github-token".equals(v.getName())).findFirst()
+        .orElseThrow(() -> new IllegalStateException());
     assertTrue(mount.getReadOnly());
   }
 

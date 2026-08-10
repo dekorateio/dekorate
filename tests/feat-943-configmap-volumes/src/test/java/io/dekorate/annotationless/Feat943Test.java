@@ -37,20 +37,21 @@ public class Feat943Test {
     assertNotNull(d);
     PodSpec p = d.getSpec().getTemplate().getSpec();
     assertNotNull(p);
-    Volume firstVolume = p.getVolumes().get(0);
+    Volume firstVolume = p.getVolumes().stream().filter(v -> "test".equals(v.getName())).findFirst()
+        .orElseThrow(() -> new IllegalStateException());
     assertEquals("greeting-map", firstVolume.getConfigMap().getName());
-    assertEquals("test", firstVolume.getName());
 
-    Volume secondVolume = p.getVolumes().get(1);
+    Volume secondVolume = p.getVolumes().stream().filter(v -> "certs".equals(v.getName())).findFirst()
+        .orElseThrow(() -> new IllegalStateException());
     assertEquals("certs-map", secondVolume.getConfigMap().getName());
     assertEquals(2, secondVolume.getConfigMap().getItems().size());
     assertKeyPathItem("keystore", "keystore.jks", secondVolume.getConfigMap().getItems().get(0));
     assertKeyPathItem("pass", "password", secondVolume.getConfigMap().getItems().get(1));
-    assertEquals("certs", secondVolume.getName());
 
     Container c = p.getContainers().get(0);
     assertNotNull(c);
-    VolumeMount mount = c.getVolumeMounts().get(0);
+    VolumeMount mount = c.getVolumeMounts().stream().filter(v -> "github-token".equals(v.getName())).findFirst()
+        .orElseThrow(() -> new IllegalStateException());
     assertTrue(mount.getReadOnly());
   }
 

@@ -32,7 +32,7 @@ import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 
 public class DeploymentConfigResourceFactory implements ResourceFactory {
 
-  private static final String KIND = "DeploymentConfig";
+  public static final String KIND = "DeploymentConfig";
 
   private static final String IF_NOT_PRESENT = "IfNotPresent";
   private static final String KUBERNETES_NAMESPACE = "KUBERNETES_NAMESPACE";

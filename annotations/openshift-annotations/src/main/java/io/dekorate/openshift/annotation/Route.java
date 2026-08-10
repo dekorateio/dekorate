@@ -37,4 +37,9 @@ public @interface Route {
    */
   String targetPort() default "http";
 
+  /**
+   * @return the TLS configuration.
+   */
+  TLSConfig tls() default @TLSConfig();
+
 }

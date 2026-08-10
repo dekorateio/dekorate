@@ -16,19 +16,21 @@
 
 package io.dekorate.example;
 
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 
 class KubernetesExampleTest {
 
   @Test
   public void shouldContainConfigMap() {
-    KubernetesList list = Serialization.unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     assertEquals(1, list.getItems().size());
     Deployment deployment = (Deployment) list.getItems().get(0);

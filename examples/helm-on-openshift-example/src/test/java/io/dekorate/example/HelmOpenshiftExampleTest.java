@@ -31,18 +31,19 @@ import io.dekorate.utils.Serialization;
 class HelmOpenshiftExampleTest {
 
   private static final String CHART_NAME = "myOcpChart";
-  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/" + CHART_NAME;
+  private static final String CHART_OUTPUT_LOCATION = "META-INF/dekorate/helm/openshift/" + CHART_NAME;
   private static final String ROOT_CONFIG_NAME = "app";
 
   @Test
   public void shouldHelmManifestsBeGenerated() throws IOException {
-    Chart chart = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/Chart.yaml"), Chart.class);
+    Chart chart = Serialization.yamlMapper()
+        .readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/Chart.yaml"), Chart.class);
     assertNotNull(chart, "Chart is null!");
     // Should be the same as in `dekorate.helm.chart` from properties.
     assertEquals(CHART_NAME, chart.getName());
     // Values.yaml manifest
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"));
-    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"));
+    assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values-dev.yaml"));
     // templates
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/buildconfig.yaml"));
     assertNotNull(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/templates/deploymentconfig.yaml"));
@@ -59,27 +60,33 @@ class HelmOpenshiftExampleTest {
 
   @Test
   public void valuesShouldContainExpectedData() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"), Map.class);
+    Map<String, Object> values = Serialization.yamlMapper()
+        .readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
     assertNotNull(values.get(ROOT_CONFIG_NAME) instanceof Map, "Value `" + ROOT_CONFIG_NAME + "` is not a map!");
-    Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
+    Map<String, Object> app = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
+    // Should map ports:
+    Map<String, Object> ports = (Map<String, Object>) app.get("ports");
+    assertNotNull(ports);
+    assertEquals(8080, ports.get("http"));
     // Should contain s2i configuration
-    assertNotNull(helmExampleValues.get("s2i-java"));
-    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2i-java")).get("builder-image"));
+    assertNotNull(app.get("s2iJava"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) app.get("s2iJava")).get("builderImage"));
     // Should contain replicas
-    assertEquals(3, helmExampleValues.get("replicas"));
-    // Should NOT contain not-found: as this property is ignored
-    assertNull(helmExampleValues.get("not-found"));
-    // Should contain vcs-url with the overridden value from properties
-    assertEquals("Overridden", helmExampleValues.get("vcs-url"));
+    assertEquals(3, app.get("replicas"));
+    // Should NOT contain notFound: as this property is ignored
+    assertNull(app.get("notFound"));
+    // Should contain vcsUrl with the overridden value from properties
+    assertEquals("Overridden", app.get("vcsUrl"));
   }
 
   @Test
   public void valuesShouldContainExpectedDataInDevProfile() throws IOException {
-    Map<String, Object> values = Serialization.yamlMapper().readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values.dev.yaml"), Map.class);
+    Map<String, Object> values = Serialization.yamlMapper()
+        .readValue(Main.class.getClassLoader().getResourceAsStream(CHART_OUTPUT_LOCATION + "/values-dev.yaml"), Map.class);
     assertNotNull(values, "Values is null!");
 
     assertNotNull(values.containsKey(ROOT_CONFIG_NAME), "Does not contain `" + ROOT_CONFIG_NAME + "`");
@@ -87,13 +94,13 @@ class HelmOpenshiftExampleTest {
     Map<String, Object> helmExampleValues = (Map<String, Object>) values.get(ROOT_CONFIG_NAME);
 
     // Should contain s2i configuration
-    assertNotNull(helmExampleValues.get("s2i-java"));
-    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2i-java")).get("builder-image"));
+    assertNotNull(helmExampleValues.get("s2iJava"));
+    assertEquals("fabric8/s2i-java", ((Map<String, Object>) helmExampleValues.get("s2iJava")).get("builderImage"));
     // Should contain replicas
     assertEquals(3, helmExampleValues.get("replicas"));
-    // Should NOT contain not-found: as this property is ignored
-    assertNull(helmExampleValues.get("not-found"));
-    // Should contain vcs-url with the value from properties
-    assertEquals("Only for DEV!", helmExampleValues.get("vcs-url"));
+    // Should NOT contain notFound: as this property is ignored
+    assertNull(helmExampleValues.get("notFound"));
+    // Should contain vcsUrl with the value from properties
+    assertEquals("Only for DEV!", helmExampleValues.get("vcsUrl"));
   }
 }

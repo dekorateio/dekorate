@@ -15,6 +15,17 @@
  */
 package io.dekorate.example;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.URL;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.testing.annotation.Inject;
+import io.dekorate.testing.annotation.KubernetesIntegrationTest;
+import io.dekorate.testing.annotation.OnServicePresentCondition;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -22,16 +33,6 @@ import io.fabric8.kubernetes.client.LocalPortForward;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import io.dekorate.testing.annotation.Inject;
-import io.dekorate.testing.annotation.KubernetesIntegrationTest;
-import io.dekorate.testing.annotation.OnServicePresentCondition;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // The test assumes that the jaeger operator is installed an a jaeger named simplest is available and thus a service simplest-jaeger is available.
 @OnServicePresentCondition("simplest-collector")
@@ -54,13 +55,13 @@ public class SpringBootOnKubernetesIT {
     System.out.println("Forwarding port");
     try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
       assertTrue(p.isAlive());
-      URL url = new URL("http://localhost:"+p.getLocalPort()+"/");
+      URL url = new URL("http://localhost:" + p.getLocalPort() + "/");
 
       OkHttpClient client = new OkHttpClient();
       Request request = new Request.Builder().get().url(url).build();
       Response response = client.newCall(request).execute();
       assertEquals(response.body().string(), "Chaining + Hello from Spring Boot!");
-    } catch (Exception e)  {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

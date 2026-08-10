@@ -63,7 +63,7 @@ public class AddCronJobDecorator extends ResourceProvidingDecorator<KubernetesLi
       return;
     }
 
-    CronJobFluent.SpecNested<CronJobBuilder> cronJobBuilder = new CronJobBuilder()
+    CronJobFluent<CronJobBuilder>.SpecNested<CronJobBuilder> cronJobBuilder = new CronJobBuilder()
         .withApiVersion(API_VERSION)
         .withNewMetadata()
         .withName(name)
@@ -80,7 +80,7 @@ public class AddCronJobDecorator extends ResourceProvidingDecorator<KubernetesLi
       cronJobBuilder = cronJobBuilder.withStartingDeadlineSeconds(job.getStartingDeadlineSeconds());
     }
 
-    JobTemplateSpecFluent.SpecNested<CronJobSpecFluent.JobTemplateNested<CronJobFluent.SpecNested<CronJobBuilder>>> jobBuilder = cronJobBuilder
+    JobTemplateSpecFluent<CronJobSpecFluent<CronJobFluent<CronJobBuilder>.SpecNested<CronJobBuilder>>.JobTemplateNested<CronJobFluent<CronJobBuilder>.SpecNested<CronJobBuilder>>>.SpecNested<CronJobSpecFluent<CronJobFluent<CronJobBuilder>.SpecNested<CronJobBuilder>>.JobTemplateNested<CronJobFluent<CronJobBuilder>.SpecNested<CronJobBuilder>>> jobBuilder = cronJobBuilder
         .withNewJobTemplate()
         .withNewSpec()
         .withCompletionMode(job.getCompletionMode().name());

@@ -46,7 +46,7 @@ public class ContainerAdapter {
     String name = container.getName();
 
     builder.withName(container.getName()).withImage(container.getImage()).withCommand(container.getCommand())
-        .withArgs(container.getArguments());
+        .withArgs(container.getArguments()).withWorkingDir(container.getWorkingDir());
 
     for (Env env : container.getEnvVars()) {
       builder.accept(new AddEnvVarDecorator(env));

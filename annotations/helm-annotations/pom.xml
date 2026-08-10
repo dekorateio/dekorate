@@ -2,7 +2,7 @@
  <parent>
     <artifactId>annotations</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>3.3-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +11,7 @@
   <name>Dekorate :: Annotations :: Helm</name>
 
   <properties>
-    <yaml-path.version>0.0.5</yaml-path.version>
+    <yaml-path.version>0.0.9</yaml-path.version>
   </properties>
 
   <dependencies>
@@ -86,8 +86,9 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven-compiler-plugin}</version>
         <configuration>
-          <source>${java.source}</source>
-          <target>${java.target}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.release}</release>
           <annotationProcessors>
             <processor>io.sundr.builder.internal.processor.BuildableProcessor</processor>
             <processor>io.sundr.transform.internal.TemplateTransformationProcessor</processor>
@@ -113,6 +114,26 @@
                   <artifact>*:*</artifact>
                   <includes>
                     <include>io/dekorate/helm/annotation/**</include>
+                    <include>META-INF/MANIFEST.MF</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+          <execution>
+            <id>model</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>model</shadedClassifierName>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <includes>
+                    <include>io/dekorate/helm/model/**</include>
                     <include>META-INF/MANIFEST.MF</include>
                   </includes>
                 </filter>

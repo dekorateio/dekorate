@@ -9,8 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.sun.net.httpserver.HttpServer;
 
 @SpringBootApplication
-public class App
-{
+public class App {
   public static void main(String[] args) throws IOException {
     int serverPort = 8080;
     HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
@@ -23,7 +22,7 @@ public class App
       exchange.close();
     }));
     server.setExecutor(null); // creates a default executor
-    System.out.println("Listening in port "+serverPort);
+    System.out.println("Listening in port " + serverPort);
     server.start();
   }
 

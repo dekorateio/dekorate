@@ -15,10 +15,11 @@
  */
 package io.dekorate.example;
 
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
-import io.dekorate.kubernetes.annotation.ConfigMapVolume;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import io.dekorate.kubernetes.annotation.ConfigMapVolume;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
 
 @KubernetesApplication(configMapVolumes = @ConfigMapVolume(volumeName = "bar-volume", configMapName = "foo-map"))
 @SpringBootApplication

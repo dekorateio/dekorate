@@ -15,12 +15,13 @@
  */
 package io.dekorate.example;
 
-import io.dekorate.kubernetes.annotation.Label;
-import io.dekorate.openshift.annotation.OpenshiftApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.dekorate.kubernetes.annotation.Label;
+import io.dekorate.openshift.annotation.OpenshiftApplication;
 
 @OpenshiftApplication(labels = @Label(key = "decorated-by", value = "dekorate"))
 @RestController

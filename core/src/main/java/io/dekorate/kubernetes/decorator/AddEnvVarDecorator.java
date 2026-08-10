@@ -62,9 +62,9 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
     Predicate<EnvFromSourceBuilder> matchingEnvFrom = new Predicate<EnvFromSourceBuilder>() {
       public boolean test(EnvFromSourceBuilder e) {
-        if (e.getSecretRef() != null && e.getSecretRef().getName() != null) {
-          return e.getSecretRef().getName().equals(env.getSecret());
-        } else if (e.getConfigMapRef() != null && e.editConfigMapRef().getName() != null) {
+        if (e.buildSecretRef() != null && e.buildSecretRef().getName() != null) {
+          return e.buildSecretRef().getName().equals(env.getSecret());
+        } else if (e.buildConfigMapRef() != null && e.editConfigMapRef().getName() != null) {
           return e.editConfigMapRef().getName().equals(env.getConfigmap());
         }
         return false;
@@ -101,7 +101,8 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
       builder.addNewEnv().withName(env.getName()).withNewValueFrom()
           .withNewSecretKeyRef(env.getValue(), env.getSecret(), null).endValueFrom().endEnv();
     } else {
-      builder.addNewEnvFrom().withNewSecretRef(env.getSecret(), null).endEnvFrom();
+      builder.addNewEnvFrom().withNewSecretRef(env.getSecret(), null)
+          .withPrefix(env.getPrefix()).endEnvFrom();
     }
   }
 
@@ -119,7 +120,8 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
       builder.addNewEnv().withName(env.getName()).withNewValueFrom()
           .withNewConfigMapKeyRef(env.getValue(), env.getConfigmap(), null).endValueFrom().endEnv();
     } else {
-      builder.addNewEnvFrom().withNewConfigMapRef(env.getConfigmap(), null).endEnvFrom();
+      builder.addNewEnvFrom().withNewConfigMapRef(env.getConfigmap(), null)
+          .withPrefix(env.getPrefix()).endEnvFrom();
     }
   }
 
@@ -145,18 +147,12 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
 
   @Override
   public int hashCode() {
-
     return Objects.hash(env);
-  }
-
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
   }
 
   @Override
   public List<ConfigReference> getConfigReferences() {
-    if (Strings.isNotNullOrEmpty(env.getValue())) {
+    if (env.getValue() != null) {
       return Arrays.asList(buildConfigReferenceForEnvValue());
     }
 
@@ -176,6 +172,6 @@ public class AddEnvVarDecorator extends ApplicationContainerDecorator<ContainerB
       path = "spec.template.spec.containers.(name == " + getContainerName() + ")" + envFilter;
     }
 
-    return new ConfigReference(property, path, env.getValue());
+    return new ConfigReference.Builder(property, path).withValue(env.getValue()).build();
   }
 }

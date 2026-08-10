@@ -36,6 +36,7 @@ import io.dekorate.knative.decorator.AddAzureFileVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddConfigMapVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddEmptyDirVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddHostAliasesToRevisionDecorator;
+import io.dekorate.knative.decorator.AddNodeSelectorToRevisionDecorator;
 import io.dekorate.knative.decorator.AddPvcVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddSecretVolumeToRevisionDecorator;
 import io.dekorate.knative.decorator.AddSidecarToRevisionDecorator;
@@ -292,6 +293,10 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
       resourceRegistry.decorate(KNATIVE, new AddHostAliasesToRevisionDecorator(hostAlias));
     }
 
+    if (config.getNodeSelector() != null) {
+      resourceRegistry.decorate(KNATIVE, new AddNodeSelectorToRevisionDecorator(config.getNodeSelector()));
+    }
+
   }
 
   @Override
@@ -331,7 +336,7 @@ public class KnativeManifestGenerator extends AbstractKubernetesManifestGenerato
 
   /**
    * Creates a {@link Service} for the {@link KnativeConfig}.
-   * 
+   *
    * @param config The sesssion.
    * @return The deployment config.
    */

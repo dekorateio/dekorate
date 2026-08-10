@@ -56,8 +56,8 @@ public class CertificateConfigAdapter {
 
   private static CertificateConfig getCertificateConfig(Map<String, Object> map) {
     CertificateConfigBuilder certificate = new CertificateConfigBuilder()
-        .withName(getString(map, "name", ""))
-        .withSecretName(getString(map, "secretName"));
+        .withName(getOptionalString(map, "name").orElse(null))
+        .withSecretName(getOptionalString(map, "secretName").orElse(null));
 
     // optional configuration
     getOptionalMap(map, "subject").ifPresent(s -> certificate.withSubject(getSubject(s)));
@@ -92,9 +92,15 @@ public class CertificateConfigAdapter {
   }
 
   private static Vault getVaultConfig(Map<String, Object> map) {
+    Optional<String> server = getOptionalString(map, "server");
+    Optional<String> path = getOptionalString(map, "path");
+    if (!server.isPresent() && !path.isPresent()) {
+      return null;
+    }
+
     VaultBuilder issuer = new VaultBuilder()
-        .withServer(getString(map, "server"))
-        .withPath(getString(map, "path"));
+        .withServer(server.get())
+        .withPath(path.get());
 
     // optional configuration
     getOptionalMap(map, "authTokenSecretRef").ifPresent(a -> issuer.withAuthTokenSecretRef(getLocalObjectRef(a)));
@@ -125,8 +131,13 @@ public class CertificateConfigAdapter {
   }
 
   private static CA getCaConfig(Map<String, Object> map) {
+    Optional<String> secretName = getOptionalString(map, "secretName");
+    if (!secretName.isPresent()) {
+      return null;
+    }
+
     CABuilder issuer = new CABuilder()
-        .withSecretName(getString(map, "secretName"));
+        .withSecretName(secretName.get());
 
     // optional configuration
     getOptionalArrayString(map, "crlDistributionPoints").ifPresent(issuer::withCrlDistributionPoints);
@@ -172,8 +183,13 @@ public class CertificateConfigAdapter {
   }
 
   private static IssuerRef getIssuerRef(Map<String, Object> objectMap) {
+    Optional<String> name = getOptionalString(objectMap, "name");
+    if (!name.isPresent()) {
+      return null;
+    }
+
     IssuerRefBuilder builder = new IssuerRefBuilder();
-    builder.withName(getString(objectMap, "name"));
+    builder.withName(name.get());
     getOptionalString(objectMap, "kind").ifPresent(builder::withKind);
     getOptionalString(objectMap, "group").ifPresent(builder::withGroup);
     return builder.build();
@@ -206,22 +222,8 @@ public class CertificateConfigAdapter {
     }).orElse(defaultValue);
   }
 
-  private static String getString(Map<String, Object> map, String key) {
-    return getOptionalString(map, key)
-        .orElseThrow(() -> new IllegalArgumentException("Missing property '" + key + "' in Certificate"));
-  }
-
-  private static String getString(Map<String, Object> map, String key, String defaultStr) {
-    return getOptionalString(map, key).orElse(defaultStr);
-  }
-
   private static Optional<String> getOptionalString(Map<String, Object> map, String key) {
     return Optional.ofNullable(get(map, key)).map(o -> (String) o).filter(Strings::isNotNullOrEmpty);
-  }
-
-  private static Map<String, Object> getMap(Map<String, Object> map, String key) {
-    return getOptionalMap(map, key)
-        .orElseThrow(() -> new IllegalArgumentException("Missing property '" + key + "' in Certificate"));
   }
 
   private static Optional<Map<String, Object>> getOptionalMap(Map<String, Object> map, String key) {

@@ -42,4 +42,6 @@ public @interface Env {
   String field() default "";
 
   String resourceField() default "";
+
+  String prefix() default "";
 }

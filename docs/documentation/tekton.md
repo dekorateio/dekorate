@@ -38,7 +38,6 @@ Two sets of resources will be generated, each representing a different configura
 This set of resources contains:
 
 - Pipeline
-- PipelineResource (git, output image)
 - PipelineRun
 - Task (build, package and push, deploy)
 - RBAC resources
@@ -70,7 +69,7 @@ to make using `tekton` as easy as it gets.
 ##### Git Resource
 
 The generated tasks and pipelines, assume the project is under version control and more specifically git.
-So, in order to `run` the pipeline or the `task` a `PiepelineResource` of type `git` is required.
+So, in order to `run` the pipeline or the `task` a `PipelineResource` of type `git` is required.
 If the project is added to git, the resource will be generated for you. If for any reason the use of an external resource is
 preferred then it needs to be configured, like:
 
@@ -103,8 +102,8 @@ after the application will be generated and used.
 
 The generated pvc can be customized using the following properties:
 
-- dekorate.tekton.source-workspace-size (defaults to `1Gi`)
-- dekorate.tekton.source-workspace-storage-class (defaults to `standard`)
+- dekorate.tekton.source-workspace-claim.size (defaults to `1Gi`)
+- dekorate.tekton.source-workspace-claim.storage-class (defaults to `standard`)
 
 The option to provide an existing pvc (by name) instead of generating one is also
 provided, using `dekorate.tekton.source-workspace-claim`.
@@ -144,4 +143,6 @@ used if explicitly requested:
 dekorate.tekton.use-local-docker-config-json=true
 ```
 
+#### related examples
+- [spring boot with Tekton example](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-tekton-example)
 

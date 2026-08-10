@@ -17,6 +17,9 @@
 
 package io.dekorate.tekton.decorator;
 
+import static io.dekorate.tekton.step.DeployStep.PATH_TO_YML_PARAM_NAME;
+import static io.dekorate.tekton.step.StepUtils.param;
+
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.fabric8.tekton.pipeline.v1beta1.Step;
 import io.fabric8.tekton.pipeline.v1beta1.StepBuilder;
@@ -26,21 +29,18 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   private static final String STEP_NAME = "deploy";
   private static final String DEPLOY_CMD = "kubectl";
-  private static final String PATH_TO_YML_PARAM_NAME = "pathToYml";
 
   private final String stepName;
-  private final String projectName;
   private final String deployerImage;
 
-  public AddDeployStepDecorator(String taskName, String stepName, String projectName, String deployerImage) {
-    super(taskName);
-    this.stepName = stepName;
-    this.projectName = projectName;
-    this.deployerImage = deployerImage;
+  public AddDeployStepDecorator(String taskName, String deployerImage) {
+    this(taskName, STEP_NAME, deployerImage);
   }
 
-  public AddDeployStepDecorator(String taskName, String projectName, String deployerImage) {
-    this(taskName, STEP_NAME, projectName, deployerImage);
+  public AddDeployStepDecorator(String taskName, String stepName, String deployerImage) {
+    super(taskName);
+    this.stepName = stepName;
+    this.deployerImage = deployerImage;
   }
 
   @Override
@@ -50,12 +50,13 @@ public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDe
 
   public Step createDeployStep() {
     return new StepBuilder().withName(stepName).withImage(deployerImage).withCommand(DEPLOY_CMD)
-        .withArgs(new String[] { "apply", "-f", param(PATH_TO_YML_PARAM_NAME) }).withWorkingDir(sourcePath(projectName))
+        .withArgs(new String[] { "apply", "-f", param(PATH_TO_YML_PARAM_NAME) })
+        .withWorkingDir(sourcePath())
         .build();
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class, AddProjectBuildStepDecorator.class, AddImageBuildStepDecorator.class };
+    return new Class[] { AddProjectBuildStepDecorator.class, AddImageBuildStepDecorator.class };
   }
 }

@@ -18,6 +18,7 @@ package io.dekorate.kubernetes.config;
 import io.dekorate.ConfigurationRegistry;
 import io.dekorate.config.DefaultConfiguration;
 import io.dekorate.kubernetes.configurator.ApplyDeployToApplicationConfiguration;
+import io.dekorate.kubernetes.configurator.ApplyImagePullSecretConfiguration;
 import io.dekorate.kubernetes.configurator.PopulateWebPort;
 import io.dekorate.project.ApplyProjectInfo;
 
@@ -28,6 +29,7 @@ public class DefaultKubernetesConfigGenerator implements KubernetesConfigGenerat
   public DefaultKubernetesConfigGenerator(ConfigurationRegistry configurationRegistry) {
     this.configurationRegistry = configurationRegistry;
     this.configurationRegistry.add(new ApplyProjectInfo(getProject()));
+    this.configurationRegistry.add(new ApplyImagePullSecretConfiguration());
     this.configurationRegistry.add(new PopulateWebPort());
     this.configurationRegistry.add(new ApplyDeployToApplicationConfiguration());
     add(new DefaultConfiguration<KubernetesConfig>(KubernetesConfig.newKubernetesConfigBuilderFromDefaults()));

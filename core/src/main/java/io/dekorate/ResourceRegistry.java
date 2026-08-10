@@ -16,14 +16,14 @@
 package io.dekorate;
 
 import static io.dekorate.utils.Development.isVerbose;
+import static io.dekorate.utils.TopologicalSort.sortDecorators;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -46,12 +46,9 @@ public class ResourceRegistry {
   private final Map<String, Set<Decorator>> customDecorators = new HashMap<>();
   private final Map<String, KubernetesListBuilder> customGroups = new HashMap<>();
 
-  private static final Comparator<Decorator> DECORATOR_COMPARATOR = (a, b) -> a.compareTo(b) == 0 ? b.compareTo(a)
-      : a.equals(b) ? 0 : 1;
-
   /**
    * Get all registered groups.
-   * 
+   *
    * @return The groups map.
    */
   public Map<String, KubernetesListBuilder> groups() {
@@ -60,7 +57,7 @@ public class ResourceRegistry {
 
   /**
    * Get the global builder
-   * 
+   *
    * @return The groups map.
    */
   public KubernetesListBuilder common() {
@@ -69,7 +66,7 @@ public class ResourceRegistry {
 
   /**
    * Add a {@link Decorator}.
-   * 
+   *
    * @param decorator The decorator.
    */
   public void decorate(Decorator decorator) {
@@ -78,7 +75,7 @@ public class ResourceRegistry {
 
   /**
    * Add a {@link Decorator} to the specified resource group.
-   * 
+   *
    * @param group The group.
    * @param decorator The decorator.
    */
@@ -91,7 +88,7 @@ public class ResourceRegistry {
 
   /**
    * Add a resource to all groups.
-   * 
+   *
    * @param metadata
    */
   public void add(HasMetadata metadata) {
@@ -100,7 +97,7 @@ public class ResourceRegistry {
 
   /**
    * Add a resource to the specified group.
-   * 
+   *
    * @param group The group.
    * @param metadata The resource.
    */
@@ -118,7 +115,7 @@ public class ResourceRegistry {
    * Add a {@link Decorator} to the specified custom group.
    * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
    * To add a custom decorator, you need to explicitly specify it using this method.
-   * 
+   *
    * @param group The group.
    * @param decorator The decorator.
    */
@@ -133,7 +130,7 @@ public class ResourceRegistry {
    * Add a resource to the specified custom group.
    * Custom groups hold custom resources and are not mixed and matched with Kubernetes/Openshift resources.
    * To add a custom resource, you need to explicitly specify it using this method.
-   * 
+   *
    * @param group The group.
    * @param metadata The resource.
    */
@@ -148,18 +145,18 @@ public class ResourceRegistry {
 
   /**
    * Generate all resources.
-   * 
+   *
    * @return A map of {@link KubernetesList} by group name.
    */
   protected Map<String, KubernetesList> generate() {
-    if (!this.common.getItems().isEmpty()) {
+    if (!this.common.buildItems().isEmpty()) {
       if (this.groups.isEmpty()) {
         KubernetesListBuilder builder = new KubernetesListBuilder();
-        builder.addToItems(common.buildItems().toArray(new HasMetadata[common.getItems().size()]));
+        builder.addToItems(common.buildItems().toArray(new HasMetadata[common.buildItems().size()]));
         this.groups.put(DEFAULT_GROUP, builder);
       } else {
         this.groups.forEach((group, builder) -> builder
-            .addToItems(common.buildItems().toArray(new HasMetadata[common.getItems().size()])));
+            .addToItems(common.buildItems().toArray(new HasMetadata[common.buildItems().size()])));
       }
     }
 
@@ -175,14 +172,12 @@ public class ResourceRegistry {
 
     groupDecorators.forEach((group, decorators) -> {
       if (groups.containsKey(group)) {
-        Set<Decorator> union = new TreeSet<>(DECORATOR_COMPARATOR);
+        log("Handling group '%s'", group);
+        Set<Decorator> union = new TreeSet<>();
         union.addAll(decorators);
         union.addAll(globalDecorators);
-        for (Decorator d : applyConstraints(union)) {
-          if (isVerbose()) {
-            LOGGER.info("Applying decorator '%s'", d.getClass().getName());
-          }
-
+        for (Decorator d : sortDecorators(union)) {
+          log("Applying decorator '%s'", d.getClass().getName());
           groups.get(group).accept(d);
         }
       }
@@ -195,14 +190,12 @@ public class ResourceRegistry {
 
     customDecorators.forEach((group, decorators) -> {
       if (customGroups.containsKey(group)) {
-        Set<Decorator> union = new TreeSet<>(DECORATOR_COMPARATOR);
+        log("Handling group '%s'", group);
+        Set<Decorator> union = new TreeSet<>();
         union.addAll(decorators);
         union.addAll(globalDecorators);
-        for (Decorator d : applyConstraints(union)) {
-          if (isVerbose()) {
-            LOGGER.info("Applying decorator '%s'", d.getClass().getName());
-          }
-
+        for (Decorator d : sortDecorators(union)) {
+          log("Applying decorator '%s'", d.getClass().getName());
           customGroups.get(group).accept(d);
         }
       }
@@ -212,55 +205,45 @@ public class ResourceRegistry {
     return resources;
   }
 
+  /**
+   * @deprecated since 3.5.3. Use `getConfigReferences(group)` instead.
+   */
+  @Deprecated
   public List<WithConfigReferences> getConfigReferences() {
-    Set<Decorator> configReferences = new HashSet<>();
-
     Set<Decorator> allDecorators = new HashSet<>();
     allDecorators.addAll(globalDecorators);
     groupDecorators.values().forEach(allDecorators::addAll);
     customDecorators.values().forEach(allDecorators::addAll);
 
+    return extractConfigReferences(allDecorators);
+  }
+
+  public List<WithConfigReferences> getConfigReferences(String group) {
+    Set<Decorator> allDecorators = new HashSet<>();
+    allDecorators.addAll(globalDecorators);
+    Optional.ofNullable(groupDecorators.get(group)).ifPresent(allDecorators::addAll);
+    Optional.ofNullable(customDecorators.get(group)).ifPresent(allDecorators::addAll);
+
+    return extractConfigReferences(allDecorators);
+  }
+
+  private List<WithConfigReferences> extractConfigReferences(Set<Decorator> allDecorators) {
+    Set<Decorator> configReferences = new HashSet<>();
     for (Decorator decorator : allDecorators) {
       if (decorator instanceof WithConfigReferences) {
         configReferences.add(decorator);
       }
     }
 
-    return applyConstraints(configReferences)
+    return sortDecorators(configReferences)
         .stream()
         .map(WithConfigReferences.class::cast)
         .collect(Collectors.toList());
   }
 
-  public List<Decorator> applyConstraints(Set<Decorator> decorators) {
-    List<Decorator> result = new ArrayList<>();
-    Decorator[] array = decorators.toArray(new Decorator[decorators.size()]);
-    // We can't guarantee that `when `decorator a < b and b < c then a < c``.
-    // Why?
-    // Because our comparators express constraints on particular pairs and can't express the global order.
-    // So, in order to be accurate we need to compare each decorator, with ALL OTHER decorators.
-    // In other words we don't ANY sorting algorithm, we need bubble sort.
-    bubbleSort(array);
-    for (Decorator d : array) {
-      result.add(d);
-    }
-    return result;
-  }
-
-  /**
-   * Bubble sort for decorators.
-   */
-  public void bubbleSort(Decorator[] decorators) {
-    int n = decorators.length;
-    Decorator temp = null;
-    for (int i = 0; i < n; i++) {
-      for (int j = 1; j < (n - i); j++) {
-        if (decorators[j].compareTo(decorators[j - 1]) < 0) {
-          temp = decorators[j - 1];
-          decorators[j - 1] = decorators[j];
-          decorators[j] = temp;
-        }
-      }
+  private void log(String format, Object... args) {
+    if (isVerbose()) {
+      LOGGER.info(format, args);
     }
   }
 }

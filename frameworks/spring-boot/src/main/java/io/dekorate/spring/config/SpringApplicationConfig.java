@@ -16,9 +16,14 @@
 package io.dekorate.spring.config;
 
 import io.dekorate.kubernetes.config.Configuration;
+import io.dekorate.project.BuildInfo;
+import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.BuildableReference;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = @BuildableReference(Configuration.class))
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class)
+})
 public class SpringApplicationConfig extends Configuration {
 }

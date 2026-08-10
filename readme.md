@@ -1,14 +1,4 @@
-Dekorate is a one-stop jar to Kubernetes manifest generation that works for all jvm languages regardless of your build tool.
-
-It makes generating Kubernetes manifests as easy as adding a dependency to the classpath.
-
-Stop wasting time editing xml, json and yml and customize the kubernetes manifests as you configure your java application.
-
-## Rebranding Notice
-
-This project was originally called `ap4k` which stood for `Annotation Processors for Kubernetes`.
-As the project now supports `decorating` of kubernetes manifests without the use of annotations, the name `ap4k` no longer describes the project in the best possible way. So, the project has been renamed to `dekorate`.
-
+jbang ./scripts/ChangeVersion.java readme.md io.dekorate 4.0.1
 ## Features
 
 - Generates manifest via annotation processing
@@ -90,7 +80,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -135,7 +125,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>thorntail-spring-starter</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -160,7 +150,7 @@ Add the following dependency to your project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -237,7 +227,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -573,7 +563,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>option-annotations</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -704,7 +694,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-annotations</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 ### OpenShift 
@@ -724,7 +714,7 @@ This module can be added to the project using:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-annotations</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ``` 
 #### Integrating with S2i
@@ -780,7 +770,7 @@ When the `tekton` module is added to the project:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>tekton-annotations</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -867,8 +857,8 @@ after the application will be generated and used.
 
 The generated pvc can be customized using the following properties:
 
-  - dekorate.tekton.source-workspace-size (defaults to `1Gi`)
-  - dekorate.tekton.source-workspace-storage-class (defaults to `standard`)
+  - dekorate.tekton.source-workspace-claim.size (defaults to `1Gi`)
+  - dekorate.tekton.source-workspace-claim.storage-class (defaults to `standard`)
   
 The option to provide an existing pvc (by name) instead of generating one is also
 provided, using `dekorate.tekton.source-workspace-claim`.
@@ -919,7 +909,7 @@ Dekorate also supports generating manifests for `knative`. To make use of
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>knative-annotations</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -1013,7 +1003,7 @@ With spring boot, we suggest you start with one of the provided starters:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-spring-starter</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -1023,7 +1013,7 @@ Or if you are on [OpenShift](https://openshift.com):
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshfit-spring-starter</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```
 
@@ -1184,7 +1174,7 @@ With Thorntail, it is recommended to add a dependency on one of the provided sta
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-thorntail-starter</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -1195,7 +1185,7 @@ Or, if you use [OpenShift](https://openshift.com):
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshfit-thorntail-starter</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -1279,10 +1269,11 @@ This hook will just trigger a jib build in order to perform a container build.
 In order to use it, one needs to add the `jib-annotations` dependency.
 
 ```xml
-<dependencies>
-  <groupId>io.dekorate</groupId>
-  <artifactId>jib-annotations</artifactId>
-</dependencies>
+<dependency>
+    <groupId>io.dekorate</groupId>
+    <artifactId>jib-annotations</artifactId>
+    <version>4.1.5</version>
+</dependency>
 ```
 
 Without the need of any additional configuration, one trigger the hook by passing `-Ddekorate.build=true`  as an argument to the build, for example:
@@ -1336,7 +1327,7 @@ The kubernetes extension can be used by adding the following dependency:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>kubernetes-junit</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```    
 This dependency gives access to [@KubernetesIntegrationTest](testing/kubernetes-junit/src/main/java/io/dekorate/testing/annotation/KubernetesIntegrationTest.java) which is what enables the extension for your tests.
@@ -1408,7 +1399,7 @@ To use that you need to add:
 <dependency>
   <groupId>io.dekorate</groupId>
   <artifactId>openshift-junit</artifactId>
-  <version>3.3-SNAPSHOT</version>
+  <version>4.1.5</version>
 </dependency>
 ```    
 By adding the annotation to your test class the following things will happen:
@@ -1748,7 +1739,7 @@ And provide the certificate configuration. The minimal information that the Deko
 To know more about how to use the Cert-Manager extension, please go to [the Cert-Manager Dekorate documentation](https://dekorate.io/docs/cert-manager).
 
 #### related examples
-- [spring boot with cert_manager](examples/spring-boot-with-certmanager-example)
+- [spring boot with cert_manager](examples/spring-boot-on-kubernetes-with-certmanager-example)
 
 #### External generator integration
 
@@ -1821,7 +1812,7 @@ The example below configures the Mapstruct, Lombok and Dekorate annotation proce
                         <path>
                             <groupId>io.dekorate</groupId>
                             <artifactId>kubernetes-annotations</artifactId>
-                            <version>3.3-SNAPSHOT</version>
+                            <version>4.1.5</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -1840,7 +1831,7 @@ The bom can be imported like:
             <dependency>
                <groupId>io.dekorate</groupId>
                <artifactId>dekorate-bom</artifactId>
-               <version>3.3-SNAPSHOT</version>
+               <version>4.1.5</version>
                <type>pom</type>
                <scope>import</scope>
             </dependency>

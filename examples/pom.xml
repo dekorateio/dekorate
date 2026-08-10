@@ -3,13 +3,18 @@
   <parent>
     <artifactId>dekorate-project</artifactId>
     <groupId>io.dekorate</groupId>
-    <version>3.3-SNAPSHOT</version>
+    <version>999-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
   <artifactId>examples</artifactId>
+
   <packaging>pom</packaging>
   <name>Dekorate :: Examples</name>
+
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
 
   <profiles>
     <profile>
@@ -23,6 +28,7 @@
         <module>kubernetes-with-configmap-volume-example</module>
         <module>kubernetes-with-custom-image-name-example</module>
         <module>kubernetes-with-hostaliases-example</module>
+        <module>kubernetes-with-nodeselectors-example</module>
         <module>frameworkless-on-kubernetes-example</module>
         <module>frameworkless-on-openshift-example</module>
         <module>spring-boot-on-kubernetes-example</module>
@@ -41,13 +47,12 @@
         <module>spring-boot-with-jaeger-on-kubernetes-example</module>
         <module>spring-boot-with-tekton-example</module>
         <module>spring-boot-with-tekton-and-m2-pvc-example</module>
-        <module>spring-boot-with-certmanager-example</module>
+        <module>spring-boot-on-kubernetes-with-certmanager-example</module>
+        <module>spring-boot-on-openshift-with-certmanager-example</module>
         <module>thorntail-on-kubernetes-example</module>
         <module>thorntail-on-openshift-example</module>
         <module>vertx-on-kubernetes-example</module>
         <module>vertx-on-openshift-example</module>
-        <module>multimodule-projects-on-kubernetes-example</module>
-        <module>multimodule-projects-on-openshift-example</module>
         <module>minikube-example</module>
         <module>minikube-example-with-properties</module>
         <module>helm-on-kubernetes-example</module>
@@ -55,6 +60,7 @@
         <module>kind-example</module>
       </modules>
     </profile>
+
     <profile>
       <id>with-dockerio</id>
       <activation>
@@ -74,6 +80,7 @@
         <module>spring-boot-on-kubernetes-with-sbo-example</module>
       </modules>
     </profile>
+
     <profile>
       <id>with-gradle-examples</id>
       <activation>
@@ -94,6 +101,20 @@
       <id>with-knative-examples</id>
       <modules>
         <module>knative-example</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>with-openshift-specific-examples</id>
+      <modules>
+        <module>multimodule-projects-on-openshift-example</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>with-kubernetes-specific-examples</id>
+      <modules>
+        <module>multimodule-projects-on-kubernetes-example</module>
       </modules>
     </profile>
   </profiles>

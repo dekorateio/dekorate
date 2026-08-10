@@ -60,12 +60,12 @@ public class AddProjectBuildStepDecorator extends NamedTaskDecorator implements 
         .withImage(image)
         .withCommand(command)
         .withArgs(arguments)
-        .withWorkingDir(sourcePath(projectName))
+        .withWorkingDir(sourcePath())
         .endStep();
   }
 
   @Override
   public Class<? extends Decorator>[] after() {
-    return new Class[] { AddInitStepDecorator.class };
+    return new Class[] { AddGitCloneStepDecorator.class };
   }
 }

@@ -79,7 +79,7 @@ public class ApplyJvmOptsConfigurator extends Configurator<BaseConfigFluent<?>> 
   }
 
   private void setJavaOptsEnvVar(String envVar, BaseConfigFluent<?> kubernetesConfig, JvmConfig jvmConfig) {
-    Optional<String> existing = Arrays.stream(kubernetesConfig.getEnvVars())
+    Optional<String> existing = Arrays.stream(kubernetesConfig.buildEnvVars())
         .filter(e -> e.getName().equals(envVar))
         .map(Env::getValue)
         .findFirst();

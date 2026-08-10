@@ -32,4 +32,6 @@ public @interface AddIfStatement {
   String onResourceName() default "";
 
   boolean withDefaultValue() default true;
+
+  String description() default "";
 }

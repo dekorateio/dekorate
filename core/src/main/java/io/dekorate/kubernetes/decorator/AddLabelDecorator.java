@@ -58,16 +58,15 @@ public class AddLabelDecorator extends NamedResourceDecorator<ObjectMetaFluent> 
   }
 
   @Override
-  public void andThenVisit(ObjectMetaFluent item, ObjectMeta resourceMeta) {
+  public void andThenVisit(ObjectMetaFluent item, String kind, ObjectMeta resourceMeta) {
     if (label.getKinds() == null || label.getKinds().length == 0 || Arrays.asList(label.getKinds()).contains(kind)) {
       item.addToLabels(label.getKey(), label.getValue());
     }
   }
 
   @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class, ApplyApplicationContainerDecorator.class,
-        AddSidecarDecorator.class };
+  public void andThenVisit(ObjectMetaFluent item, ObjectMeta resourceMeta) {
+    item.addToLabels(label.getKey(), label.getValue());
   }
 
   @Override

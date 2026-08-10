@@ -16,24 +16,26 @@
 
 package io.dekorate.example;
 
-import io.dekorate.utils.Labels;
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-
-import java.util.Optional;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Map;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Labels;
+import io.dekorate.utils.Serialization;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 
 class KubernetesExampleTest {
 
   @Test
   public void shouldContainConfigMap() {
-    KubernetesList list = Serialization.unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(KubernetesExampleTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/kubernetes.yml"));
     assertNotNull(list);
     Deployment deployment = findFirst(list, Deployment.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(deployment);
@@ -47,8 +49,8 @@ class KubernetesExampleTest {
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 
 }

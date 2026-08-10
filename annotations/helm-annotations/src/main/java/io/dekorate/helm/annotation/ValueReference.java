@@ -42,4 +42,14 @@ public @interface ValueReference {
    * @return The complete Helm expression to be replaced with.
    */
   String expression() default "";
+
+  String description() default "";
+
+  int minimum() default Integer.MIN_VALUE;
+
+  int maximum() default Integer.MAX_VALUE;
+
+  String pattern() default "";
+
+  boolean required() default false;
 }

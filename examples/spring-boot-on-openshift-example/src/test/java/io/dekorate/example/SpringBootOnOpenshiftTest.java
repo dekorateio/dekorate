@@ -24,29 +24,32 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.openshift.api.model.BuildConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.dekorate.utils.Serialization;
 
 class SpringBootOnOpenshiftTest {
 
   @Test
   public void shouldHaveMatchingOutputImageAndTrigger() {
-    KubernetesList list = Serialization.unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(getClass().getClassLoader().getResourceAsStream("META-INF/dekorate/openshift.yml"));
     assertNotNull(list);
     DeploymentConfig d = findFirst(list, DeploymentConfig.class).orElseThrow(() -> new IllegalStateException());
     BuildConfig b = findFirst(list, BuildConfig.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(d);
     assertNotNull(b);
-    assertTrue(d.getSpec().getTriggers().stream().anyMatch(t -> t.getImageChangeParams().getFrom().getName().equals(b.getSpec().getOutput().getTo().getName())),
-      "Could not find trigger with image change params from: " + b.getSpec().getOutput().getTo().getName());
+    assertTrue(
+        d.getSpec().getTriggers().stream()
+            .anyMatch(t -> t.getImageChangeParams().getFrom().getName().equals(b.getSpec().getOutput().getTo().getName())),
+        "Could not find trigger with image change params from: " + b.getSpec().getOutput().getTo().getName());
   }
 
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

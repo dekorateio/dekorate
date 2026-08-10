@@ -2,9 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.dekorate</groupId>
+  <parent>
+    <groupId>io.dekorate</groupId>
+    <artifactId>examples</artifactId>
+    <version>999-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
   <artifactId>spring-boot-with-prometheus-on-kubernetes-example</artifactId>
-  <version>3.3-SNAPSHOT</version>
   <name>Dekorate :: Examples :: Spring Boot with Prometheus on Kubernetes</name>
 
   <properties>
@@ -12,7 +17,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <version.spring-boot>2.5.12</version.spring-boot>    <version.micrometer>1.0.9</version.micrometer>
+    <version.spring-boot>2.5.12</version.spring-boot>
+    <version.micrometer>1.0.9</version.micrometer>
     <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
   </properties>
 
@@ -61,6 +67,7 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
+          <release>${java.release}</release>
         </configuration>
       </plugin>
       <plugin>

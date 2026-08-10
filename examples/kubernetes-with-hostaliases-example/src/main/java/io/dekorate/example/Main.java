@@ -15,13 +15,14 @@
  */
 package io.dekorate.example;
 
-import io.dekorate.kubernetes.annotation.HostAlias;
-import io.dekorate.kubernetes.annotation.KubernetesApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@KubernetesApplication(hostAliases = {@HostAlias(ip = "127.0.0.1", hostnames = "foo.org,bar.com"),
-  @HostAlias(ip = "10.0.0.1", hostnames = "test.com")})
+import io.dekorate.kubernetes.annotation.HostAlias;
+import io.dekorate.kubernetes.annotation.KubernetesApplication;
+
+@KubernetesApplication(hostAliases = { @HostAlias(ip = "127.0.0.1", hostnames = "foo.org,bar.com"),
+    @HostAlias(ip = "10.0.0.1", hostnames = "test.com") })
 @SpringBootApplication
 public class Main {
 

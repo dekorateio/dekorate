@@ -15,31 +15,31 @@
  */
 package io.dekorate.example;
 
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.knative.serving.v1.Service;
-
-import io.dekorate.utils.Serialization;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
+
+import io.dekorate.utils.Serialization;
+import io.fabric8.knative.serving.v1.Service;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesList;
 
 class SpringBootOnKnativeTest {
 
   @Test
   public void shouldContainDeployment() {
-    KubernetesList list = Serialization.unmarshalAsList(SpringBootOnKnativeTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
+    KubernetesList list = Serialization
+        .unmarshalAsList(SpringBootOnKnativeTest.class.getClassLoader().getResourceAsStream("META-INF/dekorate/knative.yml"));
     assertNotNull(list);
     Service s = findFirst(list, Service.class).orElseThrow(() -> new IllegalStateException());
     assertNotNull(s);
   }
 
-
   <T extends HasMetadata> Optional<T> findFirst(KubernetesList list, Class<T> t) {
     return (Optional<T>) list.getItems().stream()
-      .filter(i -> t.isInstance(i))
-      .findFirst();
+        .filter(i -> t.isInstance(i))
+        .findFirst();
   }
 }

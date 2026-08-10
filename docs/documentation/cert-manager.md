@@ -91,7 +91,7 @@ spec:
 
 #### Usage
 
-For an application (Quarkus, Spring Boot, ...) to be able to access the files mounted under `/etc/certs` from the secret, the application properties must also be updated. To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-with-certmanager-example) example which uses a PKCS Keystore.
+For an application (Quarkus, Spring Boot, ...) to be able to access the files mounted under `/etc/certs` from the secret, the application properties must also be updated. To see a practical working example, please go to [the Spring Boot with Cert-Manager](https://github.com/dekorateio/dekorate/tree/main/examples/spring-boot-on-kubernetes-with-certmanager-example) example which uses a PKCS Keystore.
 
 #### Securing Resources
 

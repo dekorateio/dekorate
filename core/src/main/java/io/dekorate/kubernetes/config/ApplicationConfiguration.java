@@ -18,10 +18,15 @@ package io.dekorate.kubernetes.config;
 import java.util.Map;
 
 import io.dekorate.Coordinates;
+import io.dekorate.project.BuildInfo;
 import io.dekorate.project.Project;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.BuildableReference;
 
-@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder")
+@Buildable(builderPackage = "io.fabric8.kubernetes.api.builder", refs = {
+    @BuildableReference(Project.class),
+    @BuildableReference(BuildInfo.class)
+})
 public class ApplicationConfiguration extends Configuration implements Coordinates {
 
   private String partOf;

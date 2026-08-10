@@ -12,7 +12,6 @@ import io.dekorate.certmanager.config.CertificatePrivateKey;
 import io.dekorate.certmanager.config.IssuerRef;
 import io.dekorate.certmanager.config.LocalObjectReference;
 import io.dekorate.certmanager.config.Subject;
-import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.utils.Strings;
 import io.fabric8.certmanager.api.model.meta.v1.ObjectReference;
@@ -26,36 +25,35 @@ import io.fabric8.certmanager.api.model.v1.CertificatePrivateKeyBuilder;
 import io.fabric8.certmanager.api.model.v1.X509Subject;
 import io.fabric8.certmanager.api.model.v1.X509SubjectBuilder;
 import io.fabric8.kubernetes.api.model.Duration;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 
 public class AddCertificateResourceDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 
+  private final String name;
   private final CertificateConfig config;
 
-  public AddCertificateResourceDecorator(CertificateConfig config) {
+  public AddCertificateResourceDecorator(String name, CertificateConfig config) {
+    this.name = name;
     this.config = config;
   }
 
   @Override
   public void visit(KubernetesListBuilder list) {
-    HasMetadata meta = getMandatoryDeploymentHasMetadata(list, ANY);
     CertificateBuilder builder = new CertificateBuilder();
 
     // metadata
     builder.withNewMetadata()
-        .withName(getName(meta))
-        .withNamespace(meta.getMetadata().getNamespace())
+        .withName(name)
         .endMetadata();
 
     // mandatory configuration
-    CertificateFluent.SpecNested<CertificateBuilder> spec = builder.withNewSpec().withSecretName(config.getSecretName());
+    CertificateFluent<?>.SpecNested<CertificateBuilder> spec = builder.withNewSpec().withSecretName(config.getSecretName());
 
     // issuer ref: it can be set or be auto generated (when it's auto generated, the name is the same as the Certificate res
     if (config.getIssuerRef() != null) {
       spec.withIssuerRef(toIssuerRef(config.getIssuerRef()));
     } else {
-      spec.withNewIssuerRef().withName(getName(meta)).endIssuerRef();
+      spec.withNewIssuerRef().withName(name).endIssuerRef();
     }
 
     // optional configuration
@@ -159,18 +157,4 @@ public class AddCertificateResourceDecorator extends ResourceProvidingDecorator<
     Optional.ofNullable(s.getStreetAddresses()).ifPresent(builder::withStreetAddresses);
     return builder.build();
   }
-
-  @Override
-  public Class<? extends Decorator>[] after() {
-    return new Class[] { ResourceProvidingDecorator.class };
-  }
-
-  private String getName(HasMetadata meta) {
-    if (Strings.isNullOrEmpty(config.getName())) {
-      return meta.getMetadata().getName();
-    }
-
-    return config.getName();
-  }
-
 }

@@ -21,7 +21,8 @@ on:
   push:
     branches:
       - main
-  pull_request:
+    paths-ignore:
+      - 'docs/**'
 
 jobs:
   cache:
@@ -31,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
       - name: Cache .m2 registry
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
@@ -45,31 +46,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        kubernetes: [v1.22.2]
+        kubernetes: [v1.31.1]
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
       - name: Setup Minikube-Kubernetes
-        uses: manusa/actions-setup-minikube@v2.7.1
+        uses: manusa/actions-setup-minikube@0e8062ceff873bd77979f39cf8fd3621416afe4d
         with:
-          minikube version: v1.23.2
+          minikube version: v1.34.0
           kubernetes version: ${{ matrix.kubernetes }}
           github token: ${{ secrets.GITHUB_TOKEN }}
           driver: 'docker'
           start args: '--force'
       - name: Cache .m2 registry
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-maven-
-      - name: Setup Java 8
+      - name: Setup Java 17
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
+          java-version: '17'
           distribution: 'adopt'
       - name: Dockerhub login
-        if: ${{secrets.DOCKERIO_USERNAME != null && secerts.DOCKERIO_PASSWORD != null }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERIO_USERNAME }}
@@ -82,68 +82,106 @@ jobs:
           kubectl get csv -n operators | grep service-binding-operator | awk -F" " '{print $7}'
       - name: Install Knative
         run: |
-          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-crds.yaml
-          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.2.0/serving-core.yaml
+          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.15.1/serving-crds.yaml
+          kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.15.1/serving-core.yaml
       - name: Install and Run Integration Tests
         run: |
-          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Pwith-knative-examples -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
+          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Pwith-service-binding-examples -Pwith-knative-examples -Pwith-kubernetes-specific-examples -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
       - name: Zip Artifacts
         if: failure()
         run: |
           zip -R manifests-k8s-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ci-manifests
           path: manifests-k8s-jvm${{ matrix.java }}.zip
 
-  openshift:
-    name: Openshift Build
+  tekton:
+    name: Tekton Build
     needs: cache
-    # the action "manusa/actions-setup-openshift@v1.1.4" only works in ubuntu-20.04
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        openshift: [v3.11.0]
+        kubernetes: [ v1.31.1 ]
+        tekton: [ v0.47.0 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
-      - name: Setup OpenShift
-        uses: manusa/actions-setup-openshift@v1.1.4
-        with:
-          oc version: ${{ matrix.openshift }}
-          github token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
+        shell: bash
       - name: Cache .m2 registry
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
+          key: ${{ runner.os }}-maven-${{ steps.get-date.outputs.date }}
           restore-keys: ${{ runner.os }}-maven-
-      - name: Setup Java 8
+      - name: Setup Minikube-Kubernetes
+        uses: manusa/actions-setup-minikube@0e8062ceff873bd77979f39cf8fd3621416afe4d
+        with:
+          minikube version: v1.34.0
+          kubernetes version: ${{ matrix.kubernetes }}
+          github token: ${{ secrets.GITHUB_TOKEN }}
+          driver: 'docker'
+          start args: '--force'
+      - name: Setup Java 17
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
+          java-version: '17'
           distribution: 'adopt'
       - name: Dockerhub login
-        if: ${{secrets.DOCKERIO_USERNAME != null && secerts.DOCKERIO_PASSWORD != null }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERIO_USERNAME }}
           password: ${{ secrets.DOCKERIO_PASSWORD }}
-      - name: Integration Tests
+      - name: Install Tekton
         run: |
-          oc login -u admin -p admin
-          oc new-project itests
-          oc import-image fabric8/s2i-java:2.3 --from=docker.io/fabric8/s2i-java:2.3 --confirm
-          oc tag --source docker docker.io/fabric8/s2i-java:2.3 s2i-java:2.3
-          ./mvnw -B clean install -Presources -Pwith-examples -Pwith-tests -Duser.name=dekorateio -Dformat.skip=true -Ddocker-registry=docker.io
+          kubectl apply -f https://github.com/tektoncd/pipeline/releases/download/${{ matrix.tekton }}/release.yaml
+      - name: Build
+        run: |
+          ./mvnw -B clean install -Dformat.skip=true -DskipTests
+      - name: Run Tekton Integration Tests
+        run: |
+          kubectl create namespace tekton
+          kubectl config set-context --current --namespace=tekton
+          cd examples/spring-boot-with-tekton-example
+          # Build example
+          mvn clean install -DskipTests -Ddekorate.docker.registry=docker.io -Ddekorate.docker.group=dekorateio -Ddekorate.tekton.use-local-docker-config-json=true -Ddekorate.tekton.projectBuilderArguments=clean,install,-Pwith-examples,-DskipTests,-Dformat.skip=true,-pl,examples/spring-boot-with-tekton-example,-am
+          # Install Tekton Task manifests
+          kubectl apply -f target/classes/META-INF/dekorate/tekton-task.yml
+          # Trigger Task workflow
+          kubectl apply -f target/classes/META-INF/dekorate/tekton-task-run.yml
+          # Wait to finish
+          kubectl wait --for=condition=Succeeded --timeout=800s TaskRun/spring-boot-with-tekton-example-run-now
+          kubectl wait deployment spring-boot-with-tekton-example --for condition=Available=True --timeout=180s
+          # Verify application
+          RESULT=$(kubectl exec $(kubectl get pod -l app.kubernetes.io/name=spring-boot-with-tekton-example -o name) -- wget -qO- http://localhost:9090)
+          if [[ "$RESULT" = *"Hello world"* ]]
+          then
+            exit 0
+          fi
+          echo "Application is not working. Result was: $RESULT"
+          exit 1
+      - name: Print logs at failures
+        if: failure()
+        run: |
+          kubectl config set-context --current --namespace=tekton
+          echo "kubectl get pods: "
+          kubectl get pods
+          echo "kubectl describe TaskRun/spring-boot-with-tekton-example-run-now: "
+          kubectl describe TaskRun/spring-boot-with-tekton-example-run-now
+          echo "kubectl logs spring-boot-with-tekton-example-run-now-pod --all-containers --max-log-requests 10: "
+          kubectl logs spring-boot-with-tekton-example-run-now-pod --all-containers --max-log-requests 10
       - name: Zip Artifacts
         if: failure()
         run: |
-          zip -R manifests-ocp-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
-      - uses: actions/upload-artifact@v1
+          zip -R manifests-tekton-jvm${{ matrix.java }}.zip 'classes/META-INF/dekorate/*'
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ci-manifests
-          path: manifests-ocp-jvm${{ matrix.java }}.zip
+          path: manifests-tekton-jvm${{ matrix.java }}.zip

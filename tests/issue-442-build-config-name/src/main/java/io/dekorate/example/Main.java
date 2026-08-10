@@ -21,7 +21,8 @@ import io.dekorate.annotation.Dekorate;
 @Dekorate
 public class Main {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
+    Thread.sleep(3_600_000);
   }
 
 }

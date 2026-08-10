@@ -44,7 +44,7 @@ public class ApplyReplicasToDeploymentConfigDecorator extends NamedResourceDecor
 
   @Override
   public void andThenVisit(DeploymentConfigSpecFluent deploymentSpec, ObjectMeta resourceMeta) {
-    if (replicas > 0) {
+    if (replicas >= 0) {
       deploymentSpec.withReplicas(replicas);
     }
   }
@@ -61,6 +61,9 @@ public class ApplyReplicasToDeploymentConfigDecorator extends NamedResourceDecor
       path = "(kind == DeploymentConfig && metadata.name == " + getName() + ").spec.replicas";
     }
 
-    return new ConfigReference(property, path, replicas);
+    return new ConfigReference.Builder(property, path)
+        .withDescription("The number of desired pods.")
+        .withMinimum(0)
+        .build();
   }
 }
