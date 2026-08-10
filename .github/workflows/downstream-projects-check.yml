@@ -102,7 +102,7 @@ jobs:
       - name: Kubernetes KinD Cluster
         uses: container-tools/kind-action@v2
         with:
-          version: v0.11.1
+          version: v0.17.0
           registry: true
       - name: Run
         run: |
@@ -133,7 +133,7 @@ jobs:
       - name: Kubernetes KinD Cluster
         uses: container-tools/kind-action@v2
         with:
-          version: v0.11.1
+          version: v0.17.0
           registry: true
       - name: Run
         run: |
