@@ -1,4 +1,3 @@
-jbang ./scripts/ChangeVersion.java readme.md io.dekorate 4.0.1
 ## Features
 
 - Generates manifest via annotation processing
