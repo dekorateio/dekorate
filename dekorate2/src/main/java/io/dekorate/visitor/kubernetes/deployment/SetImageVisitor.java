@@ -1,4 +1,4 @@
-package io.dekorate.visitor;
+package io.dekorate.visitor.kubernetes.deployment;
 
 import io.dekorate.core.Configuration;
 import io.dekorate.core.VisitorFactory;

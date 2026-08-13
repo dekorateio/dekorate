@@ -1,4 +1,4 @@
-package io.dekorate.visitor;
+package io.dekorate.visitor.kubernetes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
