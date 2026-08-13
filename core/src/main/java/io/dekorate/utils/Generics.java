@@ -31,7 +31,7 @@ import java.util.Map;
 public class Generics {
   /**
    * Get the underlying class for a type, or null if the type is a variable type.
-   * 
+   *
    * @param type the type
    * @return the underlying class
    */

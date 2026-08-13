@@ -31,7 +31,7 @@ public class FileProjectFactory {
 
   /**
    * Creates a {@link Project} from the specified {@link File}.
-   * 
+   *
    * @param file A file within the project.
    * @return The project.
    */
@@ -67,7 +67,7 @@ public class FileProjectFactory {
 
   /**
    * Read the {@link BuildInfo} from the specified path.
-   * 
+   *
    * @param path The path.
    * @return An {@link Optional} {@link BuildInfo}.
    */

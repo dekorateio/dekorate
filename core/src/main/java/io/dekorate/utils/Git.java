@@ -1,21 +1,21 @@
 /**
  * Copyright 2018 The original authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
 **/
 
 package io.dekorate.utils;
@@ -51,7 +51,7 @@ public class Git {
 
   /**
    * Get the git root.
-   * 
+   *
    * @param path Any path under the target git repo.
    * @return The {@link Path} to the git root.
    */
@@ -65,7 +65,7 @@ public class Git {
 
   /**
    * Get the git config.
-   * 
+   *
    * @param root the git root.
    * @return The {@link Path} to the git config.
    */
@@ -79,7 +79,7 @@ public class Git {
 
   /**
    * Get the git remote urls as a map.
-   * 
+   *
    * @param path the path to the git config.
    * @return A {@link Map} of urls per remote.
    */
@@ -106,7 +106,7 @@ public class Git {
 
   /**
    * Get the git remote url.
-   * 
+   *
    * @param path the path to the git config.
    * @param remote the remote.
    * @return The an {@link Optional} String with the URL of the specified remote.
@@ -147,7 +147,7 @@ public class Git {
 
   /**
    * Get the git branch.
-   * 
+   *
    * @param path the path to the git config.
    * @return The an {@link Optional} String with the branch.
    */
@@ -191,7 +191,7 @@ public class Git {
 
   /**
    * Create a predicate function that tracks if the a line is defined in the specified remote section.
-   * 
+   *
    * @param remote The target remote.
    * @param state An atomic boolean which holds the predicate state.
    * @reuturn The predicate.

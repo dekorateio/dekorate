@@ -65,7 +65,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
 
   /**
    * Writes a {@link Configuration}.
-   * 
+   *
    * @param config The target session configurations.
    * @return Map Entry containing the file system path of the written configuration and the actual content as the value
    */
@@ -94,7 +94,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
 
   /**
    * Writes a {@link Project}.
-   * 
+   *
    * @param project The project.
    * @return Map Entry containing the file system path of the written project and the actual content as the value
    */
@@ -119,7 +119,7 @@ public class SimpleFileWriter implements SessionWriter, WithProject {
 
   /**
    * Write the resources contained in the {@link KubernetesList} in a directory named after the specififed group.
-   * 
+   *
    * @param group The group.
    * @param list The resource list.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values

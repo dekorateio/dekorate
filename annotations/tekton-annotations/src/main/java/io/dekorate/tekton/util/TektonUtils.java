@@ -25,7 +25,7 @@ public class TektonUtils {
 
   /**
    * Gets the context path for the detected {@link Project}.
-   * 
+   *
    * @return the context path as {@link String}
    */
   public static final String getContextPath() {
@@ -36,7 +36,7 @@ public class TektonUtils {
 
   /**
    * Gets the context path for the specified {@link Project}.
-   * 
+   *
    * @param project the {@link Project}
    * @return the context path as {@link String}
    */

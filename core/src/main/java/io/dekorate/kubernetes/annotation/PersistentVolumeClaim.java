@@ -33,7 +33,7 @@ public @interface PersistentVolumeClaim {
 
   /*
    * The name of the claim.
-   * 
+   *
    * @return the name, or 'source' if no name specified.
    */
   String name() default "";
@@ -41,14 +41,14 @@ public @interface PersistentVolumeClaim {
   /*
    * The size requirement of the generated PVC in gigs.
    * This only makes sense for generated PVCs.
-   * 
+   *
    * @return the size, or 1Gi (default).
    */
   int size() default 1;
 
   /*
    * The unit (e.g. Ki, Mi, Gi) of the generated PVC for the source workspace.
-   * 
+   *
    * @return The unit, defaults in Gi.
    */
   String unit() default "Gi";
@@ -56,7 +56,7 @@ public @interface PersistentVolumeClaim {
   /*
    * The storage class requirement of the generated PVC
    * This only makes sense for generated PVCs.
-   * 
+   *
    * @return the storage class or standard (default).
    */
   String storageClass() default "standard";
@@ -65,7 +65,7 @@ public @interface PersistentVolumeClaim {
 
   /*
    * The labels to use as matchLabels in the generated PVC selector.
-   * 
+   *
    * @return
    */
   Label[] matchLabels() default {};

@@ -73,7 +73,7 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
 
   /**
    * Visit a part of a Resource.
-   * 
+   *
    * @param item the visited item
    * @param the {@link ObjectMeta} of the current resource.
    */
@@ -81,7 +81,7 @@ public abstract class NamedResourceDecorator<T> extends Decorator<VisitableBuild
 
   /**
    * Visit a part of a Resource.
-   * 
+   *
    * @param item the visited item
    * @param item toplevel resource kind
    * @param the {@link ObjectMeta} of the current resource.

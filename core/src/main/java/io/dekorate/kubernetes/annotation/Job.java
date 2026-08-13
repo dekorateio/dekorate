@@ -19,7 +19,7 @@ public @interface Job {
 
   /**
    * The job name.
-   * 
+   *
    * @return The job name.
    */
   String name();
@@ -40,7 +40,7 @@ public @interface Job {
 
   /**
    * CompletionMode specifies how Pod completions are tracked.
-   * 
+   *
    * @return the completion mode.
    */
   JobCompletionMode completionMode() default JobCompletionMode.NonIndexed;

@@ -32,14 +32,14 @@ public @interface OnServicePresentCondition {
 
   /**
    * The name of the service.
-   * 
+   *
    * @return The name.
    */
   String value();
 
   /**
    * The service namespace.
-   * 
+   *
    * @return The namespace or "" for the current namespace.
    */
   String namespace() default "";

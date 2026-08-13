@@ -23,7 +23,7 @@ public class Images {
 
   /**
    * Create an image from the individual parts.
-   * 
+   *
    * @param registry The registry.
    * @param group The repository.
    * @param name The name.
@@ -39,7 +39,7 @@ public class Images {
 
   /**
    * Create an image from the individual parts.
-   * 
+   *
    * @param registry The registry.
    * @param repository The repository.
    * @param tag The tag.
@@ -65,7 +65,7 @@ public class Images {
 
   /**
    * Return the registry part of the docker image.
-   * 
+   *
    * @param image The actual docker image.
    * @return The registry or null, if not registry was found.
    */
@@ -80,7 +80,7 @@ public class Images {
 
   /**
    * Return the docker image repository.
-   * 
+   *
    * @param image The docker image.
    * @return The image repository.
    */
@@ -101,7 +101,7 @@ public class Images {
 
   /**
    * Return the docker image name.
-   * 
+   *
    * @param image The docker image.
    * @return The image name.
    */
@@ -122,7 +122,7 @@ public class Images {
 
   /**
    * Return the tag of the image.
-   * 
+   *
    * @param image The docker image.
    * @return The tag if present, {@code latest} otherwise.
    */
@@ -135,7 +135,7 @@ public class Images {
 
   /**
    * Removes the tag of the image, if present.
-   * 
+   *
    * @param image The docker image.
    * @return The docker image without the tag.
    */

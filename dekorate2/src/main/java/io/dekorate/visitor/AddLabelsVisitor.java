@@ -16,16 +16,8 @@ public class AddLabelsVisitor<C extends Configuration> extends TypedVisitor<Obje
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void visit(ObjectMetaBuilder meta) {
-    Configuration kubernetes = config.getSubConfig("dekorate") != null
-        ? config.getSubConfig("dekorate").getSubConfig("kubernetes")
-        : null;
-    if (kubernetes == null) {
-      return;
-    }
-
-    Map<String, Object> labelsMap = kubernetes.getMap("labels");
+    Map<String, Object> labelsMap = config.resolveMap("dekorate.kubernetes.labels");
     if (labelsMap != null) {
       Map<String, String> labels = new LinkedHashMap<>();
       labelsMap.forEach((k, v) -> labels.put(k, v.toString()));

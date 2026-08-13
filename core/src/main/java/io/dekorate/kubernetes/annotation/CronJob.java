@@ -19,7 +19,7 @@ public @interface CronJob {
 
   /**
    * The cron job name.
-   * 
+   *
    * @return The cron job name.
    */
   String name();

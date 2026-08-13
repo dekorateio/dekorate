@@ -90,7 +90,7 @@ public class Metadata {
 
   /**
    * Create a {@link Predicate} that checks that a resource builder doesn't match the name and kind.
-   * 
+   *
    * @param HasMetadata The specified resource.
    * @return The predicate.
    */
@@ -100,7 +100,7 @@ public class Metadata {
 
   /**
    * Create a {@link Predicate} that checks that a resource builder doesn't match the name and kind.
-   * 
+   *
    * @param kind The specified kind.
    * @param name The specified name.
    * @return The predicate.

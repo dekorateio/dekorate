@@ -39,7 +39,7 @@ public class BuildInfo {
 
   /**
    * Constructor
-   * 
+   *
    * @param name The project name (e.g. maven artifactId).
    * @param version The project version (e.g. maven version).
    * @param packaging The project packaging (e.g. jar, war).
@@ -69,7 +69,7 @@ public class BuildInfo {
 
   /**
    * Get the project name.
-   * 
+   *
    * @return The project name.
    */
   public String getName() {
@@ -78,7 +78,7 @@ public class BuildInfo {
 
   /**
    * Get the project version.
-   * 
+   *
    * @return The project version.
    */
   public String getVersion() {
@@ -87,7 +87,7 @@ public class BuildInfo {
 
   /**
    * Get the project packaging.
-   * 
+   *
    * @return The project packaging.
    */
   public String getPackaging() {
@@ -96,7 +96,7 @@ public class BuildInfo {
 
   /**
    * Get the build tool name.
-   * 
+   *
    * @return the name of the build tool.
    */
   public String getBuildTool() {
@@ -105,7 +105,7 @@ public class BuildInfo {
 
   /*
    * Get the build tool version.
-   * 
+   *
    * @return the version of the build tool.
    */
   public String getBuildToolVersion() {
@@ -114,7 +114,7 @@ public class BuildInfo {
 
   /**
    * Get the output file name.
-   * 
+   *
    * @return The output file name.
    */
   public Path getOutputFile() {

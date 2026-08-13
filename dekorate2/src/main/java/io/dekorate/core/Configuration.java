@@ -99,6 +99,35 @@ public class Configuration {
     return null;
   }
 
+  @SuppressWarnings("unchecked")
+  public Object resolve(String path) {
+    String[] segments = path.split("\\.");
+    Map<String, Object> current = properties;
+    for (int i = 0; i < segments.length - 1; i++) {
+      Object next = current.get(segments[i]);
+      if (next instanceof Map) {
+        current = (Map<String, Object>) next;
+      } else {
+        return null;
+      }
+    }
+    return current.get(segments[segments.length - 1]);
+  }
+
+  public String resolveString(String path) {
+    Object v = resolve(path);
+    return v != null ? v.toString() : null;
+  }
+
+  @SuppressWarnings("unchecked")
+  public Map<String, Object> resolveMap(String path) {
+    Object v = resolve(path);
+    if (v instanceof Map) {
+      return (Map<String, Object>) v;
+    }
+    return null;
+  }
+
   public boolean has(String key) {
     return properties.containsKey(key);
   }

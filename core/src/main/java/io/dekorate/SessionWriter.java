@@ -43,7 +43,7 @@ public interface SessionWriter extends WithProject {
 
   /**
    * Writes all {@link Session} resources.
-   * 
+   *
    * @param session The target session.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
@@ -67,7 +67,7 @@ public interface SessionWriter extends WithProject {
 
   /**
    * Writes a {@link Configuration}.
-   * 
+   *
    * @param config The target session configurations.
    * @return Map Entry containing the file system path of the written configuration and the actual content as the value
    */
@@ -75,7 +75,7 @@ public interface SessionWriter extends WithProject {
 
   /**
    * Writes a {@link Project}.
-   * 
+   *
    * @param project The target session configurations.
    * @return Map Entry containing the file system path of the written project and the actual content as the value
    */
@@ -83,7 +83,7 @@ public interface SessionWriter extends WithProject {
 
   /**
    * Writes the specified resource list under the specified group file.
-   * 
+   *
    * @param group The group name.
    * @param list The resource list.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values

@@ -32,35 +32,35 @@ import io.dekorate.testing.CustomResourceCondition;
 public @interface OnCustomResourcePresentCondition {
   /**
    * The custom resource apiVersion.
-   * 
+   *
    * @return The apiVersion.
    */
   String apiVersion() default "v1";
 
   /**
    * The custom resource kind.
-   * 
+   *
    * @return The kind.
    */
   String kind();
 
   /**
    * The custom resource plural.
-   * 
+   *
    * @return The plural. If not specified the kind will be pluralized and converted to lowercase.
    */
   String plural() default "";
 
   /**
    * The name of the service.
-   * 
+   *
    * @return The name. Defaults to ANY.
    */
   String name() default ANY;
 
   /**
    * The service namespace.
-   * 
+   *
    * @return The namespace. Defaults to ANY.
    */
   String namespace() default ANY;

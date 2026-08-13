@@ -161,7 +161,7 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor impl
 
   /**
    * Get the output directory of the processor.
-   * 
+   *
    * @return The directroy.
    */
   public Path getOutputDirectory() {

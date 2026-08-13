@@ -99,7 +99,7 @@ public class BazelInfoReader implements BuildInfoReader {
 
   /**
    * Parse BUILD and read the jar configuration as a {@link Map}.
-   * 
+   *
    * @param path The path to BUILD.
    * @return A map containing all configuration found under jar.
    */

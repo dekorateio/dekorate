@@ -14,11 +14,9 @@ public class SetImageVisitor<C extends Configuration> extends TypedVisitor<Conta
 
   @Override
   public void visit(ContainerBuilder container) {
-    Configuration kubernetes = config.getSubConfig("dekorate") != null
-        ? config.getSubConfig("dekorate").getSubConfig("kubernetes")
-        : null;
-    if (kubernetes != null && kubernetes.getString("image") != null) {
-      container.withImage(kubernetes.getString("image"));
+    String image = config.resolveString("dekorate.kubernetes.image");
+    if (image != null) {
+      container.withImage(image);
     }
   }
 }
