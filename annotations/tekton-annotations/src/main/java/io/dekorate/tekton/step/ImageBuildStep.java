@@ -1,18 +1,18 @@
 /**
  * Copyright 2018 The original authors.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
 **/
 
 package io.dekorate.tekton.step;
@@ -76,7 +76,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified context.
-   *
+   * 
    * @param context the specified context.
    * @return the updated step.
    */
@@ -84,7 +84,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified dockerfile.
-   *
+   * 
    * @param dockerfile the specified dockerfile.
    * @return the updated step.
    */
@@ -92,7 +92,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified build image.
-   *
+   * 
    * @param buildImage the specified build image.
    * @return the updated step
    */
@@ -100,7 +100,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified build command.
-   *
+   * 
    * @param buildCommand the specified build command.
    * @return the updated step.
    */
@@ -108,7 +108,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified build arguments.
-   *
+   * 
    * @param buildArguments the specified build arguments.
    * @return the updated step.
    */
@@ -116,7 +116,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified push image.
-   *
+   * 
    * @param pushImage the specified push image.
    * @return the updated step.
    */
@@ -124,7 +124,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified push command.
-   *
+   * 
    * @param pushCommand the specified push command.
    * @return the updated step.
    */
@@ -132,7 +132,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Create a new step using the specified push arguments.
-   *
+   * 
    * @param pushArguments the specified push arguments.
    * @return the updated step.
    */
@@ -148,7 +148,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Returns true if the current build step requires an explicit push.
-   *
+   * 
    * @return true, if explict push is required.
    */
   public boolean isPushRequired() {
@@ -157,7 +157,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * Returns true if the current build step requires a docker socket
-   *
+   * 
    * @return true, if a docker socket is required.
    */
   public boolean isDockerSocketRequired() {
@@ -166,7 +166,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The conntext.
-   *
+   * 
    * @return the context.
    */
   public String getContext() {
@@ -175,7 +175,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The dockerfile.
-   *
+   * 
    * @return the dockerfile.
    */
   public String getDockerfile() {
@@ -184,7 +184,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The build command.
-   *
+   * 
    * @return the build command.
    */
   public String getBuildImage() {
@@ -193,7 +193,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The build command.
-   *
+   * 
    * @return the build command.
    */
   public String getBuildCommand() {
@@ -202,7 +202,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The build arguments.
-   *
+   * 
    * @return the build arguments.
    */
   public String[] getBuildArguments() {
@@ -211,7 +211,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The push image.
-   *
+   * 
    * @return the push image.
    */
   public String getPushImage() {
@@ -220,7 +220,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The push command.
-   *
+   * 
    * @return the push command.
    */
   public String getPushCommand() {
@@ -229,7 +229,7 @@ public abstract class ImageBuildStep<T extends ImageBuildStep> implements Step {
 
   /**
    * The push arguments.
-   *
+   * 
    * @return the push arguments.
    */
   public String[] getPushArguments() {

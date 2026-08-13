@@ -19,7 +19,7 @@ public @interface EmptyDirVolume {
 
   /**
    * The volumeName name.
-   *
+   * 
    * @return The volumeName name.
    */
   String volumeName();

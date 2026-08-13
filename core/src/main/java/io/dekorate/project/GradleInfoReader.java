@@ -148,7 +148,7 @@ public class GradleInfoReader implements BuildInfoReader {
 
   /**
    * Read settings.gradle and get root project properties.
-   *
+   * 
    * @param path The path to settings.gralde.
    * @return
    */
@@ -178,7 +178,7 @@ public class GradleInfoReader implements BuildInfoReader {
 
   /**
    * Parse build.gradle and read the jar configuration as a {@link Map}.
-   *
+   * 
    * @param path The path to build.gralde.
    * @return A map containing all configuration found under jar.
    */
@@ -221,7 +221,7 @@ public class GradleInfoReader implements BuildInfoReader {
 
   /**
    * Parse gradle.properties into {@link Map}.
-   *
+   * 
    * @return A map containing all configuration found it the properties file.
    */
   protected static Map<String, String> readGradleProperties(Path gradlePropertiesPath) {

@@ -74,7 +74,7 @@ public class Strings {
    * "a" -> "A"
    * "string" -> "String"
    * "myString" -> "MyString"
-   *
+   * 
    * @param str The input string.
    * @return The input string with the first character upper cased.
    */
@@ -101,7 +101,7 @@ public class Strings {
    * "A" -> "a"
    * "String" -> "string"
    * "MyString" -> "myString"
-   *
+   * 
    * @param str The input string.
    * @return The input string with the first character lower cased.
    */
@@ -123,7 +123,7 @@ public class Strings {
 
   /**
    * Convert kebab case to camel case.
-   *
+   * 
    * @param str The input string.
    * @return The camel cased string.
    */
@@ -135,7 +135,7 @@ public class Strings {
 
   /**
    * Convert camel case to kebab case.
-   *
+   * 
    * @param str The input string
    * @return The kebab cased string
    */

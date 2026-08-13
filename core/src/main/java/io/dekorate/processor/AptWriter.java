@@ -57,7 +57,7 @@ public class AptWriter extends SimpleFileWriter implements SessionWriter, WithPr
 
   /**
    * Writes all {@link Session} resources.
-   *
+   * 
    * @param session The target session.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values
    */
@@ -73,7 +73,7 @@ public class AptWriter extends SimpleFileWriter implements SessionWriter, WithPr
 
   /**
    * Write the resources contained in the {@link KubernetesList} in a directory named after the specififed group.
-   *
+   * 
    * @param group The group.
    * @param list The resource list.
    * @return Map containing the file system paths of the output files as keys and their actual content as the values

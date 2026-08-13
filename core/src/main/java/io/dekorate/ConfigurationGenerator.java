@@ -26,7 +26,7 @@ public interface ConfigurationGenerator extends SessionHandler {
 
   /**
    * Get the {@link Configuration} class that is associated with the {@link ConfigurationGenerator}.
-   *
+   * 
    * @return The {@link Configuration} class.
    */
   default Class<? extends Configuration> getConfigType() {

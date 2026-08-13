@@ -19,7 +19,7 @@ public @interface Env {
 
   /**
    * The name of the environment variable.
-   *
+   * 
    * @return the name.
    */
   String name();
@@ -29,7 +29,7 @@ public @interface Env {
    * name/value), this value will be assigned to the environment variable. If used
    * with other fields, like secret, configmap, or field, it will indicate the key
    * from with the value should be drawn.
-   *
+   * 
    * @return The value of the variable, or the property/key from which the value
    *         will be pulled (in case of secret, configmap or field).
    */

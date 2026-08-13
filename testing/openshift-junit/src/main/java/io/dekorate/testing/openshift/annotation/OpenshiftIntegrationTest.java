@@ -41,35 +41,35 @@ public @interface OpenshiftIntegrationTest {
 
   /**
    * Flag to define whether the extension should automatically apply resources.
-   *
+   * 
    * @return True, if extension should automatically deploy dekorate generated resources.
    */
   boolean deployEnabled() default true;
 
   /**
    * Flag to define whether the extension should automatically perform container builds.
-   *
+   * 
    * @return True, if extensions should automatically perform container builds.
    */
   boolean buildEnabled() default true;
 
   /**
    * Flag to define whether the extension should automatically push image.
-   *
+   * 
    * @return True, if extension should automatically push the image.
    */
   boolean pushEnabled() default false;
 
   /**
    * The amount of time in seconds to wait for the image stream tags to be available.
-   *
+   * 
    * @return The max amount in milliseconds.
    */
   long imageStreamTagTimeout() default 120000;
 
   /**
    * The amount of time in milliseconds to wait for application to become ready.
-   *
+   * 
    * @return The max amount in milliseconds.
    */
   long readinessTimeout() default 300000;

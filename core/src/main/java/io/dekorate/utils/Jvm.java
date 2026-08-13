@@ -25,7 +25,7 @@ public class Jvm {
   /*
    * Get the current Jvm version.
    * As this is an int, it trims "1.x" prefix of older version.
-   *
+   * 
    * @return The Jvm version.
    */
   public static int getVersion() {

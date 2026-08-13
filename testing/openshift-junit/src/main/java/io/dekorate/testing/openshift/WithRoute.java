@@ -47,7 +47,7 @@ public interface WithRoute
    * Inject a {@link io.fabric8.openshift.api.model.Route} or a {@link java.net.URL} to the specified {@link Field}.
    * The pod is matched using its corresponding endpoints.
    * In other words this acts like `inject route of service`
-   *
+   * 
    * @param context The execution context.
    * @param testInstance The target test instance.
    * @param field The field to inject.
@@ -89,7 +89,7 @@ public interface WithRoute
 
   /**
    * Returns the value of the {@link Named} annotation.
-   *
+   * 
    * @param field The target field.
    * @return An optional string with the name if the field is annotated or empty otherwise.
    */

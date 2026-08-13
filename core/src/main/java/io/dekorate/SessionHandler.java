@@ -25,7 +25,7 @@ public interface SessionHandler extends WithSession {
 
   /**
    * Add an {@link Element} to the generator.
-   *
+   * 
    * @param element The element.
    */
   default void add(Element element) {
@@ -33,7 +33,7 @@ public interface SessionHandler extends WithSession {
 
   /**
    * Add a {@link Map} to the generator.
-   *
+   * 
    * @param map The map.
    */
   default void add(Map map) {
@@ -41,7 +41,7 @@ public interface SessionHandler extends WithSession {
 
   /**
    * Get the annotation properties {@link Map} that matches, to the specified {@link Configuration} type.
-   *
+   * 
    * @param map The source map.
    * @param type The annotation type.
    * @return The the properties map.

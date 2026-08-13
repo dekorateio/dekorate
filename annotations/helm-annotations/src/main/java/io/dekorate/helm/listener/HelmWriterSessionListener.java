@@ -142,7 +142,7 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
 
   /**
    * Needs to be public in order to be called from outside the session context.
-   *
+   * 
    * @return the list of the Helm generated files.
    */
   public Map<String, String> writeHelmFiles(Project project,
@@ -624,9 +624,9 @@ public class HelmWriterSessionListener implements SessionListener, WithProject, 
     for (AddIfStatement addIfStatement : helmConfig.getAddIfStatements()) {
       ConfigReference configReference = new ConfigReference.Builder(
           deductProperty(helmConfig, addIfStatement.getProperty()), new String[0])
-          .withDescription(addIfStatement.getDescription())
-          .withValue(addIfStatement.getWithDefaultValue())
-          .build();
+              .withDescription(addIfStatement.getDescription())
+              .withValue(addIfStatement.getWithDefaultValue())
+              .build();
       values.put(deductProperty(helmConfig, addIfStatement.getProperty()), configReference);
     }
 

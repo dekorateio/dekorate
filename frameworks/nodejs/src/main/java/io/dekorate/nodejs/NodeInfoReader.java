@@ -113,7 +113,7 @@ public class NodeInfoReader implements BuildInfoReader {
    * - name
    * - version
    * - main
-   *
+   * 
    * @param path The path to package.json.
    * @return A map containing all configuration.
    */

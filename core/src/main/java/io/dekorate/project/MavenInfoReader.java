@@ -92,7 +92,7 @@ public class MavenInfoReader implements BuildInfoReader {
 
   /**
    * Read the artifactId from the document.
-   *
+   * 
    * @param document The document.
    * @return The artifactId.
    */
@@ -104,7 +104,7 @@ public class MavenInfoReader implements BuildInfoReader {
 
   /**
    * Read the version form the document.
-   *
+   * 
    * @pairam document The document.
    * @return The version, if exists, the parent version otherwise.
    */
@@ -115,7 +115,7 @@ public class MavenInfoReader implements BuildInfoReader {
 
   /**
    * Read the packaging form the document.
-   *
+   * 
    * @pairam document The document.
    * @return The version, if exists, the parent version otherwise.
    */
@@ -127,7 +127,7 @@ public class MavenInfoReader implements BuildInfoReader {
 
   /**
    * Read the parent version from the document.
-   *
+   * 
    * @param document The document.
    * @return The parent version, if exists. Throws IllegalStateException otherwise.
    */
@@ -139,7 +139,7 @@ public class MavenInfoReader implements BuildInfoReader {
 
   /**
    * Get the child {@link Element} that matches the specified name.
-   *
+   * 
    * @param element The element.
    * @param name The name.
    * @return An {@link Optional} element.
@@ -158,7 +158,7 @@ public class MavenInfoReader implements BuildInfoReader {
   /**
    * Get the child {@link Element} that matches the specified names.
    * This method will recurisively go through the names.
-   *
+   * 
    * @param element The element.
    * @param names The name array.
    * @return An {@link Optional} element.

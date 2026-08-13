@@ -30,14 +30,14 @@ public interface BuildInfoReader {
   /**
    * The order the reader will be applied.
    * Info readers will be sorted in ascending order.
-   *
+   * 
    * @return The order.
    */
   int order();
 
   /**
    * Checks if the reader can be applied to the current project.
-   *
+   * 
    * @param root The project root.
    * @return Returns true if applicable.
    */
@@ -45,7 +45,7 @@ public interface BuildInfoReader {
 
   /**
    * Reads all related project info from filesystem.
-   *
+   * 
    * @param root The project root.
    * @return The {@link BuildInfo} instance.
    */

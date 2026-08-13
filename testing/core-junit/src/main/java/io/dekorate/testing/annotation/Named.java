@@ -32,7 +32,7 @@ public @interface Named {
   /**
    * The name of the annotated resource.
    * This annotation is used as a qualifier for injection.
-   *
+   * 
    * @return
    */
   String value();

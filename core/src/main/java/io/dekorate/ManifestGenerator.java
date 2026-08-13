@@ -28,7 +28,7 @@ public interface ManifestGenerator<C extends Configuration> {
   /**
    * A number indicating the order each handler will be invoked.
    * Lower number will be invoked first.
-   *
+   * 
    * @return The number used for ordering.
    */
   int order();
@@ -44,7 +44,7 @@ public interface ManifestGenerator<C extends Configuration> {
 
   /**
    * Generate / populate the resources.
-   *
+   * 
    * @param config The config to handle.
    */
   void generate(C config);
@@ -59,7 +59,7 @@ public interface ManifestGenerator<C extends Configuration> {
   /**
    * Check if config is accepted.
    * A generator can choose to which config it should react.
-   *
+   * 
    * @param config The specified config class;
    * @returns True if config type is accepted, false otherwise.
    */

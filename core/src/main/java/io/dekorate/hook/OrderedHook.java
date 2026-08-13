@@ -74,7 +74,7 @@ public class OrderedHook extends ProjectHook {
 
   /**
    * Get the first non-null project found in the specified hooks.
-   *
+   * 
    * @param hooks The hooks.
    * @return The project or null, if no project found.
    */

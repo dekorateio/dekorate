@@ -24,14 +24,14 @@ public @interface Item {
 
   /**
    * The key name within the data section (in Secrets and ConfigMaps).
-   *
+   * 
    * @return The key.
    */
   String key();
 
   /**
    * The path where the file will be mounted.
-   *
+   * 
    * @return The path.
    */
   String path();

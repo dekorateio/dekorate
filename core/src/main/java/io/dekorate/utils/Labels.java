@@ -35,7 +35,7 @@ public class Labels {
 
   /**
    * Creates a {@link Map} with the labels for the {@link BaseConfig}.
-   *
+   * 
    * @param config The config.
    * @return A map containing the lables.
    */
@@ -58,7 +58,7 @@ public class Labels {
 
   /**
    * Creates a {@link Map} with the labels for the {@link ImageConfiguration}.
-   *
+   * 
    * @param config The config.
    * @return A map containing the lables.
    */

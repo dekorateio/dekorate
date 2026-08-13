@@ -30,7 +30,7 @@ import io.fabric8.kubernetes.api.builder.VisitableBuilder;
  * the actual code.
  * This is a Facade around configuration builders, which hide the builder specifics and only allows the use of
  * {@link Configurator} as visitors.
- *
+ * 
  * @param <C> The configuration class.
  */
 public class ConfigurationSupplier<C extends Configuration> implements Supplier<C>, Comparable<ConfigurationSupplier<C>> {

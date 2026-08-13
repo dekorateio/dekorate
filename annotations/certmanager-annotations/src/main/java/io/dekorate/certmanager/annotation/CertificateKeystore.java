@@ -24,7 +24,7 @@ import io.sundr.builder.annotations.Pojo;
 public @interface CertificateKeystore {
   /**
    * Create enables keystore creation for the Certificate.
-   *
+   * 
    * @return whether should create the keystore.
    */
   boolean create() default false;

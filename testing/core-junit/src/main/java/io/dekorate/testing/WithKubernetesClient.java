@@ -51,7 +51,7 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
 
   /**
    * Inject an instance of {@link KubernetesClient} to the specified {@link Field}.
-   *
+   * 
    * @param context The execution context.
    * @param testInstance The target test instance.
    * @param field The field to inject.
@@ -77,7 +77,7 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
 
   /**
    * Gets or creates an instance of {@link KubernetesClient} from the {@link ExtensionContext}.
-   *
+   * 
    * @param context The context.
    * @return An instance of the client.
    */
@@ -102,7 +102,7 @@ public interface WithKubernetesClient extends TestInstancePostProcessor {
   /**
    * Wait until the specified resources satisfy the specified predicate.
    * Workaround for https://github.com/fabric8io/kubernetes-client/issues/1607.
-   *
+   * 
    * @param context The context.
    * @param items The items.
    * @param condition The condition.

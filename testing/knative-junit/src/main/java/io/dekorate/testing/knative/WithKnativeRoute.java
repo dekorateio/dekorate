@@ -49,7 +49,7 @@ public interface WithKnativeRoute
    * Inject a {@link Route} to the specified {@link Field}.
    * The pod is matched using its corresponding endpoints.
    * In other words this acts like `inject pod of service`
-   *
+   * 
    * @param context The execution context.
    * @param testInstance The target test instance.
    * @param field The field to inject.

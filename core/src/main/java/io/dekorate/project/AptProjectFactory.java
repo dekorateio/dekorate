@@ -29,7 +29,7 @@ public class AptProjectFactory {
 
   /**
    * Creates a {@link Project} form the specified {@link ProcessingEnvironment}.
-   *
+   * 
    * @param environment The environment.
    * @return The project.
    */

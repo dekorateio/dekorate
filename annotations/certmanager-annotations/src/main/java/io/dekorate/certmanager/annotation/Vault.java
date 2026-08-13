@@ -35,21 +35,21 @@ public @interface Vault {
 
   /**
    * Vault authentication using token.
-   *
+   * 
    * @return the reference where to retrieve the Vault token.
    */
   LocalObjectReference authTokenSecretRef() default @LocalObjectReference;
 
   /**
    * Vault authentication using App Role auth mechanism.
-   *
+   * 
    * @return the app role authentication configuration.
    */
   VaultAppRole authAppRole() default @VaultAppRole;
 
   /**
    * Vault authentication using Kubernetes service account.
-   *
+   * 
    * @return the kubernetes authentication configuration.
    */
   VaultKubernetesAuth authKubernetes() default @VaultKubernetesAuth;

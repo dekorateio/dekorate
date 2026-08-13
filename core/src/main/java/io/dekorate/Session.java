@@ -79,7 +79,7 @@ public class Session {
 
   /**
    * Creates or reuses a single instance of Session.
-   *
+   * 
    * @return The Session.
    */
   public static Session getSession() {
@@ -88,7 +88,7 @@ public class Session {
 
   /**
    * Creates or reuses a single instance of Session.
-   *
+   * 
    * @return The Session.
    */
   public static Session getSession(Logger logger) {
@@ -269,7 +269,7 @@ public class Session {
 
   /**
    * Close the session an get all resource groups.
-   *
+   * 
    * @return A map of {@link KubernetesList} by group name.
    */
   private Map<String, KubernetesList> generate() {

@@ -79,7 +79,7 @@ public class JaegerProcessor implements ManifestGenerator<JaegerAgentConfig> {
 
   /**
    * Create the collector host-port based on the specified {@link JaegerAgentConfig}.
-   *
+   * 
    * @param config The config.
    * @return A string with the full host-port.
    */
