@@ -4,20 +4,37 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.dekorate.core.Configuration;
+import io.dekorate.core.VisitorFactory;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 
-public class AddLabelsVisitor<C extends Configuration> extends TypedVisitor<ObjectMetaBuilder> {
+public class AddLabelsVisitor<C extends Configuration> extends TypedVisitor<ObjectMetaBuilder>
+    implements VisitorFactory {
 
-  private final Configuration config;
+  private static final String KEY_PATH = "dekorate.kubernetes.labels";
+
+  private Configuration config;
+
+  public AddLabelsVisitor() {
+  }
 
   public AddLabelsVisitor(Configuration config) {
     this.config = config;
   }
 
   @Override
+  public String getKeyPath() {
+    return KEY_PATH;
+  }
+
+  @Override
+  public TypedVisitor<?> create(Configuration config) {
+    return new AddLabelsVisitor<>(config);
+  }
+
+  @Override
   public void visit(ObjectMetaBuilder meta) {
-    Map<String, Object> labelsMap = config.resolveMap("dekorate.kubernetes.labels");
+    Map<String, Object> labelsMap = config.resolveMap(KEY_PATH);
     if (labelsMap != null) {
       Map<String, String> labels = new LinkedHashMap<>();
       labelsMap.forEach((k, v) -> labels.put(k, v.toString()));

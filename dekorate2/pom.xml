@@ -25,5 +25,10 @@
       <artifactId>kubernetes-client-api</artifactId>
       <version>${version.kubernetes-client}</version>
     </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <version>3.6.1.Final</version>
+    </dependency>
   </dependencies>
 </project>

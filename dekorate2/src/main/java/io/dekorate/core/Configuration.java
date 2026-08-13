@@ -5,9 +5,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class Configuration {
 
@@ -126,6 +128,26 @@ public class Configuration {
       return (Map<String, Object>) v;
     }
     return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  public Set<String> collectKeyPaths() {
+    Set<String> paths = new HashSet<>();
+    collectKeyPaths(properties, "", paths);
+    return paths;
+  }
+
+  @SuppressWarnings("unchecked")
+  private void collectKeyPaths(Map<String, Object> map, String prefix, Set<String> paths) {
+    for (Map.Entry<String, Object> entry : map.entrySet()) {
+      String path = prefix.isEmpty() ? entry.getKey() : prefix + "." + entry.getKey();
+      if (entry.getValue() instanceof Map) {
+        paths.add(path);
+        collectKeyPaths((Map<String, Object>) entry.getValue(), path, paths);
+      } else {
+        paths.add(path);
+      }
+    }
   }
 
   public boolean has(String key) {
