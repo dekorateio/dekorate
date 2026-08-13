@@ -14,7 +14,6 @@ Dekorate2 simplifies this by introducing:
 1. A **configuration tree** built from a properties file with dotted key paths
 2. A **visitor factory SPI** so visitors declare which config key they handle
 3. A **visitor registry** that auto-discovers and applies matching visitors
-4. **JBoss Logging** for visibility into what gets applied
 
 ## How it works
 
