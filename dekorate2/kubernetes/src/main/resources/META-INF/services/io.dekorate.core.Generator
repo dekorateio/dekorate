@@ -1,0 +1,5 @@
+io.dekorate.generator.kubernetes.deployment.DeploymentGenerator
+io.dekorate.generator.kubernetes.service.ServiceGenerator
+io.dekorate.generator.kubernetes.serviceaccount.ServiceAccountGenerator
+io.dekorate.generator.kubernetes.rbac.RbacGenerator
+io.dekorate.generator.kubernetes.secret.SecretGenerator

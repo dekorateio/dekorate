@@ -1,0 +1,5 @@
+io.dekorate.generator.kubernetes.common.AddLabelsDecorate
+io.dekorate.generator.kubernetes.common.AddAnnotationsDecorate
+io.dekorate.generator.kubernetes.common.SetNameDecorate
+io.dekorate.generator.kubernetes.common.SetNamespaceDecorate
+io.dekorate.generator.kubernetes.deployment.SetImageDecorate

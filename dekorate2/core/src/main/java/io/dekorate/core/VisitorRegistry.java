@@ -1,6 +1,7 @@
 package io.dekorate.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -31,6 +32,37 @@ public class VisitorRegistry {
     LOG.debugf("Manually registered: %s", factory.getClass().getName());
     factories.add(factory);
     return this;
+  }
+
+  public Configuration getConfig() {
+    return config;
+  }
+
+  public List<VisitorFactory> getFactories() {
+    return factories;
+  }
+
+  public void applyAll(VisitableBuilder<?, ?> builder, String... groups) {
+    Set<String> groupSet = new HashSet<>(Arrays.asList(groups));
+    int applied = 0;
+    for (VisitorFactory factory : factories) {
+      if (!groupSet.contains(factory.getGroup())) {
+        continue;
+      }
+      String keyPath = factory.getKeyPath();
+      Object value = config.resolve(keyPath);
+      if (value != null) {
+        LOG.infof("Applying visitor %s for key path: %s (group: %s)",
+            factory.getClass().getSimpleName(), keyPath, factory.getGroup());
+        TypedVisitor<?> visitor = factory.create(config);
+        builder.accept(visitor);
+        applied++;
+      } else {
+        LOG.debugf("Skipping visitor %s — key path not found: %s",
+            factory.getClass().getSimpleName(), keyPath);
+      }
+    }
+    LOG.infof("Visitors applied: %d (groups: %s)", applied, String.join(", ", groups));
   }
 
   public void applyAll(VisitableBuilder<?, ?> builder) {

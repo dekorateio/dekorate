@@ -10,25 +10,33 @@
     <version>999-SNAPSHOT</version>
   </parent>
 
-  <artifactId>dekorate2</artifactId>
-  <name>Dekorate :: Dekorate2</name>
-  <description>TypedVisitor example for modifying Kubernetes resources</description>
+  <artifactId>dekorate-2</artifactId>
+  <packaging>pom</packaging>
+  <name>Dekorate :: Dekorate 2</name>
+  <description>Improved Decorate-based approach to enrich Kubernetes resources</description>
 
   <properties>
-    <!-- Override the version to use the latest -->
     <version.kubernetes-client>7.8.0</version.kubernetes-client>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>kubernetes-client-api</artifactId>
-      <version>${version.kubernetes-client}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging</artifactId>
-      <version>3.6.1.Final</version>
-    </dependency>
-  </dependencies>
+  <modules>
+    <module>core</module>
+    <module>kubernetes</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- We override the version as Dekorate-1 use an older -->
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-client-api</artifactId>
+        <version>${version.kubernetes-client}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <version>3.6.3.Final</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

@@ -6,5 +6,9 @@ public interface VisitorFactory {
 
   String getKeyPath();
 
+  default String getGroup() {
+    return "common";
+  }
+
   TypedVisitor<?> create(Configuration config);
 }

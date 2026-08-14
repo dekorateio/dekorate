@@ -1,2 +1,0 @@
-io.dekorate.visitor.kubernetes.deployment.SetImageVisitor
-io.dekorate.visitor.kubernetes.AddLabelsVisitor

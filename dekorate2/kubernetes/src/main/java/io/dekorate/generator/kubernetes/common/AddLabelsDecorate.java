@@ -1,4 +1,4 @@
-package io.dekorate.visitor.kubernetes;
+package io.dekorate.generator.kubernetes.common;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -8,17 +8,17 @@ import io.dekorate.core.VisitorFactory;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 
-public class AddLabelsVisitor<C extends Configuration> extends TypedVisitor<ObjectMetaBuilder>
+public class AddLabelsDecorate<C extends Configuration> extends TypedVisitor<ObjectMetaBuilder>
     implements VisitorFactory {
 
   private static final String KEY_PATH = "dekorate.kubernetes.labels";
 
   private Configuration config;
 
-  public AddLabelsVisitor() {
+  public AddLabelsDecorate() {
   }
 
-  public AddLabelsVisitor(Configuration config) {
+  public AddLabelsDecorate(Configuration config) {
     this.config = config;
   }
 
@@ -29,7 +29,7 @@ public class AddLabelsVisitor<C extends Configuration> extends TypedVisitor<Obje
 
   @Override
   public TypedVisitor<?> create(Configuration config) {
-    return new AddLabelsVisitor<>(config);
+    return new AddLabelsDecorate<>(config);
   }
 
   @Override

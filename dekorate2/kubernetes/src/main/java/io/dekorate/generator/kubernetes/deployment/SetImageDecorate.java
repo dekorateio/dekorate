@@ -1,21 +1,21 @@
-package io.dekorate.visitor.kubernetes.deployment;
+package io.dekorate.generator.kubernetes.deployment;
 
 import io.dekorate.core.Configuration;
 import io.dekorate.core.VisitorFactory;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 
-public class SetImageVisitor<C extends Configuration> extends TypedVisitor<ContainerBuilder>
+public class SetImageDecorate<C extends Configuration> extends TypedVisitor<ContainerBuilder>
     implements VisitorFactory {
 
   private static final String KEY_PATH = "dekorate.kubernetes.image";
 
   private Configuration config;
 
-  public SetImageVisitor() {
+  public SetImageDecorate() {
   }
 
-  public SetImageVisitor(Configuration config) {
+  public SetImageDecorate(Configuration config) {
     this.config = config;
   }
 
@@ -25,8 +25,13 @@ public class SetImageVisitor<C extends Configuration> extends TypedVisitor<Conta
   }
 
   @Override
+  public String getGroup() {
+    return "deployment";
+  }
+
+  @Override
   public TypedVisitor<?> create(Configuration config) {
-    return new SetImageVisitor<>(config);
+    return new SetImageDecorate<>(config);
   }
 
   @Override

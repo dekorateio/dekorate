@@ -1,15 +1,20 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
+
 //DEPS io.fabric8:kubernetes-client-api:7.8.0
 //DEPS io.fabric8:kubernetes-model-apps:7.8.0
-//DEPS org.jboss.logging:jboss-logging:3.6.1.Final
-//DEPS org.jboss.logmanager:jboss-logmanager:3.1.1.Final
-//SOURCES core/Configuration.java
-//SOURCES core/VisitorFactory.java
-//SOURCES core/VisitorRegistry.java
-//SOURCES visitor/kubernetes/deployment/SetImageVisitor.java
-//SOURCES visitor/kubernetes/AddLabelsVisitor.java
+//DEPS org.jboss.logging:jboss-logging:3.6.3.Final
+//DEPS org.jboss.logmanager:jboss-logmanager:3.2.2.Final
+//DEPS io.dekorate:dekorate-2-core:999-SNAPSHOT
+//DEPS io.dekorate:dekorate-2-kubernetes:999-SNAPSHOT
 
-package io.dekorate;
+// USE SOURCES ./core/src/main/java/io/dekorate/core/Configuration.java
+// USE SOURCES ./core/src/main/java/io/dekorate/core/VisitorFactory.java
+// USE SOURCES ./core/src/main/java/io/dekorate/core/VisitorRegistry.java
+// USE SOURCES ./kubernetes/src/main/java/io/dekorate/generator/kubernetes/deployment/SetImageDecorate.java
+// USE SOURCES ./kubernetes/src/main/java/io/dekorate/generator/kubernetes/common/AddLabelsDecorate.java
+// USE SOURCES ./kubernetes/src/main/java/io/dekorate/generator/kubernetes/common/AddAnnotationsDecorate.java
+// USE SOURCES ./kubernetes/src/main/java/io/dekorate/generator/kubernetes/common/SetNameDecorate.java
+// USE SOURCES ./kubernetes/src/main/java/io/dekorate/generator/kubernetes/common/SetNamespaceDecorate.java
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -17,20 +22,20 @@ import java.nio.file.Paths;
 
 import io.dekorate.core.Configuration;
 import io.dekorate.core.VisitorRegistry;
-import io.dekorate.visitor.kubernetes.AddLabelsVisitor;
-import io.dekorate.visitor.kubernetes.deployment.SetImageVisitor;
+import io.dekorate.generator.kubernetes.common.AddLabelsDecorate;
+import io.dekorate.generator.kubernetes.deployment.SetImageDecorate;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.client.utils.Serialization;
 
-public class EnrichK8sDeployment {
+public class Fabric8BuilderWithTypedVisitor {
 
   public static void main(String[] args) throws IOException {
     System.setProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager");
 
     if (args.length < 1) {
-      System.err.println("Usage: jbang EnrichK8sDeployment.java <config-file>");
-      System.err.println("Example: jbang EnrichK8sDeployment.java application.properties");
+      System.err.println("Usage: jbang Fabric8BuilderWithTypedVisitor.java <config-file>");
+      System.err.println("Example: jbang Fabric8BuilderWithTypedVisitor.java application.properties");
       System.exit(1);
     }
 
@@ -61,8 +66,8 @@ public class EnrichK8sDeployment {
         .endSpec();
 
     VisitorRegistry registry = new VisitorRegistry(config)
-        .register(new SetImageVisitor<>())
-        .register(new AddLabelsVisitor<>());
+        .register(new SetImageDecorate<>())
+        .register(new AddLabelsDecorate<>());
     registry.applyAll(builder);
 
     Deployment deployment = builder.build();
