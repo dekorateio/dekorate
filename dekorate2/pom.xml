@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.dekorate</groupId>
+    <artifactId>dekorate-project</artifactId>
+    <version>999-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>dekorate-2</artifactId>
+  <packaging>pom</packaging>
+  <name>Dekorate :: Dekorate 2</name>
+  <description>Improved Decorate-based approach to enrich Kubernetes resources</description>
+
+  <properties>
+    <version.kubernetes-client>7.8.0</version.kubernetes-client>
+  </properties>
+
+  <modules>
+    <module>core</module>
+    <module>kubernetes</module>
+    <module>apt</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- We override the version as Dekorate-1 use an older -->
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-client-api</artifactId>
+        <version>${version.kubernetes-client}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <version>3.6.3.Final</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

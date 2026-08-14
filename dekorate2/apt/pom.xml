@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.dekorate</groupId>
+    <artifactId>dekorate-2</artifactId>
+    <version>999-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>dekorate-2-apt</artifactId>
+  <name>Dekorate :: Dekorate 2 :: APT</name>
+  <description>Annotation processor to bootstrap Dekorate2 Session at compile time</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-2-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-2-kubernetes</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>
