@@ -1,4 +1,4 @@
-# Dekorate2 - A simplified visitor-based approach to enrich Kubernetes resources
+# Dekorate 2 - Poc to improve Dekorate 
 
 ## Motivation
 
