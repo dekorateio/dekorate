@@ -313,16 +313,17 @@ State machine:  CREATED ──load()──► LOADED ──start()──► STAR
 
 ## Module structure
 
-The project is split into two Maven modules under a parent pom:
+The project is split into three Maven modules under a parent pom:
 
 - **`dekorate2-core`** — interfaces, SPI, session management (no Kubernetes-specific code)
 - **`dekorate2-kubernetes`** — generators and decorators (depends on core)
+- **`dekorate2-apt`** — annotation processor for compile-time bootstrap (depends on core + kubernetes)
 
 Concrete visitor classes are named `xxxDecorate` (e.g., `AddLabelsDecorate`, `SetImageDecorate`) to reflect that they _decorate_ existing resources.
 
 ```
 dekorate2/
-  pom.xml                                         # Parent pom (modules: core, kubernetes)
+  pom.xml                                         # Parent pom (modules: core, kubernetes, apt)
   example/                                        # JBang scripts and sample config (see example/README.md)
     application.properties
     Fabric8BuilderWithTypedVisitor.java
@@ -361,19 +362,35 @@ dekorate2/
     src/main/resources/META-INF/services/
       io.dekorate.core.Generator                  # ServiceLoader registration for generators
       io.dekorate.core.VisitorFactory             # ServiceLoader registration for decorators
+  apt/
+    pom.xml                                       # dekorate2-apt (depends on core + kubernetes)
+    src/main/java/io/dekorate/apt/
+      EnableDekorate.java                         # Marker annotation (POC trigger)
+      DekorateAnnotationProcessor.java            # JSR 269 processor (dual-trigger)
+    src/main/resources/META-INF/services/
+      javax.annotation.processing.Processor       # Registers the processor with javac
 ```
 
 ## Examples
 
-See the [example/](example/) folder for JBang scripts demonstrating the framework:
+See the [example/](example/) folder for scripts and projects demonstrating the framework:
 
-- **`GenerateK8sResourcesUsingDekorateSession.java`** — Session-based generation (recommended)
-- **`Fabric8BuilderWithTypedVisitor.java`** — manual visitor wiring (legacy)
+- **`GenerateK8sResourcesUsingDekorateSession.java`** — JBang: Session-based generation (recommended for quick demos)
+- **`Fabric8BuilderWithTypedVisitor.java`** — JBang: manual visitor wiring (legacy)
+- **`apt-demo/`** — Maven project: compile-time generation via `@EnableDekorate` or `-Ddekorate.enabled=true`
 
-Quick start:
+Quick start (JBang):
 
 ```bash
 jbang dekorate2/example/GenerateK8sResourcesUsingDekorateSession.java dekorate2/example/application.properties
+```
+
+Quick start (APT):
+
+```bash
+cd dekorate2/example/apt-demo
+mvn clean compile
+cat target/classes/META-INF/dekorate/kubernetes.yml
 ```
 
 ## TODO
@@ -387,4 +404,132 @@ jbang dekorate2/example/GenerateK8sResourcesUsingDekorateSession.java dekorate2/
 - [x] Move the Generator class and the key related visitors under the same package
 - [x] Create a common generator package where you will handle the metadata which are common to all the resources generated such as labels, annotations, name, namespace, etc
 - [x] Create under the module "dekorate2" a parent pom with 2 modules: core and kubernetes. Keep the code of session, interfaces, SPI under the core and move to kubernetes the generator, visitor classes. Rename the classes xxxVisitor to xxxDecorate.
-- [ ] Propose a solution to bootstrap a session at compilation time if Dekorate is enabled. This is needed when we don't use 
+- [x] Propose a solution to bootstrap a session at compilation time if Dekorate is enabled. This is needed when we don't use JBang or manual code to bootstrap a Session.
+
+## Compile-time Session bootstrap (annotation processor)
+
+When a project uses Dekorate as a library (not JBang), Kubernetes manifests should be generated automatically during `mvn compile` without any manual Session wiring. The `apt` module provides a **Java annotation processor** (JSR 269) that bootstraps the Session at compile time.
+
+The processor uses `@SupportedAnnotationTypes("*")`, which tells `javac` to invoke it on **every compilation round** regardless of which annotations are present. The processor is discovered via `META-INF/services/javax.annotation.processing.Processor` on the classpath. Once discovered, `javac` calls `process()` on every round — even if the user's code has zero annotations — and the processor decides internally whether to act.
+
+### Two trigger modes
+
+The processor supports two ways to activate generation, checked in order:
+
+| Trigger | How | Use case |
+|---|---|---|
+| **System property / env variable** | `-Ddekorate.enabled=true` or `DEKORATE_ENABLED=true` | No source changes; togglable per build (CI vs local) |
+| **`@EnableDekorate` annotation** | Place on any class | Explicit opt-in committed in source; self-documenting |
+
+If neither trigger is active, the processor short-circuits immediately (negligible overhead).
+
+### Trigger 1: System property / env variable
+
+No annotation needed — just add the dependency and pass the flag:
+
+```bash
+mvn compile -Ddekorate.enabled=true
+
+# Or via environment variable
+DEKORATE_ENABLED=true mvn compile
+```
+
+The config file defaults to `application.properties`. Override with `-Ddekorate.config=custom.properties`.
+
+### Trigger 2: `@EnableDekorate` annotation
+
+A lightweight `@Retention(SOURCE)` marker annotation provided for POC usage. Consuming projects (e.g. Quarkus, Spring Boot integrations) should provide their own annotation processor that bootstraps the Session with project-specific conventions, rather than relying on this one.
+
+```java
+import io.dekorate.apt.EnableDekorate;
+
+@EnableDekorate
+public class MyApplication {
+  public static void main(String[] args) { ... }
+}
+```
+
+The `resources()` attribute selects which config files to read (defaults to `application.properties`):
+
+```java
+@EnableDekorate(resources = "dekorate.properties")
+public class MyApplication { ... }
+```
+
+### How it works
+
+```
+javac (mvn compile)
+  │
+  ├── Round 1: DekorateAnnotationProcessor.process()
+  │     ├── Checks -Ddekorate.enabled / DEKORATE_ENABLED (trigger 1)
+  │     ├── OR finds @EnableDekorate on a class (trigger 2)
+  │     ├── If neither → returns immediately (no-op)
+  │     ├── Reads application.properties from src/main/resources/
+  │     ├── Creates Session with PropertiesConfigurationGenerator
+  │     ├── session.load()  → discovers generators + visitors via ServiceLoader
+  │     └── session.start() → runs all generators, applies visitors
+  │
+  ├── Round 2..N: already bootstrapped → returns immediately
+  │
+  └── Last round: processingOver() == true
+        └── session.close() → exports kubernetes.yml to target/classes/META-INF/dekorate/
+```
+
+### User experience
+
+**1. Add the dependency** (pulls in core + kubernetes transitively):
+
+```xml
+<dependency>
+  <groupId>io.dekorate</groupId>
+  <artifactId>dekorate-2-apt</artifactId>
+  <version>${dekorate2.version}</version>
+  <optional>true</optional>
+</dependency>
+```
+
+**2. Provide configuration** in `src/main/resources/application.properties`:
+
+```properties
+dekorate.kubernetes.name=my-app
+dekorate.kubernetes.namespace=default
+dekorate.kubernetes.image=quay.io/myorg/myapp:1.0
+dekorate.kubernetes.labels.env=prod
+```
+
+**3. Trigger generation** (pick one):
+
+```bash
+# Option A: system property (no code change)
+mvn compile -Ddekorate.enabled=true
+
+# Option B: annotation (add @EnableDekorate to any class, then)
+mvn compile
+```
+
+Manifests appear at `target/classes/META-INF/dekorate/kubernetes.yml` — ready to be packaged in the JAR and consumed by deployment pipelines.
+
+### Compiler output
+
+The processor emits `NOTE`-level messages via `javac`'s messager so you can follow what happens:
+
+```
+[INFO] --- maven-compiler-plugin:3.13.0:compile (default-compile) @ my-project ---
+Note: [dekorate2] Found @EnableDekorate on com.example.MyApplication
+Note: [dekorate2] Reading config from /path/to/src/main/resources/application.properties
+Note: [dekorate2] Export path: /path/to/target/classes/META-INF/dekorate
+Note: [dekorate2] Manifests exported to /path/to/target/classes/META-INF/dekorate
+```
+
+### Key design decisions
+
+1. **`@SupportedAnnotationTypes("*")`**: The wildcard makes the processor invoked on every round, enabling the env variable trigger to work even when no dekorate annotation is present. When neither trigger is active, the processor returns immediately.
+
+2. **Session-per-compilation**: Only one Session is created per compilation. The `bootstrapped` flag ensures subsequent rounds and duplicate annotations are ignored.
+
+3. **POC annotation, production env variable**: `@EnableDekorate` is a convenience for standalone projects. In production, consuming frameworks should provide their own processor and use `-Ddekorate.enabled=true` or their own annotation to trigger generation.
+
+4. **ServiceLoader discovery**: Generators and visitors are discovered from whatever is on the annotation processor classpath. Adding `dekorate-2-kubernetes` as a dependency brings all Kubernetes generators and decorators automatically.
+
+5. **Output to `META-INF/dekorate/`**: Matches the original Dekorate convention. The manifest is packaged inside the JAR, so deployment tools can extract it.

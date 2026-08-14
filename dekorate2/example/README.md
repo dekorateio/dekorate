@@ -231,3 +231,203 @@ type: Opaque
 ```
 
 All 5 generators produce resources. Common decorators (`SetNameDecorate`, `SetNamespaceDecorate`, `AddLabelsDecorate`, `AddAnnotationsDecorate`) apply to every resource, while `SetImageDecorate` only applies to the Deployment (group: `deployment`). On close, the YAML is exported to `build/manifests/kubernetes.yml`.
+
+## apt-demo/ (compile-time generation)
+
+A standalone Maven project that demonstrates the annotation processor approach. Unlike the JBang scripts above, this generates Kubernetes manifests automatically during `mvn compile` — no manual Session wiring needed.
+
+The project uses `@EnableDekorate` on a simple Java class. The annotation processor bootstraps a Session at compile time, discovers all generators and visitors via ServiceLoader, and exports `kubernetes.yml` to `target/classes/META-INF/dekorate/`.
+
+**Note:** `@EnableDekorate` is provided for POC usage. Consuming projects (e.g. Quarkus, Spring Boot integrations) should provide their own annotation processor rather than relying on this one.
+
+### Prerequisites
+
+The dekorate2 modules must be installed locally first:
+
+```bash
+# From the dekorate project root
+mvn install -DskipTests -pl dekorate2/core,dekorate2/kubernetes,dekorate2/apt
+```
+
+### Trigger via annotation
+
+The `MyApplication.java` class carries `@EnableDekorate`:
+
+```java
+@EnableDekorate
+public class MyApplication {
+  public static void main(String[] args) {
+    System.out.println("Application started");
+  }
+}
+```
+
+```bash
+cd dekorate2/example/apt-demo
+mvn clean compile
+```
+
+### Trigger via system property (no annotation needed)
+
+```bash
+cd dekorate2/example/apt-demo
+mvn clean compile -Ddekorate.enabled=true
+```
+
+Or via environment variable:
+
+```bash
+DEKORATE_ENABLED=true mvn clean compile
+```
+
+### Output
+
+The manifest is generated at `target/classes/META-INF/dekorate/kubernetes.yml`:
+
+```bash
+cat target/classes/META-INF/dekorate/kubernetes.yml
+```
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    description: APT demo application
+  labels:
+    env: prod
+    version: "1.0"
+    team: backend
+  name: apt-demo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apt-demo
+  template:
+    metadata:
+      annotations:
+        description: APT demo application
+      labels:
+        app: apt-demo
+        env: prod
+        version: "1.0"
+        team: backend
+      name: apt-demo
+      namespace: default
+    spec:
+      containers:
+      - image: quay.io/myorg/apt-demo:1.0
+        name: apt-demo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: APT demo application
+  labels:
+    env: prod
+    version: "1.0"
+    team: backend
+  name: apt-demo
+  namespace: default
+spec:
+  selector:
+    app: apt-demo
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    description: APT demo application
+  labels:
+    env: prod
+    version: "1.0"
+    team: backend
+  name: apt-demo
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    description: APT demo application
+  labels:
+    env: prod
+    version: "1.0"
+    team: backend
+  name: apt-demo
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: apt-demo
+subjects:
+- kind: ServiceAccount
+  name: apt-demo
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    description: APT demo application
+  labels:
+    env: prod
+    version: "1.0"
+    team: backend
+  name: apt-demo
+  namespace: default
+type: Opaque
+```
+
+### Compiler log
+
+During compilation you see the processor's activity:
+
+```
+INFO: Configuration loaded
+INFO: ServiceLoader discovered 5 visitor factories
+INFO: ServiceLoader discovered 5 generators
+INFO: Running generator DeploymentGenerator (group: deployment)
+INFO: Applying visitor AddLabelsDecorate for key path: dekorate.kubernetes.labels (group: common)
+INFO: Applying visitor AddAnnotationsDecorate for key path: dekorate.kubernetes.annotations (group: common)
+INFO: Applying visitor SetNameDecorate for key path: dekorate.kubernetes.name (group: common)
+INFO: Applying visitor SetNamespaceDecorate for key path: dekorate.kubernetes.namespace (group: common)
+INFO: Applying visitor SetImageDecorate for key path: dekorate.kubernetes.image (group: deployment)
+INFO: Visitors applied: 5 (groups: deployment, common)
+INFO: Running generator ServiceGenerator (group: service)
+...
+INFO: Generated 5 resources
+INFO: Exported 5 resources to target/classes/META-INF/dekorate/kubernetes.yml
+INFO: Session closed
+[INFO] [dekorate2] Found @EnableDekorate on com.example.MyApplication
+[INFO] [dekorate2] Manifests exported to target/classes/META-INF/dekorate
+```
+
+### How it works
+
+The `pom.xml` declares `dekorate-2-apt` as a dependency and configures `annotationProcessorPaths` on the `maven-compiler-plugin` so that the processor, generators, and visitors are all on the annotation processor classpath:
+
+```xml
+<annotationProcessorPaths>
+  <path>
+    <groupId>io.dekorate</groupId>
+    <artifactId>dekorate-2-apt</artifactId>
+    <version>${dekorate2.version}</version>
+  </path>
+  <path>
+    <groupId>io.dekorate</groupId>
+    <artifactId>dekorate-2-kubernetes</artifactId>
+    <version>${dekorate2.version}</version>
+  </path>
+  <path>
+    <groupId>io.dekorate</groupId>
+    <artifactId>dekorate-2-core</artifactId>
+    <version>${dekorate2.version}</version>
+  </path>
+</annotationProcessorPaths>
+```
+
+This is required because `javac` uses a separate classpath for annotation processors. ServiceLoader inside the processor can only discover generators and visitors if their JARs (with `META-INF/services/` files) are on that path.

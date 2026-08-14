@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.example</groupId>
+  <artifactId>apt-demo</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>Dekorate2 APT Demo</name>
+  <description>Demonstrates compile-time Kubernetes manifest generation using the Dekorate2 annotation processor</description>
+
+  <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+
+    <dekorate2.version>999-SNAPSHOT</dekorate2.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.dekorate</groupId>
+      <artifactId>dekorate-2-apt</artifactId>
+      <version>${dekorate2.version}</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <release>21</release>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>io.dekorate</groupId>
+              <artifactId>dekorate-2-apt</artifactId>
+              <version>${dekorate2.version}</version>
+            </path>
+            <path>
+              <groupId>io.dekorate</groupId>
+              <artifactId>dekorate-2-kubernetes</artifactId>
+              <version>${dekorate2.version}</version>
+            </path>
+            <path>
+              <groupId>io.dekorate</groupId>
+              <artifactId>dekorate-2-core</artifactId>
+              <version>${dekorate2.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

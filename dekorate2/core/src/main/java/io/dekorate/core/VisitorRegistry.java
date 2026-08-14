@@ -21,7 +21,7 @@ public class VisitorRegistry {
 
   public VisitorRegistry(Configuration config) {
     this.config = config;
-    for (VisitorFactory factory : ServiceLoader.load(VisitorFactory.class)) {
+    for (VisitorFactory factory : ServiceLoader.load(VisitorFactory.class, VisitorFactory.class.getClassLoader())) {
       LOG.debugf("ServiceLoader discovered: %s", factory.getClass().getName());
       factories.add(factory);
     }

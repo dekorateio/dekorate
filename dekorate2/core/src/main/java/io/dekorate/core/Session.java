@@ -57,7 +57,7 @@ public class Session implements Closeable {
     visitorRegistry = new VisitorRegistry(config);
 
     int discovered = 0;
-    for (Generator generator : ServiceLoader.load(Generator.class)) {
+    for (Generator generator : ServiceLoader.load(Generator.class, Generator.class.getClassLoader())) {
       LOG.debugf("ServiceLoader discovered generator: %s", generator.getClass().getName());
       generators.add(generator);
       discovered++;
@@ -166,5 +166,9 @@ public class Session implements Closeable {
 
   public List<Generator> getGenerators() {
     return generators;
+  }
+
+  public Path getExportPath() {
+    return exportPath;
   }
 }
