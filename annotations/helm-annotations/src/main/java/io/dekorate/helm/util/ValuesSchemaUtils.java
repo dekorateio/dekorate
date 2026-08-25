@@ -6,14 +6,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.dekorate.ConfigReference;
 import io.dekorate.helm.config.HelmChartConfig;
 import io.dekorate.helm.model.ValuesSchema;
 import io.dekorate.helm.model.ValuesSchemaProperty;
 import io.dekorate.utils.Serialization;
 import io.dekorate.utils.Strings;
+import tools.jackson.core.type.TypeReference;
 
 public final class ValuesSchemaUtils {
   private ValuesSchemaUtils() {

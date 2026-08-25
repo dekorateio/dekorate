@@ -93,16 +93,16 @@ import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.QuantityBuilder;
 import io.fabric8.kubernetes.api.model.rbac.Role;
 import io.fabric8.kubernetes.api.model.rbac.RoleBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.Pipeline;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineRun;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineRunBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTask;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.Task;
-import io.fabric8.tekton.pipeline.v1beta1.TaskBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.TaskRun;
-import io.fabric8.tekton.pipeline.v1beta1.TaskRunBuilder;
+import io.fabric8.tekton.v1beta1.Pipeline;
+import io.fabric8.tekton.v1beta1.PipelineBuilder;
+import io.fabric8.tekton.v1beta1.PipelineRun;
+import io.fabric8.tekton.v1beta1.PipelineRunBuilder;
+import io.fabric8.tekton.v1beta1.PipelineTask;
+import io.fabric8.tekton.v1beta1.PipelineTaskBuilder;
+import io.fabric8.tekton.v1beta1.Task;
+import io.fabric8.tekton.v1beta1.TaskBuilder;
+import io.fabric8.tekton.v1beta1.TaskRun;
+import io.fabric8.tekton.v1beta1.TaskRunBuilder;
 
 public class TektonManifestGenerator implements ManifestGenerator<TektonConfig>, WithProject {
 

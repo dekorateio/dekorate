@@ -20,8 +20,8 @@ package io.dekorate.tekton.decorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.Task;
-import io.fabric8.tekton.pipeline.v1beta1.TaskBuilder;
+import io.fabric8.tekton.v1beta1.Task;
+import io.fabric8.tekton.v1beta1.TaskBuilder;
 
 public class TaskProvidingDecorator extends ResourceProvidingDecorator<KubernetesListBuilder> {
 

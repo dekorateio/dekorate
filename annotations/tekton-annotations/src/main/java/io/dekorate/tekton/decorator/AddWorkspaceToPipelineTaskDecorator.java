@@ -20,8 +20,8 @@ package io.dekorate.tekton.decorator;
 import java.util.function.Predicate;
 
 import io.dekorate.utils.Strings;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskBuilder;
+import io.fabric8.tekton.v1beta1.PipelineSpecFluent;
+import io.fabric8.tekton.v1beta1.PipelineTaskBuilder;
 
 public class AddWorkspaceToPipelineTaskDecorator extends NamedPipelineDecorator {
 

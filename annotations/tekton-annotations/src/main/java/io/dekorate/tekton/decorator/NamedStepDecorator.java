@@ -29,7 +29,7 @@ import io.fabric8.kubernetes.api.builder.BaseFluent;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.tekton.pipeline.v1beta1.StepBuilder;
+import io.fabric8.tekton.v1beta1.StepBuilder;
 
 public abstract class NamedStepDecorator<T> extends Decorator<VisitableBuilder> {
 

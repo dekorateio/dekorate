@@ -20,7 +20,7 @@ package io.dekorate.tekton.decorator;
 import io.dekorate.BuildImage;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.tekton.step.ProjectBuildStep;
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.fabric8.tekton.v1beta1.TaskSpecFluent;
 
 public class AddProjectBuildStepDecorator extends NamedTaskDecorator implements StepDecorator {
 

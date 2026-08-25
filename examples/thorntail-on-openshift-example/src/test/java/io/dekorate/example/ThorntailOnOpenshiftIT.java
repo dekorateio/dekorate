@@ -27,9 +27,9 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 //@OpenshiftIntegrationTest
 class ThorntailOnOpenshiftIT {
@@ -43,17 +43,17 @@ class ThorntailOnOpenshiftIT {
   private Pod pod;
 
   //  @Test
-  void shouldRespondWithHelloWorld() throws IOException {
+  void shouldRespondWithHelloWorld() throws Exception {
     assertNotNull(client);
     assertNotNull(list);
     try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
       assertTrue(p.isAlive());
 
       URL url = new URL("http://localhost:" + p.getLocalPort() + "/");
-      OkHttpClient client = new OkHttpClient();
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals("Hello world", response.body().string());
+      HttpClient client = HttpClient.newHttpClient();
+      HttpRequest request = HttpRequest.newBuilder().uri(url.toURI()).GET().build();
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      assertEquals("Hello world", response.body());
     }
   }
 }

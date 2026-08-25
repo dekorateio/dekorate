@@ -17,6 +17,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
+    <java.release>8</java.release>
+    <maven.compiler.testRelease>11</maven.compiler.testRelease>
 
     <version.thorntail>2.5.0.Final</version.thorntail>
     <version.maven-war-plugin>3.3.1</version.maven-war-plugin>
