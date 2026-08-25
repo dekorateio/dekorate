@@ -20,7 +20,7 @@ package io.dekorate.utils.serialization;
 import java.util.Arrays;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
+import tools.jackson.databind.SerializationFeature;
 
 public class SerializationFeatures {
 

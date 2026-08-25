@@ -19,14 +19,12 @@ package io.dekorate.example;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URL;
+import io.dekorate.testing.http.HttpClients;
 
 import org.junit.jupiter.api.Test;
 
 import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 @OpenshiftIntegrationTest
 public class Issue821IT {
@@ -36,10 +34,7 @@ public class Issue821IT {
 
   @Test
   public void shouldRespondWithHelloWorld() throws Exception {
-    OkHttpClient client = new OkHttpClient();
-    Request request = new Request.Builder().get().url(appUrl).build();
-    Response response = client.newCall(request).execute();
-    assertEquals("Hello world", response.body().string());
+    assertEquals("Hello world", HttpClients.getBody(appUrl));
   }
 
 }

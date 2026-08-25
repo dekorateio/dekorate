@@ -18,9 +18,7 @@ package io.dekorate.example;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.dekorate.testing.http.HttpClients;
 import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.annotation.KubernetesIntegrationTest;
 import org.junit.jupiter.api.Assertions;
@@ -47,10 +45,7 @@ public class SpringBootOnKubernetesTests {
     try {
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:"+p.getLocalPort()+"/");
-      OkHttpClient client = new OkHttpClient();
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals(response.body().string(), "Hello world");
+      assertEquals(HttpClients.getBody(url), "Hello world");
     } finally {
       p.close();
     }

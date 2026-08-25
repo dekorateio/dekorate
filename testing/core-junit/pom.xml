@@ -12,6 +12,12 @@
   <name>Dekorate :: Testing :: Core</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <!-- Java 11 required for the java.net.http based HttpClients test helper -->
+    <java.version>11</java.version>
+    <java.release>11</java.release>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.dekorate</groupId>

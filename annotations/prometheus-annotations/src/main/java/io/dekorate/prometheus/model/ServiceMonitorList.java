@@ -25,8 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
@@ -34,7 +34,7 @@ import io.fabric8.kubernetes.api.model.ListMeta;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "apiVersion", "items", "kind", "metadata" })
-@JsonDeserialize(using = JsonDeserializer.None.class)
+@JsonDeserialize(using = ValueDeserializer.None.class)
 public class ServiceMonitorList implements KubernetesResource, KubernetesResourceList<ServiceMonitor> {
 
   @JsonProperty("apiVersion")

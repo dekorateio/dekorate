@@ -18,7 +18,7 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.fabric8.tekton.v1beta1.TaskSpecFluent;
 
 /**
  * Similar to {@link AddStringParamToTaskDecorator} but will replace existing values.

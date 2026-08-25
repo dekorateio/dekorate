@@ -21,7 +21,7 @@ import io.dekorate.kubernetes.decorator.ApplyApplicationContainerDecorator;
 import io.dekorate.kubernetes.decorator.Decorator;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
+import io.fabric8.tekton.v1beta1.StepFluent;
 
 @Description("Add mount to the named step.")
 public class AddMountDecorator extends NamedStepDecorator<StepFluent<?>> {

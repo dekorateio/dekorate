@@ -67,7 +67,7 @@ public class OpenshiftExtension implements ExecutionCondition, BeforeAllCallback
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     try {
       KubernetesClient client = getKubernetesClient(context);
-      if (!client.isAdaptable(OpenShiftClient.class)) {
+      if (!client.hasApiGroup("openshift.io", false)) {
         String reason = "Could not detect Openshift!";
         return ConditionEvaluationResult.disabled(reason);
       }
