@@ -40,6 +40,18 @@
   </dependencyManagement>
 
   <dependencies>
+    <!--
+      thorntail's bootstrap jar shades an ancient org.yaml.snakeyaml (no
+      DumperOptions.setIndentWithIndicator), which otherwise shadows the real
+      snakeyaml that jackson-dataformat-yaml needs during manifest generation.
+      Declared first so the real one wins on the classpath.
+    -->
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.33</version>
+    </dependency>
+
     <dependency>
       <groupId>io.dekorate</groupId>
       <artifactId>openshift-thorntail-starter</artifactId>
@@ -73,6 +85,12 @@
       <groupId>io.dekorate</groupId>
       <artifactId>openshift-junit-starter</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-httpclient-okhttp</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

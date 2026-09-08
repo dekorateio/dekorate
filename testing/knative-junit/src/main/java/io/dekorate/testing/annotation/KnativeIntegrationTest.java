@@ -39,21 +39,21 @@ public @interface KnativeIntegrationTest {
 
   /**
    * Flag to define whether the extension should automatically apply resources.
-   * 
+   *
    * @return True, if extension should automatically deploy dekorate generated resources.
    */
   boolean deployEnabled() default true;
 
   /**
    * Flag to define whether the extension should automatically apply resources.
-   * 
+   *
    * @return True, if extensions should automatically perform container builds.
    */
   boolean buildEnabled() default true;
 
   /**
    * The amount of time in milliseconds to wait for application to become ready.
-   * 
+   *
    * @return The max amount in milliseconds.
    */
   long readinessTimeout() default 300000;

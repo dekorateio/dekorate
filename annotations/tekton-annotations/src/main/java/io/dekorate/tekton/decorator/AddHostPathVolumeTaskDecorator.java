@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 import io.dekorate.doc.Description;
 import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.VolumeBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.fabric8.tekton.v1beta1.TaskSpecFluent;
 
 @Description("Add a persistent host path volume to the specified task.")
 public class AddHostPathVolumeTaskDecorator extends NamedTaskDecorator {

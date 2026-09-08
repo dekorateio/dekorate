@@ -32,9 +32,9 @@ public class Clients {
 
   /*
    * Adapt an existing client instance, to the internal one.
-   * 
+   *
    * @param instance A client instance.
-   * 
+   *
    * @return An intneranl KubernetesClient.
    */
   public static KubernetesClient fromInstance(Object client) {
@@ -49,9 +49,9 @@ public class Clients {
 
   /*
    * Create an internal client from an external configuration instnace.
-   * 
+   *
    * @param config A client configuration.
-   * 
+   *
    * @return An intneranl KubernetesClient.
    */
   public static KubernetesClient fromConfig(Object config) {

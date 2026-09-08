@@ -38,7 +38,7 @@ public class ContainerAdapter {
 
   /**
    * Applies all container properties to the {@link ContainerBuilder}.
-   * 
+   *
    * @param builder The container builder
    * @param container The container
    */
@@ -93,7 +93,7 @@ public class ContainerAdapter {
 
   /**
    * Adapt the dekorate {@link io.dekorate.kubernetes.config.Container} to a kubernetes model {@link Container}.
-   * 
+   *
    * @param container the input container
    * @return the kubernetes model container
    */

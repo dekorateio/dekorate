@@ -21,7 +21,7 @@ public class Probes {
 
   /**
    * Checks if {@link Probe} has been configured.
-   * 
+   *
    * @return true if {@link Probe} has been explicitly configured.
    */
   public static boolean isConfigured(Probe probe) {

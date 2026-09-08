@@ -42,7 +42,7 @@ public interface WithKnativeClient extends TestInstancePostProcessor, WithKubern
 
   /**
    * Inject an instance of {@link KnativeClient} to the specified {@link Field}.
-   * 
+   *
    * @param context The execution context.
    * @param testInstance The target test instance.
    * @param field The field to inject.
@@ -68,7 +68,7 @@ public interface WithKnativeClient extends TestInstancePostProcessor, WithKubern
 
   /**
    * Gets or creates an instance of {@link KnativeClient} from the {@link ExtensionContext}.
-   * 
+   *
    * @param context The context.
    * @return An instance of the client.
    */

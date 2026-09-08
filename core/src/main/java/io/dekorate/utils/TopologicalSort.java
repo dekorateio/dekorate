@@ -27,7 +27,7 @@ public final class TopologicalSort {
 
   /**
    * Adapt the order driven by before and after dependencies into a direct direction `dependsOn`.
-   * 
+   *
    * @param items
    * @return
    */

@@ -92,7 +92,7 @@ public class SpringBootWebProcessor extends AbstractAnnotationProcessor implemen
 
   /**
    * Find the shortest common path of the specified paths.
-   * 
+   *
    * @param paths The set of paths
    * @return the shorted common path, or / if there is no common path.
    */

@@ -47,7 +47,7 @@ public class Packaging {
 
   /**
    * Packages the content of the path as a tarball
-   * 
+   *
    * @param path The path of the file or directory to package.
    * @return a file pointing to the generated tar.
    */
@@ -58,7 +58,7 @@ public class Packaging {
 
   /**
    * Packages the content of the path as a tarball
-   * 
+   *
    * @param path The path of the file or directory to package.
    * @param destination The destination root in the tarball.
    * @return a file pointing to the generated tar.
@@ -70,7 +70,7 @@ public class Packaging {
 
   /**
    * Packages the content of the path as a tarball
-   * 
+   *
    * @param path The path of the file or directory to package.
    * @param additional Additional entries to add to the tarball.
    * @return a file pointing to the generated tar.
@@ -81,7 +81,7 @@ public class Packaging {
 
   /**
    * Packages the content of the path as a tarball
-   * 
+   *
    * @param path The path of the file or directory to package.
    * @param destination The destination root in the tarball.
    * @param additional Additional entries to add to the tarball.

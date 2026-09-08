@@ -30,10 +30,14 @@ import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.fabric8.kubernetes.api.model.ExecAction;
+import io.fabric8.kubernetes.api.model.ExecActionBuilder;
 import io.fabric8.kubernetes.api.model.GRPCAction;
+import io.fabric8.kubernetes.api.model.GRPCActionBuilder;
 import io.fabric8.kubernetes.api.model.HTTPGetAction;
+import io.fabric8.kubernetes.api.model.HTTPGetActionBuilder;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.TCPSocketAction;
+import io.fabric8.kubernetes.api.model.TCPSocketActionBuilder;
 
 /**
  * Base class for any kind of {@link Decorator} that acts on probes.
@@ -154,12 +158,12 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     if (Strings.isNullOrEmpty(probe.getExecAction())) {
       return null;
     }
-    return new ExecAction(Arrays.asList(probe.getExecAction().split(" ")));
+    return new ExecActionBuilder().withCommand(Arrays.asList(probe.getExecAction().split(" "))).build();
   }
 
   private HTTPGetAction httpGetAction(Probe probe, ContainerFluent<?> container) {
     if (!container.hasPorts()) {
-      return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(8080), "HTTP");
+      return httpGetAction(probe.getHttpActionPath(), new IntOrString(8080), "HTTP");
     }
 
     httpPort = Ports.getHttpPort(container).get();
@@ -171,7 +175,16 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       schema = "HTTPS";
     }
 
-    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(port), schema);
+    return httpGetAction(probe.getHttpActionPath(), new IntOrString(port), schema);
+  }
+
+  private HTTPGetAction httpGetAction(String path, IntOrString port, String schema) {
+    return new HTTPGetActionBuilder()
+        .withHttpHeaders(Collections.emptyList())
+        .withPath(path)
+        .withPort(port)
+        .withScheme(schema)
+        .build();
   }
 
   private TCPSocketAction tcpSocketAction(Probe probe) {
@@ -183,13 +196,13 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
     if (parts.length == 1) {
       try {
         int port = Integer.parseInt(parts[0]);
-        return new TCPSocketAction(null, new IntOrString(port));
+        return new TCPSocketActionBuilder().withPort(new IntOrString(port)).build();
       } catch (NumberFormatException e) {
         throw new RuntimeException(
             "Invalid port for tcp socket action! Expected: integer <port>. Found:" + probe.getTcpSocketAction() + ".");
       }
     } else if (parts.length == 2) {
-      return new TCPSocketAction(parts[0], new IntOrString(parts[1]));
+      return new TCPSocketActionBuilder().withHost(parts[0]).withPort(new IntOrString(parts[1])).build();
     }
     throw new RuntimeException(
         "Invalid format for tcp socket action! Expected: <port> or <host>:<port>. Found:" + probe.getTcpSocketAction() + ".");
@@ -206,9 +219,9 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       if (grpcActionExpression.contains(":")) {
         // both port and service is provided
         String[] parts = grpcActionExpression.split(":");
-        grpcAction = new GRPCAction(Integer.valueOf(parts[0]), parts[1]);
+        grpcAction = new GRPCActionBuilder().withPort(Integer.valueOf(parts[0])).withService(parts[1]).build();
       } else {
-        grpcAction = new GRPCAction(Integer.valueOf(grpcActionExpression), null);
+        grpcAction = new GRPCActionBuilder().withPort(Integer.valueOf(grpcActionExpression)).build();
       }
 
       return grpcAction;
