@@ -22,7 +22,7 @@ public class Urls {
 
   /**
    * Convert a {@URL} pointing to a local file or resource to an actual {@File}.
-   * 
+   *
    * @param url The url.
    * @return The file that the url points at, or the file that contains the resource if its contained in a jar etc.
    */

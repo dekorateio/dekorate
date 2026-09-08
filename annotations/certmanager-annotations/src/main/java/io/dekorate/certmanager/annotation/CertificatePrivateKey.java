@@ -24,7 +24,7 @@ import io.sundr.builder.annotations.Pojo;
 public @interface CertificatePrivateKey {
   /**
    * RotationPolicy controls how private keys should be regenerated when a re-issuance is being processed.
-   * 
+   *
    * @return the rotation policy.
    */
   RotationPolicy rotationPolicy() default RotationPolicy.Unset;

@@ -33,7 +33,7 @@ public @interface Probe {
 
   /**
    * The command to use for the probe.
-   * 
+   *
    * @return The command.
    */
   String execAction() default "";
@@ -43,7 +43,7 @@ public @interface Probe {
    * Examples:
    * - @Probe(tcpSocketAction="8080"))
    * - @Probe(tcpSocketAction="myhost:8080"))
-   * 
+   *
    * @return The string representation of the socket.
    */
   String tcpSocketAction() default "";
@@ -59,35 +59,35 @@ public @interface Probe {
 
   /**
    * The amount of time to wait in seconds before starting to probe.
-   * 
+   *
    * @return The initial delay.
    */
   int initialDelaySeconds() default 0;
 
   /**
    * The period in which the action should be called.
-   * 
+   *
    * @return The period.
    */
   int periodSeconds() default 30;
 
   /**
    * The amount of time to wait for each action.
-   * 
+   *
    * @return The timeout.
    */
   int timeoutSeconds() default 10;
 
   /**
    * The success threshold to use.
-   * 
+   *
    * @return The threshold.
    */
   int successThreshold() default 1;
 
   /**
    * The failure threshold to use.
-   * 
+   *
    * @return The threshold.
    */
   int failureThreshold() default 3;

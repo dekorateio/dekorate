@@ -27,7 +27,7 @@ import io.dekorate.utils.Strings;
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
 import io.fabric8.kubernetes.api.builder.VisitableBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
+import io.fabric8.tekton.v1beta1.PipelineSpecFluent;
 
 public abstract class NamedPipelineDecorator extends Decorator<VisitableBuilder> {
 

@@ -116,7 +116,7 @@ public class Generators {
 
   /**
    * Process the specified map and wrap sub-maps into arrays of maps when needed.
-   * 
+   *
    * @param annotationClass The class of the annotation.
    * @param map The actual map.
    */
@@ -160,7 +160,7 @@ public class Generators {
 
   /**
    * Check if specified Object array is actually an array of maps.
-   * 
+   *
    * @param objects the object array.
    * @return true if all elements are instance of Map.
    */
@@ -175,7 +175,7 @@ public class Generators {
 
   /**
    * Check if specified list is actually a list of maps.
-   * 
+   *
    * @param list the list..
    * @return true if all elements are instance of Map.
    */

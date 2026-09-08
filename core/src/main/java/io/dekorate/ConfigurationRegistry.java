@@ -51,7 +51,7 @@ public class ConfigurationRegistry {
 
   /**
    * Add a {@link Configurator}.
-   * 
+   *
    * @param configurator The configurator.
    */
   public void add(Configurator configurator) {

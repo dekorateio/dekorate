@@ -35,7 +35,7 @@ public class S2iUtils {
 
   /**
    * Wait for the references ImageStreamTags to become available.
-   * 
+   *
    * @param items A list of items, possibly referencing image stream tags.
    * @param amount The max amount of time to wait.
    * @param timeUnit The time unit of the time to wait.

@@ -101,7 +101,7 @@ public class SbtInfoReader implements BuildInfoReader {
 
   /**
    * Get the system scala version.
-   * 
+   *
    * @return The scala version found using exec, or fallback to the default version.
    */
   protected static String getSystemScalaVersion() {
