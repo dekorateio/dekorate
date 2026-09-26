@@ -16,6 +16,8 @@
 
   <properties>
     <java.version>1.8</java.version>
+    <java.release>8</java.release>
+    <maven.compiler.testRelease>11</maven.compiler.testRelease>
     <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
   </properties>
 

@@ -33,15 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
-
 import io.dekorate.DekorateException;
 import io.dekorate.utils.serialization.Features;
 import io.dekorate.utils.serialization.SerializationFeatures;
@@ -49,6 +40,17 @@ import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.KubernetesListBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.javaprop.JavaPropsMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 
 public class Serialization {
 
@@ -60,61 +62,39 @@ public class Serialization {
   private static final String WRITE_NULL_MAP_VALUES = "WRITE_NULL_MAP_VALUES";
   private static final String WRITE_EMPTY_JSON_ARRAYS = "WRITE_EMPTY_JSON_ARRAYS";
 
-  public static YAMLFactory createYamlFactory(String[] features) {
-    YAMLFactory result = new YAMLFactory();
-    for (String name : features) {
-      Optional<Feature> feature = Features.find(name);
-      if (feature.isPresent()) {
-        result = result.enable(feature.get());
-      }
-    }
-    return result;
-  }
-
   public static ObjectMapper createYamlMapper(String[] generatorFeatures, String[] enabledFeatures, String[] disabledFeatures) {
-    return new ObjectMapper(createYamlFactory(generatorFeatures)) {
-      {
-
-        for (String name : enabledFeatures) {
-          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
-          if (feature.isPresent()) {
-            configure(feature.get(), true);
-          }
-        }
-        for (String name : disabledFeatures) {
-          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
-          if (feature.isPresent()) {
-            configure(feature.get(), false);
-          }
-        }
-
-      }
-    };
+    YAMLMapper.Builder builder = YAMLMapper.builder();
+    builder.enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS);
+    builder.changeDefaultVisibility(vc -> vc.withFieldVisibility(Visibility.ANY));
+    for (String name : generatorFeatures) {
+      Optional<YAMLWriteFeature> feature = Features.find(name);
+      feature.ifPresent(builder::enable);
+    }
+    for (String name : enabledFeatures) {
+      Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+      feature.ifPresent(builder::enable);
+    }
+    for (String name : disabledFeatures) {
+      Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+      feature.ifPresent(builder::disable);
+    }
+    return builder.build();
   }
 
   public static ObjectMapper createJsonMapper(String[] enabledFeatures, String[] disabledFeatures) {
-    ObjectMapper mapper = new ObjectMapper() {
-      {
-
-        for (String name : enabledFeatures) {
-          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
-          if (feature.isPresent()) {
-            configure(feature.get(), true);
-          }
-        }
-        for (String name : disabledFeatures) {
-          Optional<SerializationFeature> feature = SerializationFeatures.find(name);
-          if (feature.isPresent()) {
-            configure(feature.get(), false);
-          }
-        }
-
-      }
-    };
-    ClassLoader projectClassLoader = ObjectMapper.class.getClassLoader();
-    List<Module> modules = ObjectMapper.findModules(projectClassLoader);
-    mapper.registerModules(modules);
-    return mapper;
+    JsonMapper.Builder builder = JsonMapper.builder();
+    builder.enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS);
+    builder.changeDefaultVisibility(vc -> vc.withFieldVisibility(Visibility.ANY));
+    for (String name : enabledFeatures) {
+      Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+      feature.ifPresent(builder::enable);
+    }
+    for (String name : disabledFeatures) {
+      Optional<SerializationFeature> feature = SerializationFeatures.find(name);
+      feature.ifPresent(builder::disable);
+    }
+    builder.findAndAddModules();
+    return builder.build();
   }
 
   private static final ObjectMapper JSON_MAPPER = createJsonMapper(new String[] { INDENT_OUTPUT },
@@ -150,7 +130,7 @@ public class Serialization {
             .collect(Collectors.joining(",", "[", "]"));
       }
       return JSON_MAPPER.writeValueAsString(object);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw DekorateException.launderThrowable(e);
     }
   }
@@ -168,7 +148,7 @@ public class Serialization {
             .collect(Collectors.joining());
       }
       return YAML_MAPPER.writeValueAsString(object);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw DekorateException.launderThrowable(e);
     }
   }
@@ -472,7 +452,7 @@ public class Serialization {
   private static <T> String writeValueAsYamlSafe(T object) {
     try {
       return YAML_MAPPER.writeValueAsString(object);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw DekorateException.launderThrowable(e);
     }
   }
@@ -480,7 +460,7 @@ public class Serialization {
   private static <T> String writeValueAsJsonSafe(T object) {
     try {
       return JSON_MAPPER.writeValueAsString(object);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw DekorateException.launderThrowable(e);
     }
   }

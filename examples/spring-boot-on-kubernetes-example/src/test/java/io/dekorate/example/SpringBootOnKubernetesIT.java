@@ -31,9 +31,9 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @KubernetesIntegrationTest
 public class SpringBootOnKubernetesIT {
@@ -49,7 +49,7 @@ public class SpringBootOnKubernetesIT {
   Pod pod;
 
   @Test
-  public void shouldRespondWithHelloWorld() throws IOException {
+  public void shouldRespondWithHelloWorld() throws Exception {
     Assertions.assertNotNull(client);
     Assertions.assertNotNull(list);
     System.out.println("Using pod:" + pod.getMetadata().getName());
@@ -58,10 +58,10 @@ public class SpringBootOnKubernetesIT {
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:" + p.getLocalPort() + "/");
 
-      OkHttpClient client = new OkHttpClient();
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals(response.body().string(), "Hello world");
+      HttpClient client = HttpClient.newHttpClient();
+      HttpRequest request = HttpRequest.newBuilder().uri(url.toURI()).GET().build();
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      assertEquals(response.body(), "Hello world");
     }
   }
 }

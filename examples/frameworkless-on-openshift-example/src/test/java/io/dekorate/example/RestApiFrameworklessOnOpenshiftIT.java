@@ -28,9 +28,9 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @OpenshiftIntegrationTest(pushEnabled = true)
 class RestApiFrameworklessOnOpenshiftIT {
@@ -52,10 +52,10 @@ class RestApiFrameworklessOnOpenshiftIT {
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:" + p.getLocalPort() + "/api/hello");
 
-      OkHttpClient client = new OkHttpClient();
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals(response.body().string(), "Hello from OpenShift FrameworkLess world!");
+      HttpClient client = HttpClient.newHttpClient();
+      HttpRequest request = HttpRequest.newBuilder().uri(url.toURI()).GET().build();
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      assertEquals(response.body(), "Hello from OpenShift FrameworkLess world!");
     } catch (Exception e) {
       e.printStackTrace();
     }

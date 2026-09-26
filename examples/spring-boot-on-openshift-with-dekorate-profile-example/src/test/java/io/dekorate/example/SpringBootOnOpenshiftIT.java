@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.testing.annotation.Inject;
 import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
 import io.fabric8.openshift.api.model.Route;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @OpenshiftIntegrationTest
 class SpringBootOnOpenshiftIT {
@@ -42,10 +42,10 @@ class SpringBootOnOpenshiftIT {
     assertNotNull(route);
     assertNotNull(appUrl);
 
-    OkHttpClient client = new OkHttpClient();
-    Request request = new Request.Builder().get().url(appUrl).build();
-    Response response = client.newCall(request).execute();
-    assertEquals(response.body().string(), "Hello world");
+    HttpClient client = HttpClient.newHttpClient();
+    HttpRequest request = HttpRequest.newBuilder().uri(appUrl.toURI()).GET().build();
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    assertEquals(response.body(), "Hello world");
   }
 
 }

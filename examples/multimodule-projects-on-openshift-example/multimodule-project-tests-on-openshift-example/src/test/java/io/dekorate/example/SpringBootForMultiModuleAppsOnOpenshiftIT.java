@@ -31,9 +31,9 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.openshift.api.model.Route;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Disabled(value = "Sneaky test in CI runs")
 @OpenshiftIntegrationTest(additionalModules = { "../multimodule-project-a-on-openshift-example", "../multimodule-project-b-on-openshift-example" })
@@ -91,11 +91,11 @@ class SpringBootForMultiModuleAppsOnOpenshiftIT {
     assertHelloWorld(appUrlForProjectB);
   }
 
-  private void assertHelloWorld(URL appUrl) throws IOException {
-    OkHttpClient client = new OkHttpClient();
-    Request request = new Request.Builder().get().url(appUrl).build();
-    Response response = client.newCall(request).execute();
-    assertEquals(response.body().string(), "Hello world");
+  private void assertHelloWorld(URL appUrl) throws Exception {
+    HttpClient client = HttpClient.newHttpClient();
+    HttpRequest request = HttpRequest.newBuilder().uri(appUrl.toURI()).GET().build();
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    assertEquals(response.body(), "Hello world");
   }
 
 }

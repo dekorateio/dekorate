@@ -17,7 +17,7 @@
 
 package io.dekorate.tekton.decorator;
 
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.fabric8.tekton.v1beta1.TaskSpecFluent;
 
 public class AddArrayParamToTaskDecorator extends NamedTaskDecorator {
 

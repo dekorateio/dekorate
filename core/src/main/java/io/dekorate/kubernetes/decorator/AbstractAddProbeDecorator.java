@@ -159,7 +159,7 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
 
   private HTTPGetAction httpGetAction(Probe probe, ContainerFluent<?> container) {
     if (!container.hasPorts()) {
-      return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(8080), "HTTP");
+      return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(8080), null, "HTTP");
     }
 
     httpPort = Ports.getHttpPort(container).get();
@@ -171,7 +171,7 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       schema = "HTTPS";
     }
 
-    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(port), schema);
+    return new HTTPGetAction(null, Collections.emptyList(), probe.getHttpActionPath(), new IntOrString(port), null, schema);
   }
 
   private TCPSocketAction tcpSocketAction(Probe probe) {
@@ -206,9 +206,9 @@ public abstract class AbstractAddProbeDecorator extends ApplicationContainerDeco
       if (grpcActionExpression.contains(":")) {
         // both port and service is provided
         String[] parts = grpcActionExpression.split(":");
-        grpcAction = new GRPCAction(Integer.valueOf(parts[0]), parts[1]);
+        grpcAction = new GRPCAction(null, Integer.valueOf(parts[0]), parts[1]);
       } else {
-        grpcAction = new GRPCAction(Integer.valueOf(grpcActionExpression), null);
+        grpcAction = new GRPCAction(null, Integer.valueOf(grpcActionExpression), null);
       }
 
       return grpcAction;

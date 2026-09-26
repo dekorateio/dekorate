@@ -16,7 +16,7 @@
 package io.dekorate.tekton.decorator;
 
 import io.dekorate.kubernetes.decorator.Decorator;
-import io.fabric8.tekton.pipeline.v1beta1.StepFluent;
+import io.fabric8.tekton.v1beta1.StepFluent;
 
 public class AddEnvVarStepDecorator extends NamedStepDecorator<StepFluent<?>> {
 

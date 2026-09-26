@@ -65,6 +65,14 @@ limitations under the License.
       <version>${version.spring-boot}</version>
     </dependency>
 
+    <!-- yaml-path (via helm-annotations) pulls jackson-dataformat-yaml which needs snakeyaml >= 1.31,
+         but Spring Boot forces 1.28; override it here so annotation processing can run. -->
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>2.0</version>
+    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>io.dekorate</groupId>

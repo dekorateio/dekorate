@@ -21,19 +21,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.fabric8.kubernetes.api.builder.TypedVisitor;
-import io.fabric8.tekton.pipeline.v1beta1.Param;
-import io.fabric8.tekton.pipeline.v1beta1.ParamBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineSpecFluent;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTask;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskFluent;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskInputResource;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskInputResourceBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskOutputResource;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskOutputResourceBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineTaskResourcesBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.WorkspacePipelineTaskBinding;
-import io.fabric8.tekton.pipeline.v1beta1.WorkspacePipelineTaskBindingBuilder;
+import io.fabric8.tekton.v1beta1.Param;
+import io.fabric8.tekton.v1beta1.ParamBuilder;
+import io.fabric8.tekton.v1beta1.PipelineSpecFluent;
+import io.fabric8.tekton.v1beta1.PipelineTask;
+import io.fabric8.tekton.v1beta1.PipelineTaskBuilder;
+import io.fabric8.tekton.v1beta1.PipelineTaskFluent;
+import io.fabric8.tekton.v1beta1.PipelineTaskInputResource;
+import io.fabric8.tekton.v1beta1.PipelineTaskInputResourceBuilder;
+import io.fabric8.tekton.v1beta1.PipelineTaskOutputResource;
+import io.fabric8.tekton.v1beta1.PipelineTaskOutputResourceBuilder;
+import io.fabric8.tekton.v1beta1.PipelineTaskResourcesBuilder;
+import io.fabric8.tekton.v1beta1.WorkspacePipelineTaskBinding;
+import io.fabric8.tekton.v1beta1.WorkspacePipelineTaskBindingBuilder;
 
 public class AddTaskToPipelineDecorator extends NamedPipelineDecorator {
 

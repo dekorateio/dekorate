@@ -19,7 +19,7 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineRunSpecFluent;
+import io.fabric8.tekton.v1beta1.PipelineRunSpecFluent;
 
 public class AddServiceAccountToPipelineDecorator extends NamedResourceDecorator<PipelineRunSpecFluent> {
 
