@@ -10,7 +10,7 @@ class path:
       <version>${project.version}</version>
     </dependency>
 
-So as to add the ConfigMap under the volumes section of the Deployment specification you need pass the `configMapVolumes` parameter containing the volume and configMap names to the `@KubernetesApplication` in the Spring Boot annotated class. The code would look as follow:
+To add the ConfigMap under the volumes section of the Deployment specification you need pass the `configMapVolumes` parameter containing the volume and configMap names to the `@KubernetesApplication` in the Spring Boot annotated class. The code would look as follows:
 
 ```
 @KubernetesApplication(configMapVolumes = @ConfigMapVolume(volumeName = "bar-volume", configMapName = "foo-map"))
@@ -26,7 +26,7 @@ Check, if necessary, the [Main.java](src/main/java/io/dekorate/example/Main.java
 
 You can also specify the permission mode for the volume with the `defaultMode` parameter in `@ConfigMapVolume` annotation.
 If you don’t specify any, [0600 is used by default](https://dekorateio.github.io//configuration-guide/#configmapvolume). Note that the JSON spec doesn’t support octal notation, so use the value 384 for 0600 permissions
-Referenced `configMap` might be optional. By default this option will be false, so if `configMap` referenced is missing, kubernetes/openshift will lead to error. If `optional` parameter set to true, and referenced `configMap` not found, kubernetes/openshift will continue normally.
+Referenced `configMap` might be optional. By default, this option will be false, so if `configMap` referenced is missing, kubernetes/openshift will lead to error. If `optional` parameter set to true, and referenced `configMap` not found, kubernetes/openshift will continue normally.
 
 Compile the project using:
 
