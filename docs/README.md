@@ -132,5 +132,4 @@ All documentation files should be added to the `documentation/` folder and for t
 
 ## GitHub api
 
-The website uses the [jekyll-github-metadata](https://github.com/jekyll/github-metadata) plugin in order to display new releases automatically,
-this can be used for other purposes if need arises
+The website uses the [jekyll-github-metadata](https://github.com/jekyll/github-metadata) plugin in order to display new releases automatically, this can be used for other purposes if you need arises

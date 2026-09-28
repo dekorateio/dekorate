@@ -1735,7 +1735,7 @@ And provide the certificate configuration. The minimal information that the Deko
 - `secretName` : the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will include the Cert-Manager generated files.
 - the Issuer that represents the certificate authority (CA). See all the supported options in [the Issuer](#issuers) section.
 
-To know more about how to use the Cert-Manager extension, please go to [the Cert-Manager Dekorate documentation](https://dekorateio.github.io//docs/cert-manager).
+To know more about how to use the Cert-Manager extension, please go to [the Cert-Manager Dekorate documentation](https://dekorateio.github.io/dekorate/docs/cert-manager).
 
 #### related examples
 - [spring boot with cert_manager](examples/spring-boot-on-kubernetes-with-certmanager-example)
