@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
     <description>Generated Bom</description>
     
-    <url>https://dekorateio.github.io/</url>
+    <url>https://dekorateio.github.io</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>

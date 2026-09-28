@@ -1,14 +1,13 @@
 # Release Guidelines
 
-The project is a typical maven project that is released using the `maven-release-plugin`.
+The project is a typical maven project that is released using the `maven-release-plugin` on Sonatype.
 
 ## Preparation
 
-The project is released via sonatype. 
-A sonatype account is required and the account needs to be added to https://issues.sonatype.org/browse/OSSRH-49341.
+A Sonatype account is [required](https://central.sonatype.org/register/central-portal/) and the account needs to be added.
 
 The credentials of that account need to be configured inside the local settings.xml (usually under ~/.m2/settings.xml).
-The id of the repository is `oss-sonatype-staging`. So a matching server entry in the settings xml is required:
+The id of the repository is `oss-sonatype-staging`. So a matching server entry in the settings XML is required:
 
 
     <server>
