@@ -22,7 +22,7 @@ And provide the certificate configuration. The minimal information that the Deko
 - `secretName`: the name of the Kubernetes [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource that will include the Cert-Manager generated files.
 - the Issuer that represents the certificate authority (CA). See all the supported options in [the Issuer](#issuers) section.
 
-For all the configuration options, please go to [the Configuration guide](https://dekorate.io/configuration-guide/#cert-manager) of the Cert-Manager.
+For all the configuration options, please go to [the Configuration guide](https://dekorateio.github.io//configuration-guide/#cert-manager) of the Cert-Manager.
 
 The minimal configuration can be provided using the properties file and the following keys:
 
