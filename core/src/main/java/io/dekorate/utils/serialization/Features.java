@@ -20,15 +20,15 @@ package io.dekorate.utils.serialization;
 import java.util.Arrays;
 import java.util.Optional;
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
+import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 
 public class Features {
 
   public static boolean exists(String name) {
-    return Arrays.stream(Feature.values()).map(Feature::name).anyMatch(n -> n.equals(name));
+    return Arrays.stream(YAMLWriteFeature.values()).map(YAMLWriteFeature::name).anyMatch(n -> n.equals(name));
   }
 
-  public static Optional<Feature> find(String name) {
-    return Arrays.stream(Feature.values()).filter(f -> f.name().equals(name)).findFirst();
+  public static Optional<YAMLWriteFeature> find(String name) {
+    return Arrays.stream(YAMLWriteFeature.values()).filter(f -> f.name().equals(name)).findFirst();
   }
 }

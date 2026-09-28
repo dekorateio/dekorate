@@ -30,9 +30,7 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.dekorate.testing.http.HttpClients;
 
 // The test assumes that the jaeger operator is installed an a jaeger named simplest is available and thus a service simplest-jaeger is available.
 @OnServicePresentCondition("simplest-collector")
@@ -57,10 +55,7 @@ public class SpringBootOnKubernetesIT {
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:" + p.getLocalPort() + "/");
 
-      OkHttpClient client = new OkHttpClient();
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals(response.body().string(), "Chaining + Hello from Spring Boot!");
+      assertEquals(HttpClients.getBody(url), "Chaining + Hello from Spring Boot!");
     } catch (Exception e) {
       e.printStackTrace();
     }

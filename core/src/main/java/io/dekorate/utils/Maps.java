@@ -29,10 +29,9 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.dekorate.DekorateException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 public class Maps {
   private static final String PROPERTY_PREFIX = "dekorate";
@@ -121,12 +120,8 @@ public class Maps {
   }
 
   private static Map<String, Object> parse(InputStream is, ObjectMapper javaPropsMapper) {
-    try {
-      return javaPropsMapper.readValue(is, new TypeReference<Map<String, Object>>() {
-      });
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return javaPropsMapper.readValue(is, new TypeReference<Map<String, Object>>() {
+    });
   }
 
   /**

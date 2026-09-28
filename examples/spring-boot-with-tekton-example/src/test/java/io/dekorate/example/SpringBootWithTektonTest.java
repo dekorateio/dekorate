@@ -24,10 +24,10 @@ import org.junit.jupiter.api.Test;
 import io.dekorate.utils.Serialization;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
-import io.fabric8.tekton.pipeline.v1beta1.Pipeline;
-import io.fabric8.tekton.pipeline.v1beta1.PipelineRun;
-import io.fabric8.tekton.pipeline.v1beta1.Task;
-import io.fabric8.tekton.pipeline.v1beta1.TaskRun;
+import io.fabric8.tekton.v1beta1.Pipeline;
+import io.fabric8.tekton.v1beta1.PipelineRun;
+import io.fabric8.tekton.v1beta1.Task;
+import io.fabric8.tekton.v1beta1.TaskRun;
 
 class SpringBootWithTektonTest {
 

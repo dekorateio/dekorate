@@ -14,8 +14,8 @@ import io.dekorate.certmanager.config.LocalObjectReference;
 import io.dekorate.certmanager.config.Subject;
 import io.dekorate.kubernetes.decorator.ResourceProvidingDecorator;
 import io.dekorate.utils.Strings;
-import io.fabric8.certmanager.api.model.meta.v1.ObjectReference;
-import io.fabric8.certmanager.api.model.meta.v1.ObjectReferenceBuilder;
+import io.fabric8.certmanager.api.model.meta.v1.IssuerReference;
+import io.fabric8.certmanager.api.model.meta.v1.IssuerReferenceBuilder;
 import io.fabric8.certmanager.api.model.meta.v1.SecretKeySelector;
 import io.fabric8.certmanager.api.model.meta.v1.SecretKeySelectorBuilder;
 import io.fabric8.certmanager.api.model.v1.CertificateBuilder;
@@ -131,8 +131,8 @@ public class AddCertificateResourceDecorator extends ResourceProvidingDecorator<
     }
   }
 
-  private ObjectReference toIssuerRef(IssuerRef issuerRef) {
-    ObjectReferenceBuilder builder = new ObjectReferenceBuilder();
+  private IssuerReference toIssuerRef(IssuerRef issuerRef) {
+    IssuerReferenceBuilder builder = new IssuerReferenceBuilder();
     builder.withName(issuerRef.getName());
     if (Strings.isNotNullOrEmpty(issuerRef.getKind())) {
       builder.withKind(issuerRef.getKind());

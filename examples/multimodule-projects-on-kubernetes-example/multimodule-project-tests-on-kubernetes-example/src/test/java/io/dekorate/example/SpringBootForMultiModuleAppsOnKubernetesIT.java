@@ -31,9 +31,7 @@ import io.fabric8.kubernetes.api.model.KubernetesList;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.dekorate.testing.http.HttpClients;
 
 @KubernetesIntegrationTest(additionalModules = { "../multimodule-project-a-on-kubernetes-example", "../multimodule-project-b-on-kubernetes-example" })
 class SpringBootForMultiModuleAppsOnKubernetesIT {
@@ -70,15 +68,12 @@ class SpringBootForMultiModuleAppsOnKubernetesIT {
     assertHelloWorld(podForProjectB);
   }
 
-  private void assertHelloWorld(Pod pod) throws IOException {
+  private void assertHelloWorld(Pod pod) throws Exception {
     try (LocalPortForward p = client.pods().withName(pod.getMetadata().getName()).portForward(8080)) {
       assertTrue(p.isAlive());
       URL url = new URL("http://localhost:"+p.getLocalPort()+"/");
 
-      OkHttpClient client = new OkHttpClient();
-      Request request = new Request.Builder().get().url(url).build();
-      Response response = client.newCall(request).execute();
-      assertEquals(response.body().string(), "Hello world");
+      assertEquals(HttpClients.getBody(url), "Hello world");
     }
   }
 }

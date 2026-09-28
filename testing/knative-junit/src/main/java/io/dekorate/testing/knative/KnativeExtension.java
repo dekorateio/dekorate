@@ -42,7 +42,6 @@ import io.dekorate.testing.WithKubernetesClient;
 import io.dekorate.testing.WithPod;
 import io.dekorate.testing.WithProject;
 import io.dekorate.testing.config.KnativeIntegrationTestConfig;
-import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.knative.serving.v1.Service;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesList;
@@ -66,7 +65,7 @@ public class KnativeExtension implements ExecutionCondition, BeforeAllCallback, 
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     try {
       KubernetesClient client = getKubernetesClient(context);
-      if (!client.isAdaptable(KnativeClient.class)) {
+      if (!client.hasApiGroup("knative.dev", false)) {
         String reason = "Could not detect Knative!";
         return ConditionEvaluationResult.disabled(reason);
       }

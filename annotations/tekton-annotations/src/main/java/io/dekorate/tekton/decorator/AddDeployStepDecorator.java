@@ -21,9 +21,9 @@ import static io.dekorate.tekton.step.DeployStep.PATH_TO_YML_PARAM_NAME;
 import static io.dekorate.tekton.step.StepUtils.param;
 
 import io.dekorate.kubernetes.decorator.Decorator;
-import io.fabric8.tekton.pipeline.v1beta1.Step;
-import io.fabric8.tekton.pipeline.v1beta1.StepBuilder;
-import io.fabric8.tekton.pipeline.v1beta1.TaskSpecFluent;
+import io.fabric8.tekton.v1beta1.Step;
+import io.fabric8.tekton.v1beta1.StepBuilder;
+import io.fabric8.tekton.v1beta1.TaskSpecFluent;
 
 public class AddDeployStepDecorator extends NamedTaskDecorator implements StepDecorator {
 

@@ -19,7 +19,7 @@ package io.dekorate.tekton.decorator;
 
 import io.dekorate.kubernetes.decorator.NamedResourceDecorator;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.tekton.pipeline.v1beta1.TaskRunSpecFluent;
+import io.fabric8.tekton.v1beta1.TaskRunSpecFluent;
 
 public class AddPvcToTaskRunDecorator extends NamedResourceDecorator<TaskRunSpecFluent<?>> {
 
