@@ -110,6 +110,7 @@
     <module>testing</module>
     <module>starters</module>
     <module>boms</module>
+    <module>dekorate2</module>
   </modules>
 
   <dependencyManagement>
